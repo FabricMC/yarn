@@ -2,6 +2,8 @@
 
 POMF is a set of open, unencumbered Minecraft mappings, free for everyone to use under the Creative Commons Zero license.
 
+The current version targets Minecraft version **16w32b**.
+
 ## Contributing
 
 Compile Enigma from [here](https://github.com/OpenModLoader/Enigma) using Gradle and run it from build/libs.
