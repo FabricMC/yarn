@@ -3,13 +3,31 @@
 POMF is a set of open, unencumbered Minecraft mappings, free for everyone to use under the Creative Commons Zero license. The intention is to let 
 everyone mod Minecraft freely and openly, while also being able to innovate and process the mappings as they see fit.
 
-The current version targets Minecraft version **16w32b**.
+The current version targets Minecraft version **16w33a**.
 
 ## Contributing
-
-Download Enigma from [here](http://modmuss50.me:8080/job/Enigma-Asie/) ([source](https://github.com/ChorusMC/Enigma)). Use the "-all" JAR.
 
 Please remember that copying and pasting mappings from alternate projects under more restrictive licenses (such as MCP) is **completely forbidden**. It is also good to consult name changes with other people via pull requests.
 
 WIP mapping guidelines are available [here](https://docs.google.com/document/d/15fHL-WgK0uMPAy-WJbQtxrfOVLJNlfasjsnt_wruOXA/edit). Feel free to 
 contribute. It is also good to discuss naming schemes with the developers on IRC or inside a pull request.
+
+### Getting Started
+1. Fork and clone the repo
+2. Run `./gradlew pomf` (macOS and Linux) or `gradlew pomf` (Windows)
+3. Profit
+
+## Gradle
+POMF uses Gradle to provide a number of utility tasks for working with POMF.
+
+### `download`
+Downloads the client and server Minecraft jars for the current Minecraft version to `.gradle/minecraft`
+
+### `mergeJars`
+Merges the client and server jars into one merged jar, located at `VERSION-merged.jar` in the POMF directory where `VERSION` is the currnet Minecraft version.
+
+### `setupPomf`
+`download` and `mergeJars`
+
+### `pomf`
+`setupPomf` and download and launch the latest version of Enigma automatically configured to use the merged jar and the mappings.
