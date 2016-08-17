@@ -1,0 +1,123 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+        	name = "Fabric"
+        	url = "http://maven.fabricmc.net/"
+        }
+    }
+    dependencies {
+        classpath "net.fabricmc:blending-jar:0.1.1.5"
+        classpath "commons-io:commons-io:1.4"
+        classpath "com.google.guava:guava:19.0"
+    }
+}
+
+def minecraft_version = "16w33a"
+
+import groovy.json.JsonSlurper
+import org.apache.commons.io.FileUtils
+import com.google.common.hash.HashCode
+import com.google.common.hash.Hashing
+import com.google.common.io.Files
+import net.fabricmc.blendingjar.JarMerger
+import groovy.util.XmlSlurper
+
+boolean validateChecksum(File file, String checksum) {
+	if (file != null) {
+		def hash = Files.hash(file, Hashing.sha1())
+		def builder = new StringBuilder()
+		hash.asBytes().each {
+			builder.append(Integer.toString((it & 0xFF) + 0x100, 16).substring(1))
+		}
+		return builder.toString().equals(checksum)
+	}
+	return false
+}
+
+task download << {
+	def cacheFiles = new File(".gradle/minecraft")
+	if (!cacheFiles.exists()) cacheFiles.mkdirs()
+
+	def manifestFile = new File(cacheFiles, "version_manifest.json")
+
+	logger.lifecycle(":downloading minecraft json")
+	FileUtils.copyURLToFile(new URL("https://launchermeta.mojang.com/mc/game/version_manifest.json"), manifestFile)
+
+	def manifest = new JsonSlurper().parseText(FileUtils.readFileToString(manifestFile))
+	def manifestVersion = manifest.versions.stream().filter({ it.id.equals(minecraft_version) }).findFirst()
+	if (manifestVersion.isPresent()) {
+
+		def versionFile = new File(cacheFiles, "${minecraft_version}.json")
+		FileUtils.copyURLToFile(new URL(manifestVersion.get().url), versionFile)
+		def version = new JsonSlurper().parseText(FileUtils.readFileToString(versionFile))
+
+		def clientJar = new File(cacheFiles, "${minecraft_version}-client.jar")
+		def serverJar = new File(cacheFiles, "${minecraft_version}-server.jar")
+
+		if (!clientJar.exists() || !validateChecksum(clientJar, version.downloads.client.sha1)) {
+			logger.lifecycle(":downloading minecraft client")
+			FileUtils.copyURLToFile(new URL(version.downloads.client.url), clientJar)
+		}
+
+		if (!serverJar.exists() || !validateChecksum(serverJar, version.downloads.server.sha1)) {
+			logger.lifecycle(":downloading minecraft server")
+			FileUtils.copyURLToFile(new URL(version.downloads.server.url), serverJar)
+		}
+
+	} else {
+		throw new RuntimeException("No version data for Minecraft version ${minecraft_version}")
+	}
+}
+
+task mergeJars << {
+	def mergedFile = new File("${minecraft_version}-merged.jar")
+
+	if (!mergedFile.exists()) {
+		def cacheFiles = new File(".gradle/minecraft")
+
+		def client = new FileInputStream(new File(cacheFiles, "${minecraft_version}-client.jar"))
+		def server = new FileInputStream(new File(cacheFiles, "${minecraft_version}-server.jar"))
+		def merged = new FileOutputStream(mergedFile)
+
+		def jarMerger = new JarMerger(client, server, merged)
+		jarMerger.merge()
+		jarMerger.close()
+
+		client.close()
+		server.close()
+		merged.close()
+	}
+
+}
+tasks.mergeJars.dependsOn "download"
+
+task setupPomf << {
+	
+}
+tasks.setupPomf.dependsOn "mergeJars"
+
+task pomf << {
+	def cacheFiles = new File(".gradle/enigma")
+	if (!cacheFiles.exists()) cacheFiles.mkdirs()
+
+	def mavenMetadata = new File(cacheFiles, "maven-metadata.xml")
+
+	logger.lifecycle(":downloading enigma metadata")
+	FileUtils.copyURLToFile(new URL("http://maven.fabricmc.net/net/fabricmc/enigma/maven-metadata.xml"), mavenMetadata)
+	
+	def metadata = new XmlSlurper().parseText(FileUtils.readFileToString(mavenMetadata))
+	def enigmaVersion = metadata.versioning.release
+
+	def enigma = new File(cacheFiles, "${enigmaVersion}.jar")
+
+	logger.lifecycle(":downloading enigma")
+	FileUtils.copyURLToFile(new URL("http://maven.fabricmc.net/net/fabricmc/enigma/${enigmaVersion}/enigma-${enigmaVersion}-all.jar"), enigma)
+
+	logger.lifecycle(":launching enigma")
+	ant.java(jar: enigma.getAbsolutePath(), fork: true, spawn: true) {
+		arg(value: new File("${minecraft_version}-merged.jar").getAbsolutePath())
+		arg(value: new File("mappings/").getAbsolutePath())
+	}
+}
+tasks.pomf.dependsOn "setupPomf"
