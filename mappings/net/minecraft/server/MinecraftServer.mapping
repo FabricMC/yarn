@@ -5,21 +5,41 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD D flightEnabled Z
 	FIELD E motd Ljava/lang/String;
 	FIELD G playerIdleTimeout I
-	FIELD T forceGamemode Z
+	FIELD H keyPair Ljava/security/KeyPair;
+	FIELD L demo Z
+	FIELD M bonusChest Z
+	FIELD T forceGameMode Z
+	FIELD Z serverThread Ljava/lang/Thread;
 	FIELD a userCacheFile Ljava/io/File;
 	FIELD c profiler Lnone/os;
 	FIELD d worlds [Lnone/lu;
 	FIELD k LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD m snooper Lnone/rj;
+	FIELD p networkManager Lnone/mf;
+	FIELD q metadata Lnone/ke;
+	FIELD r rand Ljava/util/Random;
 	FIELD t serverIp Ljava/lang/String;
 	FIELD u serverPort I
 	FIELD w running Z
 	FIELD z onlineMode Z
 	METHOD A getRunDirectory ()Ljava/io/File;
+	METHOD F start ()V
 	METHOD G getVersion ()Ljava/lang/String;
+	METHOD O getKeyPair ()Ljava/security/KeyPair;
 	METHOD P getServerPort ()I
+	METHOD V isDemo ()Z
+	METHOD a getWorld (I)Lnone/lu;
+		ARG 0 dimensionId
 	METHOD a scheduleOnMainThread (Ljava/lang/Runnable;)Lcom/google/common/util/concurrent/ListenableFuture;
+	METHOD a setKeyPair (Ljava/security/KeyPair;)V
+		ARG 0 value
 	METHOD a loadServerIcon (Lnone/ke;)V
+	METHOD a getSpawnRadius (Lnone/lu;)I
+		ARG 0 world
+	METHOD a (Lnone/qx;)V
 	METHOD aE isMainThread ()Z
+	METHOD aH getMainThread ()Ljava/lang/Thread;
+	METHOD aJ getLogger ()Lorg/apache/logging/log4j/Logger;
 	METHOD aa isDedicated ()Z
 	METHOD ab isOnlineMode ()Z
 	METHOD ac shouldSpawnAnimals ()Z
@@ -27,21 +47,33 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD af isPvpEnabled ()Z
 	METHOD ag isFlightEnabled ()Z
 	METHOD ai getMotd ()Ljava/lang/String;
-	METHOD at shouldForceGamemode ()Z
+	METHOD am getNetworkManager ()Lnone/mf;
+	METHOD ar getSnooper ()Lnone/rj;
+	METHOD at shouldForceGameMode ()Z
 	METHOD aw getPlayerIdleTimeout ()I
 	METHOD b setServerPort (I)V
 		ARG 0 port
 	METHOD b addServerInfoToCrashReport (Lnone/b;)Lnone/b;
 		ARG 0 report
+	METHOD b setDemo (Z)V
+		ARG 0 value
+	METHOD c getBlockPos ()Lnone/cn;
 	METHOD c setServerIp (Ljava/lang/String;)V
+	METHOD c setBonusChest (Z)V
+		ARG 0 value
+	METHOD d getPos ()Lnone/bcs;
 	METHOD d setPlayerIdleTimeout (I)V
 		ARG 0 value
 	METHOD d getFile (Ljava/lang/String;)Ljava/io/File;
 		ARG 0 name
 	METHOD d setOnlineMode (Z)V
 		ARG 0 value
+	METHOD e getWorld ()Lnone/aiu;
+	METHOD e info (Ljava/lang/String;)V
+		ARG 0 msg
 	METHOD e setSpawnAnimals (Z)V
 		ARG 0 value
+	METHOD f getEntity ()Lnone/se;
 	METHOD f warn (Ljava/lang/String;)V
 		ARG 0 msg
 	METHOD f setSpawnNpcs (Z)V
@@ -52,10 +84,14 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD h getServer ()Lnet/minecraft/server/MinecraftServer;
 	METHOD h setFlightEnabled (Z)V
 		ARG 0 value
-	METHOD i setForceGamemode (Z)V
+	METHOD h_ getName ()Ljava/lang/String;
+	METHOD i setForceGameMode (Z)V
 		ARG 0 value
+	METHOD i_ getNameComponent ()Lnone/fa;
 	METHOD l setMotd (Ljava/lang/String;)V
 		ARG 0 value
+	METHOD n getGameMode ()Lnone/ais;
+	METHOD o getDifficulty ()Lnone/qx;
 	METHOD run run ()V
 	METHOD u shutdown ()V
 	METHOD v getServerIp ()Ljava/lang/String;
