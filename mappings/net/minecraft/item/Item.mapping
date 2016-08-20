@@ -8,9 +8,15 @@ CLASS none/aeo net/minecraft/item/Item
 		FIELD f miningLevel I
 		FIELD g durability I
 		METHOD a getDurability ()I
+		METHOD b getEfficiency ()F
+		METHOD c getWeaponDamage ()F
 		METHOD d getMiningLevel ()I
+		METHOD e getEnchantability ()I
+		METHOD f getRepairItem ()Lnone/aeo;
 	FIELD a BLOCK_ITEM_MAP Ljava/util/Map;
 	FIELD g REGISTRY Lnone/db;
+	FIELD h MODIFIER_DAMAGE Ljava/util/UUID;
+	FIELD i MODIFIER_SWING_SPEED Ljava/util/UUID;
 	FIELD j rand Ljava/util/Random;
 	FIELD k maxStackSize I
 	FIELD n creativeTab Lnone/adq;
@@ -49,6 +55,15 @@ CLASS none/aeo net/minecraft/item/Item
 		ARG 1 player
 		ARG 2 list
 		ARG 3 advancedTooltips
+	METHOD a canRepair (Lnone/aeq;Lnone/aeq;)Z
+		ARG 0 tool
+		ARG 1 repairItem
+	METHOD a onBlockBroken (Lnone/aeq;Lnone/aiu;Lnone/asj;Lnone/cn;Lnone/sn;)Z
+		ARG 0 stack
+		ARG 1 world
+		ARG 2 state
+		ARG 3 pos
+		ARG 4 user
 	METHOD a (Lnone/aeq;Lnone/aiu;Lnone/se;IZ)V
 		ARG 0 stack
 		ARG 1 world
@@ -61,6 +76,13 @@ CLASS none/aeo net/minecraft/item/Item
 		ARG 0 stack
 		ARG 1 world
 		ARG 2 player
+	METHOD a getMiningStrength (Lnone/aeq;Lnone/asj;)F
+		ARG 0 stack
+		ARG 1 state
+	METHOD a onEntityDamaged (Lnone/aeq;Lnone/sn;Lnone/sn;)Z
+		ARG 0 stack
+		ARG 1 target
+		ARG 2 user
 	METHOD a (Lnone/aiu;Lnone/aak;Lnone/qz;)Lnone/rc;
 		ARG 0 world
 		ARG 1 player
@@ -73,7 +95,11 @@ CLASS none/aeo net/minecraft/item/Item
 	METHOD a register (Lnone/akw;Lnone/aeo;)V
 		ARG 0 block
 		ARG 1 itemBlock
+	METHOD a canHarvestBlock (Lnone/asj;)Z
+		ARG 0 state
 	METHOD a (Lnone/dt;)Z
+	METHOD a getAttributeModifiers (Lnone/sj;)Lcom/google/common/collect/Multimap;
+		ARG 0 slotType
 	METHOD b getCreativeTab ()Lnone/adq;
 	METHOD b setContainerItem (Lnone/aeo;)Lnone/aeo;
 		ARG 0 containerItem
@@ -83,6 +109,7 @@ CLASS none/aeo net/minecraft/item/Item
 		ARG 2 player
 	METHOD b registerItemBlock (Lnone/akw;)V
 		ARG 0 block
+	METHOD c getEnchantability ()I
 	METHOD c getItemByRawId (I)Lnone/aeo;
 		ARG 0 id
 	METHOD c setTranslationKey (Ljava/lang/String;)Lnone/aeo;
@@ -91,6 +118,7 @@ CLASS none/aeo net/minecraft/item/Item
 		ARG 0 maxStackSize
 	METHOD d getItemById (Ljava/lang/String;)Lnone/aeo;
 		ARG 0 id
+	METHOD e setDurability (I)Lnone/aeo;
 	METHOD e (Lnone/aeq;)I
 		ARG 0 stack
 	METHOD f (Lnone/aeq;)Lnone/aga;
