@@ -22,6 +22,9 @@ CLASS none/bos net/minecraft/client/GlHandler
 		FIELD b green F
 		FIELD c blue F
 		FIELD d alpha F
+	CLASS none/bos$f LogicOpState
+		FIELD a capState Lnone/bos$c;
+		FIELD b opcode I
 	CLASS none/bos$h
 		FIELD b face I
 		FIELD c mode I
@@ -29,6 +32,23 @@ CLASS none/bos net/minecraft/client/GlHandler
 		FIELD a capState Lnone/bos$c;
 		FIELD b mask Z
 		FIELD c func I
+	CLASS none/bos$o LogicOp
+		FIELD a AND Lnone/bos$o;
+		FIELD b AND_INVERTED Lnone/bos$o;
+		FIELD c AND_REVERSE Lnone/bos$o;
+		FIELD d CLEAR Lnone/bos$o;
+		FIELD e COPY Lnone/bos$o;
+		FIELD f COPY_INVERTED Lnone/bos$o;
+		FIELD g EQUIV Lnone/bos$o;
+		FIELD h INVERT Lnone/bos$o;
+		FIELD i NAND Lnone/bos$o;
+		FIELD j NOOP Lnone/bos$o;
+		FIELD k NOR Lnone/bos$o;
+		FIELD l OR Lnone/bos$o;
+		FIELD m OR_INVERTED Lnone/bos$o;
+		FIELD n OR_REVERSE Lnone/bos$o;
+		FIELD o SET Lnone/bos$o;
+		FIELD p XOR Lnone/bos$o;
 	CLASS none/bos$p
 		FIELD c factor F
 		FIELD d units F
@@ -41,6 +61,7 @@ CLASS none/bos net/minecraft/client/GlHandler
 	FIELD g blendFunc Lnone/bos$b;
 	FIELD h depth Lnone/bos$k;
 	FIELD k polygonOffset Lnone/bos$p;
+	FIELD l logicOpState Lnone/bos$f;
 	FIELD n clearState Lnone/bos$d;
 	FIELD p normalizeEnabled Lnone/bos$c;
 	FIELD s shadeModel I
@@ -87,6 +108,7 @@ CLASS none/bos net/minecraft/client/GlHandler
 	METHOD a getInteger (ILjava/nio/IntBuffer;)V
 	METHOD a multMatrix (Ljava/nio/FloatBuffer;)V
 	METHOD a (Lnone/bos$u;ILjava/nio/FloatBuffer;)V
+	METHOD a logicOp (Lnone/bos$o;)V
 	METHOD a multMatrix (Lorg/lwjgl/util/vector/Quaternion;)V
 	METHOD a depthMask (Z)V
 	METHOD a colorMask (ZZZZ)V
@@ -140,4 +162,6 @@ CLASS none/bos net/minecraft/client/GlHandler
 	METHOD t genLists (I)I
 	METHOD u getString (I)Ljava/lang/String;
 	METHOD v getInteger (I)I
+	METHOD w disableColorLogicOp ()V
+	METHOD x enableColorLogicOp ()V
 	METHOD x cullFace (I)V
