@@ -3,7 +3,7 @@ CLASS none/bos net/minecraft/client/GlHandler
 		FIELD a capState Lnone/bos$c;
 		FIELD b func I
 		FIELD c ref F
-	CLASS none/bos$b
+	CLASS none/bos$b BlendFuncState
 		FIELD a capState Lnone/bos$c;
 		FIELD b sfactor I
 		FIELD c dfactor I
@@ -49,6 +49,37 @@ CLASS none/bos net/minecraft/client/GlHandler
 		FIELD n OR_REVERSE Lnone/bos$o;
 		FIELD o SET Lnone/bos$o;
 		FIELD p XOR Lnone/bos$o;
+	CLASS none/bos$r SrcBlendFactor
+		FIELD a CONSTANT_ALPHA Lnone/bos$r;
+		FIELD b CONSTANT_COLOR Lnone/bos$r;
+		FIELD c DST_ALPHA Lnone/bos$r;
+		FIELD d DST_COLOR Lnone/bos$r;
+		FIELD e ONE Lnone/bos$r;
+		FIELD f ONE_MINUS_CONSTANT_ALPHA Lnone/bos$r;
+		FIELD g ONE_MINUS_CONSTANT_COLOR Lnone/bos$r;
+		FIELD h ONE_MINUS_DST_ALPHA Lnone/bos$r;
+		FIELD i ONE_MINUS_DST_COLOR Lnone/bos$r;
+		FIELD j ONE_MINUS_SRC_ALPHA Lnone/bos$r;
+		FIELD k ONE_MINUS_SRC_COLOR Lnone/bos$r;
+		FIELD l SRC_ALPHA Lnone/bos$r;
+		FIELD m SRC_ALPHA_SATURATE Lnone/bos$r;
+		FIELD n SRC_COLOR Lnone/bos$r;
+		FIELD o ZERO Lnone/bos$r;
+	CLASS none/bos$l DstBlendFactor
+		FIELD a CONSTANT_ALPHA Lnone/bos$l;
+		FIELD b CONSTANT_COLOR Lnone/bos$l;
+		FIELD c DST_ALPHA Lnone/bos$l;
+		FIELD d DST_COLOR Lnone/bos$l;
+		FIELD e ONE Lnone/bos$l;
+		FIELD f ONE_MINUS_CONSTANT_ALPHA Lnone/bos$l;
+		FIELD g ONE_MINUS_CONSTANT_COLOR Lnone/bos$l;
+		FIELD h ONE_MINUS_DST_ALPHA Lnone/bos$l;
+		FIELD i ONE_MINUS_DST_COLOR Lnone/bos$l;
+		FIELD j ONE_MINUS_SRC_ALPHA Lnone/bos$l;
+		FIELD k ONE_MINUS_SRC_COLOR Lnone/bos$l;
+		FIELD l SRC_ALPHA Lnone/bos$l;
+		FIELD m SRC_COLOR Lnone/bos$l;
+		FIELD n ZERO Lnone/bos$l;
 	CLASS none/bos$p
 		FIELD c factor F
 		FIELD d units F
@@ -97,6 +128,7 @@ CLASS none/bos net/minecraft/client/GlHandler
 		ARG 1 mode
 	METHOD a texEnv (IIF)V
 	METHOD a texEnv (III)V
+	METHOD a blendFuncSeparate (IIII)V
 	METHOD a copyTexSubImage2D (IIIIIIII)V
 	METHOD a texImage2D (IIIIIIIILjava/nio/IntBuffer;)V
 	METHOD a readPixels (IIIIIILjava/nio/IntBuffer;)V
@@ -107,8 +139,10 @@ CLASS none/bos net/minecraft/client/GlHandler
 	METHOD a lightModel (ILjava/nio/FloatBuffer;)V
 	METHOD a getInteger (ILjava/nio/IntBuffer;)V
 	METHOD a multMatrix (Ljava/nio/FloatBuffer;)V
-	METHOD a (Lnone/bos$u;ILjava/nio/FloatBuffer;)V
 	METHOD a logicOp (Lnone/bos$o;)V
+	METHOD a blendFunc (Lnone/bos$r;Lnone/bos$l;)V
+	METHOD a blendFuncSeparate (Lnone/bos$r;Lnone/bos$l;Lnone/bos$r;Lnone/bos$l;)V
+	METHOD a (Lnone/bos$u;ILjava/nio/FloatBuffer;)V
 	METHOD a multMatrix (Lorg/lwjgl/util/vector/Quaternion;)V
 	METHOD a depthMask (Z)V
 	METHOD a colorMask (ZZZZ)V
@@ -153,6 +187,8 @@ CLASS none/bos net/minecraft/client/GlHandler
 	METHOD j enableDepthTest ()V
 	METHOD j shadeModel (I)V
 	METHOD k disableDepthTest ()V
+	METHOD l enableBlend ()V
+	METHOD m disableBlend ()V
 	METHOD m clear (I)V
 	METHOD n matrixMode (I)V
 	METHOD p disableClientState (I)V
