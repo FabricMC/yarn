@@ -2,6 +2,13 @@ CLASS none/bos net/minecraft/client/GlHandler
 	CLASS none/bos$b
 		FIELD b sfactor I
 		FIELD c dfactor I
+	CLASS none/bos$c CapabilityTracker
+		FIELD a cap I
+		FIELD b state Z
+		METHOD a enable ()V
+		METHOD b disable ()V
+		METHOD a setState (Z)V
+			ARG 0 newState
 	CLASS none/bos$d
 		FIELD a clearDepth D
 		FIELD b clearColor Lnone/bos$e;
@@ -17,14 +24,22 @@ CLASS none/bos net/minecraft/client/GlHandler
 		FIELD d units F
 	CLASS none/bos$x
 		FIELD b boundTexture I
+	FIELD d lightSystemEnabled Lnone/bos$c;
+	FIELD e lightSourceEnabled [Lnone/bos$c;
 	FIELD f colorMaterial Lnone/bos$h;
 	FIELD g blendFunc Lnone/bos$b;
 	FIELD h depth Lnone/bos$k;
 	FIELD k polygonOffset Lnone/bos$p;
+	FIELD p normalizeEnabled Lnone/bos$c;
 	FIELD s shadeModel I
+	FIELD t rescaleNormalEnabled Lnone/bos$c;
 	FIELD u colorMask Lnone/bos$g;
 	FIELD v color Lnone/bos$e;
 	METHOD A genTextures ()I
+	METHOD B disableNormalize ()V
+	METHOD C enableNormalize ()V
+	METHOD D disableRescaleNormal ()V
+	METHOD E enableRescaleNormal ()V
 	METHOD F loadIdentity ()V
 	METHOD G pushMatrix ()V
 	METHOD H popMatrix ()V
@@ -40,6 +55,7 @@ CLASS none/bos net/minecraft/client/GlHandler
 		ARG 1 units
 	METHOD a normal (FFF)V
 	METHOD a clearColor (FFFF)V
+	METHOD a disableLight (I)V
 	METHOD a alphaFunc (IF)V
 	METHOD a colorMaterial (II)V
 		ARG 0 face
@@ -64,6 +80,7 @@ CLASS none/bos net/minecraft/client/GlHandler
 	METHOD b texCoord (FF)V
 	METHOD b scale (FFF)V
 	METHOD b rotate (FFFF)V
+	METHOD b enableLight (I)V
 	METHOD b blendFunc (II)V
 	METHOD b texParameter (IIF)V
 	METHOD b texParameter (III)V
@@ -87,9 +104,11 @@ CLASS none/bos net/minecraft/client/GlHandler
 	METHOD e vertex (FFF)V
 	METHOD e deleteLists (II)V
 	METHOD e colorPointer (IIII)V
+	METHOD f disableLightSystem ()V
 	METHOD f logicOp (I)V
 	METHOD f newList (II)V
 	METHOD f drawArrays (III)V
+	METHOD g enableLightSystem ()V
 	METHOD g pixelStore (II)V
 	METHOD h deleteTextures (I)V
 	METHOD i bindTexture (I)V
