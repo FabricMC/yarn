@@ -12,8 +12,6 @@ owners of said mappings. It is also good to consult name changes with other peop
 
 WIP mapping guidelines are available [here](https://docs.google.com/document/d/15fHL-WgK0uMPAy-WJbQtxrfOVLJNlfasjsnt_wruOXA/edit). Feel free to contribute.
 
-In addition, keep in mind that in order to get your pull request accepted, you must [sign the Contributor License Agreement](http://www.clahub.com/agreements/FabricMC/pomf) first.
-
 ### Getting Started
 1. Fork and clone the repo
 2. Run `./gradlew pomf` (macOS and Linux) or `gradlew pomf` (Windows)
