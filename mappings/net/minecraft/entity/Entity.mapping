@@ -5,6 +5,7 @@ CLASS none/se net/minecraft/entity/Entity
 	FIELD Z dataTracker Lnone/km;
 	FIELD aF invulnerable Z
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD aa flags Lnone/kj;
 	FIELD ac chunkX I
 	FIELD ad chunkY I
 	FIELD ae chunkZ I
@@ -12,11 +13,15 @@ CLASS none/se net/minecraft/entity/Entity
 	FIELD an dimensionId I
 	FIELD ar uuid Ljava/util/UUID;
 	FIELD as uuidString Ljava/lang/String;
-	FIELD at isGlowing Z
+	FIELD at glowing Z
 	FIELD au passengerList Ljava/util/List;
 	FIELD c NULL_BOX Lnone/bcp;
+	FIELD g maxEntityId I
 	FIELD h entityId I
 	FIELD l world Lnone/aiu;
+	FIELD m oldX D
+	FIELD n oldY D
+	FIELD o oldZ D
 	FIELD p x D
 	FIELD q y D
 	FIELD r z D
@@ -25,16 +30,31 @@ CLASS none/se net/minecraft/entity/Entity
 	FIELD u velocityZ D
 	FIELD v yaw F
 	FIELD w pitch F
+	FIELD x oldYaw F
+	FIELD y oldPitch F
 	FIELD z onGround Z
 	METHOD O getEntityId ()I
 	METHOD R getDataTracker ()Lnone/km;
 	METHOD T invalidate ()V
 	METHOD a setUuid (Ljava/util/UUID;)V
 		ARG 0 uuid
+	METHOD a setWorld (Lnone/aiu;)V
+		ARG 0 world
 	METHOD a deserializeEntityTag (Lnone/dt;)V
 		ARG 0 tagCompound
 	METHOD a onTrackedDataSet (Lnone/kj;)V
+	METHOD a toTagList ([D)Lnone/dz;
+		ARG 0 values
+	METHOD a toTagList ([F)Lnone/dz;
+		ARG 0 values
+	METHOD aG getItemsHand ()Ljava/lang/Iterable;
+	METHOD aH getItemsArmor ()Ljava/lang/Iterable;
 	METHOD aL hasPassengers ()Z
+	METHOD aO isGlowing ()Z
+	METHOD ab getSoundSwim ()Lnone/nk;
+	METHOD b setTrackedBoolean (IZ)V
+		ARG 0 id
+		ARG 1 value
 	METHOD b interact (Lnone/aak;Lnone/qz;)Z
 		ARG 0 player
 		ARG 1 playerHand
@@ -45,7 +65,7 @@ CLASS none/se net/minecraft/entity/Entity
 	METHOD be getUuid ()Ljava/util/UUID;
 	METHOD bi getCustomName ()Ljava/lang/String;
 	METHOD bj isCustomNameVisible ()Z
-	METHOD bx getPasengerList ()Ljava/util/List;
+	METHOD bx getPassengerList ()Ljava/util/List;
 	METHOD c getBlockPos ()Lnone/cn;
 	METHOD c changeDimension (I)Lnone/se;
 		ARG 0 dimensionId
@@ -59,6 +79,8 @@ CLASS none/se net/minecraft/entity/Entity
 		ARG 0 x
 		ARG 1 y
 		ARG 2 z
+	METHOD equals (Ljava/lang/Object;)Z
+		ARG 0 other
 	METHOD f getEntity ()Lnone/se;
 	METHOD f getDistanceTo (DDD)D
 		ARG 0 x
@@ -66,6 +88,8 @@ CLASS none/se net/minecraft/entity/Entity
 		ARG 2 z
 	METHOD g getDistanceTo (Lnone/se;)F
 		ARG 0 entity
+	METHOD g setGlowing (Z)V
+		ARG 0 value
 	METHOD h getServer ()Lnet/minecraft/server/MinecraftServer;
 	METHOD h setEntityId (I)V
 		ARG 0 value
@@ -73,6 +97,8 @@ CLASS none/se net/minecraft/entity/Entity
 		ARG 0 entity
 	METHOD h_ getName ()Ljava/lang/String;
 	METHOD i_ getNameComponent ()Lnone/fa;
+	METHOD k getTrackedBoolean (I)Z
+		ARG 0 id
 	METHOD m update ()V
 	METHOD o_ getPistonBehavior ()Lnone/ayr;
 	METHOD w hasPassenger (Lnone/se;)Z
