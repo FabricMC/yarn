@@ -8,9 +8,11 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD H keyPair Ljava/security/KeyPair;
 	FIELD L demo Z
 	FIELD M bonusChest Z
+	FIELD R currentTaskName Ljava/lang/String;
 	FIELD T forceGameMode Z
 	FIELD Z serverThread Ljava/lang/Thread;
-	FIELD a userCacheFile Ljava/io/File;
+	FIELD a USER_CACHE_FILE Ljava/io/File;
+	FIELD aa serverStartTime J
 	FIELD b commandManager Lnone/m;
 	FIELD c profiler Lnone/os;
 	FIELD d worlds [Lnone/lu;
@@ -19,7 +21,9 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD p networkManager Lnone/mf;
 	FIELD q metadata Lnone/ke;
 	FIELD r rand Ljava/util/Random;
+	FIELD t serverIp Ljava/lang/String;
 	FIELD u serverPort I
+	FIELD v serverConfigManager Lnone/mr;
 	FIELD w running Z
 	FIELD z onlineMode Z
 	METHOD A getRunDirectory ()Ljava/io/File;
@@ -33,12 +37,16 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD a getWorld (I)Lnone/lu;
 		ARG 0 dimensionId
 	METHOD a scheduleOnMainThread (Ljava/lang/Runnable;)Lcom/google/common/util/concurrent/ListenableFuture;
+	METHOD a convertSave (Ljava/lang/String;)V
+	METHOD a loadSave (Ljava/lang/String;Ljava/lang/String;JLnone/aiz;Ljava/lang/String;)V
 	METHOD a setKeyPair (Ljava/security/KeyPair;)V
 		ARG 0 value
 	METHOD a loadServerIcon (Lnone/ke;)V
 	METHOD a getSpawnRadius (Lnone/lu;)I
 		ARG 0 world
 	METHOD a (Lnone/qx;)V
+	METHOD a saveWorlds (Z)V
+		ARG 0 dontLog
 	METHOD aE isMainThread ()Z
 	METHOD aH getMainThread ()Ljava/lang/Thread;
 	METHOD aJ getLogger ()Lorg/apache/logging/log4j/Logger;
@@ -56,12 +64,15 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD aw getPlayerIdleTimeout ()I
 	METHOD b setServerPort (I)V
 		ARG 0 port
+	METHOD b setCurrentTaskName (Ljava/lang/String;)V
+		ARG 0 taskName
 	METHOD b addServerInfoToCrashReport (Lnone/b;)Lnone/b;
 		ARG 0 report
 	METHOD b setDemo (Z)V
 		ARG 0 value
 	METHOD c getBlockPos ()Lnone/cn;
 	METHOD c setServerIp (Ljava/lang/String;)V
+		ARG 0 serverIp
 	METHOD c setBonusChest (Z)V
 		ARG 0 value
 	METHOD d getPos ()Lnone/bcs;
@@ -92,8 +103,13 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD i setForceGameMode (Z)V
 		ARG 0 value
 	METHOD i_ getNameComponent ()Lnone/fa;
+	METHOD j ()Z
+	METHOD k getCurrentTaskName ()Ljava/lang/String;
+	METHOD l generateTerrain ()V
 	METHOD l setMotd (Ljava/lang/String;)V
 		ARG 0 value
+	METHOD main ([Ljava/lang/String;)V
+		ARG 0 args
 	METHOD n getGameMode ()Lnone/ais;
 	METHOD o getDifficulty ()Lnone/qx;
 	METHOD run run ()V
