@@ -5,6 +5,9 @@ CLASS none/aiu net/minecraft/world/World
 	FIELD L calendar Ljava/util/Calendar;
 	FIELD N border Lnone/atd;
 	FIELD a seaLevel I
+	FIELD e entities Ljava/util/List;
+	FIELD g tileEntities Ljava/util/List;
+	FIELD h tickingTileEntities Ljava/util/List;
 	FIELD i players Ljava/util/List;
 	FIELD r rand Ljava/util/Random;
 	FIELD s dimensionProvider Lnone/auc;
@@ -23,7 +26,7 @@ CLASS none/aiu net/minecraft/world/World
 		ARG 0 pos
 	METHOD D getLocalDifficulty (Lnone/cn;)Lnone/qy;
 		ARG 0 pos
-	METHOD E isValidHeight (Lnone/cn;)Z
+	METHOD E isInvalidHeight (Lnone/cn;)Z
 		ARG 0 pos
 	METHOD G getChunkProviderStatus ()Ljava/lang/String;
 	METHOD K getSeaLevel ()I
@@ -52,6 +55,8 @@ CLASS none/aiu net/minecraft/world/World
 		ARG 0 chunkX
 		ARG 1 chunkZ
 	METHOD a spawnParticle (IZDDDDDD[I)V
+		ARG 0 typeId
+		ARG 1 shouldIgnoreRange
 	METHOD a setTime (J)V
 		ARG 0 value
 	METHOD a getEntitiesIn (Ljava/lang/Class;Lnone/bcp;)Ljava/util/List;
@@ -74,6 +79,10 @@ CLASS none/aiu net/minecraft/world/World
 		ARG 3 category
 		ARG 4 volume
 		ARG 5 pitch
+	METHOD a registerWorldListener (Lnone/aiw;)V
+		ARG 0 listener
+	METHOD a (Lnone/arb;)Z
+		ARG 0 tileEntity
 	METHOD a isAreaLoaded (Lnone/awx;)Z
 		ARG 0 area
 	METHOD a isValidPos (Lnone/cn;)Z
@@ -117,6 +126,8 @@ CLASS none/aiu net/minecraft/world/World
 		ARG 1 predicate
 	METHOD b getPlayerByUuid (Ljava/util/UUID;)Lnone/aak;
 		ARG 0 uuid
+	METHOD b unregisterWorldListener (Lnone/aiw;)V
+		ARG 0 listener
 	METHOD b isAreaLoaded (Lnone/awx;Z)Z
 		ARG 0 area
 	METHOD b getBiome (Lnone/cn;)Lnone/ajh;
@@ -124,6 +135,8 @@ CLASS none/aiu net/minecraft/world/World
 	METHOD b isEmittingRedstonePower (Lnone/cn;Lnone/cu;)Z
 		ARG 0 pos
 		ARG 1 facingFrom
+	METHOD b onEntitySpawn (Lnone/se;)V
+		ARG 0 entity
 	METHOD c (Lnone/cn;)Lnone/asj;
 	METHOD c getEmittedRedstonePower (Lnone/cn;Lnone/cu;)I
 		ARG 0 pos
@@ -146,6 +159,7 @@ CLASS none/aiu net/minecraft/world/World
 	METHOD o getBlockState (Lnone/cn;)Lnone/asj;
 		ARG 0 pos
 	METHOD r getTileEntity (Lnone/cn;)Lnone/arb;
+		ARG 0 pos
 	METHOD t updateWeather ()V
 	METHOD u getServer ()Lnet/minecraft/server/MinecraftServer;
 	METHOD x getReceivedStrongRedstonePower (Lnone/cn;)I
