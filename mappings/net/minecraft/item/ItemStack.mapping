@@ -1,10 +1,17 @@
 CLASS none/aeq net/minecraft/item/ItemStack
 	FIELD a NULL_STACK Lnone/aeq;
+	FIELD b MODIFIER_FORMAT Ljava/text/DecimalFormat;
 	FIELD c stackSize I
+	FIELD d updateCooldown I
 	FIELD e item Lnone/aeo;
 	FIELD f tag Lnone/dt;
 	FIELD g isInvalid Z
 	FIELD h metadata I
+	FIELD i holdingItemFrame Lnone/yn;
+	FIELD j lastCheckedCanHarvestBlock Lnone/akw;
+	FIELD k lastCheckedCanHarvestResult Z
+	FIELD l lastCheckedCanPlaceBlock Lnone/akw;
+	FIELD m lastCheckedCanPlaceResult Z
 	METHOD <init> (Lnone/aeo;)V
 		ARG 0 item
 	METHOD <init> (Lnone/aeo;I)V
@@ -13,6 +20,7 @@ CLASS none/aeq net/minecraft/item/ItemStack
 	METHOD <init> (Lnone/aeo;II)V
 		ARG 0 item
 		ARG 1 stackSize
+		ARG 2 metadata
 	METHOD <init> (Lnone/akw;)V
 		ARG 0 block
 	METHOD <init> (Lnone/akw;I)V
@@ -21,14 +29,28 @@ CLASS none/aeq net/minecraft/item/ItemStack
 	METHOD <init> (Lnone/akw;II)V
 		ARG 0 block
 		ARG 1 stackSize
+		ARG 2 metadata
+	METHOD A getHoldingItemFrame ()Lnone/yn;
 	METHOD B getRepairCost ()I
+	METHOD C toTextComponent ()Lnone/fa;
+	METHOD D getUpdateCooldown ()I
 	METHOD E getStackSize ()I
 	METHOD F updateIsInvalid ()V
 	METHOD a getTranslationKey ()Ljava/lang/String;
 	METHOD a split (I)Lnone/aeq;
 		ARG 0 amount
-	METHOD a damageStack (ILnone/sn;)V
-	METHOD a setTagCompound (Ljava/lang/String;Lnone/eh;)V
+	METHOD a damageDirect (ILjava/util/Random;)Z
+		ARG 0 points
+		ARG 1 rand
+	METHOD a damage (ILnone/sn;)V
+		ARG 0 points
+		ARG 1 user
+	METHOD a setChildTag (Ljava/lang/String;Lnone/eh;)V
+		ARG 0 key
+		ARG 1 value
+	METHOD a addAttributeModifier (Ljava/lang/String;Lnone/tb;Lnone/sj;)V
+		ARG 0 name
+		ARG 1 modifier
 	METHOD a activate (Lnone/aak;Lnone/aiu;Lnone/cn;Lnone/qz;Lnone/cu;FFF)Lnone/rb;
 		ARG 0 player
 		ARG 1 world
@@ -38,28 +60,68 @@ CLASS none/aeq net/minecraft/item/ItemStack
 		ARG 5 hitX
 		ARG 6 hitY
 		ARG 7 hitZ
+	METHOD a interactWithEntity (Lnone/aak;Lnone/sn;Lnone/qz;)Z
+		ARG 0 user
+		ARG 1 target
+		ARG 2 hand
 	METHOD a getTooltip (Lnone/aak;Z)Ljava/util/List;
 		ARG 0 player
 		ARG 1 advanced
-	METHOD a (Lnone/aeq;)Z
+	METHOD a isEqualIgnoreTags (Lnone/aeq;)Z
 		ARG 0 other
 	METHOD a areTagsEqual (Lnone/aeq;Lnone/aeq;)Z
+		ARG 0 a
+		ARG 1 b
 	METHOD a addEnchantment (Lnone/ahm;I)V
 		ARG 0 enchantment
 		ARG 1 level
+	METHOD a onCrafted (Lnone/aiu;Lnone/aak;I)V
+		ARG 0 world
+		ARG 1 player
+		ARG 2 amount
 	METHOD a onRightClick (Lnone/aiu;Lnone/aak;Lnone/qz;)Lnone/rc;
 		ARG 0 world
 		ARG 1 player
 		ARG 2 hand
+	METHOD a onBlockBroken (Lnone/aiu;Lnone/asj;Lnone/cn;Lnone/aak;)V
+		ARG 0 world
+		ARG 1 state
+		ARG 2 pos
+		ARG 3 user
+	METHOD a update (Lnone/aiu;Lnone/se;IZ)V
+		ARG 0 world
+		ARG 1 entity
+		ARG 2 invSlot
+		ARG 3 held
+	METHOD a onItemStopUsing (Lnone/aiu;Lnone/sn;I)V
+		ARG 0 world
+		ARG 1 user
+		ARG 2 remainingTime
+	METHOD a getCustomCanHarvest (Lnone/akw;)Z
+		ARG 0 target
 	METHOD a getMiningStrength (Lnone/asj;)F
 		ARG 0 state
 	METHOD a serialize (Lnone/dt;)Lnone/dt;
 		ARG 0 tag
+	METHOD a getAttributeModifiers (Lnone/sj;)Lcom/google/common/collect/Multimap;
+		ARG 0 slot
+	METHOD a onEntityDamaged (Lnone/sn;Lnone/aak;)V
+		ARG 0 target
+		ARG 1 user
+	METHOD a setHoldingItemFrame (Lnone/yn;)V
+		ARG 0 value
 	METHOD b isInvalid ()Z
 	METHOD b setDamage (I)V
 		ARG 0 damage
-	METHOD b (Lnone/aeq;)Z
+	METHOD b isEqualIgnoreDurability (Lnone/aeq;)Z
 		ARG 0 other
+	METHOD b areEqual (Lnone/aeq;Lnone/aeq;)Z
+		ARG 0 a
+		ARG 1 b
+	METHOD b getCustomCanPlace (Lnone/akw;)Z
+		ARG 0 target
+	METHOD b canHarvestBlock (Lnone/asj;)Z
+		ARG 0 state
 	METHOD b setTag (Lnone/dt;)V
 		ARG 0 tag
 	METHOD c getItem ()Lnone/aeo;
@@ -67,11 +129,19 @@ CLASS none/aeq net/minecraft/item/ItemStack
 		ARG 0 value
 	METHOD c getOrCreateTagCompound (Ljava/lang/String;)Lnone/dt;
 		ARG 0 key
+	METHOD c areEqualIgnoreTags (Lnone/aeq;Lnone/aeq;)Z
+		ARG 0 a
+		ARG 1 b
 	METHOD d getMaxStackSize ()I
+	METHOD d getUpdateCooldown (I)V
+		ARG 0 value
 	METHOD d getTagCompound (Ljava/lang/String;)Lnone/dt;
 		ARG 0 key
 	METHOD d isEqual (Lnone/aeq;)Z
 		ARG 0 other
+	METHOD d areEqualIgnoreDurability (Lnone/aeq;Lnone/aeq;)Z
+		ARG 0 a
+		ARG 1 b
 	METHOD e setStackSize (I)V
 		ARG 0 stackSize
 	METHOD e setDisplayName (Ljava/lang/String;)Lnone/aeq;
@@ -79,6 +149,7 @@ CLASS none/aeq net/minecraft/item/ItemStack
 	METHOD f hasDurability ()Z
 	METHOD f addStackSize (I)V
 		ARG 0 amount
+	METHOD g hasVariants ()Z
 	METHOD g subtractStackSize (I)V
 		ARG 0 amount
 	METHOD h isDamaged ()Z
@@ -86,6 +157,8 @@ CLASS none/aeq net/minecraft/item/ItemStack
 	METHOD j getMetadata ()I
 	METHOD k getDurability ()I
 	METHOD l copy ()Lnone/aeq;
+	METHOD m getMaxUseTime ()I
+	METHOD n getUseAction ()Lnone/aga;
 	METHOD o hasTag ()Z
 	METHOD p getTag ()Lnone/dt;
 	METHOD q getEnchantmentList ()Lnone/dz;
@@ -94,4 +167,7 @@ CLASS none/aeq net/minecraft/item/ItemStack
 	METHOD t hasDisplayName ()Z
 	METHOD u hasEnchantmentGlow ()Z
 	METHOD v getRarity ()Lnone/afe;
+	METHOD w isEnchantable ()Z
 	METHOD x hasEnchantments ()Z
+	METHOD y hasBlockInteraction ()Z
+	METHOD z isHeldInItemFrame ()Z
