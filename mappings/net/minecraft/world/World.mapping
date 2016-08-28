@@ -5,7 +5,7 @@ CLASS none/aiu net/minecraft/world/World
 	FIELD L calendar Ljava/util/Calendar;
 	FIELD N border Lnone/atd;
 	FIELD a seaLevel I
-	FIELD i playerList Ljava/util/List;
+	FIELD i players Ljava/util/List;
 	FIELD r rand Ljava/util/Random;
 	FIELD s dimensionProvider Lnone/auc;
 	FIELD u listeners Ljava/util/List;
@@ -41,16 +41,17 @@ CLASS none/aiu net/minecraft/world/World
 	METHOD a getChunk (II)Lnone/atm;
 		ARG 0 chunkX
 		ARG 1 chunkZ
-	METHOD a isValidRegion (IIIIIIZ)Z
+	METHOD a isAreaLoaded (IIIIIIZ)Z
 		ARG 0 minX
 		ARG 1 minY
 		ARG 2 minZ
 		ARG 3 maxX
 		ARG 4 maxY
 		ARG 5 maxZ
-	METHOD a hasChunk (IIZ)Z
+	METHOD a isChunkLoaded (IIZ)Z
 		ARG 0 chunkX
 		ARG 1 chunkZ
+	METHOD a spawnParticle (IZDDDDDD[I)V
 	METHOD a setTime (J)V
 		ARG 0 value
 	METHOD a getEntitiesIn (Ljava/lang/Class;Lnone/bcp;)Ljava/util/List;
@@ -73,36 +74,36 @@ CLASS none/aiu net/minecraft/world/World
 		ARG 3 category
 		ARG 4 volume
 		ARG 5 pitch
-	METHOD a isValidRegion (Lnone/awx;)Z
-		ARG 0 region
+	METHOD a isAreaLoaded (Lnone/awx;)Z
+		ARG 0 area
 	METHOD a isValidPos (Lnone/cn;)Z
 		ARG 0 pos
-	METHOD a isValidRegion (Lnone/cn;I)Z
-		ARG 0 center
-		ARG 1 radius
-	METHOD a isValidRegion (Lnone/cn;IZ)Z
-		ARG 0 center
-		ARG 1 radius
+	METHOD a (Lnone/cn;Lnone/asj;)Z
 	METHOD a setBlockState (Lnone/cn;Lnone/asj;I)Z
 		ARG 0 pos
 		ARG 1 state
 		ARG 2 flags
-	METHOD a isValidRegion (Lnone/cn;Lnone/cn;)Z
-		ARG 0 minPos
-		ARG 1 maxPos
-	METHOD a isValidRegion (Lnone/cn;Lnone/cn;Z)Z
-		ARG 0 minPos
-		ARG 1 maxPos
+	METHOD a isAreaLoaded (Lnone/cn;Lnone/cn;)Z
+		ARG 0 min
+		ARG 1 max
+	METHOD a isAreaLoaded (Lnone/cn;Lnone/cn;Z)Z
+		ARG 0 min
+		ARG 1 max
 	METHOD a getEmittedStrongRedstonePower (Lnone/cn;Lnone/cu;)I
 		ARG 0 pos
 		ARG 1 facing
-	METHOD a isValid (Lnone/cn;Z)Z
+	METHOD a isBlockLoaded (Lnone/cn;Z)Z
 		ARG 0 pos
 	METHOD a spawnParticle (Lnone/dd;DDDDDD[I)V
+		ARG 0 type
+	METHOD a spawnParticle (Lnone/dd;ZDDDDDD[I)V
+		ARG 0 type
+		ARG 1 shouldIgnoreRange
 	METHOD a sendPacket (Lnone/fl;)V
 		ARG 0 packet
 	METHOD a spawnEntity (Lnone/se;)Z
 		ARG 0 entity
+	METHOD ac ()Ljava/util/Calendar;
 	METHOD ae getDifficulty ()Lnone/qx;
 	METHOD aj getWorldBorder ()Lnone/atd;
 	METHOD ak getLootTableHandler ()Lnone/bbj;
@@ -116,8 +117,8 @@ CLASS none/aiu net/minecraft/world/World
 		ARG 1 predicate
 	METHOD b getPlayerByUuid (Ljava/util/UUID;)Lnone/aak;
 		ARG 0 uuid
-	METHOD b isValidRegion (Lnone/awx;Z)Z
-		ARG 0 region
+	METHOD b isAreaLoaded (Lnone/awx;Z)Z
+		ARG 0 area
 	METHOD b getBiome (Lnone/cn;)Lnone/ajh;
 		ARG 0 pos
 	METHOD b isEmittingRedstonePower (Lnone/cn;Lnone/cu;)Z
@@ -133,6 +134,8 @@ CLASS none/aiu net/minecraft/world/World
 	METHOD d isAir (Lnone/cn;)Z
 		ARG 0 pos
 	METHOD e updateSleepingStatus ()V
+	METHOD e isBlockLoaded (Lnone/cn;)Z
+		ARG 0 pos
 	METHOD f getChunk (Lnone/cn;)Lnone/atm;
 		ARG 0 pos
 	METHOD f (Lnone/se;)V
@@ -143,6 +146,7 @@ CLASS none/aiu net/minecraft/world/World
 	METHOD o getBlockState (Lnone/cn;)Lnone/asj;
 		ARG 0 pos
 	METHOD r getTileEntity (Lnone/cn;)Lnone/arb;
+	METHOD t updateWeather ()V
 	METHOD u getServer ()Lnet/minecraft/server/MinecraftServer;
 	METHOD x getReceivedStrongRedstonePower (Lnone/cn;)I
 		ARG 0 pos
