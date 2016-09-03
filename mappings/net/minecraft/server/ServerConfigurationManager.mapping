@@ -34,9 +34,9 @@ CLASS none/mr net/minecraft/server/ServerConfigurationManager
 	FIELD h server Lnet/minecraft/server/MinecraftServer;
 	FIELD i players Ljava/util/List;
 	FIELD j playerMap Ljava/util/Map;
-	FIELD k bannedPlayersList Lnone/mw;
-	FIELD l bannedIpList Lnone/mo;
-	FIELD m opList Lnone/ms;
+	FIELD k bannedProfiles Lnone/mw;
+	FIELD l bannedIps Lnone/mo;
+	FIELD m operators Lnone/ms;
 	FIELD n whitelist Lnone/my;
 	FIELD o statisticsMap Ljava/util/Map;
 	FIELD p playerSaveHandler Lnone/bay;
@@ -44,16 +44,24 @@ CLASS none/mr net/minecraft/server/ServerConfigurationManager
 	FIELD r viewDistance I
 	FIELD s gameMode Lnone/ais;
 	FIELD u latencyUpdateTimer I
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;)V
+		ARG 0 server
+	METHOD a reloadWhitelist ()V
 	METHOD a setViewDistance (I)V
+	METHOD a addToOperators (Lcom/mojang/authlib/GameProfile;)V
+		ARG 0 profile
 	METHOD a getPlayerByName (Ljava/lang/String;)Lnone/lw;
 		ARG 0 name
-	METHOD a getConnectMessage (Ljava/net/SocketAddress;Lcom/mojang/authlib/GameProfile;)Ljava/lang/String;
+	METHOD a getLoginRejectionReason (Ljava/net/SocketAddress;Lcom/mojang/authlib/GameProfile;)Ljava/lang/String;
 		ARG 0 connectingAddress
 		ARG 1 gameProfile
 	METHOD a getPlayer (Ljava/util/UUID;)Lnone/lw;
 		ARG 0 uuid
 	METHOD a setGameMode (Lnone/ais;)V
 		ARG 0 gameMode
+	METHOD a handlePlayerLogin (Lnone/eq;Lnone/lw;)V
+		ARG 0 connection
+		ARG 1 playerEntity
 	METHOD a sendToAll (Lnone/fl;)V
 		ARG 0 packet
 	METHOD a sendToWorld (Lnone/fl;I)V
@@ -61,20 +69,31 @@ CLASS none/mr net/minecraft/server/ServerConfigurationManager
 		ARG 1 dimensionId
 	METHOD a setWhitelistEnabled (Z)V
 		ARG 0 value
+	METHOD b removeFromOperators (Lcom/mojang/authlib/GameProfile;)V
+		ARG 0 profile
 	METHOD b savePlayerData (Lnone/lw;)V
 		ARG 0 entityPlayerServer
+	METHOD b sendPermissionLevel (Lnone/lw;I)V
+		ARG 0 player
+		ARG 1 permissionLevel
 	METHOD c getServer ()Lnet/minecraft/server/MinecraftServer;
+	METHOD c removeFromWhitelist (Lcom/mojang/authlib/GameProfile;)V
+		ARG 0 profile
+	METHOD d addToWhitelist (Lcom/mojang/authlib/GameProfile;)V
+		ARG 0 profile
 	METHOD e updatePlayerLatency ()V
 	METHOD e isWhitelisted (Lcom/mojang/authlib/GameProfile;)Z
 		ARG 0 profile
 	METHOD f getPlayerNames ()[Ljava/lang/String;
 	METHOD g getPlayerProfiles ()[Lcom/mojang/authlib/GameProfile;
-	METHOD h isOp (Lcom/mojang/authlib/GameProfile;)Z
+	METHOD h getBannedProfiles ()Lnone/mw;
+	METHOD h isOperator (Lcom/mojang/authlib/GameProfile;)Z
 		ARG 0 profile
+	METHOD i getBannedIps ()Lnone/mo;
 	METHOD j saveAllPlayerData ()V
 	METHOD k getWhitelist ()Lnone/my;
 	METHOD l getWhitelistedNames ()[Ljava/lang/String;
-	METHOD m getOpList ()Lnone/ms;
+	METHOD m getOperators ()Lnone/ms;
 	METHOD n getOppedNames ()[Ljava/lang/String;
 	METHOD o getCurrentPlayerCount ()I
 	METHOD p getMaxPlayerCount ()I
