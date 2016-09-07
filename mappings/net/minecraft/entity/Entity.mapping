@@ -4,13 +4,16 @@ CLASS none/se net/minecraft/entity/Entity
 	FIELD S rand Ljava/util/Random;
 	FIELD Z dataTracker Lnone/km;
 	FIELD aB NAME_TRACKER Lnone/kj;
+	FIELD aC NAME_VISIBLE_TRACKER Lnone/kj;
 	FIELD aF invulnerable Z
+	FIELD aG commandStats Lnone/o;
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD aa flags Lnone/kj;
 	FIELD ac chunkX I
 	FIELD ad chunkY I
 	FIELD ae chunkZ I
 	FIELD ak portalCooldown I
+	FIELD al inPortal Z
 	FIELD an dimensionId I
 	FIELD ar uuid Ljava/util/UUID;
 	FIELD as uuidString Ljava/lang/String;
@@ -66,6 +69,8 @@ CLASS none/se net/minecraft/entity/Entity
 		ARG 4 power
 	METHOD a setWorld (Lnone/aiu;)V
 		ARG 0 world
+	METHOD a addCrashInformation (Lnone/c;)V
+		ARG 0 element
 	METHOD a setPositionAndAngles (Lnone/cn;FF)V
 		ARG 0 pos
 		ARG 1 yaw
@@ -94,10 +99,13 @@ CLASS none/se net/minecraft/entity/Entity
 		ARG 0 values
 	METHOD aG getItemsHand ()Ljava/lang/Iterable;
 	METHOD aH getItemsArmor ()Ljava/lang/Iterable;
+	METHOD aI getItemsEquipped ()Ljava/lang/Iterable;
+	METHOD aK hasVehicle ()Z
 	METHOD aL hasPassengers ()Z
 	METHOD aO isGlowing ()Z
 	METHOD aU getHeadPitch ()F
-	METHOD ab getSoundSwim ()Lnone/nk;
+	METHOD aa getSoundSwim ()Lnone/nk;
+	METHOD ab getSoundSplash ()Lnone/nk;
 	METHOD au isValid ()Z
 	METHOD b setPosition (DDD)V
 		ARG 0 x
@@ -133,6 +141,8 @@ CLASS none/se net/minecraft/entity/Entity
 	METHOD c getBlockPos ()Lnone/cn;
 	METHOD c changeDimension (I)Lnone/se;
 		ARG 0 dimensionId
+	METHOD c setCustomName (Ljava/lang/String;)V
+		ARG 0 value
 	METHOD c getSquaredDistanceTo (Lnone/cn;)D
 		ARG 0 pos
 	METHOD d getPos ()Lnone/bcs;
@@ -170,6 +180,8 @@ CLASS none/se net/minecraft/entity/Entity
 		ARG 0 entity
 	METHOD h_ getName ()Ljava/lang/String;
 	METHOD i_ getNameComponent ()Lnone/fa;
+	METHOD j setCustomNameVisible (Z)V
+		ARG 0 value
 	METHOD k getTrackedBoolean (I)Z
 		ARG 0 id
 	METHOD m update ()V
