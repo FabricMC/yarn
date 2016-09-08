@@ -4,12 +4,15 @@ CLASS none/se net/minecraft/entity/Entity
 	FIELD S rand Ljava/util/Random;
 	FIELD T age I
 	FIELD Z dataTracker Lnone/km;
-	FIELD aB NAME_TRACKER Lnone/kj;
-	FIELD aC NAME_VISIBLE_TRACKER Lnone/kj;
+	FIELD aA AIR Lnone/kj;
+	FIELD aB NAME Lnone/kj;
+	FIELD aC NAME_VISIBLE Lnone/kj;
+	FIELD aD SILENT Lnone/kj;
+	FIELD aE NO_GRAVITY Lnone/kj;
 	FIELD aF invulnerable Z
 	FIELD aG commandStats Lnone/o;
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD aa flags Lnone/kj;
+	FIELD aa ENTITY_FLAGS Lnone/kj;
 	FIELD ac chunkX I
 	FIELD ad chunkY I
 	FIELD ae chunkZ I
@@ -22,6 +25,7 @@ CLASS none/se net/minecraft/entity/Entity
 	FIELD au passengerList Ljava/util/List;
 	FIELD av vehicle Lnone/se;
 	FIELD aw boundingBox Lnone/bcp;
+	FIELD az fireTimer I
 	FIELD b EMPTY_STACK_LIST Ljava/util/List;
 	FIELD c NULL_BOX Lnone/bcp;
 	FIELD g maxEntityId I
@@ -46,6 +50,7 @@ CLASS none/se net/minecraft/entity/Entity
 	METHOD O getEntityId ()I
 	METHOD R getDataTracker ()Lnone/km;
 	METHOD T invalidate ()V
+	METHOD X extinguish ()V
 	METHOD a setPositionAnglesAndUpdate (DDDFF)V
 		ARG 0 x
 		ARG 1 y
@@ -57,6 +62,16 @@ CLASS none/se net/minecraft/entity/Entity
 		ARG 1 commandName
 	METHOD a setUuid (Ljava/util/UUID;)V
 		ARG 0 uuid
+	METHOD a dropItems (Lnone/aeo;I)Lnone/yy;
+		ARG 0 item
+		ARG 1 amount
+	METHOD a dropItems (Lnone/aeo;IF)Lnone/yy;
+		ARG 0 item
+		ARG 1 amount
+		ARG 2 yOffset
+	METHOD a dropItems (Lnone/aeq;F)Lnone/yy;
+		ARG 0 stack
+		ARG 1 yOffset
 	METHOD a getEffectiveExplosionResistance (Lnone/aip;Lnone/aiu;Lnone/cn;Lnone/asj;)F
 		ARG 0 explosion
 		ARG 1 world
@@ -81,6 +96,7 @@ CLASS none/se net/minecraft/entity/Entity
 	METHOD a appendCommandFeedback (Lnone/fa;)V
 		ARG 0 component
 	METHOD a onTrackedDataSet (Lnone/kj;)V
+		ARG 0 data
 	METHOD a playSoundAtEntity (Lnone/nk;FF)V
 		ARG 0 sound
 		ARG 1 volume
@@ -94,6 +110,8 @@ CLASS none/se net/minecraft/entity/Entity
 	METHOD a setEquippedStack (Lnone/sj;Lnone/aeq;)V
 		ARG 0 slot
 		ARG 1 stack
+	METHOD a onStruckByLightning (Lnone/yv;)V
+		ARG 0 lightning
 	METHOD a toTagList ([D)Lnone/dz;
 		ARG 0 values
 	METHOD a toTagList ([F)Lnone/dz;
@@ -105,9 +123,13 @@ CLASS none/se net/minecraft/entity/Entity
 	METHOD aK hasVehicle ()Z
 	METHOD aL hasPassengers ()Z
 	METHOD aO isGlowing ()Z
+	METHOD aP isInvisible ()Z
+	METHOD aR getAir ()I
 	METHOD aU getHeadPitch ()F
 	METHOD aa getSoundSwim ()Lnone/nk;
 	METHOD ab getSoundSplash ()Lnone/nk;
+	METHOD ad isSilent ()Z
+	METHOD ae isUnaffectedByGravity ()Z
 	METHOD au isValid ()Z
 	METHOD b setPosition (DDD)V
 		ARG 0 x
@@ -122,8 +144,8 @@ CLASS none/se net/minecraft/entity/Entity
 	METHOD b setYawAndPitch (FF)V
 		ARG 0 yaw
 		ARG 1 pitch
-	METHOD b setTrackedBoolean (IZ)V
-		ARG 0 id
+	METHOD b setEntityFlag (IZ)V
+		ARG 0 index
 		ARG 1 value
 	METHOD b interact (Lnone/aak;Lnone/qz;)Z
 		ARG 0 player
@@ -149,10 +171,14 @@ CLASS none/se net/minecraft/entity/Entity
 		ARG 0 value
 	METHOD c getSquaredDistanceTo (Lnone/cn;)D
 		ARG 0 pos
+	METHOD c setSilent (Z)V
+		ARG 0 value
 	METHOD d getPos ()Lnone/bcs;
 	METHOD d move (DDD)V
 	METHOD d getSquaredDistanceToCenter (Lnone/cn;)D
 		ARG 0 pos
+	METHOD d setUnaffectedByGravity (Z)V
+		ARG 0 value
 	METHOD e getWorld ()Lnone/aiu;
 	METHOD e getSquaredDistanceTo (DDD)D
 		ARG 0 x
@@ -182,14 +208,21 @@ CLASS none/se net/minecraft/entity/Entity
 		ARG 0 value
 	METHOD h getSquaredDistanceTo (Lnone/se;)D
 		ARG 0 entity
+	METHOD h setInvisible (Z)V
+		ARG 0 value
 	METHOD h_ getName ()Ljava/lang/String;
+	METHOD i initDataTracker ()V
+	METHOD i setOnFire (I)V
+		ARG 0 seconds
 	METHOD i setInvulnurable (Z)V
 		ARG 0 value
 	METHOD i_ getNameComponent ()Lnone/fa;
 	METHOD j setCustomNameVisible (Z)V
 		ARG 0 value
-	METHOD k getTrackedBoolean (I)Z
-		ARG 0 id
+	METHOD k getEntityFlag (I)Z
+		ARG 0 index
+	METHOD l setAir (I)V
+		ARG 0 value
 	METHOD m update ()V
 	METHOD n_ hasCustomName ()Z
 	METHOD o startRiding (Lnone/se;)V
