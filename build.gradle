@@ -14,6 +14,13 @@ buildscript {
 }
 
 def minecraft_version = "16w33a"
+def pomfVersion = "${minecraft_version}"
+
+def ENV = System.getenv()
+
+if (ENV.BUILD_NUMBER) {
+    pomfVersion = pomfVersion + "." + "${System.getenv().BUILD_NUMBER}"
+}
 
 import groovy.json.JsonSlurper
 import org.apache.commons.io.FileUtils
@@ -125,6 +132,6 @@ tasks.pomf.dependsOn "setupPomf"
 task build(type: Zip) {
 	from "mappings/"
 	include "**/*"
-	archiveName "pomf-enigma-${minecraft_version}.zip"
+	archiveName "pomf-enigma-${pomfVersion}.zip"
 	destinationDir(file("build/libs"))
 }
