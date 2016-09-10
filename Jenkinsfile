@@ -1,7 +1,7 @@
 node {
    stage 'Checkout'
 
-   git url: 'https://github.com/FabricMC/pomf.git'
+   checkout scm
 
    stage 'Build'
 
