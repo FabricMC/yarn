@@ -4,12 +4,15 @@ CLASS none/bdo net/minecraft/client/Minecraft
 	FIELD J LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD K RESOURCE_LOGO Lnone/kp;
 	FIELD L DISPLAY_MODES Ljava/util/List;
+	FIELD P currentServerEntry Lnone/bmh;
 	FIELD Q textureManager Lnone/bxc;
 	FIELD R instance Lnone/bdo;
+	FIELD S migrationHandler Lnone/pf;
 	FIELD T fullscreen Z
 	FIELD Z snooper Lnone/rj;
 	FIELD aB defaultResourcePacks Ljava/util/List;
 	FIELD aC mcResourcePack Lnone/bxr;
+	FIELD aE languageManager Lnone/byl;
 	FIELD aF blockColorMap Lnone/bdx;
 	FIELD aG itemColorMap Lnone/bea;
 	FIELD aI spriteAtlas Lnone/bxa;
@@ -17,12 +20,16 @@ CLASS none/bdo net/minecraft/client/Minecraft
 	FIELD aK musicTracker Lnone/car;
 	FIELD aM sessionService Lcom/mojang/authlib/minecraft/MinecraftSessionService;
 	FIELD aP thread Ljava/lang/Thread;
-	FIELD aQ blockModelManager Lnone/bzn;
+	FIELD aQ bakedModelManager Lnone/bzn;
+	FIELD aR blockRenderManager Lnone/bpm;
+	FIELD a isSystemMac Z
 	FIELD aa entityRenderManager Lnone/bta;
 	FIELD ab itemRenderer Lnone/bto;
 	FIELD ad cameraEntity Lnone/se;
 	FIELD aj server Lnone/caj;
+	FIELD al gameVersion Ljava/lang/String;
 	FIELD an netProxy Ljava/net/Proxy;
+	FIELD ao worldStorage Lnone/bau;
 	FIELD ap fps I
 	FIELD ar autoConnectServerIp Ljava/lang/String;
 	FIELD as autoConnectServerPort I
@@ -42,6 +49,8 @@ CLASS none/bdo net/minecraft/client/Minecraft
 	FIELD t hitResult Lnone/bcq;
 	FIELD u settings Lnone/bdq;
 	FIELD w runDirectory Ljava/io/File;
+	METHOD B checkMaxTextureSize ()I
+	METHOD C getCurrentServerEntry ()Lnone/bmh;
 	METHOD F getServer ()Lnone/caj;
 	METHOD G onShutdown ()V
 	METHOD H getSnooper ()Lnone/rj;
@@ -50,6 +59,7 @@ CLASS none/bdo net/minecraft/client/Minecraft
 	METHOD M getNetworkProxy ()Ljava/net/Proxy;
 	METHOD N getTextureManager ()Lnone/bxc;
 	METHOD O getResourceManager ()Lnone/bya;
+	METHOD Q getLanguageManager ()Lnone/byl;
 	METHOD R getSpriteAtlas ()Lnone/bxa;
 	METHOD S is64Bit ()Z
 	METHOD U getSoundLoader ()Lnone/cau;
@@ -65,6 +75,8 @@ CLASS none/bdo net/minecraft/client/Minecraft
 		ARG 0 title
 	METHOD a setGui (Lnone/bgk;)V
 		ARG 0 screen
+	METHOD a setCurrentServerEntry (Lnone/bmh;)V
+		ARG 0 value
 	METHOD a drawLogo (Lnone/bxc;)V
 		ARG 0 tm
 	METHOD a addSnooperInfo (Lnone/rj;)V
@@ -73,10 +85,13 @@ CLASS none/bdo net/minecraft/client/Minecraft
 		ARG 0 entity
 	METHOD aB handleMouseEvents ()V
 	METHOD aC doItemPick ()V
+	METHOD aD getCurrentAction ()Ljava/lang/String;
 	METHOD aE isMainThread ()Z
 	METHOD aa getCameraEntity ()Lnone/se;
+	METHOD ab getBlockRenderManager ()Lnone/bpm;
 	METHOD ac getEntityRenderManager ()Lnone/bta;
 	METHOD ad getItemRenderer ()Lnone/bto;
+	METHOD ai getMigrationHandler ()Lnone/pf;
 	METHOD ak getBlockColorMap ()Lnone/bdx;
 	METHOD am hasReducedDebugInfo ()Z
 	METHOD an init ()V
@@ -91,6 +106,8 @@ CLASS none/bdo net/minecraft/client/Minecraft
 	METHOD az handleKeyboardEvents ()V
 	METHOD b addSnooperInitialInfo (Lnone/rj;)V
 		ARG 0 snooper
+	METHOD c getGameVersion ()Ljava/lang/String;
+	METHOD g getWorldStorage ()Lnone/bau;
 	METHOD h stop ()V
 	METHOD k getMaxFps ()I
 	METHOD l limitFramerate ()Z
