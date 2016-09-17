@@ -6,6 +6,9 @@ CLASS none/sf net/minecraft/entity/Entity
 			ARG 2 version
 	FIELD F invalid Z
 	FIELD L fallDistance F
+	FIELD M prevRenderX D
+	FIELD N prevRenderY D
+	FIELD O prevRenderZ D
 	FIELD S rand Ljava/util/Random;
 	FIELD T age I
 	FIELD Z dataTracker Lnone/km;
@@ -21,6 +24,7 @@ CLASS none/sf net/minecraft/entity/Entity
 	FIELD ac chunkX I
 	FIELD ad chunkY I
 	FIELD ae chunkZ I
+	FIELD aj velocityDirty Z
 	FIELD ak portalCooldown I
 	FIELD al inPortal Z
 	FIELD an dimensionId I
@@ -36,9 +40,9 @@ CLASS none/sf net/minecraft/entity/Entity
 	FIELD g maxEntityId I
 	FIELD h entityId I
 	FIELD l world Lnone/aiv;
-	FIELD m oldX D
-	FIELD n oldY D
-	FIELD o oldZ D
+	FIELD m prevX D
+	FIELD n prevY D
+	FIELD o prevZ D
 	FIELD p x D
 	FIELD q y D
 	FIELD r z D
@@ -47,11 +51,12 @@ CLASS none/sf net/minecraft/entity/Entity
 	FIELD u velocityZ D
 	FIELD v yaw F
 	FIELD w pitch F
-	FIELD x oldYaw F
-	FIELD y oldPitch F
+	FIELD x prevYaw F
+	FIELD y prevPitch F
 	FIELD z onGround Z
 	METHOD <init> (Lnone/aiv;)V
 		ARG 0 world
+	METHOD H updatePortalCooldown ()V
 	METHOD O getEntityId ()I
 	METHOD R getDataTracker ()Lnone/km;
 	METHOD T invalidate ()V
@@ -67,6 +72,10 @@ CLASS none/sf net/minecraft/entity/Entity
 		ARG 1 commandName
 	METHOD a setUuid (Ljava/util/UUID;)V
 		ARG 0 uuid
+	METHOD a interact (Lnone/aal;Lnone/bcu;Lnone/ra;)Lnone/rc;
+		ARG 0 player
+		ARG 1 hitPos
+		ARG 2 hand
 	METHOD a dropStack (Lnone/aep;I)Lnone/yz;
 		ARG 0 item
 		ARG 1 amount
@@ -126,6 +135,7 @@ CLASS none/sf net/minecraft/entity/Entity
 		ARG 0 values
 	METHOD a toTagList ([F)Lnone/dz;
 		ARG 0 values
+	METHOD aE getDefaultPortalCooldown ()I
 	METHOD aG getItemsHand ()Ljava/lang/Iterable;
 	METHOD aH getItemsArmor ()Ljava/lang/Iterable;
 	METHOD aI getItemsEquipped ()Ljava/lang/Iterable;
@@ -160,7 +170,7 @@ CLASS none/sf net/minecraft/entity/Entity
 		ARG 1 value
 	METHOD b interact (Lnone/aal;Lnone/ra;)Z
 		ARG 0 player
-		ARG 1 playerHand
+		ARG 1 hand
 	METHOD b serializeCustomData (Lnone/dt;)V
 		ARG 0 tag
 	METHOD b isInvulnerableTo (Lnone/rq;)Z
@@ -212,6 +222,10 @@ CLASS none/sf net/minecraft/entity/Entity
 	METHOD f deserialize (Lnone/dt;)V
 		ARG 0 tag
 	METHOD g shouldEchoCommandFeedback ()Z
+	METHOD g addVelocity (DDD)V
+		ARG 0 deltaX
+		ARG 1 deltaY
+		ARG 2 deltaZ
 	METHOD g getDistanceTo (Lnone/sf;)F
 		ARG 0 entity
 	METHOD g setGlowing (Z)V
@@ -226,6 +240,10 @@ CLASS none/sf net/minecraft/entity/Entity
 		ARG 0 value
 	METHOD h_ getName ()Ljava/lang/String;
 	METHOD i initDataTracker ()V
+	METHOD i setVelocityClient (DDD)V
+		ARG 0 x
+		ARG 1 y
+		ARG 2 z
 	METHOD i setOnFireFor (I)V
 		ARG 0 seconds
 	METHOD i setInvulnerable (Z)V
