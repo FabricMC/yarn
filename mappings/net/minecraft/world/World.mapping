@@ -5,12 +5,14 @@ CLASS none/aiv net/minecraft/world/World
 	FIELD L calendar Ljava/util/Calendar;
 	FIELD N border Lnone/atf;
 	FIELD a seaLevel I
+	FIELD c droppedBlockEntities Ljava/util/List;
 	FIELD e entities Ljava/util/List;
+	FIELD f droppedEntities Ljava/util/List;
 	FIELD g blockEntities Ljava/util/List;
 	FIELD h tickingBlockEntities Ljava/util/List;
 	FIELD i players Ljava/util/List;
 	FIELD r rand Ljava/util/Random;
-	FIELD s dimensionProvider Lnone/aue;
+	FIELD s provider Lnone/aue;
 	FIELD u listeners Ljava/util/List;
 	FIELD v chunkProvider Lnone/atj;
 	FIELD w saveHandler Lnone/bau;
@@ -18,9 +20,9 @@ CLASS none/aiv net/minecraft/world/World
 	METHOD <init> (Lnone/bau;Lnone/bat;Lnone/aue;Lnone/os;Z)V
 		ARG 0 saveHandler
 		ARG 1 properties
-		ARG 2 dimensionProvider
+		ARG 2 provider
 		ARG 3 profiler
-		ARG 4 isClient
+		ARG 4 remote
 	METHOD A ()Lnone/ajm;
 	METHOD A setSpawnPos (Lnone/cn;)V
 		ARG 0 pos
@@ -63,6 +65,8 @@ CLASS none/aiv net/minecraft/world/World
 	METHOD a getEntitiesIn (Ljava/lang/Class;Lnone/bcr;Lcom/google/common/base/Predicate;)Ljava/util/List;
 	METHOD a getPlayerByName (Ljava/lang/String;)Lnone/aal;
 		ARG 0 name
+	METHOD a addEntities (Ljava/util/Collection;)V
+		ARG 0 entities
 	METHOD a playSound (Lnone/aal;DDDLnone/nk;Lnone/nm;FF)V
 		ARG 0 player
 		ARG 1 x
@@ -83,7 +87,7 @@ CLASS none/aiv net/minecraft/world/World
 		ARG 0 listener
 	METHOD a init (Lnone/aiy;)V
 		ARG 0 info
-	METHOD a (Lnone/ard;)Z
+	METHOD a addBlockEntity (Lnone/ard;)Z
 		ARG 0 blockEntity
 	METHOD a isAreaLoaded (Lnone/awz;)Z
 		ARG 0 area
@@ -134,7 +138,7 @@ CLASS none/aiv net/minecraft/world/World
 	METHOD ae getDifficulty ()Lnone/qy;
 	METHOD aj getWorldBorder ()Lnone/atf;
 	METHOD ak getLootTableHandler ()Lnone/bbl;
-	METHOD b getWorld ()Lnone/aiv;
+	METHOD b ()Lnone/aiv;
 	METHOD b setSeaLevel (I)V
 		ARG 0 seaLevel
 	METHOD b setTimeOfDay (J)V
@@ -142,10 +146,14 @@ CLASS none/aiv net/minecraft/world/World
 	METHOD b getPlayers (Ljava/lang/Class;Lcom/google/common/base/Predicate;)Ljava/util/List;
 		ARG 0 playerClass
 		ARG 1 predicate
+	METHOD b addBlockEntities (Ljava/util/Collection;)V
+		ARG 0 blockEntities
 	METHOD b getPlayerByUuid (Ljava/util/UUID;)Lnone/aal;
 		ARG 0 uuid
 	METHOD b unregisterWorldListener (Lnone/aix;)V
 		ARG 0 listener
+	METHOD b dropBlockEntity (Lnone/ard;)V
+		ARG 0 blockEntity
 	METHOD b isAreaLoaded (Lnone/awz;Z)Z
 		ARG 0 area
 	METHOD b getBiome (Lnone/cn;)Lnone/aji;
@@ -160,10 +168,13 @@ CLASS none/aiv net/minecraft/world/World
 		ARG 0 entityId
 		ARG 1 pos
 		ARG 2 progress
+	METHOD c dropEntities (Ljava/util/Collection;)V
+		ARG 0 entities
 	METHOD c (Lnone/cn;)Lnone/asl;
 	METHOD c getEmittedRedstonePower (Lnone/cn;Lnone/cu;)I
 		ARG 0 pos
 		ARG 1 facingFrom
+	METHOD d update ()V
 	METHOD d isSpawnChunk (II)Z
 		ARG 0 chunkX
 		ARG 1 chunkY
