@@ -4,6 +4,7 @@ CLASS none/bdq net/minecraft/client/MinecraftGame
 	FIELD J LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD K RESOURCE_LOGO Lnone/kp;
 	FIELD L DISPLAY_MODES Ljava/util/List;
+	FIELD M resourcePackDirectory Ljava/io/File;
 	FIELD O sessionPropertyMap Lcom/mojang/authlib/properties/PropertyMap;
 	FIELD P currentServerEntry Lnone/bmj;
 	FIELD Q textureManager Lnone/bxe;
@@ -11,9 +12,10 @@ CLASS none/bdq net/minecraft/client/MinecraftGame
 	FIELD S migrationHandler Lnone/pf;
 	FIELD T fullscreen Z
 	FIELD Z snooper Lnone/rk;
+	FIELD aA metadataDeserializer Lnone/byt;
 	FIELD aB defaultResourcePacks Ljava/util/List;
 	FIELD aC gameResourcePack Lnone/bxt;
-	FIELD aD resourcePackDownloader Lnone/byh;
+	FIELD aD resourcePackManager Lnone/byh;
 	FIELD aE languageManager Lnone/byn;
 	FIELD aF blockColorMap Lnone/bdz;
 	FIELD aG itemColorMap Lnone/bec;
@@ -30,6 +32,7 @@ CLASS none/bdq net/minecraft/client/MinecraftGame
 	FIELD ad cameraEntity Lnone/sf;
 	FIELD ae session Lnone/bdx;
 	FIELD aj server Lnone/cal;
+	FIELD ak assetDirectory Ljava/io/File;
 	FIELD al gameVersion Ljava/lang/String;
 	FIELD an netProxy Ljava/net/Proxy;
 	FIELD ao worldStorage Lnone/baw;
@@ -52,6 +55,8 @@ CLASS none/bdq net/minecraft/client/MinecraftGame
 	FIELD t hitResult Lnone/bcs;
 	FIELD u settings Lnone/bds;
 	FIELD w runDirectory Ljava/io/File;
+	FIELD x guiClosed Z
+	METHOD A scheduleReloadResources ()Lcom/google/common/util/concurrent/ListenableFuture;
 	METHOD B checkMaxTextureSize ()I
 	METHOD C getCurrentServerEntry ()Lnone/bmj;
 	METHOD F getServer ()Lnone/cal;
@@ -82,7 +87,7 @@ CLASS none/bdq net/minecraft/client/MinecraftGame
 	METHOD a serializeBlockEntityTag (Lnone/aer;Lnone/ard;)Lnone/aer;
 		ARG 0 stack
 		ARG 1 blockEntity
-	METHOD a setGui (Lnone/bgm;)V
+	METHOD a openGui (Lnone/bgm;)V
 		ARG 0 screen
 	METHOD a setCurrentServerEntry (Lnone/bmj;)V
 		ARG 0 value
@@ -117,10 +122,14 @@ CLASS none/bdq net/minecraft/client/MinecraftGame
 	METHOD b addSnooperInitialInfo (Lnone/rk;)V
 		ARG 0 snooper
 	METHOD c getGameVersion ()Ljava/lang/String;
+	METHOD f reloadResources ()V
 	METHOD g getWorldStorage ()Lnone/baw;
 	METHOD h stop ()V
 	METHOD k getMaxFps ()I
 	METHOD l limitFramerate ()Z
+	METHOD o closeGui ()V
+	METHOD p afterOpenGui ()V
+	METHOD q openInGameMenu ()V
 	METHOD r toggleFullscreen ()V
 	METHOD s getMusicTracker ()Lnone/cat;
 	METHOD u isDemo ()Z
