@@ -1,14 +1,20 @@
 CLASS none/sp net/minecraft/entity/mob/EntityMob
 	FIELD a MOB_FLAGS Lnone/kj;
+	FIELD bA persistent Z
 	FIELD bE leashed Z
 	FIELD bF holdingEntity Lnone/sf;
+	FIELD bG leashTag Lnone/dt;
 	FIELD bt handDropChances [F
 	FIELD bu armorDropChances [F
 	FIELD bv target Lnone/so;
+	FIELD bw visibilityCache Lnone/wa;
 	FIELD bx handItems Lnone/dc;
 	FIELD by armorItems Lnone/dc;
 	FIELD bz pickUpLoot Z
 	METHOD G getSoundAmbient ()Lnone/nk;
+	METHOD J ()Lnone/kp;
+	METHOD a canBeLeashedBy (Lnone/aal;)Z
+		ARG 0 player
 	METHOD a interactMob (Lnone/aal;Lnone/ra;)Z
 		ARG 0 player
 		ARG 1 playerHand
@@ -20,6 +26,9 @@ CLASS none/sp net/minecraft/entity/mob/EntityMob
 	METHOD a setEquippedStack (Lnone/sk;Lnone/aer;)V
 		ARG 0 slot
 		ARG 1 stack
+	METHOD a detachLeash (ZZ)V
+		ARG 0 sendPacket
+		ARG 1 dropLeadStack
 	METHOD aG getItemsHand ()Ljava/lang/Iterable;
 	METHOD aH getItemsArmor ()Ljava/lang/Iterable;
 	METHOD b interact (Lnone/aal;Lnone/ra;)Z
@@ -27,15 +36,22 @@ CLASS none/sp net/minecraft/entity/mob/EntityMob
 		ARG 1 hand
 	METHOD b serializeCustomData (Lnone/dt;)V
 		ARG 0 tag
+	METHOD b attachLeash (Lnone/sf;Z)V
+		ARG 0 entity
+		ARG 1 sendPacket
 	METHOD b getEquippedStack (Lnone/sk;)Lnone/aer;
 		ARG 0 slot
 	METHOD bD initAttributes ()V
 	METHOD c setTarget (Lnone/so;)V
 		ARG 0 value
+	METHOD cQ setPersistent ()V
 	METHOD cR canPickUpLoot ()Z
+	METHOD cS isPersistent ()Z
 	METHOD cU isLeashed ()Z
+	METHOD cV getHoldingEntity ()Lnone/sf;
 	METHOD cW isAiDisabled ()Z
 	METHOD cX isLeftHanded ()Z
+	METHOD cY deserializeLeashTag ()V
 	METHOD cw getMainHand ()Lnone/sn;
 	METHOD d getPreferredEquipmentSlot (Lnone/aer;)Lnone/sk;
 		ARG 0 stack
@@ -46,5 +62,6 @@ CLASS none/sp net/minecraft/entity/mob/EntityMob
 		ARG 0 value
 	METHOD o setLeftHanded (Z)V
 		ARG 0 value
+	METHOD y getVisibilityCache ()Lnone/wa;
 	METHOD y_ update ()V
 	METHOD z getTarget ()Lnone/so;
