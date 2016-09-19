@@ -2,12 +2,21 @@ CLASS none/lu net/minecraft/world/WorldServer
 	FIELD I server Lnet/minecraft/server/MinecraftServer;
 	FIELD J entityTrackingManager Lnone/lr;
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD b disableAutoSave Z
+	FIELD b autoSaveDisabled Z
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnone/bau;Lnone/bat;ILnone/os;)V
+		ARG 0 server
+		ARG 1 saveHandler
+		ARG 2 levelProperties
+		ARG 3 worldTypeId
+		ARG 4 profiler
+	METHOD a saveLevel ()V
 	METHOD a isChunkLoaded (IIZ)Z
 		ARG 0 chunkX
 		ARG 1 chunkZ
 	METHOD a scheduleOnMainThread (Ljava/lang/Runnable;)Lcom/google/common/util/concurrent/ListenableFuture;
 		ARG 0 runnable
+	METHOD a addEntities (Ljava/util/Collection;)V
+		ARG 0 entities
 	METHOD a getEntityByUuid (Ljava/util/UUID;)Lnone/sf;
 	METHOD a init (Lnone/aiy;)V
 		ARG 0 info
@@ -21,15 +30,20 @@ CLASS none/lu net/minecraft/world/WorldServer
 		ARG 4 power
 		ARG 5 createFire
 		ARG 6 destroyBlocks
-	METHOD a (ZLnone/ot;)V
+	METHOD a save (ZLnone/ot;)V
+		ARG 0 entities
+		ARG 1 progress
 	METHOD aE isMainThread ()Z
-	METHOD b getWorld ()Lnone/aiv;
+	METHOD b ()Lnone/aiv;
 	METHOD b onSpawnEntity (Lnone/sf;)V
 		ARG 0 entity
+	METHOD d update ()V
 	METHOD e updateSleepingStatus ()V
 	METHOD k updateEntities ()V
 	METHOD n createChunkProvider ()Lnone/atj;
+	METHOD q flushChunks ()V
 	METHOD r getServerChunkProvider ()Lnone/lt;
+	METHOD s saveRegions ()V
 	METHOD t updateWeather ()V
 	METHOD u getServer ()Lnet/minecraft/server/MinecraftServer;
 	METHOD v getEntityTrackingManager ()Lnone/lr;

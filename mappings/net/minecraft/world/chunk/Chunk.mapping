@@ -2,9 +2,11 @@ CLASS none/ato net/minecraft/world/chunk/Chunk
 	FIELD a NULL_CHUNK_SECTION Lnone/atp;
 	FIELD b chunkX I
 	FIELD c chunkZ I
+	FIELD d dropped Z
 	FIELD e LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD f sections [Lnone/atp;
 	FIELD g biomeMap [B
+	FIELD j entitiesLoaded Z
 	FIELD k world Lnone/aiv;
 	FIELD l heightMap [I
 	FIELD n blockEntityMap Ljava/util/Map;
@@ -18,7 +20,7 @@ CLASS none/ato net/minecraft/world/chunk/Chunk
 		ARG 2 z
 	METHOD <init> (Lnone/aiv;Lnone/auo;II)V
 		ARG 0 world
-	METHOD a matches (II)Z
+	METHOD a matchesPos (II)Z
 		ARG 0 chunkX
 		ARG 1 chunkZ
 	METHOD a getBlockState (III)Lnone/asl;
@@ -31,6 +33,11 @@ CLASS none/ato net/minecraft/world/chunk/Chunk
 		ARG 1 pos
 	METHOD a addBlockEntity (Lnone/ard;)V
 		ARG 0 blockEntity
+	METHOD a populate (Lnone/ati;)V
+		ARG 0 generator
+	METHOD a populate (Lnone/atj;Lnone/ati;)V
+		ARG 0 provider
+		ARG 1 generator
 	METHOD a getBlockState (Lnone/cn;)Lnone/asl;
 		ARG 0 pos
 	METHOD a (Lnone/cn;I)I
@@ -60,9 +67,14 @@ CLASS none/ato net/minecraft/world/chunk/Chunk
 		ARG 1 z
 	METHOD b (Lnone/cn;)I
 		ARG 0 pos
+	METHOD b update (Z)V
+	METHOD c addEntities ()V
 	METHOD c setInhabitedTime (J)V
 		ARG 0 inhabitedTime
-	METHOD d (Lnone/cn;)V
+	METHOD c setEntitiesLoaded (Z)V
+		ARG 0 value
+	METHOD d dropEntities ()V
+	METHOD d invalidateBlockEntityAt (Lnone/cn;)V
 		ARG 0 pos
 	METHOD d setTerrainPopulated (Z)V
 		ARG 0 terrainPopulated
@@ -75,6 +87,7 @@ CLASS none/ato net/minecraft/world/chunk/Chunk
 	METHOD h getSections ()[Lnone/atp;
 	METHOD k getPos ()Lnone/aio;
 	METHOD l getBiomeMap ()[B
+	METHOD p areEntitiesLoaded ()Z
 	METHOD q getWorld ()Lnone/aiv;
 	METHOD r getHeightMap ()[I
 	METHOD s getBlockEntityMap ()Ljava/util/Map;
