@@ -2,44 +2,109 @@ CLASS none/bxg net/minecraft/client/util/TextureUtils
 	FIELD a TEXTURE_MISSING Lnone/bwt;
 	FIELD b TEXTURE_MISSING_DATA [I
 	FIELD c LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD d textureDataBuf Ljava/nio/IntBuffer;
+	FIELD e GAMMA_RAMP [F
+	FIELD f colorBlurBuffer [I
 	METHOD a createTextureId ()I
 	METHOD a destroyTextureId (I)V
 		ARG 0 id
-	METHOD a (II[[I)[[I
-	METHOD a (ILjava/awt/image/BufferedImage;)I
+	METHOD a allocTextureStorage (III)V
+		ARG 0 textureId
+		ARG 1 width
+		ARG 2 height
+	METHOD a allocTextureStorage (IIII)V
+		ARG 0 textureId
+		ARG 1 maxLevel
+		ARG 2 width
+		ARG 3 height
+	METHOD a downscale2x2Component (IIIII)I
+		ARG 0 c0
+		ARG 1 c1
+		ARG 2 c2
+		ARG 3 c3
+		ARG 4 lsb
+	METHOD a downscale2x2 (IIIIZ)I
+		ARG 0 c0
+		ARG 1 c1
+		ARG 2 c2
+		ARG 3 c3
+		ARG 4 anyFullTransparent
+	METHOD a addMipLevels (II[[I)[[I
+		ARG 0 maxLevel
+		ARG 1 width
+		ARG 2 data
+	METHOD a uploadTextureData (ILjava/awt/image/BufferedImage;)I
 		ARG 0 textureId
 		ARG 1 image
-	METHOD a (ILjava/awt/image/BufferedImage;IIZZ)I
+	METHOD a uploadTextureDataPreallocated (ILjava/awt/image/BufferedImage;IIZZ)I
 		ARG 0 textureId
 		ARG 1 image
 		ARG 2 width
 		ARG 3 height
-		ARG 4 blur
+		ARG 4 bilinear
 		ARG 5 clamp
-	METHOD a (ILjava/awt/image/BufferedImage;ZZ)I
+	METHOD a uploadTextureData (ILjava/awt/image/BufferedImage;ZZ)I
 		ARG 0 textureId
 		ARG 1 image
-		ARG 2 blur
+		ARG 2 bilinear
 		ARG 3 clamp
-	METHOD a (I[III)V
+	METHOD a uploadTextureData (I[III)V
 		ARG 0 textureId
 		ARG 1 data
 		ARG 2 width
 		ARG 3 height
-	METHOD a (I[IIIIIZZZ)V
-		ARG 0 textureId
+	METHOD a uploadTextureSubDataLayer (I[IIIIIZZZ)V
+		ARG 0 level
 		ARG 1 data
 		ARG 2 width
 		ARG 3 height
 		ARG 4 x
 		ARG 5 y
+		ARG 6 bilinear
+		ARG 7 clamp
+		ARG 8 mipmap
+	METHOD a uploadTextureDataToCurrent (Ljava/awt/image/BufferedImage;IIZZ)V
+		ARG 0 image
+		ARG 1 width
+		ARG 2 height
+		ARG 3 bilinear
+		ARG 4 clamp
 	METHOD a getBufferedImage (Ljava/io/InputStream;)Ljava/awt/image/BufferedImage;
 		ARG 0 stream
 	METHOD a getImagePixels (Lnone/byc;Lnone/kp;)[I
 		ARG 0 resourceContainer
 		ARG 1 location
-	METHOD a ([[IIIIIZZ)V
+	METHOD a setTextureClamp (Z)V
+		ARG 0 clamp
+	METHOD a setTextureFilter (ZZ)V
+		ARG 0 bilinear
+		ARG 1 mipmap
+	METHOD a convertForAnaglyph ([I)[I
+		ARG 0 data
+	METHOD a putInTextureDataBuf ([II)V
+		ARG 0 data
+		ARG 1 length
+	METHOD a verticalFlipImageData ([III)V
+		ARG 0 data
+		ARG 1 width
+		ARG 2 height
+	METHOD a uploadTextureSubDataMiptree ([[IIIIIZZ)V
+		ARG 0 data
+		ARG 1 width
+		ARG 2 height
+		ARG 3 x
+		ARG 4 y
+		ARG 5 bilinear
+		ARG 6 clamp
 	METHOD b bindTexture (I)V
 		ARG 0 texId
+	METHOD b setTextureFilter (Z)V
+		ARG 0 bilinear
+	METHOD b putInTextureDataBuf ([III)V
+		ARG 0 data
+		ARG 1 offset
+		ARG 2 length
 	METHOD c getAnaglyphColor (I)I
 		ARG 0 color
+	METHOD d applyGammaRamp (I)F
+		ARG 0 v
