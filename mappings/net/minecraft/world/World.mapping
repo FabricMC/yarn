@@ -3,8 +3,10 @@ CLASS none/aiv net/minecraft/world/World
 	FIELD C profiler Lnone/os;
 	FIELD E isRemote Z
 	FIELD L calendar Ljava/util/Calendar;
+	FIELD M tickingBlockEntities Z
 	FIELD N border Lnone/atf;
 	FIELD a seaLevel I
+	FIELD b pendingBlockEntities Ljava/util/List;
 	FIELD c droppedBlockEntities Ljava/util/List;
 	FIELD e entities Ljava/util/List;
 	FIELD f droppedEntities Ljava/util/List;
@@ -23,7 +25,7 @@ CLASS none/aiv net/minecraft/world/World
 		ARG 2 provider
 		ARG 3 profiler
 		ARG 4 remote
-	METHOD A ()Lnone/ajm;
+	METHOD A getBiomeProvider ()Lnone/ajm;
 	METHOD A setSpawnPos (Lnone/cn;)V
 		ARG 0 pos
 	METHOD D getLocalDifficulty (Lnone/cn;)Lnone/qz;
@@ -31,6 +33,7 @@ CLASS none/aiv net/minecraft/world/World
 	METHOD E isInvalidHeight (Lnone/cn;)Z
 		ARG 0 pos
 	METHOD G getChunkProviderStatus ()Ljava/lang/String;
+	METHOD J getEntitiesToRender ()Ljava/util/List;
 	METHOD K getSeaLevel ()I
 	METHOD L getWorldGenerator ()Lnone/aja;
 	METHOD N checkSessionLock ()V
@@ -83,7 +86,7 @@ CLASS none/aiv net/minecraft/world/World
 		ARG 3 category
 		ARG 4 volume
 		ARG 5 pitch
-	METHOD a registerWorldListener (Lnone/aix;)V
+	METHOD a registerListener (Lnone/aix;)V
 		ARG 0 listener
 	METHOD a init (Lnone/aiy;)V
 		ARG 0 info
@@ -150,7 +153,7 @@ CLASS none/aiv net/minecraft/world/World
 		ARG 0 blockEntities
 	METHOD b getPlayerByUuid (Ljava/util/UUID;)Lnone/aal;
 		ARG 0 uuid
-	METHOD b unregisterWorldListener (Lnone/aix;)V
+	METHOD b unregisterListener (Lnone/aix;)V
 		ARG 0 listener
 	METHOD b dropBlockEntity (Lnone/ard;)V
 		ARG 0 blockEntity
@@ -158,6 +161,9 @@ CLASS none/aiv net/minecraft/world/World
 		ARG 0 area
 	METHOD b getBiome (Lnone/cn;)Lnone/aji;
 		ARG 0 pos
+	METHOD b markDirty (Lnone/cn;Lnone/ard;)V
+		ARG 0 pos
+		ARG 1 entity
 	METHOD b isEmittingRedstonePower (Lnone/cn;Lnone/cu;)Z
 		ARG 0 pos
 		ARG 1 facingFrom
@@ -174,6 +180,8 @@ CLASS none/aiv net/minecraft/world/World
 	METHOD c getEmittedRedstonePower (Lnone/cn;Lnone/cu;)I
 		ARG 0 pos
 		ARG 1 facingFrom
+	METHOD c onDespawnEntity (Lnone/sf;)V
+		ARG 0 entity
 	METHOD d update ()V
 	METHOD d isSpawnChunk (II)Z
 		ARG 0 chunkX
@@ -188,6 +196,7 @@ CLASS none/aiv net/minecraft/world/World
 	METHOD f (Lnone/sf;)V
 	METHOD g setBlockToAir (Lnone/cn;)Z
 		ARG 0 pos
+	METHOD h setDefaultSpawnClient ()V
 	METHOD k updateEntities ()V
 	METHOD n createChunkProvider ()Lnone/atj;
 	METHOD o getBlockState (Lnone/cn;)Lnone/asl;
