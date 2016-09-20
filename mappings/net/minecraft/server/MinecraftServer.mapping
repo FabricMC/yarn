@@ -1,5 +1,6 @@
 CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	CLASS net/minecraft/server/MinecraftServer$1
+		FIELD b lastProgressUpdate J
 		METHOD a finish ()V
 		METHOD a setProgress (I)V
 			ARG 0 percentage
@@ -9,15 +10,16 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 			ARG 0 title
 		METHOD c setTask (Ljava/lang/String;)V
 			ARG 0 task
-	FIELD A spawnAnimals Z
-	FIELD B spawnNpcs Z
-	FIELD C pvpEnabled Z
-	FIELD D flightEnabled Z
+	FIELD A preventProxyConnections Z
+	FIELD B spawnAnimals Z
+	FIELD C spawnNpcs Z
+	FIELD D pvpEnabled Z
+	FIELD E flightEnabled Z
 	FIELD F motd Ljava/lang/String;
 	FIELD G worldHeight I
 	FIELD H playerIdleTimeout I
 	FIELD I keyPair Ljava/security/KeyPair;
-	FIELD J levelName Ljava/lang/String;
+	FIELD K levelName Ljava/lang/String;
 	FIELD M demo Z
 	FIELD N bonusChest Z
 	FIELD S currentTaskName Ljava/lang/String;
@@ -37,6 +39,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD g currentOperationPercent I
 	FIELD j jobs Ljava/util/Queue;
 	FIELD k LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD l levelStorage Lnone/bax;
 	FIELD m snooper Lnone/rl;
 	FIELD n gameDir Ljava/io/File;
 	FIELD o tickables Ljava/util/List;
@@ -79,6 +82,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD S getLevelName ()Ljava/lang/String;
 	METHOD U isMonsterSpawningEnabled ()Z
 	METHOD V isDemo ()Z
+	METHOD W getLevelStorage ()Lnone/bax;
 	METHOD Z isSnooperEnabled ()Z
 	METHOD a getWorld (I)Lnone/lu;
 		ARG 0 dimensionId
@@ -88,6 +92,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD a scheduleOnMainThread (Ljava/lang/Runnable;)Lcom/google/common/util/concurrent/ListenableFuture;
 		ARG 0 runnable
 	METHOD a convertSave (Ljava/lang/String;)V
+		ARG 0 levelName
 	METHOD a loadSave (Ljava/lang/String;Ljava/lang/String;JLnone/ajb;Ljava/lang/String;)V
 		ARG 0 levelName
 		ARG 3 generatorType
@@ -105,7 +110,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 		ARG 0 gameMode
 	METHOD a (Lnone/aiu;Z)Ljava/lang/String;
 		ARG 0 gameMode
-	METHOD a (Lnone/aiw;Lnone/cn;Lnone/aam;)Z
+	METHOD a canModifyBlock (Lnone/aiw;Lnone/cn;Lnone/aam;)Z
 		ARG 0 world
 		ARG 1 pos
 		ARG 2 player
@@ -144,17 +149,21 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD a_ setResourcePack (Ljava/lang/String;Ljava/lang/String;)V
 	METHOD aa isDedicated ()Z
 	METHOD ab isOnlineMode ()Z
-	METHOD ac shouldSpawnAnimals ()Z
-	METHOD ad shouldSpawnNpcs ()Z
-	METHOD ag isFlightEnabled ()Z
+	METHOD ac shouldPreventProxyConnections ()Z
+	METHOD ad shouldSpawnAnimals ()Z
+	METHOD ae shouldSpawnNpcs ()Z
+	METHOD ag isPvpEnabled ()Z
+	METHOD ah isFlightEnabled ()Z
 	METHOD ai areCommandBlocksEnabled ()Z
 	METHOD aj getMotd ()Ljava/lang/String;
+	METHOD ak getWorldHeight ()I
 	METHOD al isStopped ()Z
 	METHOD am getConfigManager ()Lnone/mr;
 	METHOD an getNetworkManager ()Lnone/mf;
 	METHOD ap hasGui ()Z
 	METHOD aq getTicks ()I
 	METHOD as getSnooper ()Lnone/rl;
+	METHOD at getSpawnProtectionRadius ()I
 	METHOD au shouldForceGameMode ()Z
 	METHOD av getProxy ()Ljava/net/Proxy;
 	METHOD aw getCurrentTimeMillis ()J
@@ -172,6 +181,8 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD b setDemo (Z)V
 		ARG 0 value
 	METHOD c getBlockPos ()Lnone/cn;
+	METHOD c setWorldHeight (I)V
+		ARG 0 value
 	METHOD c setServerIp (Ljava/lang/String;)V
 		ARG 0 serverIp
 	METHOD c setBonusChest (Z)V
@@ -186,23 +197,27 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD e getWorld ()Lnone/aiw;
 	METHOD e info (Ljava/lang/String;)V
 		ARG 0 msg
-	METHOD e setSpawnAnimals (Z)V
+	METHOD e setPreventProxyConnections (Z)V
 		ARG 0 value
 	METHOD f getEntity ()Lnone/sg;
 	METHOD f warn (Ljava/lang/String;)V
 		ARG 0 msg
-	METHOD f setSpawnNpcs (Z)V
+	METHOD f setSpawnAnimals (Z)V
 		ARG 0 value
 	METHOD g shouldEchoCommandFeedback ()Z
 	METHOD g logError (Ljava/lang/String;)V
 		ARG 0 message
+	METHOD g setSpawnNpcs (Z)V
+		ARG 0 value
 	METHOD getServerModName getServerModName ()Ljava/lang/String;
 	METHOD h log (Ljava/lang/String;)V
 		ARG 0 message
-	METHOD h setFlightEnabled (Z)V
+	METHOD h setPvpEnabled (Z)V
 		ARG 0 value
 	METHOD h_ getName ()Ljava/lang/String;
 	METHOD i createCommandManager ()Lnone/bc;
+	METHOD i setFlightEnabled (Z)V
+		ARG 0 value
 	METHOD i_ getNameComponent ()Lnone/fa;
 	METHOD j ()Z
 	METHOD j setLevelName (Ljava/lang/String;)V
