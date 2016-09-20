@@ -13,22 +13,22 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD B spawnNpcs Z
 	FIELD C pvpEnabled Z
 	FIELD D flightEnabled Z
-	FIELD E motd Ljava/lang/String;
-	FIELD F worldHeight I
-	FIELD G playerIdleTimeout I
-	FIELD H keyPair Ljava/security/KeyPair;
+	FIELD F motd Ljava/lang/String;
+	FIELD G worldHeight I
+	FIELD H playerIdleTimeout I
+	FIELD I keyPair Ljava/security/KeyPair;
 	FIELD J levelName Ljava/lang/String;
-	FIELD L demo Z
-	FIELD M bonusChest Z
-	FIELD R currentTaskName Ljava/lang/String;
-	FIELD T forceGameMode Z
-	FIELD U authService Lcom/mojang/authlib/yggdrasil/YggdrasilAuthenticationService;
-	FIELD V sessionService Lcom/mojang/authlib/minecraft/MinecraftSessionService;
-	FIELD W gameProfileRepo Lcom/mojang/authlib/GameProfileRepository;
-	FIELD X userCache Lnone/mn;
-	FIELD Z serverThread Ljava/lang/Thread;
+	FIELD M demo Z
+	FIELD N bonusChest Z
+	FIELD S currentTaskName Ljava/lang/String;
+	FIELD U forceGameMode Z
+	FIELD V authService Lcom/mojang/authlib/yggdrasil/YggdrasilAuthenticationService;
+	FIELD W sessionService Lcom/mojang/authlib/minecraft/MinecraftSessionService;
+	FIELD X gameProfileRepo Lcom/mojang/authlib/GameProfileRepository;
+	FIELD Y userCache Lnone/mn;
 	FIELD a USER_CACHE_FILE Ljava/io/File;
-	FIELD aa serverStartTime J
+	FIELD aa serverThread Ljava/lang/Thread;
+	FIELD ab serverStartTime J
 	FIELD b commandManager Lnone/m;
 	FIELD c profiler Lnone/os;
 	FIELD d worlds [Lnone/lu;
@@ -37,7 +37,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD g currentOperationPercent I
 	FIELD j jobs Ljava/util/Queue;
 	FIELD k LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD m snooper Lnone/rk;
+	FIELD m snooper Lnone/rl;
 	FIELD n gameDir Ljava/io/File;
 	FIELD o tickables Ljava/util/List;
 	FIELD p networkManager Lnone/mf;
@@ -88,24 +88,24 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD a scheduleOnMainThread (Ljava/lang/Runnable;)Lcom/google/common/util/concurrent/ListenableFuture;
 		ARG 0 runnable
 	METHOD a convertSave (Ljava/lang/String;)V
-	METHOD a loadSave (Ljava/lang/String;Ljava/lang/String;JLnone/aja;Ljava/lang/String;)V
+	METHOD a loadSave (Ljava/lang/String;Ljava/lang/String;JLnone/ajb;Ljava/lang/String;)V
 		ARG 0 levelName
 		ARG 3 generatorType
 		ARG 4 generatorOptions
-	METHOD a loadWorldResourcePack (Ljava/lang/String;Lnone/bau;)V
+	METHOD a loadWorldResourcePack (Ljava/lang/String;Lnone/bav;)V
 		ARG 0 gameDir
 		ARG 1 worldSaveHandler
 	METHOD a setKeyPair (Ljava/security/KeyPair;)V
 		ARG 0 value
-	METHOD a getEntityByUuid (Ljava/util/UUID;)Lnone/sf;
+	METHOD a getEntityByUuid (Ljava/util/UUID;)Lnone/sg;
 		ARG 0 uuid
 	METHOD a scheduleOnMainThread (Ljava/util/concurrent/Callable;)Lcom/google/common/util/concurrent/ListenableFuture;
 		ARG 0 job
-	METHOD a setGameMode (Lnone/ait;)V
+	METHOD a setGameMode (Lnone/aiu;)V
 		ARG 0 gameMode
-	METHOD a (Lnone/ait;Z)Ljava/lang/String;
+	METHOD a (Lnone/aiu;Z)Ljava/lang/String;
 		ARG 0 gameMode
-	METHOD a (Lnone/aiv;Lnone/cn;Lnone/aal;)Z
+	METHOD a (Lnone/aiw;Lnone/cn;Lnone/aam;)Z
 		ARG 0 world
 		ARG 1 pos
 		ARG 2 player
@@ -122,20 +122,22 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD a updateCommandStat (Lnone/o$a;I)V
 		ARG 0 statType
 		ARG 1 statValue
-	METHOD a setDifficulty (Lnone/qy;)V
+	METHOD a setDifficulty (Lnone/qz;)V
 		ARG 0 difficulty
-	METHOD a addSnooperInfo (Lnone/rk;)V
+	METHOD a addSnooperInfo (Lnone/rl;)V
 		ARG 0 snooper
 	METHOD a saveWorlds (Z)V
 		ARG 0 dontLog
-	METHOD aA getUserCache ()Lnone/mn;
-	METHOD aB getMetadata ()Lnone/ke;
-	METHOD aD getMaxWorldBorderRadius ()I
-	METHOD aE isMainThread ()Z
-	METHOD aF getNetworkCompressionThreshold ()I
-	METHOD aG getServerStartTime ()J
-	METHOD aH getMainThread ()Ljava/lang/Thread;
-	METHOD aJ getLogger ()Lorg/apache/logging/log4j/Logger;
+	METHOD aA getGameProfileRepo ()Lcom/mojang/authlib/GameProfileRepository;
+	METHOD aB getUserCache ()Lnone/mn;
+	METHOD aC getMetadata ()Lnone/ke;
+	METHOD aE getMaxWorldBorderRadius ()I
+	METHOD aF isMainThread ()Z
+	METHOD aG getNetworkCompressionThreshold ()I
+	METHOD aH getServerStartTime ()J
+	METHOD aI getMainThread ()Ljava/lang/Thread;
+	METHOD aJ getMigrationHandler ()Lnone/pf;
+	METHOD aK getLogger ()Lorg/apache/logging/log4j/Logger;
 	METHOD a_ updateSpawnAreaProgress (Ljava/lang/String;I)V
 		ARG 0 message
 		ARG 1 percentage
@@ -144,56 +146,49 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD ab isOnlineMode ()Z
 	METHOD ac shouldSpawnAnimals ()Z
 	METHOD ad shouldSpawnNpcs ()Z
-	METHOD ae isUsingNativeTransport ()Z
-	METHOD af isPvpEnabled ()Z
 	METHOD ag isFlightEnabled ()Z
-	METHOD ah areCommandBlocksEnabled ()Z
-	METHOD ai getMotd ()Ljava/lang/String;
-	METHOD aj getWorldHeight ()I
-	METHOD ak isStopped ()Z
-	METHOD al getConfigManager ()Lnone/mr;
-	METHOD am getNetworkManager ()Lnone/mf;
-	METHOD ao hasGui ()Z
-	METHOD ap getTicks ()I
-	METHOD ar getSnooper ()Lnone/rk;
-	METHOD as isSpawnProtectionEnabled ()I
-	METHOD at shouldForceGameMode ()Z
-	METHOD au getProxy ()Ljava/net/Proxy;
-	METHOD av getCurrentTimeMillis ()J
-	METHOD aw getPlayerIdleTimeout ()I
-	METHOD ax shouldAnnouncePlayerAchievements ()Z
-	METHOD ay getSessionService ()Lcom/mojang/authlib/minecraft/MinecraftSessionService;
-	METHOD az getGameProfileRepo ()Lcom/mojang/authlib/GameProfileRepository;
+	METHOD ai areCommandBlocksEnabled ()Z
+	METHOD aj getMotd ()Ljava/lang/String;
+	METHOD al isStopped ()Z
+	METHOD am getConfigManager ()Lnone/mr;
+	METHOD an getNetworkManager ()Lnone/mf;
+	METHOD ap hasGui ()Z
+	METHOD aq getTicks ()I
+	METHOD as getSnooper ()Lnone/rl;
+	METHOD au shouldForceGameMode ()Z
+	METHOD av getProxy ()Ljava/net/Proxy;
+	METHOD aw getCurrentTimeMillis ()J
+	METHOD ax getPlayerIdleTimeout ()I
+	METHOD ay shouldAnnouncePlayerAchievements ()Z
+	METHOD az getSessionService ()Lcom/mojang/authlib/minecraft/MinecraftSessionService;
 	METHOD b setServerPort (I)V
 		ARG 0 value
 	METHOD b setCurrentTaskName (Ljava/lang/String;)V
 		ARG 0 taskName
 	METHOD b addServerInfoToCrashReport (Lnone/b;)Lnone/b;
 		ARG 0 report
-	METHOD b addSnooperInitialInfo (Lnone/rk;)V
+	METHOD b addSnooperInitialInfo (Lnone/rl;)V
 		ARG 0 snooper
 	METHOD b setDemo (Z)V
 		ARG 0 value
 	METHOD c getBlockPos ()Lnone/cn;
-	METHOD c setWorldHeight (I)V
-		ARG 0 value
 	METHOD c setServerIp (Ljava/lang/String;)V
 		ARG 0 serverIp
 	METHOD c setBonusChest (Z)V
 		ARG 0 value
-	METHOD d getPos ()Lnone/bcu;
+	METHOD d getPos ()Lnone/bcv;
 	METHOD d setPlayerIdleTimeout (I)V
 		ARG 0 value
 	METHOD d getFile (Ljava/lang/String;)Ljava/io/File;
 		ARG 0 name
 	METHOD d setOnlineMode (Z)V
 		ARG 0 value
-	METHOD e getWorld ()Lnone/aiv;
+	METHOD e getWorld ()Lnone/aiw;
 	METHOD e info (Ljava/lang/String;)V
 		ARG 0 msg
 	METHOD e setSpawnAnimals (Z)V
 		ARG 0 value
-	METHOD f getEntity ()Lnone/sf;
+	METHOD f getEntity ()Lnone/sg;
 	METHOD f warn (Ljava/lang/String;)V
 		ARG 0 msg
 	METHOD f setSpawnNpcs (Z)V
@@ -201,8 +196,6 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD g shouldEchoCommandFeedback ()Z
 	METHOD g logError (Ljava/lang/String;)V
 		ARG 0 message
-	METHOD g setPvpEnabled (Z)V
-		ARG 0 value
 	METHOD getServerModName getServerModName ()Ljava/lang/String;
 	METHOD h log (Ljava/lang/String;)V
 		ARG 0 message
@@ -210,11 +203,11 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 		ARG 0 value
 	METHOD h_ getName ()Ljava/lang/String;
 	METHOD i createCommandManager ()Lnone/bc;
-	METHOD i setForceGameMode (Z)V
-		ARG 0 value
 	METHOD i_ getNameComponent ()Lnone/fa;
 	METHOD j ()Z
 	METHOD j setLevelName (Ljava/lang/String;)V
+		ARG 0 value
+	METHOD j setForceGameMode (Z)V
 		ARG 0 value
 	METHOD k getCurrentTaskName ()Ljava/lang/String;
 	METHOD l generateTerrain ()V
@@ -223,8 +216,8 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD m shouldGenerateStructures ()Z
 	METHOD main ([Ljava/lang/String;)V
 		ARG 0 args
-	METHOD n getGameMode ()Lnone/ait;
-	METHOD o getDifficulty ()Lnone/qy;
+	METHOD n getGameMode ()Lnone/aiu;
+	METHOD o getDifficulty ()Lnone/qz;
 	METHOD p isHardcore ()Z
 	METHOD q getOpPermissionLevel ()I
 	METHOD r shouldBroadcastRconToOps ()Z
