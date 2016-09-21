@@ -173,9 +173,13 @@ task buildTiny << {
 	}
 
 	logger.lifecycle(":compressing tiny mappings")
+	def libs = new File("build/libs/")
+	if(!libs.exists()){
+		libs.mkdirs()
+	}
 
 	def buffer = new byte[1024]
-	def outputFile = new File("build/libs/pomf-tiny-${pomfVersion}.gz")
+	def outputFile = new File(libs, "pomf-tiny-${pomfVersion}.gz")
 	def fileOutputStream = new FileOutputStream(outputFile)
     def outputStream = new GZIPOutputStream(fileOutputStream)
 	def inputFile = new File("mappings.tiny")
