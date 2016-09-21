@@ -29,6 +29,11 @@ import com.google.common.hash.Hashing
 import com.google.common.io.Files
 import net.fabricmc.blendingjar.JarMerger
 import groovy.util.XmlSlurper
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.zip.GZIPOutputStream;
+import java.io.File;
 
 boolean validateChecksum(File file, String checksum) {
 	if (file != null) {
@@ -135,3 +140,57 @@ task build(type: Zip) {
 	archiveName "pomf-enigma-${pomfVersion}.zip"
 	destinationDir(file("build/libs"))
 }
+
+task buildTiny << {
+	def cacheFiles = new File(".gradle/weave")
+	if (!cacheFiles.exists()) cacheFiles.mkdirs()
+
+	def mavenMetadata = new File(cacheFiles, "maven-metadata.xml")
+
+	logger.lifecycle(":downloading weave metadata")
+	FileUtils.copyURLToFile(new URL("http://maven.fabricmc.net/net/fabricmc/weave/maven-metadata.xml"), mavenMetadata)
+	
+	def metadata = new XmlSlurper().parseText(FileUtils.readFileToString(mavenMetadata))
+	def weaveVersion = metadata.versioning.release
+
+	def weave = new File(cacheFiles, "${weaveVersion}.jar")
+
+	if(!weave.exists()){
+		logger.lifecycle(":downloading weave")
+		FileUtils.copyURLToFile(new URL("http://maven.fabricmc.net/net/fabricmc/weave/${weaveVersion}/weave-${weaveVersion}.jar"), weave)
+	}
+	
+
+	logger.lifecycle(":generating tiny mappings")
+
+	ant.java(jar: weave.getAbsolutePath(), fork: true, spawn: false) {
+		arg(value : "tinyify")
+		arg(value: new File("${minecraft_version}-merged.jar").getAbsolutePath())
+		arg(value: new File("mappings").getAbsolutePath())
+		arg(value : "mappings.tiny")
+		arg(value : "mojang")
+		arg(value : "pomf")
+	}
+
+	logger.lifecycle(":compressing tiny mappings")
+
+	def buffer = new byte[1024]
+	def outputFile = new File("build/libs/pomf-tiny-${pomfVersion}.gz")
+	def fileOutputStream = new FileOutputStream(outputFile)
+    def outputStream = new GZIPOutputStream(fileOutputStream)
+	def inputFile = new File("mappings.tiny")
+    def fileInputStream = new FileInputStream(inputFile)
+
+    def length;
+    while ((length = fileInputStream.read(buffer)) > 0) {
+        outputStream.write(buffer, 0, length);
+    }
+
+    fileInputStream.close()
+    outputStream.finish()
+    outputStream.close()
+	inputFile.delete()
+}
+
+tasks.buildTiny.dependsOn "mergeJars"
+tasks.build.dependsOn "buildTiny"
