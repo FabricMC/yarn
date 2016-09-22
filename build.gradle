@@ -116,7 +116,7 @@ task pomf << {
 	def mavenMetadata = new File(cacheFiles, "maven-metadata.xml")
 
 	logger.lifecycle(":downloading enigma metadata")
-	FileUtils.copyURLToFile(new URL("http://maven.fabricmc.net/net/fabricmc/enigma/maven-metadata.xml"), mavenMetadata)
+	FileUtils.copyURLToFile(new URL("http://maven.fabricmc.net/cuchaz/enigma/maven-metadata.xml"), mavenMetadata)
 	
 	def metadata = new XmlSlurper().parseText(FileUtils.readFileToString(mavenMetadata))
 	def enigmaVersion = metadata.versioning.release
@@ -124,7 +124,7 @@ task pomf << {
 	def enigma = new File(cacheFiles, "${enigmaVersion}.jar")
 
 	logger.lifecycle(":downloading enigma")
-	FileUtils.copyURLToFile(new URL("http://maven.fabricmc.net/net/fabricmc/enigma/${enigmaVersion}/enigma-${enigmaVersion}-all.jar"), enigma)
+	FileUtils.copyURLToFile(new URL("http://maven.fabricmc.net/cuchaz/enigma/${enigmaVersion}/enigma-${enigmaVersion}-all.jar"), enigma)
 
 	logger.lifecycle(":launching enigma")
 	ant.java(jar: enigma.getAbsolutePath(), fork: true, spawn: true) {
