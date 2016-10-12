@@ -18,11 +18,19 @@ CLASS none/aiw net/minecraft/world/World
 	FIELD a seaLevel I
 	FIELD b pendingBlockEntities Ljava/util/List;
 	FIELD c unloadedBlockEntities Ljava/util/List;
+	FIELD d tickBlocksInstantly Z
 	FIELD e entities Ljava/util/List;
 	FIELD f unloadedEntities Ljava/util/List;
 	FIELD g blockEntities Ljava/util/List;
 	FIELD h tickingBlockEntities Ljava/util/List;
 	FIELD i players Ljava/util/List;
+	FIELD j globalEntities Ljava/util/List;
+	FIELD k entitiesById Lnone/om;
+	FIELD l randomLocationSeed I
+	FIELD n rainGradientPrev F
+	FIELD o rainGradient F
+	FIELD p thunderGradientPrev F
+	FIELD q thunderGradient F
 	FIELD r rand Ljava/util/Random;
 	FIELD s provider Lnone/auf;
 	FIELD u listeners Ljava/util/List;
@@ -57,6 +65,8 @@ CLASS none/aiw net/minecraft/world/World
 	METHOD S getSaveHandler ()Lnone/bav;
 	METHOD T getProperties ()Lnone/bau;
 	METHOD U getGameRules ()Lnone/ait;
+	METHOD V isThundering ()Z
+	METHOD W isRaining ()Z
 	METHOD a calculateAmbientDarkness (F)I
 	METHOD a getEntityById (I)Lnone/sg;
 		ARG 0 id
@@ -106,10 +116,28 @@ CLASS none/aiw net/minecraft/world/World
 		ARG 0 info
 	METHOD a addBlockEntity (Lnone/are;)Z
 		ARG 0 blockEntity
+	METHOD a getScheduledBlockTicks (Lnone/atp;Z)Ljava/util/List;
+		ARG 0 chunk
+		ARG 1 remove
 	METHOD a isAreaLoaded (Lnone/axa;)Z
 		ARG 0 area
+	METHOD a getScheduledBlockTicks (Lnone/axa;Z)Ljava/util/List;
+		ARG 0 region
+		ARG 1 remove
 	METHOD a isValidPos (Lnone/cn;)Z
 		ARG 0 pos
+	METHOD a hasBlockTickPending (Lnone/cn;Lnone/aky;)Z
+		ARG 0 pos
+		ARG 1 block
+	METHOD a scheduleBlockTick (Lnone/cn;Lnone/aky;I)V
+		ARG 0 pos
+		ARG 1 block
+		ARG 2 delay
+	METHOD a scheduleBlockTick (Lnone/cn;Lnone/aky;II)V
+		ARG 0 pos
+		ARG 1 block
+		ARG 2 delay
+		ARG 3 priority
 	METHOD a updateNeighborsExcept (Lnone/cn;Lnone/aky;Lnone/cu;)V
 		ARG 0 pos
 		ARG 1 changedBlock
@@ -122,6 +150,10 @@ CLASS none/aiw net/minecraft/world/World
 		ARG 0 pos
 		ARG 1 state
 		ARG 2 flags
+	METHOD a tickBlockInstantly (Lnone/cn;Lnone/asm;Ljava/util/Random;)V
+		ARG 0 pos
+		ARG 1 block
+		ARG 2 rand
 	METHOD a isAreaLoaded (Lnone/cn;Lnone/cn;)Z
 		ARG 0 min
 		ARG 1 max
@@ -158,6 +190,8 @@ CLASS none/aiw net/minecraft/world/World
 		ARG 5 createFire
 		ARG 6 destroyBlocks
 	METHOD a (Lnone/sg;Lnone/bcs;Lcom/google/common/base/Predicate;)Ljava/util/List;
+	METHOD a tickScheduledBlocks (Z)Z
+		ARG 0 tickAllNow
 	METHOD ac ()Ljava/util/Calendar;
 	METHOD ad getScoreboard ()Lnone/bdb;
 	METHOD ae getDifficulty ()Lnone/qz;
@@ -184,6 +218,14 @@ CLASS none/aiw net/minecraft/world/World
 		ARG 0 area
 	METHOD b getBiome (Lnone/cn;)Lnone/ajj;
 		ARG 0 pos
+	METHOD b hasBlockTickScheduled (Lnone/cn;Lnone/aky;)Z
+		ARG 0 pos
+		ARG 1 block
+	METHOD b scheduleBlockTickGuaranteedDelay (Lnone/cn;Lnone/aky;II)V
+		ARG 0 pos
+		ARG 1 block
+		ARG 2 delay
+		ARG 3 priority
 	METHOD b markDirty (Lnone/cn;Lnone/are;)V
 		ARG 0 pos
 		ARG 1 entity
@@ -216,6 +258,8 @@ CLASS none/aiw net/minecraft/world/World
 	METHOD d updateNeighbors (Lnone/cn;Lnone/aky;)V
 		ARG 0 pos
 		ARG 1 changedBlock
+	METHOD d addGlobalEntity (Lnone/sg;)Z
+		ARG 0 entity
 	METHOD e updateSleepingStatus ()V
 	METHOD e isBlockLoaded (Lnone/cn;)Z
 		ARG 0 pos
@@ -228,7 +272,15 @@ CLASS none/aiw net/minecraft/world/World
 	METHOD g setBlockToAir (Lnone/cn;)Z
 		ARG 0 pos
 	METHOD h setDefaultSpawnClient ()V
+	METHOD h getThunderGradient (F)F
+		ARG 0 deltaTicks
+	METHOD i setThunderGradient (F)V
+		ARG 0 value
+	METHOD j getRainGradient (F)F
+		ARG 0 deltaTicks
 	METHOD k updateEntities ()V
+	METHOD k setRainGradient (F)V
+		ARG 0 value
 	METHOD n createChunkProvider ()Lnone/atk;
 	METHOD o getBlockState (Lnone/cn;)Lnone/asm;
 		ARG 0 pos

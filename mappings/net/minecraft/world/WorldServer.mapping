@@ -1,6 +1,9 @@
 CLASS none/lu net/minecraft/world/WorldServer
 	FIELD I server Lnet/minecraft/server/MinecraftServer;
 	FIELD J entityTrackingManager Lnone/lr;
+	FIELD L blockTicksScheduled Ljava/util/Set;
+	FIELD M blockTicksScheduledTreeSet Ljava/util/TreeSet;
+	FIELD U blockTicksPending Ljava/util/List;
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD b autoSaveDisabled Z
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnone/bav;Lnone/bau;ILnone/os;)V
@@ -20,6 +23,24 @@ CLASS none/lu net/minecraft/world/WorldServer
 	METHOD a getEntityByUuid (Ljava/util/UUID;)Lnone/sg;
 	METHOD a init (Lnone/aiz;)V
 		ARG 0 info
+	METHOD a getScheduledBlockTicks (Lnone/atp;Z)Ljava/util/List;
+		ARG 0 chunk
+		ARG 1 remove
+	METHOD a getScheduledBlockTicks (Lnone/axa;Z)Ljava/util/List;
+		ARG 0 region
+		ARG 1 remove
+	METHOD a hasBlockTickPending (Lnone/cn;Lnone/aky;)Z
+		ARG 0 pos
+		ARG 1 block
+	METHOD a scheduleBlockTick (Lnone/cn;Lnone/aky;I)V
+		ARG 0 pos
+		ARG 1 block
+		ARG 2 delay
+	METHOD a scheduleBlockTick (Lnone/cn;Lnone/aky;II)V
+		ARG 0 pos
+		ARG 1 block
+		ARG 2 delay
+		ARG 3 priority
 	METHOD a spawnEntity (Lnone/sg;)Z
 		ARG 0 entity
 	METHOD a createExplosion (Lnone/sg;DDDFZZ)Lnone/air;
@@ -30,6 +51,8 @@ CLASS none/lu net/minecraft/world/WorldServer
 		ARG 4 power
 		ARG 5 createFire
 		ARG 6 destroyBlocks
+	METHOD a tickScheduledBlocks (Z)Z
+		ARG 0 tickAllNow
 	METHOD a save (ZLnone/ot;)V
 		ARG 0 entities
 		ARG 1 progress
@@ -38,11 +61,21 @@ CLASS none/lu net/minecraft/world/WorldServer
 	METHOD am shouldSpawnAnimals ()Z
 	METHOD an initDebugWorldProperties ()V
 	METHOD b ()Lnone/aiw;
+	METHOD b hasBlockTickScheduled (Lnone/cn;Lnone/aky;)Z
+		ARG 0 pos
+		ARG 1 block
+	METHOD b scheduleBlockTickGuaranteedDelay (Lnone/cn;Lnone/aky;II)V
+		ARG 0 pos
+		ARG 1 block
+		ARG 2 delay
+		ARG 3 priority
 	METHOD b onEntityAdded (Lnone/sg;)V
 		ARG 0 entity
 	METHOD c onEntityRemoved (Lnone/sg;)V
 		ARG 0 entity
 	METHOD d update ()V
+	METHOD d addGlobalEntity (Lnone/sg;)Z
+		ARG 0 entity
 	METHOD e updateSleepingStatus ()V
 	METHOD h setDefaultSpawnClient ()V
 	METHOD k updateEntities ()V
