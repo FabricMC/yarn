@@ -2,14 +2,27 @@ CLASS none/lw net/minecraft/entity/player/EntityPlayerServer
 	FIELD a networkHandler Lnone/mg;
 	FIELD b server Lnet/minecraft/server/MinecraftServer;
 	FIELD bS LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD bT language Ljava/lang/String;
 	FIELD bV statManager Lnone/nt;
+	FIELD bW lastScoreHealth F
+	FIELD bX lastScoreFood I
+	FIELD bY lastScoreBreath I
+	FIELD bZ lastScoreArmor I
+	FIELD ca lastScoreExperience I
+	FIELD cb lastScoreExperienceLevel I
+	FIELD cc lastSyncedHealth F
+	FIELD cd lastSyncedFoodLevel I
+	FIELD ce lastSyncedSaturationLevel Z
+	FIELD cf lastSyncedExperienceLevel I
 	FIELD ch chatVisibility Lnone/aam$b;
+	FIELD ci chatColorsEnabled Z
 	FIELD ck cameraEntity Lnone/sg;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnone/lu;Lcom/mojang/authlib/GameProfile;Lnone/lx;)V
 		ARG 0 server
 		ARG 1 world
 	METHOD A getIpAddress ()Ljava/lang/String;
 	METHOD C getChatVisibility ()Lnone/aam$b;
+	METHOD E getStatManager ()Lnone/nt;
 	METHOD F updatePotionVisibility ()V
 	METHOD G getCameraEntity ()Lnone/sg;
 	METHOD H updatePortalCooldown ()V
@@ -36,6 +49,9 @@ CLASS none/lw net/minecraft/entity/player/EntityPlayerServer
 	METHOD a openVillagerGui (Lnone/aih;)V
 	METHOD a openCommandBlock (Lnone/arh;)V
 	METHOD a openSignEditor (Lnone/arw;)V
+	METHOD a setScore (Lnone/bdh;I)V
+		ARG 0 criterion
+		ARG 1 value
 	METHOD a trySleep (Lnone/cn;)Lnone/aam$a;
 		ARG 0 pos
 	METHOD a deserializeCustomData (Lnone/dt;)V
@@ -43,6 +59,8 @@ CLASS none/lw net/minecraft/entity/player/EntityPlayerServer
 	METHOD a appendCommandFeedback (Lnone/fa;)V
 		ARG 0 component
 	METHOD a addChatMsg (Lnone/fa;Z)V
+	METHOD a setClientSettings (Lnone/iq;)V
+		ARG 0 clientSettings
 	METHOD a increaseStat (Lnone/nu;I)V
 		ARG 0 stat
 		ARG 1 points
@@ -74,6 +92,9 @@ CLASS none/lw net/minecraft/entity/player/EntityPlayerServer
 		ARG 0 entity
 	METHOD f attack (Lnone/sg;)V
 		ARG 0 entity
+	METHOD k_ updateNetwork ()V
+	METHOD l createCooldownManager ()Lnone/aer;
+	METHOD o checkBiomeExplorationAchievement ()V
 	METHOD p stopRiding ()V
 	METHOD s closeGui ()V
 	METHOD x getWorldServer ()Lnone/lu;
