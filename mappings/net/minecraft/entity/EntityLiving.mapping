@@ -1,6 +1,9 @@
 CLASS none/sp net/minecraft/entity/EntityLiving
+	FIELD aC deathCounter I
 	FIELD a ATTR_SPRINTING_SPEED_BOOST_ID Ljava/util/UUID;
 	FIELD aQ headPitch F
+	FIELD aU playerHitTimer I
+	FIELD aV dead Z
 	FIELD au LIVING_FLAGS Lnone/kj;
 	FIELD ay stuckArrowTimer I
 	FIELD b ATTR_SPRINTING_SPEED_BOOST Lnone/td;
@@ -31,6 +34,8 @@ CLASS none/sp net/minecraft/entity/EntityLiving
 	METHOD a setStackInHand (Lnone/rb;Lnone/aes;)V
 		ARG 0 hand
 		ARG 1 stack
+	METHOD a onDeath (Lnone/rr;)V
+		ARG 0 damageSource
 	METHOD a damage (Lnone/rr;F)Z
 		ARG 0 source
 		ARG 1 damage
@@ -43,6 +48,13 @@ CLASS none/sp net/minecraft/entity/EntityLiving
 		ARG 1 stack
 	METHOD a getAttributeInstance (Lnone/tb;)Lnone/tc;
 		ARG 0 attribute
+	METHOD a dropEquipment (ZI)V
+		ARG 0 recentlyHitByPlayer
+		ARG 1 looting
+	METHOD a dropLoot (ZILnone/rr;)V
+		ARG 0 recentlyHitByPlayer
+		ARG 1 looting
+		ARG 2 damageSource
 	METHOD aH getItemsArmor ()Ljava/lang/Iterable;
 	METHOD aU getHeadPitch ()F
 	METHOD a_ onEquipStack (Lnone/aes;)V
@@ -60,7 +72,12 @@ CLASS none/sp net/minecraft/entity/EntityLiving
 		ARG 0 type
 	METHOD b getEquippedStack (Lnone/sl;)Lnone/aes;
 		ARG 0 slot
+	METHOD b dropDefaultLoot (ZI)V
+		ARG 0 recentlyHitByPlayer
+		ARG 1 looting
 	METHOD bD initAttributes ()V
+	METHOD bF updatePostDeath ()V
+	METHOD bG canDropLootAndXp ()Z
 	METHOD bI getRand ()Ljava/util/Random;
 	METHOD bP clearPotionSwirls ()V
 	METHOD bQ clearPotionEffects ()V
@@ -79,6 +96,8 @@ CLASS none/sp net/minecraft/entity/EntityLiving
 	METHOD cd getAttributeContainer ()Lnone/tf;
 	METHOD cf getMainHandStack ()Lnone/aes;
 	METHOD cg getOffHandStack ()Lnone/aes;
+	METHOD ch getSoundVolume ()F
+	METHOD ci getSoundPitch ()F
 	METHOD cq isSleeping ()Z
 	METHOD cw getMainHand ()Lnone/so;
 	METHOD cy ()Lnone/rb;
