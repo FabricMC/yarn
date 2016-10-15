@@ -19,6 +19,7 @@ CLASS none/sg net/minecraft/entity/Entity
 	FIELD O prevRenderZ D
 	FIELD S rand Ljava/util/Random;
 	FIELD T age I
+	FIELD V swimming Z
 	FIELD Z dataTracker Lnone/km;
 	FIELD aA BREATH Lnone/kj;
 	FIELD aB NAME Lnone/kj;
@@ -27,6 +28,7 @@ CLASS none/sg net/minecraft/entity/Entity
 	FIELD aE NO_GRAVITY Lnone/kj;
 	FIELD aF invulnerable Z
 	FIELD aG commandStats Lnone/o;
+	FIELD aH scoreboardTags Ljava/util/Set;
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD aa ENTITY_FLAGS Lnone/kj;
 	FIELD ac chunkX I
@@ -67,9 +69,10 @@ CLASS none/sg net/minecraft/entity/Entity
 		ARG 0 world
 	METHOD H updatePortalCooldown ()V
 	METHOD O getEntityId ()I
+	METHOD P getScoreboardTags ()Ljava/util/Set;
 	METHOD R getDataTracker ()Lnone/km;
 	METHOD T invalidate ()V
-	METHOD U ()V
+	METHOD U updateLogic ()V
 	METHOD X extinguish ()V
 	METHOD a setPositionAnglesAndUpdate (DDDFF)V
 		ARG 0 x
@@ -86,6 +89,8 @@ CLASS none/sg net/minecraft/entity/Entity
 	METHOD a hasPermission (ILjava/lang/String;)Z
 		ARG 0 permissionLevel
 		ARG 1 commandName
+	METHOD a addScoreboardTag (Ljava/lang/String;)Z
+		ARG 0 tag
 	METHOD a setUuid (Ljava/util/UUID;)V
 		ARG 0 uuid
 	METHOD a interact (Lnone/aam;Lnone/bcv;Lnone/rb;)Lnone/rd;
@@ -127,6 +132,7 @@ CLASS none/sg net/minecraft/entity/Entity
 		ARG 0 pos
 		ARG 1 yaw
 		ARG 2 pitch
+	METHOD a playStepSound (Lnone/cn;Lnone/aky;)V
 	METHOD a deserializeCustomData (Lnone/dt;)V
 		ARG 0 tag
 	METHOD a appendCommandFeedback (Lnone/fa;)V
@@ -158,6 +164,7 @@ CLASS none/sg net/minecraft/entity/Entity
 		ARG 0 values
 	METHOD a toTagList ([F)Lnone/dz;
 		ARG 0 values
+	METHOD aB getForwardVector ()Lnone/bcv;
 	METHOD aE getDefaultPortalCooldown ()I
 	METHOD aG getItemsHand ()Ljava/lang/Iterable;
 	METHOD aH getItemsArmor ()Ljava/lang/Iterable;
@@ -175,7 +182,11 @@ CLASS none/sg net/minecraft/entity/Entity
 	METHOD ab getSoundSplash ()Lnone/nk;
 	METHOD ad isSilent ()Z
 	METHOD ae isUnaffectedByGravity ()Z
+	METHOD aj isSwimming ()Z
+	METHOD ak updateSwimming ()Z
+	METHOD al onSwimmingStart ()V
 	METHOD au isValid ()Z
+	METHOD av isInsideWall ()Z
 	METHOD az removeAllPassengers ()V
 	METHOD b setPosition (DDD)V
 		ARG 0 x
@@ -193,6 +204,8 @@ CLASS none/sg net/minecraft/entity/Entity
 	METHOD b setEntityFlag (IZ)V
 		ARG 0 index
 		ARG 1 value
+	METHOD b removeScoreboardTag (Ljava/lang/String;)Z
+		ARG 0 tag
 	METHOD b interact (Lnone/aam;Lnone/rb;)Z
 		ARG 0 player
 		ARG 1 hand
@@ -209,6 +222,7 @@ CLASS none/sg net/minecraft/entity/Entity
 	METHOD bl getHorizontalFacing ()Lnone/cu;
 	METHOD bn getComponentHoverEvent ()Lnone/fc;
 	METHOD bo getBoundingBox ()Lnone/bcs;
+	METHOD bq getEyeHeight ()F
 	METHOD bs getCommandStats ()Lnone/o;
 	METHOD bt isImmuneToExplosion ()Z
 	METHOD bx getPassengerList ()Ljava/util/List;
@@ -224,6 +238,9 @@ CLASS none/sg net/minecraft/entity/Entity
 		ARG 0 value
 	METHOD d getPos ()Lnone/bcv;
 	METHOD d move (DDD)V
+		ARG 0 deltaX
+		ARG 1 deltaY
+		ARG 2 deltaZ
 	METHOD d squaredDistanceToCenter (Lnone/cn;)D
 		ARG 0 pos
 	METHOD d setUnaffectedByGravity (Z)V
@@ -279,6 +296,8 @@ CLASS none/sg net/minecraft/entity/Entity
 		ARG 2 z
 	METHOD i setOnFireFor (I)V
 		ARG 0 seconds
+	METHOD i pushAwayFrom (Lnone/sg;)V
+		ARG 0 other
 	METHOD i setInvulnerable (Z)V
 		ARG 0 value
 	METHOD i_ getNameComponent ()Lnone/fa;
