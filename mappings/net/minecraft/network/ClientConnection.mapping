@@ -1,34 +1,68 @@
 CLASS none/eq net/minecraft/network/ClientConnection
+	CLASS none/eq$1
+		METHOD a createInstance ()Lio/netty/channel/nio/NioEventLoopGroup;
+		METHOD b createInstance ()Ljava/lang/Object;
+	CLASS none/eq$2
+		METHOD a createInstance ()Lio/netty/channel/epoll/EpollEventLoopGroup;
+		METHOD b createInstance ()Ljava/lang/Object;
+	CLASS none/eq$3
+		METHOD a createInstance ()Lio/netty/channel/local/LocalEventLoopGroup;
+		METHOD b createInstance ()Ljava/lang/Object;
 	CLASS none/eq$5
 		METHOD initChannel initChannel (Lio/netty/channel/Channel;)V
+			ARG 0 channel
 	CLASS none/eq$6
 		METHOD initChannel initChannel (Lio/netty/channel/Channel;)V
+			ARG 0 channel
+	FIELD c ATTR_KEY_PROTOCOL Lio/netty/util/AttributeKey;
+	FIELD d CLIENT_IO_GROUP Lnone/on;
+	FIELD e CLIENT_IO_GROUP_EPOLL Lnone/on;
+	FIELD f CLIENT_IO_GROUP_LOCAL Lnone/on;
 	FIELD g LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD h side Lnone/fm;
+	FIELD j lock Ljava/util/concurrent/locks/ReentrantReadWriteLock;
 	FIELD k channel Lio/netty/channel/Channel;
 	FIELD l address Ljava/net/SocketAddress;
 	FIELD m packetListener Lnone/ev;
 	FIELD n disconnectReason Lnone/fa;
+	FIELD o encrypted Z
+	FIELD p disconnected Z
 	METHOD <init> (Lnone/fm;)V
 		ARG 0 side
 	METHOD a setMinCompressedSize (I)V
 		ARG 0 value
+	METHOD a (Lio/netty/channel/ChannelHandlerContext;Lnone/fl;)V
+		ARG 0 context
+		ARG 1 packet
 	METHOD a connect (Ljava/net/InetAddress;IZ)Lnone/eq;
 		ARG 0 address
 		ARG 1 port
+		ARG 2 shouldUseNativeTransport
 	METHOD a connect (Ljava/net/SocketAddress;)Lnone/eq;
+		ARG 0 address
+	METHOD a setupEncryption (Ljavax/crypto/SecretKey;)V
+		ARG 0 key
 	METHOD a setState (Lnone/er;)V
+		ARG 0 state
 	METHOD a setPacketListener (Lnone/ev;)V
 		ARG 0 packetListener
 	METHOD a disconnect (Lnone/fa;)V
 		ARG 0 reason
 	METHOD a sendPacket (Lnone/fl;)V
+		ARG 0 packet
+	METHOD a sendPacket (Lnone/fl;Lio/netty/util/concurrent/GenericFutureListener;[Lio/netty/util/concurrent/GenericFutureListener;)V
 	METHOD b getAddress ()Ljava/net/SocketAddress;
 	METHOD c isLocal ()Z
 	METHOD channelActive channelActive (Lio/netty/channel/ChannelHandlerContext;)V
 		ARG 0 context
 	METHOD channelInactive channelInactive (Lio/netty/channel/ChannelHandlerContext;)V
+		ARG 0 context
 	METHOD exceptionCaught exceptionCaught (Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Throwable;)V
+		ARG 0 context
+		ARG 1 throwable
+	METHOD f isEncrypted ()Z
 	METHOD g isOpen ()Z
+	METHOD h hasChannel ()Z
 	METHOD i getPacketListener ()Lnone/ev;
 	METHOD j getDisconnectReason ()Lnone/fa;
+	METHOD l handleDisconnection ()V
