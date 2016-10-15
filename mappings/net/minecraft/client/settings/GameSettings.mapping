@@ -13,9 +13,14 @@ CLASS none/bdt net/minecraft/client/settings/GameSettings
 		FIELD K SHOW_SUBTITLES Lnone/bdt$a;
 		FIELD L REALMS_NOTIFICATIONS Lnone/bdt$a;
 		FIELD M AUTO_JUMP Lnone/bdt$a;
+		FIELD N slider Z
+		FIELD O toggle Z
 		FIELD P key Ljava/lang/String;
+		FIELD Q sliderStep F
+		FIELD R sliderMin F
+		FIELD S sliderMax F
 		FIELD a INVERT_MOUSE Lnone/bdt$a;
-		FIELD b SENSETIVITY Lnone/bdt$a;
+		FIELD b SENSITIVITY Lnone/bdt$a;
 		FIELD c FOV Lnone/bdt$a;
 		FIELD d GAMMA Lnone/bdt$a;
 		FIELD e SATURATION Lnone/bdt$a;
@@ -40,7 +45,36 @@ CLASS none/bdt net/minecraft/client/settings/GameSettings
 		FIELD x VBO Lnone/bdt$a;
 		FIELD y TOUCHSCREEN Lnone/bdt$a;
 		FIELD z CHAT_SCALE Lnone/bdt$a;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;ZZ)V
+			ARG 0 key
+			ARG 1 slider
+			ARG 2 toggle
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;ZZFFF)V
+			ARG 0 key
+			ARG 1 slider
+			ARG 2 toggle
+			ARG 3 sliderMin
+			ARG 4 sliderMax
+			ARG 5 sliderStep
+		METHOD a isSlider ()Z
+		METHOD a setMaximum (F)V
+			ARG 0 value
+		METHOD a getOption (I)Lnone/bdt$a;
+			ARG 0 id
+		METHOD b isToggle ()Z
+		METHOD c getId ()I
+		METHOD c calculatePercentage (F)F
+			ARG 0 value
 		METHOD d getTranslationKey ()Ljava/lang/String;
+		METHOD d calculateValue (F)F
+			ARG 0 value
+		METHOD e getMinimum ()F
+		METHOD e clampValue (F)F
+			ARG 0 value
+		METHOD f getMaximum ()F
+		METHOD f roundToStep (F)F
+			ARG 0 value
+		METHOD values values ()[Lnone/bdt$a;
 	FIELD A touchscreen Z
 	FIELD B mainHand Lnone/so;
 	FIELD C overrideWidth I
@@ -107,7 +141,7 @@ CLASS none/bdt net/minecraft/client/settings/GameSettings
 	FIELD av debugGraphEnabled Z
 	FIELD aw lastServer Ljava/lang/String;
 	FIELD az fov F
-	FIELD b mouseSensetivity F
+	FIELD b mouseSensitivity F
 	FIELD c invertYMouse Z
 	FIELD d viewDistance I
 	FIELD e bobView Z
@@ -132,6 +166,9 @@ CLASS none/bdt net/minecraft/client/settings/GameSettings
 	FIELD x hideServerAddress Z
 	FIELD y advancedItemTooltips Z
 	FIELD z pauseOnLostFocus Z
+	METHOD <init> (Lnone/bdr;Ljava/io/File;)V
+		ARG 0 game
+		ARG 1 optionsFile
 	METHOD a load ()V
 	METHOD a parseFloat (Ljava/lang/String;)F
 		ARG 0 s
@@ -142,8 +179,12 @@ CLASS none/bdt net/minecraft/client/settings/GameSettings
 		ARG 1 enabled
 	METHOD a get (Lnone/bdt$a;)F
 		ARG 0 option
-	METHOD a (Lnone/bdt$a;I)V
+	METHOD a updateOption (Lnone/bdt$a;F)V
 		ARG 0 option
+		ARG 1 value
+	METHOD a updateOption (Lnone/bdt$a;I)V
+		ARG 0 option
+		ARG 1 value
 	METHOD a getSoundVolume (Lnone/nm;)F
 		ARG 0 category
 	METHOD a setSoundVolume (Lnone/nm;F)V

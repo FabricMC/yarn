@@ -1,6 +1,9 @@
 CLASS none/sq net/minecraft/entity/mob/EntityMob
+	CLASS none/sq$a
 	FIELD a MOB_FLAGS Lnone/kj;
 	FIELD bA persistent Z
+	FIELD bC lootTable Lnone/kp;
+	FIELD bD lootTableSeed J
 	FIELD bE leashed Z
 	FIELD bF holdingEntity Lnone/sg;
 	FIELD bG leashTag Lnone/dt;
@@ -11,7 +14,9 @@ CLASS none/sq net/minecraft/entity/mob/EntityMob
 	FIELD bx handItems Lnone/dc;
 	FIELD by armorItems Lnone/dc;
 	FIELD bz pickUpLoot Z
+	METHOD D playSoundAmbient ()V
 	METHOD G getSoundAmbient ()Lnone/nk;
+	METHOD I getLootItem ()Lnone/aeq;
 	METHOD J ()Lnone/kp;
 	METHOD U ()V
 	METHOD a canBeLeashedBy (Lnone/aam;)Z
@@ -27,9 +32,19 @@ CLASS none/sq net/minecraft/entity/mob/EntityMob
 	METHOD a startRiding (Lnone/sg;Z)Z
 		ARG 0 entity
 		ARG 1 ignoreRequirements
+	METHOD a setEquipmentDropChance (Lnone/sl;F)V
+		ARG 0 slot
+		ARG 1 value
 	METHOD a setEquippedStack (Lnone/sl;Lnone/aes;)V
 		ARG 0 slot
 		ARG 1 stack
+	METHOD a dropEquipment (ZI)V
+		ARG 0 recentlyHitByPlayer
+		ARG 1 looting
+	METHOD a dropLoot (ZILnone/rr;)V
+		ARG 0 recentlyHitByPlayer
+		ARG 1 looting
+		ARG 2 damageSource
 	METHOD a detachLeash (ZZ)V
 		ARG 0 sendPacket
 		ARG 1 dropLeadStack
@@ -45,6 +60,9 @@ CLASS none/sq net/minecraft/entity/mob/EntityMob
 		ARG 1 sendPacket
 	METHOD b getEquippedStack (Lnone/sl;)Lnone/aes;
 		ARG 0 slot
+	METHOD b dropDefaultLoot (ZI)V
+		ARG 0 recentlyHitByPlayer
+		ARG 1 looting
 	METHOD bD initAttributes ()V
 	METHOD c setTarget (Lnone/sp;)V
 		ARG 0 value
