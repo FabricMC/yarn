@@ -23,9 +23,12 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD G worldHeight I
 	FIELD H playerIdleTimeout I
 	FIELD I keyPair Ljava/security/KeyPair;
-	FIELD K levelName Ljava/lang/String;
+	FIELD K levelId Ljava/lang/String;
+	FIELD L levelName Ljava/lang/String;
 	FIELD M demo Z
 	FIELD N bonusChest Z
+	FIELD O resourcePackUrl Ljava/lang/String;
+	FIELD P resourcePackHash Ljava/lang/String;
 	FIELD S currentTaskName Ljava/lang/String;
 	FIELD U forceGameMode Z
 	FIELD V authService Lcom/mojang/authlib/yggdrasil/YggdrasilAuthenticationService;
@@ -42,6 +45,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD e proxy Ljava/net/Proxy;
 	FIELD f currentOperation Ljava/lang/String;
 	FIELD g currentOperationPercent I
+	FIELD h lastTickLengths [J
 	FIELD j jobs Ljava/util/Queue;
 	FIELD k LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD l levelStorage Lnone/bax;
@@ -84,10 +88,13 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD P getServerPort ()I
 	METHOD Q getUserName ()Ljava/lang/String;
 	METHOD R isSinglePlayer ()Z
-	METHOD S getLevelName ()Ljava/lang/String;
+	METHOD S getLevelId ()Ljava/lang/String;
+	METHOD T getLevelName ()Ljava/lang/String;
 	METHOD U isMonsterSpawningEnabled ()Z
 	METHOD V isDemo ()Z
 	METHOD W getLevelStorage ()Lnone/bax;
+	METHOD X getResourcePackUrl ()Ljava/lang/String;
+	METHOD Y getResourcePackHash ()Ljava/lang/String;
 	METHOD Z isSnooperEnabled ()Z
 	METHOD a getWorld (I)Lnone/lu;
 		ARG 0 worldId
@@ -155,6 +162,8 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 		ARG 0 message
 		ARG 1 percentage
 	METHOD a_ setResourcePack (Ljava/lang/String;Ljava/lang/String;)V
+		ARG 0 url
+		ARG 1 hash
 	METHOD aa isDedicated ()Z
 	METHOD ab isOnlineMode ()Z
 	METHOD ac shouldPreventProxyConnections ()Z
@@ -228,16 +237,18 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 		ARG 0 value
 	METHOD i_ getNameComponent ()Lnone/fa;
 	METHOD j ()Z
-	METHOD j setLevelName (Ljava/lang/String;)V
+	METHOD j setLevelId (Ljava/lang/String;)V
 		ARG 0 value
 	METHOD j setForceGameMode (Z)V
 		ARG 0 value
 	METHOD k getCurrentTaskName ()Ljava/lang/String;
+	METHOD k setLevelName (Ljava/lang/String;)V
+		ARG 0 value
 	METHOD l generateTerrain ()V
 	METHOD l setMotd (Ljava/lang/String;)V
 		ARG 0 value
 	METHOD m shouldGenerateStructures ()Z
-	METHOD main ([Ljava/lang/String;)V
+	METHOD main main ([Ljava/lang/String;)V
 		ARG 0 args
 	METHOD n getGameMode ()Lnone/aiu;
 	METHOD o getDifficulty ()Lnone/qz;
