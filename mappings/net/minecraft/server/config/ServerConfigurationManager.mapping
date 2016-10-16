@@ -43,6 +43,7 @@ CLASS none/mr net/minecraft/server/config/ServerConfigurationManager
 	FIELD q whitelistEnabled Z
 	FIELD r viewDistance I
 	FIELD s gameMode Lnone/aiu;
+	FIELD t cheatsAllowed Z
 	FIELD u latencyUpdateTimer I
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;)V
 		ARG 0 server
@@ -73,11 +74,18 @@ CLASS none/mr net/minecraft/server/config/ServerConfigurationManager
 	METHOD a handlePlayerLogin (Lnone/eq;Lnone/lw;)V
 		ARG 0 connection
 		ARG 1 playerEntity
+	METHOD a sendServerMessage (Lnone/fa;)V
+		ARG 0 message
+	METHOD a sendChatMessage (Lnone/fa;Z)V
+		ARG 0 message
+		ARG 1 server
 	METHOD a sendToAll (Lnone/fl;)V
 		ARG 0 packet
 	METHOD a sendToWorld (Lnone/fl;I)V
 		ARG 0 packet
 		ARG 1 worldId
+	METHOD a (Lnone/lw;IZ)Lnone/lw;
+		ARG 0 player
 	METHOD a setWhitelistEnabled (Z)V
 		ARG 0 value
 	METHOD a onWorldInit ([Lnone/lu;)V
@@ -94,6 +102,8 @@ CLASS none/mr net/minecraft/server/config/ServerConfigurationManager
 	METHOD c getServer ()Lnet/minecraft/server/MinecraftServer;
 	METHOD c removeFromWhitelist (Lcom/mojang/authlib/GameProfile;)V
 		ARG 0 profile
+	METHOD c setCheatsAllowed (Z)V
+		ARG 0 value
 	METHOD d addToWhitelist (Lcom/mojang/authlib/GameProfile;)V
 		ARG 0 profile
 	METHOD e updatePlayerLatency ()V
@@ -102,6 +112,8 @@ CLASS none/mr net/minecraft/server/config/ServerConfigurationManager
 	METHOD f getPlayerNames ()[Ljava/lang/String;
 	METHOD f canBypassPlayerLimit (Lcom/mojang/authlib/GameProfile;)Z
 		ARG 0 profile
+	METHOD f sendPermissionLevel (Lnone/lw;)V
+		ARG 0 player
 	METHOD g getPlayerProfiles ()[Lcom/mojang/authlib/GameProfile;
 	METHOD h getBannedProfiles ()Lnone/mw;
 	METHOD h isOperator (Lcom/mojang/authlib/GameProfile;)Z
