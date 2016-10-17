@@ -2,15 +2,26 @@ CLASS none/nt net/minecraft/stat/StatManagerServer
 	FIELD b LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD c server Lnet/minecraft/server/MinecraftServer;
 	FIELD d statFile Ljava/io/File;
+	FIELD e dirtyStats Ljava/util/Set;
+	FIELD f lastUpdatedTime I
+	FIELD g dirtyAchievement Z
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/io/File;)V
 		ARG 0 server
 		ARG 1 statFile
 	METHOD a load ()V
 	METHOD a deserialize (Ljava/lang/String;)Ljava/util/Map;
-	METHOD a updateStatState (Lnone/aam;Lnone/nu;I)V
+		ARG 0 json
+	METHOD a serialize (Ljava/util/Map;)Ljava/lang/String;
+		ARG 0 stats
+	METHOD a set (Lnone/aam;Lnone/nu;I)V
 		ARG 0 player
 		ARG 1 stat
-		ARG 2 state
+		ARG 2 value
+	METHOD a sendChangedStats (Lnone/lw;)V
+		ARG 0 player
 	METHOD b save ()V
 	METHOD b sendStatPacket (Lnone/lw;)V
 		ARG 0 player
+	METHOD c getAndClearDirtyStats ()Ljava/util/Set;
+	METHOD d markAllDirty ()V
+	METHOD e hasNewAchievement ()Z
