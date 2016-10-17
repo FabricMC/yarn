@@ -3,23 +3,41 @@ CLASS none/bho net/minecraft/client/gui/ingame/GuiCreativeInventory
 		FIELD a itemList Lnone/dc;
 		METHOD <init> (Lnone/aam;)V
 			ARG 0 player
+		METHOD a shiftItemInSlot (IIZLnone/aam;)V
+			ARG 0 invSlot
+			ARG 1 buttonId
+			ARG 3 player
 		METHOD a canUse (Lnone/aam;)Z
 			ARG 0 player
+		METHOD a (Lnone/aes;Lnone/acv;)Z
+			ARG 0 stack
+			ARG 1 slot
 		METHOD b getStack (Lnone/aam;I)Lnone/aes;
 			ARG 0 player
 			ARG 1 slot
+		METHOD b (Lnone/acv;)Z
+			ARG 0 slot
 	CLASS none/bho$b CreativeSlot
 		FIELD b slot Lnone/acv;
+		METHOD <init> (Lnone/bho;Lnone/acv;I)V
+			ARG 0 slot
 		METHOD a getMaxStackAmount ()I
 		METHOD a takeStack (I)Lnone/aes;
 			ARG 0 amount
-		METHOD a (Lnone/aam;)Z
+		METHOD a canTakeItem (Lnone/aam;)Z
 			ARG 0 player
+		METHOD a onTakeItem (Lnone/aam;Lnone/aes;)Lnone/aes;
+			ARG 0 player
+			ARG 1 stack
 		METHOD a canInsert (Lnone/aes;)Z
 			ARG 0 stack
+		METHOD a onContentChanged (Lnone/aes;Lnone/aes;)V
+			ARG 0 originalItem
+			ARG 1 newItem
 		METHOD a matches (Lnone/qv;I)Z
 			ARG 0 inventory
 			ARG 1 invSlot
+		METHOD b doDrawHoveringEffect ()Z
 		METHOD b getMaxStackAmount (Lnone/aes;)I
 			ARG 0 stack
 		METHOD c getBackgroundSprite ()Ljava/lang/String;
@@ -29,10 +47,14 @@ CLASS none/bho net/minecraft/client/gui/ingame/GuiCreativeInventory
 		METHOD e hasStack ()Z
 		METHOD f markDirty ()V
 	FIELD A searchBox Lnone/bep;
+	FIELD B slots Ljava/util/List;
+	FIELD C deleteItemSlot Lnone/acv;
 	FIELD D clearText Z
 	FIELD u BG_TEX Lnone/kp;
 	FIELD v inventory Lnone/rk;
 	FIELD w selectedTab I
+	FIELD x scrollPosition F
+	FIELD y isScrolling Z
 	METHOD <init> (Lnone/aam;)V
 		ARG 0 player
 	METHOD a onKeyPressed (CI)V
@@ -72,5 +94,6 @@ CLASS none/bho net/minecraft/client/gui/ingame/GuiCreativeInventory
 	METHOD b setSelectedTab (Lnone/ads;)V
 		ARG 0 tab
 	METHOD e update ()V
+	METHOD i doRenderScrollBar ()Z
 	METHOD k handleMouseEvent ()V
 	METHOD m onClosed ()V
