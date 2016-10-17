@@ -2,13 +2,14 @@ CLASS none/bgn net/minecraft/client/gui/Gui
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD f PROTOCOLS Ljava/util/Set;
 	FIELD g LINE_SPLITTER Lcom/google/common/base/Splitter;
+	FIELD h lastPressedWidget Lnone/bel;
 	FIELD j game Lnone/bdr;
 	FIELD k itemRenderer Lnone/btr;
 	FIELD l width I
 	FIELD m height I
 	FIELD n widgets Ljava/util/List;
 	FIELD q fontRenderer Lnone/bef;
-	METHOD a handleKeyPress (CI)V
+	METHOD a onKeyPressed (CI)V
 		ARG 0 keyChar
 		ARG 1 keyCode
 	METHOD a setSize (II)V
@@ -18,11 +19,15 @@ CLASS none/bgn net/minecraft/client/gui/Gui
 		ARG 0 mouseX
 		ARG 1 mouseY
 		ARG 2 delta
-	METHOD a handleMouseClick (III)V
+	METHOD a onMousePressed (III)V
 		ARG 0 mouseX
 		ARG 1 mouseY
 		ARG 2 mouseButton
-	METHOD a mouseDragged (IIIJ)V
+	METHOD a onMouseDragged (IIIJ)V
+		ARG 0 mouseX
+		ARG 1 mouseY
+		ARG 2 mouseButton
+		ARG 3 heldTime
 	METHOD a drawTooltip (Ljava/lang/String;II)V
 		ARG 0 text
 		ARG 1 x
@@ -41,8 +46,8 @@ CLASS none/bgn net/minecraft/client/gui/Gui
 		ARG 0 game
 		ARG 1 width
 		ARG 2 height
-	METHOD a handleButtonPressed (Lnone/bel;)V
-		ARG 0 button
+	METHOD a onWidgetPressed (Lnone/bel;)V
+		ARG 0 widget
 	METHOD a handleTextComponentClick (Lnone/fa;)Z
 		ARG 0 component
 	METHOD a drawTextComponentHover (Lnone/fa;II)V
@@ -53,10 +58,10 @@ CLASS none/bgn net/minecraft/client/gui/Gui
 		ARG 0 result
 		ARG 1 callbackId
 	METHOD b init ()V
-	METHOD b handleTouchEvent (III)V
-		ARG 0 touchX
-		ARG 1 touchY
-		ARG 2 touchMode
+	METHOD b onMouseReleased (III)V
+		ARG 0 mouseX
+		ARG 1 mouseY
+		ARG 2 mouseButton
 	METHOD b init0 (Lnone/bdr;II)V
 		ARG 0 game
 		ARG 1 width
