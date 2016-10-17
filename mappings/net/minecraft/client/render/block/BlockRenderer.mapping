@@ -1,26 +1,26 @@
 CLASS none/bpr net/minecraft/client/render/block/BlockRenderer
-	CLASS none/bpr$a EnumNeighborInfo
+	CLASS none/bpr$a NeighborData
 		FIELD a DOWN Lnone/bpr$a;
 		FIELD b UP Lnone/bpr$a;
 		FIELD c NORTH Lnone/bpr$a;
 		FIELD d SOUTH Lnone/bpr$a;
 		FIELD e WEST Lnone/bpr$a;
 		FIELD f EAST Lnone/bpr$a;
-		FIELD g corners [Lnone/cu;
-		FIELD h shadeWeight F
-		FIELD i doNonCubicWeight Z
+		FIELD g faces [Lnone/cu;
+		FIELD h weight F
+		FIELD i nonCubicWeight Z
 		FIELD n VALUES [Lnone/bpr$a;
 		METHOD <init> (Ljava/lang/String;I[Lnone/cu;FZ[Lnone/bpr$d;[Lnone/bpr$d;[Lnone/bpr$d;[Lnone/bpr$d;)V
-			ARG 0 corners
-			ARG 1 shadeWeight
-			ARG 2 doNonCubicWeight
-		METHOD a getNeighbourInfo (Lnone/cu;)Lnone/bpr$a;
+			ARG 0 faces
+			ARG 1 weight
+			ARG 2 nonCubicWeight
+		METHOD a getData (Lnone/cu;)Lnone/bpr$a;
 			ARG 0 facing
 	CLASS none/bpr$b AmbientOcclusionCalculator
-		FIELD b vertexColorMultiplier [F
-		FIELD c vertexBrightness [I
+		FIELD b colorMultiplier [F
+		FIELD c brightness [I
 		METHOD a getAmbientOcclusionBrightness (IIII)I
-		METHOD a getVertexBrightness (IIIIFFFF)I
+		METHOD a getBrightness (IIIIFFFF)I
 		METHOD a apply (Lnone/aja;Lnone/asm;Lnone/cn;Lnone/cu;[FLjava/util/BitSet;)V
 			ARG 0 view
 			ARG 1 state
@@ -28,17 +28,26 @@ CLASS none/bpr net/minecraft/client/render/block/BlockRenderer
 			ARG 3 facing
 			ARG 4 faceShape
 			ARG 5 shapeState
-	CLASS none/bpr$c VertexTranslations
+	CLASS none/bpr$c Translation
 		FIELD a DOWN Lnone/bpr$c;
 		FIELD b UP Lnone/bpr$c;
 		FIELD c NORTH Lnone/bpr$c;
 		FIELD d SOUTH Lnone/bpr$c;
 		FIELD e WEST Lnone/bpr$c;
 		FIELD f EAST Lnone/bpr$c;
+		FIELD g firstCorner I
+		FIELD h secondCorner I
+		FIELD i thirdCorner I
+		FIELD j fourthCorner I
 		FIELD k VALUES [Lnone/bpr$c;
-		METHOD a getVertexTranslations (Lnone/cu;)Lnone/bpr$c;
+		METHOD <init> (Ljava/lang/String;IIIII)V
+			ARG 0 firstCorner
+			ARG 1 secondCorner
+			ARG 2 thirdCorner
+			ARG 3 fourthCorner
+		METHOD a getTranslations (Lnone/cu;)Lnone/bpr$c;
 			ARG 0 facing
-	CLASS none/bpr$d Orientation
+	CLASS none/bpr$d NeighborOrientation
 		FIELD a DOWN Lnone/bpr$d;
 		FIELD b UP Lnone/bpr$d;
 		FIELD c NORTH Lnone/bpr$d;
@@ -54,11 +63,15 @@ CLASS none/bpr net/minecraft/client/render/block/BlockRenderer
 		FIELD m shape I
 		METHOD <init> (Ljava/lang/String;ILnone/cu;Z)V
 			ARG 0 facing
-			ARG 1 flip
+			ARG 1 doFlip
 	FIELD a colorMap Lnone/bea;
 	METHOD <init> (Lnone/bea;)V
 		ARG 0 colorMap
 	METHOD a renderQuad (FFFFLjava/util/List;)V
+		ARG 0 colorMultiplier
+		ARG 1 red
+		ARG 2 green
+		ARG 3 blue
 		ARG 4 quads
 	METHOD a tesselateQuadsFlat (Lnone/aja;Lnone/asm;Lnone/cn;IZLnone/bon;Ljava/util/List;Ljava/util/BitSet;)V
 		ARG 0 view
@@ -84,18 +97,22 @@ CLASS none/bpr net/minecraft/client/render/block/BlockRenderer
 		ARG 2 state
 		ARG 3 pos
 		ARG 4 buffer
-		ARG 5 checkSides
+		ARG 5 testSides
 	METHOD a tesselate (Lnone/aja;Lnone/bzm;Lnone/asm;Lnone/cn;Lnone/bon;ZJ)Z
 		ARG 0 view
 		ARG 1 model
 		ARG 2 state
 		ARG 3 pos
 		ARG 4 buffer
-		ARG 5 checkSides
+		ARG 5 testSides
 		ARG 6 variationSeed
 	METHOD a render (Lnone/asm;Lnone/bzm;FFFF)V
 		ARG 0 state
 		ARG 1 model
+		ARG 2 colorMultiplier
+		ARG 3 red
+		ARG 4 green
+		ARG 5 blue
 	METHOD a updateShape (Lnone/asm;[ILnone/cu;[FLjava/util/BitSet;)V
 		ARG 0 state
 		ARG 1 vertexData
@@ -104,17 +121,22 @@ CLASS none/bpr net/minecraft/client/render/block/BlockRenderer
 		ARG 4 shapeState
 	METHOD a render (Lnone/bzm;FFFF)V
 		ARG 0 model
+		ARG 1 colorMultiplier
+		ARG 2 red
+		ARG 3 green
+		ARG 4 blue
 	METHOD a render (Lnone/bzm;Lnone/asm;FZ)V
 		ARG 0 model
 		ARG 1 state
 		ARG 2 colorMultiplier
+		ARG 3 notUseGlColor
 	METHOD b tesselateSmooth (Lnone/aja;Lnone/bzm;Lnone/asm;Lnone/cn;Lnone/bon;ZJ)Z
 		ARG 0 view
 		ARG 1 model
 		ARG 2 state
 		ARG 3 pos
 		ARG 4 buffer
-		ARG 5 checkSides
+		ARG 5 testSides
 		ARG 6 variationSeed
 	METHOD c tesselateFlat (Lnone/aja;Lnone/bzm;Lnone/asm;Lnone/cn;Lnone/bon;ZJ)Z
 		ARG 0 view
@@ -122,5 +144,5 @@ CLASS none/bpr net/minecraft/client/render/block/BlockRenderer
 		ARG 2 state
 		ARG 3 pos
 		ARG 4 buffer
-		ARG 5 checkSides
+		ARG 5 testSides
 		ARG 6 variationSeed
