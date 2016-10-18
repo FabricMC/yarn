@@ -1,28 +1,89 @@
 CLASS none/ahq net/minecraft/enchantment/EnchantmentHelper
+	CLASS none/ahq$a DamageTargetHandler
+		FIELD a user Lnone/sp;
+		FIELD b target Lnone/sg;
+		METHOD a handleEnchantment (Lnone/aho;I)V
+			ARG 0 enchantment
+			ARG 1 enchantmentLevel
+	CLASS none/ahq$b DamageUserHandler
+		FIELD a user Lnone/sp;
+		FIELD b attacker Lnone/sg;
+		METHOD a handleEnchantment (Lnone/aho;I)V
+			ARG 0 enchantment
+			ARG 1 enchantmentLevel
+	CLASS none/ahq$c EnchantmentHandler
+		METHOD a handleEnchantment (Lnone/aho;I)V
+			ARG 0 enchantment
+			ARG 1 enchantmentLevel
+	CLASS none/ahq$d AdditionalDamgeHandler
+		FIELD a additionalDamge F
+		FIELD b entityType Lnone/su;
+		METHOD a handleEnchantment (Lnone/aho;I)V
+			ARG 0 enchantment
+			ARG 1 enchantmentLevel
+	CLASS none/ahq$e ProtectionHandler
+		FIELD a protectionAmount I
+		FIELD b source Lnone/rr;
+		METHOD a handleEnchantment (Lnone/aho;I)V
+			ARG 0 enchantment
+			ARG 1 enchantmentLevel
 	FIELD a rand Ljava/util/Random;
+	FIELD b protectionHandler Lnone/ahq$e;
+	FIELD c additionalDamgeHandler Lnone/ahq$d;
+	FIELD d damageUserHandler Lnone/ahq$b;
+	FIELD e damageTargetHandler Lnone/ahq$a;
+	METHOD a (ILnone/aes;Z)Ljava/util/List;
+		ARG 1 stack
+	METHOD a getProtectionAmount (Ljava/lang/Iterable;Lnone/rr;)I
+		ARG 0 stacks
+		ARG 1 source
+	METHOD a removeInvalidEnchantments (Ljava/util/List;Lnone/ahr;)V
+		ARG 0 infos
+		ARG 1 info
 	METHOD a setEnchantments (Ljava/util/Map;Lnone/aes;)V
 		ARG 0 enchantmentMap
 		ARG 1 stack
-	METHOD a (Ljava/util/Random;IILnone/aes;)I
+	METHOD a geExperienceLevel (Ljava/util/Random;IILnone/aes;)I
 		ARG 0 rand
 		ARG 1 num
 		ARG 2 enchantmentPower
 		ARG 3 rstack
+	METHOD a (Ljava/util/Random;Lnone/aes;IZ)Lnone/aes;
+		ARG 0 rand
+		ARG 1 stack
 	METHOD a getEnchantments (Lnone/aes;)Ljava/util/Map;
 		ARG 0 stack
+	METHOD a getAdditionalDamge (Lnone/aes;Lnone/su;)F
+		ARG 0 rstack
+		ARG 1 attribute
 	METHOD a getLevel (Lnone/aho;Lnone/aes;)I
 		ARG 0 enchantment
 		ARG 1 stack
 	METHOD a getEquipmentLevel (Lnone/aho;Lnone/sp;)I
 		ARG 0 ench
 		ARG 1 entity
+	METHOD a handleEnchantmentArray (Lnone/ahq$c;Ljava/lang/Iterable;)V
+		ARG 0 EnchantmentHandler
+		ARG 1 stacks
+	METHOD a handleEnchantments (Lnone/ahq$c;Lnone/aes;)V
+		ARG 0 enchantmentHandler
+		ARG 1 stack
 	METHOD a getKnockback (Lnone/sp;)I
 		ARG 0 entity
-	METHOD b (Lnone/aho;Lnone/sp;)Lnone/aes;
+	METHOD a handleDamageUser (Lnone/sp;Lnone/sg;)V
+		ARG 0 attackingEntity
+		ARG 1 attackedEntity
+	METHOD b getEnchantmentList (Ljava/util/Random;Lnone/aes;IZ)Ljava/util/List;
+		ARG 0 rand
+		ARG 1 stack
+	METHOD b getHighestEnchantmentLevel (Lnone/aho;Lnone/sp;)Lnone/aes;
 		ARG 0 enchantment
 		ARG 1 entity
 	METHOD b getFireAspect (Lnone/sp;)I
 		ARG 0 entity
+	METHOD b handleDamageTarget (Lnone/sp;Lnone/sg;)V
+		ARG 0 attackingEntity
+		ARG 1 attackedEntity
 	METHOD c getRespiration (Lnone/sp;)I
 		ARG 0 entity
 	METHOD d getDepthStrider (Lnone/sp;)I
