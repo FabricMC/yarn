@@ -5,11 +5,13 @@ buildscript {
 			name = "Fabric"
 			url = "http://maven.fabricmc.net/"
 		}
+		maven {
+			name "RX14 Repository"
+			url 'http://mvn.rx14.co.uk/local/'
+		}
 	}
 	dependencies {
-		classpath("net.fabricmc:weave:0.1.0.6") {
-			exclude module: 'procyon-compilertools'
-		}
+		classpath "net.fabricmc:weave:0.1.0.11"
 		classpath "commons-io:commons-io:1.4"
 		classpath "com.google.guava:guava:19.0"
 	}
@@ -31,6 +33,7 @@ import com.google.common.hash.Hashing
 import com.google.common.io.Files
 import net.fabricmc.weave.merge.JarMerger
 import net.fabricmc.weave.CommandTinyify
+import net.fabricmc.weave.CommandFindMappingErrors
 import groovy.util.XmlSlurper
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -108,7 +111,7 @@ task mergeJars << {
 tasks.mergeJars.dependsOn "download"
 
 task setupPomf << {
-	
+
 }
 tasks.setupPomf.dependsOn "mergeJars"
 
@@ -120,7 +123,7 @@ task pomf << {
 
 	logger.lifecycle(":downloading enigma metadata")
 	FileUtils.copyURLToFile(new URL("http://maven.fabricmc.net/cuchaz/enigma/maven-metadata.xml"), mavenMetadata)
-	
+
 	def metadata = new XmlSlurper().parseText(FileUtils.readFileToString(mavenMetadata))
 	def enigmaVersion = metadata.versioning.release
 
@@ -142,6 +145,17 @@ task build(type: Zip) {
 	include "**/*"
 	archiveName "pomf-enigma-${pomfVersion}.zip"
 	destinationDir(file("build/libs"))
+}
+
+task checkMappings << {
+	logger.lifecycle(":checking mappings")
+
+	String[] args = [
+		new File("${minecraft_version}-merged.jar").getAbsolutePath(),
+		new File("mappings").getAbsolutePath()
+	]
+
+	new CommandFindMappingErrors().run(args)
 }
 
 task buildTiny << {
