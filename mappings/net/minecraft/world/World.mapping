@@ -213,8 +213,22 @@ CLASS aiw net/minecraft/world/World
 		ARG 1 ignoreRange
 	METHOD a sendPacket (Lfl;)V
 		ARG 0 packet
-	METHOD a getEntitiesIn (Ljava/lang/Class;Lbcs;)Ljava/util/List;
+	METHOD a countTransientEntities (Ljava/lang/Class;)I
+		ARG 0 excluding
+	METHOD a getVisibleEntitiesIn (Ljava/lang/Class;Lbcs;)Ljava/util/List;
+		ARG 0 clazz
+		ARG 1 area
 	METHOD a getEntitiesIn (Ljava/lang/Class;Lbcs;Lcom/google/common/base/Predicate;)Ljava/util/List;
+		ARG 0 clazz
+		ARG 1 area
+		ARG 2 filter
+	METHOD a getClosestVisibleEntityTo (Ljava/lang/Class;Lbcs;Lsg;)Lsg;
+		ARG 0 clazz
+		ARG 1 area
+		ARG 2 entity
+	METHOD a getEntities (Ljava/lang/Class;Lcom/google/common/base/Predicate;)Ljava/util/List;
+		ARG 0 clazz
+		ARG 1 filter
 	METHOD a getPlayerByName (Ljava/lang/String;)Laam;
 		ARG 0 name
 	METHOD a addEntities (Ljava/util/Collection;)V
@@ -236,7 +250,10 @@ CLASS aiw net/minecraft/world/World
 		ARG 4 power
 		ARG 5 createFire
 		ARG 6 destroyBlocks
-	METHOD a (Lsg;Lbcs;Lcom/google/common/base/Predicate;)Ljava/util/List;
+	METHOD a getEntitiesIn (Lsg;Lbcs;Lcom/google/common/base/Predicate;)Ljava/util/List;
+		ARG 0 except
+		ARG 1 area
+		ARG 2 filter
 	METHOD a tickScheduledBlocks (Z)Z
 		ARG 0 tickAllNow
 	METHOD ac ()Ljava/util/Calendar;
@@ -286,13 +303,16 @@ CLASS aiw net/minecraft/world/World
 	METHOD b (Lcn;Z)Z
 	METHOD b getPlayers (Ljava/lang/Class;Lcom/google/common/base/Predicate;)Ljava/util/List;
 		ARG 0 playerClass
-		ARG 1 predicate
+		ARG 1 filter
 	METHOD b addBlockEntities (Ljava/util/Collection;)V
 		ARG 0 blockEntities
 	METHOD b getPlayerByUuid (Ljava/util/UUID;)Laam;
 		ARG 0 uuid
 	METHOD b onEntityAdded (Lsg;)V
 		ARG 0 entity
+	METHOD b getVisibleEntitiesIn (Lsg;Lbcs;)Ljava/util/List;
+		ARG 0 except
+		ARG 1 area
 	METHOD c setAmbientDarkness (I)V
 		ARG 0 value
 	METHOD c setBlockBreakingProgress (ILcn;I)V
