@@ -52,6 +52,7 @@ CLASS sg net/minecraft/entity/Entity
 	FIELD az fireTimer I
 	FIELD b EMPTY_STACK_LIST Ljava/util/List;
 	FIELD c NULL_BOX Lbcs;
+	FIELD f renderDistanceMultiplier D
 	FIELD g maxEntityId I
 	FIELD h entityId I
 	FIELD j ridingCooldown I
@@ -79,8 +80,8 @@ CLASS sg net/minecraft/entity/Entity
 	METHOD T invalidate ()V
 	METHOD U updateLogic ()V
 	METHOD X extinguish ()V
-	METHOD a isInRenderRange (D)Z
-		ARG 0 range
+	METHOD a shouldRender (D)Z
+		ARG 0 distanceSq
 	METHOD a setPositionAnglesAndUpdate (DDDFF)V
 		ARG 0 x
 		ARG 1 y
@@ -203,6 +204,8 @@ CLASS sg net/minecraft/entity/Entity
 	METHOD au isValid ()Z
 	METHOD av isInsideWall ()Z
 	METHOD az removeAllPassengers ()V
+	METHOD b setRenderDistanceMultiplier (D)V
+		ARG 0 value
 	METHOD b setPosition (DDD)V
 		ARG 0 x
 		ARG 1 y
@@ -233,6 +236,7 @@ CLASS sg net/minecraft/entity/Entity
 	METHOD bC getSoundCategory ()Lnm;
 	METHOD be getUuid ()Ljava/util/UUID;
 	METHOD bf getUuidAsString ()Ljava/lang/String;
+	METHOD bh getRenderDistanceMultiplier ()D
 	METHOD bi getCustomName ()Ljava/lang/String;
 	METHOD bj isCustomNameVisible ()Z
 	METHOD bl getHorizontalFacing ()Lcu;
@@ -296,6 +300,10 @@ CLASS sg net/minecraft/entity/Entity
 		ARG 0 entity
 	METHOD g setGlowing (Z)V
 		ARG 0 value
+	METHOD h shouldRenderFrom (DDD)Z
+		ARG 0 x
+		ARG 1 y
+		ARG 2 z
 	METHOD h setHeadPitch (F)V
 		ARG 0 value
 	METHOD h setEntityId (I)V
