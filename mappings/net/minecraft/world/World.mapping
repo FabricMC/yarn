@@ -32,6 +32,7 @@ CLASS ali net/minecraft/world/World
 	FIELD v chunkProvider Lawc;
 	FIELD w saveHandler Lbdp;
 	FIELD x properties Lbdo;
+	METHOD A getChunkProvider ()Lawc;
 	METHOD A setSpawnPos (Ldx;)V
 	METHOD B getBiomeProvider ()Lalz;
 	METHOD C isDaylight ()Z
@@ -39,6 +40,7 @@ CLASS ali net/minecraft/world/World
 	METHOD E isInvalidHeight (Ldx;)Z
 	METHOD F getPendingBlockEntity (Ldx;)Latu;
 	METHOD G getEntityCountAsString ()Ljava/lang/String;
+	METHOD G isWater (Ldx;)Z
 	METHOD H getChunkProviderStatus ()Ljava/lang/String;
 	METHOD I updateAmbientDarkness ()V
 	METHOD J initWeatherGradients ()V
@@ -85,7 +87,13 @@ CLASS ali net/minecraft/world/World
 	METHOD a scheduleBlockTick (Ldx;Lank;I)V
 	METHOD a scheduleBlockTick (Ldx;Lank;II)V
 	METHOD a updateBlock (Ldx;Lank;Ldx;)V
+		ARG 0 pos
+		ARG 1 sourceBlock
+		ARG 2 sourcePos
 	METHOD a updateNeighborsExcept (Ldx;Lank;Lee;)V
+		ARG 0 pos
+		ARG 1 sourceBlock
+		ARG 2 omittedFace
 	METHOD a setBlockEntity (Ldx;Latu;)V
 	METHOD a setBlockState (Ldx;Lave;)Z
 	METHOD a setBlockState (Ldx;Lave;I)Z
@@ -117,6 +125,7 @@ CLASS ali net/minecraft/world/World
 	METHOD ak getWorldBorder ()Lavy;
 	METHOD al getLootTableHandler ()Lbeg;
 	METHOD b setSeaLevel (I)V
+		ARG 0 seaLevel
 	METHOD b fireWorldEvent (ILdx;I)V
 	METHOD b setTimeOfDay (J)V
 	METHOD b unregisterListener (Lalk;)V
@@ -126,7 +135,14 @@ CLASS ali net/minecraft/world/World
 	METHOD b getCombinedLight (Ldx;I)I
 	METHOD b hasBlockTickScheduled (Ldx;Lank;)Z
 	METHOD b scheduleBlockTickGuaranteedDelay (Ldx;Lank;II)V
+	METHOD b updateObserver (Ldx;Lank;Ldx;)V
+		ARG 0 pos
+		ARG 1 sourceBlock
+		ARG 2 sourcePos
 	METHOD b updateNeighbors (Ldx;Lank;Z)V
+		ARG 0 pos
+		ARG 1 sourceBlock
+		ARG 2 updateObservers
 	METHOD b markDirty (Ldx;Latu;)V
 	METHOD b isEmittingRedstonePower (Ldx;Lee;)Z
 	METHOD b getPlayers (Ljava/lang/Class;Lcom/google/common/base/Predicate;)Ljava/util/List;
@@ -137,17 +153,26 @@ CLASS ali net/minecraft/world/World
 	METHOD c setAmbientDarkness (I)V
 	METHOD c getHeightAt (II)I
 	METHOD c setBlockBreakingProgress (ILdx;I)V
+	METHOD c isAreaNotEmpty (Lbfm;)Z
+		ARG 0 area
 	METHOD c getTopNonAirState (Ldx;)Lave;
+	METHOD c updateNeighborObservers (Ldx;Lank;)V
+		ARG 0 pos
+		ARG 1 sourceBlock
 	METHOD c getEmittedRedstonePower (Ldx;Lee;)I
 	METHOD c getLightLevel (Ldx;Z)I
 	METHOD c unloadEntities (Ljava/util/Collection;)V
 	METHOD c onEntityRemoved (Lub;)V
 	METHOD d update ()V
+	METHOD d doesAreaContainLiquid (Lbfm;)Z
+		ARG 0 area
 	METHOD d isAir (Ldx;)Z
 	METHOD d updateHorizontalAdjacent (Ldx;Lank;)V
 	METHOD d addGlobalEntity (Lub;)Z
 	METHOD e updateSleepingStatus ()V
 	METHOD e isSpawnChunk (II)Z
+	METHOD e doesAreaContainFireSource (Lbfm;)Z
+		ARG 0 area
 	METHOD e isBlockLoaded (Ldx;)Z
 	METHOD f getChunk (Ldx;)Lawh;
 	METHOD g setBlockToAir (Ldx;)Z
