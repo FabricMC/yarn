@@ -8,7 +8,7 @@ CLASS aq net/minecraft/command/CommandBase
 	CLASS aq$a NormalizedBlockPosSelector
 		FIELD a originalPos D
 		FIELD b selectorPos D
-		FIELD c middle Z
+		FIELD c center Z
 		METHOD <init> (DDZ)V
 			ARG 0 originalPos
 			ARG 1 selectorPos
@@ -25,11 +25,11 @@ CLASS aq net/minecraft/command/CommandBase
 		ARG 1 selector
 		ARG 2 min
 		ARG 3 max
-		ARG 4 middle
+		ARG 4 center
 	METHOD a normalizeBlockPosSelector (DLjava/lang/String;Z)Laq$a;
 		ARG 0 originalPos
 		ARG 1 selector
-		ARG 2 middle
+		ARG 2 center
 	METHOD a toBlockState (Lank;Ljava/lang/String;)Lave;
 		ARG 0 block
 		ARG 1 meta
@@ -44,43 +44,43 @@ CLASS aq net/minecraft/command/CommandBase
 	METHOD a giveItem (Lau;Ljava/lang/String;)Lahd;
 		ARG 0 sender
 		ARG 1 itemName
-	METHOD a toBlockPos (Lau;[Ljava/lang/String;IZ)Ldx;
+	METHOD a parseBlockPos (Lau;[Ljava/lang/String;IZ)Ldx;
 		ARG 0 sender
 		ARG 1 params
 		ARG 2 startIndex
-		ARG 3 middle
+		ARG 3 center
 	METHOD a getStateWithProperty (Lave;Lavu;Ljava/lang/Comparable;)Lave;
 		ARG 0 blockState
 		ARG 1 propertyKey
 		ARG 2 propertyValue
-	METHOD a toBlockPropertyvalue (Lavu;Ljava/lang/String;)Ljava/lang/Comparable;
+	METHOD a toBlockProperty (Lavu;Ljava/lang/String;)Ljava/lang/Comparable;
 		ARG 0 blockProperty
-	METHOD a getCommandJsonException (Lcom/google/gson/JsonParseException;)Ldq;
+	METHOD a getException (Lcom/google/gson/JsonParseException;)Ldq;
 		ARG 0 parseException
-	METHOD a toInteger (Ljava/lang/String;)I
-		ARG 0 toConvert
-	METHOD a toDoubleWithMin (Ljava/lang/String;D)D
-		ARG 0 toConvert
+	METHOD a parseInteger (Ljava/lang/String;)I
+		ARG 0 in
+	METHOD a parseDouble (Ljava/lang/String;D)D
+		ARG 0 in
 		ARG 1 min
-	METHOD a toDoubleWithBounds (Ljava/lang/String;DD)D
-		ARG 0 toConvert
-		ARG 1 min
-		ARG 2 max
-	METHOD a toIntegerWithMin (Ljava/lang/String;I)I
-		ARG 0 toConvert
-		ARG 1 min
-	METHOD a toIntegerWithBounds (Ljava/lang/String;II)I
-		ARG 0 toConvert
+	METHOD a parseDouble (Ljava/lang/String;DD)D
+		ARG 0 in
 		ARG 1 min
 		ARG 2 max
-	METHOD a toLongWithBounds (Ljava/lang/String;JJ)J
-		ARG 0 toConvert
+	METHOD a parseInteger (Ljava/lang/String;I)I
+		ARG 0 in
+		ARG 1 min
+	METHOD a parseInteger (Ljava/lang/String;II)I
+		ARG 0 in
+		ARG 1 min
+		ARG 2 max
+	METHOD a parseLong (Ljava/lang/String;JJ)J
+		ARG 0 in
 		ARG 1 min
 		ARG 2 max
 	METHOD a matchesBeginning (Ljava/lang/String;Ljava/lang/String;)Z
 		ARG 0 string
 		ARG 1 toFind
-	METHOD a joinPrettyStringCollection (Ljava/util/Collection;)Ljava/lang/String;
+	METHOD a joinPretty (Ljava/util/Collection;)Ljava/lang/String;
 		ARG 0 collection
 	METHOD a joinPretty (Ljava/util/List;)Lgk;
 		ARG 0 list
@@ -103,12 +103,12 @@ CLASS aq net/minecraft/command/CommandBase
 		ARG 3 pos
 	METHOD a getEntityTagCompound (Lub;)Lfc;
 		ARG 0 entity
-	METHOD a joinPrettyString ([Ljava/lang/Object;)Ljava/lang/String;
+	METHOD a joinPretty ([Ljava/lang/Object;)Ljava/lang/String;
 		ARG 0 list
 	METHOD a joinStringArray ([Ljava/lang/String;I)Ljava/lang/String;
 		ARG 0 list
 		ARG 1 startIndex
-	METHOD a getFullBlockPosComponent ([Ljava/lang/String;ILdx;)Ljava/util/List;
+	METHOD a getFullPos ([Ljava/lang/String;ILdx;)Ljava/util/List;
 		ARG 0 list
 		ARG 1 index
 		ARG 2 blockPos
@@ -119,24 +119,24 @@ CLASS aq net/minecraft/command/CommandBase
 		ARG 0 string
 		ARG 1 toFind
 	METHOD b getAliases ()Ljava/util/List;
-	METHOD b normalizeBlockPosComponent (DLjava/lang/String;IIZ)D
+	METHOD b normalizePos (DLjava/lang/String;IIZ)D
 		ARG 0 originalPos
-		ARG 1 toConvert
+		ARG 1 in
 		ARG 2 min
 		ARG 3 max
-		ARG 4 middle
-	METHOD b normalizeBlockPosComponent (DLjava/lang/String;Z)D
+		ARG 4 center
+	METHOD b normalizePos (DLjava/lang/String;Z)D
 		ARG 0 originalPos
-		ARG 1 toConvert
-		ARG 2 middle
+		ARG 1 in
+		ARG 2 center
 	METHOD b getBlockStatePredicate (Lank;Ljava/lang/String;)Lcom/google/common/base/Predicate;
 		ARG 0 block
 		ARG 1 propertyString
 	METHOD b giveBlock (Lau;Ljava/lang/String;)Lank;
 		ARG 0 sender
 		ARG 1 blockName
-	METHOD b toLong (Ljava/lang/String;)J
-		ARG 0 toConvert
+	METHOD b parseLong (Ljava/lang/String;)J
+		ARG 0 in
 	METHOD b getEntityFromUuid (Lnet/minecraft/server/MinecraftServer;Lau;Ljava/lang/String;)Lub;
 		ARG 0 server
 		ARG 1 sender
@@ -144,19 +144,19 @@ CLASS aq net/minecraft/command/CommandBase
 	METHOD b hasCorrectNumberOfArgs ([Ljava/lang/String;I)Z
 		ARG 0 params
 		ARG 1 count
-	METHOD b getPartialBlockPosComponent ([Ljava/lang/String;ILdx;)Ljava/util/List;
+	METHOD b getPartialPos ([Ljava/lang/String;ILdx;)Ljava/util/List;
 		ARG 0 list
 		ARG 1 index
 		ARG 2 blockPos
 	METHOD c getBlockPropertyMap (Lank;Ljava/lang/String;)Ljava/util/Map;
 		ARG 0 block
 		ARG 1 propertyString
-	METHOD c toDouble (Ljava/lang/String;)D
-		ARG 0 toConvert
+	METHOD c parseDouble (Ljava/lang/String;)D
+		ARG 0 in
 	METHOD c createEntityUuidList (Lnet/minecraft/server/MinecraftServer;Lau;Ljava/lang/String;)Ljava/util/List;
 		ARG 0 server
 		ARG 1 sender
 		ARG 2 selector
-	METHOD d toBoolean (Ljava/lang/String;)Z
-		ARG 0 toConvert
+	METHOD d parseBoolean (Ljava/lang/String;)Z
+		ARG 0 in
 	METHOD d (Lnet/minecraft/server/MinecraftServer;Lau;Ljava/lang/String;)Ljava/lang/String;
