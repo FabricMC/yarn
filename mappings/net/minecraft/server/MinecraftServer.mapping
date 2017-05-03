@@ -35,10 +35,14 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD V authService Lcom/mojang/authlib/yggdrasil/YggdrasilAuthenticationService;
 	FIELD W sessionService Lcom/mojang/authlib/minecraft/MinecraftSessionService;
 	FIELD X gameProfileRepo Lcom/mojang/authlib/GameProfileRepository;
+	FIELD Y userCache Loe;
 	FIELD a USER_CACHE_FILE Ljava/io/File;
 	FIELD aa serverThread Ljava/lang/Thread;
 	FIELD ab serverStartTime J
 	FIELD ac iconFilePresent Z
+	FIELD b commandManager Lat;
+	FIELD c profiler Lqi;
+	FIELD d worlds [Lnl;
 	FIELD e proxy Ljava/net/Proxy;
 	FIELD f currentOperation Ljava/lang/String;
 	FIELD g currentOperationPercent I
@@ -50,6 +54,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD n gameDir Ljava/io/File;
 	FIELD o tickables Ljava/util/List;
 	FIELD p serverNetworkManager Lnw;
+	FIELD q serverMetadata Lls;
 	FIELD r rand Ljava/util/Random;
 	FIELD s migrationHandler Lqv;
 	FIELD t serverIp Ljava/lang/String;
@@ -72,6 +77,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD J getPlayerNames ()[Ljava/lang/String;
 	METHOD K getPlayerProfiles ()[Lcom/mojang/authlib/GameProfile;
 	METHOD L isDebuggingEnabled ()Z
+	METHOD N getCommandManager ()Lat;
 	METHOD O getKeyPair ()Ljava/security/KeyPair;
 	METHOD P getServerPort ()I
 	METHOD Q getUserName ()Ljava/lang/String;
@@ -84,9 +90,13 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD X getResourcePackUrl ()Ljava/lang/String;
 	METHOD Y getResourcePackHash ()Ljava/lang/String;
 	METHOD Z isSnooperEnabled ()Z
+	METHOD a getWorld (I)Lnl;
+		ARG 0 dimensionId
 	METHOD a hasPermission (ILjava/lang/String;)Z
 		ARG 0 permissionLevel
 		ARG 1 commandName
+	METHOD a setDefaultGameMode (Lalg;)V
+		ARG 0 gameMode
 	METHOD a updateCommandStat (Lav$a;I)V
 		ARG 0 statType
 		ARG 1 value
@@ -101,16 +111,20 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD a scheduleOnMainThread (Ljava/util/concurrent/Callable;)Lcom/google/common/util/concurrent/ListenableFuture;
 		ARG 0 job
 	METHOD a setConfigurationManager (Loi;)V
+	METHOD a setDifficulty (Lsu;)V
 	METHOD a addSnooperInfo (Ltg;)V
 	METHOD a saveWorlds (Z)V
 		ARG 0 dontLog
 	METHOD aA getGameProfileRepo ()Lcom/mojang/authlib/GameProfileRepository;
+	METHOD aB getUserCache ()Loe;
+	METHOD aC getServerMetadata ()Lls;
 	METHOD aE getMaxWorldBorderRadius ()I
 	METHOD aF isMainThread ()Z
 	METHOD aG getNetworkCompressionThreshold ()I
 	METHOD aH getServerStartTime ()J
 	METHOD aI getMainThread ()Ljava/lang/Thread;
 	METHOD aJ getMigrationHandler ()Lqv;
+	METHOD aK getServerAdvancementManager ()Lmq;
 	METHOD a_ updateSpawnAreaProgress (Ljava/lang/String;I)V
 		ARG 0 message
 		ARG 1 percentage
@@ -126,7 +140,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD ag isPvpEnabled ()Z
 	METHOD ah isFlightEnabled ()Z
 	METHOD ai areCommandBlocksEnabled ()Z
-	METHOD aj getMotd ()Ljava/lang/String;
+	METHOD aj getServerMotd ()Ljava/lang/String;
 	METHOD ak getWorldHeight ()I
 	METHOD al isStopped ()Z
 	METHOD am getConfigurationManager ()Loi;
@@ -204,6 +218,8 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD m shouldGenerateStructures ()Z
 	METHOD main main ([Ljava/lang/String;)V
 		ARG 0 args
+	METHOD n getDefaultGameMode ()Lalg;
+	METHOD o getDefaultDifficulty ()Lsu;
 	METHOD p isHardcore ()Z
 	METHOD q getOpPermissionLevel ()I
 	METHOD r shouldBroadcastRconToOps ()Z
