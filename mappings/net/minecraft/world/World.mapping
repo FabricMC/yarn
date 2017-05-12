@@ -7,6 +7,7 @@ CLASS ali net/minecraft/world/World
 	FIELD F isRemote Z
 	FIELD G spawnMonsters Z
 	FIELD H spawnAnimals Z
+	FIELD J unusedWhite J
 	FIELD K ambientDarkness I
 	FIELD M calendar Ljava/util/Calendar;
 	FIELD N tickingBlockEntities Z
@@ -23,6 +24,7 @@ CLASS ali net/minecraft/world/World
 	FIELD j globalEntities Ljava/util/List;
 	FIELD k entitiesById Lqd;
 	FIELD l randomLocationSeed I
+	FIELD m unusedIncrement I
 	FIELD n rainGradientPrev F
 	FIELD o rainGradient F
 	FIELD p thunderGradientPrev F
@@ -34,12 +36,20 @@ CLASS ali net/minecraft/world/World
 	FIELD v chunkProvider Lawc;
 	FIELD w saveHandler Lbdp;
 	FIELD x properties Lbdo;
+	METHOD <init> (Lbdp;Lbdo;Lawx;Lqi;Z)V
+		ARG 0 saveHandler
+		ARG 1 properties
+		ARG 2 provider
+		ARG 3 profiler
+		ARG 4 isRemote
 	METHOD A getChunkProvider ()Lawc;
 	METHOD A setSpawnPos (Ldx;)V
+		ARG 0 pos
 	METHOD B getBiomeProvider ()Lalz;
 	METHOD C isDaylight ()Z
 	METHOD D getLocalDifficulty (Ldx;)Lsv;
 	METHOD E isInvalidHeight (Ldx;)Z
+		ARG 0 pos
 	METHOD F getPendingBlockEntity (Ldx;)Latu;
 	METHOD G getEntityCountAsString ()Ljava/lang/String;
 	METHOD G isWater (Ldx;)Z
@@ -60,32 +70,74 @@ CLASS ali net/minecraft/world/World
 	METHOD V getGameRules ()Lalf;
 	METHOD W isThundering ()Z
 	METHOD X isRaining ()Z
+	METHOD a isPlayerVisible (DDDD)Z
+		ARG 0 x
+		ARG 1 y
+		ARG 2 z
+		ARG 3 distance
+	METHOD a getPlayer (DDDDLcom/google/common/base/Predicate;)Lacu;
+		ARG 0 x
+		ARG 1 y
+		ARG 2 z
+		ARG 3 distance
+		ARG 4 visibilityPredicate
+	METHOD a getPlayer (DDDDZ)Lacu;
+		ARG 0 x
+		ARG 1 y
+		ARG 2 z
+		ARG 3 distance
+		ARG 4 visibilityLevel
 	METHOD a playSound (DDDLpb;Lpd;FFZ)V
 	METHOD a calculateAmbientDarkness (F)I
 	METHOD a getEntityById (I)Lub;
 	METHOD a getChunk (II)Lawh;
+		ARG 0 chunkX
+		ARG 1 chunkZ
 	METHOD a isAreaLoaded (IIIIIIZ)Z
+		ARG 0 x1
+		ARG 1 y1
+		ARG 2 z1
+		ARG 3 x2
+		ARG 4 y2
+		ARG 5 z2
+		ARG 6 ignoreRemote
 	METHOD a isChunkLoaded (IIZ)Z
+		ARG 0 chunkX
+		ARG 1 chunkZ
+		ARG 2 ignoreRemote
 	METHOD a fireGlobalWorldEvent (ILdx;I)V
 	METHOD a spawnParticle (IZDDDDDD[I)V
 	METHOD a setTime (J)V
+		ARG 0 time
 	METHOD a playSound (Lacu;DDDLpb;Lpd;FF)V
 	METHOD a fireWorldEvent (Lacu;ILdx;I)V
 	METHOD a playSound (Lacu;Ldx;Lpb;Lpd;FF)V
 	METHOD a registerListener (Lalk;)V
 	METHOD a init (Lall;)V
+		ARG 0 info
 	METHOD a getLight (Lalo;Ldx;)I
+		ARG 0 lightType
+		ARG 1 pos
 	METHOD a addBlockEntity (Latu;)Z
 	METHOD a getScheduledBlockTicks (Lawh;Z)Ljava/util/List;
 	METHOD a isAreaLoaded (Lazr;)Z
+		ARG 0 region
 	METHOD a getScheduledBlockTicks (Lazr;Z)Ljava/util/List;
 	METHOD a rayTrace (Lbfp;Lbfp;)Lbfn;
 	METHOD a rayTrace (Lbfp;Lbfp;Z)Lbfn;
 	METHOD a rayTrace (Lbfp;Lbfp;ZZZ)Lbfn;
 	METHOD a isValidPos (Ldx;)Z
+		ARG 0 pos
 	METHOD a isAreaLoaded (Ldx;I)Z
+		ARG 0 pos
+		ARG 1 range
 	METHOD a isAreaLoaded (Ldx;IZ)Z
+		ARG 0 pos
+		ARG 1 range
+		ARG 2 ignoreRemote
 	METHOD a hasBlockTickPending (Ldx;Lank;)Z
+		ARG 0 pos
+		ARG 1 block
 	METHOD a scheduleBlockTick (Ldx;Lank;I)V
 	METHOD a scheduleBlockTick (Ldx;Lank;II)V
 	METHOD a updateBlock (Ldx;Lank;Ldx;)V
@@ -96,15 +148,32 @@ CLASS ali net/minecraft/world/World
 		ARG 0 pos
 		ARG 1 sourceBlock
 		ARG 2 omittedFace
+	METHOD a updateNeighborsWithoutDebug (Ldx;Lank;Z)V
 	METHOD a setBlockEntity (Ldx;Latu;)V
 	METHOD a setBlockState (Ldx;Lave;)Z
+		ARG 0 pos
+		ARG 1 state
 	METHOD a setBlockState (Ldx;Lave;I)Z
+		ARG 0 pos
+		ARG 1 state
+		ARG 2 listenerMask
 	METHOD a updateListeners (Ldx;Lave;Lave;I)V
+		ARG 0 pos
+		ARG 1 oldState
+		ARG 2 newState
+		ARG 3 listenerMask
 	METHOD a tickBlockInstantly (Ldx;Lave;Ljava/util/Random;)V
 	METHOD a isAreaLoaded (Ldx;Ldx;)Z
+		ARG 0 firstCorner
+		ARG 1 secondCorner
 	METHOD a isAreaLoaded (Ldx;Ldx;Z)Z
+		ARG 0 firstCorner
+		ARG 1 secondCorner
+		ARG 2 ignoreRemote
 	METHOD a getEmittedStrongRedstonePower (Ldx;Lee;)I
 	METHOD a isBlockLoaded (Ldx;Z)Z
+		ARG 0 pos
+		ARG 1 ignoreRemote
 	METHOD a spawnParticle (Len;DDDDDD[I)V
 	METHOD a spawnParticle (Len;ZDDDDDD[I)V
 	METHOD a sendPacket (Lgv;)V
@@ -114,8 +183,12 @@ CLASS ali net/minecraft/world/World
 	METHOD a getClosestVisibleEntityTo (Ljava/lang/Class;Lbfm;Lub;)Lub;
 	METHOD a getEntities (Ljava/lang/Class;Lcom/google/common/base/Predicate;)Ljava/util/List;
 	METHOD a getPlayerByName (Ljava/lang/String;)Lacu;
+		ARG 0 name
 	METHOD a addEntities (Ljava/util/Collection;)V
 	METHOD a spawnEntity (Lub;)Z
+	METHOD a getPlayerVisible (Lub;D)Lacu;
+		ARG 0 other
+		ARG 1 distance
 	METHOD a createExplosion (Lub;DDDFZ)Lald;
 	METHOD a createExplosion (Lub;DDDFZZ)Lald;
 	METHOD a getEntitiesIn (Lub;Lbfm;Lcom/google/common/base/Predicate;)Ljava/util/List;
@@ -123,20 +196,28 @@ CLASS ali net/minecraft/world/World
 	METHOD a setSpawnEnabled (ZZ)V
 		ARG 0 monsters
 		ARG 1 animals
+	METHOD ad getCalendar ()Ljava/util/Calendar;
 	METHOD ae getScoreboard ()Lbfv;
 	METHOD af getDifficulty ()Lsu;
 	METHOD ag getAmbientDarkness ()I
 	METHOD aj getVillageManager ()Lyk;
 	METHOD ak getWorldBorder ()Lavy;
 	METHOD al getLootTableHandler ()Lbeg;
+	METHOD b getWorld ()Lali;
 	METHOD b setSeaLevel (I)V
 		ARG 0 seaLevel
+	METHOD b (II)Z
+	METHOD b markRegionForRenderUpdate (IIIIII)V
 	METHOD b fireWorldEvent (ILdx;I)V
 	METHOD b setTimeOfDay (J)V
+		ARG 0 time
 	METHOD b unregisterListener (Lalk;)V
 	METHOD b unloadBlockEntity (Latu;)V
 	METHOD b isAreaLoaded (Lazr;Z)Z
+		ARG 0 region
+		ARG 1 ignoreRemote
 	METHOD b getBiome (Ldx;)Lalv;
+		ARG 0 pos
 	METHOD b getCombinedLight (Ldx;I)I
 	METHOD b hasBlockTickScheduled (Ldx;Lank;)Z
 	METHOD b scheduleBlockTickGuaranteedDelay (Ldx;Lank;II)V
@@ -149,29 +230,51 @@ CLASS ali net/minecraft/world/World
 		ARG 1 sourceBlock
 		ARG 2 updateObservers
 	METHOD b markDirty (Ldx;Latu;)V
+	METHOD b markRegionForRenderUpdate (Ldx;Ldx;)V
 	METHOD b isEmittingRedstonePower (Ldx;Lee;)Z
+	METHOD b destroyBlock (Ldx;Z)Z
+		ARG 0 pos
+		ARG 1 dropBlock
 	METHOD b getPlayers (Ljava/lang/Class;Lcom/google/common/base/Predicate;)Ljava/util/List;
 	METHOD b addBlockEntities (Ljava/util/Collection;)V
 	METHOD b getPlayerByUuid (Ljava/util/UUID;)Lacu;
+		ARG 0 uuid
 	METHOD b onEntityAdded (Lub;)V
+	METHOD b getPlayerMobVisible (Lub;D)Lacu;
+		ARG 0 other
+		ARG 1 distance
 	METHOD b getVisibleEntitiesIn (Lub;Lbfm;)Ljava/util/List;
 	METHOD c setAmbientDarkness (I)V
 	METHOD c getHeightAt (II)I
+		ARG 0 x
+		ARG 1 z
 	METHOD c setBlockBreakingProgress (ILdx;I)V
 	METHOD c isAreaNotEmpty (Lbfm;)Z
 		ARG 0 area
 	METHOD c getTopNonAirState (Ldx;)Lave;
+		ARG 0 pos
 	METHOD c updateNeighborObservers (Ldx;Lank;)V
 		ARG 0 pos
 		ARG 1 sourceBlock
+	METHOD c addBlockAction (Ldx;Lank;II)V
+		ARG 0 pos
+		ARG 1 block
+		ARG 2 first
+		ARG 3 second
 	METHOD c getEmittedRedstonePower (Ldx;Lee;)I
 	METHOD c getLightLevel (Ldx;Z)I
+		ARG 0 pos
+		ARG 1 checkTransparency
 	METHOD c unloadEntities (Ljava/util/Collection;)V
 	METHOD c onEntityRemoved (Lub;)V
 	METHOD d update ()V
+	METHOD d getChunkHeight (II)I
+		ARG 0 x
+		ARG 1 z
 	METHOD d doesAreaContainLiquid (Lbfm;)Z
 		ARG 0 area
 	METHOD d isAir (Ldx;)Z
+		ARG 0 pos
 	METHOD d updateHorizontalAdjacent (Ldx;Lank;)V
 	METHOD d (Ldx;Z)Z
 		ARG 0 pos
@@ -181,18 +284,27 @@ CLASS ali net/minecraft/world/World
 	METHOD e doesAreaContainFireSource (Lbfm;)Z
 		ARG 0 area
 	METHOD e isBlockLoaded (Ldx;)Z
+		ARG 0 pos
+	METHOD f getFogColor (F)Lbfp;
 	METHOD f getChunk (Ldx;)Lawh;
+		ARG 0 pos
 	METHOD g setBlockToAir (Ldx;)Z
+		ARG 0 pos
 	METHOD h setDefaultSpawnClient ()V
 	METHOD h getThunderGradient (F)F
 	METHOD h isSkyVisible (Ldx;)Z
+		ARG 0 pos
 	METHOD i setThunderGradient (F)V
 	METHOD j tickRandomBlocks ()V
 	METHOD j getRainGradient (F)F
 	METHOD j getSkyLightLevel (Ldx;)I
+		ARG 0 pos
 	METHOD k updateEntities ()V
 	METHOD k setRainGradient (F)V
 	METHOD k getLightLevel (Ldx;)I
+		ARG 0 pos
+	METHOD l getTopBlock (Ldx;)Ldx;
+		ARG 0 pos
 	METHOD n createChunkProvider ()Lawc;
 	METHOD o getBlockState (Ldx;)Lave;
 	METHOD r getBlockEntity (Ldx;)Latu;
