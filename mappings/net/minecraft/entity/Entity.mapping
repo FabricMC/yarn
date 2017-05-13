@@ -1,6 +1,7 @@
 CLASS ub net/minecraft/entity/Entity
 	CLASS ub$1
 		METHOD a upgradeTag (Lqu;Lfc;I)Lfc;
+	FIELD E isStuckInWeb Z
 	FIELD F invalid Z
 	FIELD G width F
 	FIELD H height F
@@ -31,7 +32,9 @@ CLASS ub net/minecraft/entity/Entity
 	FIELD ai velocityDirty Z
 	FIELD aj portalCooldown I
 	FIELD ak inPortal Z
+	FIELD al portalTime I
 	FIELD am worldId I
+	FIELD an lastPortalPosition Ldx;
 	FIELD aq uuid Ljava/util/UUID;
 	FIELD ar uuidString Ljava/lang/String;
 	FIELD as glowing Z
@@ -70,7 +73,10 @@ CLASS ub net/minecraft/entity/Entity
 	METHOD S getDataTracker ()Lma;
 	METHOD U invalidate ()V
 	METHOD V updateLogic ()V
+	METHOD W getMaxPortalTime ()I
+	METHOD X setOnFireFromLava ()V
 	METHOD Y extinguish ()V
+	METHOD Z kill ()V
 	METHOD a shouldRender (D)Z
 		ARG 0 distanceSq
 	METHOD a setPositionAnglesAndUpdate (DDDFF)V
@@ -129,6 +135,7 @@ CLASS ub net/minecraft/entity/Entity
 		ARG 1 value
 	METHOD a onBlockCollision (Lave;)V
 		ARG 0 state
+	METHOD a setBoundingBox (Lbfm;)V
 	METHOD a isTeamPlayer (Lbfx;)Z
 		ARG 0 team
 	METHOD a addCrashReportDetails (Lc;)V
@@ -157,6 +164,8 @@ CLASS ub net/minecraft/entity/Entity
 	METHOD a damage (Ltm;F)Z
 		ARG 0 source
 		ARG 1 damage
+	METHOD a copyEntityData (Lub;)V
+		ARG 0 entity
 	METHOD a startRiding (Lub;Z)Z
 		ARG 0 entity
 		ARG 1 ignoreRequirements
@@ -171,6 +180,8 @@ CLASS ub net/minecraft/entity/Entity
 		ARG 0 values
 	METHOD a toTagList ([F)Lfi;
 		ARG 0 values
+	METHOD aA getHeightOffset ()D
+	METHOD aB getMountedHeightOffset ()D
 	METHOD aC removeAllPassengers ()V
 	METHOD aE getForwardVector ()Lbfp;
 	METHOD aF getRotationClient ()Lbfo;
@@ -183,22 +194,30 @@ CLASS ub net/minecraft/entity/Entity
 	METHOD aN hasVehicle ()Z
 	METHOD aO hasPassengers ()Z
 	METHOD aP isSneaking ()Z
+	METHOD aQ isSprinting ()Z
 	METHOD aR isGlowing ()Z
 	METHOD aS isInvisible ()Z
 	METHOD aT getScoreboardTeam ()Lbfx;
 	METHOD aU getBreath ()I
+	METHOD aV stickInWeb ()V
 	METHOD aW getParts ()[Lub;
 	METHOD aX getHeadPitch ()F
+	METHOD aZ isInvulnerable ()Z
 	METHOD ab getSoundSwim ()Lpb;
 	METHOD ac getSoundSplash ()Lpb;
 	METHOD ad checkBlockCollision ()V
 	METHOD af isSilent ()Z
 	METHOD ag isUnaffectedByGravity ()Z
+	METHOD aj isFireImmune ()Z
 	METHOD al isSwimming ()Z
 	METHOD an updateSwimming ()Z
 	METHOD ao onSwimmingStart ()V
+	METHOD ap attemptSprintingParticles ()V
+	METHOD aq spawnSprintingParticles ()V
 	METHOD ar isTouchingLava ()Z
 	METHOD at doesCollide ()Z
+	METHOD av shouldSetPositionOnLoad ()Z
+	METHOD aw getId ()Ljava/lang/String;
 	METHOD ax isValid ()Z
 	METHOD ay isInsideWall ()Z
 	METHOD b setRenderDistanceMultiplier (D)V
@@ -214,6 +233,8 @@ CLASS ub net/minecraft/entity/Entity
 		ARG 3 yaw
 		ARG 4 pitch
 	METHOD b setRotation (FF)V
+		ARG 0 yaw
+		ARG 1 pitch
 	METHOD b changeWorld (I)Lub;
 		ARG 0 worldId
 	METHOD b setEntityFlag (IZ)V
@@ -235,12 +256,15 @@ CLASS ub net/minecraft/entity/Entity
 	METHOD bC getTopmostRiddenEntity ()Lub;
 	METHOD bE getRiddenEntity ()Lub;
 	METHOD bF getSoundCategory ()Lpd;
+	METHOD bb getSafeFallDistance ()I
+	METHOD bf canAvoidTraps ()Z
 	METHOD bg doesRenderOnFire ()Z
 	METHOD bh getUuid ()Ljava/util/UUID;
 	METHOD bi getUuidAsString ()Ljava/lang/String;
 	METHOD bk getRenderDistanceMultiplier ()D
 	METHOD bl getCustomName ()Ljava/lang/String;
 	METHOD bm isCustomNameVisible ()Z
+	METHOD bn shouldRenderName ()Z
 	METHOD bo getHorizontalFacing ()Lee;
 	METHOD bq getComponentHoverEvent ()Lgm;
 	METHOD br getBoundingBox ()Lbfm;
@@ -270,6 +294,10 @@ CLASS ub net/minecraft/entity/Entity
 		ARG 2 z
 	METHOD e handleFallDamage (FF)V
 		ARG 0 fallDistance
+	METHOD e canSeePlayer (Lacu;)Z
+		ARG 0 player
+	METHOD e setInPortal (Ldx;)V
+		ARG 0 portalPos
 	METHOD e serialize (Lfc;)Lfc;
 		ARG 0 tag
 	METHOD e setSneaking (Z)V
@@ -284,6 +312,8 @@ CLASS ub net/minecraft/entity/Entity
 		ARG 1 yaw
 	METHOD f deserialize (Lfc;)V
 		ARG 0 tag
+	METHOD f setSprinting (Z)V
+		ARG 0 value
 	METHOD g shouldEchoCommandFeedback ()Z
 	METHOD g shouldRenderFrom (DDD)Z
 		ARG 0 x
@@ -316,6 +346,9 @@ CLASS ub net/minecraft/entity/Entity
 	METHOD i setInvulnerable (Z)V
 		ARG 0 value
 	METHOD i_ getNameComponent ()Lgk;
+	METHOD j setYaw (F)V
+	METHOD j burn (I)V
+		ARG 0 damageAmount
 	METHOD j setCustomNameVisible (Z)V
 		ARG 0 value
 	METHOD k getEntityFlag (I)Z
