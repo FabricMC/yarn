@@ -57,8 +57,14 @@ CLASS ank net/minecraft/block/Block
 		ARG 1 tab
 		ARG 2 list
 	METHOD a addInformation (Lahf;Lacu;Ljava/util/List;Z)V
+		ARG 0 stack
+		ARG 1 player
+		ARG 2 tooltip
+		ARG 3 debugEnabled
 	METHOD a shouldDropItemsOnExplosion (Lald;)Z
 		ARG 0 explosion
+	METHOD a getTickRate (Lali;)I
+		ARG 0 world
 	METHOD a afterBreak (Lali;Lacu;Ldx;Lave;Latu;Lahf;)V
 		ARG 0 world
 		ARG 1 player
@@ -70,6 +76,9 @@ CLASS ank net/minecraft/block/Block
 		ARG 0 world
 		ARG 1 pos
 	METHOD a onBlockBreakStart (Lali;Ldx;Lacu;)V
+		ARG 0 world
+		ARG 1 pos
+		ARG 2 player
 	METHOD a dropStack (Lali;Ldx;Lahf;)V
 		ARG 0 world
 		ARG 1 pos
@@ -88,6 +97,11 @@ CLASS ank net/minecraft/block/Block
 		ARG 2 state
 		ARG 3 dropChance
 		ARG 4 fortune
+	METHOD a onBreak (Lali;Ldx;Lave;Lacu;)V
+		ARG 0 world
+		ARG 1 pos
+		ARG 2 state
+		ARG 3 player
 	METHOD a activate (Lali;Ldx;Lave;Lacu;Lsw;Lee;FFF)Z
 		ARG 0 world
 		ARG 1 pos
@@ -118,11 +132,23 @@ CLASS ank net/minecraft/block/Block
 		ARG 5 hitZ
 		ARG 6 metadata
 		ARG 7 player
+	METHOD a onSteppedOn (Lali;Ldx;Lub;)V
+		ARG 0 world
+		ARG 1 pos
+		ARG 2 entity
 	METHOD a onLandedUpon (Lali;Ldx;Lub;F)V
 		ARG 0 world
 		ARG 1 pos
 		ARG 2 entity
 		ARG 3 fallDistance
+	METHOD a adjustMovement (Lali;Ldx;Lub;Lbfp;)Lbfp;
+		ARG 0 world
+		ARG 1 pos
+		ARG 2 entity
+		ARG 3 movement
+	METHOD a onEntityLand (Lali;Lub;)V
+		ARG 0 world
+		ARG 1 entity
 	METHOD a isAir (Lalm;Ldx;)Z
 		ARG 0 view
 		ARG 1 pos
@@ -145,8 +171,20 @@ CLASS ank net/minecraft/block/Block
 		ARG 1 world
 		ARG 2 pos
 	METHOD a onBlockAction (Lave;Lali;Ldx;II)Z
+		ARG 0 state
+		ARG 1 world
+		ARG 2 pos
 	METHOD a update (Lave;Lali;Ldx;Lank;Ldx;)V
+		ARG 0 state
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 block
+		ARG 4 updatePos
 	METHOD a addBoundingBoxes (Lave;Lali;Ldx;Lbfm;Ljava/util/List;Lub;Z)V
+		ARG 0 state
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 bounds
 	METHOD a rayTrace (Lave;Lali;Ldx;Lbfp;Lbfp;)Lbfn;
 		ARG 0 state
 		ARG 1 world
@@ -154,6 +192,10 @@ CLASS ank net/minecraft/block/Block
 		ARG 3 begin
 		ARG 4 end
 	METHOD a randomDisplayTick (Lave;Lali;Ldx;Ljava/util/Random;)V
+		ARG 0 state
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 rand
 	METHOD a getCollisionBox (Lave;Lalm;Ldx;)Lbfm;
 		ARG 0 state
 		ARG 1 view
@@ -176,6 +218,8 @@ CLASS ank net/minecraft/block/Block
 	METHOD a allowsSpawning (Lave;Lub;)Z
 		ARG 0 state
 		ARG 1 entity
+	METHOD a canCollideWith (Lave;Z)Z
+		ARG 0 state
 	METHOD a addCollisionBox (Ldx;Lbfm;Ljava/util/List;Lbfm;)V
 		ARG 0 pos
 		ARG 1 mask
@@ -202,6 +246,9 @@ CLASS ank net/minecraft/block/Block
 		ARG 1 pos
 		ARG 2 amount
 	METHOD b onBlockRemoved (Lali;Ldx;Lave;)V
+		ARG 0 world
+		ARG 1 pos
+		ARG 2 state
 	METHOD b dropItems (Lali;Ldx;Lave;I)V
 		ARG 0 world
 		ARG 1 pos
@@ -212,6 +259,13 @@ CLASS ank net/minecraft/block/Block
 		ARG 1 pos
 		ARG 2 state
 		ARG 3 random
+	METHOD b canPlaceAtSide (Lali;Ldx;Lee;)Z
+		ARG 0 world
+		ARG 1 pos
+		ARG 2 side
+	METHOD b isNotSolid (Lalm;Ldx;)Z
+		ARG 0 view
+		ARG 1 pos
 	METHOD b isEqual (Lank;)Z
 		ARG 0 other
 	METHOD b isFullBoundsCubeForCulling (Lave;)Z
@@ -237,6 +291,9 @@ CLASS ank net/minecraft/block/Block
 	METHOD c getStateByRawId (I)Lave;
 		ARG 0 id
 	METHOD c onBlockAdded (Lali;Ldx;Lave;)V
+		ARG 0 world
+		ARG 1 pos
+		ARG 2 state
 	METHOD c getComparatorOutput (Lave;Lali;Ldx;)I
 		ARG 0 state
 		ARG 1 world
@@ -252,6 +309,7 @@ CLASS ank net/minecraft/block/Block
 		ARG 3 facingFrom
 	METHOD c setTranslationKey (Ljava/lang/String;)Lank;
 		ARG 0 value
+	METHOD d canMobSpawnInside ()Z
 	METHOD d setLightOpacityLevel (I)Lank;
 		ARG 0 value
 	METHOD d getDropItemDamage (Lave;)I
@@ -271,6 +329,9 @@ CLASS ank net/minecraft/block/Block
 		ARG 0 state
 	METHOD g emitsRedstonePower (Lave;)Z
 		ARG 0 state
+	METHOD h onRainTick (Lali;Ldx;)V
+		ARG 0 world
+		ARG 1 pos
 	METHOD h getPistonBehavior (Lave;)Lbbn;
 		ARG 0 state
 	METHOD j setUnbreakable ()Lank;
@@ -282,6 +343,7 @@ CLASS ank net/minecraft/block/Block
 	METHOD l hasBlockEntity ()Z
 	METHOD l isFullBoundsCube (Lave;)Z
 		ARG 0 state
+	METHOD m canCollideWith ()Z
 	METHOD m getLightOpacityLevel (Lave;)I
 		ARG 0 state
 	METHOD n shouldDropSilkTouch ()Z
@@ -296,6 +358,7 @@ CLASS ank net/minecraft/block/Block
 	METHOD q getCreativeTab ()Lagf;
 	METHOD q getMaterial (Lave;)Lbbk;
 		ARG 0 state
+	METHOD r canUpdate ()Z
 	METHOD r getMapColor (Lave;)Lbbl;
 		ARG 0 state
 	METHOD s getStateFactory ()Lavf;
@@ -305,8 +368,11 @@ CLASS ank net/minecraft/block/Block
 	METHOD t isSimpleFullBlock (Lave;)Z
 		ARG 0 state
 	METHOD u getOffsetType ()Lank$a;
+	METHOD u canSuffocate (Lave;)Z
+		ARG 0 state
 	METHOD v getSoundGroup ()Lasm;
 	METHOD v hasBlockEntityBreakingRender (Lave;)Z
+		ARG 0 state
 	METHOD w registerDefaults ()V
 	METHOD w getStackFromState (Lave;)Lahf;
 		ARG 0 state
