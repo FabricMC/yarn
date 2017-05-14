@@ -1,5 +1,6 @@
 CLASS uk net/minecraft/entity/EntityLiving
 	FIELD aB deathCounter I
+	FIELD a LOGGER_LIVING Lorg/apache/logging/log4j/Logger;
 	FIELD aP headPitch F
 	FIELD aQ prevHeadPitch F
 	FIELD aT playerHitTimer I
@@ -7,6 +8,7 @@ CLASS uk net/minecraft/entity/EntityLiving
 	FIELD at LIVING_FLAGS Llx;
 	FIELD av preferredHand Lsw;
 	FIELD ax stuckArrowTimer I
+	FIELD ay hurtTime I
 	FIELD bE absorptionAmount F
 	FIELD b ATTR_SPRINTING_SPEED_BOOST_ID Ljava/util/UUID;
 	FIELD br STUCK_ARROWS Llx;
@@ -26,6 +28,7 @@ CLASS uk net/minecraft/entity/EntityLiving
 		ARG 0 other
 	METHOD F updatePotionVisibility ()V
 	METHOD V updateLogic ()V
+	METHOD Z kill ()V
 	METHOD a setPositionAndRotations (DDDFFIZ)V
 		ARG 0 x
 		ARG 1 y
@@ -97,11 +100,15 @@ CLASS uk net/minecraft/entity/EntityLiving
 	METHOD bT clearPotionSwirls ()V
 	METHOD bU clearPotionEffects ()V
 	METHOD bV getPotionEffects ()Ljava/util/Collection;
+	METHOD bW isUndead ()Z
 	METHOD bX getHealth ()F
 	METHOD bZ getSoundHurt ()Lpb;
+	METHOD bn shouldRenderName ()Z
 	METHOD c setHealth (F)V
 		ARG 0 value
 	METHOD c setCurrentHand (Lsw;)V
+	METHOD c removePotionEffect (Ltu;)Ltv;
+		ARG 0 effect
 	METHOD c addPotionEffect (Ltv;)V
 		ARG 0 effect
 	METHOD cA getMainHand ()Luj;
@@ -111,6 +118,7 @@ CLASS uk net/minecraft/entity/EntityLiving
 	METHOD ce getHealthMaximum ()F
 	METHOD cf getStuckArrows ()I
 	METHOD ch getAttributeContainer ()Lvb;
+	METHOD ci getEntityAttribute ()Lup;
 	METHOD cj getMainHandStack ()Lahf;
 	METHOD ck getOffHandStack ()Lahf;
 	METHOD cl getSoundVolume ()F
@@ -121,17 +129,22 @@ CLASS uk net/minecraft/entity/EntityLiving
 	METHOD d damage (Ltm;F)V
 		ARG 0 damageSource
 		ARG 1 damage
+	METHOD d isPotionEffective (Ltv;)Z
+		ARG 0 effect
 	METHOD e handleFallDamage (FF)V
 		ARG 0 fallDistance
 	METHOD e getSoundFall (I)Lpb;
 		ARG 0 height
 	METHOD f setStuckArrows (I)V
 		ARG 0 value
+	METHOD f setSprinting (Z)V
+		ARG 0 value
 	METHOD g getForwardVector (F)Lbfp;
 		ARG 0 lerpTime
 	METHOD i initDataTracker ()V
 	METHOD i setHeadPitch (F)V
 		ARG 0 value
+	METHOD j setYaw (F)V
 	METHOD l doJump (Z)V
 	METHOD l_ isChild ()Z
 	METHOD m_ canClimb ()Z
