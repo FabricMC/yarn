@@ -57,6 +57,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD q serverMetadata Lms;
 	FIELD r rand Ljava/util/Random;
 	FIELD s migrationHandler Lrw;
+	FIELD t serverIp Ljava/lang/String;
 	FIELD u serverPort I
 	FIELD v serverConfigurationManager Lpj;
 	FIELD w running Z
@@ -83,8 +84,10 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD I getMaxPlayerCount ()I
 	METHOD J getPlayerNames ()[Ljava/lang/String;
 	METHOD K getPlayerProfiles ()[Lcom/mojang/authlib/GameProfile;
+	METHOD L isDebuggingEnabled ()Z
 	METHOD N getCommandManager ()Lbl;
 	METHOD O getKeyPair ()Ljava/security/KeyPair;
+	METHOD P getServerPort ()I
 	METHOD Q getUserName ()Ljava/lang/String;
 	METHOD R isSinglePlayer ()Z
 	METHOD S getLevelName ()Ljava/lang/String;
@@ -125,6 +128,8 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD aE getMaxWorldBorderRadius ()I
 	METHOD aF isMainThread ()Z
 	METHOD aG getNetworkCompressionThreshold ()I
+	METHOD aH getServerStartTime ()J
+	METHOD aI getMainThread ()Ljava/lang/Thread;
 	METHOD aK getServerAdvancementManager ()Lnq;
 	METHOD a_ updateSpawnAreaProgress (Ljava/lang/String;I)V
 		ARG 0 message
@@ -149,11 +154,14 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD ap hasGui ()Z
 	METHOD aq getTicks ()I
 	METHOD as getSnooper ()Luj;
+	METHOD at getSpawnProtectionRadius ()I
 	METHOD au shouldForceGameMode ()Z
 	METHOD av getProxy ()Ljava/net/Proxy;
 	METHOD aw getCurrentTimeMillis ()J
 	METHOD ax getPlayerIdleTimeout ()I
 	METHOD az getSessionService ()Lcom/mojang/authlib/minecraft/MinecraftSessionService;
+	METHOD b setServerPort (I)V
+		ARG 0 value
 	METHOD b addServerInfoToCrashReport (Lb;)Lb;
 		ARG 0 report
 	METHOD b setCurrentTaskName (Ljava/lang/String;)V
@@ -164,6 +172,8 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 		ARG 0 value
 	METHOD c setWorldHeight (I)V
 		ARG 0 value
+	METHOD c setServerIp (Ljava/lang/String;)V
+		ARG 0 serverIp
 	METHOD c setBonusChest (Z)V
 		ARG 0 value
 	METHOD d setPlayerIdleTimeout (I)V
@@ -172,24 +182,35 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 		ARG 0 name
 	METHOD d setOnlineMode (Z)V
 		ARG 0 value
-	METHOD e ()Lams;
+	METHOD e getWorld ()Lams;
+	METHOD e info (Ljava/lang/String;)V
+		ARG 0 msg
+	METHOD e setPreventProxyConnections (Z)V
+		ARG 0 value
 	METHOD f warn (Ljava/lang/String;)V
 		ARG 0 msg
 	METHOD f setSpawnAnimals (Z)V
 		ARG 0 value
 	METHOD g shouldEchoCommandFeedback ()Z
+	METHOD g logError (Ljava/lang/String;)V
+		ARG 0 message
 	METHOD g setSpawnNpcs (Z)V
 		ARG 0 value
 	METHOD getServerModName getServerModName ()Ljava/lang/String;
+	METHOD h log (Ljava/lang/String;)V
+		ARG 0 message
 	METHOD h setPvpEnabled (Z)V
 		ARG 0 value
 	METHOD h_ getName ()Ljava/lang/String;
+	METHOD i createCommandManager ()Ldh;
 	METHOD i setUserName (Ljava/lang/String;)V
 		ARG 0 value
 	METHOD i setFlightEnabled (Z)V
 		ARG 0 value
 	METHOD j setupServer ()Z
 	METHOD j setLevelName (Ljava/lang/String;)V
+		ARG 0 value
+	METHOD j setForceGameMode (Z)V
 		ARG 0 value
 	METHOD k getCurrentTaskName ()Ljava/lang/String;
 	METHOD k setServerName (Ljava/lang/String;)V
@@ -198,6 +219,8 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD l setMotd (Ljava/lang/String;)V
 		ARG 0 value
 	METHOD m shouldGenerateStructures ()Z
+	METHOD main main ([Ljava/lang/String;)V
+		ARG 0 args
 	METHOD n getDefaultGameMode ()Lamq;
 	METHOD o getDefaultDifficulty ()Ltx;
 	METHOD p isHardcore ()Z
@@ -207,6 +230,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD s shouldBroadcastConsoleToOps ()Z
 	METHOD t clearSpawnAreaProgress ()V
 	METHOD u shutdown ()V
+	METHOD v getServerIp ()Ljava/lang/String;
 	METHOD w isRunning ()Z
 	METHOD x stop ()V
 	METHOD y hasIconFile ()Z
