@@ -23,6 +23,7 @@ CLASS aza net/minecraft/world/World
 	FIELD s rand Ljava/util/Random;
 	FIELD u pathingCoordinator Lajo;
 	FIELD v listeners Ljava/util/List;
+	FIELD w chunkProvider Lbnz;
 	FIELD x saveHandler Lcdk;
 	FIELD y properties Lcdj;
 	FIELD z villageManager Lajz;
@@ -34,6 +35,8 @@ CLASS aza net/minecraft/world/World
 	METHOD M getChunkProviderStatus ()Ljava/lang/String;
 	METHOD N updateAmbientDarkness ()V
 	METHOD O initWeatherGradients ()V
+	METHOD P getEntityCount ()I
+	METHOD Q getGeneratorType ()Lazh;
 	METHOD S checkSessionLock ()V
 	METHOD T getTime ()J
 	METHOD U getTimeOfDay ()J
@@ -53,11 +56,16 @@ CLASS aza net/minecraft/world/World
 		ARG 5 volume
 		ARG 6 pitch
 	METHOD a calculateAmbientDarkness (F)I
+	METHOD a isHeightInvalid (I)Z
+		ARG 0 y
 	METHOD a getBlockState (III)Lblz;
 		ARG 0 x
 		ARG 1 y
 		ARG 2 z
 	METHOD a markRegionForRenderUpdate (IIIIII)V
+	METHOD a getChunk (IILboa;)Lbnu;
+		ARG 0 chunkX
+		ARG 1 chunkZ
 	METHOD a fireGlobalWorldEvent (ILeq;I)V
 		ARG 0 eventId
 		ARG 1 pos
@@ -66,6 +74,8 @@ CLASS aza net/minecraft/world/World
 		ARG 0 time
 	METHOD a spawnEntity (Lafh;)Z
 		ARG 0 entity
+		ARG 1 chunkX
+		ARG 2 chunkZ
 	METHOD a createExplosion (Lafh;DDDFZ)Layt;
 		ARG 0 entity
 		ARG 1 x
@@ -81,6 +91,10 @@ CLASS aza net/minecraft/world/World
 		ARG 5 power
 		ARG 6 createFire
 		ARG 7 destroyBlocks
+	METHOD a getEntities (Lafh;Lcgz;Ljava/util/function/Predicate;)Ljava/util/List;
+		ARG 0 entity
+		ARG 1 boundingBox
+		ARG 3 list
 	METHOD a playSound (Lapb;DDDLwv;Lwx;FF)V
 		ARG 0 player
 		ARG 1 x
@@ -191,6 +205,9 @@ CLASS aza net/minecraft/world/World
 		ARG 0 uuid
 	METHOD c setSeaLevel (I)V
 		ARG 0 seaLevel
+	METHOD c getChunk (II)Lboh;
+		ARG 0 chunkX
+		ARG 1 chunkZ
 	METHOD c setBlockBreakingProgress (ILeq;I)V
 		ARG 0 entityId
 		ARG 1 pos
@@ -225,6 +242,10 @@ CLASS aza net/minecraft/world/World
 		ARG 0 pos
 	METHOD j setRainGradient (F)V
 		ARG 0 value
+	METHOD j isValid (Leq;)Z
+		ARG 0 pos
+	METHOD k isHeightInvaid (Leq;)Z
+		ARG 0 pos
 	METHOD l setDefaultSpawnClient ()V
 	METHOD l getChunk (Leq;)Lboh;
 		ARG 0 pos
@@ -233,6 +254,7 @@ CLASS aza net/minecraft/world/World
 	METHOD n removeBlockEntity (Leq;)V
 		ARG 0 pos
 	METHOD n_ updateEntities ()V
+	METHOD r_ getSeaLevel ()I
 	METHOD s getReceivedStrongRedstonePower (Leq;)I
 		ARG 0 pos
 	METHOD t updateWeather ()V
