@@ -1,4 +1,60 @@
 CLASS azx net/minecraft/world/biome/Biome
+	CLASS azx$a Builder
+		FIELD a surfaceBuilder Lbyq;
+		FIELD b precipation Lazx$d;
+		FIELD c category Lazx$b;
+		FIELD d depth Ljava/lang/Float;
+		FIELD e scale Ljava/lang/Float;
+		FIELD f temperature Ljava/lang/Float;
+		FIELD g downfall Ljava/lang/Float;
+		FIELD h waterColor Ljava/lang/Integer;
+		FIELD i waterFogColor Ljava/lang/Integer;
+		FIELD j parent Ljava/lang/String;
+		METHOD a depth (F)Lazx$a;
+		METHOD a waterColor (I)Lazx$a;
+		METHOD a category (Lazx$b;)Lazx$a;
+		METHOD a precipation (Lazx$d;)Lazx$a;
+		METHOD a surfaceBuilder (Lbyq;)Lazx$a;
+		METHOD a parent (Ljava/lang/String;)Lazx$a;
+		METHOD b scale (F)Lazx$a;
+		METHOD b waterFogCOlor (I)Lazx$a;
+		METHOD c temperature (F)Lazx$a;
+		METHOD d downfall (F)Lazx$a;
+	CLASS azx$b Category
+		FIELD a NONE Lazx$b;
+		FIELD b TAIGA Lazx$b;
+		FIELD c EXTREME_HILLS Lazx$b;
+		FIELD d JUNGLE Lazx$b;
+		FIELD e MESA Lazx$b;
+		FIELD f PLAINS Lazx$b;
+		FIELD g SAVANNA Lazx$b;
+		FIELD h ICY Lazx$b;
+		FIELD i THE_END Lazx$b;
+		FIELD j BEACH Lazx$b;
+		FIELD k FOREST Lazx$b;
+		FIELD l OCEAN Lazx$b;
+		FIELD m DESERT Lazx$b;
+		FIELD n RIVER Lazx$b;
+		FIELD o SWAMP Lazx$b;
+		FIELD p MUSHROOM Lazx$b;
+		FIELD q NETHER Lazx$b;
+		FIELD r NAME_MAP Ljava/util/Map;
+		FIELD s name Ljava/lang/String;
+		METHOD a getName ()Ljava/lang/String;
+	CLASS azx$c TemperatureGroup
+		FIELD a OCEAN Lazx$c;
+		FIELD b COLD Lazx$c;
+		FIELD c MEDIUM Lazx$c;
+		FIELD d WARM Lazx$c;
+		FIELD e NAME_MAP Ljava/util/Map;
+		FIELD f name Ljava/lang/String;
+		METHOD a getName ()Ljava/lang/String;
+	CLASS azx$d Precipation
+		FIELD a NONE Lazx$d;
+		FIELD b RAIN Lazx$d;
+		FIELD c SNOW Lazx$d;
+		FIELD d NAME_MAP Ljava/util/Map;
+		FIELD e name Ljava/lang/String;
 	CLASS azx$e SpawnListEntry
 		FIELD c minGroupSize I
 		FIELD d maxGroupSize I
@@ -7,13 +63,29 @@ CLASS azx net/minecraft/world/biome/Biome
 			ARG 2 minGroupSize
 			ARG 3 maxGroupSize
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD b BIOMES Ljava/util/Set;
 	FIELD c NAMED_BIOME_IDS Lez;
+	FIELD f translationKey Ljava/lang/String;
+	FIELD g depth F
+	FIELD h scale F
 	FIELD i temperature F
-	FIELD j rainfall F
-	FIELD m id Ljava/lang/String;
-	FIELD s spawnListCave Ljava/util/List;
+	FIELD j downfall F
+	FIELD k waterColor I
+	FIELD l waterFogColor I
+	FIELD m parent Ljava/lang/String;
+	FIELD n surfaceBuilder Lbyq;
+	FIELD o category Lazx$b;
+	FIELD p precipation Lazx$d;
+	FIELD u entitySpawnMap Ljava/util/Map;
+	METHOD <init> (Lazx$a;)V
+		ARG 0 builder
 	METHOD a getSkyColor (F)I
 		ARG 0 temperature
+	METHOD a getEntitySpawnList (Lafs;)Ljava/util/List;
+		ARG 0 type
+	METHOD a addEntitySpawnEntry (Lafs;Lazx$e;)V
+		ARG 0 type
+		ARG 1 entry
 	METHOD a getIfNamed (Lazx;)Lazx;
 		ARG 0 biome
 	METHOD a getFoliageColorAt (Leq;)I
@@ -21,10 +93,19 @@ CLASS azx net/minecraft/world/biome/Biome
 	METHOD b hasName ()Z
 	METHOD b getGrassColorAt (Leq;)I
 		ARG 0 pos
+	METHOD c getPrecipation ()Lazx$d;
 	METHOD c getTemperature (Leq;)F
 		ARG 0 pos
 	METHOD e getMaxSpawnLimit ()F
 	METHOD g getTemperatureGroup ()Lazx$c;
+	METHOD h getDepth ()F
 	METHOD i getRainfall ()F
+	METHOD j getTextComponent ()Liw;
+	METHOD k getTranslationKey ()Ljava/lang/String;
+	METHOD l getScale ()F
 	METHOD m getTemperature ()F
+	METHOD n getWaterColor ()I
+	METHOD o getWaterFogColor ()I
+	METHOD p getCategory ()Lazx$b;
+	METHOD q getSurfaceBuilder ()Lbyq;
 	METHOD s getId ()Ljava/lang/String;
