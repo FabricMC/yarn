@@ -1,0 +1,40 @@
+CLASS vy net/minecraft/util/UserCache
+	CLASS vy$a Entry
+		FIELD b profile Lcom/mojang/authlib/GameProfile;
+		FIELD c expirationDate Ljava/util/Date;
+		METHOD a getProfile ()Lcom/mojang/authlib/GameProfile;
+		METHOD b getExpirationDate ()Ljava/util/Date;
+	CLASS vy$b JsonConverter
+	FIELD a EXPIRATION_DATE_FORMAT Ljava/text/SimpleDateFormat;
+	FIELD b gson Lcom/google/gson/Gson;
+	FIELD c useRemote Z
+	FIELD d byName Ljava/util/Map;
+	FIELD e byUuid Ljava/util/Map;
+	FIELD f byAccessTime Ljava/util/Deque;
+	FIELD g profileRepository Lcom/mojang/authlib/GameProfileRepository;
+	FIELD h cacheFile Ljava/io/File;
+	FIELD i ENTRY_LIST_TYPE Ljava/lang/reflect/ParameterizedType;
+	METHOD <init> (Lcom/mojang/authlib/GameProfileRepository;Ljava/io/File;)V
+		ARG 0 profileRepository
+		ARG 1 cacheFile
+	METHOD a getLastAccessedEntries (I)Ljava/util/List;
+		ARG 0 maximumSize
+	METHOD a add (Lcom/mojang/authlib/GameProfile;)V
+		ARG 0 profile
+	METHOD a add (Lcom/mojang/authlib/GameProfile;Ljava/util/Date;)V
+		ARG 0 profile
+		ARG 1 expirationDate
+	METHOD a findProfileByName (Lcom/mojang/authlib/GameProfileRepository;Ljava/lang/String;)Lcom/mojang/authlib/GameProfile;
+		ARG 0 repository
+		ARG 1 name
+	METHOD a findByName (Ljava/lang/String;)Lcom/mojang/authlib/GameProfile;
+		ARG 0 name
+	METHOD a getByUuid (Ljava/util/UUID;)Lcom/mojang/authlib/GameProfile;
+		ARG 0 uuid
+	METHOD a setUseRemote (Z)V
+		ARG 0 value
+	METHOD b load ()V
+	METHOD b getEntry (Ljava/util/UUID;)Lvy$a;
+		ARG 0 uuid
+	METHOD c save ()V
+	METHOD d shouldUseRemote ()Z

@@ -27,6 +27,9 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD Z serverStartTime J
 	FIELD a USER_CACHE_FILE Ljava/io/File;
 	FIELD aa iconFilePresent Z
+	FIELD ab dataManager Lvq;
+	FIELD af recipeManager Lawj;
+	FIELD an forceWorldUpgrade Z
 	FIELD b profiler Lyf;
 	FIELD d lastTickLengths [J
 	FIELD f serverThread Ljava/lang/Thread;
@@ -34,8 +37,8 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD j snooper Laek;
 	FIELD k gameDir Ljava/io/File;
 	FIELD l tickables Ljava/util/List;
-	FIELD m serverNetworkManager Luo;
-	FIELD n serverMetadata Lpd;
+	FIELD m networkIO Luo;
+	FIELD n metadata Lpd;
 	FIELD o rand Ljava/util/Random;
 	FIELD q serverIp Ljava/lang/String;
 	FIELD r serverPort I
@@ -78,11 +81,19 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 		ARG 0 atlas
 	METHOD a setDefaultGameMode (Layx;)V
 		ARG 0 gameMode
+	METHOD a getWorld (Lbpb;)Ltz;
 	METHOD a appendCommandFeedback (Liw;)V
 		ARG 0 feedback
 	METHOD a setKeyPair (Ljava/security/KeyPair;)V
 		ARG 0 value
+	METHOD a registerTickable (Lqk;)V
+	METHOD a getSpawnRadius (Ltz;)I
+		ARG 0 world
 	METHOD a setConfigurationManager (Lwc;)V
+	METHOD a setForceWorldUpgrade (Z)V
+	METHOD aE getDataManager ()Lvq;
+	METHOD aK getRecipeManager ()Lawj;
+	METHOD aO getGameRules ()Layw;
 	METHOD a_ setResourcePack (Ljava/lang/String;Ljava/lang/String;)V
 		ARG 0 url
 		ARG 1 hash
@@ -90,8 +101,8 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD ab isStopped ()Z
 	METHOD ac getConfigurationManager ()Lwc;
 	METHOD ad isRemote ()Z
-	METHOD ae getServerNetworkManager ()Luo;
-	METHOD ag ()Z
+	METHOD ae getNetworkIO ()Luo;
+	METHOD ag hasGui ()Z
 	METHOD ah getTicks ()I
 	METHOD aj getSnooper ()Laek;
 	METHOD al getSpawnProtectionRadius ()I
