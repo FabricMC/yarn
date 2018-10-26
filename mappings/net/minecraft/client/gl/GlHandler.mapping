@@ -39,6 +39,7 @@ CLASS dgk net/minecraft/client/gl/GlHandler
 		FIELD a FRONT Ldgk$i;
 		FIELD b BACK Ldgk$i;
 		FIELD c FRONT_AND_BACK Ldgk$i;
+		FIELD d glValue I
 	CLASS dgk$j CullFaceState
 		FIELD a capState Ldgk$c;
 		FIELD b mode I
@@ -61,10 +62,12 @@ CLASS dgk net/minecraft/client/gl/GlHandler
 		FIELD l SRC_ALPHA Ldgk$l;
 		FIELD m SRC_COLOR Ldgk$l;
 		FIELD n ZERO Ldgk$l;
+		FIELD o glValue I
 	CLASS dgk$m FogMode
 		FIELD a LINEAR Ldgk$m;
 		FIELD b EXP Ldgk$m;
 		FIELD c EXP2 Ldgk$m;
+		FIELD d glValue I
 	CLASS dgk$n FogState
 		FIELD a capState Ldgk$c;
 		FIELD b mode I
@@ -88,6 +91,7 @@ CLASS dgk net/minecraft/client/gl/GlHandler
 		FIELD n OR_REVERSE Ldgk$o;
 		FIELD o SET Ldgk$o;
 		FIELD p XOR Ldgk$o;
+		FIELD q glValue I
 	CLASS dgk$p PolygonOffsetState
 		FIELD a capFill Ldgk$c;
 		FIELD b capLine Ldgk$c;
@@ -124,6 +128,7 @@ CLASS dgk net/minecraft/client/gl/GlHandler
 		FIELD m SRC_ALPHA_SATURATE Ldgk$r;
 		FIELD n SRC_COLOR Ldgk$r;
 		FIELD o ZERO Ldgk$r;
+		FIELD p glValue I
 	CLASS dgk$s StencilSubState
 		FIELD a func I
 	CLASS dgk$t StencilState
@@ -145,6 +150,12 @@ CLASS dgk net/minecraft/client/gl/GlHandler
 	CLASS dgk$x Texture2DState
 		FIELD a capState Ldgk$c;
 		FIELD b boundTexture I
+	CLASS dgk$y Viewport
+		FIELD a INSTANCE Ldgk$y;
+		FIELD b x I
+		FIELD c y I
+		FIELD d width I
+		FIELD e height I
 	FIELD c alphaTestState Ldgk$a;
 	FIELD d lightSystemEnabled Ldgk$c;
 	FIELD f colorMaterial Ldgk$h;
@@ -159,6 +170,7 @@ CLASS dgk net/minecraft/client/gl/GlHandler
 	FIELD o stencilState Ldgk$t;
 	FIELD p normalizeEnabled Ldgk$c;
 	FIELD q activeTexture I
+	FIELD r textureStates [Ldgk$x;
 	FIELD s shadeModel I
 	FIELD t rescaleNormalEnabled Ldgk$c;
 	FIELD u colorMask Ldgk$g;
@@ -176,6 +188,7 @@ CLASS dgk net/minecraft/client/gl/GlHandler
 	METHOD a pushAttrib ()V
 	METHOD a clearDepth (D)V
 	METHOD a scale (DDD)V
+	METHOD a rotate (DDDD)V
 	METHOD a ortho (DDDDDD)V
 	METHOD a fogDensity (F)V
 	METHOD a polygonOffset (FF)V
@@ -193,7 +206,10 @@ CLASS dgk net/minecraft/client/gl/GlHandler
 	METHOD a texEnv (IIF)V
 	METHOD a texEnv (III)V
 	METHOD a blendFuncSeparate (IIII)V
+	METHOD a texSubImage2D (IIIIIIIIJ)V
 	METHOD a texImage2D (IIIIIIIILjava/nio/IntBuffer;)V
+	METHOD a readPixels (IIIIIIJ)V
+	METHOD a getTexImage (IIIIJ)V
 	METHOD a texCoordPointer (IIILjava/nio/ByteBuffer;)V
 	METHOD a normalPointer (IILjava/nio/ByteBuffer;)V
 	METHOD a light (IILjava/nio/FloatBuffer;)V
@@ -207,6 +223,7 @@ CLASS dgk net/minecraft/client/gl/GlHandler
 	METHOD a enableTextureGen (Ldgk$u;)V
 	METHOD a texGenMode (Ldgk$u;I)V
 	METHOD a texGen (Ldgk$u;ILjava/nio/FloatBuffer;)V
+	METHOD a multiplyMatrix (Ljava/nio/FloatBuffer;)V
 	METHOD a depthMask (Z)V
 	METHOD a colorMask (ZZZZ)V
 	METHOD b translate (DDD)V
@@ -214,9 +231,11 @@ CLASS dgk net/minecraft/client/gl/GlHandler
 	METHOD b scale (FFF)V
 	METHOD b rotate (FFFF)V
 	METHOD b disableLight (I)V
+	METHOD b pixelTransfer (IF)V
 	METHOD b blendFunc (II)V
 	METHOD b texParameter (IIF)V
 	METHOD b texParameter (III)V
+	METHOD b viewport (IIII)V
 	METHOD b vertexPointer (IIILjava/nio/ByteBuffer;)V
 	METHOD b texEnv (IILjava/nio/FloatBuffer;)V
 	METHOD b fog (ILjava/nio/FloatBuffer;)V
@@ -252,6 +271,7 @@ CLASS dgk net/minecraft/client/gl/GlHandler
 	METHOD f enableLightSystem ()V
 	METHOD f logicOp (I)V
 	METHOD f newList (II)V
+	METHOD f normalPointer (III)V
 	METHOD g disableLightSystem ()V
 	METHOD g activeTexture (I)V
 	METHOD g pixelStore (II)V
@@ -268,6 +288,7 @@ CLASS dgk net/minecraft/client/gl/GlHandler
 	METHOD k enableDepthTest ()V
 	METHOD l disableBlend ()V
 	METHOD m enableBlend ()V
+	METHOD m clear (I)V
 	METHOD n matrixMode (I)V
 	METHOD o enableFog ()V
 	METHOD p disableFog ()V
