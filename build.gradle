@@ -299,6 +299,11 @@ task mapJar(dependsOn: [downloadMcLibs, build]) {
 	inputs.files downloadMcLibs.outputs.files.files
 	outputs.file(mappedFile)
 
+	//Force the task to always run
+	outputs.upToDateWhen {
+		return true
+	}
+
 	doLast {
 		logger.lifecycle(":mapping minecraft")
 
