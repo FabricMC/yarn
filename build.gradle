@@ -17,6 +17,8 @@ buildscript {
 }
 
 apply plugin: 'de.undercouch.download'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 def minecraft_version = "18w43c"
 def pomfVersion = "${minecraft_version}"
@@ -29,18 +31,21 @@ if (ENV.BUILD_NUMBER) {
 
 def mappingsDir = file("mappings")
 def cacheFilesMinecraft = file(".gradle/minecraft")
+def tempDir = file(".gradle/temp")
 def mergedFile = file("${minecraft_version}-merged.jar")
 def mappedFile = file("${minecraft_version}-mapped.jar")
 def versionFile = new File(cacheFilesMinecraft, "${minecraft_version}.json")
 def clientJar = new File(cacheFilesMinecraft, "${minecraft_version}-client.jar")
 def serverJar = new File(cacheFilesMinecraft, "${minecraft_version}-server.jar")
 def libraries = new File(cacheFilesMinecraft, "${minecraft_version}-libraries")
+def libs = new File("build/libs/")
 
 import groovy.json.JsonSlurper
 import org.apache.commons.io.FileUtils
 import com.google.common.hash.HashCode
 import com.google.common.hash.Hashing
 import com.google.common.io.Files
+import net.fabricmc.stitch.commands.CommandMergeTiny
 import net.fabricmc.stitch.merge.JarMerger
 import net.fabricmc.tinyremapper.OutputConsumerPath
 import net.fabricmc.tinyremapper.TinyRemapper
@@ -198,7 +203,7 @@ task pomf(dependsOn: setupPomf) {
 	}
 }
 
-task build(type: Zip) {
+task buildEngima(type: Zip) {
 	from mappingsDir
 	include "**/*"
 	archiveName "pomf-enigma-${pomfVersion}.zip"
@@ -219,33 +224,76 @@ task checkMappings {
 	}
 }
 
-task buildTiny(dependsOn: "mergeJars") {
+task downloadIntermediary(type: Download){
+    src "https://github.com/FabricMC/intermediary/raw/master/mappings/${minecraft_version}.tiny"
+    dest new File(cacheFilesMinecraft, "${minecraft_version}-intermediary.tiny")
+}
+
+task buildPomfTiny(dependsOn: "mergeJars",type: FileOutput) {
 	inputs.dir mappingsDir
-	def libs = new File("build/libs/")
 	if (!libs.exists()) {
 		libs.mkdirs()
 	}
-	def outputFile = new File(libs, "pomf-tiny-${pomfVersion}.gz")
-	outputs.file(outputFile)
+
+	def pomfTiny = new File(tempDir, "pomf-mappings.tiny")
+	fileOutput = pomfTiny
+	
+	outputs.upToDateWhen {return true}
+
 	doLast {
 		logger.lifecycle(":generating tiny mappings")
 
 		String[] args = [
 			mergedFile.getAbsolutePath(),
 			mappingsDir.getAbsolutePath(),
-			"mappings.tiny",
+			pomfTiny.getAbsolutePath(),
 			"mojang",
 			"pomf"
 		]
 
 		new CommandTinyify().run(args)
+	}
+}
 
+task mergeTiny(dependsOn: ["buildPomfTiny", "downloadIntermediary"], type: FileOutput) {
+	def pomfTinyInput = buildPomfTiny.fileOutput
+	def intermediaryTinyInput = downloadIntermediary.dest
+
+	def outputFile = new File(tempDir, "mappings.tiny")
+	outputs.file(outputFile)
+	fileOutput = outputFile
+
+	outputs.upToDateWhen {return true}
+
+	doLast {
+		logger.lifecycle(":merging pomf and intermediary")
+		String[] args = [
+			pomfTinyInput.getAbsolutePath(),
+			intermediaryTinyInput.getAbsolutePath(),
+			outputFile.getAbsolutePath(),
+			"intermediary", 
+			"mojang"
+		]
+
+		new CommandMergeTiny().run(args)
+	}
+}
+
+task compressTiny(dependsOn: "mergeTiny", type: FileOutput){
+	def outputFile = new File(libs, "pomf-tiny-${pomfVersion}.gz")
+	outputs.file(outputFile)
+	fileOutput = outputFile
+
+	def inputFile = mergeTiny.fileOutput
+
+	outputs.upToDateWhen {return true}
+
+	doLast {
 		logger.lifecycle(":compressing tiny mappings")
 
 		def buffer = new byte[1024]
 		def fileOutputStream = new FileOutputStream(outputFile)
 		def outputStream = new GZIPOutputStream(fileOutputStream)
-		def inputFile = new File("mappings.tiny")
 		def fileInputStream = new FileInputStream(inputFile)
 
 		def length
@@ -260,7 +308,8 @@ task buildTiny(dependsOn: "mergeJars") {
 	}
 }
 
-tasks.build.dependsOn "buildTiny"
+tasks.build.dependsOn "compressTiny"
+tasks.build.dependsOn "buildEngima"
 
 task downloadMcLibs(dependsOn: downloadWantedVersionManifest) {
 	inputs.files versionFile
@@ -337,4 +386,37 @@ task mapJar(dependsOn: [downloadMcLibs, build]) {
 			throw new RuntimeException("Failed to remap jar", e);
 		}
 	}
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId 'net.fabricmc'
+			artifactId "pomf"
+			version pomfVersion
+
+			artifact (compressTiny.fileOutput) {
+				classifier "tiny"
+			}
+			artifact (buildEngima) {
+				classifier "engima"
+			}
+		}
+	}
+	repositories {
+		maven {
+			url "http://mavenupload.modmuss50.me/"
+			if (project.hasProperty('mavenPass')) {
+				credentials {
+					username 'buildslave'
+					password project.getProperty('mavenPass')
+				}
+			}
+		}
+	}
+}
+
+
+class FileOutput extends DefaultTask {
+	@OutputFile File fileOutput
 }
