@@ -12,6 +12,7 @@ buildscript {
 		classpath "com.google.guava:guava:19.0"
 		classpath 'de.undercouch:gradle-download-task:3.4.3'
 		classpath 'net.fabricmc:tiny-remapper:+'
+		classpath 'net.fabricmc:stitch:+'
 	}
 }
 
@@ -30,6 +31,7 @@ if (ENV.BUILD_NUMBER) {
 
 def mappingsDir = file("mappings")
 def cacheFilesMinecraft = file(".gradle/minecraft")
+def tempDir = file(".gradle/temp")
 def mergedFile = file("${minecraft_version}-merged.jar")
 def mappedFile = file("${minecraft_version}-mapped.jar")
 def versionFile = new File(cacheFilesMinecraft, "${minecraft_version}.json")
@@ -49,6 +51,7 @@ import net.fabricmc.weave.CommandFindMappingErrors
 import net.fabricmc.tinyremapper.OutputConsumerPath
 import net.fabricmc.tinyremapper.TinyRemapper
 import net.fabricmc.tinyremapper.TinyUtils
+import net.fabricmc.stitch.commands.CommandMergeTiny
 import groovy.util.XmlSlurper
 import groovy.io.FileType
 import java.io.FileInputStream;
@@ -221,33 +224,76 @@ task checkMappings {
 	}
 }
 
-task buildTiny(dependsOn: "mergeJars", type: FileOutput) {
+task downloadIntermediary(type: Download){
+    src "https://github.com/FabricMC/intermediary/raw/master/mappings/${minecraft_version}.tiny"
+    dest new File(cacheFilesMinecraft, "${minecraft_version}-intermediary.tiny")
+}
+
+task buildPomfTiny(dependsOn: "mergeJars",type: FileOutput) {
 	inputs.dir mappingsDir
 	if (!libs.exists()) {
 		libs.mkdirs()
 	}
-	def outputFile = new File(libs, "pomf-tiny-${pomfVersion}.gz")
-	outputs.file(outputFile)
-	fileOutput = outputFile
+
+	def pomfTiny = new File(tempDir, "pomf-mappings.tiny")
+	fileOutput = pomfTiny
+	
+	outputs.upToDateWhen {return true}
+
 	doLast {
 		logger.lifecycle(":generating tiny mappings")
 
 		String[] args = [
 			mergedFile.getAbsolutePath(),
 			mappingsDir.getAbsolutePath(),
-			"mappings.tiny",
+			pomfTiny.getAbsolutePath(),
 			"mojang",
 			"pomf"
 		]
 
 		new CommandTinyify().run(args)
+	}
+}
 
+task mergeTiny(dependsOn: ["buildPomfTiny", "downloadIntermediary"], type: FileOutput) {
+	def pomfTinyInput = buildPomfTiny.fileOutput
+	def intermediaryTinyInput = downloadIntermediary.dest
+
+	def outputFile = new File(tempDir, "mappings.tiny")
+	outputs.file(outputFile)
+	fileOutput = outputFile
+
+	outputs.upToDateWhen {return true}
+
+	doLast {
+		logger.lifecycle(":merging pomf and intermediary")
+		String[] args = [
+			pomfTinyInput.getAbsolutePath(),
+			intermediaryTinyInput.getAbsolutePath(),
+			outputFile.getAbsolutePath(),
+			"intermediary", 
+			"mojang"
+		]
+
+		new CommandMergeTiny().run(args)
+	}
+}
+
+task compressTiny(dependsOn: "mergeTiny", type: FileOutput){
+	def outputFile = new File(libs, "pomf-tiny-${pomfVersion}.gz")
+	outputs.file(outputFile)
+	fileOutput = outputFile
+
+	def inputFile = mergeTiny.fileOutput
+
+	outputs.upToDateWhen {return true}
+
+	doLast {
 		logger.lifecycle(":compressing tiny mappings")
 
 		def buffer = new byte[1024]
 		def fileOutputStream = new FileOutputStream(outputFile)
 		def outputStream = new GZIPOutputStream(fileOutputStream)
-		def inputFile = new File("mappings.tiny")
 		def fileInputStream = new FileInputStream(inputFile)
 
 		def length
@@ -262,7 +308,7 @@ task buildTiny(dependsOn: "mergeJars", type: FileOutput) {
 	}
 }
 
-tasks.build.dependsOn "buildTiny"
+tasks.build.dependsOn "compressTiny"
 tasks.build.dependsOn "buildEngima"
 
 task downloadMcLibs(dependsOn: downloadWantedVersionManifest) {
@@ -350,7 +396,7 @@ publishing {
 			artifactId "pomf"
 			version pomfVersion
 
-			artifact (buildTiny.fileOutput) {
+			artifact (compressTiny.fileOutput) {
 				classifier "tiny"
 			}
 			artifact (buildEngima) {
