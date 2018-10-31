@@ -1,16 +1,35 @@
 CLASS cmc net/minecraft/client/render/FontRenderer
+	CLASS cmc$a CharacterRenderInfo
+		FIELD a x0 F
+		FIELD b y0 F
+		FIELD c x1 F
+		FIELD d y1 F
+		FIELD e red F
+		FIELD f green F
+		FIELD g blue F
+		FIELD h alpha F
+		METHOD a draw (Lcla;)V
 	FIELD a FONT_HEIGHT I
 	FIELD b rand Ljava/util/Random;
+	FIELD c LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD d textureManager Ldjc;
+	FIELD e glyphSizes Lcny;
 	FIELD f rightToLeft Z
 	METHOD a isRightToLeft ()Z
+	METHOD a getCharacterWidth (C)F
 	METHOD a mirror (Ljava/lang/String;)Ljava/lang/String;
 		ARG 0 s
-	METHOD a drawString (Ljava/lang/String;FFI)I
-		ARG 0 str
+	METHOD a drawStringWithShadow (Ljava/lang/String;FFI)I
+		ARG 0 text
 		ARG 1 x
 		ARG 2 y
 		ARG 3 color
+	METHOD a drawString (Ljava/lang/String;FFIZ)I
+		ARG 0 text
+		ARG 1 x
+		ARG 2 y
+		ARG 3 color
+		ARG 4 withShadow
 	METHOD a drawStringBounded (Ljava/lang/String;IIII)V
 		ARG 0 str
 		ARG 1 x
@@ -19,10 +38,31 @@ CLASS cmc net/minecraft/client/render/FontRenderer
 		ARG 4 color
 	METHOD a setRightToLeft (Z)V
 		ARG 0 value
+	METHOD b getStringWidth (Ljava/lang/String;)I
+		ARG 0 text
+	METHOD b drawStringWithoutShadow (Ljava/lang/String;FFI)I
+		ARG 0 text
+		ARG 1 x
+		ARG 2 y
+		ARG 3 color
+	METHOD b drawStringInternal (Ljava/lang/String;FFIZ)F
+		ARG 0 text
+		ARG 1 x
+		ARG 2 y
+		ARG 3 color
+		ARG 4 isShadow
+		ARG 5 colorMultiplier
+		ARG 6 initialRed
+		ARG 7 initialGreen
+		ARG 8 initialBlue
+		ARG 9 red
+		ARG 10 green
+		ARG 11 blue
+		ARG 12 alpha
 	METHOD b getStringBoundedHeight (Ljava/lang/String;I)I
 		ARG 0 str
 		ARG 1 maxWidth
-	METHOD b renderStringBounded (Ljava/lang/String;IIII)V
+	METHOD b drawStringBoundedInternal (Ljava/lang/String;IIII)V
 		ARG 0 str
 		ARG 1 x
 		ARG 2 y
