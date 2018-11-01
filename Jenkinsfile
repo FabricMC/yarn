@@ -9,7 +9,7 @@ node {
    sh "chmod +x gradlew"
    sh "./gradlew build --refresh-dependencies"
 
-   stage 'Publish"
+   stage 'Publish'
 
    sh "./gradlew publish"
 
