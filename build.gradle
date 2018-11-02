@@ -279,7 +279,16 @@ task mergeTiny(dependsOn: ["buildPomfTiny", "downloadIntermediary"], type: FileO
 	}
 }
 
-task compressTiny(dependsOn: "mergeTiny", type: FileOutput){
+task tinyJar(type: Jar, dependsOn: "mergeTiny") {
+	archiveName = "pomf-${pomfVersion}.jar"
+	destinationDir(file("build/libs"))
+	classifier = "jar"
+	from (mergeTiny.fileOutput) {
+		rename { "mappings/mappings.tiny" }
+	}
+}
+
+task compressTiny(dependsOn: ["tinyJar", "mergeTiny"], type: FileOutput){
 	def outputFile = new File(libs, "pomf-tiny-${pomfVersion}.gz")
 	outputs.file(outputFile)
 	fileOutput = outputFile
@@ -310,6 +319,7 @@ task compressTiny(dependsOn: "mergeTiny", type: FileOutput){
 
 tasks.build.dependsOn "compressTiny"
 tasks.build.dependsOn "buildEnigma"
+tasks.build.dependsOn "tinyJar"
 
 task downloadMcLibs(dependsOn: downloadWantedVersionManifest) {
 	inputs.files versionFile
@@ -401,6 +411,7 @@ publishing {
 			artifact (buildEnigma) {
 				classifier "enigma"
 			}
+			artifact (tinyJar)
 		}
 	}
 	repositories {
