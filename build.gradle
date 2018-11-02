@@ -247,8 +247,8 @@ task buildPomfTiny(dependsOn: "mergeJars",type: FileOutput) {
 			mergedFile.getAbsolutePath(),
 			mappingsDir.getAbsolutePath(),
 			pomfTiny.getAbsolutePath(),
-			"mojang",
-			"pomf"
+			"official",
+			"named"
 		]
 
 		new CommandTinyify().run(args)
@@ -271,8 +271,8 @@ task mergeTiny(dependsOn: ["buildPomfTiny", "downloadIntermediary"], type: FileO
 			pomfTinyInput.getAbsolutePath(),
 			intermediaryTinyInput.getAbsolutePath(),
 			outputFile.getAbsolutePath(),
-			"intermediary", 
-			"mojang"
+			"intermediary",
+			"official"
 		]
 
 		new CommandMergeTiny().run(args)
@@ -315,6 +315,10 @@ task compressTiny(dependsOn: ["tinyJar", "mergeTiny"], type: FileOutput){
 		outputStream.close()
 		inputFile.delete()
 	}
+}
+
+clean.doFirst {
+	delete tempDir, cacheFilesMinecraft
 }
 
 tasks.build.dependsOn "compressTiny"
@@ -374,7 +378,7 @@ task mapJar(dependsOn: [downloadMcLibs, build]) {
 		def tinyInput = new File("build/libs/pomf-tiny-${pomfVersion}.gz").toPath()
 
 		def remapper = TinyRemapper.newRemapper()
-			.withMappings(TinyUtils.createTinyMappingProvider(tinyInput, "mojang", "pomf"))
+			.withMappings(TinyUtils.createTinyMappingProvider(tinyInput, "official", "named"))
 			.build()
       
 		try {
