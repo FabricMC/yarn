@@ -238,7 +238,7 @@ task buildPomfTiny(dependsOn: "mergeJars",type: FileOutput) {
 	def pomfTiny = new File(tempDir, "pomf-mappings.tiny")
 	fileOutput = pomfTiny
 	
-	outputs.upToDateWhen {return true}
+	outputs.upToDateWhen {return false}
 
 	doLast {
 		logger.lifecycle(":generating tiny mappings")
@@ -263,7 +263,7 @@ task mergeTiny(dependsOn: ["buildPomfTiny", "downloadIntermediary"], type: FileO
 	outputs.file(outputFile)
 	fileOutput = outputFile
 
-	outputs.upToDateWhen {return true}
+	outputs.upToDateWhen {return false}
 
 	doLast {
 		logger.lifecycle(":merging pomf and intermediary")
@@ -280,6 +280,7 @@ task mergeTiny(dependsOn: ["buildPomfTiny", "downloadIntermediary"], type: FileO
 }
 
 task tinyJar(type: Jar, dependsOn: "mergeTiny") {
+	outputs.upToDateWhen {return false}
 	archiveName = "pomf-${pomfVersion}.jar"
 	destinationDir(file("build/libs"))
 	classifier = ""
@@ -295,7 +296,7 @@ task compressTiny(dependsOn: ["tinyJar", "mergeTiny"], type: FileOutput){
 
 	def inputFile = mergeTiny.fileOutput
 
-	outputs.upToDateWhen {return true}
+	outputs.upToDateWhen {return false}
 
 	doLast {
 		logger.lifecycle(":compressing tiny mappings")
@@ -331,7 +332,7 @@ task downloadMcLibs(dependsOn: downloadWantedVersionManifest) {
 	outputs.file(libraries)
 
 	outputs.upToDateWhen {
-		return true
+		return false
 	}
 
 	doLast {
@@ -365,7 +366,7 @@ task mapJar(dependsOn: [downloadMcLibs, build]) {
 
 	//Force the task to always run
 	outputs.upToDateWhen {
-		return true
+		return false
 	}
 
 	doLast {
