@@ -1,5 +1,5 @@
 CLASS cla net/minecraft/client/render/VertexBuffer
-	CLASS cla$a BufferState
+	CLASS cla$a State
 		FIELD b rawBuffer [I
 		FIELD c format Lclg;
 		METHOD a getRawBuffer ()[I
@@ -13,7 +13,7 @@ CLASS cla net/minecraft/client/render/VertexBuffer
 	FIELD f vertexes I
 	FIELD g currentElement Lclh;
 	FIELD h currentElementId I
-	FIELD i drawNoColor Z
+	FIELD i colorDisabled Z
 	FIELD j drawMode I
 	FIELD k offsetX D
 	FIELD l offsetY D
@@ -22,11 +22,11 @@ CLASS cla net/minecraft/client/render/VertexBuffer
 	FIELD o building Z
 	METHOD <init> (I)V
 		ARG 0 initialSize
-	METHOD a getState ()Lcla$a;
+	METHOD a toBufferState ()Lcla$a;
 	METHOD a texture (DD)Lcla;
 		ARG 0 u
 		ARG 1 v
-	METHOD a putPosition (DDD)V
+	METHOD a postPosition (DDD)V
 		ARG 0 x
 		ARG 1 y
 		ARG 2 z
@@ -36,17 +36,21 @@ CLASS cla net/minecraft/client/render/VertexBuffer
 		ARG 1 green
 		ARG 2 blue
 		ARG 3 alpha
-	METHOD a putColorMultipliers (FFFI)V
+	METHOD a multiplyColor (FFFI)V
 		ARG 0 red
 		ARG 1 green
 		ARG 2 blue
 		ARG 3 vertexIndex
-	METHOD a putColor (I)V
+	METHOD a setQuadColor (I)V
 		ARG 0 rgb
 	METHOD a texture (II)Lcla;
 		ARG 0 u
 		ARG 1 v
-	METHOD a putBrightness (IIII)V
+	METHOD a clamp (III)I
+		ARG 0 value
+		ARG 1 min
+		ARG 2 max
+	METHOD a brightness (IIII)V
 	METHOD a begin (ILclg;)V
 		ARG 0 drawMode
 		ARG 1 format
@@ -57,28 +61,28 @@ CLASS cla net/minecraft/client/render/VertexBuffer
 	METHOD a putVertexData ([I)V
 		ARG 0 vertexData
 	METHOD b clear ()V
-	METHOD b pos (DDD)Lcla;
+	METHOD b vertex (DDD)Lcla;
 		ARG 0 x
 		ARG 1 y
 		ARG 2 z
-	METHOD b putNormal (FFF)V
+	METHOD b postNormal (FFF)V
 		ARG 0 x
 		ARG 1 y
 		ARG 2 z
-	METHOD b putColor (FFFI)V
+	METHOD b setColor (FFFI)V
 		ARG 0 red
 		ARG 1 green
 		ARG 2 blue
 		ARG 3 vertexIndex
-	METHOD b growBuffer (I)V
+	METHOD b grow (I)V
 		ARG 0 amount
-	METHOD b putColor (II)V
+	METHOD b setColor (II)V
 	METHOD b color (IIII)Lcla;
 		ARG 0 red
 		ARG 1 green
 		ARG 2 blue
 		ARG 3 alpha
-	METHOD c drawNoColor ()V
+	METHOD c disableColor ()V
 	METHOD c setOffset (DDD)V
 		ARG 0 x
 		ARG 1 y
@@ -87,13 +91,15 @@ CLASS cla net/minecraft/client/render/VertexBuffer
 		ARG 0 x
 		ARG 1 y
 		ARG 2 z
-	METHOD c putColor (IIII)V
+	METHOD c roundBufferSize (I)I
+		ARG 0 amount
+	METHOD c setColor (IIII)V
 		ARG 0 colorIndex
 		ARG 1 red
 		ARG 2 blue
 		ARG 3 alpha
-	METHOD d endVertex ()V
-	METHOD d putColor (FFF)V
+	METHOD d next ()V
+	METHOD d setQuadColor (FFF)V
 		ARG 0 red
 		ARG 1 green
 		ARG 2 blue
