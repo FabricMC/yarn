@@ -2,8 +2,10 @@ CLASS azt net/minecraft/world/World
 	FIELD A isRemote Z
 	FIELD B unusedWhite J
 	FIELD C ambientDarkness I
+	FIELD D ticksSinceLightningClient I
 	FIELD G tickingBlockEntities Z
 	FIELD H border Lbpa;
+	FIELD a FACING_VALUES [Lev;
 	FIELD b seaLevel I
 	FIELD c pendingBlockEntities Ljava/util/List;
 	FIELD d unloadedBlockEntities Ljava/util/List;
@@ -27,6 +29,8 @@ CLASS azt net/minecraft/world/World
 	FIELD x saveHandler Lces;
 	FIELD y properties Lcer;
 	FIELD z villageManager Lako;
+	METHOD A getRecipeManager ()Laxc;
+	METHOD B getTagManager ()Lxq;
 	METHOD D getScoreboard ()Lcjk;
 	METHOD E getChunkProvider ()Lbph;
 	METHOD F getPendingBlockEntity (Leq;)Lbll;
@@ -110,6 +114,7 @@ CLASS azt net/minecraft/world/World
 		ARG 0 listener
 	METHOD a init (Lazy;)V
 		ARG 0 info
+	METHOD a toCrashReportElement (Lb;)Lc;
 	METHOD a getLightLevel (Lbac;Leq;)I
 		ARG 0 type
 		ARG 1 pos
@@ -168,8 +173,11 @@ CLASS azt net/minecraft/world/World
 		ARG 0 name
 	METHOD a addBlockEntities (Ljava/util/Collection;)V
 		ARG 0 blockEntities
+	METHOD a loadEntities (Ljava/util/stream/Stream;)V
+		ARG 0 entities
 	METHOD a sendPacket (Ljl;)V
 		ARG 0 packet
+	METHOD aa getTicksSinceLightningClient ()I
 	METHOD ab getVillageManager ()Lako;
 	METHOD b getEntityById (I)Lafv;
 		ARG 0 id
@@ -201,6 +209,7 @@ CLASS azt net/minecraft/world/World
 		ARG 0 entities
 	METHOD b getPlayerByUuid (Ljava/util/UUID;)Lapr;
 		ARG 0 uuid
+	METHOD c getAmbientDarkness ()I
 	METHOD c setSeaLevel (I)V
 		ARG 0 seaLevel
 	METHOD c getChunk (II)Lbpp;
@@ -220,6 +229,7 @@ CLASS azt net/minecraft/world/World
 	METHOD c getEmittedRedstonePower (Leq;Lev;)I
 		ARG 0 pos
 		ARG 1 facingFrom
+	METHOD d getWorldBorder ()Lbpa;
 	METHOD d setAmbientDarkness (I)V
 		ARG 0 value
 	METHOD d addGlobalEntity (Lafv;)Z
@@ -227,6 +237,8 @@ CLASS azt net/minecraft/world/World
 	METHOD d getBlockEntity (Leq;)Lbll;
 		ARG 0 pos
 	METHOD e getFogColor (F)Lcim;
+	METHOD e setTicksSinceLightningClient (I)V
+		ARG 0 value
 	METHOD f getLocalDifficulty (Leq;)Laen;
 		ARG 0 pos
 	METHOD g getLevelProperties ()Lcer;
@@ -254,6 +266,7 @@ CLASS azt net/minecraft/world/World
 	METHOD o removeBlockEntity (Leq;)V
 		ARG 0 pos
 	METHOD r_ getSeaLevel ()I
+	METHOD s_ getSeed ()J
 	METHOD t updateWeather ()V
 	METHOD t getReceivedStrongRedstonePower (Leq;)I
 		ARG 0 pos
@@ -263,4 +276,6 @@ CLASS azt net/minecraft/world/World
 		ARG 0 pos
 	METHOD w getServer ()Lnet/minecraft/server/MinecraftServer;
 	METHOD w setSpawnPos (Leq;)V
+		ARG 0 pos
+	METHOD y hasHighHumidity (Leq;)Z
 		ARG 0 pos
