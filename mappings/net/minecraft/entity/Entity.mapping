@@ -11,6 +11,7 @@ CLASS afv net/minecraft/entity/Entity
 	FIELD P noClip Z
 	FIELD R rand Ljava/util/Random;
 	FIELD S age I
+	FIELD T insideWater Z
 	FIELD Y fireImmune Z
 	FIELD Z dataTracker Lpm;
 	FIELD aC fireTimer I
@@ -128,6 +129,8 @@ CLASS afv net/minecraft/entity/Entity
 		ARG 2 world
 		ARG 3 pos
 		ARG 5 state
+	METHOD a dropItem (Lazs;)Lanu;
+	METHOD a dropItem (Lazs;I)Lanu;
 	METHOD a setWorld (Lazt;)V
 		ARG 1 world
 	METHOD a applyMirror (Lbia;)F
@@ -186,6 +189,7 @@ CLASS afv net/minecraft/entity/Entity
 	METHOD aX isOnFire ()Z
 	METHOD aY hasVehicle ()Z
 	METHOD aZ hasPassengers ()Z
+	METHOD a_ dropStack (Lauv;)Lanu;
 	METHOD aa setOnFireFromLava ()V
 	METHOD ab extinguish ()V
 	METHOD ac destroy ()V
@@ -195,7 +199,7 @@ CLASS afv net/minecraft/entity/Entity
 	METHOD ak isSilent ()Z
 	METHOD al isUnaffectedByGravity ()Z
 	METHOD ao isFireImmune ()Z
-	METHOD ap isSwimming ()Z
+	METHOD ap isInsideWater ()Z
 	METHOD aw onSwimmingStart ()V
 	METHOD ax attemptSprintingParticles ()V
 	METHOD ay spawnSprintingParticles ()V
@@ -230,6 +234,7 @@ CLASS afv net/minecraft/entity/Entity
 		ARG 1 value
 	METHOD b removeScoreboardTag (Ljava/lang/String;)Z
 		ARG 1 tag
+	METHOD b isInsideFluid (Lxo;)Z
 	METHOD b setInWorld (Z)V
 	METHOD bA isCustomNameVisible ()Z
 	METHOD bB shouldRenderName ()Z
@@ -246,6 +251,7 @@ CLASS afv net/minecraft/entity/Entity
 	METHOD bX getSoundCategory ()Lwy;
 	METHOD bb isSneaking ()Z
 	METHOD bc isSprinting ()Z
+	METHOD bd isSwimming ()Z
 	METHOD be isGlowing ()Z
 	METHOD bf isInvisible ()Z
 	METHOD bg getScoreboardTeam ()Lcjm;
@@ -271,7 +277,7 @@ CLASS afv net/minecraft/entity/Entity
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
-	METHOD d getVectorFromPolar (FF)Lcim;
+	METHOD d getVectorFromRotation (FF)Lcim;
 		ARG 1 pitch
 		ARG 2 yaw
 	METHOD d squaredDistanceToCenter (Leq;)D
@@ -299,6 +305,7 @@ CLASS afv net/minecraft/entity/Entity
 		ARG 1 deltaX
 		ARG 3 deltaY
 		ARG 5 deltaZ
+	METHOD f getRotationVec (F)Lcim;
 	METHOD f setOnFireFor (I)V
 		ARG 1 seconds
 	METHOD f deserialize (Lhm;)V
@@ -309,6 +316,7 @@ CLASS afv net/minecraft/entity/Entity
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
+	METHOD g getPitch (F)F
 	METHOD g burn (I)V
 		ARG 1 damageAmount
 	METHOD g distanceTo (Lafv;)F
@@ -317,12 +325,14 @@ CLASS afv net/minecraft/entity/Entity
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
+	METHOD h getYaw (F)F
 	METHOD h getEntityFlag (I)Z
 		ARG 1 index
 	METHOD h squaredDistanceTo (Lafv;)D
 		ARG 1 entity
 	METHOD h setGlowing (Z)V
 		ARG 1 value
+	METHOD i getCameraPosVec (F)Lcim;
 	METHOD i setBreath (I)V
 		ARG 1 value
 	METHOD i pushAwayFrom (Lafv;)V
