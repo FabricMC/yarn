@@ -11,6 +11,7 @@ CLASS bey net/minecraft/block/Block
 		FIELD b mapColor Lcbw;
 		FIELD d soundGroup Lbjx;
 		FIELD e lightOpacityLevel I
+		FIELD j dropTableId Lpw;
 		METHOD <init> (Lcbv;Lcbw;)V
 			ARG 0 material
 			ARG 1 mapColor
@@ -20,7 +21,11 @@ CLASS bey net/minecraft/block/Block
 		METHOD a create (Lcbv;)Lbey$c;
 		METHOD a create (Lcbv;Latw;)Lbey$c;
 		METHOD a create (Lcbv;Lcbw;)Lbey$c;
+		METHOD b copyDropTable (Lbey;)Lbey$c;
+			ARG 1 block
+		METHOD e withoutDropTable ()Lbey$c;
 	FIELD c defaultState Lbno;
+	FIELD e dropTableId Lpw;
 	FIELD f translationKey Ljava/lang/String;
 	FIELD g LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD h BLOCKSTATE_ID_LIST Lfb;
@@ -32,6 +37,7 @@ CLASS bey net/minecraft/block/Block
 	METHOD Y_ getOffsetType ()Lbey$b;
 	METHOD a canMobSpawnInside ()Z
 	METHOD a createCubeShape (DDDDDD)Lcjm;
+	METHOD a getStateFromRawId (I)Lbno;
 	METHOD a getPlacementState (Late;)Lbno;
 	METHOD a getBlockFromItem (Lauu;)Lbey;
 		ARG 0 item
@@ -80,7 +86,7 @@ CLASS bey net/minecraft/block/Block
 		ARG 1 world
 		ARG 2 pos
 	METHOD a getTickRate (Lbac;)I
-	METHOD a isFullBoundsCubeForConnection (Lbno;)Z
+	METHOD a (Lbno;)Z
 	METHOD a allowsSpawning (Lbno;Lafy;)Z
 		ARG 1 state
 	METHOD a calcBlockBreakingDelta (Lbno;Lapv;Lazl;Les;)F
@@ -96,13 +102,14 @@ CLASS bey net/minecraft/block/Block
 	METHOD a canPlaceAtSide (Lbno;Lazl;Les;Lceb;)Z
 		ARG 1 world
 		ARG 3 pos
-	METHOD a getCollisionShape (Lbno;Lazl;Les;Lcix;)Lcjm;
+	METHOD a (Lbno;Lazl;Les;Lcix;)Lcjm;
 		ARG 1 state
 		ARG 2 view
 	METHOD a getWeakRedstonePower (Lbno;Lazl;Les;Lex;)I
 		ARG 1 state
 		ARG 2 view
 		ARG 3 pos
+	METHOD a dropStacks (Lbno;Lazy;Les;)V
 	METHOD a onBlockAction (Lbno;Lazy;Les;II)Z
 		ARG 1 state
 		ARG 2 world
@@ -124,11 +131,14 @@ CLASS bey net/minecraft/block/Block
 		ARG 6 facing
 		ARG 7 hitX
 		ARG 8 hitY
+	METHOD a onStacksDropped (Lbno;Lazy;Les;Lava;)V
 	METHOD a update (Lbno;Lazy;Les;Lbey;Les;)V
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 block
+	METHOD a dropStacks (Lbno;Lazy;Les;Lbls;)V
+	METHOD a dropStacks (Lbno;Lazy;Les;Lbls;Lafy;Lava;)V
 	METHOD a onBlockAdded (Lbno;Lazy;Les;Lbno;)V
 		ARG 3 pos
 	METHOD a onBlockRemoved (Lbno;Lazy;Les;Lbno;Z)V
@@ -145,8 +155,12 @@ CLASS bey net/minecraft/block/Block
 		ARG 1 state
 	METHOD a applyRotation (Lbno;Lbjf;)Lbno;
 		ARG 1 state
+	METHOD a getDroppedStacks (Lbno;Lcfl$a;)Ljava/util/List;
+		ARG 1 state
 	METHOD a getRenderingState (Lbno;Lex;Lbno;Lazz;Les;Les;)Lbno;
 		ARG 1 state
+	METHOD a getDroppedStacks (Lbno;Lud;Les;Lbls;)Ljava/util/List;
+	METHOD a getDroppedStacks (Lbno;Lud;Les;Lbls;Lafy;Lava;)Ljava/util/List;
 	METHOD a appendProperties (Lbnp$a;)V
 	METHOD a matches (Lxr;)Z
 	METHOD b hasBlockEntityBreakingRender (Lbno;)Z
@@ -161,6 +175,7 @@ CLASS bey net/minecraft/block/Block
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
+	METHOD b dropStacks (Lbno;Lcfl$a;)V
 	METHOD c getRenderLayer ()Lazm;
 	METHOD c onRainTick (Lazy;Les;)V
 		ARG 1 world
@@ -184,20 +199,23 @@ CLASS bey net/minecraft/block/Block
 	METHOD h getItem ()Lauu;
 	METHOD i canCollideWith ()Z
 	METHOD i emitsRedstonePower (Lbno;)Z
+	METHOD j getDropTableId ()Lpw;
 	METHOD j getPistonBehavior (Lbno;)Lcbx;
 	METHOD k getOffsetPos (Lbno;Lazl;Les;)Lcis;
 		ARG 1 state
 		ARG 2 view
 	METHOD l getTextComponent ()Liz;
+	METHOD l getRawIdFromState (Lbno;)I
 	METHOD m getTranslationKey ()Ljava/lang/String;
 	METHOD m getLightOpacityLevel (Lbno;)I
 	METHOD n getMaterial (Lbno;)Lcbv;
 	METHOD o getStateFactory ()Lbnp;
-	METHOD o isFullBoundsCubeForRendering (Lbno;)Z
+	METHOD o (Lbno;)Z
 	METHOD p getDefaultState ()Lbno;
 	METHOD p isSimpleFullBlock (Lbno;)Z
 	METHOD q canSuffocate (Lbno;)Z
 	METHOD r hasSolidTopSurface (Lbno;)Z
+	METHOD s hasRandomTicks (Lbno;)Z
 	METHOD t hasComparatorOutput (Lbno;)Z
 	METHOD u setDefaultState (Lbno;)V
 	METHOD v getSoundGroup (Lbno;)Lbjx;
