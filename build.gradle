@@ -21,13 +21,13 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
 def minecraft_version = "18w45a"
-def pomfVersion = "${minecraft_version}"
 
 def ENV = System.getenv()
+// Fetch build number from Jenkins
+def build_number = ENV.BUILD_NUMBER ?: "local"
 
-if (ENV.BUILD_NUMBER) {
-	pomfVersion = pomfVersion + "." + "${System.getenv().BUILD_NUMBER}"
-}
+def pomfVersion = "${minecraft_version}.$build_number"
+
 
 def mappingsDir = file("mappings")
 def cacheFilesMinecraft = file(".gradle/minecraft")
@@ -42,7 +42,6 @@ def libs = new File("build/libs/")
 
 import groovy.json.JsonSlurper
 import org.apache.commons.io.FileUtils
-import com.google.common.hash.HashCode
 import com.google.common.hash.Hashing
 import com.google.common.io.Files
 import net.fabricmc.stitch.commands.CommandMergeTiny
@@ -52,14 +51,8 @@ import net.fabricmc.tinyremapper.TinyRemapper
 import net.fabricmc.tinyremapper.TinyUtils
 import net.fabricmc.weave.CommandTinyify
 import net.fabricmc.weave.CommandFindMappingErrors
-import groovy.util.XmlSlurper
 import groovy.io.FileType
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.zip.GZIPOutputStream;
-import java.io.File;
-import java.nio.file.Paths;
+import java.util.zip.GZIPOutputStream
 
 boolean validateChecksum(File file, String checksum) {
 	if (file != null) {
@@ -412,6 +405,7 @@ publishing {
 
 			artifact (compressTiny.fileOutput) {
 				classifier "tiny"
+				builtBy compressTiny
 			}
 			artifact (buildEnigma) {
 				classifier "enigma"
