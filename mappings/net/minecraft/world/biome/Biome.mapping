@@ -1,7 +1,7 @@
 CLASS bav net/minecraft/world/biome/Biome
 	CLASS bav$a Builder
 		FIELD a surfaceBuilder Lcae;
-		FIELD b precipation Lbav$d;
+		FIELD b precipitation Lbav$d;
 		FIELD c category Lbav$b;
 		FIELD d depth Ljava/lang/Float;
 		FIELD e scale Ljava/lang/Float;
@@ -11,15 +11,28 @@ CLASS bav net/minecraft/world/biome/Biome
 		FIELD i waterFogColor Ljava/lang/Integer;
 		FIELD j parent Ljava/lang/String;
 		METHOD a depth (F)Lbav$a;
+			ARG 1 depth
 		METHOD a waterColor (I)Lbav$a;
+			ARG 1 color
 		METHOD a category (Lbav$b;)Lbav$a;
+			ARG 1 category
 		METHOD a precipation (Lbav$d;)Lbav$a;
+			ARG 1 precipitation
 		METHOD a surfaceBuilder (Lcae;)Lbav$a;
+			ARG 1 surfaceBuilder
+		METHOD a configureSurfaceBuilder (Lcao;Lcaq;)Lbav$a;
+			ARG 1 surfaceBuilder
+			ARG 2 config
 		METHOD a parent (Ljava/lang/String;)Lbav$a;
+			ARG 1 parent
 		METHOD b scale (F)Lbav$a;
-		METHOD b waterFogCOlor (I)Lbav$a;
+			ARG 1 scale
+		METHOD b waterFogColor (I)Lbav$a;
+			ARG 1 color
 		METHOD c temperature (F)Lbav$a;
+			ARG 1 temperature
 		METHOD d downfall (F)Lbav$a;
+			ARG 1 downfall
 	CLASS bav$b Category
 		FIELD a NONE Lbav$b;
 		FIELD b TAIGA Lbav$b;
@@ -40,7 +53,10 @@ CLASS bav net/minecraft/world/biome/Biome
 		FIELD q NETHER Lbav$b;
 		FIELD r NAME_MAP Ljava/util/Map;
 		FIELD s name Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
+			ARG 3 name
 		METHOD a getName ()Ljava/lang/String;
+		METHOD values ()[Lbav$b;
 	CLASS bav$c TemperatureGroup
 		FIELD a OCEAN Lbav$c;
 		FIELD b COLD Lbav$c;
@@ -48,23 +64,31 @@ CLASS bav net/minecraft/world/biome/Biome
 		FIELD d WARM Lbav$c;
 		FIELD e NAME_MAP Ljava/util/Map;
 		FIELD f name Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
+			ARG 3 name
 		METHOD a getName ()Ljava/lang/String;
-	CLASS bav$d Precipation
+	CLASS bav$d Precipitation
 		FIELD a NONE Lbav$d;
 		FIELD b RAIN Lbav$d;
 		FIELD c SNOW Lbav$d;
 		FIELD d NAME_MAP Ljava/util/Map;
 		FIELD e name Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
+			ARG 3 name
+		METHOD a getName ()Ljava/lang/String;
+		METHOD values ()[Lbav$d;
 	CLASS bav$e SpawnListEntry
+		FIELD b factory Lagc;
 		FIELD c minGroupSize I
 		FIELD d maxGroupSize I
 		METHOD <init> (Lagc;III)V
-			ARG 1 weight
-			ARG 2 minGroupSize
-			ARG 3 maxGroupSize
+			ARG 1 factory
+			ARG 2 weight
+			ARG 3 minGroupSize
+			ARG 4 maxGroupSize
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD b BIOMES Ljava/util/Set;
-	FIELD c NAMED_BIOME_IDS Lfb;
+	FIELD c PARENT_BIOME_IDS Lfb;
 	FIELD f translationKey Ljava/lang/String;
 	FIELD g depth F
 	FIELD h scale F
@@ -76,11 +100,16 @@ CLASS bav net/minecraft/world/biome/Biome
 	FIELD n surfaceBuilder Lcae;
 	FIELD o category Lbav$b;
 	FIELD p precipation Lbav$d;
+	FIELD q carversMap Ljava/util/Map;
+	FIELD r featuresMap Ljava/util/Map;
+	FIELD s features Ljava/util/List;
+	FIELD t structureFeatures Ljava/util/Map;
 	FIELD u entitySpawnMap Ljava/util/Map;
 	METHOD <init> (Lbav$a;)V
 		ARG 1 builder
 	METHOD a addDefaultFeatures ()V
 	METHOD a getSkyColor (F)I
+		ARG 1 temperature
 	METHOD a byRawId (ILbav;)Lbav;
 		ARG 0 rawId
 		ARG 1 fallback
@@ -89,28 +118,54 @@ CLASS bav net/minecraft/world/biome/Biome
 		ARG 1 entityType
 	METHOD a addEntitySpawnEntry (Lagj;Lbav$e;)V
 		ARG 1 type
-	METHOD a getIfNamed (Lbav;)Lbav;
+		ARG 2 spawnListEntry
+	METHOD a canSetSnow (Lbac;Les;)Z
+		ARG 2 pos
+	METHOD a canSetSnow (Lbac;Les;Z)Z
+		ARG 2 pos
+	METHOD a getParentBiome (Lbav;)Lbav;
 		ARG 0 biome
+	METHOD a getCarversForStep (Lbrc$a;)Ljava/util/List;
+		ARG 1 step
 	METHOD a addCarver (Lbrc$a;Lbrp;)V
+		ARG 1 step
+		ARG 2 carver
+	METHOD a getFeaturesForStep (Lbrc$b;)Ljava/util/List;
+		ARG 1 step
 	METHOD a addFeature (Lbrc$b;Lbsk;)V
+		ARG 1 step
+		ARG 2 feature
+	METHOD a configureCarver (Lbru;Lbrn;)Lbrp;
+		ARG 0 carver
+		ARG 1 config
 	METHOD a configureFeature (Lbtl;Lbtm;Lbyb;Lbsw;)Lbsk;
 		ARG 0 feature
 		ARG 1 featureConfig
 		ARG 2 decorator
 		ARG 3 decoratorConfig
+	METHOD a hasStructureFeature (Lbwf;)Z
+		ARG 1 structureFeature
+	METHOD a addStructureFeature (Lbwf;Lbtm;)V
+		ARG 1 structureFeature
+		ARG 2 config
 	METHOD a getFoliageColorAt (Les;)I
 		ARG 1 pos
 		ARG 2 temp
 		ARG 4 rainfall
-	METHOD b hasName ()Z
+	METHOD b hasParent ()Z
+	METHOD b canSetIce (Lbac;Les;)Z
+	METHOD b getStructureFeatureConfig (Lbwf;)Lbtm;
+		ARG 1 structureFeature
 	METHOD b getGrassColorAt (Les;)I
 		ARG 1 pos
 		ARG 2 temp
 		ARG 4 rainfall
-	METHOD c getPrecipation ()Lbav$d;
+	METHOD c getPrecipitation ()Lbav$d;
 	METHOD c getTemperature (Les;)F
+		ARG 1 pos
 	METHOD d hasHighHumidity ()Z
 	METHOD e getMaxSpawnLimit ()F
+	METHOD f getFeatures ()Ljava/util/List;
 	METHOD g getTemperatureGroup ()Lbav$c;
 	METHOD h getDepth ()F
 	METHOD i getRainfall ()F
@@ -122,4 +177,5 @@ CLASS bav net/minecraft/world/biome/Biome
 	METHOD o getWaterFogColor ()I
 	METHOD p getCategory ()Lbav$b;
 	METHOD q getSurfaceBuilder ()Lcae;
-	METHOD s getId ()Ljava/lang/String;
+	METHOD r getSurfaceConfig ()Lcaq;
+	METHOD s getParent ()Ljava/lang/String;
