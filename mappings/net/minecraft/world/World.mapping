@@ -2,6 +2,7 @@ CLASS bae net/minecraft/world/World
 	FIELD A isRemote Z
 	FIELD B ambientDarkness I
 	FIELD C ticksSinceLightningClient I
+	FIELD E profiler Laee;
 	FIELD F tickingBlockEntities Z
 	FIELD G border Lbpr;
 	FIELD a FACING_VALUES [Lex;
@@ -28,6 +29,11 @@ CLASS bae net/minecraft/world/World
 	FIELD x saveHandler Lcfy;
 	FIELD y properties Lcfx;
 	FIELD z villageManager Lakw;
+	METHOD <init> (Lcfy;Lcgg;Lcfx;Lbqz;Ljava/util/function/BiFunction;Laee;Z)V
+		ARG 1 serializer
+		ARG 3 properties
+		ARG 4 dimension
+		ARG 6 profiler
 	METHOD A getRecipeManager ()Laxm;
 	METHOD A hasHighHumidity (Les;)Z
 	METHOD B getTagManager ()Lxv;
@@ -72,6 +78,8 @@ CLASS bae net/minecraft/world/World
 		ARG 1 entity
 		ARG 2 x
 		ARG 4 y
+	METHOD a (Lagc;F)Lcjs;
+		ARG 1 entity
 	METHOD a createExplosion (Lagc;Lafl;DDDFZZ)Lazx;
 		ARG 1 entity
 		ARG 3 x
@@ -107,6 +115,7 @@ CLASS bae net/minecraft/world/World
 	METHOD a rayTrace (Lcjs;Lcjs;Lcjq;ZZ)Lcjp;
 		ARG 1 begin
 		ARG 2 end
+	METHOD a clearBlockState (Les;)Z
 	METHOD a updateNeighbors (Les;Lbfg;)V
 	METHOD a addBlockAction (Les;Lbfg;II)V
 		ARG 1 pos
@@ -123,11 +132,15 @@ CLASS bae net/minecraft/world/World
 	METHOD a setBlockState (Les;Lbnz;)Z
 		ARG 1 pos
 	METHOD a setBlockState (Les;Lbnz;I)Z
+		ARG 1 pos
+		ARG 2 state
 	METHOD a updateListeners (Les;Lbnz;Lbnz;I)V
 		ARG 1 pos
 		ARG 2 oldState
 		ARG 3 newState
 	METHOD a getEmittedStrongRedstonePower (Les;Lex;)I
+		ARG 1 pos
+	METHOD a breakBlock (Les;Z)Z
 		ARG 1 pos
 	METHOD a countTransientEntities (Ljava/lang/Class;I)I
 	METHOD a getClosestVisibleEntityTo (Ljava/lang/Class;Lcjo;Lagc;)Lagc;
@@ -144,6 +157,7 @@ CLASS bae net/minecraft/world/World
 	METHOD aa getTicksSinceLightningClient ()I
 	METHOD ab getVillageManager ()Lakw;
 	METHOD ae getProfiler ()Laee;
+	METHOD b tickTime ()V
 	METHOD b getEntityById (I)Lagc;
 	METHOD b fireWorldEvent (ILes;I)V
 		ARG 1 eventId
@@ -180,6 +194,7 @@ CLASS bae net/minecraft/world/World
 	METHOD d setTicksSinceLightningClient (I)V
 	METHOD d addGlobalEntity (Lagc;)Z
 	METHOD d isAir (Les;)Z
+	METHOD e isRemote ()Z
 	METHOD e getFogColor (F)Lcjs;
 	METHOD e getBiome (Les;)Lbbd;
 	METHOD f getBlockEntity (Les;)Lbmc;

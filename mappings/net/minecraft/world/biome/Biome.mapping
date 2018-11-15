@@ -1,7 +1,7 @@
 CLASS bbd net/minecraft/world/biome/Biome
 	CLASS bbd$a Builder
 		FIELD a surfaceBuilder Lcbf;
-		FIELD b precipation Lbbd$d;
+		FIELD b precipitation Lbbd$d;
 		FIELD c category Lbbd$b;
 		FIELD d depth Ljava/lang/Float;
 		FIELD e scale Ljava/lang/Float;
@@ -15,9 +15,11 @@ CLASS bbd net/minecraft/world/biome/Biome
 		METHOD a category (Lbbd$b;)Lbbd$a;
 		METHOD a precipation (Lbbd$d;)Lbbd$a;
 		METHOD a surfaceBuilder (Lcbf;)Lbbd$a;
+		METHOD a configureSurfaceBuilder (Lcbp;Lcbr;)Lbbd$a;
+			ARG 1 surfaceBuilder
 		METHOD a parent (Ljava/lang/String;)Lbbd$a;
 		METHOD b scale (F)Lbbd$a;
-		METHOD b waterFogCOlor (I)Lbbd$a;
+		METHOD b waterFogColor (I)Lbbd$a;
 		METHOD c temperature (F)Lbbd$a;
 		METHOD d downfall (F)Lbbd$a;
 	CLASS bbd$b Category
@@ -49,22 +51,26 @@ CLASS bbd net/minecraft/world/biome/Biome
 		FIELD e NAME_MAP Ljava/util/Map;
 		FIELD f name Ljava/lang/String;
 		METHOD a getName ()Ljava/lang/String;
-	CLASS bbd$d Precipation
+	CLASS bbd$d Precipitation
 		FIELD a NONE Lbbd$d;
 		FIELD b RAIN Lbbd$d;
 		FIELD c SNOW Lbbd$d;
 		FIELD d NAME_MAP Ljava/util/Map;
 		FIELD e name Ljava/lang/String;
+		METHOD a getName ()Ljava/lang/String;
 	CLASS bbd$e SpawnListEntry
+		FIELD b factory Lagg;
 		FIELD c minGroupSize I
 		FIELD d maxGroupSize I
 		METHOD <init> (Lagg;III)V
-			ARG 1 weight
-			ARG 2 minGroupSize
-			ARG 3 maxGroupSize
+			ARG 1 factory
+			ARG 2 weight
+			ARG 3 minGroupSize
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD b BIOMES Ljava/util/Set;
-	FIELD c NAMED_BIOME_IDS Lfb;
+	FIELD c PARENT_BIOME_ID_MAP Lfb;
+	FIELD d TEMPERATURE_NOISE Lcbx;
+	FIELD e FOLIAGE_NOISE Lcbx;
 	FIELD f translationKey Ljava/lang/String;
 	FIELD g depth F
 	FIELD h scale F
@@ -76,7 +82,12 @@ CLASS bbd net/minecraft/world/biome/Biome
 	FIELD n surfaceBuilder Lcbf;
 	FIELD o category Lbbd$b;
 	FIELD p precipation Lbbd$d;
+	FIELD q carversMap Ljava/util/Map;
+	FIELD r featuresMap Ljava/util/Map;
+	FIELD s features Ljava/util/List;
+	FIELD t structureFeatures Ljava/util/Map;
 	FIELD u entitySpawnMap Ljava/util/Map;
+	METHOD a addDefaultFeatures ()V
 	METHOD a getSkyColor (F)I
 	METHOD a byRawId (ILbbd;)Lbbd;
 		ARG 0 rawId
@@ -84,15 +95,38 @@ CLASS bbd net/minecraft/world/biome/Biome
 	METHOD a getEntitySpawnList (Lagn;)Ljava/util/List;
 	METHOD a addEntitySpawnEntry (Lagn;Lbbd$e;)V
 		ARG 1 type
-	METHOD a getIfNamed (Lbbd;)Lbbd;
+	METHOD a canSetSnow (Lbai;Les;)Z
+	METHOD a canSetSnow (Lbai;Les;Z)Z
+		ARG 2 pos
+	METHOD a getParentBiome (Lbbd;)Lbbd;
 		ARG 0 biome
+	METHOD a getCarversForStep (Lbrl$a;)Ljava/util/List;
+	METHOD a addCarver (Lbrl$a;Lbrz;)V
+		ARG 1 step
+	METHOD a getFeaturesForStep (Lbrl$b;)Ljava/util/List;
+	METHOD a addFeature (Lbrl$b;Lbsu;)V
+		ARG 1 step
+	METHOD a configureCarver (Lbse;Lbrx;)Lbrz;
+		ARG 0 carver
+		ARG 1 config
+	METHOD a configureFeature (Lbtv;Lbtw;Lbza;Lbtg;)Lbsu;
+		ARG 0 feature
+		ARG 1 featureConfig
+		ARG 2 decorator
+		ARG 3 decoratorConfig
+	METHOD a hasStructureFeature (Lbwq;)Z
+	METHOD a addStructureFeature (Lbwq;Lbtw;)V
+		ARG 1 structureFeature
 	METHOD a getFoliageColorAt (Les;)I
-	METHOD b hasName ()Z
+	METHOD b hasParent ()Z
+	METHOD b canSetIce (Lbai;Les;)Z
+	METHOD b getStructureFeatureConfig (Lbwq;)Lbtw;
 	METHOD b getGrassColorAt (Les;)I
-	METHOD c getPrecipation ()Lbbd$d;
+	METHOD c getPrecipitation ()Lbbd$d;
 	METHOD c getTemperature (Les;)F
 	METHOD d hasHighHumidity ()Z
 	METHOD e getMaxSpawnLimit ()F
+	METHOD f getFeatures ()Ljava/util/List;
 	METHOD g getTemperatureGroup ()Lbbd$c;
 	METHOD h getDepth ()F
 	METHOD i getRainfall ()F
@@ -104,4 +138,5 @@ CLASS bbd net/minecraft/world/biome/Biome
 	METHOD o getWaterFogColor ()I
 	METHOD p getCategory ()Lbbd$b;
 	METHOD q getSurfaceBuilder ()Lcbf;
-	METHOD s getId ()Ljava/lang/String;
+	METHOD r getSurfaceConfig ()Lcbr;
+	METHOD s getParent ()Ljava/lang/String;
