@@ -9,30 +9,58 @@ CLASS bfg net/minecraft/block/Block
 	CLASS bfg$c Builder
 		FIELD a material Lccw;
 		FIELD b mapColor Lccx;
+		FIELD c collidable Z
 		FIELD d soundGroup Lbkh;
-		FIELD e lightOpacityLevel I
+		FIELD e luminance I
+		FIELD f resistance F
+		FIELD g hardness F
+		FIELD h randomTicks Z
+		FIELD i slipperiness F
 		FIELD j dropTableId Lpx;
 		METHOD <init> (Lccw;Lccx;)V
 			ARG 0 material
 			ARG 1 mapColor
-		METHOD a lightOpacityLevel (I)Lbfg$c;
+		METHOD a noCollision ()Lbfg$c;
+		METHOD a slipperiness (F)Lbfg$c;
+			ARG 1 opacity
+		METHOD a breakValues (FF)Lbfg$c;
+			ARG 1 hardness
+			ARG 2 blastResistance
+		METHOD a luminance (I)Lbfg$c;
+			ARG 1 luminance
 		METHOD a copy (Lbfg;)Lbfg$c;
+			ARG 0 block
+			ARG 1 builder
 		METHOD a soundGroup (Lbkh;)Lbfg$c;
+			ARG 1 soundGroup
 		METHOD a create (Lccw;)Lbfg$c;
 		METHOD a create (Lccw;Laub;)Lbfg$c;
 		METHOD a create (Lccw;Lccx;)Lbfg$c;
+		METHOD b breakInstantly ()Lbfg$c;
+		METHOD b breakValues (F)Lbfg$c;
+			ARG 1 value
 		METHOD b copyDropTable (Lbfg;)Lbfg$c;
+			ARG 1 block
+		METHOD c randomlyTicks ()Lbfg$c;
+		METHOD d ()Lbfg$c;
 		METHOD e withoutDropTable ()Lbfg$c;
+	FIELD b slipperiness F
 	FIELD c defaultState Lbnz;
 	FIELD e dropTableId Lpx;
 	FIELD f translationKey Ljava/lang/String;
 	FIELD g LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD h STATE_IDS Lfb;
-	FIELD i lightOpacityLevel I
+	FIELD i luminance I
+	FIELD j hardness F
+	FIELD k blastResistance F
+	FIELD l randomTicks Z
 	FIELD m soundGroup Lbkh;
 	FIELD n material Lccw;
 	FIELD o mapColor Lccx;
 	FIELD p stateFactory Lboa;
+	FIELD q collidable Z
+	METHOD <init> (Lbfg$c;)V
+		ARG 1 builder
 	METHOD Y_ getOffsetType ()Lbfg$b;
 	METHOD a canMobSpawnInside ()Z
 	METHOD a createCubeShape (DDDDDD)Lckm;
@@ -101,7 +129,7 @@ CLASS bfg net/minecraft/block/Block
 	METHOD a canPlaceAtSide (Lbnz;Lazq;Les;Lcfb;)Z
 		ARG 1 world
 		ARG 3 pos
-	METHOD a (Lbnz;Lazq;Les;Lcjx;)Lckm;
+	METHOD a getCollisionBox (Lbnz;Lazq;Les;Lcjx;)Lckm;
 		ARG 1 state
 		ARG 2 view
 	METHOD a getWeakRedstonePower (Lbnz;Lazq;Les;Lex;)I
@@ -201,12 +229,14 @@ CLASS bfg net/minecraft/block/Block
 	METHOD j getHardness (Lbnz;Lazq;Les;)F
 		ARG 1 state
 		ARG 2 world
+	METHOD k getBlastResistance ()F
 	METHOD k getLightOpacityLevel (Lbnz;)I
 	METHOD l getTextComponent ()Liz;
 	METHOD l getMaterial (Lbnz;)Lccw;
 	METHOD m getTranslationKey ()Ljava/lang/String;
 	METHOD m hasRandomTicks (Lbnz;)Z
 	METHOD m getRayTraceShape (Lbnz;Lazq;Les;)Lckm;
+	METHOD n getSlipperiness ()F
 	METHOD o getStateFactory ()Lboa;
 	METHOD o hasComparatorOutput (Lbnz;)Z
 	METHOD p getDefaultState ()Lbnz;
