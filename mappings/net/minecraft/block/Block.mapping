@@ -21,7 +21,7 @@ CLASS bfo net/minecraft/block/Block
 			ARG 0 material
 			ARG 1 mapColor
 		METHOD a noCollision ()Lbfo$c;
-		METHOD a setFriction (F)Lbfo$c;
+		METHOD a setFrictionCoefficient (F)Lbfo$c;
 		METHOD a setStrength (FF)Lbfo$c;
 			ARG 1 hardness
 		METHOD a setLuminance (I)Lbfo$c;
@@ -62,6 +62,7 @@ CLASS bfo net/minecraft/block/Block
 		ARG 3 tooltip
 	METHOD a onEntityLand (Lazy;Lage;)V
 		ARG 1 world
+	METHOD a getFaceShape (Lazy;Lboh;Les;Lex;)Lbog;
 	METHOD a getPickStack (Lazy;Les;Lboh;)Lavn;
 		ARG 1 world
 		ARG 2 pos
@@ -148,7 +149,7 @@ CLASS bfo net/minecraft/block/Block
 		ARG 7 hitX
 		ARG 8 hitY
 	METHOD a onStacksDropped (Lboh;Lbam;Les;Lavn;)V
-	METHOD a update (Lboh;Lbam;Les;Lbfo;Les;)V
+	METHOD a neighborUpdate (Lboh;Lbam;Les;Lbfo;Les;)V
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
@@ -161,7 +162,7 @@ CLASS bfo net/minecraft/block/Block
 		ARG 3 pos
 		ARG 4 state
 	METHOD a rayTrace (Lboh;Lbam;Les;Lckg;Lckg;)Lckd;
-	METHOD a randomTick (Lboh;Lbam;Les;Ljava/util/Random;)V
+	METHOD a scheduledTick (Lboh;Lbam;Les;Ljava/util/Random;)V
 		ARG 1 world
 		ARG 2 state
 		ARG 3 pos
@@ -199,7 +200,7 @@ CLASS bfo net/minecraft/block/Block
 	METHOD c isNaturalStone (Lbfo;)Z
 	METHOD c canCollideWith (Lboh;)Z
 	METHOD c getAmbientOcclusionLightLevel (Lboh;Lazy;Les;)F
-	METHOD c (Lboh;Lbam;Les;Ljava/util/Random;)V
+	METHOD c randomTick (Lboh;Lbam;Les;Ljava/util/Random;)V
 		ARG 1 world
 		ARG 2 state
 		ARG 3 pos
@@ -210,6 +211,7 @@ CLASS bfo net/minecraft/block/Block
 	METHOD e getMapColor (Lboh;Lazy;Les;)Lcdl;
 	METHOD g hasBlockEntity ()Z
 	METHOD g emitsRedstonePower (Lboh;)Z
+	METHOD g canSuffocate (Lboh;Lazy;Les;)Z
 	METHOD h getItem ()Lavi;
 	METHOD h getPistonBehavior (Lboh;)Lcdm;
 	METHOD i canCollideWith ()Z
@@ -220,7 +222,7 @@ CLASS bfo net/minecraft/block/Block
 		ARG 1 state
 		ARG 2 world
 	METHOD k getBlastResistance ()F
-	METHOD k getLightOpacityLevel (Lboh;)I
+	METHOD k getLuminance (Lboh;)I
 	METHOD l getTextComponent ()Liz;
 	METHOD l getMaterial (Lboh;)Lcdk;
 	METHOD m getTranslationKey ()Ljava/lang/String;
