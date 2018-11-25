@@ -1,0 +1,100 @@
+CLASS zm net/minecraft/datafixers/fixes/ChunkPalettedStorageFix
+	CLASS zm$a ChunkNibbleArray
+		FIELD a contents [B
+		METHOD a get (III)I
+			ARG 1 x
+			ARG 2 y
+			ARG 3 z
+	CLASS zm$b Facing
+		CLASS zm$b$a Axis
+			FIELD a X Lzm$b$a;
+			FIELD b Y Lzm$b$a;
+			FIELD c Z Lzm$b$a;
+		CLASS zm$b$b Direction
+			FIELD a POSITIVE Lzm$b$b;
+			FIELD b NEGATIVE Lzm$b$b;
+			FIELD c offset I
+			METHOD a getOffset ()I
+		FIELD a DOWN Lzm$b;
+		FIELD b UP Lzm$b;
+		FIELD c NORTH Lzm$b;
+		FIELD d SOUTH Lzm$b;
+		FIELD e WEST Lzm$b;
+		FIELD f EAST Lzm$b;
+		FIELD g axis Lzm$b$a;
+		FIELD h direction Lzm$b$b;
+		METHOD <init> (Ljava/lang/String;ILzm$b$b;Lzm$b$a;)V
+			ARG 3 direction
+			ARG 4 axis
+		METHOD a getDirection ()Lzm$b$b;
+		METHOD b getAxis ()Lzm$b$a;
+	CLASS zm$c Section
+		FIELD a y I
+		FIELD b paletteMap Lyb;
+		FIELD c paletteData Lcom/mojang/datafixers/Dynamic;
+		FIELD d section Lcom/mojang/datafixers/Dynamic;
+		FIELD e hasBlocks Z
+		FIELD f seenIds Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+		FIELD g innerPositions Lit/unimi/dsi/fastutil/ints/IntList;
+		FIELD h seenStates Ljava/util/Set;
+		FIELD i states [I
+		METHOD <init> (Lcom/mojang/datafixers/Dynamic;)V
+			ARG 1 section
+		METHOD a transform ()Lcom/mojang/datafixers/Dynamic;
+		METHOD a getBlock (I)Lcom/mojang/datafixers/Dynamic;
+			ARG 1 pos
+		METHOD a addBlockAt (II)V
+		METHOD a setBlock (ILcom/mojang/datafixers/Dynamic;)V
+			ARG 1 pos
+			ARG 2 state
+		METHOD b visit (I)I
+			ARG 1 edgeFlags
+	CLASS zm$d Level
+		FIELD a sides I
+		FIELD b sections [Lzm$c;
+		FIELD c level Lcom/mojang/datafixers/Dynamic;
+		FIELD d xPos I
+		FIELD e yPos I
+		FIELD f blockEntities Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+		METHOD a transform ()Lcom/mojang/datafixers/Dynamic;
+		METHOD a getBlock (I)Lcom/mojang/datafixers/Dynamic;
+		METHOD a setBlock (ILcom/mojang/datafixers/Dynamic;)V
+		METHOD a adjacentTo (ILzm$b;)I
+			ARG 1 direction
+		METHOD b getBlockEntity (I)Lcom/mojang/datafixers/Dynamic;
+		METHOD c removeBlockEntity (I)Lcom/mojang/datafixers/Dynamic;
+		METHOD d getSection (I)Lzm$c;
+	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD d pumpkin Lcom/mojang/datafixers/Dynamic;
+	FIELD e podzol Lcom/mojang/datafixers/Dynamic;
+	FIELD f snowyGrass Lcom/mojang/datafixers/Dynamic;
+	FIELD g snowyMycelium Lcom/mojang/datafixers/Dynamic;
+	FIELD h sunflowerUpper Lcom/mojang/datafixers/Dynamic;
+	FIELD i lilacUpper Lcom/mojang/datafixers/Dynamic;
+	FIELD j grassUpper Lcom/mojang/datafixers/Dynamic;
+	FIELD k fernUpper Lcom/mojang/datafixers/Dynamic;
+	FIELD l roseUpper Lcom/mojang/datafixers/Dynamic;
+	FIELD m peonyUpper Lcom/mojang/datafixers/Dynamic;
+	FIELD n flowerPot Ljava/util/Map;
+	FIELD o skull Ljava/util/Map;
+	FIELD p door Ljava/util/Map;
+	FIELD q noteblock Ljava/util/Map;
+	FIELD r colors Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+	FIELD s bed Ljava/util/Map;
+	FIELD t banner Ljava/util/Map;
+	FIELD u air Lcom/mojang/datafixers/Dynamic;
+	METHOD a getName (Lcom/mojang/datafixers/Dynamic;)Ljava/lang/String;
+	METHOD a getProperty (Lcom/mojang/datafixers/Dynamic;Ljava/lang/String;)Ljava/lang/String;
+	METHOD a buildBed (Ljava/util/Map;ILjava/lang/String;)V
+		ARG 0 out
+	METHOD a buildSkull (Ljava/util/Map;ILjava/lang/String;Ljava/lang/String;)V
+		ARG 0 out
+		ARG 2 mob
+		ARG 3 block
+	METHOD a buildDoor (Ljava/util/Map;Ljava/lang/String;I)V
+		ARG 0 out
+		ARG 1 name
+	METHOD a addTo (Lyb;Lcom/mojang/datafixers/Dynamic;)I
+	METHOD b fixChunk (Lcom/mojang/datafixers/Dynamic;)Lcom/mojang/datafixers/Dynamic;
+	METHOD b buildBanner (Ljava/util/Map;ILjava/lang/String;)V
+		ARG 0 out
