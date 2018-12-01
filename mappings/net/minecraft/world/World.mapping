@@ -4,7 +4,7 @@ CLASS baq net/minecraft/world/World
 	FIELD C ambientDarkness I
 	FIELD D ticksSinceLightningClient I
 	FIELD F profiler Laek;
-	FIELD G tickingBlockEntities Z
+	FIELD G iteratingTickingBlockEntities Z
 	FIELD H border Lbpu;
 	FIELD a FACING_VALUES [Ley;
 	FIELD b pendingBlockEntities Ljava/util/List;
@@ -14,10 +14,11 @@ CLASS baq net/minecraft/world/World
 	FIELD f entities Ljava/util/List;
 	FIELD g unloadedEntities Ljava/util/List;
 	FIELD h blockEntities Ljava/util/List;
-	FIELD i iteratingTickingBlockEntities Ljava/util/List;
+	FIELD i tickingBlockEntities Ljava/util/List;
 	FIELD j players Ljava/util/List;
 	FIELD k globalEntities Ljava/util/List;
 	FIELD l entitiesById Lyl;
+	FIELD m lcgBlockSeed I
 	FIELD n unusedIncrement I
 	FIELD o rainGradientPrev F
 	FIELD p rainGradient F
@@ -55,11 +56,25 @@ CLASS baq net/minecraft/world/World
 	METHOD V getGameRules ()Lbam;
 	METHOD W isThundering ()Z
 	METHOD X isRaining ()Z
-	METHOD a isPlayerVisible (DDDD)Z
+	METHOD a (DDD)Laqj;
+		ARG 1 x
+		ARG 3 z
+		ARG 5 maxDistance
+	METHOD a containsVisiblePlayer (DDDD)Z
 		ARG 1 x
 		ARG 3 y
-	METHOD a getClosestPlayer (DDDDLjava/util/function/Predicate;)Laqj;
+		ARG 5 z
+		ARG 7 maxDistance
+	METHOD a (DDDDDLjava/util/function/Function;Ljava/util/function/Predicate;)Laqj;
 		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+	METHOD a findClosestPlayer (DDDDLjava/util/function/Predicate;)Laqj;
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+		ARG 7 maxDistance
+		ARG 9 predicate
 	METHOD a playSound (DDDLxf;Lxh;FFZ)V
 		ARG 1 x
 		ARG 3 y
@@ -68,6 +83,12 @@ CLASS baq net/minecraft/world/World
 	METHOD a calculateAmbientDarkness (F)I
 	METHOD a isHeightInvalid (I)Z
 		ARG 0 y
+	METHOD a getRandomPosInChunk (IIII)Let;
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+		ARG 4 heightMask
+		ARG 5 randomValue
 	METHOD a getChunk (IILbqb;)Lbpw;
 		ARG 1 chunkX
 		ARG 2 chunkZ
@@ -76,6 +97,8 @@ CLASS baq net/minecraft/world/World
 		ARG 2 pos
 	METHOD a setTime (J)V
 	METHOD a spawnEntity (Lagi;)Z
+	METHOD a (Lagi;DD)Laqj;
+		ARG 1 entity
 	METHOD a createExplosion (Lagi;DDDFZ)Lbaj;
 		ARG 1 entity
 		ARG 2 x
@@ -99,6 +122,9 @@ CLASS baq net/minecraft/world/World
 		ARG 1 player
 		ARG 2 eventId
 		ARG 3 pos
+	METHOD a canPlayerModifyAt (Laqj;Let;)Z
+		ARG 1 player
+		ARG 2 pos
 	METHOD a playSound (Laqj;Let;Lxf;Lxh;FF)V
 	METHOD a toCrashReportElement (Lb;)Lc;
 	METHOD a registerListener (Lbat;)V
@@ -106,6 +132,10 @@ CLASS baq net/minecraft/world/World
 	METHOD a getLightLevel (Lbbb;Let;)I
 		ARG 1 type
 	METHOD a addBlockEntity (Lbmn;)Z
+	METHOD a (Lbqi;I)V
+		ARG 3 pos
+		ARG 5 chunkStartX
+		ARG 6 chunkStartZ
 	METHOD a getTop (Lbrp$a;II)I
 		ARG 1 type
 		ARG 2 x
@@ -121,6 +151,8 @@ CLASS baq net/minecraft/world/World
 		ARG 1 begin
 		ARG 2 end
 	METHOD a clearBlockState (Let;)Z
+	METHOD a (Let;DD)Laqj;
+		ARG 1 pos
 	METHOD a updateNeighbors (Let;Lbfr;)V
 	METHOD a addBlockAction (Let;Lbfr;II)V
 		ARG 1 pos
@@ -165,6 +197,11 @@ CLASS baq net/minecraft/world/World
 	METHOD ac getRaidState ()Larm;
 	METHOD af getProfiler ()Laek;
 	METHOD b tickTime ()V
+	METHOD b findClosestVisiblePlayer (DDDD)Z
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+		ARG 7 maxDistance
 	METHOD b getEntityById (I)Lagi;
 	METHOD b fireWorldEvent (ILet;I)V
 		ARG 1 eventId
