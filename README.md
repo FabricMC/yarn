@@ -25,7 +25,7 @@ POMF uses Gradle to provide a number of utility tasks for working with POMF.
 Downloads the client and server Minecraft jars for the current Minecraft version to `.gradle/minecraft`
 
 ### `mergeJars`
-Merges the client and server jars into one merged jar, located at `VERSION-merged.jar` in the POMF directory where `VERSION` is the currnet Minecraft version.
+Merges the client and server jars into one merged jar, located at `VERSION-merged.jar` in the POMF directory where `VERSION` is the current Minecraft version.
 
 ### `setupPomf`
 `download` and `mergeJars`
