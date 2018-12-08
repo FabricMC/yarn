@@ -8,7 +8,7 @@ buildscript {
 	}
 	dependencies {
 		classpath "net.fabricmc:weave:0.2.0.+"
-		classpath "net.fabricmc:stitch:0.1.0.+"
+		classpath "net.fabricmc:stitch:0.1.0.23+"
 		classpath "commons-io:commons-io:1.4"
 		classpath "com.google.guava:guava:19.0"
 		classpath 'de.undercouch:gradle-download-task:3.4.3'
@@ -16,9 +16,11 @@ buildscript {
 	}
 }
 
-apply plugin: 'de.undercouch.download'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
+plugins {
+	id 'de.undercouch.download' version '3.4.3'
+	id 'maven'
+	id 'maven-publish'
+}
 
 def minecraft_version = "18w49a"
 
@@ -28,6 +30,28 @@ def build_number = ENV.BUILD_NUMBER ?: "local"
 
 def pomfVersion = "${minecraft_version}.$build_number"
 
+
+repositories {
+	mavenCentral()
+	maven {
+		name "Modmuss50 Repository"
+		url 'https://maven.modmuss50.me'
+	}
+}
+
+configurations {
+	enigmaRuntime {
+		resolutionStrategy {
+			cacheDynamicVersionsFor 0, "seconds"
+			cacheChangingModulesFor 0, "seconds"
+		}
+	}
+}
+
+dependencies {
+	enigmaRuntime "net.fabricmc:stitch:0.1.0.23+"
+	enigmaRuntime "cuchaz:enigma:0.12.2.+:all"
+}
 
 def mappingsDir = file("mappings")
 def cacheFilesMinecraft = file(".gradle/minecraft")
@@ -165,31 +189,12 @@ task setupPomf(dependsOn: mergeJars) {
 
 task pomf(dependsOn: setupPomf) {
 	doLast {
-		def cacheFilesEnigma = new File(".gradle/enigma")
-		if (!cacheFilesEnigma.exists()) {
-			cacheFilesEnigma.mkdirs()
-		}
-
-		def mavenMetadata = new File(cacheFilesEnigma, "maven-metadata.xml")
-		def localEnigmaVersion = mavenMetadata.exists() ? new XmlSlurper().parseText(FileUtils.readFileToString(mavenMetadata)).versioning.release : ""
-
-		logger.lifecycle(":downloading enigma metadata")
-		FileUtils.copyURLToFile(new URL("http://maven.modmuss50.me/cuchaz/enigma/maven-metadata.xml"), mavenMetadata)
-
-		def metadata = new XmlSlurper().parseText(FileUtils.readFileToString(mavenMetadata))
-		def enigmaVersion = metadata.versioning.release
-
-		def enigma = new File(cacheFilesEnigma, "${enigmaVersion}.jar")
-
-		if (localEnigmaVersion != enigmaVersion || !enigma.exists()) {
-			logger.lifecycle(":downloading enigma")
-			FileUtils.copyURLToFile(new URL("http://maven.modmuss50.me/cuchaz/enigma/${enigmaVersion}/enigma-${enigmaVersion}-all.jar"), enigma)
-		} else {
-			logger.lifecycle(":skipping enigma download")
-		}
-
-		logger.lifecycle(":launching enigma")
-		ant.java(jar: enigma.getAbsolutePath(), fork: true, spawn: true) {
+		ant.java(
+			classname: 'cuchaz.enigma.Main',
+			classpath: configurations.enigmaRuntime.asPath,
+			fork: true,
+			spawn: true
+		) {
 			arg(value: mergedFile.getAbsolutePath())
 			arg(value: mappingsDir.getAbsolutePath())
 		}
