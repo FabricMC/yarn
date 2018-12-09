@@ -9,14 +9,16 @@ The current version targets Minecraft version **18w49a**.
 
 Please remember that copying and pasting mappings from alternate projects under more restrictive licenses (such as MCP) is **completely forbidden** without explicit permission from the 
 owners of said mappings. Discussing the naming approaches used in said projects is also not welcome - you have been warned.
-However, it is a good idea to consult name changes with other people - use pull requests or our communtiy spaces to ask questions!
+However, it is a good idea to consult name changes with other people - use pull requests or our community spaces to ask questions!
 
 ### Getting Started
+
 1. Fork and clone the repo
-2. Run `./gradlew pomf` (macOS and Linux) or `gradlew pomf` (Windows)
+2. Run `./gradlew pomf` (Linux, macOS) or `gradlew pomf` (Windows)
 3. Profit
 
 ## Gradle
+
 POMF uses Gradle to provide a number of utility tasks for working with POMF.
 
 ### `download`
