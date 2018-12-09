@@ -8,10 +8,8 @@ The current version targets Minecraft version **18w49a**.
 ## Contributing
 
 Please remember that copying and pasting mappings from alternate projects under more restrictive licenses (such as MCP) is **completely forbidden** without explicit permission from the 
-owners of said mappings. It is also good to consult name changes with other people - use pull requests or our IRC (#fabric @ irc.esper.net) to ask questions!
-
-Outdated mapping guidelines are available [here](https://docs.google.com/document/d/15fHL-WgK0uMPAy-WJbQtxrfOVLJNlfasjsnt_wruOXA/edit). 
-New ones should probably be made.
+owners of said mappings. Discussing the naming approaches used in said projects is also not welcome - you have been warned.
+However, it is a good idea to consult name changes with other people - use pull requests or our communtiy spaces to ask questions!
 
 ### Getting Started
 1. Fork and clone the repo
