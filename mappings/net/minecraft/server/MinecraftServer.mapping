@@ -23,7 +23,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	FIELD V sessionService Lcom/mojang/authlib/minecraft/MinecraftSessionService;
 	FIELD W gameProfileRepo Lcom/mojang/authlib/GameProfileRepository;
 	FIELD X userCache Lwj;
-	FIELD Z serverStartTime J
+	FIELD Z timeReference J
 	FIELD a USER_CACHE_FILE Ljava/io/File;
 	FIELD aa iconFilePresent Z
 	FIELD ab dataManager Lwb;
@@ -91,11 +91,16 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD a setResourcePack (Ljava/lang/String;Ljava/lang/String;)V
 		ARG 1 url
 	METHOD a setKeyPair (Ljava/security/KeyPair;)V
+	METHOD a (Ljava/util/function/BooleanSupplier;)V
+		ARG 2 startTime
+		ARG 6 endTime
 	METHOD a appendCommandFeedback (Ljb;)V
 	METHOD a registerTickable (Lqq;)V
 	METHOD a getSpawnRadius (Luk;)I
 	METHOD a setConfigurationManager (Lwn;)V
 	METHOD a stop (Z)V
+	METHOD a save (ZZ)V
+		ARG 1 silent
 	METHOD aA getServerStartTime ()J
 	METHOD aB getMainThread ()Ljava/lang/Thread;
 	METHOD aC getDataFixer ()Lcom/mojang/datafixers/DataFixer;
@@ -109,6 +114,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD aP getLootManager ()Lchw;
 	METHOD aQ getGameRules ()Lbao;
 	METHOD aV getProfiler ()Laeh;
+	METHOD aX shouldKeepTicking ()Z
 	METHOD aa areCommandBlocksEnabled ()Z
 	METHOD ab getServerMotd ()Ljava/lang/String;
 	METHOD ac getWorldHeight ()I
@@ -134,6 +140,7 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD b setWorldHeight (I)V
 	METHOD b appendCrashReportDetails (Lb;)Lb;
 	METHOD b setServerIp (Ljava/lang/String;)V
+	METHOD b tick (Ljava/util/function/BooleanSupplier;)V
 	METHOD b setForceWorldUpgrade (Z)V
 	METHOD c setPlayerIdleTimeout (I)V
 	METHOD c getFile (Ljava/lang/String;)Ljava/io/File;
@@ -169,6 +176,9 @@ CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
 	METHOD o isRunning ()Z
 	METHOD q executeQueuedTask ()Z
 	METHOD r hasIconFile ()Z
+	METHOD run ()V
+		ARG 1 dt
+		ARG 3 ticksSkipped
 	METHOD s getIconFile ()Ljava/io/File;
 	METHOD t getRunDirectory ()Ljava/io/File;
 	METHOD u exit ()V
