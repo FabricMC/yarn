@@ -103,7 +103,9 @@ CLASS bft net/minecraft/block/Block
 		ARG 0 item
 	METHOD a addInformation (Lavu;Lbae;Ljava/util/List;Laxe;)V
 		ARG 1 stack
+		ARG 2 view
 		ARG 3 tooltip
+		ARG 4 options
 	METHOD a onEntityLand (Lbae;Lagk;)V
 		ARG 1 world
 		ARG 2 entity
@@ -122,6 +124,8 @@ CLASS bft net/minecraft/block/Block
 	METHOD a dropExperience (Lbas;Let;I)V
 		ARG 1 world
 		ARG 2 pos
+		ARG 3 size
+		ARG 4 adjustedSize
 	METHOD a onSteppedOn (Lbas;Let;Lagk;)V
 		ARG 1 world
 		ARG 2 pos
@@ -156,6 +160,7 @@ CLASS bft net/minecraft/block/Block
 	METHOD a onBroken (Lbat;Let;Lbom;)V
 		ARG 1 world
 		ARG 2 pos
+		ARG 3 state
 	METHOD a getTickRate (Lbaw;)I
 		ARG 1 world
 	METHOD a (Lbft;)Z
@@ -192,6 +197,7 @@ CLASS bft net/minecraft/block/Block
 		ARG 1 state
 		ARG 2 view
 		ARG 3 pos
+		ARG 4 ePos
 	METHOD a getWeakRedstonePower (Lbom;Lbae;Let;Ley;)I
 		ARG 1 state
 		ARG 2 view
@@ -214,6 +220,7 @@ CLASS bft net/minecraft/block/Block
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
+		ARG 4 player
 	METHOD a activate (Lbom;Lbas;Let;Laql;Lafd;Ley;FFF)Z
 		ARG 1 state
 		ARG 2 world
@@ -240,6 +247,7 @@ CLASS bft net/minecraft/block/Block
 		ARG 2 pos
 		ARG 3 blockEntity
 	METHOD a dropStacks (Lbom;Lbas;Let;Lbmq;Lagk;Lavu;)V
+		ARG 0 state
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 blockEntity
@@ -251,8 +259,10 @@ CLASS bft net/minecraft/block/Block
 		ARG 3 pos
 		ARG 4 prevState
 	METHOD a onBlockRemoved (Lbom;Lbas;Let;Lbom;Z)V
+		ARG 1 state
+		ARG 2 world
 		ARG 3 pos
-		ARG 4 state
+		ARG 4 newState
 	METHOD a rayTrace (Lbom;Lbas;Let;Lckz;Lckz;)Lckw;
 		ARG 0 state
 		ARG 1 world
@@ -265,7 +275,7 @@ CLASS bft net/minecraft/block/Block
 		ARG 1 world
 		ARG 2 state
 		ARG 3 pos
-		ARG 4 random
+		ARG 4 rnd
 	METHOD a (Lbom;Lbat;Let;I)V
 		ARG 1 state
 		ARG 2 world
@@ -297,6 +307,9 @@ CLASS bft net/minecraft/block/Block
 		ARG 3 pos
 		ARG 4 flags
 	METHOD a (Lbom;Lbom;Ley;)Z
+		ARG 1 state
+		ARG 2 neighbor
+		ARG 3 facing
 	METHOD a getDroppedStacks (Lbom;Lchr$a;)Ljava/util/List;
 		ARG 1 state
 		ARG 2 builder
@@ -321,6 +334,13 @@ CLASS bft net/minecraft/block/Block
 		ARG 3 blockEntity
 		ARG 4 builder
 	METHOD a getDroppedStacks (Lbom;Luk;Let;Lbmq;Lagk;Lavu;)Ljava/util/List;
+		ARG 0 state
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 blockEntity
+		ARG 4 entity
+		ARG 5 stack
+		ARG 6 builder
 	METHOD a appendProperties (Lbon$a;)V
 		ARG 1 builder
 	METHOD a (Lclt;)Z
@@ -330,6 +350,10 @@ CLASS bft net/minecraft/block/Block
 		ARG 1 facing
 	METHOD a matches (Lxy;)Z
 		ARG 1 tag
+	METHOD a_ (Lbom;Lbae;Let;)Z
+		ARG 1 state
+		ARG 2 view
+		ARG 3 pos
 	METHOD b (Lbft;)Z
 		ARG 0 block
 	METHOD b getRenderType (Lbom;)Lbjz;
@@ -342,10 +366,12 @@ CLASS bft net/minecraft/block/Block
 	METHOD b getComparatorOutput (Lbom;Lbas;Let;)I
 		ARG 1 state
 		ARG 2 world
+		ARG 3 pos
 	METHOD b randomDisplayTick (Lbom;Lbas;Let;Ljava/util/Random;)V
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
+		ARG 4 rnd
 	METHOD b getRenderingState (Lbom;Lbat;Let;)Lbom;
 		ARG 0 state
 		ARG 1 world
@@ -358,11 +384,16 @@ CLASS bft net/minecraft/block/Block
 		ARG 3 pos
 		ARG 4 flags
 	METHOD b dropStacks (Lbom;Lchr$a;)V
+		ARG 0 state
+		ARG 1 builder
+		ARG 2 world
+		ARG 3 pos
 	METHOD c getRenderLayer ()Lbaf;
 	METHOD c onRainTick (Lbas;Let;)V
 		ARG 1 world
 		ARG 2 pos
 	METHOD c isNaturalStone (Lbft;)Z
+		ARG 0 block
 	METHOD c canCollideWith (Lbom;)Z
 		ARG 1 state
 	METHOD c getAmbientOcclusionLightLevel (Lbom;Lbae;Let;)F
@@ -387,6 +418,7 @@ CLASS bft net/minecraft/block/Block
 		ARG 3 pos
 		ARG 4 rnd
 	METHOD d isNaturalDirt (Lbft;)Z
+		ARG 0 block
 	METHOD d isAir (Lbom;)Z
 		ARG 1 state
 	METHOD d isSimpleFullBlock (Lbom;Lbae;Let;)Z
@@ -457,9 +489,19 @@ CLASS bft net/minecraft/block/Block
 	METHOD n getFrictionCoefficient ()F
 	METHOD n (Lbom;)Z
 		ARG 1 state
+	METHOD n (Lbom;Lbae;Let;)Z
+		ARG 1 state
+		ARG 2 view
+		ARG 3 pos
+		ARG 4 isFull
+		ARG 5 shape
 	METHOD o getStateFactory ()Lbon;
 	METHOD o hasComparatorOutput (Lbom;)Z
 		ARG 1 state
+	METHOD o (Lbom;Lbae;Let;)I
+		ARG 1 state
+		ARG 2 view
+		ARG 3 pos
 	METHOD p getDefaultState ()Lbom;
 	METHOD p setDefaultState (Lbom;)V
 		ARG 1 state
