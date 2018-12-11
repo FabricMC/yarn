@@ -1,43 +1,119 @@
 CLASS bom net/minecraft/block/BlockState
-	CLASS bom$a
+	CLASS bom$a ShapeCache
 		FIELD a DIRECTIONS [Ley;
+		FIELD b cull Z
+		FIELD f shapes [Lclt;
+		METHOD <init> (Lbom;)V
+			ARG 1 state
+			ARG 2 block
+			ARG 3 shape
+		METHOD c (Lbom$a;)[Lclt;
+	FIELD c shapeCache Lbom$a;
 	FIELD d luminance I
+	METHOD <init> (Lbft;Lcom/google/common/collect/ImmutableMap;)V
+		ARG 1 block
+		ARG 2 propertyMap
 	METHOD a allowsSpawning (Lagk;)Z
+		ARG 1 entity
 	METHOD a calcBlockBreakingDelta (Laql;Lbae;Let;)F
+		ARG 1 player
+		ARG 2 view
+		ARG 3 pos
 	METHOD a (Laty;)Z
 		ARG 1 ctx
 	METHOD a getBlockBrightness (Lbac;Let;)I
+		ARG 1 view
+		ARG 2 pos
+	METHOD a (Lbae;Let;)Z
+		ARG 1 view
+		ARG 2 pos
 	METHOD a canPlaceAtSide (Lbae;Let;Lcgh;)Z
+		ARG 1 view
+		ARG 2 pos
+		ARG 3 env
 	METHOD a (Lbae;Let;Lcle;)Lclt;
 		ARG 1 view
 		ARG 2 pos
-	METHOD a (Lbae;Let;Ley;)Lclt;
+		ARG 3 ePos
+	METHOD a getCullShape (Lbae;Let;Ley;)Lclt;
 		ARG 1 view
 		ARG 2 pos
 		ARG 3 facing
 	METHOD a getComparatorOutput (Lbas;Let;)I
+		ARG 1 world
+		ARG 2 pos
 	METHOD a onBlockAction (Lbas;Let;II)Z
+		ARG 1 world
+		ARG 2 pos
 	METHOD a onEntityCollision (Lbas;Let;Lagk;)V
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 entity
 	METHOD a onBlockBreakStart (Lbas;Let;Laql;)V
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 player
 	METHOD a activate (Lbas;Let;Laql;Lafd;Ley;FFF)Z
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 player
+		ARG 4 hand
+		ARG 5 facing
+		ARG 6 hitX
+		ARG 7 hitY
+		ARG 8 hitZ
 	METHOD a onStacksDropped (Lbas;Let;Lavu;)V
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 stack
 	METHOD a neighborUpdate (Lbas;Let;Lbft;Let;)V
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 neighborBlock
+		ARG 4 neighborPos
 	METHOD a onBlockAdded (Lbas;Let;Lbom;)V
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 prevState
 	METHOD a onBlockRemoved (Lbas;Let;Lbom;Z)V
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 newState
 	METHOD a scheduledTick (Lbas;Let;Ljava/util/Random;)V
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 rnd
 	METHOD a (Lbat;Let;I)V
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 flags
 	METHOD a canPlaceAt (Lbaw;Let;)Z
+		ARG 1 world
+		ARG 2 pos
 	METHOD a applyMirror (Lbjc;)Lbom;
+		ARG 1 mirror
 	METHOD a applyRotation (Lbkc;)Lbom;
+		ARG 1 rotation
+	METHOD a (Lbom;Ley;)Z
+		ARG 1 neighbor
+		ARG 2 facing
 	METHOD a getDroppedStacks (Lchr$a;)Ljava/util/List;
+		ARG 1 builder
 	METHOD a deserialize (Lcom/mojang/datafixers/Dynamic;)Lbom;
 		ARG 0 dynamic
+		ARG 1 block
+		ARG 2 propertiesMap
+		ARG 3 state
+		ARG 4 stateFactory
+		ARG 7 key
+		ARG 8 property
 	METHOD a serialize (Lcom/mojang/datafixers/types/DynamicOps;Lbom;)Lcom/mojang/datafixers/Dynamic;
 		ARG 0 ops
 		ARG 1 state
+		ARG 2 map
+		ARG 3 t
+	METHOD a getPosRandom (Let;)J
+		ARG 1 pos
 	METHOD a getRenderingState (Ley;Lbom;Lbat;Let;Let;)Lbom;
 		ARG 1 facing
 		ARG 2 neighborState
@@ -45,25 +121,61 @@ CLASS bom net/minecraft/block/BlockState
 		ARG 4 pos
 		ARG 5 neighborPos
 	METHOD a matches (Lxy;)Z
+		ARG 1 tag
+	METHOD b (Lbae;Let;)I
+		ARG 1 view
+		ARG 2 pos
 	METHOD b getWeakRedstonePower (Lbae;Let;Ley;)I
+		ARG 1 view
+		ARG 2 pos
+		ARG 3 facing
 	METHOD b randomTick (Lbas;Let;Ljava/util/Random;)V
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 rnd
 	METHOD b (Lbat;Let;I)V
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 flags
+	METHOD c initShapeCache ()V
+	METHOD c (Lbae;Let;)Z
+		ARG 1 view
+		ARG 2 pos
 	METHOD c getStrongRedstonePower (Lbae;Let;Ley;)I
+		ARG 1 view
+		ARG 2 pos
+		ARG 3 facing
 	METHOD d getBlock ()Lbft;
 	METHOD d getMaterialColor (Lbae;Let;)Lcee;
+		ARG 1 view
+		ARG 2 pos
 	METHOD e getMaterial ()Lced;
+	METHOD e (Lbae;Let;)Z
+		ARG 1 view
+		ARG 2 pos
 	METHOD f getAmbientOcclusionLightLevel (Lbae;Let;)F
+		ARG 1 view
+		ARG 2 pos
 	METHOD g getLuminance ()I
+	METHOD g blocksLight (Lbae;Let;)Z
+		ARG 1 view
+		ARG 2 pos
 	METHOD h isAir ()Z
 	METHOD h isSimpleFullBlock (Lbae;Let;)Z
+		ARG 1 view
+		ARG 2 pos
 	METHOD i hasBlockEntityBreakingRender ()Z
 	METHOD i getHardness (Lbae;Let;)F
+		ARG 1 view
+		ARG 2 pos
 	METHOD j getRenderType ()Lbjz;
+	METHOD j (Lbae;Let;)Z
+		ARG 1 view
+		ARG 2 pos
 	METHOD k emitsRedstonePower ()Z
 	METHOD k getBoundingShape (Lbae;Let;)Lclt;
+		ARG 1 view
+		ARG 2 pos
 	METHOD l hasComparatorOutput ()Z
 	METHOD l (Lbae;Let;)Lclt;
 		ARG 1 view
@@ -74,9 +186,20 @@ CLASS bom net/minecraft/block/BlockState
 		ARG 2 pos
 	METHOD n isFullBoundsCubeForCulling ()Z
 	METHOD n getRayTraceShape (Lbae;Let;)Lclt;
+		ARG 1 view
+		ARG 2 pos
 	METHOD o getFluidState ()Lcdz;
 	METHOD o hasSolidTopSurface (Lbae;Let;)Z
+		ARG 1 view
+		ARG 2 pos
 	METHOD p hasRandomTicks ()Z
 	METHOD p getOffsetPos (Lbae;Let;)Lckz;
+		ARG 1 view
+		ARG 2 pos
 	METHOD q getSoundGroup ()Lbku;
 	METHOD q canSuffocate (Lbae;Let;)Z
+		ARG 1 view
+		ARG 2 pos
+	METHOD r (Lbae;Let;)Z
+		ARG 1 view
+		ARG 2 pos
