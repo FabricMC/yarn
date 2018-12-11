@@ -2,15 +2,30 @@ CLASS uj net/minecraft/server/world/ServerChunkProvider
 	FIELD b LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD g chunkSaveHandler Lbqy;
 	FIELD h world Lbas;
+	FIELD i worldThread Ljava/lang/Thread;
+	FIELD j genQueue Ljava/util/Queue;
 	FIELD l loadedChunkMap Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 	FIELD r genWorkerPool Ljava/util/concurrent/ExecutorService;
 	FIELD s genWorkerId Ljava/util/concurrent/atomic/AtomicInteger;
 	METHOD a getLightingProvider ()Lcdq;
+	METHOD a getChunkSync (IILbqe;Z)Lbpz;
+		ARG 1 x
+		ARG 2 z
+		ARG 3 status
+		ARG 4 require
+		ARG 5 isWorldThread
+	METHOD a markForUpdate (Let;)V
 	METHOD a save (Z)V
 		ARG 1 saveChunks
 		ARG 4 chunk
 	METHOD b get (II)Lbae;
 		ARG 1 chunkX
+	METHOD b getChunkAsync (IILbqe;Z)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 x
+		ARG 2 z
+		ARG 3 status
+	METHOD b getChunkWatcher (J)Ltz;
+	METHOD b getChunkTrackingDistance (Lbag;Lagk;)I
 	METHOD d isGenerationDisabled (Lum;)Z
 	METHOD g getStatus ()Ljava/lang/String;
 	METHOD i getLoadedChunkCount ()I
