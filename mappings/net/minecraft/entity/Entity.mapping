@@ -81,7 +81,7 @@ CLASS agk net/minecraft/entity/Entity
 	METHOD Y updateLogic ()V
 	METHOD Z getMaxPortalTime ()I
 	METHOD a sendCommandFeedback ()Z
-	METHOD a shouldRender (D)Z
+	METHOD a shouldRenderAtDistance (D)Z
 	METHOD a setPositionAnglesAndUpdate (DDDFF)V
 		ARG 1 x
 		ARG 3 y
@@ -132,7 +132,7 @@ CLASS agk net/minecraft/entity/Entity
 		ARG 3 multiplierY
 		ARG 4 multiplierZ
 	METHOD a changeDimension (Lbrf;)Lagk;
-	METHOD a addCrashReportDetails (Lc;)V
+	METHOD a populateCrashReport (Lc;)V
 	METHOD a setBoundingBox (Lckv;)V
 	METHOD a squaredDistanceTo (Lckz;)D
 	METHOD a isTeamPlayer (Lcmb;)Z
@@ -154,7 +154,7 @@ CLASS agk net/minecraft/entity/Entity
 	METHOD aA getLightmapCoordinates ()I
 	METHOD aD doesCollide ()Z
 	METHOD aF shouldSetPositionOnLoad ()Z
-	METHOD aG getId ()Ljava/lang/String;
+	METHOD aG getSavedEntityId ()Ljava/lang/String;
 	METHOD aH isValid ()Z
 	METHOD aI isInsideWall ()Z
 	METHOD aK getHeightOffset ()D
@@ -202,6 +202,7 @@ CLASS agk net/minecraft/entity/Entity
 	METHOD b writeCustomDataToTag (Lhq;)V
 	METHOD b removeScoreboardTag (Ljava/lang/String;)Z
 	METHOD b setCustomName (Ljb;)V
+	METHOD b onStartedTrackingBy (Lum;)V
 	METHOD b isInsideFluid (Lxy;)Z
 	METHOD b setInWorld (Z)V
 	METHOD bA shouldRenderName ()Z
@@ -243,6 +244,8 @@ CLASS agk net/minecraft/entity/Entity
 	METHOD c handleFallDamage (FF)V
 		ARG 1 fallDistance
 	METHOD c squaredDistanceTo (Let;)D
+	METHOD c saveSelfToTag (Lhq;)Z
+	METHOD c onStoppedTrackingBy (Lum;)V
 	METHOD c setSilent (Z)V
 	METHOD d getName ()Ljb;
 	METHOD d squaredDistanceTo (DDD)D
@@ -250,6 +253,7 @@ CLASS agk net/minecraft/entity/Entity
 	METHOD d getVectorFromRotation (FF)Lckz;
 		ARG 1 pitch
 	METHOD d squaredDistanceToCenter (Let;)D
+	METHOD d saveToTag (Lhq;)Z
 	METHOD d setUnaffectedByGravity (Z)V
 	METHOD e hasCustomName ()Z
 	METHOD e distanceTo (DDD)D
@@ -270,6 +274,8 @@ CLASS agk net/minecraft/entity/Entity
 	METHOD f setSprinting (Z)V
 	METHOD g shouldRenderFrom (DDD)Z
 		ARG 1 x
+		ARG 3 y
+		ARG 5 z
 	METHOD g getPitch (F)F
 	METHOD g burn (I)V
 	METHOD g distanceTo (Lagk;)F
