@@ -3,7 +3,7 @@
 Yarn is a set of open, unencumbered Minecraft mappings, free for everyone to use under the Creative Commons Zero license. The intention is to let 
 everyone mod Minecraft freely and openly, while also being able to innovate and process the mappings as they see fit.
 
-The current version targets Minecraft version **18w49a**.
+The current version targets Minecraft version **18w50a**.
 
 ## Contributing
 
