@@ -56,7 +56,7 @@ CLASS bbp net/minecraft/world/World
 	METHOD V getGameRules ()Lbbl;
 	METHOD W isThundering ()Z
 	METHOD X isRaining ()Z
-	METHOD a (DDD)Larb;
+	METHOD a findClosestVisiblePlayer (DDD)Larb;
 		ARG 1 x
 	METHOD a containsVisiblePlayer (DDDD)Z
 		ARG 1 x
@@ -83,7 +83,7 @@ CLASS bbp net/minecraft/world/World
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
-	METHOD a (IILbrf;Z)Lbra;
+	METHOD a getChunk (IILbrf;Z)Lbra;
 		ARG 1 chunkX
 		ARG 2 chunkZ
 		ARG 3 requiredState
@@ -98,6 +98,7 @@ CLASS bbp net/minecraft/world/World
 		ARG 1 entity
 		ARG 2 x
 		ARG 4 y
+	METHOD a createExplosion (Lagv;DDDFZZ)Lbbi;
 	METHOD a (Lagv;F)Lcmd;
 		ARG 1 entity
 	METHOD a createExplosion (Lagv;Lage;DDDFZZ)Lbbi;
@@ -117,6 +118,7 @@ CLASS bbp net/minecraft/world/World
 		ARG 1 player
 		ARG 2 eventId
 		ARG 3 pos
+	METHOD a playSoundFromEntity (Larb;Lagv;Lxm;Lxo;FF)V
 	METHOD a canPlayerModifyAt (Larb;Let;)Z
 		ARG 1 player
 	METHOD a playSound (Larb;Let;Lxm;Lxo;FF)V
@@ -172,6 +174,8 @@ CLASS bbp net/minecraft/world/World
 	METHOD a playRecord (Let;Lxm;)V
 	METHOD a breakBlock (Let;Z)Z
 		ARG 1 pos
+	METHOD a addParticle (Lft;DDDDDD)V
+	METHOD a addParticle (Lft;ZDDDDDD)V
 	METHOD a countTransientEntities (Ljava/lang/Class;I)I
 	METHOD a getClosestVisibleEntityTo (Ljava/lang/Class;Lclz;Lagv;)Lagv;
 		ARG 1 clazz
@@ -194,10 +198,11 @@ CLASS bbp net/minecraft/world/World
 	METHOD ac getRaidState ()Lash;
 	METHOD af getProfiler ()Laeu;
 	METHOD b tickTime ()V
-	METHOD b findClosestVisiblePlayer (DDDD)Z
+	METHOD b findVisiblePlayer (DDDD)Z
 		ARG 1 x
 		ARG 3 y
 	METHOD b getEntityById (I)Lagv;
+	METHOD b scheduleNeighborChunksRender (III)V
 	METHOD b fireWorldEvent (ILet;I)V
 		ARG 1 eventId
 		ARG 2 pos
@@ -239,6 +244,7 @@ CLASS bbp net/minecraft/world/World
 	METHOD e isRemote ()Z
 	METHOD e getFogColor (F)Lcmd;
 	METHOD e getBiome (Let;)Lbco;
+	METHOD f getWorld ()Lbbp;
 	METHOD f getBlockEntity (Let;)Lbnq;
 		ARG 1 pos
 	METHOD g getLevelProperties ()Lcih;
@@ -260,6 +266,7 @@ CLASS bbp net/minecraft/world/World
 	METHOD m_ updateEntities ()V
 	METHOD n getChunk (Let;)Lbrm;
 	METHOD o getDimension ()Lbsf;
+	METHOD o scheduleBlockRender (Let;)V
 	METHOD q removeBlockEntity (Let;)V
 	METHOD q_ getSeaLevel ()I
 	METHOD r_ getSeed ()J
