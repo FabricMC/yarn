@@ -7,13 +7,17 @@ CLASS cqz net/minecraft/client/gui/widget/AbstractListWidget
 	FIELD j x2 I
 	FIELD k x1 I
 	FIELD l entryHeight I
+	FIELD o scrollY D
+	FIELD r visible Z
 	METHOD <init> (Lcpk;IIIII)V
 		ARG 1 client
+	METHOD a drawBackground ()V
 	METHOD a charTyped (CI)Z
 		ARG 1 chr
 		ARG 2 keyCode
 	METHOD a mouseScrolled (D)Z
 		ARG 1 dY
+	METHOD a getSelectedEntry (DD)I
 	METHOD a mouseClicked (DDI)Z
 		ARG 1 mouseX
 		ARG 3 mouseY
@@ -22,16 +26,34 @@ CLASS cqz net/minecraft/client/gui/widget/AbstractListWidget
 		ARG 1 mouseX
 		ARG 3 mouseY
 		ARG 5 button
-	METHOD a isSelected (I)Z
+		ARG 6 deltaX
+		ARG 8 deltaY
+	METHOD a isSelectedEntry (I)Z
+		ARG 1 index
+	METHOD a selectEntry (IIDD)Z
+		ARG 1 index
+		ARG 2 button
+		ARG 3 mouseX
+		ARG 5 mouseY
 	METHOD a draw (IIF)V
 		ARG 1 mouseX
 		ARG 2 mouseY
 	METHOD a keyPressed (III)Z
 		ARG 1 keyCode
 		ARG 2 scanCode
+		ARG 3 modifiers
+	METHOD a (IIIF)V
+		ARG 1 index
 	METHOD a drawEntries (IIIIF)V
+		ARG 1 x
+		ARG 2 y
+		ARG 3 mouseX
+		ARG 4 mouseY
 	METHOD a drawEntry (IIIIIIF)V
-	METHOD b getListeners ()Ljava/util/List;
+	METHOD b getEntries ()Ljava/util/List;
+	METHOD b isSelected (DD)Z
+		ARG 1 mouseX
+		ARG 3 mouseY
 	METHOD b mouseReleased (DDI)Z
 		ARG 1 mouseX
 		ARG 3 mouseY
@@ -40,12 +62,15 @@ CLASS cqz net/minecraft/client/gui/widget/AbstractListWidget
 		ARG 1 width
 		ARG 2 height
 		ARG 3 y1
+		ARG 4 y2
 	METHOD d getEntryCount ()I
 	METHOD e getEntryWidth ()I
-	METHOD e scrollByY (I)V
+	METHOD e scroll (I)V
+		ARG 1 amount
 	METHOD f getScrollbarPosition ()I
-	METHOD f setLeftPos (I)V
-	METHOD n getContentHeight ()I
+	METHOD f setX (I)V
+	METHOD m isVisible ()Z
+	METHOD n getMaxScrollPosition ()I
 	METHOD o clampScrollY ()V
 	METHOD p getMaxScrollY ()I
 	METHOD q getScrollY ()I
