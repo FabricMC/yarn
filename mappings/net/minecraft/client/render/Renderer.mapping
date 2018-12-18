@@ -21,6 +21,17 @@ CLASS dee net/minecraft/client/render/Renderer
 	FIELD k world Ldbi;
 	FIELD o chunkRenderDispatcher Ldeo;
 	METHOD a reload ()V
+	METHOD a drawBox (DDDDDDFFFF)V
+		ARG 0 minX
+		ARG 2 minY
+		ARG 4 minZ
+		ARG 6 maxX
+		ARG 8 maxY
+		ARG 10 maxZ
+		ARG 12 red
+		ARG 13 green
+		ARG 14 blue
+		ARG 15 alpha
 	METHOD a renderSky (F)V
 	METHOD a scheduleChunkRender (IIIZ)V
 	METHOD a onGlobalWorldEvent (ILet;I)V
@@ -29,12 +40,18 @@ CLASS dee net/minecraft/client/render/Renderer
 	METHOD a onEntityAdded (Lagv;)V
 	METHOD a renderWorldBorder (Lagv;F)V
 		ARG 1 camera
+		ARG 2 partialTicks
 	METHOD a renderEntities (Lagv;Ldha;F)V
 		ARG 1 cameraEntity
 	METHOD a onWorldEvent (Larb;ILet;I)V
 		ARG 1 player
 		ARG 2 eventId
 		ARG 3 pos
+	METHOD a drawHighlightedBlockOutline (Larb;Lcma;IF)V
+		ARG 1 player
+		ARG 2 hit
+		ARG 3 renderPass
+		ARG 4 delta
 	METHOD a onSound (Larb;Lxm;Lxo;DDDFF)V
 		ARG 1 player
 		ARG 2 sound
@@ -56,10 +73,38 @@ CLASS dee net/minecraft/client/render/Renderer
 		ARG 2 pos
 		ARG 3 oldState
 		ARG 4 newState
+	METHOD a drawBox (Lclz;FFFF)V
+		ARG 0 box
+		ARG 1 red
+		ARG 2 green
+		ARG 3 blue
+		ARG 4 alpha
+	METHOD a drawSegmentedShapeOutline (Lcmx;DDDFFFF)V
+		ARG 0 shape
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+		ARG 7 red
+		ARG 8 green
+		ARG 9 blue
+		ARG 10 alpha
+	METHOD a drawBox (Lcou;DDDDDDFFFF)V
+		ARG 0 buffer
+		ARG 1 minX
+		ARG 3 minY
+		ARG 5 minZ
+		ARG 7 maxX
+		ARG 9 maxY
+		ARG 11 maxZ
+		ARG 13 red
+		ARG 14 green
+		ARG 15 blue
+		ARG 16 alpha
 	METHOD a renderPartiallyBrokenBlocks (Lcox;Lcou;Lagv;F)V
 		ARG 1 tesselator
 		ARG 2 buffer
 		ARG 3 cameraEntity
+		ARG 4 delta
 	METHOD a setWorld (Ldbi;)V
 	METHOD a (Lft;DDDDDD)V
 		ARG 1 parameters
@@ -93,14 +138,49 @@ CLASS dee net/minecraft/client/render/Renderer
 	METHOD a playRecord (Lxm;Let;)V
 	METHOD a getRandomParticleSpawnChance (Z)I
 		ARG 1 canSpawnOnMinimal
-	METHOD b renderCuboidOutline (DDDDDDFFFF)V
+	METHOD b drawBoxOutline (DDDDDDFFFF)V
+		ARG 0 minX
+		ARG 2 minY
+		ARG 4 minZ
+		ARG 6 maxX
+		ARG 8 maxY
+		ARG 10 maxZ
+		ARG 12 red
+		ARG 13 green
+		ARG 14 blue
+		ARG 15 alpha
 	METHOD b scheduleChunkRender (III)V
 	METHOD b onBlockBreakingStage (ILet;I)V
 		ARG 1 entityId
 		ARG 2 pos
 	METHOD b onEntityRemoved (Lagv;)V
-	METHOD b renderCuboidOutline (Lclz;FFFF)V
-	METHOD b renderCuboid (Lcou;DDDDDDFFFF)V
+	METHOD b drawBoxOutline (Lclz;FFFF)V
+		ARG 0 box
+		ARG 1 red
+		ARG 2 green
+		ARG 3 blue
+		ARG 4 alpha
+	METHOD b drawShapeOutline (Lcmx;DDDFFFF)V
+		ARG 0 shape
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+		ARG 7 red
+		ARG 8 green
+		ARG 9 blue
+		ARG 10 alpha
+	METHOD b drawBoxOutline (Lcou;DDDDDDFFFF)V
+		ARG 0 buffer
+		ARG 1 minX
+		ARG 3 minY
+		ARG 5 minZ
+		ARG 7 maxX
+		ARG 9 maxY
+		ARG 11 maxZ
+		ARG 13 red
+		ARG 14 green
+		ARG 15 blue
+		ARG 16 alpha
 	METHOD b spawnParticle (Lft;ZDDDDDD)Ldco;
 		ARG 1 parameters
 		ARG 2 alwaysSpawn
