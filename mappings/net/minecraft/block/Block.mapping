@@ -9,6 +9,7 @@ CLASS bgs net/minecraft/block/Block
 			ARG 3 facing
 		METHOD equals (Ljava/lang/Object;)Z
 			ARG 1 o
+			ARG 2 neighborGroup
 	CLASS bgs$b OffsetType
 		FIELD a NONE Lbgs$b;
 		FIELD b XZ Lbgs$b;
@@ -38,6 +39,7 @@ CLASS bgs net/minecraft/block/Block
 			ARG 1 luminance
 		METHOD a copy (Lbgs;)Lbgs$c;
 			ARG 0 source
+			ARG 1 settings
 		METHOD a sounds (Lblt;)Lbgs$c;
 			ARG 1 soundGroup
 		METHOD a of (Lcfh;)Lbgs$c;
@@ -76,6 +78,7 @@ CLASS bgs net/minecraft/block/Block
 	FIELD v collidable Z
 	METHOD <init> (Lbgs$c;)V
 		ARG 1 settings
+		ARG 2 stateBuilder
 	METHOD a canMobSpawnInside ()Z
 	METHOD a createCubeShape (DDDDDD)Lcmx;
 		ARG 0 xMin
@@ -86,6 +89,7 @@ CLASS bgs net/minecraft/block/Block
 		ARG 10 zMax
 	METHOD a getStateFromRawId (I)Lbpm;
 		ARG 0 stateId
+		ARG 1 state
 	METHOD a getPlacementState (Laus;)Lbpm;
 		ARG 1 ctx
 	METHOD a addStacksForDisplay (Lavg;Lfh;)V
@@ -113,6 +117,7 @@ CLASS bgs net/minecraft/block/Block
 		ARG 3 pos
 		ARG 4 state
 		ARG 5 blockEntity
+		ARG 6 stack
 	METHOD a dropExperience (Lbbp;Let;I)V
 		ARG 1 world
 		ARG 2 pos
@@ -139,6 +144,7 @@ CLASS bgs net/minecraft/block/Block
 		ARG 2 pos
 		ARG 3 state
 		ARG 4 placer
+		ARG 5 itemStack
 	METHOD a onBreak (Lbbp;Let;Lbpm;Larb;)V
 		ARG 1 world
 		ARG 2 pos
@@ -162,6 +168,8 @@ CLASS bgs net/minecraft/block/Block
 		ARG 2 player
 		ARG 3 world
 		ARG 4 pos
+		ARG 5 hardness
+		ARG 6 efficiency
 	METHOD a (Lbpm;Laus;)Z
 		ARG 1 state
 		ARG 2 ctx
@@ -254,6 +262,8 @@ CLASS bgs net/minecraft/block/Block
 		ARG 2 pos
 		ARG 3 from
 		ARG 4 to
+		ARG 5 initalResult
+		ARG 6 perciceResult
 	METHOD a randomDisplayTick (Lbpm;Lbbp;Let;Ljava/util/Random;)V
 		ARG 1 state
 		ARG 2 world
@@ -279,19 +289,25 @@ CLASS bgs net/minecraft/block/Block
 		ARG 1 otherState
 		ARG 2 world
 		ARG 3 pos
+		ARG 4 shape
+		ARG 5 visibleEntities
 	METHOD a replaceBlock (Lbpm;Lbpm;Lbbq;Let;I)V
 		ARG 0 state
 		ARG 1 newState
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 flags
-	METHOD a (Lbpm;Lbpm;Ley;)Z
+	METHOD a isSideVisible (Lbpm;Lbpm;Ley;)Z
 		ARG 1 state
 		ARG 2 neighbor
 		ARG 3 facing
 	METHOD a getDroppedStacks (Lbpm;Lciv$a;)Ljava/util/List;
 		ARG 1 state
 		ARG 2 builder
+		ARG 3 dropIdentifier
+		ARG 4 lootContext
+		ARG 5 world
+		ARG 6 lootSupplier
 	METHOD a getPosRandom (Lbpm;Let;)J
 		ARG 1 state
 		ARG 2 pos
@@ -307,6 +323,7 @@ CLASS bgs net/minecraft/block/Block
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 blockEntity
+		ARG 4 lootBuilder
 	METHOD a getDroppedStacks (Lbpm;Luq;Let;Lbnq;Lagv;Lawo;)Ljava/util/List;
 		ARG 0 state
 		ARG 1 world
@@ -314,6 +331,7 @@ CLASS bgs net/minecraft/block/Block
 		ARG 3 blockEntity
 		ARG 4 entity
 		ARG 5 stack
+		ARG 6 lootBuilder
 	METHOD a appendProperties (Lbpn$a;)V
 		ARG 1 builder
 	METHOD a isShapeFullCube (Lcmx;)Z
@@ -321,9 +339,10 @@ CLASS bgs net/minecraft/block/Block
 	METHOD a isFaceFullCube (Lcmx;Ley;)Z
 		ARG 0 shape
 		ARG 1 facing
+		ARG 2 faceShape
 	METHOD a matches (Lye;)Z
 		ARG 1 tag
-	METHOD a_ (Lbpm;Lbbb;Let;)Z
+	METHOD a_ isWaterLogged (Lbpm;Lbbb;Let;)Z
 		ARG 1 state
 		ARG 2 view
 		ARG 3 pos
@@ -350,6 +369,7 @@ CLASS bgs net/minecraft/block/Block
 		ARG 0 state
 		ARG 1 world
 		ARG 2 pos
+		ARG 4 mutablePos
 	METHOD b (Lbpm;Lbbq;Let;I)V
 		ARG 1 state
 		ARG 2 world
@@ -358,6 +378,8 @@ CLASS bgs net/minecraft/block/Block
 	METHOD b dropStacks (Lbpm;Lciv$a;)V
 		ARG 0 state
 		ARG 1 builder
+		ARG 2 world
+		ARG 3 position
 	METHOD c getRenderLayer ()Lbbc;
 	METHOD c onRainTick (Lbbp;Let;)V
 		ARG 1 world
@@ -375,6 +397,11 @@ CLASS bgs net/minecraft/block/Block
 		ARG 1 view
 		ARG 2 pos
 		ARG 3 facing
+		ARG 4 otherPos
+		ARG 5 otherState
+		ARG 6 neighborGroup
+		ARG 9 shape
+		ARG 10 otherShape
 	METHOD c randomTick (Lbpm;Lbbp;Let;Ljava/util/Random;)V
 		ARG 1 world
 		ARG 2 state
@@ -422,6 +449,7 @@ CLASS bgs net/minecraft/block/Block
 		ARG 2 view
 		ARG 3 pos
 	METHOD j getDropTableId ()Lqc;
+		ARG 1 blockIdentifier
 	METHOD j getPistonBehavior (Lbpm;)Lcfj;
 		ARG 1 state
 	METHOD j getHardness (Lbpm;Lbbb;Let;)F
@@ -436,6 +464,7 @@ CLASS bgs net/minecraft/block/Block
 	METHOD l getTextComponent ()Ljd;
 	METHOD l getRawIdFromState (Lbpm;)I
 		ARG 0 state
+		ARG 1 rawId
 	METHOD l (Lbpm;Lbbb;Let;)Lcmx;
 		ARG 1 state
 		ARG 2 view
@@ -454,6 +483,8 @@ CLASS bgs net/minecraft/block/Block
 		ARG 1 state
 		ARG 2 view
 		ARG 3 pos
+		ARG 4 fullCube
+		ARG 5 shape
 	METHOD o getStateFactory ()Lbpn;
 	METHOD o (Lbpm;)Z
 		ARG 1 state
@@ -474,3 +505,6 @@ CLASS bgs net/minecraft/block/Block
 	METHOD q getOffsetPos (Lbpm;Lbbb;Let;)Lcmd;
 		ARG 1 state
 		ARG 2 view
+		ARG 3 blockPos
+		ARG 4 offsetType
+		ARG 5 psudoRandomValue
