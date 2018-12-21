@@ -1,6 +1,8 @@
 CLASS cog net/minecraft/client/util/Window
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD b errorCallback Lorg/lwjgl/glfw/GLFWErrorCallback;
+	FIELD c windowEventHandler Lnopackage/WindowEventHandler;
+	FIELD d monitorTracker Lcod;
 	FIELD e monitor Lcnz;
 	FIELD f handle J
 	FIELD k videoMode Ljava/util/Optional;
@@ -9,14 +11,24 @@ CLASS cog net/minecraft/client/util/Window
 	FIELD s windowHeight I
 	FIELD t scaledWidth I
 	FIELD u scaledHeight I
+	FIELD w renderPhase Ljava/lang/String;
 	FIELD z framerateLimit I
+	METHOD a logOnGlError ()V
 	METHOD a setFramerateLimit (I)V
+	METHOD a logGlError (IJ)V
+		ARG 1 error
+		ARG 2 description
 	METHOD a setWindowIcon (Ljava/io/InputStream;Ljava/io/InputStream;)V
 		ARG 1 icon16
+	METHOD a setRenderPhase (Ljava/lang/String;)V
+		ARG 1 renderPhase
 	METHOD b getFramerateLimit ()I
+	METHOD b throwExceptionForGlError (IJ)V
 	METHOD b onSizeChanged (JII)V
 		ARG 1 handle
 	METHOD b setVsync (Z)V
+	METHOD c waitForFramerateLimit ()V
+	METHOD c setFullscreen (Z)V
 	METHOD d getVideoMode ()Ljava/util/Optional;
 	METHOD g toggleFullscreen ()V
 	METHOD h getHandle ()J
@@ -26,3 +38,5 @@ CLASS cog net/minecraft/client/util/Window
 	METHOD l pollEvents ()V
 	METHOD o getScaledWidth ()I
 	METHOD p getScaledHeight ()I
+	METHOD t throwExceptionOnGlError ()V
+	METHOD u getMonitor ()V
