@@ -1,16 +1,219 @@
-CLASS dea net/minecraft/client/render/WorldRenderer
-	FIELD a firstPersonRenderer Ldec;
-	FIELD c LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD d RAIN_LOC Lqc;
-	FIELD e SNOW_LOC Lqc;
-	FIELD f client Lcpk;
-	FIELD g resourceContainer Lwj;
-	FIELD h random Ljava/util/Random;
-	METHOD <init> (Lcpk;Lwj;)V
-		ARG 1 client
-	METHOD a onSetCameraEntity (Lagv;)V
-	METHOD a loadShader (Lqc;)V
+CLASS dee net/minecraft/client/render/WorldRenderer
+	FIELD A ticks I
+	FIELD B partiallyBrokenBlocks Ljava/util/Map;
+	FIELD D destroyStages [Ldno;
+	FIELD E framebuffer Lcnr;
+	FIELD W chunkBatcher Ldgq;
+	FIELD Y renderDistance I
+	FIELD aa totalEntities I
+	FIELD ab renderedEntities I
+	FIELD ah vertexBufferObjectsEnabled Z
+	FIELD ai chunkRendererFactory Ldgv;
+	FIELD b LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD c MOON_PHASES_TEX Lqc;
+	FIELD d SUN_TEX Lqc;
+	FIELD e CLOUDS_TEX Lqc;
+	FIELD f END_SKY_TEX Lqc;
+	FIELD g FORCEFIELD_TEX Lqc;
+	FIELD h client Lcpk;
+	FIELD i textureManager Ldnp;
+	FIELD j entityRenderDispatcher Ldit;
+	FIELD k world Ldbi;
+	FIELD o chunkRenderDispatcher Ldeo;
+	FIELD p starsDisplayList I
+	FIELD t starsBuffer Lcoy;
+	FIELD x cloudsDirty Z
+	FIELD y cloudsDisplayList I
+	FIELD z cloudsBuffer Lcoy;
+	METHOD a reload ()V
+	METHOD a drawBox (DDDDDDFFFF)V
+		ARG 0 minX
+		ARG 2 minY
+		ARG 4 minZ
+		ARG 6 maxX
+		ARG 8 maxY
+		ARG 10 maxZ
+		ARG 12 red
+		ARG 13 green
+		ARG 14 blue
+		ARG 15 alpha
+	METHOD a renderSky (F)V
+	METHOD a renderClouds (FDDD)V
+	METHOD a scheduleChunkRender (IIIZ)V
+	METHOD a onGlobalWorldEvent (ILet;I)V
+		ARG 1 eventId
+		ARG 2 pos
+	METHOD a onEntityAdded (Lagv;)V
+	METHOD a renderWorldBorder (Lagv;F)V
+		ARG 1 camera
+		ARG 2 delta
+	METHOD a renderEntities (Lagv;Ldha;F)V
+		ARG 1 cameraEntity
+	METHOD a onWorldEvent (Larb;ILet;I)V
+		ARG 1 player
+		ARG 2 eventId
+		ARG 3 pos
+	METHOD a drawHighlightedBlockOutline (Larb;Lcma;IF)V
+		ARG 1 player
+		ARG 2 hit
+		ARG 3 renderPass
+		ARG 4 delta
+	METHOD a onSound (Larb;Lxm;Lxo;DDDFF)V
+		ARG 1 player
+		ARG 2 sound
+		ARG 3 category
+		ARG 4 x
+		ARG 6 y
+		ARG 8 z
+		ARG 10 volume
+		ARG 11 pitch
+	METHOD a onSoundFromEntity (Larb;Lxm;Lxo;Lagv;FF)V
+		ARG 1 player
+		ARG 2 sound
+		ARG 3 category
+		ARG 4 entity
+		ARG 5 volume
+		ARG 6 pitch
+	METHOD a onBlockUpdate (Lbbb;Let;Lbpm;Lbpm;I)V
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 oldState
+		ARG 4 newState
+	METHOD a drawBox (Lclz;FFFF)V
+		ARG 0 box
+		ARG 1 red
+		ARG 2 green
+		ARG 3 blue
+		ARG 4 alpha
+	METHOD a drawDebugShapeOutline (Lcmx;DDDFFFF)V
+		ARG 0 shape
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+		ARG 7 red
+		ARG 8 green
+		ARG 9 blue
+		ARG 10 alpha
+	METHOD a drawBox (Lcou;DDDDDDFFFF)V
+		ARG 0 buffer
+		ARG 1 minX
+		ARG 3 minY
+		ARG 5 minZ
+		ARG 7 maxX
+		ARG 9 maxY
+		ARG 11 maxZ
+		ARG 13 red
+		ARG 14 green
+		ARG 15 blue
+		ARG 16 alpha
+	METHOD a renderStars (Lcou;)V
+	METHOD a renderClouds (Lcou;DDDLcmd;)V
+		ARG 8 color
+	METHOD a renderPartiallyBrokenBlocks (Lcox;Lcou;Lagv;F)V
+		ARG 1 tesselator
+		ARG 2 builder
+		ARG 3 cameraEntity
+		ARG 4 delta
+	METHOD a setWorld (Ldbi;)V
+	METHOD a (Lft;DDDDDD)V
+		ARG 1 parameters
+		ARG 2 x
+		ARG 4 y
+		ARG 6 z
+		ARG 8 velocityX
+		ARG 10 velocityY
+		ARG 12 velocityZ
+	METHOD a addParticle (Lft;ZDDDDDD)V
+		ARG 1 parameters
+		ARG 2 alwaysSpawn
+		ARG 3 x
+		ARG 5 y
+		ARG 7 z
+		ARG 9 velocityX
+		ARG 11 velocityY
+		ARG 13 velocityZ
+	METHOD a addParticle (Lft;ZZDDDDDD)V
+		ARG 1 parameters
+		ARG 2 alwaysSpawn
+		ARG 3 canSpawnOnMinimal
+		ARG 4 x
+		ARG 6 y
+		ARG 8 z
+		ARG 10 velocityX
+		ARG 12 velocityY
+		ARG 14 velocityZ
 	METHOD a onResourceReload (Lwj;)V
 		ARG 1 manager
-	METHOD e tick ()V
-	METHOD l getGame ()Lcpk;
+	METHOD a playRecord (Lxm;Let;)V
+	METHOD a getRandomParticleSpawnChance (Z)I
+		ARG 1 canSpawnOnMinimal
+	METHOD b drawBoxOutline (DDDDDDFFFF)V
+		ARG 0 minX
+		ARG 2 minY
+		ARG 4 minZ
+		ARG 6 maxX
+		ARG 8 maxY
+		ARG 10 maxZ
+		ARG 12 red
+		ARG 13 green
+		ARG 14 blue
+		ARG 15 alpha
+	METHOD b scheduleChunkRender (III)V
+	METHOD b onBlockBreakingStage (ILet;I)V
+		ARG 1 entityId
+		ARG 2 pos
+	METHOD b onEntityRemoved (Lagv;)V
+	METHOD b drawBoxOutline (Lclz;FFFF)V
+		ARG 0 box
+		ARG 1 red
+		ARG 2 green
+		ARG 3 blue
+		ARG 4 alpha
+	METHOD b drawShapeOutline (Lcmx;DDDFFFF)V
+		ARG 0 shape
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+		ARG 7 red
+		ARG 8 green
+		ARG 9 blue
+		ARG 10 alpha
+	METHOD b buildBoxOutline (Lcou;DDDDDDFFFF)V
+		ARG 0 builder
+		ARG 1 minX
+		ARG 3 minY
+		ARG 5 minZ
+		ARG 7 maxX
+		ARG 9 maxY
+		ARG 11 maxZ
+		ARG 13 red
+		ARG 14 green
+		ARG 15 blue
+		ARG 16 alpha
+	METHOD b spawnParticle (Lft;ZDDDDDD)Ldco;
+		ARG 1 parameters
+		ARG 2 alwaysSpawn
+		ARG 3 x
+		ARG 5 y
+		ARG 7 z
+		ARG 9 velocityX
+		ARG 11 velocityY
+		ARG 13 velocityZ
+	METHOD b spawnParticle (Lft;ZZDDDDDD)Ldco;
+		ARG 1 parameters
+		ARG 2 alwaysSpawn
+		ARG 3 canSpawnOnMinimal
+		ARG 4 x
+		ARG 6 y
+		ARG 8 z
+		ARG 10 velocityX
+		ARG 12 velocityY
+		ARG 14 velocityZ
+	METHOD c drawFramebuffer ()V
+	METHOD g getChunkNumber ()I
+	METHOD h getEntitiesDebugString ()Ljava/lang/String;
+	METHOD k tick ()V
+	METHOD n ()V
+	METHOD o loadDestroyStageTextures ()V
+	METHOD r setupStarRendering ()V
+	METHOD s renderEndSky ()V
