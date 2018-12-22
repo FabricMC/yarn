@@ -9,17 +9,53 @@ CLASS brm net/minecraft/world/chunk/WorldChunk
 	FIELD e pendingBlockEntityTags Ljava/util/Map;
 	FIELD f loadedToWorld Z
 	FIELD g world Lbbp;
+	FIELD h heightmaps Ljava/util/Map;
+	FIELD i upgradeData Lbrw;
 	FIELD j blockEntityMap Ljava/util/Map;
 	FIELD k entitySections [Lyj;
+	FIELD l structureStarts Ljava/util/Map;
+	FIELD m structureReferences Ljava/util/Map;
+	FIELD n postProcessingLists [Lit/unimi/dsi/fastutil/shorts/ShortList;
+	FIELD o blockTickScheduler Lbcg;
+	FIELD p fluidTickScheduler Lbcg;
+	FIELD r lastSaveTime J
 	FIELD s dirty Z
+	FIELD t inhabitedTime J
 	FIELD w pos Lbbd;
-	METHOD <init> (Lbbp;II[Lbco;Lbrw;Lbcg;Lbcg;J[Lbrn;Ljava/util/function/Consumer;)V
+	FIELD x isLightOn Z
+	METHOD <init> (Lbbp;II[Lbco;)V
+		ARG 1 world
+		ARG 2 chunkX
+		ARG 3 chunkZ
 		ARG 4 biomeArray
+	METHOD <init> (Lbbp;II[Lbco;Lbrw;Lbcg;Lbcg;JLjava/util/function/Consumer;)V
+		ARG 2 chunkX
+		ARG 3 chunkZ
+		ARG 4 biomeArray
+		ARG 5 upgradeData
+		ARG 6 blockTickScheduler
+		ARG 7 fluidTickScheduler
+		ARG 8 inhabitedTime
+	METHOD <init> (Lbbp;II[Lbco;Lbrw;Lbcg;Lbcg;J[Lbrn;Ljava/util/function/Consumer;)V
+		ARG 1 world
+		ARG 2 chunkX
+		ARG 3 chunkZ
+		ARG 4 biomeArray
+		ARG 5 upgradeData
+		ARG 6 blockTickScheduler
+		ARG 7 fluidTickScheduler
+		ARG 8 inhabitedTime
+		ARG 10 sections
+	METHOD <init> (Lbbp;Lbru;II)V
+		ARG 1 world
+		ARG 2 protoChunk
 	METHOD A getBlockEntityMap ()Ljava/util/Map;
 	METHOD B getEntitySectionArray ()[Lyj;
 	METHOD a getFluidState (III)Lcfd;
 		ARG 1 x
 		ARG 2 y
+	METHOD a setLastSaveTime (J)V
+		ARG 1 lastSaveTime
 	METHOD a addEntity (Lagv;)V
 		ARG 1 entity
 	METHOD a remove (Lagv;I)V
@@ -33,6 +69,8 @@ CLASS brm net/minecraft/world/chunk/WorldChunk
 		ARG 1 type
 		ARG 2 x
 		ARG 3 z
+	METHOD a setHeightmap (Lbst$a;[J)V
+	METHOD a setLightingProvider (Lceu;)V
 	METHOD a setBlockEntity (Let;Lbnq;)V
 		ARG 1 pos
 		ARG 2 blockEntity
@@ -48,26 +86,54 @@ CLASS brm net/minecraft/world/chunk/WorldChunk
 		ARG 1 entityClass
 		ARG 2 box
 		ARG 3 entityList
+	METHOD a getStructureStart (Ljava/lang/String;)Lcco;
+	METHOD a addStructureReference (Ljava/lang/String;J)V
+		ARG 1 structureId
+		ARG 2 reference
+	METHOD a addStructureStart (Ljava/lang/String;Lcco;)V
+	METHOD a setStructureStarts (Ljava/util/Map;)V
+	METHOD a setShouldSave (Z)V
+		ARG 1 dirty
+	METHOD addStructureStart setStructureStart (Ljava/lang/String;Lcco;)V
+		ARG 2 structureStart
+	METHOD b setInhabitedTime (J)V
 	METHOD b remove (Lagv;)V
 	METHOD b getHeightmap (Lbst$a;)Lbst;
 		ARG 1 type
 	METHOD b getBlockState (Let;)Lbpm;
 		ARG 1 pos
+	METHOD b getStructureReferences (Ljava/lang/String;)Lit/unimi/dsi/fastutil/longs/LongSet;
+		ARG 1 structureId
+	METHOD b setStructureReferences (Ljava/util/Map;)V
+	METHOD b setLightOn (Z)V
+	METHOD c getBlockEntityPositions ()Ljava/util/Set;
 	METHOD c getFluidState (Let;)Lcfd;
 		ARG 1 pos
 	METHOD c setLoadedToWorld (Z)V
 	METHOD d getSectionArray ()[Lbrn;
 	METHOD d removeBlockEntity (Let;)V
+	METHOD e getLightingProvider ()Lceu;
+	METHOD f getHeightmaps ()Ljava/util/Collection;
 	METHOD f getBlockEntity (Let;)Lbnq;
 		ARG 1 pos
 	METHOD g getPos ()Lbbd;
+	METHOD g getBlockEntityTagAt (Let;)Lhs;
+	METHOD h getStructureStarts ()Ljava/util/Map;
 	METHOD h createBlockEntity (Let;)Lbnq;
 	METHOD i getBiomeArray ()[Lbco;
+	METHOD j needsSaving ()Z
 	METHOD j getLuminance (Let;)I
 		ARG 1 pos
 	METHOD k getStatus ()Lbrf;
+	METHOD l getPostProcessingLists ()[Lit/unimi/dsi/fastutil/shorts/ShortList;
+	METHOD n getBlockTickScheduler ()Lbcg;
+	METHOD o getFluidTickScheduler ()Lbcg;
+	METHOD p getUpgradeData ()Lbrw;
+	METHOD q getInhabitedTime ()J
+	METHOD r isLightOn ()Z
 	METHOD s loadToWorld ()V
 	METHOD t unloadFromWorld ()V
 	METHOD u markDirty ()V
+	METHOD x getStructureReferences ()Ljava/util/Map;
 	METHOD y isLoadedToWorld ()Z
 	METHOD z getWorld ()Lbbp;
