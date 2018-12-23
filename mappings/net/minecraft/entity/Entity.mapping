@@ -1,4 +1,7 @@
 CLASS agv net/minecraft/entity/Entity
+	FIELD A verticalCollision Z
+	FIELD B collided Z
+	FIELD C velocityModified Z
 	FIELD D movementMultiplierSet Z
 	FIELD F invalid Z
 	FIELD G width F
@@ -9,6 +12,7 @@ CLASS agv net/minecraft/entity/Entity
 	FIELD O prevRenderZ D
 	FIELD P stepHeight F
 	FIELD Q noClip Z
+	FIELD R pushSpeedReduction F
 	FIELD S random Ljava/util/Random;
 	FIELD T age I
 	FIELD U insideWater Z
@@ -27,6 +31,7 @@ CLASS agv net/minecraft/entity/Entity
 	FIELD ad chunkX I
 	FIELD ae chunkY I
 	FIELD af chunkZ I
+	FIELD aj ignoreCameraFrustum Z
 	FIELD ak velocityDirty Z
 	FIELD al portalCooldown I
 	FIELD am inPortal Z
@@ -61,6 +66,7 @@ CLASS agv net/minecraft/entity/Entity
 	FIELD w prevYaw F
 	FIELD x prevPitch F
 	FIELD y onGround Z
+	FIELD z horizontalCollision Z
 	METHOD <init> (Lagz;Lbbp;)V
 		ARG 1 type
 	METHOD B_ getPistonBehavior ()Lcfj;
@@ -103,6 +109,7 @@ CLASS agv net/minecraft/entity/Entity
 		ARG 2 x
 		ARG 4 y
 		ARG 6 z
+		ARG 21 collisionVoxelStream
 	METHOD a onStruckByLightning (Laov;)V
 	METHOD a interactAt (Larb;Lcmd;Lafo;)Lafq;
 		ARG 1 player
@@ -155,7 +162,9 @@ CLASS agv net/minecraft/entity/Entity
 	METHOD a toListTag ([D)Lhy;
 	METHOD a toListTag ([F)Lhy;
 	METHOD aA getLightmapCoordinates ()I
+	METHOD aC scheduleVelocityUpdate ()V
 	METHOD aD doesCollide ()Z
+	METHOD aE isPushable ()Z
 	METHOD aF shouldSetPositionOnLoad ()Z
 	METHOD aG getSavedEntityId ()Ljava/lang/String;
 	METHOD aH isValid ()Z
@@ -200,6 +209,7 @@ CLASS agv net/minecraft/entity/Entity
 	METHOD b setEntityFlag (IZ)V
 		ARG 1 index
 	METHOD b isInvulnerableTo (Lage;)Z
+	METHOD b onPlayerCollision (Larb;)V
 	METHOD b interact (Larb;Lafo;)Z
 		ARG 1 player
 	METHOD b writeCustomDataToTag (Lhs;)V
@@ -233,7 +243,7 @@ CLASS agv net/minecraft/entity/Entity
 	METHOD bh getMaxBreath ()I
 	METHOD bi getBreath ()I
 	METHOD bj getParts ()[Lagv;
-	METHOD bk getHeadPitch ()F
+	METHOD bk getHeadYaw ()F
 	METHOD bm isInvulnerable ()Z
 	METHOD bn canUsePortals ()Z
 	METHOD bo getSafeFallDistance ()I
@@ -289,7 +299,7 @@ CLASS agv net/minecraft/entity/Entity
 	METHOD i setBreath (I)V
 	METHOD i pushAwayFrom (Lagv;)V
 	METHOD i setInvisible (Z)V
-	METHOD j setHeadPitch (F)V
+	METHOD j setHeadYaw (F)V
 	METHOD j allowsPermissionLevel (I)Z
 	METHOD k setYaw (F)V
 	METHOD l setInvulnerable (Z)V
