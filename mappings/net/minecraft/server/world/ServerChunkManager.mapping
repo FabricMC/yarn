@@ -2,18 +2,24 @@ CLASS up net/minecraft/server/world/ServerChunkManager
 	FIELD c chunkStatuses Ljava/util/List;
 	FIELD e chunkGenerator Lbrb;
 	FIELD f world Lbbp;
+	FIELD g serverThread Ljava/lang/Thread;
 	FIELD h lightProvider Luu;
 	FIELD i genQueue Ljava/util/Queue;
 	FIELD j players Lun;
 	FIELD l maxWatchDistance I
 	FIELD n spawnMonsters Z
 	FIELD o spawnAnimals Z
+	METHOD <init> (Lbbp;Lbrz;Ljava/util/concurrent/Executor;Lbrb;I)V
+		ARG 5 viewDistance
 	METHOD a getLightingProvider ()Luu;
+	METHOD a isChunkLoaded (II)Z
 	METHOD a getChunkSync (IILbrf;Z)Lbra;
 		ARG 1 x
 		ARG 2 z
 		ARG 3 status
 		ARG 4 require
+	METHOD a getEntry (J)Luc;
+		ARG 1 pos
 	METHOD a getWatchDistance (Lbbd;II)I
 	METHOD a getWatchDistance (Lbbd;Lagv;)I
 	METHOD a onLightUpdate (Lbca;III)V
@@ -25,20 +31,29 @@ CLASS up net/minecraft/server/world/ServerChunkManager
 		ARG 3 z
 	METHOD a addOrRemovePlayer (Lus;Z)V
 		ARG 2 add
+	METHOD a save (Z)V
+		ARG 1 flush
 	METHOD a setMobSpawnOptions (ZZ)V
 		ARG 1 spawnMonsters
 		ARG 2 spawnAnimals
 	METHOD b getProgressString ()Ljava/lang/String;
 	METHOD b applyViewDistance (I)V
+		ARG 1 viewDistance
 	METHOD b get (II)Lbbb;
 		ARG 1 chunkX
 		ARG 2 chunkZ
+	METHOD b getChunkSyncIfServerThread (IILbrf;Z)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 chunkX
+		ARG 2 chunkZ
+		ARG 3 status
+		ARG 4 require
 	METHOD b getSqDistance (Lbbd;Lagv;)D
 	METHOD b removePlayer (Lus;)V
 	METHOD c getChunkAsync (IILbrf;Z)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 x
-		ARG 2 z
+		ARG 1 chunkX
+		ARG 2 chunkZ
 		ARG 3 status
+		ARG 4 require
 	METHOD c updateChunkWatchingForPlayer (Lus;)V
 		ARG 1 playerEntity
 	METHOD d getWorld ()Lbbp;
