@@ -1,12 +1,14 @@
 CLASS cpk net/minecraft/client/MinecraftClient
 	FIELD E LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD F cachedMaxTextureSize I
+	FIELD G resourcePackDir Ljava/io/File;
 	FIELD H sessionPropertyMap Lcom/mojang/authlib/properties/PropertyMap;
 	FIELD I windowSettings Lcnu;
 	FIELD J currentServerEntry Ldbl;
 	FIELD K textureManager Ldnp;
 	FIELD L instance Lcpk;
 	FIELD M dataFixer Lcom/mojang/datafixers/DataFixer;
+	FIELD N windowProvider Ldep;
 	FIELD O crashed Z
 	FIELD P crashReport Lb;
 	FIELD Q connectedToRealms Z
@@ -42,17 +44,24 @@ CLASS cpk net/minecraft/client/MinecraftClient
 	FIELD ag netProxy Ljava/net/Proxy;
 	FIELD ah levelStorage Lcik;
 	FIELD ai currentFps I
+	FIELD aj itemUseCooldown I
 	FIELD ak autoConnectServerIp Ljava/lang/String;
 	FIELD al autoConnectServerPort I
 	FIELD ao is64Bit Z
 	FIELD ap isDemo Z
+	FIELD aq clientConnection Lir;
+	FIELD ar isIntegratedServerRunning Z
 	FIELD as profiler Laeq;
 	FIELD at resourceManager Lwh;
+	FIELD au resourcePackCreator Ldnw;
 	FIELD av resourcePackContainerManager Lwb;
 	FIELD aw languageManager Ldoi;
 	FIELD ax blockColorMap Lcpt;
 	FIELD ay itemColorMap Lcpw;
 	FIELD az framebuffer Lcnr;
+	FIELD b defaultFontRendererId Lqc;
+	FIELD c altFontRendererId Lqc;
+	FIELD d memoryReservedForCrash [B
 	FIELD e interactionManager Ldbh;
 	FIELD g window Lcog;
 	FIELD h world Ldbi;
@@ -70,6 +79,7 @@ CLASS cpk net/minecraft/client/MinecraftClient
 	FIELD v mouse Lcpl;
 	FIELD w keyboard Lcpj;
 	FIELD x runDirectory Ljava/io/File;
+	FIELD y metricsData Lyo;
 	FIELD z fpsDebugString Ljava/lang/String;
 	METHOD A getServer ()Ldqk;
 	METHOD B getSnooper ()Lafy;
@@ -133,7 +143,11 @@ CLASS cpk net/minecraft/client/MinecraftClient
 	METHOD ao getGame ()Lcpf;
 	METHOD ap init ()V
 	METHOD ar checkIs64Bit ()Z
-	METHOD av getFramerate ()I
+	METHOD as startTimerHackThread ()V
+	METHOD at checkGameData ()V
+	METHOD au drawGuiWithoutMouse ()V
+	METHOD av getFramerateLimit ()I
+	METHOD aw isFramerateLimited ()Z
 	METHOD ay isMainThread ()Z
 	METHOD b start ()V
 	METHOD b populateCrashReport (Lb;)Lb;
@@ -149,6 +163,7 @@ CLASS cpk net/minecraft/client/MinecraftClient
 	METHOD g reloadResources ()V
 	METHOD h getLevelStorage ()Lcik;
 	METHOD i stop ()V
+	METHOD j cleanUpAfterCrash ()V
 	METHOD k stopThread ()V
 	METHOD m getMusicTracker ()Ldqq;
 	METHOD n tick ()V
@@ -160,3 +175,4 @@ CLASS cpk net/minecraft/client/MinecraftClient
 	METHOD v reloadResourcesConcurrently ()Ljava/util/concurrent/CompletableFuture;
 	METHOD w getMaxTextureSize ()I
 	METHOD x getCurrentServerEntry ()Ldbl;
+	METHOD y isIntegratedServerRunning ()Z
