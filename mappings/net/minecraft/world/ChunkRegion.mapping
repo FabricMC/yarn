@@ -1,25 +1,32 @@
-CLASS uy
+CLASS uy net/minecraft/world/ChunkRegion
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD c chunkX I
-	FIELD d chunkZ I
+	FIELD b chunks Ljava/util/List;
+	FIELD c centerChunkX I
+	FIELD d centerChunkZ I
+	FIELD e width I
 	FIELD f world Lbbp;
 	FIELD g seed J
 	FIELD h seaLevel I
 	FIELD i levelProperties Lcih;
 	FIELD j random Ljava/util/Random;
 	FIELD k dimension Lbsf;
+	FIELD l generatorSettings Lbso;
 	FIELD m blockTickScheduler Lbcg;
 	FIELD n fluidTickScheduler Lbcg;
+	METHOD <init> (Lbbp;Ljava/util/List;)V
+		ARG 2 chunks
 	METHOD E getChunkManager ()Lbre;
 	METHOD F getFluidTickScheduler ()Lbcg;
 	METHOD G getBlockTickScheduler ()Lbcg;
+	METHOD a getCenterChunkX ()I
 	METHOD a getClosestPlayer (DDDDLjava/util/function/Predicate;)Larb;
 		ARG 1 x
 		ARG 3 y
-	METHOD a (II)Lbra;
-		ARG 1 chunkX
-		ARG 2 chunkZ
-	METHOD a (IILbrf;Z)Lbra;
+		ARG 5 z
+	METHOD a getChunk (II)Lbra;
+		ARG 1 x
+		ARG 2 z
+	METHOD a getChunk (IILbrf;Z)Lbra;
 		ARG 1 chunkX
 		ARG 2 chunkZ
 		ARG 3 requiredState
@@ -52,6 +59,7 @@ CLASS uy
 		ARG 12 velocityZ
 	METHOD a getEntities (Ljava/lang/Class;Lclz;Ljava/util/function/Predicate;)Ljava/util/List;
 		ARG 1 entityClass
+	METHOD b getCenterChunkZ ()I
 	METHOD b isChunkLoaded (II)Z
 	METHOD b getBlockState (Let;)Lbpm;
 		ARG 1 pos
@@ -60,6 +68,7 @@ CLASS uy
 		ARG 1 pos
 	METHOD d getWorldBorder ()Lbqy;
 	METHOD d isAir (Let;)Z
+		ARG 1 pos
 	METHOD e isClient ()Z
 	METHOD e getBiome (Let;)Lbco;
 	METHOD f getWorld ()Lbbp;
@@ -70,7 +79,9 @@ CLASS uy
 		ARG 1 pos
 	METHOD h getPersistentStateManager ()Lciq;
 	METHOD i getSaveHandler ()Lcii;
+	METHOD k markBlockForPostProcessing (Let;)V
 	METHOD m getRandom ()Ljava/util/Random;
+	METHOD n getSpawnPos ()Let;
 	METHOD o getDimension ()Lbsf;
 	METHOD q_ getSeaLevel ()I
 	METHOD r_ getSeed ()J
