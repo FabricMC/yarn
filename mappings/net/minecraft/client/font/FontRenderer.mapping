@@ -1,5 +1,5 @@
 CLASS cpy net/minecraft/client/font/FontRenderer
-	CLASS cpy$a CharacterRenderInfo
+	CLASS cpy$a Rectangle
 		FIELD a xMin F
 		FIELD b yMin F
 		FIELD c xMax F
@@ -8,6 +8,15 @@ CLASS cpy net/minecraft/client/font/FontRenderer
 		FIELD f green F
 		FIELD g blue F
 		FIELD h alpha F
+		METHOD <init> (FFFFFFFF)V
+			ARG 1 xMin
+			ARG 2 yMin
+			ARG 3 xMax
+			ARG 4 yMax
+			ARG 5 red
+			ARG 6 green
+			ARG 7 blue
+			ARG 8 alpha
 		METHOD a draw (Lcou;)V
 	FIELD a fontHeight I
 	FIELD b random Ljava/util/Random;
@@ -18,7 +27,8 @@ CLASS cpy net/minecraft/client/font/FontRenderer
 		ARG 1 textureManager
 	METHOD a isRightToLeft ()Z
 	METHOD a getCharWidth (C)F
-	METHOD a (Lcrx;ZZFFFLcou;FFFF)V
+	METHOD a drawGlyph (Lcrx;ZZFFFLcou;FFFF)V
+		ARG 1 glyphRenderer
 		ARG 2 bold
 		ARG 3 strikethrough
 		ARG 4 boldOffset
@@ -28,16 +38,18 @@ CLASS cpy net/minecraft/client/font/FontRenderer
 		ARG 8 red
 		ARG 9 green
 		ARG 10 blue
+		ARG 11 alpha
 	METHOD a mirror (Ljava/lang/String;)Ljava/lang/String;
 	METHOD a drawWithShadow (Ljava/lang/String;FFI)I
 		ARG 1 string
 		ARG 2 x
 		ARG 3 y
-	METHOD a drawInternal (Ljava/lang/String;FFIZ)I
+	METHOD a draw (Ljava/lang/String;FFIZ)I
 		ARG 1 str
 		ARG 2 x
 		ARG 3 y
 		ARG 4 color
+		ARG 5 withShadow
 	METHOD a (Ljava/lang/String;I)Ljava/lang/String;
 		ARG 1 string
 	METHOD a drawStringBounded (Ljava/lang/String;IIII)V
@@ -45,6 +57,11 @@ CLASS cpy net/minecraft/client/font/FontRenderer
 		ARG 2 x
 		ARG 3 y
 		ARG 4 maxWidth
+	METHOD a findWordEdge (Ljava/lang/String;IIZ)I
+		ARG 1 string
+		ARG 2 direction
+		ARG 3 position
+		ARG 4 skipWhitespaceToRightOfWord
 	METHOD a (Ljava/lang/String;IZ)Ljava/lang/String;
 		ARG 1 string
 		ARG 2 width
@@ -54,11 +71,12 @@ CLASS cpy net/minecraft/client/font/FontRenderer
 		ARG 1 string
 		ARG 2 x
 		ARG 3 y
-	METHOD b drawStringInternal (Ljava/lang/String;FFIZ)F
+	METHOD b drawLayer (Ljava/lang/String;FFIZ)F
 		ARG 1 str
 		ARG 2 x
 		ARG 3 y
 		ARG 4 color
+		ARG 5 isShadow
 	METHOD b getStringBoundedHeight (Ljava/lang/String;I)I
 		ARG 1 str
 	METHOD b renderStringBounded (Ljava/lang/String;IIII)V
