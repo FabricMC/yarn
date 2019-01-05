@@ -14,10 +14,22 @@ CLASS dno net/minecraft/client/texture/Sprite
 	FIELD o uMax F
 	FIELD p vMin F
 	FIELD q vMax F
+	FIELD r blendedPixelCache [I
+	FIELD s srgbLinearMap [F
 	METHOD a interpolateFrames ()V
 	METHOD a getU (D)F
+	METHOD a lerp (DII)I
+		ARG 1 multiplier
+		ARG 3 first
+		ARG 4 second
 	METHOD a getXFromU (F)F
 	METHOD a generateMipmaps (I)V
+	METHOD a blendPixelsComponent (IIIII)I
+		ARG 0 colorTopLeft
+		ARG 1 colorTopRight
+		ARG 2 colorBottomLeft
+		ARG 3 colorBottomRight
+		ARG 4 componentShift
 	METHOD a init (IIIIZ)V
 		ARG 1 width
 		ARG 2 height
@@ -29,7 +41,15 @@ CLASS dno net/minecraft/client/texture/Sprite
 	METHOD b getV (D)F
 	METHOD b getYFromV (F)F
 	METHOD b generateMipmapsInternal (I)V
+		ARG 1 mipLevels
+	METHOD b blendPixels (IIIIZ)I
+		ARG 0 colorTopLeft
+		ARG 1 colorTopRight
+		ARG 2 colorBottomLeft
+		ARG 3 colorBottomRight
+		ARG 4 hasTransparency
 	METHOD c destroy ()V
+	METHOD c srgbToLinear (I)F
 	METHOD g getWidth ()I
 	METHOD h getHeight ()I
 	METHOD i getMinU ()F
@@ -39,3 +59,4 @@ CLASS dno net/minecraft/client/texture/Sprite
 	METHOD m getId ()Lqc;
 	METHOD n tick ()V
 	METHOD p isAnimated ()Z
+	METHOD toString ()Ljava/lang/String;
