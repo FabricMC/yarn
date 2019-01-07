@@ -38,6 +38,7 @@ CLASS bbp net/minecraft/world/World
 		ARG 1 serializer
 		ARG 3 properties
 		ARG 4 dimension
+		ARG 5 chunkManagerProvider
 		ARG 6 profiler
 		ARG 7 isClient
 	METHOD A getRecipeManager ()Layx;
@@ -60,6 +61,7 @@ CLASS bbp net/minecraft/world/World
 	METHOD V getGameRules ()Lbbl;
 	METHOD W isThundering ()Z
 	METHOD X isRaining ()Z
+	METHOD Y getEffectiveHeight ()I
 	METHOD a findClosestVisiblePlayer (DDD)Larb;
 		ARG 1 x
 	METHOD a containsVisiblePlayer (DDDD)Z
@@ -91,6 +93,7 @@ CLASS bbp net/minecraft/world/World
 		ARG 1 chunkX
 		ARG 2 chunkZ
 		ARG 3 requiredState
+		ARG 4 create
 	METHOD a fireGlobalWorldEvent (ILet;I)V
 		ARG 1 eventId
 		ARG 2 pos
@@ -127,7 +130,8 @@ CLASS bbp net/minecraft/world/World
 	METHOD a canPlayerModifyAt (Larb;Let;)Z
 		ARG 1 player
 	METHOD a playSound (Larb;Let;Lxm;Lxo;FF)V
-	METHOD a toCrashReportElement (Lb;)Lc;
+	METHOD a addDetailsToCrashReport (Lb;)Lc;
+		ARG 1 report
 	METHOD a registerListener (Lbbs;)V
 	METHOD a init (Lbbu;)V
 		ARG 1 levelInfo
@@ -151,6 +155,7 @@ CLASS bbp net/minecraft/world/World
 	METHOD a clearBlockState (Let;)Z
 	METHOD a (Let;DD)Larb;
 		ARG 1 pos
+	METHOD a getLightLevel (Let;I)I
 	METHOD a updateNeighbors (Let;Lbgs;)V
 	METHOD a addBlockAction (Let;Lbgs;II)V
 		ARG 1 pos
@@ -218,6 +223,8 @@ CLASS bbp net/minecraft/world/World
 	METHOD aa getTicksSinceLightningClient ()I
 	METHOD ab getVillageManager ()Lals;
 	METHOD ac getRaidManager ()Lash;
+	METHOD ad getForcedChunks ()Lit/unimi/dsi/fastutil/longs/LongSet;
+	METHOD ae areThereForcedChunks ()Z
 	METHOD af getProfiler ()Laeu;
 	METHOD b tickTime ()V
 	METHOD b findVisiblePlayer (DDDD)Z
@@ -227,6 +234,10 @@ CLASS bbp net/minecraft/world/World
 		ARG 1 delta
 	METHOD b getEntityById (I)Lagv;
 	METHOD b scheduleNeighborChunksRender (III)V
+	METHOD b setChunkForced (IIZ)Z
+		ARG 1 chunkX
+		ARG 2 chunkZ
+		ARG 3 forced
 	METHOD b fireWorldEvent (ILet;I)V
 		ARG 1 eventId
 		ARG 2 pos
@@ -243,7 +254,7 @@ CLASS bbp net/minecraft/world/World
 		ARG 1 pos
 	METHOD b isEmittingRedstonePower (Let;Ley;)Z
 		ARG 1 pos
-	METHOD b (Lft;DDDDDD)V
+	METHOD b addImportantParticle (Lft;DDDDDD)V
 		ARG 1 parameters
 		ARG 2 x
 		ARG 4 y
@@ -257,8 +268,9 @@ CLASS bbp net/minecraft/world/World
 	METHOD b getPlayerByUuid (Ljava/util/UUID;)Larb;
 	METHOD c getAmbientDarkness ()I
 	METHOD c setAmbientDarkness (I)V
-	METHOD c getChunk (II)Lbrm;
+	METHOD c getWorldChunk (II)Lbrm;
 		ARG 1 chunkX
+		ARG 2 chunkZ
 	METHOD c setBlockBreakingProgress (ILet;I)V
 		ARG 1 entityId
 		ARG 2 pos
@@ -276,8 +288,13 @@ CLASS bbp net/minecraft/world/World
 	METHOD d isAir (Let;)Z
 	METHOD e isClient ()Z
 	METHOD e getFogColor (F)Lcmd;
+	METHOD e isChunkForced (II)Z
+		ARG 1 chunkX
+		ARG 2 chunkZ
+	METHOD e removeEntity (Lagv;)V
 	METHOD e getBiome (Let;)Lbco;
 	METHOD f getWorld ()Lbbp;
+	METHOD f getStarsBrightness (F)F
 	METHOD f getBlockEntity (Let;)Lbnq;
 		ARG 1 pos
 	METHOD g getLevelProperties ()Lcih;
@@ -295,16 +312,21 @@ CLASS bbp net/minecraft/world/World
 	METHOD l isValid (Let;)Z
 		ARG 0 pos
 	METHOD m getRandom ()Ljava/util/Random;
-	METHOD m isHeightInvaid (Let;)Z
+	METHOD m isHeightInvalid (Let;)Z
 		ARG 0 pos
 	METHOD m_ updateEntities ()V
-	METHOD n getChunk (Let;)Lbrm;
+	METHOD n getWorldChunk (Let;)Lbrm;
+	METHOD n_ tickPlayers ()V
 	METHOD o getDimension ()Lbsf;
 	METHOD o scheduleBlockRender (Let;)V
 	METHOD q removeBlockEntity (Let;)V
 	METHOD q_ getSeaLevel ()I
+	METHOD r isBlockFullCube (Let;)Z
+		ARG 1 pos
 	METHOD r_ getSeed ()J
+	METHOD s isHeightValidAndBlockLoaded (Let;)Z
 	METHOD t updateWeather ()V
+	METHOD t doesBlockHaveSolidTopSurface (Let;)Z
 	METHOD v getReceivedStrongRedstonePower (Let;)I
 	METHOD w getServer ()Lnet/minecraft/server/MinecraftServer;
 	METHOD w isReceivingRedstonePower (Let;)Z
