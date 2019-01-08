@@ -1,15 +1,12 @@
 CLASS tr net/minecraft/server/dedicated/MinecraftDedicatedServer
 	FIELD g LOGGER_DEDICATED Lorg/apache/logging/log4j/Logger;
 	FIELD h SHA1_PATTERN Ljava/util/regex/Pattern;
-	FIELD i pendingServerCommands Ljava/util/List;
-	FIELD j queryResponseHandler Lxi;
-	FIELD k serverCommandOutput Lxf;
+	FIELD i commandQueue Ljava/util/List;
+	FIELD k rconCommandOutput Lxf;
 	FIELD l rconServer Lxk;
-	FIELD m propertiesManager Ltt;
+	FIELD m propertiesLoader Ltt;
 	FIELD n defaultGameMode Lbbm;
-	FIELD o dedicatedServerGui Ltx;
-	METHOD <init> (Ljava/io/File;Ltt;Lcom/mojang/datafixers/DataFixer;Lcom/mojang/authlib/yggdrasil/YggdrasilAuthenticationService;Lcom/mojang/authlib/minecraft/MinecraftSessionService;Lcom/mojang/authlib/GameProfileRepository;Lwp;)V
-		ARG 2 propertiesManager
+	FIELD o gui Ltx;
 	METHOD K_ shouldBroadcastConsoleToOps ()Z
 	METHOD M isMonsterSpawningEnabled ()Z
 	METHOD S isDedicated ()Z
@@ -18,10 +15,9 @@ CLASS tr net/minecraft/server/dedicated/MinecraftDedicatedServer
 	METHOD a setDefaultGameMode (Lbbm;)V
 	METHOD a openToLan (Lbbm;ZI)Z
 	METHOD a isSpawnProtected (Lbbp;Let;Larb;)Z
-	METHOD a queueServerCommand (Ljava/lang/String;Lca;)V
-		ARG 1 command
-		ARG 2 source
-	METHOD aZ executeServerCommands ()V
+	METHOD a enqueueCommand (Ljava/lang/String;Lca;)V
+	METHOD aY getResourcePackHash ()Ljava/lang/String;
+	METHOD a_ executeRconCommand (Ljava/lang/String;)Ljava/lang/String;
 	METHOD aa areCommandBlocksEnabled ()Z
 	METHOD ae getPlayerManager ()Lwt;
 	METHOD af isRemote ()Z
@@ -47,5 +43,6 @@ CLASS tr net/minecraft/server/dedicated/MinecraftDedicatedServer
 	METHOD i isHardcore ()Z
 	METHOD j getOpPermissionLevel ()I
 	METHOD k shouldBroadcastRconToOps ()Z
+	METHOD m setUseWhitelist (Z)V
 	METHOD u exit ()V
 	METHOD v isNetherAllowed ()Z
