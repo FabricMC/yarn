@@ -1,29 +1,37 @@
-CLASS ui net/minecraft/server/world/ui
-	CLASS ui$a
+CLASS ui net/minecraft/server/world/ChunkTaskPrioritySystem
+	CLASS ui$a RunnableMessage
 		FIELD a function Ljava/util/function/Function;
 		FIELD b pos J
 		METHOD <init> (Ljava/util/function/Function;JLjava/util/function/IntSupplier;)V
 			ARG 1 function
 			ARG 2 pos
-	CLASS ui$b ChunkPrioritySorterMessage
+	CLASS ui$b SorterMessage
 		FIELD a runnable Ljava/lang/Runnable;
 		FIELD b pos J
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD b queues Ljava/util/Map;
 	FIELD c actors Ljava/util/Set;
 	FIELD d sorter Lafi;
+	METHOD <init> (Ljava/util/List;Ljava/util/concurrent/Executor;I)V
+		ARG 1 actors
+		ARG 2 sortingExecutor
+		ARG 3 maxQueues
+	METHOD a getSortingActor (Lafh;)Lafh;
+		ARG 1 actor
 	METHOD a (Lafh;Ljava/util/function/Function;JLjava/util/function/IntSupplier;Z)V
 		ARG 1 actor
-	METHOD a (Lafh;Z)Lafh;
+	METHOD a getExecutingActor (Lafh;Z)Lafh;
 		ARG 1 actor
 	METHOD a updateLevel (Lbbt;Ljava/util/function/IntSupplier;ILjava/util/function/IntConsumer;)V
 		ARG 1 pos
 		ARG 2 lastLevelUpdatedToProvider
 		ARG 3 newLevel
 		ARG 4 lastLevelUpdatedToConsumer
-	METHOD a (Ljava/lang/Runnable;JLjava/util/function/IntSupplier;)Lui$a;
+	METHOD a createRunnableMessage (Ljava/lang/Runnable;JLjava/util/function/IntSupplier;)Lui$a;
 		ARG 0 runnable
 		ARG 1 pos
+	METHOD a createPrioritySorterMessage (Ljava/lang/Runnable;JZ)Lui$b;
+	METHOD a createRunnableMessage (Luf;Ljava/lang/Runnable;)Lui$a;
 	METHOD a (Luh;Lafh;)V
 		ARG 2 actor
 	METHOD b getQueue (Lafh;)Luh;
