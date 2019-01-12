@@ -5,19 +5,37 @@ CLASS un net/minecraft/server/world/ChunkTicketManager
 		METHOD a setLevelFor (JI)V
 			ARG 1 index
 			ARG 3 level
+		METHOD d getLevel (J)I
+			ARG 1 chunkPos
 		METHOD e getCurrentLevelFor (J)I
 			ARG 1 index
 	CLASS un$b
+		FIELD e viewDistance I
+		FIELD f posToLastLevelUpdatedTo Lit/unimi/dsi/fastutil/longs/Long2IntMap;
+		FIELD g chunkPositions Lit/unimi/dsi/fastutil/longs/LongSet;
 		METHOD a updateLevels ()V
+		METHOD a applyViewDistance (I)V
+			ARG 1 viewDistance
+		METHOD a (JIZZ)V
+			ARG 1 pos
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD d positionToTicketSet Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap;
+	FIELD g chunkHolders Ljava/util/Set;
+	FIELD h levelUpdateListener Luf$c;
+	FIELD i playerTicketThrottler Lafh;
+	FIELD j playerTicketThrottlerSorter Lafh;
+	FIELD k chunkPositions Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD m location J
+	METHOD a purge ()V
+	METHOD a applyViewDistance (I)V
+		ARG 1 viewDistance
 	METHOD a setLevelFor (JI)V
 		ARG 1 index
 		ARG 3 level
-	METHOD a (JILuf;I)Luf;
-		ARG 1 index
+	METHOD a setLevel (JILuf;I)Luf;
+		ARG 1 pos
 		ARG 3 level
+		ARG 4 holder
 	METHOD a addTicket (JLuy;)V
 		ARG 1 position
 		ARG 3 ticket
@@ -26,20 +44,29 @@ CLASS un net/minecraft/server/world/ChunkTicketManager
 	METHOD a getLevel (Lit/unimi/dsi/fastutil/objects/ObjectSortedSet;)I
 		ARG 1 ticketSet
 	METHOD a update (Lug;)Z
-	METHOD a addTicketAtLevel (Luz;Lbbt;ILjava/lang/Object;)V
+	METHOD a addTicketWithLevel (Luz;Lbbt;ILjava/lang/Object;)V
 		ARG 1 type
 		ARG 2 pos
 		ARG 3 level
 		ARG 4 argument
+	METHOD b getChunkHolder (J)Luf;
+		ARG 1 pos
+	METHOD b removeTicket (JLuy;)V
+		ARG 1 pos
+		ARG 3 ticket
 	METHOD b addTicket (Luz;Lbbt;ILjava/lang/Object;)V
 		ARG 1 type
 		ARG 2 pos
+		ARG 3 radius
 		ARG 4 argument
 	METHOD c removeTicket (Luz;Lbbt;ILjava/lang/Object;)V
 		ARG 1 type
 		ARG 2 pos
+		ARG 3 radius
 		ARG 4 argument
+	METHOD d getLevel (J)I
+		ARG 1 chunkPos
 	METHOD e getCurrentLevelFor (J)I
-		ARG 1 index
+		ARG 1 pos
 	METHOD i getTicketSet (J)Lit/unimi/dsi/fastutil/objects/ObjectSortedSet;
 		ARG 1 position
