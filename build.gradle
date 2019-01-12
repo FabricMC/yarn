@@ -8,7 +8,7 @@ buildscript {
 	}
 	dependencies {
 		classpath "net.fabricmc:weave:0.2.0.+"
-		classpath "net.fabricmc:stitch:0.1.1.32+"
+		classpath "net.fabricmc:stitch:0.1.1.39+"
 		classpath "commons-io:commons-io:1.4"
 		classpath "com.google.guava:guava:19.0"
 		classpath 'de.undercouch:gradle-download-task:3.4.3'
@@ -49,7 +49,7 @@ configurations {
 }
 
 dependencies {
-	enigmaRuntime "net.fabricmc:stitch:0.1.1.32+"
+	enigmaRuntime "net.fabricmc:stitch:0.1.1.39+"
 	enigmaRuntime "cuchaz:enigma:0.12.2.+:all"
 }
 
@@ -57,7 +57,8 @@ def mappingsDir = file("mappings")
 def cacheFilesMinecraft = file(".gradle/minecraft")
 def tempDir = file(".gradle/temp")
 def mergedFile = file("${minecraft_version}-merged.jar")
-def mappedFile = file("${minecraft_version}-mapped.jar")
+def intermediaryJar = file("${minecraft_version}-intermediary.jar")
+def namedJar = file("${minecraft_version}-named.jar")
 def versionFile = new File(cacheFilesMinecraft, "${minecraft_version}.json")
 def clientJar = new File(cacheFilesMinecraft, "${minecraft_version}-client.jar")
 def serverJar = new File(cacheFilesMinecraft, "${minecraft_version}-server.jar")
@@ -354,9 +355,9 @@ task downloadMcLibs(dependsOn: downloadWantedVersionManifest) {
 	}
 }
 
-task mapJar(dependsOn: [downloadMcLibs, build]) {
+task mapIntermediaryJar(dependsOn: [downloadMcLibs, build]) {
 	inputs.files downloadMcLibs.outputs.files.files
-	outputs.file(mappedFile)
+	outputs.file(intermediaryJar)
 
 	//Force the task to always run
 	outputs.upToDateWhen {
@@ -364,35 +365,26 @@ task mapJar(dependsOn: [downloadMcLibs, build]) {
 	}
 
 	doLast {
-		logger.lifecycle(":mapping minecraft")
+		logger.lifecycle(":mapping minecraft to intermdiary")
+		def tinyInput = new File("build/libs/yarn-tiny-${yarnVersion}.gz")
+		mapJar(intermediaryJar, mergedFile, tinyInput, libraries, "official", "intermediary")
+	}
+}
 
-		if (mappedFile.exists()) {
-			mappedFile.delete()
-		}
+task mapNamedJar(dependsOn: mapIntermediaryJar) {
+	inputs.files downloadMcLibs.outputs.files.files
+	outputs.file(namedJar)
 
-		def tinyInput = new File("build/libs/yarn-tiny-${yarnVersion}.gz").toPath()
+	//Force the task to always run
+	outputs.upToDateWhen {
+		return false
+	}
 
-		def remapper = TinyRemapper.newRemapper()
-			.withMappings(TinyUtils.createTinyMappingProvider(tinyInput, "official", "named"))
-			.build()
-      
-		try {
+	doLast {
+		logger.lifecycle(":mapping minecraft to named")
 
-			def outputConsumer = new OutputConsumerPath(mappedFile.toPath())
-
-			outputConsumer.addNonClassFiles(mergedFile.toPath())
-			remapper.read(mergedFile.toPath())
-
-			libraries.eachFileRecurse(FileType.FILES) {file ->
-				remapper.read(file.toPath())
-			}
-
-			remapper.apply(mergedFile.toPath(), outputConsumer)
-			remapper.finish()
-		} catch (Exception e) {
-			remapper.finish();
-			throw new RuntimeException("Failed to remap jar", e);
-		}
+		def tinyInput = new File("build/libs/yarn-tiny-${yarnVersion}.gz")
+		mapJar(namedJar, intermediaryJar, tinyInput, libraries, "intermediary", "named")
 	}
 }
 
@@ -426,6 +418,35 @@ publishing {
 	}
 }
 
+
+void mapJar(File output, File input, File mappings, File libraries, String from, String to){
+	if (output.exists()) {
+		output.delete()
+	}
+
+	def remapper = TinyRemapper.newRemapper()
+		.withMappings(TinyUtils.createTinyMappingProvider(mappings.toPath(), from, to))
+		.renameInvalidLocals(true)
+		.rebuildSourceFilenames(true)
+		.build()
+      
+	try {
+		def outputConsumer = new OutputConsumerPath(output.toPath())
+		outputConsumer.addNonClassFiles(input.toPath())
+		remapper.read(input.toPath())
+
+		libraries.eachFileRecurse(FileType.FILES) {file ->
+			remapper.read(file.toPath())
+		}
+		remapper.apply(input.toPath(), outputConsumer)
+		remapper.finish()
+		outputConsumer.close()
+	} catch (Exception e) {
+		remapper.finish();
+		outputConsumer.close()
+		throw new RuntimeException("Failed to remap jar", e);
+	}
+}
 
 class FileOutput extends DefaultTask {
 	@OutputFile File fileOutput
