@@ -1,14 +1,50 @@
 CLASS vn net/minecraft/server/network/ServerPlayNetworkHandler
-	FIELD E floatingTicks I
+	FIELD A teleportRequestTick I
+	FIELD B floating Z
+	FIELD C floatingTicks I
+	FIELD D ridingEntity Z
+	FIELD E vechicleFloatingTicks I
+	FIELD F movePacketsCount I
+	FIELD G lastTickMovePacketsCount I
 	FIELD a client Lir;
 	FIELD b player Luv;
 	FIELD c LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD d server Lnet/minecraft/server/MinecraftServer;
+	FIELD e ticks I
 	FIELD f lastKeepAliveTime J
 	FIELD g waitingForKeepAlive Z
 	FIELD h keepAliveId J
 	FIELD i messageCooldown I
+	FIELD j creativeItemDropThresold I
+	FIELD k transactions Lyz;
+	FIELD l lastTickX D
+	FIELD m lastTickY D
+	FIELD n lastTickZ D
+	FIELD o updatedX D
+	FIELD p updatedY D
+	FIELD q updatedZ D
+	FIELD r topmostDiddenEntity Lahd;
+	FIELD s lastTickRiddenX D
+	FIELD t lastTickRiddenY D
+	FIELD u lastTickRiddenZ D
+	FIELD v updatedRiddenX D
+	FIELD w updatedRiddenY D
+	FIELD x updatedRiddenZ D
+	FIELD y requestedTeleportPos Lcms;
+	FIELD z requestedTeleportId I
 	METHOD a getConnection ()Lir;
+	METHOD a teleportRequest (DDDFF)V
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+		ARG 7 yaw
+		ARG 8 pitch
+	METHOD a teleportRequest (DDDFFLjava/util/Set;)V
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+		ARG 7 yaw
+		ARG 8 pitch
 	METHOD a onConnectionLost (Ljd;)V
 		ARG 1 disconnectReason
 	METHOD a sendPacket (Ljr;)V
@@ -96,6 +132,7 @@ CLASS vn net/minecraft/server/network/ServerPlayNetworkHandler
 	METHOD a onPlayerInteractItem (Lou;)V
 		ARG 1 packet
 	METHOD aa_ tick ()V
+	METHOD b syncWithPlayerPosition ()V
 	METHOD b disconnect (Ljd;)V
 	METHOD b validatePlayerMove (Lnv;)Z
 	METHOD b validateVehicleMove (Lnw;)Z
