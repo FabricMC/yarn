@@ -2,14 +2,34 @@ CLASS dey net/minecraft/client/render/WorldRenderer
 	FIELD A ticks I
 	FIELD B partiallyBrokenBlocks Ljava/util/Map;
 	FIELD D destroyStages [Ldok;
-	FIELD E framebuffer Lcog;
+	FIELD E entityOutlinesFramebuffer Lcog;
+	FIELD F entityOutlineShader Ldfd;
+	FIELD G lastCameraChunkUpdateX D
+	FIELD H lastCameraChunkUpdateY D
+	FIELD I lastCameraChunkUpdateZ D
+	FIELD J cameraChunkX I
+	FIELD K cameraChunkY I
+	FIELD L cameraChunkZ I
+	FIELD M lastCameraX D
+	FIELD N lastCameraY D
+	FIELD O lastCameraZ D
+	FIELD P lastCameraPitch D
+	FIELD Q lastCameraYaw D
 	FIELD W chunkBatcher Ldhm;
+	FIELD X chunkRendererList Ldeo;
 	FIELD Y renderDistance I
 	FIELD a DIRECTIONS [Ley;
 	FIELD aa totalEntities I
 	FIELD ab renderedEntities I
+	FIELD ae forcedFrustum Ldhz;
+	FIELD ag forcedFrustumPosition Lcpg;
 	FIELD ah vertexBufferObjectsEnabled Z
 	FIELD ai chunkRendererFactory Ldhr;
+	FIELD aj lastTranslucentSortX D
+	FIELD ak lastTranslucentSortY D
+	FIELD al lastTranslucentSortZ D
+	FIELD am terrainUpdateNecessary Z
+	FIELD an entityOutlinesUpdateNecessary Z
 	FIELD b LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD c MOON_PHASES_TEX Lqe;
 	FIELD d SUN_TEX Lqe;
@@ -20,6 +40,7 @@ CLASS dey net/minecraft/client/render/WorldRenderer
 	FIELD i textureManager Ldol;
 	FIELD j entityRenderDispatcher Ldjp;
 	FIELD k world Ldcc;
+	FIELD l chunkRenderers Ljava/util/Set;
 	FIELD o chunkRenderDispatcher Ldfi;
 	FIELD p starsDisplayList I
 	FIELD t starsBuffer Lcpn;
@@ -44,10 +65,17 @@ CLASS dey net/minecraft/client/render/WorldRenderer
 	METHOD a onGlobalWorldEvent (ILet;I)V
 		ARG 1 eventId
 		ARG 2 pos
+	METHOD a updateChunks (J)V
 	METHOD a onEntityAdded (Lahd;)V
 	METHOD a renderWorldBorder (Lahd;F)V
 		ARG 1 camera
 		ARG 2 delta
+	METHOD a setUpTerrain (Lahd;FLdhw;IZ)V
+		ARG 1 camera
+		ARG 2 tickDelta
+	METHOD a doesEntityHaveOutline (Lahd;Lahd;Ldhw;)Z
+		ARG 1 entity
+		ARG 2 camera
 	METHOD a renderEntities (Lahd;Ldhw;F)V
 		ARG 1 cameraEntity
 	METHOD a onWorldEvent (Lark;ILet;I)V
@@ -80,6 +108,12 @@ CLASS dey net/minecraft/client/render/WorldRenderer
 		ARG 2 pos
 		ARG 3 oldState
 		ARG 4 newState
+	METHOD a renderLayer (Lbbs;)V
+		ARG 1 layer
+	METHOD a renderLayer (Lbbs;DLahd;)I
+		ARG 1 layer
+		ARG 2 tickDelta
+		ARG 4 camera
 	METHOD a drawBoxOutline (Lcmo;FFFF)V
 		ARG 0 box
 		ARG 1 red
@@ -148,6 +182,7 @@ CLASS dey net/minecraft/client/render/WorldRenderer
 	METHOD a playRecord (Lxt;Let;)V
 	METHOD a getRandomParticleSpawnChance (Z)I
 		ARG 1 canSpawnOnMinimal
+	METHOD b loadEntityOutlineShader ()V
 	METHOD b drawBox (DDDDDDFFFF)V
 		ARG 0 minX
 		ARG 2 minY
@@ -210,7 +245,8 @@ CLASS dey net/minecraft/client/render/WorldRenderer
 		ARG 10 velocityX
 		ARG 12 velocityY
 		ARG 14 velocityZ
-	METHOD c drawFramebuffer ()V
+	METHOD c drawEntityOutlinesFramebuffer ()V
+	METHOD d canDrawEntityOutlines ()Z
 	METHOD f getChunksDebugString ()Ljava/lang/String;
 	METHOD g getChunkNumber ()I
 	METHOD h getEntitiesDebugString ()Ljava/lang/String;
@@ -218,3 +254,5 @@ CLASS dey net/minecraft/client/render/WorldRenderer
 	METHOD o loadDestroyStageTextures ()V
 	METHOD r setupStarRendering ()V
 	METHOD s renderEndSky ()V
+	METHOD setUpTerrain (Lahd;FLdhw;IZ)V
+		ARG 3 visibleRegion

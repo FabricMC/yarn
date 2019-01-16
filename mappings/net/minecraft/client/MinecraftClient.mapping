@@ -20,6 +20,8 @@ CLASS cpz net/minecraft/client/MinecraftClient
 	FIELD V cameraEntity Lahd;
 	FIELD W searchManager Ldrb;
 	FIELD X session Lcqg;
+	FIELD Y isPaused Z
+	FIELD Z pausedTickDelta F
 	FIELD aA spriteAtlas Ldoj;
 	FIELD aB soundLoader Ldrp;
 	FIELD aC musicTracker Ldrm;
@@ -32,9 +34,11 @@ CLASS cpz net/minecraft/client/MinecraftClient
 	FIELD aJ toastManager Lcse;
 	FIELD aK game Lcpu;
 	FIELD aL isRunning Z
+	FIELD aM nextDebugInfoUpdateTime J
 	FIELD aN fpsCounter I
 	FIELD aO tutorialManager Ldrz;
 	FIELD aP isWindowFocused Z
+	FIELD aQ renderTaskQueue Ljava/util/Queue;
 	FIELD aR openProfilerSection Ljava/lang/String;
 	FIELD a isSystemMac Z
 	FIELD aa server Ldrg;
@@ -48,6 +52,7 @@ CLASS cpz net/minecraft/client/MinecraftClient
 	FIELD aj itemUseCooldown I
 	FIELD ak autoConnectServerIp Ljava/lang/String;
 	FIELD al autoConnectServerPort I
+	FIELD an lastMetricsSampleTime J
 	FIELD ao is64Bit Z
 	FIELD ap isDemo Z
 	FIELD aq clientConnection Lir;
@@ -66,15 +71,17 @@ CLASS cpz net/minecraft/client/MinecraftClient
 	FIELD e interactionManager Ldcb;
 	FIELD f window Lcow;
 	FIELD g world Ldcc;
-	FIELD h renderer Ldey;
+	FIELD h worldRenderer Ldey;
 	FIELD i player Ldeh;
+	FIELD j targetedEntity Lahd;
 	FIELD k particleManager Lddl;
 	FIELD l fontRenderer Lcqn;
 	FIELD m currentGui Lcug;
-	FIELD n worldRenderer Ldeu;
-	FIELD o renderDebug Ldif;
+	FIELD n gameRenderer Ldeu;
+	FIELD o debugRenderer Ldif;
 	FIELD p attackCooldown I
-	FIELD q hudInGame Lcqo;
+	FIELD q inGameHud Lcqo;
+	FIELD r skipGameRender Z
 	FIELD s hitResult Lcmp;
 	FIELD t options Lcqb;
 	FIELD u mouse Lcqa;
@@ -107,6 +114,9 @@ CLASS cpz net/minecraft/client/MinecraftClient
 	METHOD a onResolutionChanged ()V
 	METHOD a handleProfilerKeyPress (I)V
 		ARG 1 digit
+	METHOD a handleGlErrorByDisableVsync (IJ)V
+		ARG 1 error
+		ARG 2 description
 	METHOD a addSnooperInfo (Lagg;)V
 	METHOD a setCameraEntity (Lahd;)V
 		ARG 1 entity
@@ -121,7 +131,7 @@ CLASS cpz net/minecraft/client/MinecraftClient
 	METHOD a startIntegratedServer (Ljava/lang/String;Ljava/lang/String;Lbck;)V
 		ARG 1 name
 		ARG 2 displayName
-	METHOD a setWindowFocused (Z)V
+	METHOD a onWindowFocusChanged (Z)V
 		ARG 1 focused
 	METHOD aA drawProfilerResults ()V
 	METHOD aB doAttack ()V
@@ -134,7 +144,7 @@ CLASS cpz net/minecraft/client/MinecraftClient
 	METHOD ab getDataFixer ()Lcom/mojang/datafixers/DataFixer;
 	METHOD ac getTickDelta ()F
 	METHOD ae getBlockColorMap ()Lcqi;
-	METHOD af_ openInGameMenu ()V
+	METHOD af_ openPauseMenu ()V
 	METHOD ag hasReducedDebugInfo ()Z
 	METHOD ah getToastManager ()Lcse;
 	METHOD ai getTutorialManager ()Ldrz;
@@ -145,6 +155,7 @@ CLASS cpz net/minecraft/client/MinecraftClient
 	METHOD an getProfiler ()Lafd;
 	METHOD ao getGame ()Lcpu;
 	METHOD aq init ()V
+	METHOD ar initializeSearchableContainers ()V
 	METHOD as checkIs64Bit ()Z
 	METHOD at startTimerHackThread ()V
 	METHOD au checkGameData ()V
@@ -161,13 +172,14 @@ CLASS cpz net/minecraft/client/MinecraftClient
 		ARG 1 connectedToRealms
 	METHOD d getGameVersion ()Ljava/lang/String;
 	METHOD d render (Z)V
+		ARG 1 fullRender
 	METHOD e getVersionType ()Ljava/lang/String;
 	METHOD f forcesUnicodeFont ()Z
 	METHOD g reloadResources ()V
 	METHOD h getLevelStorage ()Lciz;
 	METHOD i stop ()V
 	METHOD j cleanUpAfterCrash ()V
-	METHOD k stopThread ()V
+	METHOD k scheduleStop ()V
 	METHOD m getMusicTracker ()Ldrm;
 	METHOD n tick ()V
 	METHOD o isDemo ()Z
@@ -178,4 +190,5 @@ CLASS cpz net/minecraft/client/MinecraftClient
 	METHOD v reloadResourcesConcurrently ()Ljava/util/concurrent/CompletableFuture;
 	METHOD w getMaxTextureSize ()I
 	METHOD x getCurrentServerEntry ()Ldcf;
-	METHOD y isIntegratedServerRunning ()Z
+	METHOD y isInSingleplayer ()Z
+	METHOD z isIntegratedServerRunning ()Z
