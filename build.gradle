@@ -173,6 +173,10 @@ task mergeJars(dependsOn: downloadMcJars) {
 		def server = inputs.files.files.find {it.name.endsWith("-server.jar")}
 		def merged = mergedFile
 
+		if(merged.exists()){
+			return
+		}
+
 		def jarMerger = new JarMerger(client, server, merged)
 		jarMerger.merge()
 		jarMerger.close()
@@ -439,11 +443,10 @@ void mapJar(File output, File input, File mappings, File libraries, String from,
 			remapper.read(file.toPath())
 		}
 		remapper.apply(input.toPath(), outputConsumer)
+		outputConsumer.close()
 		remapper.finish()
-		outputConsumer.close()
 	} catch (Exception e) {
-		remapper.finish();
-		outputConsumer.close()
+		remapper.finish()
 		throw new RuntimeException("Failed to remap jar", e);
 	}
 }
