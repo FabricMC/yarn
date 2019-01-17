@@ -1,13 +1,13 @@
 CLASS big net/minecraft/block/ComposterBlock
-	CLASS big$a CookingInventory
-		METHOD a canInsertInvStack (ILaxc;Ley;)Z
-			ARG 1 slot
-			ARG 2 stack
-		METHOD a getInvAvailableSlots (Ley;)[I
-		METHOD b canExtractInvStack (ILaxc;Ley;)Z
-			ARG 1 slot
-			ARG 2 stack
-	CLASS big$b
+	CLASS big$b ComposterInventory
+		FIELD a state Lbqi;
+		FIELD b world Lbcj;
+		FIELD c pos Let;
+		FIELD d dirty Z
+		METHOD <init> (Lbqi;Lbcj;Let;)V
+			ARG 1 state
+			ARG 2 world
+			ARG 3 pos
 		METHOD R_ getInvMaxStackAmount ()I
 		METHOD a canInsertInvStack (ILaxc;Ley;)Z
 			ARG 1 slot
@@ -17,7 +17,16 @@ CLASS big net/minecraft/block/ComposterBlock
 			ARG 1 slot
 			ARG 2 stack
 		METHOD e markDirty ()V
-	CLASS big$c
+	CLASS big$c FullComposterInventory
+		FIELD a state Lbqi;
+		FIELD b world Lbcj;
+		FIELD c pos Let;
+		FIELD d dirty Z
+		METHOD <init> (Lbqi;Lbcj;Let;Laxc;)V
+			ARG 1 state
+			ARG 2 world
+			ARG 3 pos
+			ARG 4 outputItem
 		METHOD R_ getInvMaxStackAmount ()I
 		METHOD a canInsertInvStack (ILaxc;Ley;)Z
 			ARG 1 slot
@@ -27,8 +36,15 @@ CLASS big net/minecraft/block/ComposterBlock
 			ARG 1 slot
 			ARG 2 stack
 		METHOD e markDirty ()V
+	FIELD a LEVEL Lbri;
+	FIELD b ITEM_TO_LEVEL_INCREASE_CHANCE Lit/unimi/dsi/fastutil/objects/Object2FloatMap;
+	FIELD c RAY_TRACE_SHAPE Lcnr;
+	FIELD d LEVEL_TO_COLLISION_SHAPE [Lcnr;
 	METHOD <init> (Lbhl$c;)V
 		ARG 1 settings
+	METHOD a registerCompostableItem (FLbch;)V
+		ARG 0 levelIncreaseChance
+		ARG 1 item
 	METHOD a canPlaceAtSide (Lbqi;Lbbt;Let;Lcie;)Z
 		ARG 1 world
 		ARG 2 view
@@ -48,6 +64,7 @@ CLASS big net/minecraft/block/ComposterBlock
 		ARG 3 pos
 		ARG 4 player
 		ARG 5 hand
+	METHOD a getInventory (Lbqi;Lbcj;Let;)Lagg;
 	METHOD a appendProperties (Lbqj$a;)V
 		ARG 1 builder
 	METHOD b hasComparatorOutput (Lbqi;)Z
@@ -62,6 +79,16 @@ CLASS big net/minecraft/block/ComposterBlock
 		ARG 2 state
 		ARG 3 pos
 		ARG 4 rnd
+	METHOD b addToComposter (Lbqi;Lbcj;Let;Laxc;)Z
+		ARG 0 state
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 item
+	METHOD d registerDefaultCompostableItems ()V
+	METHOD d emptyComposter (Lbqi;Lbcj;Let;)V
+		ARG 0 state
+		ARG 1 world
+		ARG 2 pos
 	METHOD i getPistonBehavior (Lbqi;)Lcgc;
 		ARG 1 state
 	METHOD l getRayTraceShape (Lbqi;Lbbt;Let;)Lcnr;
