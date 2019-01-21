@@ -1,6 +1,7 @@
 CLASS bpb net/minecraft/block/entity/HopperBlockEntity
 	FIELD i inventory Lfh;
 	FIELD j transferCooldown I
+	FIELD k lastTickTime J
 	METHOD A getHopperZ ()D
 	METHOD V_ getInvSize ()I
 	METHOD a takeInvStack (II)Laxc;
@@ -9,11 +10,27 @@ CLASS bpb net/minecraft/block/entity/HopperBlockEntity
 	METHOD a setInvStack (ILaxc;)V
 		ARG 1 slot
 		ARG 2 itemStack
+	METHOD a tryTransfering (Lafq;Lafq;Laxc;ILey;)Laxc;
+		ARG 0 from
+		ARG 1 to
+		ARG 2 stack
+		ARG 3 slot
+	METHOD a tryTransfering (Lafq;Lafq;Laxc;Ley;)Laxc;
+		ARG 0 from
+		ARG 1 to
+		ARG 2 stack
+		ARG 3 side
+	METHOD a extract (Lafq;Lapg;)Z
+		ARG 0 inventory
+		ARG 1 itemEntity
 	METHOD a canInsert (Lafq;Laxc;ILey;)Z
-		ARG 0 inv
+		ARG 0 inventory
 		ARG 1 stack
 		ARG 2 slot
-		ARG 3 facing
+		ARG 3 side
+	METHOD a getAvailableSlots (Lafq;Ley;)Ljava/util/stream/IntStream;
+		ARG 0 inventory
+		ARG 1 side
 	METHOD a onEntityCollided (Lahc;)V
 	METHOD a canMergeItems (Laxc;Laxc;)Z
 		ARG 0 first
@@ -24,11 +41,18 @@ CLASS bpb net/minecraft/block/entity/HopperBlockEntity
 		ARG 3 y
 		ARG 5 z
 	METHOD a getInventoryAt (Lbci;Let;)Lafq;
-	METHOD a tryExtract (Lbpa;)Z
+	METHOD a tryExtracting (Lbpa;)Z
 		ARG 0 hopper
+	METHOD a tryExtracting (Lbpa;Lafq;ILey;)Z
+		ARG 0 hopper
+		ARG 1 inventory
+		ARG 2 slot
+		ARG 3 side
 	METHOD a setInvStackList (Lfh;)V
 		ARG 1 list
 	METHOD a fromTag (Lhq;)V
+	METHOD a insertAndExtract (Ljava/util/function/Supplier;)Z
+		ARG 1 extractMethod
 	METHOD ab_ tick ()V
 	METHOD b canExtract (Lafq;Laxc;ILey;)Z
 		ARG 0 inv
@@ -48,10 +72,12 @@ CLASS bpb net/minecraft/block/entity/HopperBlockEntity
 		ARG 1 facing
 	METHOD c getInputItemEntities (Lbpa;)Ljava/util/List;
 	METHOD f getInvStackList ()Lfh;
+	METHOD g getContainerName ()Ljb;
 	METHOD h isEmpty ()Z
 	METHOD s isFull ()Z
-	METHOD t tryInsert ()Z
+	METHOD t tryInserting ()Z
 	METHOD u getOutputInventory ()Lafq;
-	METHOD v isCooldown ()Z
+	METHOD v needsCooldown ()Z
 	METHOD x getHopperX ()D
+	METHOD y isDisabled ()Z
 	METHOD z getHopperY ()D
