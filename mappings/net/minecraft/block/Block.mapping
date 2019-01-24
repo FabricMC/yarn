@@ -62,6 +62,7 @@ CLASS bhl net/minecraft/block/Block
 	FIELD d dynamicBounds Z
 	FIELD e dropTableId Lqc;
 	FIELD f translationKey Ljava/lang/String;
+	FIELD g cachedItem Lawx;
 	FIELD h FACE_CULL_MAP Ljava/lang/ThreadLocal;
 	FIELD l LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD m STATE_IDS Lfc;
@@ -77,7 +78,7 @@ CLASS bhl net/minecraft/block/Block
 	METHOD <init> (Lbhl$c;)V
 		ARG 1 settings
 	METHOD a canMobSpawnInside ()Z
-	METHOD a createCubeShape (DDDDDD)Lcnr;
+	METHOD a createCuboidShape (DDDDDD)Lcnr;
 		ARG 0 xMin
 		ARG 2 yMin
 		ARG 4 zMin
@@ -164,7 +165,7 @@ CLASS bhl net/minecraft/block/Block
 		ARG 2 player
 		ARG 3 world
 		ARG 4 pos
-	METHOD a (Lbqi;Lavh;)Z
+	METHOD a canReplace (Lbqi;Lavh;)Z
 		ARG 1 state
 		ARG 2 ctx
 	METHOD a getBlockBrightness (Lbqi;Lbbr;Let;)I
@@ -256,15 +257,15 @@ CLASS bhl net/minecraft/block/Block
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
-	METHOD a applyMirror (Lbqi;Lbkw;)Lbqi;
+	METHOD a mirror (Lbqi;Lbkw;)Lbqi;
 		ARG 1 state
 		ARG 2 mirror
-	METHOD a applyRotation (Lbqi;Lblw;)Lbqi;
+	METHOD a rotate (Lbqi;Lblw;)Lbqi;
 		ARG 1 state
 		ARG 2 rotation
-	METHOD a (Lbqi;Lbqi;Lbci;Let;)Lbqi;
-		ARG 0 state
-		ARG 1 otherState
+	METHOD a pushEntitiesUpBeforeBlockChange (Lbqi;Lbqi;Lbci;Let;)Lbqi;
+		ARG 0 from
+		ARG 1 to
 		ARG 2 world
 		ARG 3 pos
 	METHOD a replaceBlock (Lbqi;Lbqi;Lbcj;Let;I)V
@@ -306,7 +307,7 @@ CLASS bhl net/minecraft/block/Block
 		ARG 1 builder
 	METHOD a isShapeFullCube (Lcnr;)Z
 		ARG 0 shape
-	METHOD a isFaceFullCube (Lcnr;Ley;)Z
+	METHOD a isFaceFullSquare (Lcnr;Ley;)Z
 		ARG 0 shape
 		ARG 1 facing
 	METHOD a matches (Lyj;)Z
@@ -334,11 +335,15 @@ CLASS bhl net/minecraft/block/Block
 		ARG 2 view
 		ARG 3 pos
 		ARG 4 facing
-	METHOD b scheduledTick (Lbqi;Lbci;Let;Ljava/util/Random;)V
-		ARG 1 world
-		ARG 2 state
+	METHOD b createContainerProvider (Lbqi;Lbci;Let;)Laga;
+		ARG 1 state
+		ARG 2 world
 		ARG 3 pos
-		ARG 4 rnd
+	METHOD b onScheduledTick (Lbqi;Lbci;Let;Ljava/util/Random;)V
+		ARG 1 state
+		ARG 2 world
+		ARG 3 pos
+		ARG 4 random
 	METHOD b getRenderingState (Lbqi;Lbcj;Let;)Lbqi;
 		ARG 0 state
 		ARG 1 world
@@ -372,16 +377,16 @@ CLASS bhl net/minecraft/block/Block
 		ARG 0 state
 		ARG 1 world
 		ARG 2 pos
-	METHOD c randomTick (Lbqi;Lbci;Let;Ljava/util/Random;)V
-		ARG 1 world
-		ARG 2 state
+	METHOD c onRandomTick (Lbqi;Lbci;Let;Ljava/util/Random;)V
+		ARG 1 state
+		ARG 2 world
 		ARG 3 pos
-		ARG 4 rnd
+		ARG 4 random
 	METHOD d isNaturalDirt (Lbhl;)Z
 		ARG 0 block
 	METHOD d hasBlockEntityBreakingRender (Lbqi;)Z
 		ARG 1 state
-	METHOD d getMaterialColor (Lbqi;Lbbt;Let;)Lcgb;
+	METHOD d getMapColor (Lbqi;Lbbt;Let;)Lcgb;
 		ARG 1 state
 		ARG 2 view
 		ARG 3 pos

@@ -1,13 +1,34 @@
 CLASS bjm net/minecraft/block/FireBlock
+	FIELD a AGE Lbri;
+	FIELD b NORTH Lbra;
+	FIELD c EAST Lbra;
+	FIELD d SOUTH Lbra;
+	FIELD e WEST Lbra;
+	FIELD f UP Lbra;
+	FIELD g DIRECTION_PROPERTIES Ljava/util/Map;
+	FIELD h burnChances Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+	FIELD i spreadChances Lit/unimi/dsi/fastutil/objects/Object2IntMap;
 	METHOD <init> (Lbhl$c;)V
 		ARG 1 settings
 	METHOD a getPlacementState (Lavh;)Lbqi;
 		ARG 1 ctx
-	METHOD a trySpreadFire (Lbci;Let;ILjava/util/Random;I)V
+	METHOD a getStateForPosition (Lbbt;Let;)Lbqi;
+		ARG 1 world
+		ARG 2 pos
+	METHOD a isRainingAround (Lbci;Let;)Z
+		ARG 1 world
+		ARG 2 pos
+	METHOD a trySpreadingFire (Lbci;Let;ILjava/util/Random;I)V
+		ARG 3 spreadFactor
 	METHOD a getTickRate (Lbcm;)I
 		ARG 1 world
-	METHOD a registerFlammable (Lbhl;II)V
+	METHOD a getBurnChance (Lbcm;Let;)I
+		ARG 1 world
+		ARG 2 pos
+	METHOD a registerFlammableBlock (Lbhl;II)V
 		ARG 1 block
+		ARG 2 burnChance
+		ARG 3 spreadChance
 	METHOD a getOutlineShape (Lbqi;Lbbt;Let;Lcnc;)Lcnr;
 		ARG 1 state
 		ARG 2 view
@@ -35,10 +56,17 @@ CLASS bjm net/minecraft/block/FireBlock
 		ARG 6 neighborPos
 	METHOD a appendProperties (Lbqj$a;)V
 		ARG 1 builder
-	METHOD b scheduledTick (Lbqi;Lbci;Let;Ljava/util/Random;)V
+	METHOD b areBlocksAroundFlammable (Lbbt;Let;)Z
+		ARG 1 world
+		ARG 2 pos
+	METHOD b onScheduledTick (Lbqi;Lbci;Let;Ljava/util/Random;)V
 		ARG 1 world
 		ARG 2 state
 		ARG 3 pos
 		ARG 4 rnd
 	METHOD c getRenderLayer ()Lbbu;
 	METHOD d registerDefaultFlammables ()V
+	METHOD f getSpreadChance (Lbhl;)I
+	METHOD g getBurnChance (Lbhl;)I
+	METHOD j isFlammable (Lbqi;)Z
+		ARG 1 blockState
