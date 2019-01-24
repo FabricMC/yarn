@@ -1,72 +1,59 @@
-CLASS bci net/minecraft/world/World
-	FIELD A isClient Z
-	FIELD B unusedWhite J
-	FIELD C thread Ljava/lang/Thread;
-	FIELD D ambientDarkness I
-	FIELD E ticksSinceLightningClient I
-	FIELD F persistentStateManager Lcjj;
-	FIELD G profiler Lafb;
-	FIELD H iteratingTickingBlockEntities Z
-	FIELD I border Lbru;
+CLASS bcl net/minecraft/world/World
+	FIELD A unusedWhite J
+	FIELD B thread Ljava/lang/Thread;
+	FIELD C ambientDarkness I
+	FIELD D ticksSinceLightningClient I
+	FIELD E profiler Lafc;
+	FIELD F iteratingTickingBlockEntities Z
+	FIELD G border Lbrw;
 	FIELD a FACING_VALUES [Ley;
 	FIELD b pendingBlockEntities Ljava/util/List;
-	FIELD c unloadedBlockEntities Ljava/util/List;
-	FIELD d LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD e entities Ljava/util/List;
-	FIELD f unloadedEntities Ljava/util/List;
-	FIELD g blockEntities Ljava/util/List;
-	FIELD h tickingBlockEntities Ljava/util/List;
-	FIELD i players Ljava/util/List;
-	FIELD j globalEntities Ljava/util/List;
-	FIELD k entitiesById Lyx;
-	FIELD l lcgBlockSeed I
-	FIELD m unusedIncrement I
-	FIELD n rainGradientPrev F
-	FIELD o rainGradient F
-	FIELD p thunderGradientPrev F
-	FIELD q thunderGradient F
-	FIELD r random Ljava/util/Random;
-	FIELD s dimension Lbtb;
-	FIELD t pathingCoordinator Lalp;
-	FIELD u listeners Ljava/util/List;
-	FIELD v chunkManager Lbsa;
-	FIELD w saveHandler Lcjb;
-	FIELD x properties Lcja;
-	FIELD y villageManager Lama;
-	FIELD z raidManager Lasp;
-	METHOD <init> (Lcjb;Lcjj;Lcja;Lbtc;Ljava/util/function/BiFunction;Lafb;Z)V
-		ARG 1 serializer
-		ARG 3 properties
-		ARG 4 dimension
-		ARG 5 chunkManagerProvider
-		ARG 6 profiler
-		ARG 7 isClient
-	METHOD A getRecipeManager ()Lazn;
-	METHOD B getTagManager ()Lyl;
-	METHOD C isSavingDisabled ()Z
-	METHOD D getScoreboard ()Lcnx;
-	METHOD E getChunkManager ()Lbsa;
-	METHOD H getPendingBlockEntity (Let;)Lbom;
-	METHOD J isDaylight ()Z
-	METHOD L getEntityCountAsString ()Ljava/lang/String;
-	METHOD M getChunkProviderStatus ()Ljava/lang/String;
-	METHOD N updateAmbientDarkness ()V
-	METHOD O initWeatherGradients ()V
-	METHOD P getEntityCount ()I
-	METHOD R getGeneratorType ()Lbcr;
-	METHOD T checkSessionLock ()V
+	FIELD c LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD d entities Ljava/util/List;
+	FIELD e unloadedEntities Ljava/util/List;
+	FIELD f blockEntities Ljava/util/List;
+	FIELD g tickingBlockEntities Ljava/util/List;
+	FIELD h players Ljava/util/List;
+	FIELD i globalEntities Ljava/util/List;
+	FIELD j entitiesById Lyx;
+	FIELD k lcgBlockSeed I
+	FIELD l unusedIncrement I
+	FIELD m rainGradientPrev F
+	FIELD n rainGradient F
+	FIELD o thunderGradientPrev F
+	FIELD p thunderGradient F
+	FIELD q random Ljava/util/Random;
+	FIELD r dimension Lbtc;
+	FIELD s pathingCoordinator Lalp;
+	FIELD t listeners Ljava/util/List;
+	FIELD u chunkManager Lbsc;
+	FIELD v properties Lcix;
+	FIELD w villageManager Lama;
+	FIELD x raidManager Lasp;
+	FIELD y isClient Z
+	FIELD z unloadedBlockEntities Ljava/util/List;
+	METHOD E getScoreboard ()Lcnr;
+	METHOD G getPendingBlockEntity (Let;)Lboo;
+	METHOD K isDaylight ()Z
+	METHOD M getEntityCountAsString ()Ljava/lang/String;
+	METHOD N getChunkProviderStatus ()Ljava/lang/String;
+	METHOD O updateAmbientDarkness ()V
+	METHOD P initWeatherGradients ()V
+	METHOD Q getEntityCount ()I
+	METHOD S getGeneratorType ()Lbct;
 	METHOD U getTime ()J
 	METHOD V getTimeOfDay ()J
-	METHOD W getGameRules ()Lbce;
+	METHOD W getGameRules ()Lbch;
 	METHOD X isThundering ()Z
 	METHOD Y isRaining ()Z
 	METHOD Z getEffectiveHeight ()I
+	METHOD a tickTime ()V
 	METHOD a findClosestVisiblePlayer (DDD)Larj;
 		ARG 1 x
 	METHOD a containsVisiblePlayer (DDDD)Z
 		ARG 1 x
 		ARG 3 y
-	METHOD a addFireworkParticle (DDDDDDLhq;)V
+	METHOD a addFireworkParticle (DDDDDDLhr;)V
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
@@ -78,10 +65,6 @@ CLASS bci net/minecraft/world/World
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
-	METHOD a getClosestPlayer (DDDDLjava/util/function/Predicate;)Larj;
-		ARG 1 x
-		ARG 3 y
-		ARG 5 z
 	METHOD a playSound (DDDLxr;Lxt;FFZ)V
 		ARG 1 x
 		ARG 3 y
@@ -90,41 +73,29 @@ CLASS bci net/minecraft/world/World
 	METHOD a calculateAmbientDarkness (F)I
 	METHOD a isHeightInvalid (I)Z
 		ARG 0 y
-	METHOD a getChunk (II)Lbrw;
-		ARG 1 chunkX
-		ARG 2 chunkZ
 	METHOD a getRandomPosInChunk (IIII)Let;
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
-	METHOD a getChunk (IILbsb;Z)Lbrw;
-		ARG 1 chunkX
-		ARG 2 chunkZ
-		ARG 3 status
-		ARG 4 create
 	METHOD a fireGlobalWorldEvent (ILet;I)V
 		ARG 1 eventId
 		ARG 2 pos
 	METHOD a setTime (J)V
-	METHOD a spawnEntity (Lahc;)Z
 	METHOD a summonParticle (Lahc;B)V
 	METHOD a (Lahc;DD)Larj;
 		ARG 1 entity
-	METHOD a createExplosion (Lahc;DDDFZ)Lbcb;
+	METHOD a createExplosion (Lahc;DDDFZ)Lbce;
 		ARG 1 entity
 		ARG 2 x
 		ARG 4 y
-	METHOD a createExplosion (Lahc;DDDFZZ)Lbcb;
-	METHOD a getSkyColor (Lahc;F)Lcmx;
+	METHOD a createExplosion (Lahc;DDDFZZ)Lbce;
+	METHOD a getSkyColor (Lahc;F)Lcmr;
 		ARG 1 entity
-	METHOD a createExplosion (Lahc;Lagl;DDDFZZ)Lbcb;
+	METHOD a createExplosion (Lahc;Lagl;DDDFZZ)Lbce;
 		ARG 1 entity
 		ARG 3 x
 		ARG 5 y
 		ARG 7 z
-	METHOD a getEntities (Lahc;Lcms;Ljava/util/function/Predicate;)Ljava/util/List;
-		ARG 1 entity
-		ARG 2 boundingBox
 	METHOD a playSound (Larj;DDDLxr;Lxt;FF)V
 		ARG 1 player
 		ARG 2 x
@@ -137,62 +108,32 @@ CLASS bci net/minecraft/world/World
 	METHOD a playSoundFromEntity (Larj;Lahc;Lxr;Lxt;FF)V
 	METHOD a canPlayerModifyAt (Larj;Let;)Z
 		ARG 1 player
-	METHOD a playSound (Larj;Let;Lxr;Lxt;FF)V
 	METHOD a addDetailsToCrashReport (Lb;)Lc;
 		ARG 1 report
-	METHOD a registerListener (Lbcl;)V
-	METHOD a init (Lbcn;)V
-		ARG 1 levelInfo
-	METHOD a getLightLevel (Lbct;Let;)I
-		ARG 1 type
-	METHOD a addBlockEntity (Lbom;)Z
-	METHOD a getTop (Lbtp$a;II)I
-		ARG 1 type
-		ARG 2 x
-	METHOD a getTopPosition (Lbtp$a;Let;)Let;
-		ARG 1 type
-	METHOD a isAreaNotEmpty (Lcms;)Z
-	METHOD a clearBlockState (Let;)Z
+	METHOD a registerListener (Lbco;)V
+	METHOD a addBlockEntity (Lboo;)Z
+	METHOD a isAreaNotEmpty (Lcmm;)Z
 	METHOD a (Let;DD)Larj;
 		ARG 1 pos
-	METHOD a getLightLevel (Let;I)I
-	METHOD a updateNeighbors (Let;Lbhl;)V
-	METHOD a addBlockAction (Let;Lbhl;II)V
+	METHOD a addBlockAction (Let;Lbhn;II)V
 		ARG 1 pos
 		ARG 2 block
 		ARG 3 first
-	METHOD a updateNeighbor (Let;Lbhl;Let;)V
+	METHOD a updateNeighbor (Let;Lbhn;Let;)V
 		ARG 1 pos
 		ARG 2 sourceBlock
-	METHOD a updateNeighborsExcept (Let;Lbhl;Ley;)V
+	METHOD a updateNeighborsExcept (Let;Lbhn;Ley;)V
 		ARG 1 pos
 		ARG 2 sourceBlock
-	METHOD a setBlockEntity (Let;Lbom;)V
+	METHOD a setBlockEntity (Let;Lboo;)V
 		ARG 1 pos
-	METHOD a setBlockState (Let;Lbqi;)Z
+	METHOD a setBlockState (Let;Lbqk;)Z
 		ARG 1 pos
-	METHOD a setBlockState (Let;Lbqi;I)Z
-		ARG 1 pos
-		ARG 2 state
-		ARG 3 flags
-	METHOD a updateListeners (Let;Lbqi;Lbqi;I)V
+	METHOD a updateListeners (Let;Lbqk;Lbqk;I)V
 		ARG 1 pos
 		ARG 2 oldState
 		ARG 3 newState
-	METHOD a getEmittedStrongRedstonePower (Let;Ley;)I
-		ARG 1 pos
-	METHOD a test (Let;Ljava/util/function/Predicate;)Z
 	METHOD a playRecord (Let;Lxr;)V
-	METHOD a breakBlock (Let;Z)Z
-		ARG 1 pos
-	METHOD a addParticle (Lft;DDDDDD)V
-		ARG 1 parameters
-		ARG 2 x
-		ARG 4 y
-		ARG 6 z
-		ARG 8 velocityX
-		ARG 10 velocityY
-		ARG 12 velocityZ
 	METHOD a addParticle (Lft;ZDDDDDD)V
 		ARG 1 parameters
 		ARG 2 alwaysSpawn
@@ -202,30 +143,25 @@ CLASS bci net/minecraft/world/World
 		ARG 9 velocityX
 		ARG 11 velocityY
 		ARG 13 velocityZ
-	METHOD a getClosestVisibleEntityTo (Ljava/lang/Class;Lcms;Lahc;)Lahc;
+	METHOD a getClosestVisibleEntityTo (Ljava/lang/Class;Lcmm;Lahc;)Lahc;
 		ARG 1 clazz
 		ARG 2 area
-	METHOD a getEntities (Ljava/lang/Class;Lcms;Ljava/util/function/Predicate;)Ljava/util/List;
-		ARG 1 entityClass
 	METHOD a getEntities (Ljava/lang/Class;Ljava/util/function/Predicate;)Ljava/util/List;
 		ARG 1 entityClass
-	METHOD a getPlayerByName (Ljava/lang/String;)Larj;
 	METHOD a locateStructure (Ljava/lang/String;Let;IZ)Let;
 	METHOD a addBlockEntities (Ljava/util/Collection;)V
 	METHOD a getEntityByUuid (Ljava/util/UUID;)Lahc;
 	METHOD a tick (Ljava/util/function/BooleanSupplier;)V
 	METHOD a loadEntities (Ljava/util/stream/Stream;)V
-	METHOD a sendPacket (Ljp;)V
+	METHOD a sendPacket (Ljq;)V
 	METHOD a setMobSpawnOptions (ZZ)V
 		ARG 1 spawnMonsters
 		ARG 2 spawnAnimals
+	METHOD a_ setSpawnPos (Let;)V
 	METHOD ab getTicksSinceLightningClient ()I
 	METHOD ac getVillageManager ()Lama;
 	METHOD ad getRaidManager ()Lasp;
-	METHOD ae getForcedChunks ()Lit/unimi/dsi/fastutil/longs/LongSet;
-	METHOD af hasForcedChunks ()Z
-	METHOD ag getProfiler ()Lafb;
-	METHOD b tickTime ()V
+	METHOD ae getProfiler ()Lafc;
 	METHOD b findVisiblePlayer (DDDD)Z
 		ARG 1 x
 		ARG 3 y
@@ -233,23 +169,17 @@ CLASS bci net/minecraft/world/World
 		ARG 1 delta
 	METHOD b getEntityById (I)Lahc;
 	METHOD b scheduleNeighborChunksRender (III)V
-	METHOD b setChunkForced (IIZ)Z
-		ARG 1 chunkX
-		ARG 2 chunkZ
-		ARG 3 forced
 	METHOD b fireWorldEvent (ILet;I)V
 		ARG 1 eventId
 		ARG 2 pos
 	METHOD b setTimeOfDay (J)V
 	METHOD b onEntityAdded (Lahc;)V
-	METHOD b unregisterListener (Lbcl;)V
-	METHOD b unloadBlockEntity (Lbom;)V
-	METHOD b doesAreaContainFireSource (Lcms;)Z
-	METHOD b getBlockState (Let;)Lbqi;
+	METHOD b unregisterListener (Lbco;)V
+	METHOD b unloadBlockEntity (Lboo;)V
+	METHOD b doesAreaContainFireSource (Lcmm;)Z
+	METHOD b updateNeighborsAlways (Let;Lbhn;)V
 		ARG 1 pos
-	METHOD b updateNeighborsAlways (Let;Lbhl;)V
-		ARG 1 pos
-	METHOD b markDirty (Let;Lbom;)V
+	METHOD b markDirty (Let;Lboo;)V
 		ARG 1 pos
 	METHOD b isEmittingRedstonePower (Let;Ley;)Z
 		ARG 1 pos
@@ -272,74 +202,56 @@ CLASS bci net/minecraft/world/World
 		ARG 13 velocityZ
 	METHOD b getPlayers (Ljava/lang/Class;Ljava/util/function/Predicate;)Ljava/util/List;
 		ARG 1 playerClass
+	METHOD b getPlayerByName (Ljava/lang/String;)Larj;
 	METHOD b unloadEntities (Ljava/util/Collection;)V
 	METHOD b getPlayerByUuid (Ljava/util/UUID;)Larj;
-	METHOD c getAmbientDarkness ()I
 	METHOD c setAmbientDarkness (I)V
-	METHOD c getWorldChunk (II)Lbsi;
+	METHOD c getWorldChunk (II)Lbsk;
 		ARG 1 chunkX
 		ARG 2 chunkZ
 	METHOD c setBlockBreakingProgress (ILet;I)V
 		ARG 1 entityId
 		ARG 2 pos
 	METHOD c onEntityRemoved (Lahc;)V
-	METHOD c getFluidState (Let;)Lcfw;
-		ARG 1 pos
-	METHOD c updateHorizontalAdjacent (Let;Lbhl;)V
+	METHOD c updateHorizontalAdjacent (Let;Lbhn;)V
 		ARG 1 pos
 	METHOD c getEmittedRedstonePower (Let;Ley;)I
 		ARG 1 pos
-	METHOD d getWorldBorder ()Lbru;
-	METHOD d getCloudColor (F)Lcmx;
+	METHOD d getCloudColor (F)Lcmr;
 	METHOD d setTicksSinceLightningClient (I)V
 	METHOD d addGlobalEntity (Lahc;)Z
-	METHOD d getBiome (Let;)Lbdh;
-	METHOD e isClient ()Z
-	METHOD e getFogColor (F)Lcmx;
-	METHOD e isChunkForced (II)Z
-		ARG 1 chunkX
-		ARG 2 chunkZ
+	METHOD e getFogColor (F)Lcmr;
 	METHOD e removeEntity (Lahc;)V
-	METHOD e getBlockEntity (Let;)Lbom;
-		ARG 1 pos
-	METHOD f getWorld ()Lbci;
 	METHOD f getStarsBrightness (F)F
-	METHOD f getLocalDifficulty (Let;)Lafv;
-		ARG 1 pos
-	METHOD g getLevelProperties ()Lcja;
 	METHOD g getThunderGradient (F)F
-	METHOD h getPersistentStateManager ()Lcjj;
 	METHOD h setThunderGradient (F)V
-	METHOD i getSaveHandler ()Lcjb;
 	METHOD i getRainGradient (F)F
+	METHOD i_ updateSleepingStatus ()V
 	METHOD j setRainGradient (F)V
-	METHOD j getTopNonAirState (Let;)Lbqi;
+	METHOD j getTopNonAirState (Let;)Lbqk;
+	METHOD j_ setDefaultSpawnClient ()V
 	METHOD k isValid (Let;)Z
 		ARG 0 pos
-	METHOD k_ updateSleepingStatus ()V
-	METHOD l setDefaultSpawnClient ()V
+	METHOD k_ updateEntities ()V
 	METHOD l isHeightInvalid (Let;)Z
 		ARG 0 pos
-	METHOD m getRandom ()Ljava/util/Random;
-	METHOD m getWorldChunk (Let;)Lbsi;
-	METHOD m_ updateEntities ()V
-	METHOD n getSpawnPos ()Let;
+	METHOD l_ tickPlayers ()V
+	METHOD m getWorldChunk (Let;)Lbsk;
 	METHOD n scheduleBlockRender (Let;)V
-	METHOD n_ tickPlayers ()V
-	METHOD o getDimension ()Lbtb;
+	METHOD p updateWeather ()V
 	METHOD p removeBlockEntity (Let;)V
 	METHOD q isBlockFullCube (Let;)Z
 		ARG 1 pos
-	METHOD q_ getSeaLevel ()I
 	METHOD r isHeightValidAndBlockLoaded (Let;)Z
-	METHOD r_ getSeed ()J
+	METHOD s getServer ()Lnet/minecraft/server/MinecraftServer;
 	METHOD s doesBlockHaveSolidTopSurface (Let;)Z
-	METHOD t updateWeather ()V
 	METHOD u getReceivedStrongRedstonePower (Let;)I
 	METHOD v isReceivingRedstonePower (Let;)Z
-	METHOD w getServer ()Lnet/minecraft/server/MinecraftServer;
+	METHOD w getRecipeManager ()Lazo;
 	METHOD w getReceivedRedstonePower (Let;)I
-	METHOD x setSpawnPos (Let;)V
-	METHOD y hasRain (Let;)Z
+	METHOD x getTagManager ()Lyl;
+	METHOD x hasRain (Let;)Z
 		ARG 1 pos
-	METHOD z hasHighHumidity (Let;)Z
+	METHOD y isSavingDisabled ()Z
+	METHOD y hasHighHumidity (Let;)Z
+	METHOD z checkSessionLock ()V
