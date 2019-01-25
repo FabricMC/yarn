@@ -25,9 +25,22 @@ CLASS cvl net/minecraft/client/gui/ingame/EditBookGui
 			ARG 1 mouseX
 			ARG 3 mouseY
 		METHOD a playPressedSound (Ldrw;)V
+	CLASS cvl$a TextCursorPosition
+	FIELD A buttonPreviousPage Lcwj;
+	FIELD B buttonDone Lcrc;
+	FIELD C buttonSign Lcrc;
+	FIELD D buttonFinalize Lcrc;
+	FIELD E buttonCancel Lcrc;
 	FIELD a player Larj;
 	FIELD f stack Laxc;
+	FIELD g dirty Z
+	FIELD h signed Z
+	FIELD s currentPage I
+	FIELD t pages Ljava/util/List;
 	FIELD u title Ljava/lang/String;
+	FIELD v highlightBegin I
+	FIELD w highlightEnd I
+	FIELD z buttonNextPage Lcwj;
 	METHOD <init> (Larj;Laxc;Lafw;)V
 		ARG 1 player
 		ARG 2 stack
@@ -52,6 +65,52 @@ CLASS cvl net/minecraft/client/gui/ingame/EditBookGui
 		ARG 1 keyCode
 		ARG 2 scanCode
 		ARG 3 modifiers
+	METHOD a stripFromatting (Ljava/lang/String;)Ljava/lang/String;
+	METHOD a finalizeBook (Z)V
+		ARG 1 signBook
+		ARG 2 pagesTag
+	METHOD b keyPressedEditMode (III)Z
+		ARG 1 keyCode
+		ARG 2 scanCode
+		ARG 3 modifiers
+		ARG 4 content
+	METHOD b applyBackspaceKey (Ljava/lang/String;)V
+		ARG 1 content
+		ARG 2 newContent
 	METHOD c onInitialized ()V
+		ARG 1 xOffset
+	METHOD c applyDeleteKey (Ljava/lang/String;)V
+		ARG 1 content
+		ARG 2 newContent
+	METHOD c getTextCursorPosition (Ljava/lang/String;I)Lcvl$a;
+		ARG 1 pageContent
+		ARG 2 rawPosition
+	METHOD d applyLeftArrowKey (Ljava/lang/String;)V
+		ARG 1 content
+		ARG 2 offset
 	METHOD f update ()V
+	METHOD f applyRightArrowKey (Ljava/lang/String;)V
+		ARG 1 content
+		ARG 2 offset
+	METHOD h playPageTurnSound ()V
+	METHOD i countPages ()I
+	METHOD j openPreviousPage ()V
+	METHOD k openNextPage ()V
+	METHOD k setPageContent (Ljava/lang/String;)V
+		ARG 1 newContent
+	METHOD l writeString (Ljava/lang/String;)V
+	METHOD m updateButtons ()V
 	METHOD n onClosed ()V
+	METHOD o removeEmptyPages ()V
+		ARG 1 pageIterator
+	METHOD s appendNewPage ()V
+	METHOD u removeHighlightedText ()V
+		ARG 1 content
+		ARG 2 begin
+		ARG 3 end
+		ARG 4 newContent
+	METHOD v getCurrentPageContent ()Ljava/lang/String;
+	METHOD w getHighlightedText ()Ljava/lang/String;
+		ARG 1 content
+		ARG 2 begin
+		ARG 3 end
