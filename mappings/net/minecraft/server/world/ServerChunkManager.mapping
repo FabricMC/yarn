@@ -9,7 +9,8 @@ CLASS uq net/minecraft/server/world/ServerChunkManager
 	FIELD h lightProvider Luv;
 	FIELD i genQueue Ljava/util/Queue;
 	FIELD j players Luo;
-	FIELD k chunkHolderManager Luf;
+	FIELD k threadedAnvilChunkStorage Luf;
+	FIELD l dimensionalPersistentStateManager Lciw;
 	FIELD m maxWatchDistance I
 	FIELD n lastMobSpawningTime J
 	FIELD o spawnMonsters Z
@@ -28,10 +29,12 @@ CLASS uq net/minecraft/server/world/ServerChunkManager
 		ARG 1 player
 	METHOD a markForUpdate (Let;)V
 	METHOD a addPlayer (Lut;)V
+		ARG 1 player
 	METHOD a (Lut;II)Z
 		ARG 2 x
 		ARG 3 z
 	METHOD a addOrRemovePlayer (Lut;Z)V
+		ARG 1 player
 		ARG 2 add
 	METHOD a addTicket (Lux;Lbby;ILjava/lang/Object;)V
 	METHOD a save (Z)V
@@ -44,6 +47,7 @@ CLASS uq net/minecraft/server/world/ServerChunkManager
 		ARG 4 create
 	METHOD b getSqDistance (Lbby;Lahc;)D
 	METHOD b removePlayer (Lut;)V
+		ARG 1 player
 	METHOD b removeTicket (Lux;Lbby;ILjava/lang/Object;)V
 	METHOD c getWorld ()Lbcl;
 	METHOD c getChunkAsync (IILbsd;Z)Ljava/util/concurrent/CompletableFuture;
@@ -53,7 +57,9 @@ CLASS uq net/minecraft/server/world/ServerChunkManager
 		ARG 4 create
 	METHOD c updateChunkWatchingForPlayer (Lut;)V
 		ARG 1 playerEntity
-	METHOD d isWatchDisabled (Lut;)Z
+	METHOD d doesNotGenerateChunks (Lut;)Z
+		ARG 1 player
 	METHOD g getLoadedChunkCount ()I
+	METHOD h getDimensionalPersistentStateManager ()Lciw;
 	METHOD k update ()Z
 	METHOD l doMobSpawning ()V

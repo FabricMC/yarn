@@ -1,0 +1,63 @@
+CLASS uf net/minecraft/server/world/ThreadedAnvilChunkStorage
+	CLASS uf$a TicketManager
+		METHOD <init> (Luf;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)V
+			ARG 1 executor
+	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD b posToHolder Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
+	FIELD e world Lbcl;
+	FIELD f serverLightingProvider Luv;
+	FIELD g genQueueAdder Ljava/util/concurrent/Executor;
+	FIELD h playersWatchingChunkProvider Lue$d;
+	FIELD i chunkGenerator Lbrz;
+	FIELD j dimensionalPersistentStateManagerFactory Ljava/util/function/Supplier;
+	FIELD k posToHolderCopy Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
+	FIELD m posToHolderCopyOutdated Z
+	FIELD n chunkTaskPrioritySystem Luh;
+	FIELD o worldgenActor Lafg;
+	FIELD p mainActor Lafg;
+	FIELD q worldGenerationProgressListener Lvc;
+	FIELD r ticketManager Luf$a;
+	FIELD s totalChunksLoadedCount Ljava/util/concurrent/atomic/AtomicInteger;
+	FIELD t structureManager Lceb;
+	FIELD u saveDir Ljava/io/File;
+	METHOD a getLightProvider ()Luv;
+	METHOD a applyViewDistance (II)V
+		ARG 1 maxWatchDistance
+		ARG 2 viewDistance
+	METHOD a getChunkHolder (J)Lue;
+		ARG 1 pos
+	METHOD a setLevel (JILue;I)Lue;
+		ARG 1 pos
+		ARG 3 level
+		ARG 4 holder
+	METHOD a getDebugString (Lbby;)Ljava/lang/String;
+		ARG 1 pos
+	METHOD a getChunkRegion (Lbby;ILjava/util/function/IntFunction;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 centerChunk
+		ARG 2 margin
+		ARG 3 distanceToStatus
+	METHOD a convertToFullChunk (Lbry;)Ljava/util/concurrent/CompletableFuture;
+	METHOD a save (Lbry;Z)V
+	METHOD a getPrecedingTargetChunkGenerationStatus (Lbsd;I)Lbsd;
+		ARG 2 distance
+	METHOD a unload (Ljava/util/function/BooleanSupplier;)V
+	METHOD a getChunk (Lue;Lbsd;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 holder
+		ARG 2 status
+	METHOD a sendWatchPackets (Lut;Lbby;[Ljq;ZZ)V
+		ARG 1 player
+		ARG 2 pos
+		ARG 3 packets
+		ARG 4 withinMaxWatchDistance
+		ARG 5 withinViewDistance
+	METHOD a save (Z)V
+		ARG 1 flush
+	METHOD b updateHolderMap ()V
+	METHOD b getCopiedChunkHolder (J)Lue;
+		ARG 1 pos
+	METHOD c getTotalChunksLoadedCount ()I
+	METHOD d getLoadedChunkCount ()I
+	METHOD d getUpdatedChunkTag (Lbby;)Lhr;
+		ARG 1 pos
+	METHOD e getTicketManager ()Luf$a;
+	METHOD f entryIterator ()Lit/unimi/dsi/fastutil/objects/ObjectBidirectionalIterator;
