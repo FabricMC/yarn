@@ -4,7 +4,12 @@ CLASS ahg net/minecraft/entity/EntityType
 		FIELD b function Ljava/util/function/Function;
 		FIELD c saveable Z
 		FIELD d summonable Z
+		FIELD e width F
+		FIELD f height F
 		METHOD a disableSummon ()Lahg$a;
+		METHOD a setSize (FF)Lahg$a;
+			ARG 1 width
+			ARG 2 height
 		METHOD a create (Ljava/lang/Class;)Lahg$a;
 		METHOD a create (Ljava/lang/Class;Ljava/util/function/Function;)Lahg$a;
 		METHOD a build (Ljava/lang/String;)Lahg;
@@ -93,6 +98,8 @@ CLASS ahg net/minecraft/entity/EntityType
 	FIELD bb textComponent Ljc;
 	FIELD bc lootTableId Lqd;
 	FIELD bd dataFixerType Lcom/mojang/datafixers/types/Type;
+	FIELD be width F
+	FIELD bf height F
 	FIELD c ARROW Lahg;
 	FIELD d BAT Lahg;
 	FIELD e BLAZE Lahg;
@@ -124,7 +131,11 @@ CLASS ahg net/minecraft/entity/EntityType
 		ARG 4 summonable
 		ARG 5 dataFixerType
 	METHOD a isSaveable ()Z
+	METHOD a createSimpleBoundingBox (DDD)Lcmm;
 	METHOD a createInstanceFromId (ILbcl;)Lahc;
+	METHOD a spawnEntityStack (Lahc;Lbcm;)V
+		ARG 0 entity
+		ARG 1 iWorld
 	METHOD a getId (Lahg;)Lqd;
 	METHOD a create (Lbcl;)Lahc;
 	METHOD a newInstance (Lbcl;Lahg;)Lahc;
@@ -133,12 +144,38 @@ CLASS ahg net/minecraft/entity/EntityType
 	METHOD a loadFromEntityTag (Lbcl;Larj;Lahc;Lhr;)V
 	METHOD a spawnFromItemStack (Lbcl;Laxd;Larj;Let;Laho;ZZ)Lahc;
 	METHOD a spawn (Lbcl;Lhr;Ljc;Larj;Let;Laho;ZZ)Lahc;
-	METHOD a fromTag (Lhr;Lbcl;)Ljava/util/Optional;
+	METHOD a fromTag (Lhr;)Ljava/util/Optional;
+		ARG 0 compoundTag
+	METHOD a getEntityFromTag (Lhr;Lbcl;)Ljava/util/Optional;
+	METHOD a loadEntityStackAtPosition (Lhr;Lbcl;DDDZ)Lahc;
+		ARG 0 compoundTag
+		ARG 1 world
+		ARG 2 x
+		ARG 4 y
+		ARG 6 z
+		ARG 8 spawn
+	METHOD a spawnEntityInCHunk (Lhr;Lbcl;Lbsk;)Lahc;
+		ARG 0 compoundTag
+		ARG 1 world
+		ARG 2 worldChunk
+	METHOD a loadEntityStack (Lhr;Lbcl;Ljava/util/function/Function;)Lahc;
+		ARG 0 compoundTag
+		ARG 1 world
+		ARG 2 entityProcessor
+	METHOD a loadEntityStack (Lhr;Lbcl;Z)Lahc;
+		ARG 0 compoundTag
+		ARG 1 world
+		ARG 2 spawn
 	METHOD a get (Ljava/lang/String;)Ljava/util/Optional;
 	METHOD a register (Ljava/lang/String;Lahg$a;)Lahg;
 	METHOD b isSummonable ()Z
 	METHOD b create (Lbcl;Lhr;Ljc;Larj;Let;Laho;ZZ)Lahc;
+	METHOD b loadEntityFromTag (Lhr;Lbcl;)Ljava/util/Optional;
+		ARG 0 compoundTag
+		ARG 1 world
 	METHOD c getEntityClass ()Ljava/lang/Class;
 	METHOD d getTranslationKey ()Ljava/lang/String;
 	METHOD e getTextComponent ()Ljc;
 	METHOD f getLootTableId ()Lqd;
+	METHOD g getWidth ()F
+	METHOD h getHeight ()F
