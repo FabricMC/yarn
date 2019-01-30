@@ -3,7 +3,8 @@ CLASS ahc net/minecraft/entity/Entity
 	FIELD B verticalCollision Z
 	FIELD C collided Z
 	FIELD D velocityModified Z
-	FIELD E movementMultiplierSet Z
+	FIELD E applyMovementMultiplier Z
+	FIELD F movementMultiplier Lcmr;
 	FIELD G invalid Z
 	FIELD K fallDistance F
 	FIELD L prevRenderX D
@@ -25,6 +26,8 @@ CLASS ahc net/minecraft/entity/Entity
 	FIELD aH NO_GRAVITY Lps;
 	FIELD aI invulnerable Z
 	FIELD aJ scoreboardTags Ljava/util/Set;
+	FIELD aL pistonMovementDelta [D
+	FIELD aM pistonMovementTick J
 	FIELD aa ENTITY_FLAGS Lps;
 	FIELD ac chunkX I
 	FIELD ad chunkY I
@@ -52,6 +55,7 @@ CLASS ahc net/minecraft/entity/Entity
 	FIELD g type Lahg;
 	FIELD h LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD j ridingCooldown I
+	FIELD k teleporting Z
 	FIELD l world Lbcl;
 	FIELD m prevX D
 	FIELD n prevY D
@@ -130,6 +134,7 @@ CLASS ahc net/minecraft/entity/Entity
 	METHOD a onBlockCollision (Lbqk;)V
 	METHOD a slowMovement (Lbqk;Lcmr;)V
 		ARG 1 state
+		ARG 2 multipliers
 	METHOD a changeDimension (Lbtd;)Lahc;
 	METHOD a populateCrashReport (Lc;)V
 	METHOD a lookAt (Lch$a;Lcmr;)V
@@ -179,6 +184,8 @@ CLASS ahc net/minecraft/entity/Entity
 	METHOD ab setOnFireFromLava ()V
 	METHOD ac extinguish ()V
 	METHOD ad destroy ()V
+	METHOD af moveToBoundingBoxCenter ()V
+		ARG 1 boundingBox
 	METHOD ag getSoundSwim ()Lxr;
 	METHOD ah getSoundSplash ()Lxr;
 	METHOD aj checkBlockCollision ()V
