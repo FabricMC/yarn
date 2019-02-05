@@ -2,10 +2,16 @@ CLASS atj net/minecraft/container/Container
 	FIELD a slotList Ljava/util/List;
 	FIELD b syncId I
 	FIELD c stackList Lfh;
+	FIELD d properties Ljava/util/List;
 	FIELD e type Lauk;
 	FIELD f actionId S
+	FIELD g quickCraftStage I
+	FIELD h quickCraftButton I
+	FIELD i quickCraftSlots Ljava/util/Set;
 	FIELD j listeners Ljava/util/List;
+	FIELD k restrictedPlayers Ljava/util/Set;
 	METHOD <init> (Lauk;I)V
+		ARG 1 type
 		ARG 2 syncId
 	METHOD a getType ()Lauk;
 	METHOD a getSlot (I)Lauw;
@@ -14,8 +20,9 @@ CLASS atj net/minecraft/container/Container
 		ARG 2 propertyId
 	METHOD a onSlotClick (IILatr;Laro;)Laxi;
 		ARG 1 slotId
-		ARG 2 buttonId
+		ARG 2 clickData
 		ARG 3 actionType
+		ARG 5 resultStack
 	METHOD a setStackInSlot (ILaxi;)V
 		ARG 1 slot
 	METHOD a onContentChanged (Laft;)V
@@ -27,14 +34,16 @@ CLASS atj net/minecraft/container/Container
 		ARG 1 player
 		ARG 2 id
 	METHOD a dropInventory (Laro;Lbcq;Laft;)V
-	METHOD a readData (Lats;)V
-		ARG 1 data
+	METHOD a setPlayerRestriction (Laro;Z)V
+		ARG 2 unrestricted
+	METHOD a addProperties (Lats;)V
 	METHOD a checkContainerDataCount (Lats;I)V
 		ARG 0 data
 		ARG 1 expectedCount
 	METHOD a canUse (Latt;Laro;Lbhs;)Z
 	METHOD a addListener (Latu;)V
 		ARG 1 listener
+	METHOD a addProperty (Latx;)Latx;
 	METHOD a addSlot (Lauw;)Lauw;
 		ARG 1 slot
 	METHOD a canInsertItemIntoSlot (Lauw;Laxi;Z)Z
@@ -44,15 +53,22 @@ CLASS atj net/minecraft/container/Container
 		ARG 1 stack
 		ARG 2 startIndex
 		ARG 3 endIndex
+	METHOD a canStacksCombine (Laxi;Laxi;)Z
 	METHOD a calculateComparatorOutput (Lbot;)I
 		ARG 0 entity
 	METHOD a updateSlotStacks (Ljava/util/List;)V
+		ARG 1 stacks
 	METHOD a calculateStackSize (Ljava/util/Set;ILaxi;I)V
 		ARG 0 slots
 		ARG 1 rmode
 		ARG 2 stack
 		ARG 3 stackSize
 	METHOD b getStacks ()Lfh;
+	METHOD b unpackQuickCraftStage (I)I
+		ARG 0 clickData
+	METHOD b packClickData (II)I
+		ARG 0 buttonId
+		ARG 1 quickCraftStage
 	METHOD b calculateComparatorOutput (Laft;)I
 		ARG 0 inventory
 	METHOD b close (Laro;)V
@@ -61,4 +77,9 @@ CLASS atj net/minecraft/container/Container
 		ARG 2 invSlot
 	METHOD b removeListener (Latu;)V
 		ARG 1 listener
+	METHOD b canInsertIntoSlot (Lauw;)Z
 	METHOD c sendContentUpdates ()V
+	METHOD c unpackButtonId (I)I
+		ARG 0 clickData
+	METHOD c isRestricted (Laro;)Z
+	METHOD d quickCraftEnd ()V
