@@ -26,7 +26,9 @@ CLASS ue net/minecraft/server/world/ChunkHolder
 	FIELD d UNLOADED_WORLD_CHUNK_FUTURE Ljava/util/concurrent/CompletableFuture;
 	FIELD e CHUNK_STATUSES Ljava/util/List;
 	FIELD f LEVEL_TYPES [Lue$b;
-	FIELD g statusToChunk Ljava/util/concurrent/atomic/AtomicReferenceArray;
+	FIELD g chunkByStatus Ljava/util/concurrent/atomic/AtomicReferenceArray;
+	FIELD h tickingFutureChunk Ljava/util/concurrent/CompletableFuture;
+	FIELD i entityTickingFutureChunk Ljava/util/concurrent/CompletableFuture;
 	FIELD j chunk Ljava/util/concurrent/CompletableFuture;
 	FIELD l level I
 	FIELD m lastLevelUpdatedTo I
@@ -34,6 +36,9 @@ CLASS ue net/minecraft/server/world/ChunkHolder
 	FIELD o blockUpdatePositions [S
 	FIELD p blockUpdateCount I
 	FIELD q sectionsNeedingUpdateMask I
+	FIELD r lightSentWithBlocksBits I
+	FIELD s skyLightUpdateBits I
+	FIELD t blockLightUpdateBits I
 	FIELD u lightingProvider Lcfs;
 	FIELD v levelUpdateListener Lue$c;
 	FIELD w playersWatchingChunkProvider Lue$d;
@@ -41,6 +46,8 @@ CLASS ue net/minecraft/server/world/ChunkHolder
 		ARG 1 pos
 		ARG 2 level
 		ARG 5 playersWatchingChunkProvider
+	METHOD <init> (Ljava/lang/String;)V
+		ARG 1 name
 	METHOD a setLevel (I)V
 		ARG 1 level
 	METHOD a markForUpdate (III)V
