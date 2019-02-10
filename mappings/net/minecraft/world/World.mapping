@@ -1,5 +1,6 @@
 CLASS bcu net/minecraft/world/World
-	FIELD a FACING_VALUES [Ley;
+	FIELD A wanderingTraderManager Larn;
+	FIELD a DIRECTIONS [Ley;
 	FIELD b unusedWhite J
 	FIELD c LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD d blockEntities Ljava/util/List;
@@ -22,9 +23,16 @@ CLASS bcu net/minecraft/world/World
 	FIELD u iteratingTickingBlockEntities Z
 	FIELD v thread Ljava/lang/Thread;
 	FIELD w ambientDarkness I
-	FIELD x ticksSinceLightningClient I
+	FIELD x ticksSinceLightning I
 	FIELD y profiler Lafj;
 	FIELD z border Lbse;
+	METHOD <init> (Lcjf;Lbtl;Ljava/util/function/BiFunction;Lafj;Z)V
+		ARG 1 levelProperties
+		ARG 2 dimensionType
+		ARG 3 chunkManagerProvider
+		ARG 4 profiler
+		ARG 5 isClient
+	METHOD D getNextMapId ()I
 	METHOD D getPendingBlockEntity (Let;)Lbow;
 	METHOD F getScoreboard ()Lcnz;
 	METHOD L isDaylight ()Z
@@ -32,13 +40,16 @@ CLASS bcu net/minecraft/world/World
 	METHOD N updateAmbientDarkness ()V
 	METHOD O initWeatherGradients ()V
 	METHOD P getGeneratorType ()Lbdb;
+	METHOD Q getRandomPlayer ()Lars;
+	METHOD R disconnect ()V
 	METHOD S getTime ()J
 	METHOD T getTimeOfDay ()J
 	METHOD U getGameRules ()Lbcq;
 	METHOD V isThundering ()Z
 	METHOD W isRaining ()Z
 	METHOD X getEffectiveHeight ()I
-	METHOD Z getTicksSinceLightningClient ()I
+	METHOD Y getHorizonHeight ()D
+	METHOD Z getTicksSinceLightning ()I
 	METHOD a tickTime ()V
 	METHOD a findClosestVisiblePlayer (DDD)Lars;
 		ARG 1 x
@@ -53,10 +64,14 @@ CLASS bcu net/minecraft/world/World
 		ARG 9 velocityY
 		ARG 11 velocityZ
 		ARG 13 tag
-	METHOD a (DDDDDLjava/util/function/Function;Ljava/util/function/Predicate;)Lars;
+	METHOD a findMobAttackTarget (DDDDDLjava/util/function/Function;Ljava/util/function/Predicate;)Lars;
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
+		ARG 7 baseHorizontalDistanceLimit
+		ARG 9 yDistanceLimit
+		ARG 11 horizontalDistanceLimitMultiplierProvider
+		ARG 12 predicate
 	METHOD a playSound (DDDLxv;Lxx;FFZ)V
 		ARG 1 x
 		ARG 3 y
@@ -70,14 +85,20 @@ CLASS bcu net/minecraft/world/World
 		ARG 3 z
 	METHOD a setBlockBreakingProgress (ILet;I)V
 	METHOD a setTime (J)V
+	METHOD a tickEntity (Lahi;)V
 	METHOD a summonParticle (Lahi;B)V
-	METHOD a (Lahi;DD)Lars;
+	METHOD a findMobAttackTarget (Lahi;DD)Lars;
 		ARG 1 entity
+		ARG 2 baseHorizontalDistanceLimit
+		ARG 4 yDistanceLimit
 	METHOD a createExplosion (Lahi;DDDFZ)Lbcn;
 		ARG 1 entity
 		ARG 2 x
 		ARG 4 y
 	METHOD a createExplosion (Lahi;DDDFZZ)Lbcn;
+		ARG 2 x
+		ARG 4 y
+		ARG 6 z
 	METHOD a getSkyColor (Lahi;F)Lcmz;
 		ARG 1 entity
 	METHOD a createExplosion (Lahi;Lags;DDDFZZ)Lbcn;
@@ -90,19 +111,34 @@ CLASS bcu net/minecraft/world/World
 		ARG 2 x
 		ARG 4 y
 		ARG 6 z
-	METHOD a fireWorldEvent (Lars;ILet;I)V
+	METHOD a playEvent (Lars;ILet;I)V
+		ARG 1 source
+		ARG 2 type
+		ARG 3 pos
+		ARG 4 data
 	METHOD a playSoundFromEntity (Lars;Lahi;Lxv;Lxx;FF)V
 	METHOD a canPlayerModifyAt (Lars;Let;)Z
 		ARG 1 player
 	METHOD a addDetailsToCrashReport (Lb;)Lc;
 		ARG 1 report
+	METHOD a putMapState (Lcja;)V
+		ARG 1 mapState
 	METHOD a isAreaNotEmpty (Lcmu;)Z
-	METHOD a (Let;DD)Lars;
+	METHOD a getBlockState (Lcmu;Lbhv;)Lbqs;
+		ARG 1 area
+		ARG 2 block
+	METHOD a containsBlockWithMaterial (Lcmu;Lcgi;)Z
+		ARG 1 area
+		ARG 2 material
+	METHOD a findMobAttackTarget (Let;DD)Lars;
 		ARG 1 pos
+		ARG 2 baseHorizontalDistanceLimit
+		ARG 4 yDistanceLimit
 	METHOD a addBlockAction (Let;Lbhv;II)V
 		ARG 1 pos
 		ARG 2 block
-		ARG 3 first
+		ARG 3 type
+		ARG 4 data
 	METHOD a updateNeighbor (Let;Lbhv;Let;)V
 		ARG 1 pos
 		ARG 2 sourceBlock
@@ -126,6 +162,8 @@ CLASS bcu net/minecraft/world/World
 	METHOD a getClosestVisibleEntityTo (Ljava/lang/Class;Lcmu;Lahi;)Lahi;
 		ARG 1 clazz
 		ARG 2 area
+	METHOD a getMapState (Ljava/lang/String;)Lcja;
+		ARG 1 id
 	METHOD a locateStructure (Ljava/lang/String;Let;IZ)Let;
 		ARG 1 id
 		ARG 2 center
@@ -133,6 +171,7 @@ CLASS bcu net/minecraft/world/World
 		ARG 4 skipExistingChunks
 	METHOD a tick (Ljava/util/function/BooleanSupplier;)V
 	METHOD a sendPacket (Ljq;)V
+		ARG 1 packet
 	METHOD a setMobSpawnOptions (ZZ)V
 		ARG 1 spawnMonsters
 		ARG 2 spawnAnimals
@@ -147,8 +186,13 @@ CLASS bcu net/minecraft/world/World
 		ARG 1 delta
 	METHOD b isHeightInvalid (I)Z
 		ARG 0 y
-	METHOD b fireGlobalWorldEvent (ILet;I)V
+	METHOD b playGlobalEvent (ILet;I)V
+		ARG 1 type
+		ARG 2 pos
+		ARG 3 data
 	METHOD b setTimeOfDay (J)V
+	METHOD b updateChunkEntities (Lahi;)V
+		ARG 1 entity
 	METHOD b addBlockEntity (Lbow;)Z
 	METHOD b doesAreaContainFireSource (Lcmu;)Z
 	METHOD b updateNeighborsAlways (Let;Lbhv;)V
@@ -183,15 +227,17 @@ CLASS bcu net/minecraft/world/World
 	METHOD c getWorldChunk (II)Lbss;
 		ARG 1 chunkX
 		ARG 2 chunkZ
-	METHOD c fireWorldEvent (ILet;I)V
-		ARG 1 eventId
+	METHOD c playEvent (ILet;I)V
+		ARG 1 type
 		ARG 2 pos
+		ARG 3 data
 	METHOD c updateHorizontalAdjacent (Let;Lbhv;)V
 		ARG 1 pos
 	METHOD c getEmittedRedstonePower (Let;Ley;)I
 		ARG 1 pos
 	METHOD d getCloudColor (F)Lcmz;
-	METHOD d setTicksSinceLightningClient (I)V
+	METHOD d setTicksSinceLightning (I)V
+		ARG 1 ticksSinceLightning
 	METHOD e getFogColor (F)Lcmz;
 	METHOD f getStarsBrightness (F)F
 	METHOD g getThunderGradient (F)F
