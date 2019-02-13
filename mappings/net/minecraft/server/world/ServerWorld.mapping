@@ -1,30 +1,61 @@
 CLASS ur net/minecraft/server/world/ServerWorld
+	FIELD A blockEntitiesToUnload Ljava/util/List;
 	FIELD B server Lnet/minecraft/server/MinecraftServer;
+	FIELD C worldSaveHandler Lcjg;
 	FIELD D entityTracker Lum;
 	FIELD E entitiesByUuid Ljava/util/Map;
+	FIELD F allPlayersSleeping Z
 	FIELD G idleTimeout I
 	FIELD H portalForcer Lbdf;
 	FIELD I blockTickScheduler Lbdh;
 	FIELD J fluidTickScheduler Lbdh;
 	FIELD L pendingBlockActions Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;
+	FIELD M insideTick Z
 	FIELD a savingDisabled Z
 	FIELD v LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD w globalEntities Ljava/util/List;
+	FIELD x regularEntities Ljava/util/List;
+	FIELD y entitiesById Lzb;
+	FIELD z entitiesToUnload Ljava/util/List;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lcjg;Lcjf;Lbtl;Lafj;Lvb;)V
 		ARG 1 server
+		ARG 3 worldSaveHandler
+		ARG 4 properties
+		ARG 5 dimensionType
+		ARG 6 profiler
+		ARG 7 worldGenerationProgressListener
+	METHOD A checkSessionLock ()V
+	METHOD B getSaveHandler ()Lcjg;
 	METHOD C getPersistentStateManager ()Lcje;
 	METHOD E getForcedChunks ()Lit/unimi/dsi/fastutil/longs/LongSet;
+	METHOD a getChunkSyncIfServerThread (IIZ)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 x
+		ARG 2 z
+		ARG 3 create
+	METHOD a addLightning (Lapj;)Z
 	METHOD a init (Lbcy;)V
 		ARG 1 levelInfo
+	METHOD a unloadBlockEntity (Lbow;)V
+	METHOD a unloadEntities (Ljava/util/Collection;)V
 	METHOD a save (Lzg;ZZ)V
 		ARG 1 progressListener
+	METHOD ag resetWeather ()V
 	METHOD ai shouldSpawnNpcs ()Z
 	METHOD aj shouldSpawnAnimals ()Z
 	METHOD ak sendBlockActions ()V
+	METHOD b isInsideTick ()Z
 	METHOD b setChunkForced (IIZ)Z
 		ARG 1 x
 		ARG 2 z
-		ARG 3 force
+		ARG 3 forced
 	METHOD d getScoreboard ()Lqs;
+	METHOD e onSkippedToMorning ()V
+	METHOD f shouldSkipToMorning ()Z
+	METHOD i_ updatePlayersSleeping ()V
+	METHOD j resetIdleTimeout ()V
+	METHOD j removeEntityIfInvalid (Lahi;)Z
+		ARG 1 entity
+	METHOD k_ tickEntities ()V
 	METHOD l placeBonusChest ()V
 	METHOD m_ tickScheduledTicks ()V
 	METHOD n saveLevel ()V
