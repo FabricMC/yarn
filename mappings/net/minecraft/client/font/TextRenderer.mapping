@@ -1,4 +1,4 @@
-CLASS crb net/minecraft/client/font/FontRenderer
+CLASS crb net/minecraft/client/font/TextRenderer
 	CLASS crb$a Rectangle
 		FIELD a xMin F
 		FIELD b yMin F
@@ -21,10 +21,11 @@ CLASS crb net/minecraft/client/font/FontRenderer
 	FIELD a fontHeight I
 	FIELD b random Ljava/util/Random;
 	FIELD c textureManager Ldpn;
-	FIELD d font Lcsw;
+	FIELD d fontStorage Lcsw;
 	FIELD e rightToLeft Z
 	METHOD <init> (Ldpn;Lcsw;)V
 		ARG 1 textureManager
+		ARG 2 fontStorage
 	METHOD a isRightToLeft ()Z
 	METHOD a getCharWidth (C)F
 	METHOD a drawGlyph (Lcsz;ZZFFFLcpx;FFFF)V
@@ -50,8 +51,9 @@ CLASS crb net/minecraft/client/font/FontRenderer
 		ARG 3 y
 		ARG 4 color
 		ARG 5 withShadow
-	METHOD a (Ljava/lang/String;I)Ljava/lang/String;
+	METHOD a trimToWidth (Ljava/lang/String;I)Ljava/lang/String;
 		ARG 1 string
+		ARG 2 width
 	METHOD a drawStringBounded (Ljava/lang/String;IIII)V
 		ARG 1 str
 		ARG 2 x
@@ -62,9 +64,12 @@ CLASS crb net/minecraft/client/font/FontRenderer
 		ARG 2 direction
 		ARG 3 position
 		ARG 4 skipWhitespaceToRightOfWord
-	METHOD a (Ljava/lang/String;IZ)Ljava/lang/String;
+	METHOD a trimToWidth (Ljava/lang/String;IZ)Ljava/lang/String;
 		ARG 1 string
 		ARG 2 width
+		ARG 3 rightToLeft
+	METHOD a setFonts (Ljava/util/List;)V
+		ARG 1 fonts
 	METHOD a setRightToLeft (Z)V
 	METHOD b getStringWidth (Ljava/lang/String;)I
 	METHOD b draw (Ljava/lang/String;FFI)I
