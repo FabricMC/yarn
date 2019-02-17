@@ -1,9 +1,9 @@
-CLASS dfo net/minecraft/client/render/WorldRenderer
+CLASS dfv net/minecraft/client/render/WorldRenderer
 	FIELD A ticks I
 	FIELD B partiallyBrokenBlocks Ljava/util/Map;
-	FIELD D destroyStages [Ldpd;
-	FIELD E entityOutlinesFramebuffer Lcoo;
-	FIELD F entityOutlineShader Ldft;
+	FIELD D destroyStages [Ldpm;
+	FIELD E entityOutlinesFramebuffer Lcov;
+	FIELD F entityOutlineShader Ldga;
 	FIELD G lastCameraChunkUpdateX D
 	FIELD H lastCameraChunkUpdateY D
 	FIELD I lastCameraChunkUpdateZ D
@@ -15,37 +15,37 @@ CLASS dfo net/minecraft/client/render/WorldRenderer
 	FIELD O lastCameraZ D
 	FIELD P lastCameraPitch D
 	FIELD Q lastCameraYaw D
-	FIELD W chunkBatcher Ldic;
-	FIELD X chunkRendererList Ldfe;
+	FIELD W chunkBatcher Ldij;
+	FIELD X chunkRendererList Ldfl;
 	FIELD Y renderDistance I
-	FIELD a DIRECTIONS [Ley;
+	FIELD a DIRECTIONS [Lew;
 	FIELD aa renderedEntities I
-	FIELD ad forcedFrustum Ldip;
-	FIELD af forcedFrustumPosition Lcpn;
+	FIELD ad forcedFrustum Ldiw;
+	FIELD af forcedFrustumPosition Lcpu;
 	FIELD ag vertexBufferObjectsEnabled Z
-	FIELD ah chunkRendererFactory Ldih;
+	FIELD ah chunkRendererFactory Ldio;
 	FIELD ai lastTranslucentSortX D
 	FIELD aj lastTranslucentSortY D
 	FIELD ak lastTranslucentSortZ D
 	FIELD al terrainUpdateNecessary Z
 	FIELD am entityOutlinesUpdateNecessary Z
 	FIELD b LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD c MOON_PHASES_TEX Lqd;
-	FIELD d SUN_TEX Lqd;
-	FIELD e CLOUDS_TEX Lqd;
-	FIELD f END_SKY_TEX Lqd;
-	FIELD g FORCEFIELD_TEX Lqd;
-	FIELD h client Lcqg;
-	FIELD i textureManager Ldpe;
-	FIELD j entityRenderDispatcher Ldkf;
-	FIELD k world Ldcm;
+	FIELD c MOON_PHASES_TEX Lqh;
+	FIELD d SUN_TEX Lqh;
+	FIELD e CLOUDS_TEX Lqh;
+	FIELD f END_SKY_TEX Lqh;
+	FIELD g FORCEFIELD_TEX Lqh;
+	FIELD h client Lcqn;
+	FIELD i textureManager Ldpn;
+	FIELD j entityRenderDispatcher Ldkm;
+	FIELD k world Ldct;
 	FIELD l chunkRenderers Ljava/util/Set;
-	FIELD o chunkRenderDispatcher Ldfy;
+	FIELD o chunkRenderDispatcher Ldgf;
 	FIELD p starsDisplayList I
-	FIELD t starsBuffer Lcpu;
+	FIELD t starsBuffer Lcqb;
 	FIELD x cloudsDirty Z
 	FIELD y cloudsDisplayList I
-	FIELD z cloudsBuffer Lcpu;
+	FIELD z cloudsBuffer Lcqb;
 	METHOD a loadEntityOutlineShader ()V
 	METHOD a drawBoxOutline (DDDDDDFFFF)V
 		ARG 0 minX
@@ -62,34 +62,41 @@ CLASS dfo net/minecraft/client/render/WorldRenderer
 		ARG 1 tickDelta
 	METHOD a renderClouds (FDDD)V
 		ARG 1 tickDelta
+	METHOD a scheduleBlockRender (IIIIII)V
 	METHOD a scheduleChunkRender (IIIZ)V
+	METHOD a playGlobalEvent (ILes;I)V
 	METHOD a updateChunks (J)V
-	METHOD a renderWorldBorder (Lahi;F)V
+	METHOD a renderWorldBorder (Lahl;F)V
 		ARG 1 camera
 		ARG 2 delta
-	METHOD a setUpTerrain (Lahi;FLdim;IZ)V
+	METHOD a setUpTerrain (Lahl;FLdit;IZ)V
 		ARG 1 camera
 		ARG 2 tickDelta
-	METHOD a drawHighlightedBlockOutline (Lahi;Lcmx;IF)V
+	METHOD a drawHighlightedBlockOutline (Lahl;Lcne;IF)V
 		ARG 2 hit
 		ARG 3 renderPass
 		ARG 4 delta
-	METHOD a renderEntities (Lahi;Ldim;F)V
+	METHOD a renderEntities (Lahl;Ldit;F)V
 		ARG 1 cameraEntity
 		ARG 3 tickDelta
-	METHOD a renderLayer (Lbcg;)V
+	METHOD a playLevelEvent (Lary;ILes;I)V
+		ARG 1 source
+		ARG 2 type
+		ARG 3 pos
+		ARG 4 data
+	METHOD a renderLayer (Lbcn;)V
 		ARG 1 layer
-	METHOD a renderLayer (Lbcg;DLahi;)I
+	METHOD a renderLayer (Lbcn;DLahl;)I
 		ARG 1 layer
 		ARG 2 tickDelta
 		ARG 4 camera
-	METHOD a drawBoxOutline (Lcmu;FFFF)V
+	METHOD a drawBoxOutline (Lcnb;FFFF)V
 		ARG 0 box
 		ARG 1 red
 		ARG 2 green
 		ARG 3 blue
 		ARG 4 alpha
-	METHOD a drawDebugShapeOutline (Lcnt;DDDFFFF)V
+	METHOD a drawDebugShapeOutline (Lcoa;DDDFFFF)V
 		ARG 0 shape
 		ARG 1 x
 		ARG 3 y
@@ -98,8 +105,8 @@ CLASS dfo net/minecraft/client/render/WorldRenderer
 		ARG 8 green
 		ARG 9 blue
 		ARG 10 alpha
-	METHOD a renderStars (Lcpq;)V
-	METHOD a buildBoxOutline (Lcpq;DDDDDDFFFF)V
+	METHOD a renderStars (Lcpx;)V
+	METHOD a buildBoxOutline (Lcpx;DDDDDDFFFF)V
 		ARG 0 buffer
 		ARG 1 minX
 		ARG 3 minY
@@ -111,15 +118,15 @@ CLASS dfo net/minecraft/client/render/WorldRenderer
 		ARG 14 green
 		ARG 15 blue
 		ARG 16 alpha
-	METHOD a renderClouds (Lcpq;DDDLcmz;)V
+	METHOD a renderClouds (Lcpx;DDDLcng;)V
 		ARG 8 color
-	METHOD a renderPartiallyBrokenBlocks (Lcpt;Lcpq;Lahi;F)V
+	METHOD a renderPartiallyBrokenBlocks (Lcqa;Lcpx;Lahl;F)V
 		ARG 1 tesselator
 		ARG 2 builder
 		ARG 3 cameraEntity
 		ARG 4 delta
-	METHOD a setWorld (Ldcm;)V
-	METHOD a (Lft;DDDDDD)V
+	METHOD a setWorld (Ldct;)V
+	METHOD a (Lfx;DDDDDD)V
 		ARG 1 parameters
 		ARG 2 x
 		ARG 4 y
@@ -127,6 +134,27 @@ CLASS dfo net/minecraft/client/render/WorldRenderer
 		ARG 8 velocityX
 		ARG 10 velocityY
 		ARG 12 velocityZ
+	METHOD a addParticle (Lfx;ZDDDDDD)V
+		ARG 1 parameters
+		ARG 2 shouldAlwaysSpawn
+		ARG 3 x
+		ARG 5 y
+		ARG 7 z
+		ARG 9 velocityX
+		ARG 11 velocityY
+		ARG 13 velocityZ
+	METHOD a addParticle (Lfx;ZZDDDDDD)V
+		ARG 1 parameters
+		ARG 2 shouldAlwaysSpawn
+		ARG 3 isImportant
+		ARG 4 x
+		ARG 6 y
+		ARG 8 z
+		ARG 10 velocityX
+		ARG 12 velocityY
+		ARG 14 velocityY
+	METHOD a (Lwt;)V
+		ARG 1 arg1
 	METHOD a getRandomParticleSpawnChance (Z)I
 		ARG 1 canSpawnOnMinimal
 	METHOD b drawEntityOutlinesFramebuffer ()V
@@ -141,13 +169,14 @@ CLASS dfo net/minecraft/client/render/WorldRenderer
 		ARG 13 green
 		ARG 14 blue
 		ARG 15 alpha
-	METHOD b drawBox (Lcmu;FFFF)V
+	METHOD b setBlockBreakingProgress (ILes;I)V
+	METHOD b drawBox (Lcnb;FFFF)V
 		ARG 0 box
 		ARG 1 red
 		ARG 2 green
 		ARG 3 blue
 		ARG 4 alpha
-	METHOD b drawShapeOutline (Lcnt;DDDFFFF)V
+	METHOD b drawShapeOutline (Lcoa;DDDFFFF)V
 		ARG 0 shape
 		ARG 1 x
 		ARG 3 y
@@ -156,7 +185,7 @@ CLASS dfo net/minecraft/client/render/WorldRenderer
 		ARG 8 green
 		ARG 9 blue
 		ARG 10 alpha
-	METHOD b buildBox (Lcpq;DDDDDDFFFF)V
+	METHOD b buildBox (Lcpx;DDDDDDFFFF)V
 		ARG 0 builder
 		ARG 1 minX
 		ARG 3 minY
@@ -168,7 +197,7 @@ CLASS dfo net/minecraft/client/render/WorldRenderer
 		ARG 14 green
 		ARG 15 blue
 		ARG 16 alpha
-	METHOD b spawnParticle (Lft;ZDDDDDD)Lddu;
+	METHOD b spawnParticle (Lfx;ZDDDDDD)Ldeb;
 		ARG 1 parameters
 		ARG 2 alwaysSpawn
 		ARG 3 x
@@ -177,7 +206,7 @@ CLASS dfo net/minecraft/client/render/WorldRenderer
 		ARG 9 velocityX
 		ARG 11 velocityY
 		ARG 13 velocityZ
-	METHOD b spawnParticle (Lft;ZZDDDDDD)Lddu;
+	METHOD b spawnParticle (Lfx;ZZDDDDDD)Ldeb;
 		ARG 1 parameters
 		ARG 2 alwaysSpawn
 		ARG 3 canSpawnOnMinimal
