@@ -12,7 +12,7 @@ official terminology helps everyone.
 ## Guidelines
 
 To keep with the goal of consistency within the mappings and the greater Minecraft community, here are a set of guidelines to
-follow when naming unmapped methods.
+follow when naming unmapped classes, fields, methods, method arguments and other aspects of the code.
 
 ### 1. When known, stick to official terminology.
 
@@ -35,16 +35,35 @@ should be.
 ### 2. Do not rip off other mapping projects.
 
 Other mapping projects are the result of other people's hard work. Coming up with names is not quite trivial, and people can
-get upset if someone just takes them and runs with them. Essentially - don't open up a copy of the game decompiled with another
-mapping set "just to check how something works" or "just to check how they named it so I can come up with my own name" - that
-is not the right thing to do! (Of course, some names are derived from official terminology - those are likely to be identical
-across all projects.)
+get upset if someone just takes them and runs with them. For these (and other) reasons, we are very wary about re-using names
+which might have been invented for the purposes of other mapping projects.
 
-### 3. Stick to Java coding conventions.
+Definitely don't open up a copy of the game decompiled with another mapping set "just to check how something works" or
+"just to check how they named it so I can come up with my own name". You're supposed to come up with those *independently* - if
+you're having trouble, it's best to leave it to someone else. Likewise, do not ask people "what should I call [insert name
+from other mapping set here]" or "what is [insert name] called in Yarn" - that just spoils the name for everyone, making it *less*,
+not *more* likely to be mapped soon.
+
+Of course, keep in mind that some names are derived from official terminology - those are likely to be identical across all
+projects. If the code's strings imply something is a "VoxelShape", say, then you don't need to force yourself to come up with
+a different name. In addition, if you can show your thinking process to be independent - say, if something is obviously a
+"BlockPredicate" - that's probably fine as well.
+
+In general, this rule is somewhat vague, as a lot of the surrounding issues are somewhat vague. As such, we can only clearly
+define extreme situations and try to give a general outline of what we believe should and should not be done. If in doubt, ask
+more experienced contributors. (Of course, if you have never worked with decompiled Minecraft code previously, little of this is
+likely to apply to you.)
+
+### 3. Stick to common coding conventions.
 
 Mappings should, of course, stick to the [standard Java naming conventions](https://www.oracle.com/technetwork/java/javase/documentation/codeconventions-135099.html#367).
 Packages should be all lower case, class/enum/interface names should be `TitleCase`, fields and methods should be `camelCase`,
 and constants should be `UPPER_CASE`.
+
+There are additional conventions we have generally agreed to. Some are listed below - when in doubt, follow what the mappings do!
+
+* For getters and setters, we always use the "get"/"set" prefixes, with the exception of booleans - where verbs such as
+  "is", "should", "can", "does", etc. are used depending on what flows most naturally.
 
 ### 4. Use a natural (English) word order.
 
@@ -55,7 +74,8 @@ classes.
 
 In keeping with the natural English feel, we prefer to avoid prefixing interfaces and enums with `I` and `Enum` respectively.
 While they can be useful for differentiation, we feel that in most cases there should be enough room to differentiate
-classes without requiring prefixes.
+classes without requiring prefixes. In short: the ideal is for field accesses and method calls to feel like sentences, making
+it easier to reason about code.
 
 ### 5. Make names explicit and efficient.
 
@@ -66,7 +86,7 @@ Instead of using terms like `serialize` and `deserialize`, use something like `t
 with the same structures.
 
 Despite this, there's such thing as a name that's *too* descriptive. Excessively long class or method names can be a major
-annoyance, and a hindrance to being able to program as well. We've recently had large amounts of discussion of the name
+annoyance, and a hindrance to being able to program as well.  We've, for example, had large amounts of discussion of the name
 scheme for packets, trying to find the best balance between descriptiveness and efficiency. We have, for the time being,
 settled on a name scheme that involves abbreviations. Abbreviations should be avoided when possible, but when you have
 classes with names like `ScoreboardObjectiveUpdateS2CPacket`, the abbreviations are necessary to prevent the name being
