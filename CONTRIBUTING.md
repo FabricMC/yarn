@@ -41,14 +41,22 @@ Due to the reasons stated above, we need to avoid using the same names as MCP fo
 often clash with the first rule, since MCP used many Mojang names as well. In these cases, keep with the Mojang name, since
 it's not something that's original to MCP. We don't need to change the name of `ItemStack`, for example.
 
-### 3. Use a natural (English) word order.
+### 3. Stick to Java coding conventions.
+
+Mappings should, of course, stick to the [standard Java naming conventions](https://www.oracle.com/technetwork/java/javase/documentation/codeconventions-135099.html#367). Packages should be all lower case, class/enum/interface names should be `TitleCase`, fields and methods should be `camelCase`, and constants should be `UPPER_CASE`.
+
+### 4. Use a natural (English) word order.
 
 As a group, we've decided to focus on a more natural word order for our mappings. The most notable example of this in our
 mappings is that we use a *suffix* system instead of a *prefix* system. That would mean using something like `LoomBlock ` and
 `LoomBlockEntity` instead of `BlockLoom` and `BlockEntityLoom`. This should be applied to methods and fields as well as
 classes.
 
-### 4. Make names explicit and efficient.
+In keeping with the natural English feel, we prefer to avoid prefixing interfaces and enums with `I` and `Enum` respectively.
+While they can be useful for differentiation, we feel that in most cases there should be enough room to differentiate
+classes without requiring prefixes.
+
+### 5. Make names explicit and efficient.
 
 When someone calls a method, they should know exactly what it will do and exactly what will result from it. While this can be
 found out by looking at the method code, it's a much better experience for a dev to be able to find out by seeing the name.
@@ -63,7 +71,7 @@ settled on a name scheme that involves abbreviations. Abbreviations should be av
 classes with names like `ScoreboardObjectiveUpdateS2CPacket`, the abbreviations are necessary to prevent the name being
 even more excessively long.
 
-### 5. Don't be afraid to dispute existing names.
+### 6. Don't be afraid to dispute existing names.
 
 The Fabric community is active and evolving. Because of this, what's agreed upon as a good name can change over time. If you
 have an issue with a name and don't feel like it fits in Yarn, don't hesitate to make an issue about it. We're still having
