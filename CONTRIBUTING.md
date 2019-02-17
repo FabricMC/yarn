@@ -75,6 +75,6 @@ even more excessively long.
 The Fabric community is active and evolving. Because of this, what's agreed upon as a good name can change over time. If you
 have an issue with a name and don't feel like it fits in Yarn, don't hesitate to make an issue about it. We're still having
 active discussion about packet naming schemes at the time of writing, and we may choose to change the scheme in the future if
-enough people think a change is warranted. We want to avoid a LexManos situation where one person has to rule with an iron
-fist, but that requires an active community who won't stay quiet for fear of being banned from the community because of their
-PR. Healthy discussion is the best thing that Yarn can have.
+enough people think a change is warranted. We want to avoid a situation where one person has to rule with an iron fist, but
+that requires an active community who won't stay quiet for fear of being banned from the community because of their PR.
+Healthy discussion is the best thing that Yarn can have.
