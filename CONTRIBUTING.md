@@ -1,9 +1,6 @@
 # Contributing to Yarn
 
-Yarn is in a slightly precarious position, due to the odd nature of MCP. MCP is all-rights-reserved, yet visible to anyone
-who has ever modded Minecraft using anything other than Fabric. This leads to "contamination" of a lot of potential
-contributors, since people already have a conception of what a method "should" be named. Because of this, we have decided to
-take a clean-room approach with mapping Minecraft to avoid potential legal/drama issues within the community.
+This document describes
 
 ## What's in a Name?
 
@@ -11,34 +8,36 @@ The fundamental goal of mappings is to make modding Minecraft easier to understa
 to create a cohesive, simple naming scheme that avoids confusion or being too verbose. Having a lot of things named in
 different schemes would be a nightmare for usability, so we want to avoid that. This includes naming schemes not just within
 Yarn but within the greater Minecraft community. Despite that goal, there are some name sources that are inherently more
-"reliable" than others; you should use an up-to-date and known Mojang name above any alternative, even if an alternative
-would be simpler.
+"reliable" than others; if an official Mojang name is hinted at or can be guessed, you should generally use that - sticking
+closer to official terminology helps everyone.
 
 ## Guidelines
 
 To keep with the goal of consistency within the mappings and the greater Minecraft community, here are a set of guidelines to
 follow when naming unmapped methods.
 
-### 1. Use modern, sensible Mojang names when known.
+### 1. Stick to official terms when known.
 
 This can be a contentious decision, due to many of Notch's original names for things (that he himself has stated were
 terrible choices for names) sticking around. While it would be nice to have names like `Gui` or the like, we have decided to
-use `Screen`, since that's the name for guis that the client-side registry uses. Mojang names can be found in many places,
+use `Screen`, since that's the name for guis that the client-side registry uses. official terms can be found in many places,
 from registry names to lang files to tweets by devs. If you want to claim something as a Mojang name, and it's not an obvious
-one, provide a source for proof.
+one, provide a source for proof. In addition, some things - like enum names or registered object fields - have automatically-
+derived names; generally, those should not be changed.
 
-Minecraft is still under active development, and names have been changed in the past. The most notable case of this is `Tile`,
-which used to be the name for Blocks. This has changed in 1.13 and 1.14, so we use the modern name `BlockEntity` instead of
-the old Notch name `TileEntity`.
+Minecraft is still under active development, and names have been changed in the past. The most notable case of this is
+`Tile`, which used to be the name for Blocks. This has changed in 1.13 and 1.14, so we use the modern name `BlockEntity`
+instead of the older name `TileEntity`.
 
-There are a few situations when we've decided that Mojang's names are too obtuse or clunky for our mappings, where we've
-decided to use our own names. The most obvious example is our use of `Identifier` when Mojang uses `NamespacedString`. In
-these cases, we should make a community consensus on whether to use a better name, and what the name should be.
+There are a few situations when we've decided that official termsofficial names are too obtuse or clunky for our mappings,
+where we've decided to use our own names. The most obvious example is our use of `Identifier` when Mojang is assumed to use
+`NamespacedString`. In these cases, we should make a community consensus on whether to use a better name, and what the name
+should be.
 
 ### 2. Avoid MCP and other proprietary names wherever possible.
 
 Due to the reasons stated above, we need to avoid using the same names as MCP for classes where we can avoid it. This can
-often clash with the first rule, since MCP used many Mojang names as well. In these cases, keep with the Mojang name, since
+often clash with the first rule, since MCP used many official terms as well. In these cases, keep with the Mojang name, since
 it's not something that's original to MCP. We don't need to change the name of `ItemStack`, for example.
 
 ### 3. Stick to Java coding conventions.
