@@ -5,7 +5,7 @@ CLASS axt net/minecraft/item/ItemStack
 	FIELD d amount I
 	FIELD e updateCooldown I
 	FIELD f item Laxo;
-	FIELD g tag Lhv;
+	FIELD g compound Lhv;
 	FIELD h invalid Z
 	FIELD i holdingItemFrame Lapi;
 	FIELD j lastCheckedCanHarvestBlock Lbrd;
@@ -14,6 +14,8 @@ CLASS axt net/minecraft/item/ItemStack
 	FIELD m lastCheckedCanPlaceResult Z
 	METHOD <init> (Lbda;I)V
 		ARG 1 container
+	METHOD <init> (Lhv;)V
+		ARG 1 compound
 	METHOD A getRepairCost ()I
 	METHOD B toTextComponent ()Ljg;
 	METHOD C getUpdateCooldown ()I
@@ -66,14 +68,16 @@ CLASS axt net/minecraft/item/ItemStack
 	METHOD a areBlocksEqual (Lbrd;Lbrd;)Z
 		ARG 0 first
 		ARG 1 second
-	METHOD a fromTag (Lhv;)Laxt;
-		ARG 0 tag
-	METHOD a getOrCreateSubCompoundTag (Ljava/lang/String;)Lhv;
+	METHOD a fromNbt (Lhv;)Laxt;
+		ARG 0 compound
+	METHOD a getOrCreateSubCompound (Ljava/lang/String;)Lhv;
+		ARG 1 key
 	METHOD a addAttributeModifier (Ljava/lang/String;Laik;Lahq;)V
 		ARG 1 attributeName
 		ARG 2 modifier
-	METHOD a setChildTag (Ljava/lang/String;Lim;)V
-		ARG 1 tagName
+	METHOD a writeToCompound (Ljava/lang/String;Lim;)V
+		ARG 1 key
+		ARG 2 value
 	METHOD a setDisplayName (Ljg;)Laxt;
 	METHOD a getCustomCanHarvest (Lyr;Lbrd;)Z
 	METHOD b getItem ()Laxo;
@@ -84,7 +88,8 @@ CLASS axt net/minecraft/item/ItemStack
 		ARG 1 b
 	METHOD b isEffectiveOn (Lbqz;)Z
 	METHOD b toTag (Lhv;)Lhv;
-	METHOD b getSubCompoundTag (Ljava/lang/String;)Lhv;
+	METHOD b getSubCompound (Ljava/lang/String;)Lhv;
+		ARG 1 key
 	METHOD b getCustomCanPlace (Lyr;Lbrd;)Z
 	METHOD c getMaxAmount ()I
 	METHOD c setRepairCost (I)V
@@ -92,8 +97,10 @@ CLASS axt net/minecraft/item/ItemStack
 	METHOD c areEqualIgnoreTags (Laxt;Laxt;)Z
 		ARG 0 a
 		ARG 1 b
-	METHOD c setTag (Lhv;)V
-	METHOD c removeSubTag (Ljava/lang/String;)V
+	METHOD c setCompound (Lhv;)V
+		ARG 1 compound
+	METHOD c removeSubCompound (Ljava/lang/String;)V
+		ARG 1 key
 	METHOD d canStack ()Z
 	METHOD d setUpdateCooldown (I)V
 	METHOD d areEqualIgnoreDurability (Laxt;Laxt;)Z
@@ -110,9 +117,9 @@ CLASS axt net/minecraft/item/ItemStack
 	METHOD j getTranslationKey ()Ljava/lang/String;
 	METHOD k getMaxUseTime ()I
 	METHOD l getUseAction ()Lazf;
-	METHOD n hasTag ()Z
-	METHOD o getTag ()Lhv;
-	METHOD p getOrCreateTag ()Lhv;
+	METHOD n hasCompound ()Z
+	METHOD o getCompound ()Lhv;
+	METHOD p getOrCreateCompound ()Lhv;
 	METHOD q getEnchantmentList ()Lib;
 	METHOD r getDisplayName ()Ljg;
 	METHOD s removeDisplayName ()V
