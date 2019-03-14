@@ -1,6 +1,8 @@
 CLASS net/minecraft/server/MinecraftServer
 	CLASS net/minecraft/server/MinecraftServer$1
 		FIELD b lastProgressUpdate J
+		METHOD a setDone ()V
+		METHOD a progressStagePercentage (I)V
 	FIELD A preventProxyConnections Z
 	FIELD B spawnAnimals Z
 	FIELD C spawnNpcs Z
@@ -27,11 +29,11 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD ac dataManager Lwy;
 	FIELD ad resourcePackContainerManager Lwp;
 	FIELD af commandManager Lcd;
-	FIELD ag recipeManager Lbdb;
+	FIELD ag recipeManager Lbda;
 	FIELD ah tagManager Lyz;
 	FIELD ai scoreboard Lrd;
 	FIELD aj bossBarManager Lrg;
-	FIELD ak lootManager Lcnc;
+	FIELD ak lootManager Lcnb;
 	FIELD al advancementManager Lra;
 	FIELD am commandFunctionManager Lrb;
 	FIELD an metricsData Lzh;
@@ -43,7 +45,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD f lastTickLengths [J
 	FIELD h serverThread Ljava/lang/Thread;
 	FIELD i LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD j levelStorage Lcmp;
+	FIELD j levelStorage Lcmo;
 	FIELD k snooper Lagy;
 	FIELD l gameDir Ljava/io/File;
 	FIELD m tickables Ljava/util/List;
@@ -71,7 +73,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD K getServerName ()Ljava/lang/String;
 	METHOD L isMonsterSpawningEnabled ()Z
 	METHOD M isDemo ()Z
-	METHOD N getLevelStorage ()Lcmp;
+	METHOD N getLevelStorage ()Lcmo;
 	METHOD O getResourcePackUrl ()Ljava/lang/String;
 	METHOD P getResourcePackHash ()Ljava/lang/String;
 	METHOD R isDedicated ()Z
@@ -83,18 +85,21 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD X isPvpEnabled ()Z
 	METHOD Y isFlightEnabled ()Z
 	METHOD Z areCommandBlocksEnabled ()Z
+	METHOD a sendCommandFeedback ()Z
 	METHOD a setServerPort (I)V
 	METHOD a setDifficulty (Lago;Z)V
-	METHOD a setDefaultGameMode (Lbfv;)V
-	METHOD a openToLan (Lbfv;ZI)Z
-	METHOD a isSpawnProtected (Lbfy;Leu;Laum;)Z
-	METHOD a getWorld (Lbwr;)Lvc;
-	METHOD a createWorlds (Lcmn;Lcmm;Lbgc;Lvl;)V
+	METHOD a addSnooperInfo (Lagy;)V
+	METHOD a setDefaultGameMode (Lbfu;)V
+	METHOD a openToLan (Lbfu;ZI)Z
+	METHOD a isSpawnProtected (Lbfx;Leu;Laun;)Z
+	METHOD a getWorld (Lbwq;)Lvc;
+	METHOD a createWorlds (Lcmm;Lcml;Lbgb;Lvl;)V
 	METHOD a getPermissionLevel (Lcom/mojang/authlib/GameProfile;)I
 	METHOD a setCrashReport (Ld;)V
 	METHOD a setResourcePack (Ljava/lang/String;Ljava/lang/String;)V
 		ARG 1 url
 	METHOD a setKeyPair (Ljava/security/KeyPair;)V
+	METHOD a appendCommandFeedback (Ljl;)V
 	METHOD a setFavicon (Lpz;)V
 		ARG 1 metadata
 	METHOD a getSpawnRadius (Lvc;)I
@@ -109,11 +114,11 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD aE getDataManager ()Lwy;
 	METHOD aH getCommandManager ()Lcd;
 	METHOD aI getCommandSource ()Lcc;
-	METHOD aJ getRecipeManager ()Lbdb;
+	METHOD aJ getRecipeManager ()Lbda;
 	METHOD aK getTagManager ()Lyz;
 	METHOD aL getScoreboard ()Lrd;
-	METHOD aM getLootManager ()Lcnc;
-	METHOD aN getGameRules ()Lbfu;
+	METHOD aM getLootManager ()Lcnb;
+	METHOD aN getGameRules ()Lbft;
 	METHOD aO getBossBarManager ()Lrg;
 	METHOD aQ getTickTime ()F
 	METHOD aR getMetricsData ()Lzh;
@@ -138,10 +143,12 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD as getUserCache ()Lxi;
 	METHOD at getServerMetadata ()Lpz;
 	METHOD av getMaxWorldBorderRadius ()I
+	METHOD aw isOffThread ()Z
 	METHOD ay getNetworkCompressionThreshold ()I
 	METHOD az getServerStartTime ()J
+	METHOD b shouldTrackOutput ()Z
 	METHOD b setWorldHeight (I)V
-	METHOD b reloadDataPacks (Lcmm;)V
+	METHOD b reloadDataPacks (Lcml;)V
 	METHOD b populateCrashReport (Ld;)Ld;
 	METHOD b registerTickable (Ljava/lang/Runnable;)V
 	METHOD b setServerIp (Ljava/lang/String;)V
@@ -156,7 +163,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD f shouldGenerateStructures ()Z
 	METHOD f warn (Ljava/lang/String;)V
 	METHOD f setOnlineMode (Z)V
-	METHOD g getDefaultGameMode ()Lbfv;
+	METHOD g getDefaultGameMode ()Lbfu;
 	METHOD g logError (Ljava/lang/String;)V
 	METHOD g setPreventProxyConnections (Z)V
 	METHOD h getDefaultDifficulty ()Lago;
@@ -177,6 +184,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD m getServerIp ()Ljava/lang/String;
 	METHOD main ([Ljava/lang/String;)V
 		ARG 0 args
+	METHOD p executeQueuedTask ()Z
 	METHOD q hasIconFile ()Z
 	METHOD r getIconFile ()Ljava/io/File;
 	METHOD s getRunDirectory ()Ljava/io/File;

@@ -1,39 +1,54 @@
 CLASS va net/minecraft/server/world/ServerChunkManager
+	CLASS va$a
+		METHOD aw isOffThread ()Z
+		METHOD p executeQueuedTask ()Z
 	FIELD a threadedAnvilChunkStorage Lup;
 	FIELD b CHUNKS_ELIGIBLE_FOR_SPAWNING I
 	FIELD c CHUNK_STATUSES Ljava/util/List;
 	FIELD d ticketManager Luv;
-	FIELD e chunkGenerator Lbvm;
+	FIELD e chunkGenerator Lbvl;
 	FIELD f world Lvc;
 	FIELD g serverThread Ljava/lang/Thread;
 	FIELD h lightProvider Lvf;
-	FIELD j persistentStateManager Lcml;
+	FIELD j persistentStateManager Lcmk;
 	FIELD k lastMobSpawningTime J
 	FIELD l spawnMonsters Z
 	FIELD m spawnAnimals Z
+	METHOD a isChunkLoaded (II)Z
+	METHOD a getChunkSync (IILbvp;Z)Lbvk;
 	METHOD a getChunkHolder (J)Luo;
 		ARG 1 pos
-	METHOD a getDebugString (Lbfl;)Ljava/lang/String;
+	METHOD a isEntityInLoadedChunk (Lahw;)Z
+	METHOD a getDebugString (Lbfk;)Ljava/lang/String;
 		ARG 1 pos
+	METHOD a setChunkForced (Lbfk;Z)V
+	METHOD a onLightUpdate (Lbgg;Lfn;)V
 	METHOD a markForUpdate (Leu;)V
+	METHOD a tick (Ljava/util/function/BooleanSupplier;)V
 	METHOD a addOrRemovePlayer (Lvd;)V
-	METHOD a addTicket (Lvh;Lbfl;ILjava/lang/Object;)V
+	METHOD a addTicket (Lvh;Lbfk;ILjava/lang/Object;)V
 	METHOD a save (Z)V
 		ARG 1 flush
+	METHOD a setMobSpawnOptions (ZZ)V
 	METHOD b getTotalChunksLoadedCount ()I
-	METHOD b getChunkSyncIfServerThread (IILbvq;Z)Ljava/util/concurrent/CompletableFuture;
+	METHOD b getChunk (II)Lbfi;
+	METHOD b getChunkSyncIfServerThread (IILbvp;Z)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 chunkX
 		ARG 2 chunkZ
 		ARG 3 status
 		ARG 4 create
-	METHOD b removeTicket (Lvh;Lbfl;ILjava/lang/Object;)V
+	METHOD b removeTicket (Lvh;Lbfk;ILjava/lang/Object;)V
 	METHOD c applyViewDistance (II)V
-	METHOD c getChunkAsync (IILbvq;Z)Ljava/util/concurrent/CompletableFuture;
+	METHOD c getChunkAsync (IILbvp;Z)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 chunkX
 		ARG 2 chunkZ
 		ARG 3 status
 		ARG 4 create
+	METHOD e getStatus ()Ljava/lang/String;
+	METHOD f getChunkGenerator ()Lbvl;
 	METHOD g getLoadedChunkCount ()I
-	METHOD h getPersistentStateManager ()Lcml;
+	METHOD h getPersistentStateManager ()Lcmk;
+	METHOD j getLightingProvider ()Lcjb;
+	METHOD k getWorld ()Lbfi;
 	METHOD l update ()Z
 	METHOD m tickChunks ()V

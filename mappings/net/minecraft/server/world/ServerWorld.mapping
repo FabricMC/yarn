@@ -1,21 +1,21 @@
 CLASS vc net/minecraft/server/world/ServerWorld
 	FIELD A players Ljava/util/List;
 	FIELD B server Lnet/minecraft/server/MinecraftServer;
-	FIELD C worldSaveHandler Lcmn;
+	FIELD C worldSaveHandler Lcmm;
 	FIELD D allPlayersSleeping Z
 	FIELD E idleTimeout I
-	FIELD F portalForcer Lbgk;
-	FIELD G blockTickScheduler Lbgl;
-	FIELD H fluidTickScheduler Lbgl;
+	FIELD F portalForcer Lbgj;
+	FIELD G blockTickScheduler Lbgk;
+	FIELD H fluidTickScheduler Lbgk;
 	FIELD J pendingBlockActions Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;
 	FIELD K insideTick Z
-	FIELD L wanderingTraderManager Laug;
+	FIELD L wanderingTraderManager Lauh;
 	FIELD b savingDisabled Z
 	FIELD v LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD w globalEntities Ljava/util/List;
 	FIELD x entitiesById Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 	FIELD y entitiesByUuid Ljava/util/Map;
-	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lcmn;Lcmm;Lbwr;Lafv;Lvl;)V
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lcmm;Lcml;Lbwq;Lafv;Lvl;)V
 		ARG 1 server
 		ARG 2 chunkExecutor
 		ARG 3 worldSaveHandler
@@ -23,19 +23,39 @@ CLASS vc net/minecraft/server/world/ServerWorld
 		ARG 5 dimensionType
 		ARG 6 profiler
 		ARG 7 worldGenerationProgressListener
+	METHOD A getPlayers ()Ljava/util/List;
+	METHOD D getScoreboard ()Lcrg;
+	METHOD E getChunkManager ()Lbvo;
+	METHOD F getFluidTickScheduler ()Lbgm;
+	METHOD G getBlockTickScheduler ()Lbgm;
+	METHOD a getEntityById (I)Lahw;
 	METHOD a getChunkSyncIfServerThread (IIZ)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 x
 		ARG 2 z
 		ARG 3 create
-	METHOD a addLightning (Lasc;)V
-	METHOD a init (Lbgc;)V
+	METHOD a setBlockBreakingProgress (ILeu;I)V
+	METHOD a setTime (J)V
+	METHOD a summonParticle (Lahw;B)V
+	METHOD a createExplosion (Lahw;Lahf;DDDFZLbfq$a;)Lbfq;
+	METHOD a addLightning (Lasd;)V
+	METHOD a playSound (Laun;DDDLyf;Lyh;FF)V
+	METHOD a playEvent (Laun;ILeu;I)V
+	METHOD a playSoundFromEntity (Laun;Lahw;Lyf;Lyh;FF)V
+	METHOD a canPlayerModifyAt (Laun;Leu;)Z
+	METHOD a init (Lbgb;)V
 		ARG 1 levelInfo
-	METHOD a tickChunk (Lbvx;I)V
+	METHOD a tickChunk (Lbvw;I)V
 		ARG 1 chunk
 		ARG 2 randomTickSpeed
+	METHOD a putMapState (Lcmg;)V
+	METHOD a addBlockAction (Leu;Lbky;II)V
+	METHOD a updateListeners (Leu;Lbtw;Lbtw;I)V
+	METHOD a getMapState (Ljava/lang/String;)Lcmg;
+	METHOD a locateStructure (Ljava/lang/String;Leu;IZ)Leu;
 	METHOD a getEntity (Ljava/util/UUID;)Lahw;
 	METHOD a save (Lzp;ZZ)V
 		ARG 1 progressListener
+	METHOD a_ setSpawnPos (Leu;)V
 	METHOD ac resetWeather ()V
 	METHOD ad sendBlockActions ()V
 	METHOD b isInsideTick ()Z
@@ -43,14 +63,22 @@ CLASS vc net/minecraft/server/world/ServerWorld
 		ARG 1 x
 		ARG 2 z
 		ARG 3 forced
+	METHOD b playGlobalEvent (ILeu;I)V
+	METHOD c spawnEntity (Lahw;)Z
 	METHOD f resetIdleTimeout ()V
 	METHOD g placeBonusChest ()V
 	METHOD h getForcedSpawnPoint ()Leu;
 	METHOD i_ updatePlayersSleeping ()V
+	METHOD j_ setDefaultSpawnClient ()V
 	METHOD k_ saveLevel ()V
-	METHOD q getPortalForcer ()Lbgk;
-	METHOD r getStructureManager ()Lchq;
+	METHOD p getServer ()Lnet/minecraft/server/MinecraftServer;
+	METHOD q getPortalForcer ()Lbgj;
+	METHOD r getStructureManager ()Lchp;
+	METHOD s getRecipeManager ()Lbda;
+	METHOD t getTagManager ()Lyz;
+	METHOD u isSavingDisabled ()Z
 	METHOD v checkSessionLock ()V
-	METHOD w getSaveHandler ()Lcmn;
-	METHOD x getPersistentStateManager ()Lcml;
+	METHOD w getSaveHandler ()Lcmm;
+	METHOD x getPersistentStateManager ()Lcmk;
+	METHOD y getNextMapId ()I
 	METHOD z getForcedChunks ()Lit/unimi/dsi/fastutil/longs/LongSet;
