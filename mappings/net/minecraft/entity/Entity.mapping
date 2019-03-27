@@ -1,7 +1,7 @@
 CLASS ahy net/minecraft/entity/Entity
 	FIELD A velocityModified Z
 	FIELD B movementMultiplier Lcqo;
-	FIELD C invalid Z
+	FIELD C removed Z
 	FIELD G fallDistance F
 	FIELD H prevRenderX D
 	FIELD I prevRenderY D
@@ -41,7 +41,7 @@ CLASS ahy net/minecraft/entity/Entity
 	FIELD ar riddenEntity Lahy;
 	FIELD as velocity Lcqo;
 	FIELD at boundingBox Lcqj;
-	FIELD aw fireTimer I
+	FIELD aw fireTime I
 	FIELD ax BREATH Lqf;
 	FIELD ay CUSTOM_NAME Lqf;
 	FIELD az NAME_VISIBLE Lqf;
@@ -73,15 +73,18 @@ CLASS ahy net/minecraft/entity/Entity
 		ARG 1 type
 	METHOD E updatePortalCooldown ()V
 	METHOD N createSpawnPacket ()Lka;
+	METHOD R detach ()V
 	METHOD S getType ()Laic;
 	METHOD T getEntityId ()I
 	METHOD U getScoreboardTags ()Ljava/util/Set;
 	METHOD V kill ()V
 	METHOD W getDataTracker ()Lqi;
-	METHOD Y invalidate ()V
+	METHOD Y remove ()V
 	METHOD Z getPose ()Lair;
+	METHOD a setStatus (B)V
 	METHOD a shouldRenderAtDistance (D)Z
 		ARG 1 distance
+	METHOD a requestTeleport (DDD)V
 	METHOD a setPositionAnglesAndUpdate (DDDFF)V
 		ARG 1 x
 		ARG 3 y
@@ -95,6 +98,11 @@ CLASS ahy net/minecraft/entity/Entity
 	METHOD a rayTrace (DFZ)Lcqm;
 		ARG 1 maxDistance
 		ARG 3 tickDelta
+	METHOD a fall (DZLbue;Lev;)V
+		ARG 1 heightDifference
+		ARG 3 onGround
+		ARG 4 blockState
+		ARG 5 blockPos
 	METHOD a setRotation (FF)V
 		ARG 1 yaw
 	METHOD a updateVelocity (FLcqo;)V
@@ -112,6 +120,7 @@ CLASS ahy net/minecraft/entity/Entity
 		ARG 2 target
 	METHOD a move (Laim;Lcqo;)V
 		ARG 1 type
+		ARG 2 offset
 	METHOD a getSize (Lair;)Lahz;
 	METHOD a getEyeHeight (Lair;Lahz;)F
 	METHOD a onStruckByLightning (Lasl;)V
@@ -149,6 +158,9 @@ CLASS ahy net/minecraft/entity/Entity
 		ARG 0 movementInput
 		ARG 1 speed
 		ARG 2 yaw
+	METHOD a clipSneakingMovement (Lcqo;Laim;)Lcqo;
+		ARG 1 offset
+		ARG 2 type
 	METHOD a isTeamPlayer (Lcrq;)Z
 	METHOD a populateCrashReport (Le;)V
 	METHOD a setPositionAndAngles (Lev;FF)V
@@ -173,12 +185,13 @@ CLASS ahy net/minecraft/entity/Entity
 	METHOD aA spawnSprintingParticles ()V
 	METHOD aB isTouchingLava ()Z
 	METHOD aC getLightmapCoordinates ()I
+	METHOD aD getBrightnessAtEyes ()F
 	METHOD aE scheduleVelocityUpdate ()V
 	METHOD aF doesCollide ()Z
 	METHOD aG isPushable ()Z
 	METHOD aH shouldSetPositionOnLoad ()Z
 	METHOD aI getSavedEntityId ()Ljava/lang/String;
-	METHOD aJ isValid ()Z
+	METHOD aJ isAlive ()Z
 	METHOD aK isInsideWall ()Z
 	METHOD aL updateRiding ()V
 	METHOD aM getHeightOffset ()D
@@ -209,6 +222,7 @@ CLASS ahy net/minecraft/entity/Entity
 	METHOD at isTouchingWater ()Z
 	METHOD au isInsideWaterOrBubbleColumn ()Z
 	METHOD av isInWater ()Z
+	METHOD aw updateSwimming ()V
 	METHOD ay onSwimmingStart ()V
 	METHOD az attemptSprintingParticles ()V
 	METHOD b setRenderDistanceMultiplier (D)V
@@ -229,6 +243,8 @@ CLASS ahy net/minecraft/entity/Entity
 	METHOD b onPlayerCollision (Lauv;)V
 	METHOD b interact (Lauv;Lags;)Z
 		ARG 1 player
+	METHOD b doesNotCollide (Lcqj;)Z
+		ARG 1 box
 	METHOD b squaredHorizontalLength (Lcqo;)D
 	METHOD b writeCustomDataToTag (Lib;)V
 		ARG 1 tag
@@ -294,6 +310,10 @@ CLASS ahy net/minecraft/entity/Entity
 	METHOD cc getHeight ()F
 	METHOD cd getPos ()Lcqo;
 	METHOD ce getVelocity ()Lcqo;
+	METHOD d doesNotCollide (DDD)Z
+		ARG 1 offsetX
+		ARG 3 offsetY
+		ARG 5 offsetZ
 	METHOD d setVelocity (Lcqo;)V
 	METHOD d saveToTag (Lib;)Z
 	METHOD d setUnaffectedByGravity (Z)V
@@ -319,6 +339,8 @@ CLASS ahy net/minecraft/entity/Entity
 	METHOD g getPitch (F)F
 	METHOD g burn (I)V
 	METHOD g distanceTo (Lahy;)F
+	METHOD g setSwimming (Z)V
+		ARG 1 swimming
 	METHOD h tick ()V
 	METHOD h setVelocityClient (DDD)V
 		ARG 1 x
@@ -354,6 +376,8 @@ CLASS ahy net/minecraft/entity/Entity
 	METHOD u setPositionAndAngles (Lahy;)V
 	METHOD u_ initDataTracker ()V
 	METHOD w hasPassenger (Lahy;)Z
+	METHOD x isConnectedThroughVehicle (Lahy;)Z
+		ARG 1 entity
 	METHOD x_ refreshSize ()V
 	METHOD y getPermissionLevel ()I
 	METHOD y_ getPistonBehavior ()Lcjy;
