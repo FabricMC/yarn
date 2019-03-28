@@ -3,9 +3,17 @@ CLASS aix net/minecraft/entity/ai/brain/Brain
 	FIELD b sensors Ljava/util/Map;
 	FIELD c tasks Ljava/util/Map;
 	FIELD d schedule Laww;
+	FIELD e requiredActivityMemories Ljava/util/Map;
+	FIELD f coreActivities Ljava/util/Set;
 	FIELD g possibleActivities Ljava/util/Set;
-	FIELD h activity Lawu;
-	METHOD a doActivity (JJ)V
+	FIELD h defaultActivity Lawu;
+	FIELD i activityStartTime J
+	METHOD <init> (Ljava/util/Collection;Ljava/util/Collection;Lcom/mojang/datafixers/Dynamic;)V
+		ARG 1 memoryModules
+		ARG 2 sensors
+	METHOD a refreshActivities (JJ)V
+		ARG 1 timeOfDay
+		ARG 3 time
 	METHOD a hasMemoryModule (Laor;)Z
 	METHOD a isMemoryInState (Laor;Laos;)Z
 		ARG 2 state
@@ -14,15 +22,24 @@ CLASS aix net/minecraft/entity/ai/brain/Brain
 		ARG 2 value
 	METHOD a setMemory (Laor;Ljava/util/Optional;)V
 		ARG 2 value
+	METHOD a resetPossibleActivities (Lawu;)V
 	METHOD a setTaskList (Lawu;Lcom/google/common/collect/ImmutableList;)V
 	METHOD a setTaskList (Lawu;Lcom/google/common/collect/ImmutableList;Ljava/util/Set;)V
 	METHOD a setSchedule (Laww;)V
+	METHOD a isEmptyCollection (Ljava/lang/Object;)Z
+		ARG 1 value
+	METHOD a setCoreActivities (Ljava/util/Set;)V
+	METHOD a tick (Lve;Laii;)V
 	METHOD b getSchedule ()Laww;
 	METHOD b forget (Laor;)V
-	METHOD b setActivity (Lawu;)V
+	METHOD b setDefaultActivity (Lawu;)V
 	METHOD b stopAllTasks (Lve;Laii;)V
 	METHOD c getMemory (Laor;)Ljava/util/Optional;
 	METHOD c hasActivity (Lawu;)Z
+	METHOD c updateSensors (Lve;Laii;)V
+	METHOD d streamRunningTasks ()Ljava/util/stream/Stream;
 	METHOD d getOptionalMemory (Laor;)Ljava/util/Optional;
-	METHOD d tick (Lve;Laii;)V
+	METHOD d canDoActivity (Lawu;)Z
+	METHOD d startTasks (Lve;Laii;)V
+	METHOD e updateTasks (Lve;Laii;)V
 	METHOD f copy ()Laix;
