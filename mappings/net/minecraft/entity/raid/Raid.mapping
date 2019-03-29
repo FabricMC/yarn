@@ -1,15 +1,26 @@
 CLASS awq net/minecraft/entity/raid/Raid
+	CLASS awq$a Status
+		FIELD e VALUES [Lawq$a;
+		METHOD a getName ()Ljava/lang/String;
+		METHOD b fromName (Ljava/lang/String;)Lawq$a;
 	CLASS awq$b Member
 		FIELD a VINDICATOR Lawq$b;
 		FIELD b EVOKER Lawq$b;
 		FIELD c PILLAGER Lawq$b;
 		FIELD d WITCH Lawq$b;
 		FIELD e RAVAGER Lawq$b;
+		FIELD f VALUES [Lawq$b;
 		FIELD g type Laid;
-		FIELD h firstWave [I
+		FIELD h waveToCount [I
 	FIELD a ILLAGER_BANNER Lbbp;
+	FIELD b EVENT_TEXT Ljw;
+	FIELD c VICTORY_SUFFIX_TEXT Ljw;
+	FIELD d DEFEAT_SUFFIX_TEXT Ljw;
+	FIELD e VICTORY_TITLE Ljm;
+	FIELD f DEFEAT_TITLE Ljm;
 	FIELD g waveToLeader Ljava/util/Map;
 	FIELD h waveToRaiders Ljava/util/Map;
+	FIELD i heroesOfTheVillage Ljava/util/Set;
 	FIELD j ticksActive J
 	FIELD k center Lev;
 	FIELD l world Lve;
@@ -23,13 +34,20 @@ CLASS awq net/minecraft/entity/raid/Raid
 	FIELD t postRaidTicks I
 	FIELD u preRaidTicks I
 	FIELD v random Ljava/util/Random;
+	FIELD w waveCount I
+	FIELD x status Lawq$a;
+	FIELD y finishCooldown I
 	METHOD <init> (ILve;Lev;)V
 		ARG 1 id
+	METHOD A hasSpawnedFinalWave ()Z
+	METHOD B hasExtraWave ()Z
+	METHOD C hasSpawnedExtraWave ()Z
+	METHOD D isSpawningExtraWave ()Z
 	METHOD E removeObsoleteRaiders ()V
 	METHOD F canSpawnRaiders ()Z
 	METHOD G markDirty ()V
 	METHOD H getIllagerBanner ()Lbbp;
-	METHOD a isOnGoing ()Z
+	METHOD a isFinished ()Z
 	METHOD a setRaidLeader (ILawr;)V
 		ARG 1 wave
 	METHOD a addRaider (ILawr;Lev;Z)V
@@ -40,18 +58,31 @@ CLASS awq net/minecraft/entity/raid/Raid
 	METHOD a addToWave (ILawr;Z)Z
 		ARG 1 wave
 		ARG 3 countHealth
+	METHOD a getMaxWaves (Lagr;)I
+	METHOD a addHero (Lahz;)V
 	METHOD a start (Lavm;)V
+	METHOD a getCount (Lawq$b;IZ)I
+		ARG 2 wave
+		ARG 3 extra
+	METHOD a getBonusCount (Lawq$b;Ljava/util/Random;ILags;Z)I
+		ARG 3 wave
+		ARG 5 extra
 	METHOD a removeFromWave (Lawr;Z)V
 		ARG 2 countHealth
 	METHOD a playRaidHorn (Lev;)V
 	METHOD a toTag (Lib;)Lib;
+	METHOD b isPreRaid ()Z
 	METHOD b getLeader (I)Lawr;
 	METHOD b addToWave (ILawr;)Z
 		ARG 1 wave
 	METHOD b spawnNextWave (Lev;)V
+	METHOD c hasSpawned ()Z
 	METHOD c removeLeader (I)V
 		ARG 1 wave
+	METHOD d hasStopped ()Z
 	METHOD d getPillagerSpawnLocation (I)Lev;
+	METHOD e hasWon ()Z
+	METHOD f hasLost ()Z
 	METHOD i getWorld ()Lbgv;
 	METHOD k hasStarted ()Z
 	METHOD l getGroupsSpawned ()I
@@ -65,6 +96,7 @@ CLASS awq net/minecraft/entity/raid/Raid
 	METHOD t getCenter ()Lev;
 	METHOD u getRaidId ()I
 	METHOD v isActive ()Z
+	METHOD w getEnchantmentChance ()F
 	METHOD x isInRaidDistance ()Ljava/util/function/Predicate;
 	METHOD y updateBarToPlayers ()V
-	METHOD z hasSpawnedAllGroups ()Z
+	METHOD z shouldSpawnMoreGroups ()Z
