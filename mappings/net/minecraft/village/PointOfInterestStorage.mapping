@@ -1,13 +1,14 @@
 CLASS apw net/minecraft/village/PointOfInterestStorage
-	CLASS apw$a PathfindingFavorProvider
-		FIELD b pathfindingFavors Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
+	CLASS apw$a PointOfInterestDistanceTracker
+		FIELD b distances Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
+		METHOD a update ()V
 	CLASS apw$b OccupationStatus
 		FIELD a HAS_SPACE Lapw$b;
 		FIELD b IS_OCCUPIED Lapw$b;
 		FIELD c ANY Lapw$b;
 		FIELD d predicate Ljava/util/function/Predicate;
 		METHOD a getPredicate ()Ljava/util/function/Predicate;
-	FIELD a levelProcessor Lapw$a;
+	FIELD a pointOfInterestDistanceTracker Lapw$a;
 	METHOD a remove (Lev;)V
 		ARG 1 pos
 	METHOD a add (Lev;Lapz;)V
@@ -16,7 +17,7 @@ CLASS apw net/minecraft/village/PointOfInterestStorage
 	METHOD a test (Lev;Ljava/util/function/Predicate;)Z
 		ARG 1 pos
 		ARG 2 predicate
-	METHOD a getLevel (Lfo;)I
+	METHOD a getDistanceFromNearestOccupied (Lfo;)I
 		ARG 1 pos
 	METHOD a get (Ljava/util/function/Predicate;JLapw$b;)Ljava/util/stream/Stream;
 		ARG 1 typePredicate
@@ -30,6 +31,13 @@ CLASS apw net/minecraft/village/PointOfInterestStorage
 		ARG 1 typePredicate
 		ARG 2 pos
 		ARG 4 occupationStatus
+	METHOD a getPosition (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Lapw$b;Lev;ILjava/util/Random;)Ljava/util/Optional;
+		ARG 1 typePredicate
+		ARG 2 positionPredicate
+		ARG 3 occupationStatus
+		ARG 4 pos
+		ARG 5 radius
+		ARG 6 random
 	METHOD a getPosition (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Lev;I)Ljava/util/Optional;
 		ARG 1 typePredicate
 		ARG 2 positionPredicate
@@ -48,5 +56,13 @@ CLASS apw net/minecraft/village/PointOfInterestStorage
 		ARG 2 positionPredicate
 		ARG 3 pos
 		ARG 4 radius
+	METHOD b getNearestPosition (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Lev;ILapw$b;)Ljava/util/Optional;
+		ARG 1 typePredicate
+		ARG 2 blockPosPredicate
+		ARG 3 pos
+		ARG 4 radius
+		ARG 5 occupationStatus
 	METHOD c getType (Lev;)Ljava/util/Optional;
+		ARG 1 pos
+	METHOD f isOccupied (J)Z
 		ARG 1 pos
