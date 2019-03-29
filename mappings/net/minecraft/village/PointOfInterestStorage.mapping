@@ -1,13 +1,14 @@
 CLASS apw net/minecraft/village/PointOfInterestStorage
-	CLASS apw$a PathfindingFavorProvider
-		FIELD b pathfindingFavors Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
+	CLASS apw$a PointOfInterestDistanceTracker
+		FIELD b villageLevels Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
+		METHOD a update ()V
 	CLASS apw$b OccupationStatus
 		FIELD a HAS_SPACE Lapw$b;
 		FIELD b IS_OCCUPIED Lapw$b;
 		FIELD c ANY Lapw$b;
 		FIELD d predicate Ljava/util/function/Predicate;
 		METHOD a getPredicate ()Ljava/util/function/Predicate;
-	FIELD a levelProcessor Lapw$a;
+	FIELD a pointOfInterestDistanceTracker Lapw$a;
 	METHOD a remove (Lev;)V
 		ARG 1 pos
 	METHOD a add (Lev;Lapz;)V
@@ -16,7 +17,7 @@ CLASS apw net/minecraft/village/PointOfInterestStorage
 	METHOD a test (Lev;Ljava/util/function/Predicate;)Z
 		ARG 1 pos
 		ARG 2 predicate
-	METHOD a getLevel (Lfo;)I
+	METHOD a getOccupiedDistance (Lfo;)I
 		ARG 1 pos
 	METHOD a get (Ljava/util/function/Predicate;JLapw$b;)Ljava/util/stream/Stream;
 		ARG 1 typePredicate
@@ -62,4 +63,6 @@ CLASS apw net/minecraft/village/PointOfInterestStorage
 		ARG 4 radius
 		ARG 5 occupationStatus
 	METHOD c getType (Lev;)Ljava/util/Optional;
+		ARG 1 pos
+	METHOD f isOccupied (J)Z
 		ARG 1 pos
