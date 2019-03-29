@@ -4,6 +4,8 @@ CLASS ev net/minecraft/util/math/BlockPos
 		METHOD tryAdvance (Ljava/util/function/Consumer;)Z
 			ARG 1 consumer
 	CLASS ev$2
+		FIELD a iterator Ley;
+		FIELD b pos Lev$a;
 		FIELD c minX I
 		FIELD d minY I
 		FIELD e minZ I
@@ -30,6 +32,7 @@ CLASS ev net/minecraft/util/math/BlockPos
 		METHOD g set (Lfq;)Lev$a;
 		METHOD p setY (I)V
 	CLASS ev$b PooledMutable
+		FIELD f free Z
 		FIELD g POOL Ljava/util/List;
 		METHOD <init> (III)V
 			ARG 1 y
@@ -39,6 +42,7 @@ CLASS ev net/minecraft/util/math/BlockPos
 		METHOD f get (III)Lev$b;
 		METHOD r get ()Lev$b;
 	FIELD a ORIGIN Lev;
+	FIELD b LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD c SIZE_BITS_X I
 	FIELD d SIZE_BITS_Z I
 	FIELD f SIZE_BITS_Y I
@@ -59,7 +63,7 @@ CLASS ev net/minecraft/util/math/BlockPos
 		ARG 0 x
 		ARG 1 y
 		ARG 2 z
-	METHOD a getBlocksInCuboid (IIIIII)Ljava/util/stream/Stream;
+	METHOD a streamBoxPositions (IIIIII)Ljava/util/stream/Stream;
 		ARG 0 minX
 		ARG 1 minY
 		ARG 2 minZ
@@ -73,6 +77,9 @@ CLASS ev net/minecraft/util/math/BlockPos
 		ARG 3 y
 	METHOD a offset (JLfa;)J
 		ARG 0 value
+	METHOD a rotate (Lbqj;)Lev;
+	METHOD a deserialize (Lcom/mojang/datafixers/Dynamic;)Lev;
+		ARG 0 dynamic
 	METHOD a iterateBoxPositions (Lev;Lev;)Ljava/lang/Iterable;
 		ARG 0 pos1
 		ARG 1 pos2
@@ -87,6 +94,12 @@ CLASS ev net/minecraft/util/math/BlockPos
 		ARG 2 y
 		ARG 3 z
 	METHOD b iterateBoxPositions (IIIIII)Ljava/lang/Iterable;
+		ARG 0 minX
+		ARG 1 maxX
+		ARG 2 minY
+		ARG 3 maxY
+		ARG 4 minZ
+		ARG 5 maxZ
 	METHOD b unpackLongX (J)I
 	METHOD b subtract (Lfq;)Lev;
 	METHOD c down ()Lev;
