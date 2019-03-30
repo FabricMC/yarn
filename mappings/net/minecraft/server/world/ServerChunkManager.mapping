@@ -1,5 +1,5 @@
 CLASS vc net/minecraft/server/world/ServerChunkManager
-	CLASS vc$a ChunkTaskQueue
+	CLASS vc$a MainThreadExecutor
 	FIELD a threadedAnvilChunkStorage Lur;
 	FIELD b CHUNKS_ELIGIBLE_FOR_SPAWNING I
 	FIELD c CHUNK_STATUSES Ljava/util/List;
@@ -8,15 +8,21 @@ CLASS vc net/minecraft/server/world/ServerChunkManager
 	FIELD f world Lve;
 	FIELD g serverThread Ljava/lang/Thread;
 	FIELD h lightProvider Lvh;
+	FIELD i mainThreadExecutor Lvc$a;
 	FIELD j persistentStateManager Lcnk;
 	FIELD k lastMobSpawningTime J
 	FIELD l spawnMonsters Z
 	FIELD m spawnAnimals Z
+	METHOD <init> (Lve;Ljava/io/File;Lcom/mojang/datafixers/DataFixer;Lcip;Ljava/util/concurrent/Executor;Lbwl;IILvn;Ljava/util/function/Supplier;)V
+		ARG 5 workerExecutor
 	METHOD a getChunkHolder (J)Luq;
 		ARG 1 pos
 	METHOD a getDebugString (Lbgi;)Ljava/lang/String;
 		ARG 1 pos
 	METHOD a markForUpdate (Lev;)V
+	METHOD a isMissingForLevel (Luq;I)Z
+		ARG 1 holder
+		ARG 2 maxLevel
 	METHOD a updateCameraPosition (Lvf;)V
 		ARG 1 player
 	METHOD a addTicket (Lvj;Lbgi;ILjava/lang/Object;)V
@@ -31,6 +37,8 @@ CLASS vc net/minecraft/server/world/ServerChunkManager
 	METHOD b unloadEntity (Lahz;)V
 	METHOD b removeTicket (Lvj;Lbgi;ILjava/lang/Object;)V
 	METHOD c applyViewDistance (II)V
+		ARG 1 watchDistance
+		ARG 2 viewDistance
 	METHOD c getChunkAsync (IILbwp;Z)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 chunkX
 		ARG 2 chunkZ
@@ -40,5 +48,5 @@ CLASS vc net/minecraft/server/world/ServerChunkManager
 	METHOD g getLoadedChunkCount ()I
 	METHOD h getPersistentStateManager ()Lcnk;
 	METHOD i getPointOfInterestStorage ()Lapw;
-	METHOD l update ()Z
+	METHOD l tick ()Z
 	METHOD m tickChunks ()V

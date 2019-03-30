@@ -23,11 +23,12 @@ CLASS uq net/minecraft/server/world/ChunkHolder
 	FIELD d UNLOADED_WORLD_CHUNK_FUTURE Ljava/util/concurrent/CompletableFuture;
 	FIELD e CHUNK_STATUSES Ljava/util/List;
 	FIELD f LEVEL_TYPES [Luq$b;
-	FIELD g chunkByStatus Ljava/util/concurrent/atomic/AtomicReferenceArray;
-	FIELD h tickingFutureChunk Ljava/util/concurrent/CompletableFuture;
-	FIELD i entityTickingFutureChunk Ljava/util/concurrent/CompletableFuture;
-	FIELD j chunk Ljava/util/concurrent/CompletableFuture;
-	FIELD l level I
+	FIELD g futuresByStatus Ljava/util/concurrent/atomic/AtomicReferenceArray;
+	FIELD h tickingFuture Ljava/util/concurrent/CompletableFuture;
+	FIELD i entityTickingFuture Ljava/util/concurrent/CompletableFuture;
+	FIELD j future Ljava/util/concurrent/CompletableFuture;
+	FIELD k level I
+	FIELD l futureLevel I
 	FIELD m lastLevelUpdatedTo I
 	FIELD n pos Lbgi;
 	FIELD o blockUpdatePositions [S
@@ -43,6 +44,7 @@ CLASS uq net/minecraft/server/world/ChunkHolder
 		ARG 1 pos
 		ARG 2 level
 		ARG 5 playersWatchingChunkProvider
+	METHOD a getTickingFuture ()Ljava/util/concurrent/CompletableFuture;
 	METHOD a setLevel (I)V
 		ARG 1 level
 	METHOD a markForUpdate (III)V
@@ -50,27 +52,29 @@ CLASS uq net/minecraft/server/world/ChunkHolder
 		ARG 2 y
 		ARG 3 z
 	METHOD a sendBlockEntityUpdatePacket (Lbgv;Lev;)V
-	METHOD a getChunkForStatus (Lbwp;)Ljava/util/concurrent/CompletableFuture;
+	METHOD a getFuture (Lbwp;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 status
-	METHOD a getChunk (Lbwp;Lur;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 status
+	METHOD a createFuture (Lbwp;Lur;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 targetStatus
 		ARG 2 chunkStorage
 	METHOD a flushUpdates (Lbww;)V
-	METHOD a updateChunk (Ljava/util/concurrent/CompletableFuture;)V
+	METHOD a updateFuture (Ljava/util/concurrent/CompletableFuture;)V
+		ARG 1 newChunkFuture
 	METHOD a sendPacketToPlayersWatching (Lka;Z)V
 		ARG 2 onlyOnWatchDistanceEdge
-	METHOD a update (Lur;)V
+	METHOD a tick (Lur;)V
 		ARG 1 chunkStorage
+	METHOD b getEntityTickingFuture ()Ljava/util/concurrent/CompletableFuture;
 	METHOD b getTargetGenerationStatus (I)Lbwp;
 		ARG 0 level
-	METHOD b getChunkMinimumStatus (Lbwp;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 status
 	METHOD c getWorldChunk ()Lbww;
 	METHOD c getLevelType (I)Luq$b;
 		ARG 0 distance
+	METHOD d getCompletedStatus ()Lbwp;
 	METHOD d setLastLevelUpdatedTo (I)V
-	METHOD e getChunk ()Lbwk;
-	METHOD f getChunkFuture ()Ljava/util/concurrent/CompletableFuture;
+	METHOD e getCompletedChunk ()Lbwk;
+	METHOD f getFuture ()Ljava/util/concurrent/CompletableFuture;
 	METHOD g getLevelType ()Luq$b;
 	METHOD h getPos ()Lbgi;
 	METHOD i getLevel ()I

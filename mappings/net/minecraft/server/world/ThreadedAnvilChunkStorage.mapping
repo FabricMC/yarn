@@ -1,7 +1,8 @@
 CLASS ur net/minecraft/server/world/ThreadedAnvilChunkStorage
 	CLASS ur$a TicketManager
 		METHOD <init> (Lur;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)V
-			ARG 1 executor
+			ARG 1 workerExecutor
+			ARG 2 mainThreadExecutor
 	CLASS ur$b EntityTracker
 		FIELD b entry Lvd;
 		FIELD c entity Lahz;
@@ -14,12 +15,15 @@ CLASS ur net/minecraft/server/world/ThreadedAnvilChunkStorage
 			ARG 1 players
 		METHOD equals (Ljava/lang/Object;)Z
 			ARG 1 o
+	FIELD A watchDistance I
+	FIELD B viewDistance I
+	FIELD a MAX_LEVEL I
 	FIELD d LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD e posToHolder Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 	FIELD f posToHolderCopy Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 	FIELD i world Lve;
 	FIELD j serverLightingProvider Lvh;
-	FIELD k genQueueAdder Lagb;
+	FIELD k chunkTaskQueue Lagb;
 	FIELD l chunkGenerator Lbwl;
 	FIELD m persistentStateManagerFactory Ljava/util/function/Supplier;
 	FIELD n pointOfInterestStorage Lapw;
@@ -32,10 +36,18 @@ CLASS ur net/minecraft/server/world/ThreadedAnvilChunkStorage
 	FIELD v totalChunksLoadedCount Ljava/util/concurrent/atomic/AtomicInteger;
 	FIELD w structureManager Lcip;
 	FIELD x saveDir Ljava/io/File;
+	FIELD y playerChunkWatchingManager Luz;
 	FIELD z entityTrackers Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+	METHOD <init> (Lve;Ljava/io/File;Lcom/mojang/datafixers/DataFixer;Lcip;Ljava/util/concurrent/Executor;Lagb;Lbwy;Lbwl;Lvn;Ljava/util/function/Supplier;II)V
+		ARG 1 world
+		ARG 3 dataFixer
+		ARG 5 workerExecutor
+		ARG 6 mainThreadExecutor
+		ARG 8 chunkGenerator
+		ARG 9 worldGenerationProgressListener
 	METHOD a getLightProvider ()Lvh;
-	METHOD a applyViewDistance (II)V
-		ARG 1 maxWatchDistance
+	METHOD a setViewDistance (II)V
+		ARG 1 watchDistance
 		ARG 2 viewDistance
 	METHOD a getChunkHolder (J)Luq;
 		ARG 1 pos
@@ -46,19 +58,21 @@ CLASS ur net/minecraft/server/world/ThreadedAnvilChunkStorage
 	METHOD a loadEntity (Lahz;)V
 	METHOD a getDebugString (Lbgi;)Ljava/lang/String;
 		ARG 1 pos
-	METHOD a getChunkRegion (Lbgi;ILjava/util/function/IntFunction;)Ljava/util/concurrent/CompletableFuture;
+	METHOD a createChunkRegionFuture (Lbgi;ILjava/util/function/IntFunction;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 centerChunk
 		ARG 2 margin
 		ARG 3 distanceToStatus
 	METHOD a save (Lbwk;)V
 	METHOD a convertToFullChunk (Lbwk;Ljava/util/function/IntSupplier;)Ljava/util/concurrent/CompletableFuture;
-	METHOD a getPrecedingTargetChunkGenerationStatus (Lbwp;I)Lbwp;
+	METHOD a getRequiredStatusForGeneration (Lbwp;I)Lbwp;
+		ARG 1 centerChunkTargetStatus
 		ARG 2 distance
 	METHOD a tick (Ljava/util/function/BooleanSupplier;)V
-	METHOD a getChunk (Luq;Lbwp;)Ljava/util/concurrent/CompletableFuture;
+	METHOD a createChunkFuture (Luq;Lbwp;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 holder
 		ARG 2 status
 	METHOD a updateCameraPosition (Lvf;)V
+		ARG 1 player
 	METHOD a sendWatchPackets (Lvf;Lbgi;[Lka;ZZ)V
 		ARG 1 player
 		ARG 2 pos
@@ -71,6 +85,8 @@ CLASS ur net/minecraft/server/world/ThreadedAnvilChunkStorage
 	METHOD b getCopiedChunkHolder (J)Luq;
 		ARG 1 pos
 	METHOD b unloadEntity (Lahz;)V
+	METHOD b getEntityTickingChunkFuture (Lbgi;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 pos
 	METHOD b doesNotGenerateChunks (Lvf;)Z
 		ARG 1 player
 	METHOD c getTotalChunksLoadedCount ()I
