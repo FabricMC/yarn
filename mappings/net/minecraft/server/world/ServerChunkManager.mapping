@@ -17,6 +17,9 @@ CLASS vc net/minecraft/server/world/ServerChunkManager
 		ARG 5 workerExecutor
 	METHOD a getChunkHolder (J)Luq;
 		ARG 1 pos
+	METHOD a sendToNearbyPlayers (Lahz;Lka;)V
+		ARG 1 entity
+		ARG 2 packet
 	METHOD a getDebugString (Lbgi;)Ljava/lang/String;
 		ARG 1 pos
 	METHOD a markForUpdate (Lev;)V
@@ -29,22 +32,24 @@ CLASS vc net/minecraft/server/world/ServerChunkManager
 	METHOD a save (Z)V
 		ARG 1 flush
 	METHOD b getTotalChunksLoadedCount ()I
-	METHOD b getChunkSyncIfServerThread (IILbwp;Z)Ljava/util/concurrent/CompletableFuture;
+	METHOD b getChunkFutureSyncOnMainThread (IILbwp;Z)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 chunkX
 		ARG 2 chunkZ
 		ARG 3 status
 		ARG 4 create
 	METHOD b unloadEntity (Lahz;)V
+	METHOD b sendToOtherNearbyPlayers (Lahz;Lka;)V
 	METHOD b removeTicket (Lvj;Lbgi;ILjava/lang/Object;)V
 	METHOD c applyViewDistance (II)V
 		ARG 1 watchDistance
 		ARG 2 viewDistance
-	METHOD c getChunkAsync (IILbwp;Z)Ljava/util/concurrent/CompletableFuture;
+	METHOD c getChunkFuture (IILbwp;Z)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 chunkX
 		ARG 2 chunkZ
 		ARG 3 status
 		ARG 4 create
 	METHOD c loadEntity (Lahz;)V
+	METHOD d executeQueuedTasks ()Z
 	METHOD g getLoadedChunkCount ()I
 	METHOD h getPersistentStateManager ()Lcnk;
 	METHOD i getPointOfInterestStorage ()Lapw;

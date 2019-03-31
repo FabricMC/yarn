@@ -10,9 +10,9 @@ CLASS uq net/minecraft/server/world/ChunkHolder
 	CLASS uq$c LevelUpdateListener
 		METHOD a updateLevel (Lbgi;Ljava/util/function/IntSupplier;ILjava/util/function/IntConsumer;)V
 			ARG 1 pos
-			ARG 2 lastLevelUpdatedToProvider
-			ARG 3 newLevel
-			ARG 4 lastLevelUpdatedToConsumer
+			ARG 2 levelGetter
+			ARG 3 targetLevel
+			ARG 4 levelSetter
 	CLASS uq$d PlayersWatchingChunkProvider
 		METHOD a getPlayersWatchingChunk (Lbgi;Z)Ljava/util/stream/Stream;
 			ARG 1 chunkPos
@@ -27,16 +27,16 @@ CLASS uq net/minecraft/server/world/ChunkHolder
 	FIELD h tickingFuture Ljava/util/concurrent/CompletableFuture;
 	FIELD i entityTickingFuture Ljava/util/concurrent/CompletableFuture;
 	FIELD j future Ljava/util/concurrent/CompletableFuture;
-	FIELD k level I
-	FIELD l futureLevel I
-	FIELD m lastLevelUpdatedTo I
+	FIELD k lastTickLevel I
+	FIELD l level I
+	FIELD m levelUpdateListenerLevel I
 	FIELD n pos Lbgi;
 	FIELD o blockUpdatePositions [S
 	FIELD p blockUpdateCount I
 	FIELD q sectionsNeedingUpdateMask I
 	FIELD r lightSentWithBlocksBits I
-	FIELD s skyLightUpdateBits I
-	FIELD t blockLightUpdateBits I
+	FIELD s blockLightUpdateBits I
+	FIELD t skyLightUpdateBits I
 	FIELD u lightingProvider Lckb;
 	FIELD v levelUpdateListener Luq$c;
 	FIELD w playersWatchingChunkProvider Luq$d;
@@ -47,17 +47,23 @@ CLASS uq net/minecraft/server/world/ChunkHolder
 	METHOD a getTickingFuture ()Ljava/util/concurrent/CompletableFuture;
 	METHOD a setLevel (I)V
 		ARG 1 level
-	METHOD a markForUpdate (III)V
+	METHOD a markForBlockUpdate (III)V
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
 	METHOD a sendBlockEntityUpdatePacket (Lbgv;Lev;)V
+		ARG 1 world
+		ARG 2 pos
+	METHOD a markForLightUpdate (Lbhe;I)V
+		ARG 1 type
+		ARG 2 y
 	METHOD a getFuture (Lbwp;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 status
 	METHOD a createFuture (Lbwp;Lur;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 targetStatus
 		ARG 2 chunkStorage
 	METHOD a flushUpdates (Lbww;)V
+		ARG 1 chunk
 	METHOD a updateFuture (Ljava/util/concurrent/CompletableFuture;)V
 		ARG 1 newChunkFuture
 	METHOD a sendPacketToPlayersWatching (Lka;Z)V
@@ -67,15 +73,17 @@ CLASS uq net/minecraft/server/world/ChunkHolder
 	METHOD b getEntityTickingFuture ()Ljava/util/concurrent/CompletableFuture;
 	METHOD b getTargetGenerationStatus (I)Lbwp;
 		ARG 0 level
+	METHOD b getFutureChecked (Lbwp;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 status
 	METHOD c getWorldChunk ()Lbww;
 	METHOD c getLevelType (I)Luq$b;
 		ARG 0 distance
 	METHOD d getCompletedStatus ()Lbwp;
-	METHOD d setLastLevelUpdatedTo (I)V
+	METHOD d setLevelUpdateListenerLevel (I)V
+		ARG 1 level
 	METHOD e getCompletedChunk ()Lbwk;
 	METHOD f getFuture ()Ljava/util/concurrent/CompletableFuture;
 	METHOD g getLevelType ()Luq$b;
 	METHOD h getPos ()Lbgi;
 	METHOD i getLevel ()I
-	METHOD j getLastLevelUpdatedTo ()I
+	METHOD j getLevelUpdateListenerLevel ()I
