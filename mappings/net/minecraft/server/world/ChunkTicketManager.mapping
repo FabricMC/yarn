@@ -26,10 +26,19 @@ CLASS ux net/minecraft/server/world/ChunkTicketManager
 			ARG 5 withinViewDistance
 		METHOD c isWithinViewDistance (I)Z
 			ARG 1 distance
+	CLASS net/minecraft/server/world/ChunkTicketManager$a DistanceFromTicketTracker
+		METHOD a update (I)I
+			ARG 1 maxSteps
+	CLASS net/minecraft/server/world/ChunkTicketManager$c ShouldEntityTickTracker
+		METHOD a update ()V
+		METHOD d isPlayerInChunkSection (J)Z
+			ARG 1 pos
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD c playersByChunkPos Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 	FIELD d playersByChunkSectionPos Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 	FIELD e ticketsByPosition Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap;
+	FIELD f distanceFromTicketTracker Lux$a;
+	FIELD g shouldEntityTickTracker Lux$c;
 	FIELD h viewDistance I
 	FIELD i distanceFromNearestPlayerTracker Lux$b;
 	FIELD j nearbyChunkTicketUpdater Lux$d;
@@ -45,6 +54,8 @@ CLASS ux net/minecraft/server/world/ChunkTicketManager
 		ARG 2 mainThreadExecutor
 	METHOD a purge ()V
 	METHOD a setViewDistance (I)V
+	METHOD a isUnloaded (J)Z
+		ARG 1 pos
 	METHOD a setLevel (JILuq;I)Luq;
 		ARG 1 pos
 		ARG 3 level
@@ -54,6 +65,8 @@ CLASS ux net/minecraft/server/world/ChunkTicketManager
 		ARG 3 ticket
 	METHOD a setChunkForced (Lbgi;Z)V
 		ARG 2 forced
+	METHOD a shouldTickEntity (Lfo;)Z
+		ARG 1 pos
 	METHOD a handleChunkEnter (Lfo;Lvf;)V
 		ARG 1 pos
 		ARG 2 player

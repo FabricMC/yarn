@@ -32,7 +32,7 @@ CLASS ur net/minecraft/server/world/ThreadedAnvilChunkStorage
 	FIELD l chunkGenerator Lbwl;
 	FIELD m persistentStateManagerFactory Ljava/util/function/Supplier;
 	FIELD n pointOfInterestStorage Lapw;
-	FIELD o fullChunks Lit/unimi/dsi/fastutil/longs/LongSet;
+	FIELD o unloadedChunks Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD p posToHolderCopyOutdated Z
 	FIELD q chunkTaskPrioritySystem Lut;
 	FIELD r worldgenActor Lagd;
@@ -67,11 +67,15 @@ CLASS ur net/minecraft/server/world/ThreadedAnvilChunkStorage
 		ARG 2 packet
 	METHOD a getDebugString (Lbgi;)Ljava/lang/String;
 		ARG 1 pos
+	METHOD a getChebyshevDistance (Lbgi;II)I
+		ARG 0 pos
+		ARG 1 x
+		ARG 2 z
 	METHOD a createChunkRegionFuture (Lbgi;ILjava/util/function/IntFunction;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 centerChunk
 		ARG 2 margin
 		ARG 3 distanceToStatus
-	METHOD a getSquaredHorizontalDistance (Lbgi;Lahz;)D
+	METHOD a getSquaredDistance (Lbgi;Lahz;)D
 		ARG 0 pos
 		ARG 1 entity
 	METHOD a save (Lbwk;)V
@@ -106,6 +110,13 @@ CLASS ur net/minecraft/server/world/ThreadedAnvilChunkStorage
 		ARG 2 packet
 	METHOD b createEntityTickingChunkFuture (Lbgi;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 pos
+	METHOD b getChebyshevDistance (Lbgi;Lahz;)I
+		ARG 0 pos
+		ARG 1 entity
+	METHOD b getChebyshevDistance (Lbgi;Lvf;Z)I
+		ARG 0 pos
+		ARG 1 player
+		ARG 2 useCameraPosition
 	METHOD b doesNotGenerateChunks (Lvf;)Z
 		ARG 1 player
 	METHOD c getTotalChunksLoadedCount ()I
