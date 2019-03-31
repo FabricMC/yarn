@@ -6,8 +6,12 @@ CLASS ur net/minecraft/server/world/ThreadedAnvilChunkStorage
 	CLASS ur$b EntityTracker
 		FIELD b entry Lvd;
 		FIELD c entity Lahz;
+		FIELD d maxDistance I
 		FIELD e lastCameraPosition Lfo;
 		FIELD f playersTracking Ljava/util/Set;
+		METHOD <init> (Lur;Lahz;IIZ)V
+			ARG 2 maxDistance
+			ARG 3 tickInterval
 		METHOD a stopTracking ()V
 		METHOD a updateCameraPosition (Ljava/util/List;)V
 			ARG 1 players
@@ -24,8 +28,8 @@ CLASS ur net/minecraft/server/world/ThreadedAnvilChunkStorage
 	FIELD B viewDistance I
 	FIELD a MAX_LEVEL I
 	FIELD d LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD e posToHolder Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
-	FIELD f posToHolderCopy Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
+	FIELD e currentChunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
+	FIELD f chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 	FIELD i world Lve;
 	FIELD j serverLightingProvider Lvh;
 	FIELD k mainThreadExecutor Lagb;
@@ -33,7 +37,7 @@ CLASS ur net/minecraft/server/world/ThreadedAnvilChunkStorage
 	FIELD m persistentStateManagerFactory Ljava/util/function/Supplier;
 	FIELD n pointOfInterestStorage Lapw;
 	FIELD o unloadedChunks Lit/unimi/dsi/fastutil/longs/LongSet;
-	FIELD p posToHolderCopyOutdated Z
+	FIELD p chunkHolderListDirty Z
 	FIELD q chunkTaskPrioritySystem Lut;
 	FIELD r worldgenActor Lagd;
 	FIELD s mainActor Lagd;
@@ -55,7 +59,7 @@ CLASS ur net/minecraft/server/world/ThreadedAnvilChunkStorage
 	METHOD a setViewDistance (II)V
 		ARG 1 watchDistance
 		ARG 2 viewDistance
-	METHOD a getChunkHolder (J)Luq;
+	METHOD a getCurrentChunkHolder (J)Luq;
 		ARG 1 pos
 	METHOD a setLevel (JILuq;I)Luq;
 		ARG 1 pos
@@ -99,10 +103,14 @@ CLASS ur net/minecraft/server/world/ThreadedAnvilChunkStorage
 	METHOD a handlePlayerAddedOrRemoved (Lvf;Z)V
 		ARG 1 player
 		ARG 2 added
+	METHOD a sendChunkDataPackets (Lvf;[Lka;Lbww;)V
+		ARG 1 player
+		ARG 2 packets
+		ARG 3 chunk
 	METHOD a save (Z)V
 		ARG 1 flush
 	METHOD b updateHolderMap ()V
-	METHOD b getCopiedChunkHolder (J)Luq;
+	METHOD b getChunkHolder (J)Luq;
 		ARG 1 pos
 	METHOD b unloadEntity (Lahz;)V
 	METHOD b sendToNearbyPlayers (Lahz;Lka;)V
