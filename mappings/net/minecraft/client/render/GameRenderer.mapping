@@ -18,14 +18,20 @@ CLASS djq net/minecraft/client/render/GameRenderer
 	FIELD h random Ljava/util/Random;
 	FIELD i viewDistance F
 	FIELD j mapRenderer Lcvn;
-	FIELD o tickStartSkyDarkness F
+	FIELD k ticks I
+	FIELD l movementFovMultiplier F
+	FIELD m lastMovementFovMultiplier F
+	FIELD n skyDarkness F
+	FIELD o lastSkyDarkness F
+	FIELD p renderHand Z
 	FIELD q blockOutlineEnabled Z
 	FIELD r lastWorldIconUpdate J
-	FIELD s lastRenderTime J
+	FIELD s lastWindowFocusedTime J
 	FIELD t lightmapTextureManager Ldjv;
 	FIELD x backgroundRenderer Ldjp;
 	METHOD <init> (Lcus;Lxc;)V
 		ARG 1 client
+	METHOD a isShaderEnabled ()Z
 	METHOD a updateTargetedEntity (F)V
 		ARG 1 tickDelta
 	METHOD a renderWorld (FJ)V
@@ -40,22 +46,58 @@ CLASS djq net/minecraft/client/render/GameRenderer
 		ARG 2 scaledHeight
 		ARG 3 tickDelta
 	METHOD a onCameraEntitySet (Lahz;)V
+	METHOD a getNightVisionStrength (Laii;F)F
+		ARG 1 entity
+		ARG 2 tickDelta
 	METHOD a showFloatingItem (Lbbp;)V
-		ARG 1 item
+		ARG 1 floatingItem
+	METHOD a renderHand (Lcui;F)V
+		ARG 1 camera
+		ARG 2 tickDelta
+	METHOD a getFov (Lcui;FZ)D
+		ARG 2 tickDelta
+	METHOD a renderAboveClouds (Lcui;Ldju;FDDD)V
+		ARG 1 camera
+		ARG 2 worldRenderer
+		ARG 3 tickDelta
+		ARG 4 cameraX
+		ARG 6 cameraY
+		ARG 8 cameraZ
+	METHOD a renderFloatingText (Lcvk;Ljava/lang/String;FFFIFFZ)V
+		ARG 0 textRenderer
+		ARG 1 text
+		ARG 2 x
+		ARG 3 y
+		ARG 4 z
+		ARG 5 verticalOffset
+		ARG 6 yaw
+		ARG 7 pitch
+		ARG 8 translucent
 	METHOD a loadShader (Lqr;)V
 	METHOD b disableShader ()V
+	METHOD b renderWeather (F)V
 	METHOD b renderCenter (FJ)V
 		ARG 1 tickDelta
 	METHOD c toggleShadersEnabled ()V
 	METHOD c getSkyDarkness (F)F
 		ARG 1 tickDelta
+	METHOD d bobViewWhenHurt (F)V
+		ARG 1 tickDelta
+	METHOD d setFogBlack (Z)V
+		ARG 1 fogBlack
 	METHOD e tick ()V
+	METHOD e bobView (F)V
+		ARG 1 tickDelta
 	METHOD f getShader ()Ldjz;
+	METHOD f applyCameraTransformations (F)V
+		ARG 1 tickDelta
 	METHOD h disableLightmap ()V
 	METHOD i enableLightmap ()V
 	METHOD k getMapRenderer ()Lcvn;
 	METHOD l getClient ()Lcus;
 	METHOD m getViewDistance ()F
 	METHOD n getCamera ()Lcui;
+	METHOD o updateMovementFovMultiplier ()V
 	METHOD p updateWorldIcon ()V
 	METHOD q shouldRenderBlockOutline ()Z
+	METHOD r renderRain ()V
