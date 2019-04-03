@@ -1,6 +1,11 @@
 CLASS dju net/minecraft/client/render/WorldRenderer
+	CLASS dju$a ChunkInfo
+		FIELD b renderer Ldmm;
+		METHOD <init> (Ldju;Ldmm;Lfa;I)V
+			ARG 1 renderer
 	FIELD A ticks I
 	FIELD B partiallyBrokenBlocks Ljava/util/Map;
+	FIELD C playingSongs Ljava/util/Map;
 	FIELD D destroyStages [Ldto;
 	FIELD E entityOutlinesFramebuffer Lcsx;
 	FIELD F entityOutlineShader Ldjz;
@@ -40,6 +45,8 @@ CLASS dju net/minecraft/client/render/WorldRenderer
 	FIELD j entityRenderDispatcher Ldon;
 	FIELD k world Ldgt;
 	FIELD l chunkRenderers Ljava/util/Set;
+	FIELD m chunkInfos Ljava/util/List;
+	FIELD n blockEntities Ljava/util/Set;
 	FIELD o chunkRenderDispatcher Ldke;
 	FIELD p starsDisplayList I
 	FIELD t starsBuffer Lcty;
@@ -63,8 +70,21 @@ CLASS dju net/minecraft/client/render/WorldRenderer
 	METHOD a renderClouds (FDDD)V
 		ARG 1 tickDelta
 	METHOD a onResized (II)V
-	METHOD a scheduleBlockRender (IIIIII)V
+	METHOD a scheduleBlockRenders (III)V
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+	METHOD a scheduleBlockRenders (IIIIII)V
+		ARG 1 minX
+		ARG 2 minY
+		ARG 3 minZ
+		ARG 4 maxX
+		ARG 5 maxY
+		ARG 6 maxZ
 	METHOD a scheduleChunkRender (IIIZ)V
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
 	METHOD a playGlobalEvent (ILev;I)V
 	METHOD a updateChunks (J)V
 	METHOD a playLevelEvent (Lavm;ILev;I)V
@@ -72,10 +92,16 @@ CLASS dju net/minecraft/client/render/WorldRenderer
 		ARG 2 type
 		ARG 3 pos
 		ARG 4 data
+	METHOD a updateBlock (Lbgg;Lev;Lbuw;Lbuw;I)V
+		ARG 2 pos
 	METHOD a renderLayer (Lbgh;)V
 		ARG 1 layer
 	METHOD a renderLayer (Lbgh;Lcui;)I
 		ARG 1 layer
+	METHOD a updateEntitiesForSong (Lbgv;Lev;Z)V
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 playing
 	METHOD a drawBoxOutline (Lcrb;FFFF)V
 		ARG 0 box
 		ARG 1 red
@@ -118,7 +144,13 @@ CLASS dju net/minecraft/client/render/WorldRenderer
 		ARG 3 tickDelta
 	METHOD a setUpTerrain (Lcui;Ldms;IZ)V
 	METHOD a setWorld (Ldgt;)V
-	METHOD a (Lgd;DDDDDD)V
+	METHOD a getOpenChunkFaces (Lev;)Ljava/util/Set;
+		ARG 1 pos
+	METHOD a getChunkRenderer (Lev;Ldmm;Lfa;)Ldmm;
+		ARG 1 pos
+	METHOD a scheduleSectionRender (Lev;Z)V
+		ARG 1 pos
+	METHOD a addParticle (Lgd;DDDDDD)V
 		ARG 1 parameters
 		ARG 2 x
 		ARG 4 y
@@ -145,9 +177,21 @@ CLASS dju net/minecraft/client/render/WorldRenderer
 		ARG 10 velocityX
 		ARG 12 velocityY
 		ARG 14 velocityY
+	METHOD a updateBlockEntities (Ljava/util/Collection;Ljava/util/Collection;)V
+		ARG 1 removed
+		ARG 2 added
+	METHOD a removeOutdatedPartiallyBrokenBlocks (Ljava/util/Iterator;)V
+		ARG 1 partiallyBrokenBlocks
+	METHOD a playSong (Lyh;Lev;)V
+		ARG 1 song
+		ARG 2 pos
 	METHOD a getRandomParticleSpawnChance (Z)Lcux;
 		ARG 1 canSpawnOnMinimal
 	METHOD b drawEntityOutlinesFramebuffer ()V
+	METHOD b scheduleBlockRender (III)V
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
 	METHOD b setBlockBreakingProgress (ILev;I)V
 	METHOD b drawShapeOutline (Lcsa;DDDFFFF)V
 		ARG 0 shape
@@ -195,6 +239,10 @@ CLASS dju net/minecraft/client/render/WorldRenderer
 	METHOD g getChunkNumber ()I
 	METHOD h getEntitiesDebugString ()Ljava/lang/String;
 	METHOD k tick ()V
+	METHOD m isTerrainRenderComplete ()Z
+	METHOD n scheduleTerrainUpdate ()V
 	METHOD o loadDestroyStageTextures ()V
 	METHOD r setupStarRendering ()V
 	METHOD s renderEndSky ()V
+	METHOD t enableBlockOverlayRendering ()V
+	METHOD u disableBlockOverlayRendering ()V
