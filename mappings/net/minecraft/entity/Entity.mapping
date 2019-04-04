@@ -13,7 +13,7 @@ CLASS ahz net/minecraft/entity/Entity
 	FIELD O age I
 	FIELD P insideWater Z
 	FIELD U dataTracker Lqj;
-	FIELD V ENTITY_FLAGS Lqg;
+	FIELD V FLAGS Lqg;
 	FIELD X chunkX I
 	FIELD Y chunkY I
 	FIELD Z chunkZ I
@@ -81,7 +81,8 @@ CLASS ahz net/minecraft/entity/Entity
 	METHOD W getDataTracker ()Lqj;
 	METHOD Y remove ()V
 	METHOD Z getPose ()Lais;
-	METHOD a setStatus (B)V
+	METHOD a handleStatus (B)V
+		ARG 1 status
 	METHOD a shouldRenderAtDistance (D)Z
 		ARG 1 distance
 	METHOD a requestTeleport (DDD)V
@@ -202,8 +203,11 @@ CLASS ahz net/minecraft/entity/Entity
 	METHOD aT getRotationVecClient ()Lcri;
 	METHOD aV getDefaultPortalCooldown ()I
 	METHOD aX getItemsHand ()Ljava/lang/Iterable;
-	METHOD aY getItemsArmor ()Ljava/lang/Iterable;
+	METHOD aY getArmorItems ()Ljava/lang/Iterable;
 	METHOD aZ getItemsEquipped ()Ljava/lang/Iterable;
+	METHOD a_ equip (ILbbq;)Z
+		ARG 1 slot
+		ARG 2 item
 	METHOD aa baseTick ()V
 	METHOD ab getMaxPortalTime ()I
 	METHOD ac setOnFireFromLava ()V
@@ -236,7 +240,7 @@ CLASS ahz net/minecraft/entity/Entity
 	METHOD b handleFallDamage (FF)V
 		ARG 1 fallDistance
 		ARG 2 damageMultiplier
-	METHOD b setEntityFlag (IZ)V
+	METHOD b setFlag (IZ)V
 		ARG 1 index
 	METHOD b isInvulnerableTo (Lahi;)Z
 	METHOD b setPose (Lais;)V
@@ -261,6 +265,7 @@ CLASS ahz net/minecraft/entity/Entity
 	METHOD bG getMovementDirection ()Lfa;
 	METHOD bH getComponentHoverEvent ()Ljp;
 	METHOD bI getBoundingBox ()Lcrd;
+	METHOD bJ getVisibilityBoundingBox ()Lcrd;
 	METHOD bK getStandingEyeHeight ()F
 	METHOD bL getBlockPos ()Lev;
 	METHOD bM getPosVector ()Lcri;
@@ -276,6 +281,7 @@ CLASS ahz net/minecraft/entity/Entity
 	METHOD ba isOnFire ()Z
 	METHOD bb hasVehicle ()Z
 	METHOD bc hasPassengers ()Z
+	METHOD bd canBeRiddenInWater ()Z
 	METHOD be isSneaking ()Z
 	METHOD bg isSprinting ()Z
 	METHOD bh isSwimming ()Z
@@ -314,6 +320,7 @@ CLASS ahz net/minecraft/entity/Entity
 		ARG 3 offsetY
 		ARG 5 offsetZ
 	METHOD d getEyeHeight (Lais;)F
+		ARG 1 pose
 	METHOD d setVelocity (Lcri;)V
 	METHOD d saveToTag (Lib;)Z
 	METHOD d setUnaffectedByGravity (Z)V
@@ -347,9 +354,13 @@ CLASS ahz net/minecraft/entity/Entity
 		ARG 3 y
 		ARG 5 z
 	METHOD h getYaw (F)F
-	METHOD h getEntityFlag (I)Z
+	METHOD h getFlag (I)Z
 	METHOD h squaredDistanceTo (Lahz;)D
 	METHOD h setGlowing (Z)V
+	METHOD i pushOutOfBlocks (DDD)V
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
 	METHOD i setBreath (I)V
 	METHOD i pushAwayFrom (Lahz;)V
 	METHOD i setInvisible (Z)V

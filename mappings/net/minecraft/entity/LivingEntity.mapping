@@ -1,4 +1,5 @@
 CLASS aii net/minecraft/entity/LivingEntity
+	FIELD aA handSwingProgress F
 	FIELD aM headYaw F
 	FIELD aN prevHeadYaw F
 	FIELD aP attackingPlayer Lavn;
@@ -7,26 +8,30 @@ CLASS aii net/minecraft/entity/LivingEntity
 	FIELD aS despawnCounter I
 	FIELD ap LIVING_FLAGS Lqg;
 	FIELD aq SLEEPING_SIZE Laia;
+	FIELD ar isHandSwinging Z
 	FIELD as preferredHand Lagt;
+	FIELD at handSwingTicks I
 	FIELD au stuckArrowTimer I
 	FIELD av hurtTime I
 	FIELD ay deathCounter I
+	FIELD az lastHandSwingProgress F
 	FIELD bA lastAttackedTime I
 	FIELD bB attacking Laii;
 	FIELD bC lastAttackTime I
 	FIELD bD movementSpeed F
 	FIELD bF absorptionAmount F
+	FIELD bG lastBlockPos Lev;
 	FIELD b ATTR_SPRINTING_SPEED_BOOST_ID Ljava/util/UUID;
 	FIELD ba jumping Z
-	FIELD bb movementInputSideways F
-	FIELD bc movementInputUp F
-	FIELD bd movementInputForward F
+	FIELD bb sidewaysSpeed F
+	FIELD bc upwardSpeed F
+	FIELD bd forwardSpeed F
 	FIELD bn activeItemStack Lbbq;
 	FIELD br brain Laix;
 	FIELD bs SLEEPING_POSITION Lqg;
 	FIELD bt attributeContainer Lajc;
 	FIELD bu damageTracker Lahh;
-	FIELD bv activePotionEffects Ljava/util/Map;
+	FIELD bv activeStatusEffects Ljava/util/Map;
 	FIELD bw equippedHand Lfj;
 	FIELD bx equippedArmor Lfj;
 	FIELD bz attacker Laii;
@@ -57,16 +62,30 @@ CLASS aii net/minecraft/entity/LivingEntity
 	METHOD a dropLoot (Lahi;Z)V
 		ARG 1 source
 		ARG 2 killedByPlayer
-	METHOD a hasPotionEffect (Lahr;)Z
-	METHOD a pickUpEntity (Lahz;I)V
+	METHOD a hasStatusEffect (Lahr;)Z
+	METHOD a takeKnockback (Lahz;FDD)V
+		ARG 1 source
+		ARG 2 scale
+		ARG 3 x
+		ARG 5 z
+	METHOD a sendPickup (Lahz;I)V
+		ARG 1 item
 		ARG 2 count
 	METHOD a canTarget (Laid;)Z
 	METHOD a isEquippedStackValid (Laie;)Z
 	METHOD a setAttacker (Laii;)V
+	METHOD a isTarget (Laii;Lapp;)Z
+		ARG 1 target
+		ARG 2 targetPredicate
 	METHOD a getAttributeInstance (Laiy;)Laiz;
+	METHOD a spawnItemParticles (Lbbq;I)V
+		ARG 1 item
+		ARG 2 count
 	METHOD a applyFoodEffects (Lbbq;Lbgw;Laii;)V
 	METHOD a eatFood (Lbgw;Lbbq;)Lbbq;
-	METHOD a createBrain (Lcom/mojang/datafixers/Dynamic;)Laix;
+	METHOD a deserializeBrain (Lcom/mojang/datafixers/Dynamic;)Laix;
+	METHOD a setPositionInBed (Lev;)V
+		ARG 1 pos
 	METHOD a setNearbySongPlaying (Lev;Z)V
 		ARG 1 songSource
 		ARG 2 playing
@@ -76,28 +95,49 @@ CLASS aii net/minecraft/entity/LivingEntity
 	METHOD b heal (F)V
 		ARG 1 amount
 	METHOD b getStackInHand (Lagt;)Lbbq;
-	METHOD b getPotionEffect (Lahr;)Laht;
+	METHOD b applyArmorToDamage (Lahi;F)F
+		ARG 1 source
+		ARG 2 damage
+	METHOD b getStatusEffect (Lahr;)Laht;
 	METHOD b getEquippedStack (Laie;)Lbbq;
 	METHOD b getActiveEyeHeight (Lais;Laia;)F
 	METHOD b onEquipStack (Lbbq;)V
 		ARG 1 stack
+	METHOD b spawnEatingParticlesAndPlayEatingSoundOrPlayDrinkingSound (Lbbq;I)V
+		ARG 1 item
+		ARG 2 particleCount
+	METHOD b applyFrostWalker (Lev;)V
+		ARG 1 pos
 	METHOD c setHealth (F)V
+	METHOD c setLivingFlag (IZ)V
+		ARG 1 mask
+		ARG 2 value
 	METHOD c setCurrentHand (Lagt;)V
 	METHOD c playHurtSound (Lahi;)V
+	METHOD c applyEnchantmentsToDamage (Lahi;F)F
+		ARG 1 source
+		ARG 2 amount
 	METHOD c removePotionEffect (Lahr;)Laht;
 	METHOD c addPotionEffect (Laht;)Z
+	METHOD c sendEquipmentBreakStatus (Laie;)V
+		ARG 1 slot
 	METHOD c canTarget (Laii;)Z
+		ARG 1 target
 	METHOD c getDrinkSound (Lbbq;)Lyh;
 	METHOD c containsOnlyAmbientEffects (Ljava/util/Collection;)Z
 		ARG 0 effects
+	METHOD c swimUpward (Lyz;)V
+		ARG 1 fluid
 	METHOD cA getHealth ()F
 	METHOD cB getRecentDamageSource ()Lahi;
 	METHOD cC dropInventory ()V
 	METHOD cD getLootTable ()Lqr;
 	METHOD cE getDeathSound ()Lyh;
+	METHOD cG getArmor ()I
 	METHOD cH getDamageTracker ()Lahh;
 	METHOD cJ getHealthMaximum ()F
 	METHOD cK getStuckArrows ()I
+	METHOD cL tickHandSwing ()V
 	METHOD cM getAttributeContainer ()Lajc;
 	METHOD cN getGroup ()Laim;
 	METHOD cO getMainHandStack ()Lbbq;
@@ -112,6 +152,7 @@ CLASS aii net/minecraft/entity/LivingEntity
 	METHOD ch getBrain ()Laix;
 	METHOD ci initAttributes ()V
 	METHOD cj canBreatheInWater ()Z
+	METHOD ck getScaleFactor ()F
 	METHOD cl updatePostDeath ()V
 	METHOD cm canDropLootAndXp ()Z
 	METHOD cn shouldAlwaysDropXp ()Z
@@ -121,15 +162,22 @@ CLASS aii net/minecraft/entity/LivingEntity
 	METHOD cr getAttacking ()Laii;
 	METHOD cs getLastAttackTime ()I
 	METHOD ct getDespawnCounter ()I
+	METHOD cu spawnPotionParticles ()V
 	METHOD cv clearPotionSwirls ()V
 	METHOD cw clearPotionEffects ()Z
-	METHOD cx getPotionEffects ()Ljava/util/Collection;
+	METHOD cx getStatusEffects ()Ljava/util/Collection;
+	METHOD cy getActiveStatusEffects ()Ljava/util/Map;
 	METHOD cz isUndead ()Z
+	METHOD d sendToolBreakStatus (Lagt;)V
 	METHOD d drop (Lahi;)V
 	METHOD d applyDamage (Lahi;F)V
-		ARG 1 damageSource
+		ARG 1 source
+		ARG 2 damage
 	METHOD d removeStatusEffect (Lahr;)Z
 	METHOD d isPotionEffective (Laht;)Z
+	METHOD d getEquipmentBreakStatus (Laie;)B
+	METHOD d takeShieldHit (Laii;)V
+		ARG 1 source
 	METHOD d getCurrentExperience (Lavn;)I
 	METHOD d getEatSound (Lbbq;)Lyh;
 	METHOD d setSleepingPosition (Lev;)V
@@ -149,18 +197,29 @@ CLASS aii net/minecraft/entity/LivingEntity
 		ARG 1 yaw
 	METHOD e getHurtSound (Lahi;)Lyh;
 		ARG 1 source
+	METHOD e knockback (Laii;)V
+		ARG 1 target
 	METHOD e canPickUp (Lbbq;)Z
 	METHOD e travel (Lcri;)V
 		ARG 1 movementInput
 	METHOD e sleep (Lev;)V
 	METHOD f attackLivingEntity (Laii;)V
 	METHOD f getArrowType (Lbbq;)Lbbq;
+	METHOD g playEquipmentBreakEffects (Lbbq;)V
+		ARG 1 item
 	METHOD k updateMovement ()V
+	METHOD k getNextBreathInWater (I)I
+		ARG 1 breath
 	METHOD l getHandSwingDuration ()I
+	METHOD l getNextBreathInAir (I)I
+		ARG 1 breath
+	METHOD m damageArmor (F)V
+		ARG 1 amount
 	METHOD m setDespawnCounter (I)V
 		ARG 1 despawnCounter
 	METHOD n initAi ()V
 	METHOD n damageShield (F)V
+		ARG 1 amount
 	METHOD n getFallSound (I)Lyh;
 	METHOD o setMovementSpeed (F)V
 		ARG 1 movementSpeed
