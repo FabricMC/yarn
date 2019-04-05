@@ -1,10 +1,12 @@
 CLASS avn net/minecraft/entity/player/PlayerEntity
-	CLASS avn$a SleepResult
+	CLASS avn$a SleepFailureReason
 		FIELD a INVALID_WORLD Lavn$a;
 		FIELD b WRONG_TIME Lavn$a;
 		FIELD c TOO_FAR_AWAY Lavn$a;
 		FIELD e INVALID_ATTEMPT Lavn$a;
 		FIELD f NOT_SAFE Lavn$a;
+		FIELD g text Ljm;
+		METHOD a getText ()Ljm;
 	FIELD bA container Laxr;
 	FIELD bB hungerManager Laxn;
 	FIELD b SIZES Ljava/util/Map;
@@ -65,21 +67,31 @@ CLASS avn net/minecraft/entity/player/PlayerEntity
 		ARG 1 recipes
 	METHOD a addChatMessage (Ljm;Z)V
 		ARG 1 message
-	METHOD a increaseStat (Lqr;)V
+	METHOD a incrementStat (Lqr;)V
+		ARG 1 stat
+	METHOD a increaseStat (Lqr;I)V
+		ARG 1 stat
+		ARG 2 amount
 	METHOD a playSound (Lyh;Lyj;FF)V
 	METHOD a resetStat (Lyo;)V
-	METHOD a incrementStat (Lyo;I)V
 		ARG 1 stat
+	METHOD a increaseStat (Lyo;I)V
+		ARG 1 stat
+		ARG 2 amount
 	METHOD a wakeUp (ZZZ)V
 	METHOD a unlockRecipes ([Lqr;)V
 		ARG 1 ids
 	METHOD b addEnchantedHitParticles (Lahz;)V
 	METHOD b getBlockBreakingSpeed (Lbuy;)F
+	METHOD b isBedObstructed (Lev;Lfa;)Z
+		ARG 1 pos
+		ARG 2 direction
 	METHOD b setPlayerSpawn (Lev;Z)V
 		ARG 1 pos
 	METHOD b lockRecipes (Ljava/util/Collection;)I
 		ARG 1 recipes
 	METHOD b incrementStat (Lyo;)V
+		ARG 1 stat
 	METHOD c collideWithEntity (Lahz;)V
 	METHOD c isUsingEffectiveTool (Lbuy;)Z
 	METHOD c getOfflinePlayerUuid (Ljava/lang/String;)Ljava/util/UUID;
@@ -88,6 +100,7 @@ CLASS avn net/minecraft/entity/player/PlayerEntity
 	METHOD dA getScore ()I
 	METHOD dB vanishCursedItems ()V
 	METHOD dD requestRespawn ()V
+	METHOD dE isMainPlayer ()Z
 	METHOD dF getGameProfile ()Lcom/mojang/authlib/GameProfile;
 	METHOD dG isSleepingLongEnough ()Z
 	METHOD dH getSleepTimer ()I
@@ -109,6 +122,8 @@ CLASS avn net/minecraft/entity/player/PlayerEntity
 	METHOD dz updateSize ()V
 	METHOD ea isCreativeLevelTwoOp ()Z
 	METHOD f attack (Lahz;)V
+	METHOD f doesNotSuffocate (Lev;)Z
+		ARG 1 pos
 	METHOD g createCooldownManager ()Lbbm;
 	METHOD g giveItemStack (Lbbq;)Z
 		ARG 1 stack
@@ -117,9 +132,12 @@ CLASS avn net/minecraft/entity/player/PlayerEntity
 	METHOD j updateShoulderEntity (Lib;)V
 	METHOD l updateTurtleHelmet ()V
 	METHOD n dropSelectedItem (Z)Late;
+	METHOD o disableShield (Z)V
+		ARG 1 sprinting
 	METHOD p canConsume (Z)Z
 	METHOD q setScore (I)V
 	METHOD q setReducedDebugInfo (Z)V
+	METHOD r sendAbilitiesUpdate ()V
 	METHOD r addExhaustion (F)V
 	METHOD r addScore (I)V
 	METHOD t_ closeGui ()V
