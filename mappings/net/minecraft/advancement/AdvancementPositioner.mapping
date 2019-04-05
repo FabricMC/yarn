@@ -1,4 +1,4 @@
-CLASS ac net/minecraft/advancement/AdvancementPosition
+CLASS ac net/minecraft/advancement/AdvancementPositioner
 	FIELD a advancement Lq;
 	FIELD b parent Lac;
 	FIELD c previousSibling Lac;
@@ -9,19 +9,23 @@ CLASS ac net/minecraft/advancement/AdvancementPosition
 	FIELD h depth I
 	FIELD i row F
 	FIELD j relativeRowInSiblings F
-	METHOD a initRecursively ()V
-	METHOD a increaseRow (F)V
+	METHOD a calculateRecursively ()V
+	METHOD a increaseRowRecursively (F)V
 		ARG 1 deltaRow
-	METHOD a positMinRow (FIF)F
+	METHOD a findMinRowRecursively (FIF)F
 		ARG 1 deltaRow
 		ARG 2 depth
 		ARG 3 minRow
-	METHOD a postInit (Lac;)Lac;
+	METHOD a onFinishCalculation (Lac;)Lac;
 		ARG 1 last
+	METHOD a pushDown (Lac;F)V
+		ARG 2 extraRowDistance
 	METHOD a getLast (Lac;Lac;)Lac;
-	METHOD a arrangeForRoot (Lq;)V
-	METHOD a adjust (Lq;Lac;)Lac;
-		ARG 2 childPosition
+	METHOD a arrangeForTree (Lq;)V
+		ARG 0 root
+	METHOD a findChildrenRecursively (Lq;Lac;)Lac;
+		ARG 2 lastChild
+	METHOD b onFinishChildrenCalculation ()V
 	METHOD c getFirstChild ()Lac;
 	METHOD d getLastChild ()Lac;
 	METHOD e apply ()V
