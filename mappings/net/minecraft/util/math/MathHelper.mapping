@@ -1,17 +1,18 @@
 CLASS zr net/minecraft/util/math/MathHelper
 	FIELD a SQUARE_ROOT_OF_TWO F
-	FIELD b sinTable [F
+	FIELD b SINE_TABLE [F
 	FIELD c RANDOM Ljava/util/Random;
 	FIELD d MULTIPLY_DE_BRUJIN_BIT_POSITION [I
 	FIELD e SMALLEST_FRACTION_FREE_DOUBLE D
-	FIELD f asinTable [D
-	FIELD g cosTable [D
+	FIELD f ARCSINE_TABLE [D
+	FIELD g COSINE_TABLE [D
 	METHOD a randomUUID ()Ljava/util/UUID;
 	METHOD a sqrt (D)F
 	METHOD a absMax (DD)D
 	METHOD a clamp (DDD)D
 		ARG 0 value
 		ARG 2 min
+		ARG 4 max
 	METHOD a lerp2 (DDDDDD)D
 		ARG 0 partialX
 		ARG 2 partialY
@@ -55,6 +56,7 @@ CLASS zr net/minecraft/util/math/MathHelper
 	METHOD a nextDouble (Ljava/util/Random;DD)D
 		ARG 0 random
 		ARG 1 min
+		ARG 3 max
 	METHOD a nextFloat (Ljava/util/Random;FF)F
 		ARG 0 random
 		ARG 1 min
@@ -67,11 +69,16 @@ CLASS zr net/minecraft/util/math/MathHelper
 		ARG 0 array
 	METHOD b fastFloor (D)I
 	METHOD b floorMod (DD)D
-	METHOD b lerpClamped (DDD)D
+	METHOD b clampedLerp (DDD)D
 		ARG 0 first
 		ARG 2 second
+		ARG 4 partial
 	METHOD b cos (F)F
 	METHOD b floorMod (FF)F
+	METHOD b (FFF)F
+		ARG 0 start
+		ARG 1 end
+		ARG 2 speed
 	METHOD b wrapDegrees (I)I
 	METHOD b floorMod (II)I
 	METHOD b packRgb (III)I
@@ -80,8 +87,18 @@ CLASS zr net/minecraft/util/math/MathHelper
 		ARG 2 b
 	METHOD c floor (D)I
 	METHOD c atan2 (DD)D
+	METHOD c minusDiv (DDD)D
+		ARG 0 numerator
+		ARG 2 delta
+		ARG 4 denominator
 	METHOD c sqrt (F)F
 	METHOD c subtractAngles (FF)F
+		ARG 0 start
+		ARG 1 end
+	METHOD c changeGraduallyTo (FFF)F
+		ARG 0 start
+		ARG 1 end
+		ARG 2 speed
 	METHOD c smallestEncompassingPowerOfTwo (I)I
 		ARG 0 value
 	METHOD c roundUp (II)I
@@ -96,6 +113,12 @@ CLASS zr net/minecraft/util/math/MathHelper
 		ARG 4 second
 	METHOD d floor (F)I
 	METHOD d angleBetween (FF)F
+		ARG 0 first
+		ARG 1 second
+	METHOD d changeAngleGraduallyTo (FFF)F
+		ARG 0 start
+		ARG 1 end
+		ARG 2 speed
 	METHOD d log2DeBrujin (I)I
 	METHOD d multiplyColors (II)I
 		ARG 0 first
@@ -122,7 +145,11 @@ CLASS zr net/minecraft/util/math/MathHelper
 	METHOD g isPowerOfTwo (I)Z
 	METHOD h fractionalPart (D)D
 		ARG 0 value
+	METHOD h lerpDegree (FFF)F
+		ARG 0 partial
+		ARG 1 first
+		ARG 2 second
 	METHOD i fastInverseSqrt (D)D
 		ARG 0 value
 	METHOD j ease (D)D
-	METHOD k sgn (D)I
+	METHOD k sign (D)I
