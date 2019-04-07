@@ -3,22 +3,46 @@ CLASS cod net/minecraft/world/loot/LootPool
 		FIELD a entries Ljava/util/List;
 		FIELD b conditions Ljava/util/List;
 		FIELD c functions Ljava/util/List;
-		FIELD d rolls Lcoh;
+		FIELD d rolsRange Lcoh;
 		FIELD e range Lcoj;
 		METHOD a withRolls (Lcoh;)Lcod$a;
+			ARG 1 rollsRange
 		METHOD a withEntry (Lcou$a;)Lcod$a;
+			ARG 1 entryBuilder
 		METHOD b build ()Lcod;
 	CLASS cod$b Serializer
+		METHOD deserialize (Lcom/google/gson/JsonElement;Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)Ljava/lang/Object;
+			ARG 1 poolJson
+			ARG 2 unused
+			ARG 3 context
+		METHOD serialize (Ljava/lang/Object;Ljava/lang/reflect/Type;Lcom/google/gson/JsonSerializationContext;)Lcom/google/gson/JsonElement;
+			ARG 1 pool
+			ARG 2 unused
+			ARG 3 context
 	FIELD a entries [Lcou;
 	FIELD b conditions [Lcqo;
 	FIELD c predicate Ljava/util/function/Predicate;
 	FIELD d functions [Lcpl;
 	FIELD e javaFunctions Ljava/util/function/BiFunction;
-	FIELD f rolls Lcoh;
-	FIELD g bonusRolls Lcoj;
+	FIELD f rollsRange Lcoh;
+	FIELD g bonusRollsRange Lcoj;
+	METHOD <init> ([Lcou;[Lcqo;[Lcpl;Lcoh;Lcoj;)V
+		ARG 1 entries
+		ARG 2 conditions
+		ARG 3 functions
+		ARG 4 rollsRange
+		ARG 5 bonusRollsRange
 	METHOD a create ()Lcod$a;
+	METHOD a (Lcob;Ljava/util/List;Lorg/apache/commons/lang3/mutable/MutableInt;Lcot;)V
+		ARG 3 choice
 	METHOD a check (Lcof;Ljava/util/function/Function;Ljava/util/Set;Lcqb;)V
 		ARG 1 reporter
 		ARG 2 getSupplier
+		ARG 3 parentLootTables
+		ARG 4 contextType
 	METHOD a drop (Ljava/util/function/Consumer;Lcob;)V
+		ARG 1 dropItemConsumer
+		ARG 2 context
 	METHOD b supplyOnce (Ljava/util/function/Consumer;Lcob;)V
+		ARG 1 dropItemConsumer
+		ARG 2 context

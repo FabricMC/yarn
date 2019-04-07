@@ -12,8 +12,10 @@ CLASS cpd net/minecraft/world/loot/function/CopyNbtLootFunction
 			ARG 2 target
 			ARG 3 operator
 	CLASS cpd$b Operation
-		FIELD a source Ljava/lang/String;
-		FIELD c target Ljava/lang/String;
+		FIELD a sourcePath Ljava/lang/String;
+		FIELD b parsedSourcePath Lcr$h;
+		FIELD c targetPath Ljava/lang/String;
+		FIELD d parsedTargetPath Lcr$h;
 		FIELD e operator Lcpd$d;
 		METHOD <init> (Ljava/lang/String;Ljava/lang/String;Lcpd$d;)V
 			ARG 1 source
@@ -24,6 +26,7 @@ CLASS cpd net/minecraft/world/loot/function/CopyNbtLootFunction
 			ARG 0 functionOpJsonObject
 		METHOD a execute (Ljava/util/function/Supplier;Lis;)V
 			ARG 1 itemTagTagGetter
+			ARG 2 sourceEntityTag
 	CLASS cpd$c Source
 		FIELD e name Ljava/lang/String;
 		FIELD f parameter Lcqa;
@@ -31,9 +34,22 @@ CLASS cpd net/minecraft/world/loot/function/CopyNbtLootFunction
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;Lcqa;Ljava/util/function/Function;)V
 			ARG 3 name
 			ARG 4 parameter
+			ARG 5 mergeFunction
+		METHOD a (Lcqa;Ljava/util/function/Function;Lcob;)Lis;
+			ARG 2 context
 		METHOD a get (Ljava/lang/String;)Lcpd$c;
 			ARG 0 name
 	CLASS cpd$d Operator
+		CLASS cpd$d$2
+			METHOD a (Lis;Lis;)V
+				ARG 1 listTag
+			METHOD a (Ljava/util/List;Lis;)V
+				ARG 1 foundTag
+		CLASS cpd$d$3
+			METHOD a (Lis;Lis;)V
+				ARG 1 compoundTag
+			METHOD a (Ljava/util/List;Lis;)V
+				ARG 1 foundTag
 		FIELD a REPLACE Lcpd$d;
 		FIELD b APPEND Lcpd$d;
 		FIELD c MERGE Lcpd$d;
@@ -45,6 +61,7 @@ CLASS cpd net/minecraft/world/loot/function/CopyNbtLootFunction
 			ARG 2 tragetPath
 			ARG 3 tagsFromSource
 		METHOD a get (Ljava/lang/String;)Lcpd$d;
+			ARG 0 name
 	CLASS cpd$e Factory
 	FIELD a source Lcpd$c;
 	FIELD c operations Ljava/util/List;
@@ -56,6 +73,8 @@ CLASS cpd net/minecraft/world/loot/function/CopyNbtLootFunction
 		ARG 3 operations
 	METHOD a (Lbbr;Lis;Lcpd$b;)V
 		ARG 2 operation
+	METHOD a (Lbtc;)Lis;
+		ARG 0 blockEntity
 	METHOD a create (Lcpd$c;)Lcpd$a;
 		ARG 0 source
 	METHOD b parseNbtPath (Ljava/lang/String;)Lcr$h;
