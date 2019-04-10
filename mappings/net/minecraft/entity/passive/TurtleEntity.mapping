@@ -1,20 +1,85 @@
 CLASS arf net/minecraft/entity/passive/TurtleEntity
-	CLASS arf$a TurtleMateGoal
-		FIELD d turtleEntity Larf;
+	CLASS arf$a MateGoal
+		FIELD d turtle Larf;
+		METHOD <init> (Larf;D)V
+			ARG 1 owner
+			ARG 2 speed
+	CLASS arf$b GoHomeGoal
+		FIELD a owner Larf;
+		FIELD b speed D
+		FIELD c noPath Z
+		FIELD d homeReachingTryTicks I
+		METHOD <init> (Larf;D)V
+			ARG 1 owner
+			ARG 2 speed
+	CLASS arf$c WanderInWaterGoal
+		FIELD g turtle Larf;
+		METHOD <init> (Larf;D)V
+			ARG 1 turtle
+			ARG 2 speed
+	CLASS arf$d LayEggGoal
+		FIELD g turtle Larf;
+		METHOD <init> (Larf;D)V
+			ARG 1 turtle
+			ARG 2 speed
 	CLASS arf$e TurtleMoveControl
 		FIELD i turtle Larf;
+		METHOD <init> (Larf;)V
+			ARG 1 owner
+		METHOD g updateVelocity ()V
+	CLASS arf$f TurtleEscapeDangerGoal
+		METHOD <init> (Larf;D)V
+			ARG 1 owner
+			ARG 2 speed
 	CLASS arf$g TurtleSwimNavigation
-	CLASS arf$i
-		FIELD a CLOSE_PLAYER_PREDICATE Lapq;
-		FIELD b turtleEntity Larf;
+		METHOD <init> (Larf;Lbgx;)V
+			ARG 1 owner
+			ARG 2 world
+	CLASS arf$h WanderOnLandGoal
+		FIELD h turtle Larf;
+	CLASS arf$i ApproachFoodHoldingPlayerGoal
+		FIELD a CLOSE_ENTITY_PREDICATE Lapq;
+		FIELD b owner Larf;
+		FIELD c speed D
 		FIELD d targetPlayer Lavo;
+		FIELD e cooldown I
+		FIELD f attractiveItems Ljava/util/Set;
+		METHOD <init> (Larf;DLbbm;)V
+			ARG 1 owner
+			ARG 2 speed
+			ARG 4 attractiveItem
+		METHOD a isAttractive (Lbbr;)Z
+			ARG 1 stack
+	CLASS arf$j TravelGoal
+		FIELD a owner Larf;
+		FIELD b speed D
+		FIELD c noPath Z
+		METHOD <init> (Larf;D)V
+			ARG 1 turtle
+			ARG 2 speed
 	FIELD bA BABY_TURTLE_ON_LAND_FILTER Ljava/util/function/Predicate;
 	FIELD bB HOME_POS Lqh;
 	FIELD bC HAS_EGG Lqh;
+	FIELD bE DIGGING_SAND Lqh;
 	FIELD bF TRAVEL_POS Lqh;
+	FIELD bG LAND_BOUND Lqh;
+	FIELD bH ACTIVELY_TRAVELLING Lqh;
+	FIELD bI sandDiggingCounter I
 	METHOD dS hasEgg ()Z
+	METHOD dT isDiggingSand ()Z
 	METHOD dU getHomePos ()Lev;
 	METHOD dV getTravelPos ()Lev;
+	METHOD dW isLandBound ()Z
+	METHOD eb isActivelyTravelling ()Z
 	METHOD g setHomePos (Lev;)V
+		ARG 1 pos
 	METHOD h setTravelPos (Lev;)V
+		ARG 1 pos
 	METHOD r setHasEgg (Z)V
+		ARG 1 hasEgg
+	METHOD s setDiggingSand (Z)V
+		ARG 1 diggingSand
+	METHOD t setLandBound (Z)V
+		ARG 1 landBound
+	METHOD u setActivelyTravelling (Z)V
+		ARG 1 travelling
