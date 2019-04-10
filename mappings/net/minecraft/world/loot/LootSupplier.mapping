@@ -4,9 +4,19 @@ CLASS coe net/minecraft/world/loot/LootSupplier
 		FIELD b functions Ljava/util/List;
 		FIELD c type Lcqb;
 		METHOD a withPool (Lcod$a;)Lcoe$a;
+			ARG 1 poolBuilder
 		METHOD a withType (Lcqb;)Lcoe$a;
+			ARG 1 context
 		METHOD b create ()Lcoe;
 	CLASS coe$b Serializer
+		METHOD deserialize (Lcom/google/gson/JsonElement;Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)Ljava/lang/Object;
+			ARG 1 lootTableRootJson
+			ARG 2 unused
+			ARG 3 context
+		METHOD serialize (Ljava/lang/Object;Ljava/lang/reflect/Type;Lcom/google/gson/JsonSerializationContext;)Lcom/google/gson/JsonElement;
+			ARG 1 supplier
+			ARG 2 unused
+			ARG 3 context
 	FIELD a EMPTY Lcoe;
 	FIELD b GENERIC Lcqb;
 	FIELD c LOGGER Lorg/apache/logging/log4j/Logger;
@@ -14,12 +24,36 @@ CLASS coe net/minecraft/world/loot/LootSupplier
 	FIELD e pools [Lcod;
 	FIELD f functions [Lcpl;
 	FIELD g combinedFunction Ljava/util/function/BiFunction;
+	METHOD <init> (Lcqb;[Lcod;[Lcpl;)V
+		ARG 1 contextType
+		ARG 2 pools
+		ARG 3 functions
 	METHOD a getType ()Lcqb;
 	METHOD a supplyInventory (Lago;Lcob;)V
+		ARG 1 inventory
+		ARG 2 context
 	METHOD a getFreeSlots (Lago;Ljava/util/Random;)Ljava/util/List;
+		ARG 1 inventory
+		ARG 2 random
 	METHOD a getDrops (Lcob;)Ljava/util/List;
+		ARG 1 context
 	METHOD a drop (Lcob;Ljava/util/function/Consumer;)V
+		ARG 1 context
+		ARG 2 itemDropper
 	METHOD a check (Lcof;Ljava/util/function/Function;Ljava/util/Set;Lcqb;)V
+		ARG 1 reporter
+		ARG 2 supplierGetter
+		ARG 3 parentLootTables
+		ARG 4 contextType
+	METHOD a shuffle (Ljava/util/List;ILjava/util/Random;)V
+		ARG 1 drops
+		ARG 2 freeSlots
+		ARG 3 random
 	METHOD a limitedConsumer (Ljava/util/function/Consumer;)Ljava/util/function/Consumer;
-	METHOD b create ()Lcoe$a;
+		ARG 0 itemDropper
+	METHOD a (Ljava/util/function/Consumer;Lbbr;)V
+		ARG 1 stack
+	METHOD b builder ()Lcoe$a;
 	METHOD b dropLimited (Lcob;Ljava/util/function/Consumer;)V
+		ARG 1 context
+		ARG 2 dropItemConsumer
