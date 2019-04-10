@@ -12,6 +12,7 @@ CLASS aia net/minecraft/entity/Entity
 	FIELD N random Ljava/util/Random;
 	FIELD O age I
 	FIELD P insideWater Z
+	FIELD Q waterHeight D
 	FIELD U dataTracker Lqk;
 	FIELD V FLAGS Lqh;
 	FIELD W POSE Lqh;
@@ -85,6 +86,9 @@ CLASS aia net/minecraft/entity/Entity
 		ARG 1 status
 	METHOD a shouldRenderAtDistance (D)Z
 		ARG 1 distance
+	METHOD a changeLookDirection (DD)V
+		ARG 1 cursorDeltaX
+		ARG 3 cursorDeltaY
 	METHOD a requestTeleport (DDD)V
 	METHOD a setPositionAnglesAndUpdate (DDDFF)V
 		ARG 1 x
@@ -191,7 +195,7 @@ CLASS aia net/minecraft/entity/Entity
 	METHOD aC getLightmapCoordinates ()I
 	METHOD aD getBrightnessAtEyes ()F
 	METHOD aE scheduleVelocityUpdate ()V
-	METHOD aF doesCollide ()Z
+	METHOD aF collides ()Z
 	METHOD aG isPushable ()Z
 	METHOD aH shouldSetPositionOnLoad ()Z
 	METHOD aI getSavedEntityId ()Ljava/lang/String;
@@ -200,8 +204,10 @@ CLASS aia net/minecraft/entity/Entity
 	METHOD aL updateRiding ()V
 	METHOD aM getHeightOffset ()D
 	METHOD aN getMountedHeightOffset ()D
+	METHOD aO isLiving ()Z
 	METHOD aP removeAllPassengers ()V
 	METHOD aQ getBoundingBoxMarginForTargeting ()F
+	METHOD aR getRotationVector ()Lcrl;
 	METHOD aS getRotationClient ()Lcrk;
 	METHOD aT getRotationVecClient ()Lcrl;
 	METHOD aV getDefaultPortalCooldown ()I
@@ -246,6 +252,7 @@ CLASS aia net/minecraft/entity/Entity
 		ARG 2 damageMultiplier
 	METHOD b setFlag (IZ)V
 		ARG 1 index
+		ARG 2 value
 	METHOD b isInvulnerableTo (Lahj;)Z
 	METHOD b setPose (Lait;)V
 	METHOD b onPlayerCollision (Lavo;)V
@@ -288,8 +295,10 @@ CLASS aia net/minecraft/entity/Entity
 	METHOD bc hasPassengers ()Z
 	METHOD bd canBeRiddenInWater ()Z
 	METHOD be isSneaking ()Z
+	METHOD bf isInSneakingPose ()Z
 	METHOD bg isSprinting ()Z
 	METHOD bh isSwimming ()Z
+	METHOD bi isInSwimmingPose ()Z
 	METHOD bj isGlowing ()Z
 	METHOD bk isInvisible ()Z
 	METHOD bl getScoreboardTeam ()Lcsn;
@@ -307,16 +316,20 @@ CLASS aia net/minecraft/entity/Entity
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
-	METHOD c getVectorFromRotation (FF)Lcrl;
+	METHOD c getRotationVector (FF)Lcrl;
 		ARG 1 pitch
 		ARG 2 yaw
+	METHOD c wouldPoseNotCollide (Lait;)Z
+		ARG 1 pose
 	METHOD c canSeePlayer (Lavo;)Z
+		ARG 1 player
 	METHOD c squaredDistanceTo (Lcrl;)D
 	METHOD c setInPortal (Lev;)V
 	METHOD c saveSelfToTag (Lib;)Z
 	METHOD c onStoppedTrackingBy (Lvg;)V
 	METHOD c setSilent (Z)V
 	METHOD cb getCommandSource ()Lcd;
+	METHOD cc getWaterHeight ()D
 	METHOD cd getWidth ()F
 	METHOD ce getHeight ()F
 	METHOD cf getPos ()Lcrl;
@@ -325,6 +338,9 @@ CLASS aia net/minecraft/entity/Entity
 		ARG 1 offsetX
 		ARG 3 offsetY
 		ARG 5 offsetZ
+	METHOD d getOppositeRotationVector (FF)Lcrl;
+		ARG 1 pitch
+		ARG 2 yaw
 	METHOD d playSwimSound (F)V
 		ARG 1 volume
 	METHOD d getEyeHeight (Lait;)F
@@ -337,6 +353,7 @@ CLASS aia net/minecraft/entity/Entity
 	METHOD e setEntityId (I)V
 	METHOD e toTag (Lib;)Lib;
 	METHOD e setSneaking (Z)V
+		ARG 1 sneaking
 	METHOD equals (Ljava/lang/Object;)Z
 		ARG 1 o
 	METHOD f addVelocity (DDD)V
@@ -348,6 +365,7 @@ CLASS aia net/minecraft/entity/Entity
 	METHOD f setOnFireFor (I)V
 	METHOD f fromTag (Lib;)V
 	METHOD f setSprinting (Z)V
+		ARG 1 sprinting
 	METHOD g shouldRenderFrom (DDD)Z
 		ARG 1 x
 		ARG 3 y
@@ -366,25 +384,39 @@ CLASS aia net/minecraft/entity/Entity
 	METHOD h getYaw (F)F
 		ARG 1 tickDelta
 	METHOD h getFlag (I)Z
+		ARG 1 index
 	METHOD h squaredDistanceTo (Laia;)D
 	METHOD h setGlowing (Z)V
+		ARG 1 glowing
 	METHOD i pushOutOfBlocks (DDD)V
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
+	METHOD i getOppositeRotationVector (F)Lcrl;
+		ARG 1 tickDelta
 	METHOD i setBreath (I)V
+		ARG 1 breath
 	METHOD i pushAwayFrom (Laia;)V
 	METHOD i setInvisible (Z)V
+		ARG 1 invisible
 	METHOD j stopRiding ()V
 	METHOD j setVelocity (DDD)V
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
 	METHOD j getCameraPosVec (F)Lcrl;
 		ARG 1 tickDelta
 	METHOD j allowsPermissionLevel (I)Z
+	METHOD j (Laia;)Lcrg;
 	METHOD k isBeingRainedOn ()Z
 	METHOD k setHeadYaw (F)V
 		ARG 1 headYaw
+	METHOD k updatePassengerPosition (Laia;)V
+		ARG 1 passenger
 	METHOD l isInsideBubbleColumn ()Z
 	METHOD l setYaw (F)V
+	METHOD l onPassengerLookAround (Laia;)V
+		ARG 1 passenger
 	METHOD l setInvulnerable (Z)V
 	METHOD m startRiding (Laia;)Z
 	METHOD m setCustomNameVisible (Z)V
