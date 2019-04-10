@@ -22,7 +22,7 @@ plugins {
 	id 'maven-publish'
 }
 
-def minecraft_version = "19w14b"
+def minecraft_version = "1.14 Pre-Release 1"
 
 def ENV = System.getenv()
 // Fetch build number from Jenkins
@@ -225,7 +225,8 @@ task checkMappings {
 }
 
 task downloadIntermediary(type: Download){
-    src "https://github.com/FabricMC/intermediary/raw/master/mappings/${minecraft_version}.tiny"
+    def url = "https://github.com/FabricMC/intermediary/raw/master/mappings/${minecraft_version}.tiny"
+    src url.replaceAll(" ", "%20")
     dest new File(cacheFilesMinecraft, "${minecraft_version}-intermediary.tiny")
 }
 
