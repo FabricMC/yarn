@@ -1,7 +1,16 @@
 CLASS ctp net/minecraft/client/texture/NativeImage
 	CLASS ctp$a Format
 		FIELD e bytesPerPixel I
+		FIELD f pixelDataFormat I
 		METHOD a getBytesPerPixel ()I
+		METHOD b setPackAlignment ()V
+		METHOD c setUnpackAlignment ()V
+		METHOD d getPixelDataFormat ()I
+		METHOD g hasLuminanceOrAlpha ()Z
+	CLASS ctp$c WriteCallback
+		FIELD a channel Ljava/nio/channels/WritableByteChannel;
+		FIELD b exception Ljava/io/IOException;
+		METHOD a throwStoredException ()V
 	FIELD a WRITE_TO_FILE_OPEN_OPTIONS Ljava/util/Set;
 	FIELD b format Lctp$a;
 	FIELD c width I
@@ -48,8 +57,11 @@ CLASS ctp net/minecraft/client/texture/NativeImage
 		ARG 9 clamp
 	METHOD a resizeSubRectTo (IIIILctp;)V
 	METHOD a upload (IIIZ)V
+	METHOD a loadFromTextureImage (IZ)V
 	METHOD a fromInputStream (Lctp$a;Ljava/io/InputStream;)Lctp;
 	METHOD a fromByteBuffer (Lctp$a;Ljava/nio/ByteBuffer;)Lctp;
+	METHOD a copyFrom (Lctp;)V
+		ARG 1 image
 	METHOD a writeFile (Ljava/io/File;)V
 	METHOD a fromInputStream (Ljava/io/InputStream;)Lctp;
 	METHOD a writeFile (Ljava/lang/String;)V
@@ -65,6 +77,7 @@ CLASS ctp net/minecraft/client/texture/NativeImage
 		ARG 7 shiftX
 		ARG 8 shiftY
 		ARG 10 glyph
+	METHOD a setTextureFilter (ZZ)V
 	METHOD b getHeight ()I
 	METHOD b getAlphaOrLuminance (II)B
 		ARG 1 x
@@ -76,4 +89,5 @@ CLASS ctp net/minecraft/client/texture/NativeImage
 		ARG 0 clamp
 	METHOD c getFormat ()Lctp$a;
 	METHOD d makePixelArray ()[I
+	METHOD f untrack ()V
 	METHOD g checkAllocated ()V
