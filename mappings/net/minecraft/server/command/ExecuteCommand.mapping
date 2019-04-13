@@ -2,7 +2,7 @@ CLASS sa net/minecraft/server/command/ExecuteCommand
 	CLASS sa$a ExistsCondition
 		METHOD test (Lcom/mojang/brigadier/context/CommandContext;)I
 			ARG 1 context
-	CLASS sa$b BooleanCondition
+	CLASS sa$b Condition
 		METHOD test (Lcom/mojang/brigadier/context/CommandContext;)Z
 			ARG 1 context
 	FIELD a BLOCKS_TOOBIG_EXCEPTION Lcom/mojang/brigadier/exceptions/Dynamic2CommandExceptionType;
@@ -39,11 +39,13 @@ CLASS sa net/minecraft/server/command/ExecuteCommand
 	METHOD a transformSourceForCondition (Lcom/mojang/brigadier/context/CommandContext;ZZ)Ljava/util/Collection;
 		ARG 0 context
 		ARG 1 positive
-		ARG 2 requestResultValue
-	METHOD a executeCondition (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/builder/ArgumentBuilder;ZLsa$b;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+		ARG 2 value
+	METHOD a addConditionExecute (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/builder/ArgumentBuilder;ZLsa$b;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
 		ARG 0 node
 		ARG 1 builder
-	METHOD a addBlockConditionArguments (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/builder/ArgumentBuilder;ZZ)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+		ARG 2 positive
+		ARG 3 condition
+	METHOD a addBlocksConditionExecute (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/builder/ArgumentBuilder;ZZ)Lcom/mojang/brigadier/builder/ArgumentBuilder;
 		ARG 0 node
 		ARG 1 builder
 		ARG 2 positive
@@ -65,7 +67,7 @@ CLASS sa net/minecraft/server/command/ExecuteCommand
 		ARG 2 end
 		ARG 3 destination
 		ARG 4 masked
-	METHOD a executeCondition (ZLsa$a;)Lcom/mojang/brigadier/Command;
+	METHOD a getExistsConditionExecute (ZLsa$a;)Lcom/mojang/brigadier/Command;
 		ARG 0 positive
 		ARG 1 condition
 	METHOD b executeNegativeBlockCondition (Lcom/mojang/brigadier/context/CommandContext;Z)I
