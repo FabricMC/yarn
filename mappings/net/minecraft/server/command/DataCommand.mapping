@@ -1,4 +1,12 @@
 CLASS ub net/minecraft/server/command/DataCommand
+	CLASS ub$a Modify
+		METHOD modify (Lcom/mojang/brigadier/context/CommandContext;Lib;Lcr$h;Ljava/util/List;)I
+			ARG 1 context
+			ARG 3 path
+			ARG 4 tags
+	CLASS ub$b
+		METHOD create (Lub$a;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+			ARG 1 modifier
 	CLASS ub$c ObjectType
 		METHOD a addArgumentsToBuilder (Lcom/mojang/brigadier/builder/ArgumentBuilder;Ljava/util/function/Function;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
 			ARG 1 argumentBuilder
@@ -16,6 +24,8 @@ CLASS ub net/minecraft/server/command/DataCommand
 	FIELD j MODIFY_INVALID_INDEX_EXCEPTION Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;
 	METHOD a executeInsert (ILib;Lcr$h;Ljava/util/List;)I
 		ARG 0 integer
+		ARG 1 sourceTag
+		ARG 3 tags
 	METHOD a executeGet (Lcd;Lua;)I
 		ARG 0 source
 		ARG 1 object
@@ -33,11 +43,16 @@ CLASS ub net/minecraft/server/command/DataCommand
 		ARG 1 object
 		ARG 2 tag
 	METHOD a register (Lcom/mojang/brigadier/CommandDispatcher;)V
-	METHOD a (Lcom/mojang/brigadier/context/CommandContext;Lub$c;Lub$a;Ljava/util/List;)I
+		ARG 0 dispatcher
+	METHOD a executeModify (Lcom/mojang/brigadier/context/CommandContext;Lub$c;Lub$a;Ljava/util/List;)I
+		ARG 0 context
 		ARG 1 objectType
+		ARG 2 modifier
+		ARG 3 tags
 	METHOD a getTag (Lcr$h;Lua;)Lis;
 		ARG 0 path
 		ARG 1 object
+	METHOD a addModifyArgument (Ljava/util/function/BiConsumer;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
 	METHOD b executeGet (Lcd;Lua;Lcr$h;)I
 		ARG 0 source
 		ARG 1 object
