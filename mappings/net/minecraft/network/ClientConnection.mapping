@@ -1,4 +1,7 @@
 CLASS ja net/minecraft/network/ClientConnection
+	CLASS net/minecraft/network/ClientConnection$a PacketWrapper
+		FIELD a packet Lka;
+		FIELD b listener Lio/netty/util/concurrent/GenericFutureListener;
 	FIELD a MARKER_NETWORK Lorg/apache/logging/log4j/Marker;
 	FIELD b MARKER_NETWORK_PACKETS Lorg/apache/logging/log4j/Marker;
 	FIELD c ATTR_KEY_PROTOCOL Lio/netty/util/AttributeKey;
@@ -7,6 +10,7 @@ CLASS ja net/minecraft/network/ClientConnection
 	FIELD f CLIENT_IO_GROUP_LOCAL Lzo;
 	FIELD g LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD h side Lkb;
+	FIELD i packetQueue Ljava/util/Queue;
 	FIELD j lock Ljava/util/concurrent/locks/ReentrantReadWriteLock;
 	FIELD k channel Lio/netty/channel/Channel;
 	FIELD l address Ljava/net/SocketAddress;
@@ -21,6 +25,9 @@ CLASS ja net/minecraft/network/ClientConnection
 	FIELD u ticks I
 	METHOD a tick ()V
 	METHOD a setMinCompressedSize (I)V
+	METHOD a handlePacket (Lio/netty/channel/ChannelHandlerContext;Lka;)V
+		ARG 1 context
+		ARG 2 packet
 	METHOD a connect (Ljava/net/InetAddress;IZ)Lja;
 		ARG 0 address
 		ARG 1 port
@@ -32,9 +39,18 @@ CLASS ja net/minecraft/network/ClientConnection
 	METHOD a setPacketListener (Ljf;)V
 	METHOD a disconnect (Ljm;)V
 		ARG 1 disconnectReason
-	METHOD a sendPacket (Lka;)V
-	METHOD a sendPacket (Lka;Lio/netty/util/concurrent/GenericFutureListener;)V
+	METHOD a send (Lka;)V
+		ARG 1 packet
+	METHOD a send (Lka;Lio/netty/util/concurrent/GenericFutureListener;)V
+		ARG 1 packet
+		ARG 2 listener
+	METHOD a handlePacket (Lka;Ljf;)V
+		ARG 0 packet
+		ARG 1 listener
 	METHOD b getAddress ()Ljava/net/SocketAddress;
+	METHOD b sendImmediately (Lka;Lio/netty/util/concurrent/GenericFutureListener;)V
+		ARG 1 packet
+		ARG 2 listener
 	METHOD c isLocal ()Z
 	METHOD f isEncrypted ()Z
 	METHOD g isOpen ()Z
@@ -45,3 +61,4 @@ CLASS ja net/minecraft/network/ClientConnection
 	METHOD l handleDisconnection ()V
 	METHOD m getAveragePacketsReceived ()F
 	METHOD n getAveragePacketsSent ()F
+	METHOD o sendQueuedPackets ()V
