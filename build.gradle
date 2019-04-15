@@ -439,12 +439,12 @@ void mapJar(File output, File input, File mappings, File libraries, String from,
 	try {
 		def outputConsumer = new OutputConsumerPath(output.toPath())
 		outputConsumer.addNonClassFiles(input.toPath())
-		remapper.read(input.toPath())
+		remapper.readInputs(input.toPath())
 
 		libraries.eachFileRecurse(FileType.FILES) {file ->
-			remapper.read(file.toPath())
+			remapper.readInputs(file.toPath())
 		}
-		remapper.apply(input.toPath(), outputConsumer)
+		remapper.apply(outputConsumer)
 		outputConsumer.close()
 		remapper.finish()
 	} catch (Exception e) {
