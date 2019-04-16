@@ -2,6 +2,14 @@ CLASS tk net/minecraft/server/command/SpreadPlayersCommand
 	CLASS tk$a Pile
 		FIELD a x D
 		FIELD b z D
+		METHOD a normalize ()V
+		METHOD a clamp (DDDD)Z
+			ARG 1 minX
+			ARG 3 minZ
+			ARG 5 maxX
+			ARG 7 maxZ
+		METHOD a getY (Lbgl;)I
+			ARG 1 blockView
 		METHOD a setPileLocation (Ljava/util/Random;DDDD)V
 			ARG 1 random
 			ARG 2 minX
@@ -9,9 +17,12 @@ CLASS tk net/minecraft/server/command/SpreadPlayersCommand
 			ARG 6 maxX
 			ARG 8 maxZ
 		METHOD a getDistance (Ltk$a;)D
-			ARG 1 pile
+			ARG 1 other
+		METHOD b absolute ()F
 		METHOD b isSafe (Lbgl;)Z
 			ARG 1 world
+		METHOD b subtract (Ltk$a;)V
+			ARG 1 other
 	FIELD a FAILED_TEAMS_EXCEPTION Lcom/mojang/brigadier/exceptions/Dynamic4CommandExceptionType;
 	FIELD b FAILED_ENTITIES_EXCEPTION Lcom/mojang/brigadier/exceptions/Dynamic4CommandExceptionType;
 	METHOD a execute (Lcd;Lcrn;FFZLjava/util/Collection;)I
@@ -22,6 +33,7 @@ CLASS tk net/minecraft/server/command/SpreadPlayersCommand
 		ARG 4 respectTeams
 		ARG 5 targets
 	METHOD a register (Lcom/mojang/brigadier/CommandDispatcher;)V
+		ARG 0 dispatcher
 	METHOD a spread (Lcrn;DLvf;Ljava/util/Random;DDDD[Ltk$a;Z)V
 		ARG 0 center
 		ARG 1 spreadDistance

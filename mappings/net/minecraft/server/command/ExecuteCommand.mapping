@@ -1,41 +1,78 @@
 CLASS sa net/minecraft/server/command/ExecuteCommand
-	CLASS sa$a Condition
+	CLASS sa$a ExistsCondition
+		METHOD test (Lcom/mojang/brigadier/context/CommandContext;)I
+			ARG 1 context
+	CLASS sa$b Condition
+		METHOD test (Lcom/mojang/brigadier/context/CommandContext;)Z
+			ARG 1 context
 	FIELD a BLOCKS_TOOBIG_EXCEPTION Lcom/mojang/brigadier/exceptions/Dynamic2CommandExceptionType;
 	FIELD b CONDITIONAL_FAIL_EXCEPTION Lcom/mojang/brigadier/exceptions/SimpleCommandExceptionType;
 	FIELD c CONDITIONAL_FAIL_COUNT_EXCEPTION Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;
+	FIELD d BINARY_RESULT_CONSUMER Ljava/util/function/BinaryOperator;
 	METHOD a executeStoreScore (Lcd;Ljava/util/Collection;Lcsl;Z)Lcd;
 		ARG 0 source
 		ARG 1 targets
 		ARG 2 objective
+		ARG 3 requestResultValue
 	METHOD a executeStoreBossbar (Lcd;Lri;ZZ)Lcd;
+		ARG 0 source
 		ARG 1 bossBar
+		ARG 2 storeInValue
+		ARG 3 requestResultValue
 	METHOD a executeStoreData (Lcd;Lua;Lcr$h;Ljava/util/function/IntFunction;Z)Lcd;
+		ARG 0 source
+		ARG 1 object
+		ARG 2 path
+		ARG 3 tagSetter
+		ARG 4 requestResultValue
 	METHOD a register (Lcom/mojang/brigadier/CommandDispatcher;)V
-	METHOD a testObjectiveCondition (Lcom/mojang/brigadier/context/CommandContext;Lbi$d;)Z
-	METHOD a testObjectiveCondition (Lcom/mojang/brigadier/context/CommandContext;Ljava/util/function/BiPredicate;)Z
+		ARG 0 dispatcher
+	METHOD a testScoreMatch (Lcom/mojang/brigadier/context/CommandContext;Lbi$d;)Z
+		ARG 0 context
+		ARG 1 range
+	METHOD a testScoreCondition (Lcom/mojang/brigadier/context/CommandContext;Ljava/util/function/BiPredicate;)Z
+		ARG 0 context
+		ARG 1 condition
 	METHOD a executePositiveBlockCondition (Lcom/mojang/brigadier/context/CommandContext;Z)I
+		ARG 0 context
 		ARG 1 masked
-	METHOD a transformSourceForCondition (Lcom/mojang/brigadier/context/CommandContext;ZZ)Ljava/util/Collection;
+	METHOD a getSourceOrEmptyForConditionFork (Lcom/mojang/brigadier/context/CommandContext;ZZ)Ljava/util/Collection;
+		ARG 0 context
 		ARG 1 positive
-		ARG 2 result
-	METHOD a executeCondition (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/builder/ArgumentBuilder;ZLsa$b;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
-	METHOD a addBlockConditionExecutes (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/builder/ArgumentBuilder;ZZ)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+		ARG 2 value
+	METHOD a addConditionLogic (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/builder/ArgumentBuilder;ZLsa$b;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+		ARG 0 root
+		ARG 1 builder
+		ARG 2 positive
+		ARG 3 condition
+	METHOD a addBlocksConditionLogic (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/builder/ArgumentBuilder;ZZ)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+		ARG 0 root
+		ARG 1 builder
 		ARG 2 positive
 		ARG 3 masked
 	METHOD a addConditionArguments (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;Z)Lcom/mojang/brigadier/builder/ArgumentBuilder;
-		ARG 0 node
+		ARG 0 root
 		ARG 1 argumentBuilder
 		ARG 2 positive
 	METHOD a addStoreArguments (Lcom/mojang/brigadier/tree/LiteralCommandNode;Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;Z)Lcom/mojang/brigadier/builder/ArgumentBuilder;
 		ARG 0 node
 		ARG 1 builder
-		ARG 2 result
+		ARG 2 requestResultValue
 	METHOD a countPathMatches (Lua;Lcr$h;)I
 		ARG 0 object
 		ARG 1 path
-	METHOD a testBlockCondition (Lvf;Lev;Lev;Lev;Z)Ljava/util/OptionalInt;
-	METHOD a executeCondition (ZLsa$a;)Lcom/mojang/brigadier/Command;
+	METHOD a testBlocksCondition (Lvf;Lev;Lev;Lev;Z)Ljava/util/OptionalInt;
+		ARG 0 world
+		ARG 1 start
+		ARG 2 end
+		ARG 3 destination
+		ARG 4 masked
+	METHOD a getExistsConditionExecute (ZLsa$a;)Lcom/mojang/brigadier/Command;
 		ARG 0 positive
 		ARG 1 condition
 	METHOD b executeNegativeBlockCondition (Lcom/mojang/brigadier/context/CommandContext;Z)I
-	METHOD c testBlockCondition (Lcom/mojang/brigadier/context/CommandContext;Z)Ljava/util/OptionalInt;
+		ARG 0 context
+		ARG 1 masked
+	METHOD c testBlocksCondition (Lcom/mojang/brigadier/context/CommandContext;Z)Ljava/util/OptionalInt;
+		ARG 0 context
+		ARG 1 masked
