@@ -11,9 +11,12 @@ CLASS bi net/minecraft/util/NumberRange
 			ARG 0 element
 		METHOD a parse (Lcom/mojang/brigadier/StringReader;)Lbi$c;
 			ARG 0 reader
-		METHOD a (Lcom/mojang/brigadier/StringReader;Ljava/lang/Float;Ljava/lang/Float;)Lbi$c;
+		METHOD a create (Lcom/mojang/brigadier/StringReader;Ljava/lang/Float;Ljava/lang/Float;)Lbi$c;
+			ARG 0 reader
 			ARG 1 min
 			ARG 2 max
+		METHOD a parse (Lcom/mojang/brigadier/StringReader;Ljava/util/function/Function;)Lbi$c;
+			ARG 0 reader
 		METHOD a squared (Ljava/lang/Float;)Ljava/lang/Double;
 			ARG 0 value
 		METHOD b atLeast (F)Lbi$c;
@@ -51,8 +54,13 @@ CLASS bi net/minecraft/util/NumberRange
 		ARG 0 json
 		ARG 1 defaultValue
 		ARG 3 factory
-	METHOD a fromStringReader (Lcom/mojang/brigadier/StringReader;Lbi$b;Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/util/function/Function;)Lbi;
+	METHOD a isNextCharValid (Lcom/mojang/brigadier/StringReader;)Z
+		ARG 0 reader
+	METHOD a parse (Lcom/mojang/brigadier/StringReader;Lbi$b;Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/util/function/Function;)Lbi;
 	METHOD a fromStringReader (Lcom/mojang/brigadier/StringReader;Ljava/util/function/Function;Ljava/util/function/Supplier;)Ljava/lang/Number;
+	METHOD a applyIfNonNull (Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+		ARG 0 object
+		ARG 1 function
 	METHOD b getMax ()Ljava/lang/Number;
 	METHOD c isDummy ()Z
 	METHOD d serialize ()Lcom/google/gson/JsonElement;

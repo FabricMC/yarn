@@ -1,12 +1,91 @@
 CLASS cr net/minecraft/command/arguments/NbtPathArgumentType
 	CLASS cr$i NbtPathNode
-	FIELD a INVALID_NBT_PATH_NODE_EXCEPTION Lcom/mojang/brigadier/exceptions/SimpleCommandExceptionType;
-	FIELD b NBT_PATH_NOT_FOUND_EXCEPTION Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;
+		METHOD a createParent ()Lis;
+		METHOD a remove (Lis;)I
+			ARG 1 tag
+		METHOD a get (Lis;Ljava/util/List;)V
+			ARG 1 tag
+			ARG 2 results
+		METHOD a put (Lis;Ljava/util/function/Supplier;)I
+			ARG 1 tag
+			ARG 2 supplier
+		METHOD a putIfAbsent (Lis;Ljava/util/function/Supplier;Ljava/util/List;)V
+			ARG 1 tag
+			ARG 2 supplier
+			ARG 3 results
+		METHOD a get (Ljava/util/List;)Ljava/util/List;
+			ARG 1 tags
+		METHOD a get (Ljava/util/List;Ljava/util/function/BiConsumer;)Ljava/util/List;
+			ARG 1 tags
+			ARG 2 getter
+		METHOD a putIfAbsent (Ljava/util/List;Ljava/util/function/Supplier;)Ljava/util/List;
+			ARG 1 tags
+			ARG 2 supplier
+	CLASS cr$a AllListElementsNode
+		FIELD a INSTANCE Lcr$a;
+	CLASS cr$b CompoundChildNode
+		FIELD a name Ljava/lang/String;
+	CLASS cr$c ListIndexNode
+		FIELD a index I
+		METHOD <init> (I)V
+			ARG 1 index
+	CLASS cr$e EqualListElementNode
+		FIELD a tag Lib;
+		FIELD b predicate Ljava/util/function/Predicate;
+	CLASS cr$f EqualCompundChildNode
+		FIELD a name Ljava/lang/String;
+		FIELD b tag Lib;
+		FIELD c predicate Ljava/util/function/Predicate;
+		METHOD <init> (Ljava/lang/String;Lib;)V
+			ARG 1 name
+			ARG 2 tag
+	CLASS cr$g EqualCompoundNode
+		FIELD a predicate Ljava/util/function/Predicate;
+		METHOD <init> (Lib;)V
+			ARG 1 tag
+	CLASS cr$h NbtPath
+		FIELD a string Ljava/lang/String;
+		FIELD b nodeEndIndices Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+		FIELD c nodes [Lcr$i;
+		METHOD <init> (Ljava/lang/String;[Lcr$i;Lit/unimi/dsi/fastutil/objects/Object2IntMap;)V
+			ARG 1 string
+			ARG 2 nodes
+			ARG 3 nodeEndIndices
+		METHOD a createNothingFoundException (Lcr$i;)Lcom/mojang/brigadier/exceptions/CommandSyntaxException;
+			ARG 1 node
+		METHOD a get (Lis;)Ljava/util/List;
+			ARG 1 tag
+		METHOD a putIfAbsent (Lis;Ljava/util/function/Supplier;)Ljava/util/List;
+			ARG 1 tag
+			ARG 2 supplier
+		METHOD a forEach (Ljava/util/List;Ljava/util/function/Function;)I
+			ARG 0 tags
+			ARG 1 function
+		METHOD b count (Lis;)I
+			ARG 1 tag
+		METHOD b put (Lis;Ljava/util/function/Supplier;)I
+			ARG 1 tag
+			ARG 2 supplier
+		METHOD c remove (Lis;)I
+			ARG 1 tag
+		METHOD d getParents (Lis;)Ljava/util/List;
+			ARG 1 tag
+	FIELD a INVALID_PATH_NODE_EXCEPTION Lcom/mojang/brigadier/exceptions/SimpleCommandExceptionType;
+	FIELD b NOTHING_FOUND_EXCEPTION Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;
 	FIELD c EXAMPLES Ljava/util/Collection;
 	METHOD a create ()Lcr;
+	METHOD a isNameCharacter (C)Z
+		ARG 0 c
+	METHOD a readCompoundChildNode (Lcom/mojang/brigadier/StringReader;Ljava/lang/String;)Lcr$i;
+		ARG 0 reader
+		ARG 1 name
 	METHOD a parseNode (Lcom/mojang/brigadier/StringReader;Z)Lcr$i;
 		ARG 0 reader
 		ARG 1 first
 	METHOD a getNbtPath (Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;)Lcr$h;
 		ARG 0 context
 		ARG 1 name
+	METHOD b readName (Lcom/mojang/brigadier/StringReader;)Ljava/lang/String;
+		ARG 0 reader
+	METHOD b getEqualityPredicate (Lib;)Ljava/util/function/Predicate;
+		ARG 0 tag
