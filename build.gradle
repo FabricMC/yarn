@@ -7,8 +7,8 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath "net.fabricmc:weave:0.3.0.+"
-		classpath "net.fabricmc:stitch:0.1.2.46"
+		classpath "net.fabricmc:weave:0.3.1.17+"
+		classpath "net.fabricmc:stitch:0.1.2.49"
 		classpath "commons-io:commons-io:1.4"
 		classpath "com.google.guava:guava:19.0"
 		classpath 'de.undercouch:gradle-download-task:3.4.3'
@@ -70,12 +70,13 @@ import org.apache.commons.io.FileUtils
 import com.google.common.hash.Hashing
 import com.google.common.io.Files
 import net.fabricmc.stitch.commands.CommandMergeTiny
+import net.fabricmc.stitch.commands.CommandRewriteIntermediary
 import net.fabricmc.stitch.merge.JarMerger
 import net.fabricmc.tinyremapper.OutputConsumerPath
 import net.fabricmc.tinyremapper.TinyRemapper
 import net.fabricmc.tinyremapper.TinyUtils
-import net.fabricmc.weave.CommandTinyify
 import net.fabricmc.weave.CommandFindMappingErrors
+import net.fabricmc.weave.CommandTinyify
 import groovy.io.FileType
 import java.util.zip.GZIPOutputStream
 
@@ -230,6 +231,28 @@ task downloadIntermediary(type: Download){
     dest new File(cacheFilesMinecraft, "${minecraft_version}-intermediary.tiny")
 }
 
+task patchIntermediary(dependsOn: ["mergeJars", "downloadIntermediary"], type: FileOutput) {
+	def intermediaryTinyInput = downloadIntermediary.dest
+
+	def outputFile = new File(cacheFilesMinecraft, "${minecraft_version}-intermediary-full.tiny")
+	outputs.file(outputFile)
+	fileOutput = outputFile
+
+	outputs.upToDateWhen {return false}
+
+	doLast {
+		logger.lifecycle(":patching intermediary")
+		String[] args = [
+			mergedFile.getAbsolutePath(),
+			intermediaryTinyInput.getAbsolutePath(),
+			outputFile.getAbsolutePath(),
+			"--writeAll"
+		]
+
+		new CommandRewriteIntermediary().run(args)
+	}
+}
+
 task buildYarnTiny(dependsOn: "mergeJars",type: FileOutput) {
 	inputs.dir mappingsDir
 	if (!libs.exists()) {
@@ -256,9 +279,9 @@ task buildYarnTiny(dependsOn: "mergeJars",type: FileOutput) {
 	}
 }
 
-task mergeTiny(dependsOn: ["buildYarnTiny", "downloadIntermediary"], type: FileOutput) {
+task mergeTiny(dependsOn: ["buildYarnTiny", "patchIntermediary"], type: FileOutput) {
 	def yarnTinyInput = buildYarnTiny.fileOutput
-	def intermediaryTinyInput = downloadIntermediary.dest
+	def intermediaryTinyInput = patchIntermediary.fileOutput
 
 	def outputFile = new File(tempDir, "mappings.tiny")
 	outputs.file(outputFile)
