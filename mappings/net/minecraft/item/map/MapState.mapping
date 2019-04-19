@@ -1,19 +1,69 @@
 CLASS cnv net/minecraft/item/map/MapState
+	CLASS cnv$a PlayerUpdateTracker
+		FIELD a player Lavx;
+		FIELD d dirty Z
+		FIELD e startX I
+		FIELD f startZ I
+		FIELD g endX I
+		FIELD h endZ I
+		FIELD i emptyPacketsRequested I
+		METHOD <init> (Lcnv;Lavx;)V
+			ARG 1 player
+		METHOD a markDirty (II)V
+			ARG 1 x
+			ARG 2 z
+		METHOD a getPacket (Lbca;)Lka;
 	FIELD a xCenter I
 	FIELD b zCenter I
 	FIELD c dimension Lbyd;
 	FIELD d showIcons Z
 	FIELD e unlimitedTracking Z
 	FIELD f scale B
-	FIELD g colorArray [B
+	FIELD g colors [B
 	FIELD h locked Z
+	FIELD i updateTrackers Ljava/util/List;
 	FIELD j icons Ljava/util/Map;
+	FIELD k updateTrackersByPlayer Ljava/util/Map;
+	FIELD l banners Ljava/util/Map;
+	FIELD m frames Ljava/util/Map;
 	METHOD <init> (Ljava/lang/String;)V
 		ARG 1 key
 	METHOD a calculateCenter (DDI)V
+	METHOD a markDirty (II)V
+		ARG 1 x
+		ARG 2 z
 	METHOD a init (IIIZZLbyd;)V
 		ARG 3 scale
 		ARG 4 showIcons
 		ARG 5 unlimitedTracking
+	METHOD a getPlayerSyncData (Lavx;)Lcnv$a;
+		ARG 1 player
+	METHOD a update (Lavx;Lbca;)V
+		ARG 1 player
+		ARG 2 stack
+	METHOD a getPlayerMarkerPacket (Lbca;Lbgr;Lavx;)Lka;
+		ARG 1 map
+		ARG 2 world
+		ARG 3 pos
 	METHOD a addDecorationsTag (Lbca;Lev;Ljava/lang/String;Lcns$a;)V
+		ARG 2 id
+	METHOD a removeBanner (Lbgr;II)V
+		ARG 1 world
+		ARG 2 x
+		ARG 3 z
+	METHOD a addBanner (Lbhi;Lev;)V
+		ARG 1 world
+		ARG 2 pos
+	METHOD a addIcon (Lcns$a;Lbhi;Ljava/lang/String;DDDLjm;)V
+		ARG 1 type
+		ARG 2 world
+		ARG 3 key
+		ARG 4 x
+		ARG 6 z
+		ARG 8 rotation
+		ARG 10 text
+	METHOD a copyFrom (Lcnv;)V
+		ARG 1 state
+	METHOD a removeFrame (Lev;I)V
+		ARG 1 pos
 		ARG 2 id
