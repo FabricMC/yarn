@@ -1,30 +1,52 @@
 CLASS dne net/minecraft/client/render/chunk/ChunkRenderer
 	FIELD a chunkUpdateCount I
-	FIELD b chunkRenderData Ldnc;
+	FIELD b data Ldnc;
 	FIELD c boundingBox Lcrq;
 	FIELD d world Lbhh;
 	FIELD e renderer Ldkm;
-	FIELD f chunkRenderLock Ljava/util/concurrent/locks/ReentrantLock;
-	FIELD g chunkRenderDataLock Ljava/util/concurrent/locks/ReentrantLock;
-	FIELD h chunkRenderDataTask Ldmz;
+	FIELD f lock Ljava/util/concurrent/locks/ReentrantLock;
+	FIELD g dataLock Ljava/util/concurrent/locks/ReentrantLock;
+	FIELD h task Ldmz;
 	FIELD i blockEntities Ljava/util/Set;
 	FIELD j buffers [Lcun;
-	FIELD l renderScheduled Z
+	FIELD l rebuildScheduled Z
 	FIELD m origin Lev$a;
+	FIELD n neighborPositions [Lev$a;
+	FIELD o rebuildOnClientThread Z
 	METHOD a delete ()V
 	METHOD a resortTransparency (FFFLdmz;)V
+	METHOD a setOrigin (III)V
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
 	METHOD a endBufferBuilding (Lbgs;FFFLcuj;Ldnc;)V
 	METHOD a beginBufferBuilding (Lcuj;Lev;)V
-	METHOD a setChunkRenderData (Ldnc;)V
-		ARG 1 chunkRenderData
-	METHOD a scheduleRender (Z)V
+	METHOD a setData (Ldnc;)V
+		ARG 1 data
+	METHOD a isChunkNonEmpty (Lev;Lbhh;)Z
+		ARG 0 pos
+		ARG 1 world
+	METHOD a getNeighborPosition (Lfa;)Lev;
+		ARG 1 direction
+	METHOD a scheduleRebuild (Z)V
+		ARG 1 rebuildOnClientThread
+	METHOD b shouldBuild ()Z
 	METHOD b rebuildChunk (FFFLdmz;)V
+		ARG 1 cameraX
+		ARG 2 cameraY
+		ARG 3 cameraZ
+		ARG 4 task
 	METHOD b getGlBuffer (I)Lcun;
+		ARG 1 layer
 	METHOD c cancel ()V
-	METHOD d getChunkRenderLock ()Ljava/util/concurrent/locks/ReentrantLock;
-	METHOD f getResortTransparencyTask ()Ldmz;
-	METHOD g getDistanceToPlayerSquared ()D
-	METHOD h getChunkRenderData ()Ldnc;
+	METHOD d getLock ()Ljava/util/concurrent/locks/ReentrantLock;
+	METHOD e startRebuild ()Ldmz;
+	METHOD f startResortTransparency ()Ldmz;
+	METHOD g getSquaredCameraDistance ()D
+	METHOD h getData ()Ldnc;
 	METHOD i clear ()V
 	METHOD k getOrigin ()Lev;
+	METHOD l unscheduleRebuild ()V
+	METHOD m shouldRebuild ()Z
+	METHOD n shouldRebuildOnClientThread ()Z
 	METHOD o getWorld ()Lbhh;
