@@ -24,7 +24,8 @@ CLASS dkm net/minecraft/client/render/WorldRenderer
 	FIELD X chunkRendererList Ldkc;
 	FIELD Y renderDistance I
 	FIELD a DIRECTIONS [Lfa;
-	FIELD aa renderedEntities I
+	FIELD aa regularEntityCount I
+	FIELD ab blockEntityCount I
 	FIELD ad forcedFrustum Ldnn;
 	FIELD af forcedFrustumPosition Lcus;
 	FIELD ag vertexBufferObjectsEnabled Z
@@ -49,7 +50,9 @@ CLASS dkm net/minecraft/client/render/WorldRenderer
 	FIELD n blockEntities Ljava/util/Set;
 	FIELD o chunkRenderDispatcher Ldkw;
 	FIELD p starsDisplayList I
+	FIELD r skyDisplayList I
 	FIELD t starsBuffer Lcun;
+	FIELD v skyBuffer Lcun;
 	FIELD x cloudsDirty Z
 	FIELD y cloudsDisplayList I
 	FIELD z cloudsBuffer Lcun;
@@ -87,6 +90,7 @@ CLASS dkm net/minecraft/client/render/WorldRenderer
 		ARG 3 z
 	METHOD a playGlobalEvent (ILev;I)V
 	METHOD a updateChunks (J)V
+		ARG 1 endTime
 	METHOD a playLevelEvent (Lavx;ILev;I)V
 		ARG 1 source
 		ARG 2 type
@@ -118,6 +122,7 @@ CLASS dkm net/minecraft/client/render/WorldRenderer
 		ARG 9 blue
 		ARG 10 alpha
 	METHOD a renderStars (Lcuj;)V
+		ARG 1 buffer
 	METHOD a buildBoxOutline (Lcuj;DDDDDDFFFF)V
 		ARG 0 buffer
 		ARG 1 minX
@@ -132,6 +137,10 @@ CLASS dkm net/minecraft/client/render/WorldRenderer
 		ARG 16 alpha
 	METHOD a renderClouds (Lcuj;DDDLcrv;)V
 		ARG 8 color
+	METHOD a (Lcuj;FZ)V
+		ARG 1 bufferBuilder
+		ARG 2 y
+		ARG 3 flipX
 	METHOD a renderPartiallyBrokenBlocks (Lcum;Lcuj;Lcux;)V
 		ARG 1 tesselator
 		ARG 2 builder
@@ -146,8 +155,10 @@ CLASS dkm net/minecraft/client/render/WorldRenderer
 	METHOD a setWorld (Ldhl;)V
 	METHOD a getOpenChunkFaces (Lev;)Ljava/util/Set;
 		ARG 1 pos
-	METHOD a getChunkRenderer (Lev;Ldne;Lfa;)Ldne;
+	METHOD a getNeighborChunkRenderer (Lev;Ldne;Lfa;)Ldne;
 		ARG 1 pos
+		ARG 2 chunkRenderer
+		ARG 3 direction
 	METHOD a scheduleSectionRender (Lev;Z)V
 		ARG 1 pos
 	METHOD a addParticle (Lgd;DDDDDD)V
@@ -235,6 +246,7 @@ CLASS dkm net/minecraft/client/render/WorldRenderer
 		ARG 14 velocityZ
 	METHOD c canDrawEntityOutlines ()Z
 	METHOD d reload ()V
+	METHOD e clearChunkRenderers ()V
 	METHOD f getChunksDebugString ()Ljava/lang/String;
 	METHOD g getChunkNumber ()I
 	METHOD h getEntitiesDebugString ()Ljava/lang/String;
@@ -242,7 +254,7 @@ CLASS dkm net/minecraft/client/render/WorldRenderer
 	METHOD m isTerrainRenderComplete ()Z
 	METHOD n scheduleTerrainUpdate ()V
 	METHOD o loadDestroyStageTextures ()V
-	METHOD r setupStarRendering ()V
+	METHOD r renderStars ()V
 	METHOD s renderEndSky ()V
 	METHOD t enableBlockOverlayRendering ()V
 	METHOD u disableBlockOverlayRendering ()V

@@ -2,17 +2,48 @@ CLASS dna net/minecraft/client/render/chunk/ChunkBatcher
 	CLASS dna$a ChunkUploadTask
 		FIELD b task Lcom/google/common/util/concurrent/ListenableFutureTask;
 		FIELD c priority D
+		METHOD <init> (Ldna;Lcom/google/common/util/concurrent/ListenableFutureTask;D)V
+			ARG 1 task
+			ARG 2 priority
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD b THREAD_FACTORY Ljava/util/concurrent/ThreadFactory;
+	FIELD c bufferCount I
 	FIELD d workerThreads Ljava/util/List;
 	FIELD e workers Ljava/util/List;
 	FIELD f pendingChunks Ljava/util/concurrent/PriorityBlockingQueue;
 	FIELD g availableBuffers Ljava/util/concurrent/BlockingQueue;
-	FIELD h bufferRenderer Lcuk;
+	FIELD h displayListBufferRenderer Lcuk;
+	FIELD i vboBufferRenderer Lcuo;
 	FIELD j pendingUploads Ljava/util/Queue;
-	FIELD k activeWorker Ldnb;
+	FIELD k clientThreadWorker Ldnb;
+	FIELD l cameraPosition Lcrv;
 	METHOD a getDebugString ()Ljava/lang/String;
+	METHOD a runTasksSync (J)Z
+		ARG 1 endTime
+	METHOD a upload (Lbgs;Lcuj;Ldne;Ldnc;D)Lcom/google/common/util/concurrent/ListenableFuture;
+		ARG 1 layer
+		ARG 2 bufferBuilder
+		ARG 3 chunkRenderer
+		ARG 4 chunkRenderData
+	METHOD a setCameraPosition (Lcrv;)V
+		ARG 1 cameraPosition
+	METHOD a uploadDisplayList (Lcuj;I)V
+		ARG 1 bufferBuilder
+		ARG 2 index
+	METHOD a uploadVbo (Lcuj;Lcun;)V
+		ARG 1 bufferBuilder
+		ARG 2 glBuffer
 	METHOD a addAvailableBuffer (Ldkb;)V
+	METHOD a rebuild (Ldne;)Z
+		ARG 1 renderer
+	METHOD b getCameraPosition ()Lcrv;
+	METHOD b rebuildSync (Ldne;)Z
+		ARG 1 renderer
+	METHOD c reset ()V
+	METHOD c resortTransparency (Ldne;)Z
+		ARG 1 renderer
 	METHOD d getNextAvailableBuffer ()Ldkb;
 	METHOD e getNextChunkRenderDataTask ()Ldmz;
+	METHOD f clear ()V
 	METHOD g isEmpty ()Z
+	METHOD h stop ()V
