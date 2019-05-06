@@ -1,10 +1,19 @@
 CLASS ww net/minecraft/resource/ResourcePackContainer
-	CLASS ww$a SortingDirection
+	CLASS ww$a InsertionPosition
 		METHOD a inverse ()Lww$a;
-		METHOD a locate (Ljava/util/List;Ljava/lang/Object;Ljava/util/function/Function;Z)I
+		METHOD a insert (Ljava/util/List;Ljava/lang/Object;Ljava/util/function/Function;Z)I
+			ARG 1 items
+			ARG 2 item
 			ARG 3 converter
 			ARG 4 inverse
 	CLASS ww$b Factory
+		METHOD create (Ljava/lang/String;ZLjava/util/function/Supplier;Lwh;Lwm;Lww$a;)Lww;
+			ARG 1 name
+			ARG 2 alwaysCreatePack
+			ARG 3 packFactory
+			ARG 4 pack
+			ARG 5 meta
+			ARG 6 insertionPosition
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD b BROKEN_PACK_META Lwm;
 	FIELD c name Ljava/lang/String;
@@ -12,9 +21,9 @@ CLASS ww net/minecraft/resource/ResourcePackContainer
 	FIELD e displayName Ljm;
 	FIELD f description Ljm;
 	FIELD g compatibility Lws;
-	FIELD h direction Lww$a;
+	FIELD h position Lww$a;
 	FIELD i notSorting Z
-	FIELD j tillEnd Z
+	FIELD j positionFixed Z
 	METHOD <init> (Ljava/lang/String;ZLjava/util/function/Supplier;Ljm;Ljm;Lws;Lww$a;Z)V
 		ARG 1 name
 		ARG 2 notSorting
@@ -34,6 +43,10 @@ CLASS ww net/minecraft/resource/ResourcePackContainer
 	METHOD a getDisplayName ()Ljm;
 	METHOD a of (Ljava/lang/String;ZLjava/util/function/Supplier;Lww$b;Lww$a;)Lww;
 		ARG 0 name
+		ARG 1 alwaysCreatePack
+		ARG 2 packFactory
+		ARG 3 containerFactory
+		ARG 4 insertionPosition
 	METHOD a getInformationText (Z)Ljm;
 	METHOD b getDescription ()Ljm;
 	METHOD c getCompatibility ()Lws;
@@ -42,5 +55,5 @@ CLASS ww net/minecraft/resource/ResourcePackContainer
 	METHOD equals (Ljava/lang/Object;)Z
 		ARG 1 o
 	METHOD f canBeSorted ()Z
-	METHOD g sortsTillEnd ()Z
-	METHOD h getSortingDirection ()Lww$a;
+	METHOD g isPositionFixed ()Z
+	METHOD h getInitialPosition ()Lww$a;

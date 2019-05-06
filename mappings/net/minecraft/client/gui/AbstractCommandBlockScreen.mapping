@@ -1,21 +1,61 @@
 CLASS dak net/minecraft/client/gui/AbstractCommandBlockScreen
+	CLASS dak$a SuggestionWindow
+		FIELD b area Ldkt;
+		FIELD c suggestions Lcom/mojang/brigadier/suggestion/Suggestions;
+		FIELD d typedText Ljava/lang/String;
+		FIELD e inWindowIndex I
+		FIELD f selection I
+		FIELD g mouse Lcru;
+		FIELD h chosen Z
+		METHOD <init> (Ldak;IIILcom/mojang/brigadier/suggestion/Suggestions;)V
+			ARG 2 x
+			ARG 3 y
+			ARG 4 width
+			ARG 5 suggestions
+		METHOD a apply ()V
+		METHOD a mouseScrolled (D)Z
+			ARG 1 amount
+		METHOD a scroll (I)V
+			ARG 1 offset
+		METHOD a draw (II)V
+			ARG 1 mouseX
+			ARG 2 mouseY
+		METHOD a mouseClicked (III)Z
+			ARG 1 x
+			ARG 2 y
+			ARG 3 button
+		METHOD b discard ()V
+		METHOD b select (I)V
+			ARG 1 index
+		METHOD b keyPressed (III)Z
+			ARG 1 keyCode
+			ARG 2 scanCode
+			ARG 3 modifiers
 	FIELD a consoleCommandTextField Lcwu;
 	FIELD b previousOutputTextField Lcwu;
 	FIELD c doneButton Lcwo;
 	FIELD d cancelButton Lcwo;
 	FIELD e toggleTrackingOutputButton Lcwo;
 	FIELD f trackingOutput Z
+	FIELD g exceptions Ljava/util/List;
 	FIELD j parsedCommand Lcom/mojang/brigadier/ParseResults;
-	FIELD m suggestionsDisabled Z
+	FIELD k suggestionsFuture Ljava/util/concurrent/CompletableFuture;
+	FIELD l suggestionWindow Ldak$a;
+	FIELD m notSuggesting Z
 	METHOD a getCommandExecutor ()Lbgn;
 	METHOD a syncSettingsToServer (Lbgn;)V
 		ARG 1 commandExecutor
 	METHOD a setCommand (Ljava/lang/String;)V
 		ARG 1 command
 	METHOD b onCommandChanged (Ljava/lang/String;)V
+	METHOD b suggestSuffix (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+		ARG 0 typed
+		ARG 1 suggestion
 	METHOD c updateTrackedOutput ()V
 	METHOD d commitAndClose ()V
 	METHOD e updateCommand ()V
+	METHOD f showSuggestions ()V
+	METHOD g updateCommandFeedback ()V
 	METHOD keyPressed (III)Z
 		ARG 1 keyCode
 		ARG 2 scanCode

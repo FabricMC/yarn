@@ -1,31 +1,46 @@
 CLASS cyr net/minecraft/client/gui/ingame/ChatScreen
 	CLASS cyr$a SuggestionWindow
+		FIELD b area Ldkt;
 		FIELD c suggestions Lcom/mojang/brigadier/suggestion/Suggestions;
-		FIELD d typedText Ljava/lang/String;
-		FIELD f selectedSuggestionIndex I
-		FIELD g lastMousePos Lcru;
-		METHOD a useSuggestion ()V
-		METHOD a scrollSelectedSuggestion (I)V
+		FIELD d input Ljava/lang/String;
+		FIELD e inWindowIndex I
+		FIELD f selection I
+		FIELD g mouse Lcru;
+		FIELD h chosen Z
+		METHOD <init> (Lcyr;IIILcom/mojang/brigadier/suggestion/Suggestions;)V
+			ARG 2 x
+			ARG 3 y
+			ARG 4 width
+			ARG 5 suggestions
+		METHOD a complete ()V
+		METHOD a mouseScrolled (D)Z
+			ARG 1 amount
+		METHOD a scroll (I)V
 			ARG 1 offset
 		METHOD a draw (II)V
 			ARG 1 mouseX
 			ARG 2 mouseY
+		METHOD a mouseClicked (III)Z
+			ARG 1 x
+			ARG 2 y
+			ARG 3 button
 		METHOD b close ()V
-		METHOD b setSelectedSuggestionIndex (I)V
-			ARG 1 selectedSuggestionIndex
-		METHOD b handleKeyPress (III)Z
+		METHOD b select (I)V
+			ARG 1 index
+		METHOD b keyPressed (III)Z
 			ARG 1 keyCode
 			ARG 2 scanCode
 			ARG 3 modifiers
 	FIELD a chatField Lcwu;
+	FIELD b commandExceptions Ljava/util/List;
 	FIELD c commandExceptionsX I
 	FIELD d commandExceptionsWidth I
 	FIELD e WHITESPACE_PATTERN Ljava/util/regex/Pattern;
 	FIELD i parseResults Lcom/mojang/brigadier/ParseResults;
 	FIELD j suggestionsFuture Ljava/util/concurrent/CompletableFuture;
 	FIELD k suggestionsWindow Lcyr$a;
-	FIELD m suggestionsTemporarilyDisabled Z
-	METHOD a openSuggestionsWindow ()V
+	FIELD m notSuggesting Z
+	METHOD a showSuggestions ()V
 	METHOD a getRenderText (Lcom/mojang/brigadier/ParseResults;Ljava/lang/String;I)Ljava/lang/String;
 		ARG 0 parseResults
 		ARG 1 typedText
@@ -37,7 +52,10 @@ CLASS cyr net/minecraft/client/gui/ingame/ChatScreen
 	METHOD b updateCommand ()V
 	METHOD b getLastWhitespaceIndex (Ljava/lang/String;)I
 		ARG 0 string
-	METHOD c updateSuggestionsAndExceptions ()V
+	METHOD b suggestSuffix (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+		ARG 0 typed
+		ARG 1 suggestion
+	METHOD c updateCommandFeedback ()V
 	METHOD c setText (Ljava/lang/String;)V
 		ARG 1 text
 	METHOD keyPressed (III)Z
