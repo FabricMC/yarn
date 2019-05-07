@@ -2,6 +2,7 @@ CLASS aio net/minecraft/entity/LivingEntity
 	FIELD aA deathTime I
 	FIELD aB lastHandSwingProgress F
 	FIELD aC handSwingProgress F
+	FIELD aD lastAttackedTicks I
 	FIELD aE lastLimbDistance F
 	FIELD aF limbDistance F
 	FIELD aG limbAngle F
@@ -49,8 +50,10 @@ CLASS aio net/minecraft/entity/LivingEntity
 	METHOD A getAttackDistanceScalingFactor (Laif;)D
 	METHOD C updatePotionVisibility ()V
 	METHOD C tryAttack (Laif;)Z
+		ARG 1 target
 	METHOD D pushAway (Laif;)V
 	METHOD E canSee (Laif;)Z
+		ARG 1 entity
 	METHOD a teleport (DDDZ)Z
 		ARG 1 x
 		ARG 3 y
@@ -60,7 +63,9 @@ CLASS aio net/minecraft/entity/LivingEntity
 	METHOD a setStackInHand (Lagz;Lbca;)V
 		ARG 1 hand
 	METHOD a onDeath (Laho;)V
+		ARG 1 damageSource
 	METHOD a dropEquipment (Laho;IZ)V
+		ARG 1 damageSource
 		ARG 2 addedDropChance
 		ARG 3 dropAllowed
 	METHOD a dropLoot (Laho;Z)V
@@ -76,8 +81,10 @@ CLASS aio net/minecraft/entity/LivingEntity
 		ARG 1 item
 		ARG 2 count
 	METHOD a canTarget (Laij;)Z
+		ARG 1 type
 	METHOD a isEquippedStackValid (Laik;)Z
 	METHOD a setAttacker (Laio;)V
+		ARG 1 attacker
 	METHOD a isTarget (Laio;Lapz;)Z
 		ARG 1 target
 		ARG 2 targetPredicate
@@ -105,7 +112,10 @@ CLASS aio net/minecraft/entity/LivingEntity
 		ARG 2 damage
 	METHOD b getStatusEffect (Lahx;)Lahz;
 	METHOD b getEquippedStack (Laik;)Lbca;
+		ARG 1 slot
 	METHOD b getActiveEyeHeight (Laiy;Laig;)F
+		ARG 1 pose
+		ARG 2 size
 	METHOD b onEquipStack (Lbca;)V
 		ARG 1 stack
 	METHOD b spawnConsumptionEffects (Lbca;I)V
@@ -119,16 +129,19 @@ CLASS aio net/minecraft/entity/LivingEntity
 		ARG 2 value
 	METHOD c setCurrentHand (Lagz;)V
 	METHOD c playHurtSound (Laho;)V
+		ARG 1 damageSource
 	METHOD c applyEnchantmentsToDamage (Laho;F)F
 		ARG 1 source
 		ARG 2 amount
 	METHOD c removePotionEffect (Lahx;)Lahz;
 	METHOD c addPotionEffect (Lahz;)Z
+		ARG 1 effect
 	METHOD c sendEquipmentBreakStatus (Laik;)V
 		ARG 1 slot
 	METHOD c canTarget (Laio;)Z
 		ARG 1 target
 	METHOD c getDrinkSound (Lbca;)Lyj;
+		ARG 1 stack
 	METHOD c containsOnlyAmbientEffects (Ljava/util/Collection;)Z
 		ARG 0 effects
 	METHOD c swimUpward (Lzb;)V
@@ -179,15 +192,18 @@ CLASS aio net/minecraft/entity/LivingEntity
 		ARG 2 damage
 	METHOD d removeStatusEffect (Lahx;)Z
 	METHOD d isPotionEffective (Lahz;)Z
+		ARG 1 effect
 	METHOD d getEquipmentBreakStatus (Laik;)B
 	METHOD d takeShieldHit (Laio;)V
 		ARG 1 source
 	METHOD d getCurrentExperience (Lavx;)I
+		ARG 1 player
 	METHOD d getEatSound (Lbca;)Lyj;
+		ARG 1 stack
 	METHOD d setSleepingPosition (Lev;)V
 	METHOD da getMovementSpeed ()F
 	METHOD db tickNewAi ()V
-	METHOD dc tickEntityPushing ()V
+	METHOD dc tickPushing ()V
 	METHOD dd isUsingRiptide ()Z
 	METHOD de canMoveVoluntarily ()Z
 	METHOD df getAbsorptionAmount ()F
@@ -212,10 +228,13 @@ CLASS aio net/minecraft/entity/LivingEntity
 	METHOD e knockback (Laio;)V
 		ARG 1 target
 	METHOD e canPickUp (Lbca;)Z
+		ARG 1 stack
 	METHOD e travel (Lcrv;)V
 		ARG 1 movementInput
 	METHOD e sleep (Lev;)V
+		ARG 1 pos
 	METHOD f attackLivingEntity (Laio;)V
+		ARG 1 target
 	METHOD f getArrowType (Lbca;)Lbca;
 	METHOD g playEquipmentBreakEffects (Lbca;)V
 		ARG 1 item
@@ -233,6 +252,7 @@ CLASS aio net/minecraft/entity/LivingEntity
 	METHOD n damageShield (F)V
 		ARG 1 amount
 	METHOD n getFallSound (I)Lyj;
+		ARG 1 fallDistance
 	METHOD o setMovementSpeed (F)V
 		ARG 1 movementSpeed
 	METHOD o setStuckArrows (I)V
@@ -240,6 +260,7 @@ CLASS aio net/minecraft/entity/LivingEntity
 	METHOD p getHandSwingProgress (F)F
 		ARG 1 tickDelta
 	METHOD q setAbsorptionAmount (F)V
+		ARG 1 amount
 	METHOD v_ isBaby ()Z
 	METHOD w_ isClimbing ()Z
 	METHOD z onAttacking (Laif;)V
