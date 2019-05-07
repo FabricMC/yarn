@@ -4,17 +4,19 @@ CLASS avx net/minecraft/entity/player/PlayerEntity
 		METHOD a getText ()Ljm;
 	FIELD bA container Layb;
 	FIELD bB hungerManager Laxx;
-	FIELD bF experienceOrbPickupDelay I
+	FIELD bF experiencePickUpDelay I
 	FIELD b SIZES Ljava/util/Map;
 	FIELD bM isInWater Z
 	FIELD bN abilities Lavu;
-	FIELD bO experience I
-	FIELD bP experienceLevel I
-	FIELD bQ experienceLevelProgress F
+	FIELD bO experienceLevel I
+	FIELD bP totalExperience I
+	FIELD bQ experienceProgress F
 	FIELD bR enchantmentTableSeed I
 	FIELD bT fishHook Latj;
+	FIELD bU lastPlayedLevelUpSoundTime I
 	FIELD bV gameProfile Lcom/mojang/authlib/GameProfile;
 	FIELD bW reducedDebugInfo Z
+	FIELD bX selectedItem Lbca;
 	FIELD bY itemCooldownManager Lbbw;
 	FIELD bs STANDING_SIZE Laig;
 	FIELD bt PLAYER_MODEL_BIT_MASK Lqh;
@@ -29,23 +31,41 @@ CLASS avx net/minecraft/entity/player/PlayerEntity
 	FIELD e sleepTimer I
 	FIELD f spawnPosition Lev;
 	FIELD g spawnForced Z
+	METHOD <init> (Lbhh;Lcom/mojang/authlib/GameProfile;)V
+		ARG 1 world
+		ARG 2 profile
 	METHOD a sendTradeOffers (ILbgl;IIZ)V
 		ARG 1 syncId
+		ARG 2 offers
+		ARG 3 levelProgress
+		ARG 4 experience
+		ARG 5 leveled
 	METHOD a openContainer (Lahd;)Ljava/util/OptionalInt;
 	METHOD a addCritParticles (Laif;)V
+		ARG 1 target
 	METHOD a interact (Laif;Lagz;)Laha;
 		ARG 1 entity
+		ARG 2 hand
 	METHOD a setMainHand (Lain;)V
+		ARG 1 absoluteHand
 	METHOD a openHorseInventory (Lars;Lagt;)V
 	METHOD a shouldDamagePlayer (Lavx;)Z
+		ARG 1 player
 	METHOD a isSkinOverlayVisible (Lavy;)Z
+		ARG 1 modelPart
+	METHOD a applyEnchantmentCosts (Lbca;I)V
+		ARG 1 enchantedItem
+		ARG 2 experienceLevels
 	METHOD a openEditBookScreen (Lbca;Lagz;)V
+		ARG 1 book
+		ARG 2 hand
 	METHOD a dropItem (Lbca;Z)Lato;
 		ARG 1 stack
 	METHOD a dropItem (Lbca;ZZ)Lato;
 		ARG 1 stack
 	METHOD a openCommandBlockMinecartScreen (Lbgn;)V
 	METHOD a setGameMode (Lbhe;)V
+		ARG 1 gameMode
 	METHOD a openCommandBlockScreen (Lbtr;)V
 	METHOD a openJigsawScreen (Lbuc;)V
 	METHOD a openEditSignScreen (Lbui;)V
@@ -53,12 +73,16 @@ CLASS avx net/minecraft/entity/player/PlayerEntity
 	METHOD a getUuidFromProfile (Lcom/mojang/authlib/GameProfile;)Ljava/util/UUID;
 		ARG 0 profile
 	METHOD a trySleep (Lev;)Lcom/mojang/datafixers/util/Either;
+		ARG 1 pos
 	METHOD a isWithinSleepingRange (Lev;Lfa;)Z
 		ARG 1 sleepPos
+		ARG 2 direction
 	METHOD a canPlaceOn (Lev;Lfa;Lbca;)Z
 		ARG 1 pos
 		ARG 2 facing
+		ARG 3 stack
 	METHOD a spawnParticles (Lgd;)V
+		ARG 1 parameters
 	METHOD a unlockRecipes (Ljava/util/Collection;)I
 		ARG 1 recipes
 	METHOD a addChatMessage (Ljm;Z)V
@@ -69,16 +93,23 @@ CLASS avx net/minecraft/entity/player/PlayerEntity
 		ARG 1 stat
 		ARG 2 amount
 	METHOD a playSound (Lyj;Lyl;FF)V
+		ARG 1 event
+		ARG 2 category
+		ARG 3 volume
+		ARG 4 pitch
 	METHOD a resetStat (Lyq;)V
 		ARG 1 stat
 	METHOD a increaseStat (Lyq;I)V
 		ARG 1 stat
 		ARG 2 amount
 	METHOD a wakeUp (ZZZ)V
+		ARG 3 setSpawn
 	METHOD a unlockRecipes ([Lqs;)V
 		ARG 1 ids
 	METHOD b addEnchantedHitParticles (Laif;)V
+		ARG 1 target
 	METHOD b getBlockBreakingSpeed (Lbvj;)F
+		ARG 1 block
 	METHOD b isBedObstructed (Lev;Lfa;)Z
 		ARG 1 pos
 		ARG 2 direction
@@ -88,13 +119,18 @@ CLASS avx net/minecraft/entity/player/PlayerEntity
 		ARG 1 recipes
 	METHOD b incrementStat (Lyq;)V
 		ARG 1 stat
+	METHOD c addExperienceLevels (I)V
+		ARG 1 levels
 	METHOD c collideWithEntity (Laif;)V
+		ARG 1 entity
 	METHOD c isUsingEffectiveTool (Lbvj;)Z
+		ARG 1 block
 	METHOD c getOfflinePlayerUuid (Ljava/lang/String;)Ljava/util/UUID;
 		ARG 0 nickname
 	METHOD c addTellClickEvent (Ljm;)Ljm;
 		ARG 1 component
 	METHOD d addExperience (I)V
+		ARG 1 experience
 	METHOD dA updateInWater ()Z
 	METHOD dB updateSize ()V
 	METHOD dC getScore ()I
@@ -118,10 +154,13 @@ CLASS avx net/minecraft/entity/player/PlayerEntity
 	METHOD dV getReducedDebugInfo ()Z
 	METHOD dW getShoulderEntityLeft ()Lib;
 	METHOD dX getShoulderEntityRight ()Lib;
+	METHOD dY getAttackCooldownProgressPerTick ()F
+	METHOD dZ resetLastAttackedTicks ()V
 	METHOD ea getItemCooldownManager ()Lbbw;
 	METHOD eb getLuck ()F
 	METHOD ec isCreativeLevelTwoOp ()Z
 	METHOD f attack (Laif;)V
+		ARG 1 target
 	METHOD f doesNotSuffocate (Lev;)Z
 		ARG 1 pos
 	METHOD g createCooldownManager ()Lbbw;
@@ -130,17 +169,28 @@ CLASS avx net/minecraft/entity/player/PlayerEntity
 	METHOD g addShoulderEntity (Lib;)Z
 		ARG 1 tag
 	METHOD h setShoulderEntityLeft (Lib;)V
+		ARG 1 entityTag
 	METHOD i setShoulderEntityRight (Lib;)V
+		ARG 1 entityTag
 	METHOD j updateShoulderEntity (Lib;)V
+		ARG 1 entityTag
 	METHOD l updateTurtleHelmet ()V
 	METHOD n dropSelectedItem (Z)Lato;
+		ARG 1 dropEntireStack
 	METHOD o disableShield (Z)V
 		ARG 1 sprinting
 	METHOD p canConsume (Z)Z
+		ARG 1 ignoreHunger
 	METHOD q setScore (I)V
+		ARG 1 score
 	METHOD q setReducedDebugInfo (Z)V
+		ARG 1 reducedDebugInfo
 	METHOD r sendAbilitiesUpdate ()V
 	METHOD r addExhaustion (F)V
+		ARG 1 exhaustion
 	METHOD r addScore (I)V
+		ARG 1 score
+	METHOD s getAttackCooldownProgress (F)F
+		ARG 1 baseTime
 	METHOD t_ closeContainer ()V
 	METHOD u isCreative ()Z
