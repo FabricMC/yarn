@@ -8,7 +8,7 @@ buildscript {
 	}
 	dependencies {
 		classpath "net.fabricmc:weave:0.3.1.17+"
-		classpath "net.fabricmc:stitch:0.1.2.49"
+		classpath "net.fabricmc:stitch:0.1.2.49+"
 		classpath "commons-io:commons-io:1.4"
 		classpath "com.google.guava:guava:19.0"
 		classpath 'de.undercouch:gradle-download-task:3.4.3'
@@ -49,7 +49,7 @@ configurations {
 }
 
 dependencies {
-	enigmaRuntime "net.fabricmc:stitch:0.1.1.39+"
+	enigmaRuntime "net.fabricmc:stitch:0.1.2.49+"
 	enigmaRuntime "cuchaz:enigma:0.13.1.+:all"
 }
 
@@ -70,6 +70,7 @@ import org.apache.commons.io.FileUtils
 import com.google.common.hash.Hashing
 import com.google.common.io.Files
 import net.fabricmc.stitch.commands.CommandMergeTiny
+import net.fabricmc.stitch.commands.CommandProposeFieldNames
 import net.fabricmc.stitch.commands.CommandRewriteIntermediary
 import net.fabricmc.stitch.merge.JarMerger
 import net.fabricmc.tinyremapper.OutputConsumerPath
@@ -238,7 +239,7 @@ task patchIntermediary(dependsOn: ["mergeJars", "downloadIntermediary"], type: F
 	outputs.file(outputFile)
 	fileOutput = outputFile
 
-	outputs.upToDateWhen {return false}
+	outputs.upToDateWhen {false}
 
 	doLast {
 		logger.lifecycle(":patching intermediary")
@@ -262,7 +263,7 @@ task buildYarnTiny(dependsOn: "mergeJars",type: FileOutput) {
 	def yarnTiny = new File(tempDir, "yarn-mappings.tiny")
 	fileOutput = yarnTiny
 	
-	outputs.upToDateWhen {return false}
+	outputs.upToDateWhen {false}
 
 	doLast {
 		logger.lifecycle(":generating tiny mappings")
@@ -283,18 +284,18 @@ task mergeTiny(dependsOn: ["buildYarnTiny", "patchIntermediary"], type: FileOutp
 	def yarnTinyInput = buildYarnTiny.fileOutput
 	def intermediaryTinyInput = patchIntermediary.fileOutput
 
-	def outputFile = new File(tempDir, "mappings.tiny")
-	outputs.file(outputFile)
-	fileOutput = outputFile
+	def resultMappings = new File(tempDir, "mappings.tiny")
+	outputs.file(resultMappings)
+	fileOutput = resultMappings
 
-	outputs.upToDateWhen {return false}
+	outputs.upToDateWhen {false}
 
 	doLast {
 		logger.lifecycle(":merging yarn and intermediary")
 		String[] args = [
 			yarnTinyInput.getAbsolutePath(),
 			intermediaryTinyInput.getAbsolutePath(),
-			outputFile.getAbsolutePath(),
+			resultMappings.getAbsolutePath(),
 			"intermediary",
 			"official"
 		]
@@ -304,7 +305,7 @@ task mergeTiny(dependsOn: ["buildYarnTiny", "patchIntermediary"], type: FileOutp
 }
 
 task tinyJar(type: Jar, dependsOn: "mergeTiny") {
-	outputs.upToDateWhen {return false}
+	outputs.upToDateWhen {false}
 	archiveName = "yarn-${yarnVersion}.jar"
 	destinationDir(file("build/libs"))
 	classifier = ""
@@ -320,7 +321,7 @@ task compressTiny(dependsOn: ["tinyJar", "mergeTiny"], type: FileOutput){
 
 	def inputFile = mergeTiny.fileOutput
 
-	outputs.upToDateWhen {return false}
+	outputs.upToDateWhen {false}
 
 	doLast {
 		logger.lifecycle(":compressing tiny mappings")
@@ -355,9 +356,7 @@ task downloadMcLibs(dependsOn: downloadWantedVersionManifest) {
 
 	outputs.file(libraries)
 
-	outputs.upToDateWhen {
-		return false
-	}
+	outputs.upToDateWhen {false}
 
 	doLast {
 		if (!versionFile.exists()) {
@@ -389,9 +388,7 @@ task mapIntermediaryJar(dependsOn: [downloadMcLibs, build]) {
 	outputs.file(intermediaryJar)
 
 	//Force the task to always run
-	outputs.upToDateWhen {
-		return false
-	}
+	outputs.upToDateWhen {false}
 
 	doLast {
 		logger.lifecycle(":mapping minecraft to intermdiary")
@@ -405,9 +402,7 @@ task mapNamedJar(dependsOn: mapIntermediaryJar) {
 	outputs.file(namedJar)
 
 	//Force the task to always run
-	outputs.upToDateWhen {
-		return false
-	}
+	outputs.upToDateWhen {false}
 
 	doLast {
 		logger.lifecycle(":mapping minecraft to named")
