@@ -1,26 +1,26 @@
 CLASS vg net/minecraft/server/world/ServerWorld
 	FIELD A players Ljava/util/List;
 	FIELD B server Lnet/minecraft/server/MinecraftServer;
-	FIELD C worldSaveHandler Lcob;
+	FIELD C worldSaveHandler Lcod;
 	FIELD D allPlayersSleeping Z
 	FIELD E idleTimeout I
-	FIELD F portalForcer Lbht;
-	FIELD G blockTickScheduler Lbhu;
-	FIELD H fluidTickScheduler Lbhu;
+	FIELD F portalForcer Lbhu;
+	FIELD G blockTickScheduler Lbhv;
+	FIELD H fluidTickScheduler Lbhv;
 	FIELD I entityNavigations Ljava/util/Set;
 	FIELD J pendingBlockActions Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;
 	FIELD K insideTick Z
-	FIELD L wanderingTraderManager Lavr;
+	FIELD L wanderingTraderManager Lavs;
 	FIELD a ticking Z
 	FIELD b savingDisabled Z
-	FIELD c raidManager Laxd;
-	FIELD d siegeManager Laqe;
+	FIELD c raidManager Laxe;
+	FIELD d siegeManager Laqf;
 	FIELD v LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD w globalEntities Ljava/util/List;
 	FIELD x entitiesById Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 	FIELD y entitiesByUuid Ljava/util/Map;
 	FIELD z entitiesToLoad Ljava/util/Queue;
-	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lcob;Lcoa;Lbyd;Lage;Lvp;)V
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lcod;Lcoc;Lbye;Lagh;Lvp;)V
 		ARG 1 server
 		ARG 2 workerExecutor
 		ARG 3 worldSaveHandler
@@ -28,31 +28,29 @@ CLASS vg net/minecraft/server/world/ServerWorld
 		ARG 5 dimensionType
 		ARG 6 profiler
 		ARG 7 worldGenerationProgressListener
-	METHOD B getPointOfInterestStorage ()Laqg;
-	METHOD C getRaidManager ()Laxd;
-	METHOD a getChunkFutureSyncOnMainThread (IIZ)Ljava/util/concurrent/CompletableFuture;
+	METHOD B getPointOfInterestStorage ()Laqh;
+	METHOD C getRaidManager ()Laxe;
+	METHOD a setChunkForced (IIZ)Z
 		ARG 1 x
 		ARG 2 z
-		ARG 3 create
-	METHOD a tickEntity (Laif;)V
-	METHOD a getEntities (Laij;Ljava/util/function/Predicate;)Ljava/util/List;
-	METHOD a handleInteraction (Laqd;Laif;Laiz;)V
+		ARG 3 forced
+	METHOD a tickEntity (Laii;)V
+	METHOD a getEntities (Laim;Ljava/util/function/Predicate;)Ljava/util/List;
+	METHOD a handleInteraction (Laqe;Laii;Lajc;)V
 		ARG 1 interaction
 		ARG 3 observer
-	METHOD a addLightning (Latl;)V
-	METHOD a init (Lbhl;)V
+	METHOD a addLightning (Latm;)V
+	METHOD a init (Lbhm;)V
 		ARG 1 levelInfo
-	METHOD a tickFluid (Lbhx;)V
+	METHOD a tickFluid (Lbhy;)V
 		ARG 1 tick
-	METHOD a unloadEntities (Lbxj;)V
+	METHOD a unloadEntities (Lbxk;)V
 		ARG 1 chunk
-	METHOD a tickChunk (Lbxj;I)V
+	METHOD a tickChunk (Lbxk;I)V
 		ARG 1 chunk
 		ARG 2 randomTickSpeed
 	METHOD a isNearOccupiedPointOfInterest (Lev;I)Z
 		ARG 2 maxDistance
-	METHOD a getOccupiedPointOfInterestDistance (Lfo;)I
-		ARG 1 pos
 	METHOD a spawnParticles (Lgd;DDDIDDDD)I
 		ARG 1 particle
 		ARG 2 x
@@ -63,7 +61,7 @@ CLASS vg net/minecraft/server/world/ServerWorld
 		ARG 11 deltaY
 		ARG 13 deltaZ
 		ARG 15 speed
-	METHOD a getEntity (Ljava/util/UUID;)Laif;
+	METHOD a getEntity (Ljava/util/UUID;)Laii;
 	METHOD a tick (Ljava/util/function/BooleanSupplier;)V
 	METHOD a getPlayers (Ljava/util/function/Predicate;)Ljava/util/List;
 		ARG 1 predicate
@@ -91,45 +89,43 @@ CLASS vg net/minecraft/server/world/ServerWorld
 	METHOD ad resetWeather ()V
 	METHOD ae sendBlockActions ()V
 	METHOD b isInsideTick ()Z
-	METHOD b setChunkForced (IIZ)Z
-		ARG 1 x
-		ARG 2 z
-		ARG 3 forced
-	METHOD b checkChunk (Laif;)V
-	METHOD b tickBlock (Lbhx;)V
+	METHOD b checkChunk (Laii;)V
+	METHOD b tickBlock (Lbhy;)V
 		ARG 1 tick
+	METHOD b getOccupiedPointOfInterestDistance (Lfo;)I
+		ARG 1 pos
 	METHOD b_ isNearOccupiedPointOfInterest (Lev;)Z
 		ARG 1 pos
-	METHOD c_ getRaidAt (Lev;)Laxb;
+	METHOD c_ getRaidAt (Lev;)Laxc;
 	METHOD d_ hasRaidAt (Lev;)Z
 	METHOD e removePlayer (Lvh;)V
 		ARG 1 player
 	METHOD f resetIdleTimeout ()V
-	METHOD f loadEntity (Laif;)Z
+	METHOD f loadEntity (Laii;)Z
 		ARG 1 entity
 	METHOD f addPlayer (Lvh;)V
 		ARG 1 player
 	METHOD g placeBonusChest ()V
-	METHOD g unloadEntity (Laif;)V
+	METHOD g unloadEntity (Laii;)V
 		ARG 1 entity
 	METHOD h getForcedSpawnPoint ()Lev;
-	METHOD h removeEntity (Laif;)V
+	METHOD h removeEntity (Laii;)V
 	METHOD i_ updatePlayersSleeping ()V
 	METHOD j getAliveEnderDragons ()Ljava/util/List;
-	METHOD k addEntity (Laif;)Z
+	METHOD k addEntity (Laii;)Z
 		ARG 1 entity
 	METHOD k_ saveLevel ()V
 	METHOD l getMobCountsByCategory ()Lit/unimi/dsi/fastutil/objects/Object2IntMap;
-	METHOD l checkUuid (Laif;)Z
+	METHOD l checkUuid (Laii;)Z
 		ARG 1 entity
 	METHOD l_ getRandomAlivePlayer ()Lvh;
-	METHOD m loadEntityUnchecked (Laif;)V
+	METHOD m loadEntityUnchecked (Laii;)V
 		ARG 1 entity
-	METHOD n removeEntityFromChunk (Laif;)V
+	METHOD n removeEntityFromChunk (Laii;)V
 		ARG 1 entity
-	METHOD q getPortalForcer ()Lbht;
-	METHOD r getStructureManager ()Lcje;
+	METHOD q getPortalForcer ()Lbhu;
+	METHOD r getStructureManager ()Lcjg;
 	METHOD v checkSessionLock ()V
-	METHOD w getSaveHandler ()Lcob;
-	METHOD x getPersistentStateManager ()Lcnz;
+	METHOD w getSaveHandler ()Lcod;
+	METHOD x getPersistentStateManager ()Lcob;
 	METHOD z getForcedChunks ()Lit/unimi/dsi/fastutil/longs/LongSet;
