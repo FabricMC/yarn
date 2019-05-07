@@ -10,8 +10,10 @@ CLASS arc net/minecraft/entity/passive/PandaEntity
 			ARG 5 recessive
 		METHOD a getId ()I
 		METHOD a byId (I)Larc$a;
+			ARG 0 id
 		METHOD a byName (Ljava/lang/String;)Larc$a;
 		METHOD a createRandom (Ljava/util/Random;)Larc$a;
+			ARG 0 random
 		METHOD b getName ()Ljava/lang/String;
 		METHOD b getProductGene (Larc$a;Larc$a;)Larc$a;
 			ARG 0 mainGene
@@ -19,8 +21,17 @@ CLASS arc net/minecraft/entity/passive/PandaEntity
 		METHOD c isRecessive ()Z
 	CLASS arc$b AttackGoal
 		FIELD d panda Larc;
+		METHOD <init> (Larc;DZ)V
+			ARG 1 panda
+			ARG 2 speed
 	CLASS arc$c PandaFleeGoal
-		FIELD i owner Larc;
+		FIELD i panda Larc;
+		METHOD <init> (Larc;Ljava/lang/Class;FDD)V
+			ARG 1 panda
+			ARG 2 fleeFromType
+			ARG 3 distance
+			ARG 4 slowSpeed
+			ARG 6 fastSpeed
 	CLASS arc$d PandaMateGoal
 		FIELD d CLOSE_PLAYER_PREDICATE Lapz;
 		FIELD e panda Larc;
@@ -34,17 +45,25 @@ CLASS arc net/minecraft/entity/passive/PandaEntity
 		FIELD a panda Larc;
 		METHOD <init> (Larc;[Ljava/lang/Class;)V
 			ARG 1 panda
+			ARG 2 noRevengeTypes
 	CLASS arc$g LieOnBackGoal
 		FIELD a panda Larc;
 		FIELD b nextLieOnBackAge I
-	CLASS arc$h PandaLookAtEntityGoal
+		METHOD <init> (Larc;)V
+			ARG 1 panda
+	CLASS arc$h LookAtEntityGoal
 		FIELD f panda Larc;
 		METHOD <init> (Larc;Ljava/lang/Class;F)V
 			ARG 1 panda
+			ARG 2 targetType
+			ARG 3 range
 	CLASS arc$i PandaMoveControl
 		FIELD i panda Larc;
 	CLASS arc$j ExtinguishFireGoal
 		FIELD f panda Larc;
+		METHOD <init> (Larc;D)V
+			ARG 1 panda
+			ARG 2 speed
 	CLASS arc$k PlayGoal
 		FIELD a panda Larc;
 		METHOD <init> (Larc;)V
@@ -73,8 +92,12 @@ CLASS arc net/minecraft/entity/passive/PandaEntity
 	FIELD bQ IS_FOOD Ljava/util/function/Predicate;
 	FIELD bz playingTicks I
 	METHOD a setMainGene (Larc$a;)V
+		ARG 1 gene
 	METHOD a initGenes (Larc;Larc;)V
+		ARG 1 mother
+		ARG 2 father
 	METHOD b setHiddenGene (Larc$a;)V
+		ARG 1 gene
 	METHOD d setPandaFlag (IZ)V
 		ARG 1 mask
 		ARG 2 value
@@ -104,6 +127,7 @@ CLASS arc net/minecraft/entity/passive/PandaEntity
 	METHOD ey updatePlaying ()V
 	METHOD ez sneeze ()V
 	METHOD j canEat (Lbca;)Z
+		ARG 1 stack
 	METHOD r setAskForBambooTicks (I)V
 		ARG 1 askForBambooTicks
 	METHOD r setScared (Z)V
@@ -111,11 +135,13 @@ CLASS arc net/minecraft/entity/passive/PandaEntity
 	METHOD s setSneezeProgress (I)V
 		ARG 1 sneezeProgress
 	METHOD s setLyingOnBack (Z)V
+		ARG 1 lyingOnBack
 	METHOD t setEatingTicks (I)V
 		ARG 1 eatingTicks
 	METHOD t setEating (Z)V
 		ARG 1 eating
 	METHOD u hasPandaFlag (I)Z
+		ARG 1 bitmask
 	METHOD u setSneezing (Z)V
 		ARG 1 sneezing
 	METHOD v getScaredAnimationProgress (F)F
