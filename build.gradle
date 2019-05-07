@@ -285,7 +285,6 @@ task mergeTiny(dependsOn: ["buildYarnTiny", "patchIntermediary"], type: FileOutp
 	def intermediaryTinyInput = patchIntermediary.fileOutput
 
 	def resultMappings = new File(tempDir, "mappings.tiny")
-	def noAutoMappings = new File(tempDir, "mappings-no-auto.tiny")
 	outputs.file(resultMappings)
 	fileOutput = resultMappings
 
@@ -293,25 +292,15 @@ task mergeTiny(dependsOn: ["buildYarnTiny", "patchIntermediary"], type: FileOutp
 
 	doLast {
 		logger.lifecycle(":merging yarn and intermediary")
-		String[] argsMerge = [
+		String[] args = [
 			yarnTinyInput.getAbsolutePath(),
 			intermediaryTinyInput.getAbsolutePath(),
-			noAutoMappings.getAbsolutePath(),
+			resultMappings.getAbsolutePath(),
 			"intermediary",
 			"official"
 		]
 
-		new CommandMergeTiny().run(argsMerge)
-
-		logger.lifecycle(":adding auto-mapped fields")
-		String[] argsPropose = [
-			mergedFile.getAbsolutePath(),
-			noAutoMappings.getAbsolutePath(),
-			resultMappings.getAbsolutePath(),
-			"--writeAll"
-		]
-
-		new CommandProposeFieldNames().run(argsPropose)
+		new CommandMergeTiny().run(args)
 	}
 }
 
