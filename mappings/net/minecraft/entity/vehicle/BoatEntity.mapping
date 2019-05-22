@@ -17,9 +17,9 @@ CLASS axo net/minecraft/entity/vehicle/BoatEntity
 	FIELD aK fallVelocity D
 	FIELD aL onBubbleColumnSurface Z
 	FIELD aM bubbleColumnIsDrag Z
-	FIELD aN bubbleWobbleStrength F
-	FIELD aO bubbleWobble F
-	FIELD aP lastBubbleWobble F
+	FIELD aN bubbleWobbleMaxAngle F
+	FIELD aO bubbleWobbleAngle F
+	FIELD aP lastBubbleWobbleAngle F
 	FIELD ar BUBBLE_WOBBLE_TICKS Lqh;
 	FIELD as paddlePhases [F
 	FIELD at velocityDecay F
@@ -27,7 +27,7 @@ CLASS axo net/minecraft/entity/vehicle/BoatEntity
 	FIELD av yawVelocity F
 	FIELD b DAMAGE_WOBBLE_TICKS Lqh;
 	FIELD c DAMAGE_WOBBLE_SIDE Lqh;
-	FIELD d DAMAGE_WOBBLE_STRENGTH Lqh;
+	FIELD d DAMAGE_WOBBLE_MAX_ROLL Lqh;
 	FIELD e BOAT_TYPE Lqh;
 	FIELD f LEFT_PADDLE_MOVING Lqh;
 	FIELD g RIGHT_PADDLE_MOVING Lqh;
@@ -37,8 +37,8 @@ CLASS axo net/minecraft/entity/vehicle/BoatEntity
 		ARG 4 y
 		ARG 6 z
 	METHOD A getBubbleWobbleTicks ()I
-	METHOD a setDamageWobbleStrength (F)V
-		ARG 1 wobbleStrength
+	METHOD a setDamageWobbleMaxRoll (F)V
+		ARG 1 maxRoll
 	METHOD a isPaddleMoving (I)Z
 		ARG 1 paddle
 	METHOD a interpolatePaddlePhase (IF)F
@@ -48,15 +48,15 @@ CLASS axo net/minecraft/entity/vehicle/BoatEntity
 		ARG 1 entity
 	METHOD a setBoatType (Laxo$b;)V
 		ARG 1 type
-	METHOD a setPaddleMovings (ZZ)V
+	METHOD a setPaddlesMoving (ZZ)V
 		ARG 1 leftMoving
 		ARG 2 rightMoving
-	METHOD a setInputs (ZZZZ)V
+	METHOD a setInput (ZZZZ)V
 		ARG 1 pressingLeft
 		ARG 2 pressingRight
 		ARG 3 pressingForward
 		ARG 4 pressingBack
-	METHOD b interpolateBubbleWobble (F)F
+	METHOD b interpolateBubbleWobbleAngle (F)F
 		ARG 1 tickDelta
 	METHOD b setDamageWobbleTicks (I)V
 		ARG 1 wobbleTicks
@@ -66,13 +66,13 @@ CLASS axo net/minecraft/entity/vehicle/BoatEntity
 		ARG 1 wobbleTicks
 	METHOD f asItem ()Lbbw;
 	METHOD i getPaddleSoundEvent ()Lyj;
-	METHOD m getDamageWobbleStrength ()F
+	METHOD m getDamageWobbleMaxRoll ()F
 	METHOD n getDamageWobbleTicks ()I
 	METHOD o getDamageWobbleSide ()I
 	METHOD p getBoatType ()Laxo$b;
-	METHOD q handleBubbleColumn ()V
+	METHOD q tickBubbleColumn ()V
 	METHOD s checkLocation ()Laxo$a;
 	METHOD u checKBoatInWater ()Z
 	METHOD v getUnderWaterLocation ()Laxo$a;
-	METHOD w updateVelocity ()V
-	METHOD z updatePaddles ()V
+	METHOD w tickVelocity ()V
+	METHOD z tickPaddles ()V
