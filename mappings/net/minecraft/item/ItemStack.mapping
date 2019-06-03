@@ -2,132 +2,186 @@ CLASS bcb net/minecraft/item/ItemStack
 	FIELD a EMPTY Lbcb;
 	FIELD b MODIFIER_FORMAT Ljava/text/DecimalFormat;
 	FIELD c LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD d amount I
-	FIELD e updateCooldown I
+	FIELD d count I
+	FIELD e cooldown I
 	FIELD f item Lbbw;
 	FIELD g tag Lib;
 	FIELD h empty Z
-	FIELD i holdingItemFrame Latf;
-	FIELD j lastCheckedCanHarvestBlock Lbvo;
-	FIELD k lastCheckedCanHarvestResult Z
-	FIELD l lastCheckedCanPlaceBlock Lbvo;
-	FIELD m lastCheckedCanPlaceResult Z
+	FIELD i frame Latf;
+	FIELD j lastDestroyPos Lbvo;
+	FIELD k lastDestroyResult Z
+	FIELD l lastPlaceOnPos Lbvo;
+	FIELD m lastPlaceOnResult Z
+	METHOD <init> (Lbhh;)V
+		ARG 1 item
 	METHOD <init> (Lbhh;I)V
-		ARG 1 container
+		ARG 1 item
+		ARG 2 count
+	METHOD <init> (Lib;)V
+		ARG 1 tag
 	METHOD A getRepairCost ()I
-	METHOD B toTextComponent ()Ljm;
-	METHOD C getUpdateCooldown ()I
-	METHOD D getAmount ()I
+	METHOD B toHoverableText ()Ljm;
+	METHOD C getCooldown ()I
+	METHOD D getCount ()I
 	METHOD E isFood ()Z
 	METHOD F createModifierFormat ()Ljava/text/DecimalFormat;
-	METHOD G updateEmptyFlag ()V
+	METHOD G updateEmptyState ()V
 	METHOD a isEmpty ()Z
 	METHOD a split (I)Lbcb;
 		ARG 1 amount
-	METHOD a applyDamage (ILair;Ljava/util/function/Consumer;)V
-	METHOD a applyDamage (ILjava/util/Random;Lvh;)Z
+	METHOD a damage (ILair;Ljava/util/function/Consumer;)V
 		ARG 1 amount
+		ARG 2 entity
+		ARG 3 breakCallback
+	METHOD a damage (ILjava/util/Random;Lvh;)Z
+		ARG 1 amount
+		ARG 2 random
+		ARG 3 player
 	METHOD a getAttributeModifiers (Lain;)Lcom/google/common/collect/Multimap;
-	METHOD a onEntityDamaged (Lair;Lavy;)V
-		ARG 1 attacker
-	METHOD a setHoldingItemFrame (Latf;)V
-	METHOD a interactWithEntity (Lavy;Lair;Lahc;)Z
+		ARG 1 slot
+	METHOD a postHit (Lair;Lavy;)V
+		ARG 1 target
+		ARG 2 attacker
+	METHOD a setFrame (Latf;)V
+		ARG 1 frame
+	METHOD a useOnEntity (Lavy;Lair;Lahc;)Z
 		ARG 1 user
-		ARG 2 target
-	METHOD a getTooltipText (Lavy;Lbdj;)Ljava/util/List;
+		ARG 2 entity
+		ARG 3 hand
+	METHOD a getTooltip (Lavy;Lbdj;)Ljava/util/List;
 		ARG 1 player
-	METHOD a isEqualIgnoreTags (Lbcb;)Z
+		ARG 2 context
+	METHOD a isItemEqualIgnoreDamage (Lbcb;)Z
+		ARG 1 stack
 	METHOD a areTagsEqual (Lbcb;Lbcb;)Z
-		ARG 0 a
-		ARG 1 b
+		ARG 0 left
+		ARG 1 right
 	METHOD a useOnBlock (Lbdm;)Lahd;
+		ARG 1 context
 	METHOD a addEnchantment (Lbfj;I)V
 		ARG 1 enchantment
 		ARG 2 level
-	METHOD a update (Lbhi;Laii;IZ)V
+	METHOD a inventoryTick (Lbhi;Laii;IZ)V
 		ARG 1 world
-		ARG 2 owner
-		ARG 3 invSlot
-	METHOD a onItemFinishedUsing (Lbhi;Lair;)Lbcb;
-		ARG 1 world
-	METHOD a onItemStopUsing (Lbhi;Lair;I)V
+		ARG 2 entity
+		ARG 3 slot
+		ARG 4 selected
+	METHOD a finishUsing (Lbhi;Lair;)Lbcb;
 		ARG 1 world
 		ARG 2 user
-	METHOD a onCrafted (Lbhi;Lavy;I)V
+	METHOD a onStoppedUsing (Lbhi;Lair;I)V
+		ARG 1 world
+		ARG 2 user
+		ARG 3 remainingUseTicks
+	METHOD a onCraft (Lbhi;Lavy;I)V
 		ARG 1 world
 		ARG 2 player
 		ARG 3 amount
 	METHOD a use (Lbhi;Lavy;Lahc;)Lahe;
 		ARG 1 world
-		ARG 2 player
-	METHOD a onBlockBroken (Lbhi;Lbvk;Lev;Lavy;)V
+		ARG 2 user
+		ARG 3 hand
+	METHOD a postMine (Lbhi;Lbvk;Lev;Lavy;)V
 		ARG 1 world
 		ARG 2 state
 		ARG 3 pos
-	METHOD a getBlockBreakingSpeed (Lbvk;)F
+		ARG 4 miner
+	METHOD a getMiningSpeed (Lbvk;)F
+		ARG 1 state
 	METHOD a areBlocksEqual (Lbvo;Lbvo;)Z
 		ARG 0 first
 		ARG 1 second
 	METHOD a fromTag (Lib;)Lbcb;
 		ARG 0 tag
-	METHOD a getOrCreateSubCompoundTag (Ljava/lang/String;)Lib;
+	METHOD a (Lib;Lju;)V
+		ARG 1 style
+	METHOD a getOrCreateSubTag (Ljava/lang/String;)Lib;
 		ARG 1 key
 	METHOD a addAttributeModifier (Ljava/lang/String;Lajj;Lain;)V
-		ARG 1 attributeName
+		ARG 1 name
 		ARG 2 modifier
-	METHOD a setChildTag (Ljava/lang/String;Lis;)V
-		ARG 1 tagName
-	METHOD a appendEnchantmentComponents (Ljava/util/List;Lii;)V
-		ARG 0 list
+		ARG 3 slot
+	METHOD a putSubTag (Ljava/lang/String;Lis;)V
+		ARG 1 key
+		ARG 2 tag
+	METHOD a (Ljava/util/List;Lib;Lbfj;)V
+		ARG 2 e
+	METHOD a appendEnchantments (Ljava/util/List;Lii;)V
+		ARG 0 tooltip
 		ARG 1 enchantments
-	METHOD a setDisplayName (Ljm;)Lbcb;
-	METHOD a getCustomCanHarvest (Lzd;Lbvo;)Z
+	METHOD a setCustomName (Ljm;)Lbcb;
+		ARG 1 name
+	METHOD a canDestroy (Lzd;Lbvo;)Z
+		ARG 1 manager
+		ARG 2 pos
 	METHOD b getItem ()Lbbw;
 	METHOD b setDamage (I)V
-	METHOD b isEqualIgnoreDurability (Lbcb;)Z
-	METHOD b areEqual (Lbcb;Lbcb;)Z
-		ARG 0 a
-		ARG 1 b
+		ARG 1 damage
+	METHOD b isItemEqual (Lbcb;)Z
+		ARG 1 stack
+	METHOD b areEqualIgnoreDamage (Lbcb;Lbcb;)Z
+		ARG 0 left
+		ARG 1 right
+	METHOD b usageTick (Lbhi;Lair;I)V
+		ARG 1 world
+		ARG 2 user
+		ARG 3 remainingUseTicks
 	METHOD b isEffectiveOn (Lbvk;)Z
+		ARG 1 state
 	METHOD b toTag (Lib;)Lib;
-	METHOD b getSubCompoundTag (Ljava/lang/String;)Lib;
+		ARG 1 tag
+	METHOD b getSubTag (Ljava/lang/String;)Lib;
 		ARG 1 key
-	METHOD b getCustomCanPlace (Lzd;Lbvo;)Z
-	METHOD c getMaxAmount ()I
+	METHOD b (Ljm;)Ljm;
+		ARG 0 text
+	METHOD b canPlaceOn (Lzd;Lbvo;)Z
+		ARG 1 manager
+		ARG 2 pos
+	METHOD c getMaxCount ()I
 	METHOD c setRepairCost (I)V
-	METHOD c isEqual (Lbcb;)Z
-	METHOD c areEqualIgnoreTags (Lbcb;Lbcb;)Z
-		ARG 0 a
-		ARG 1 b
+		ARG 1 repairCost
+	METHOD c isEqualIgnoreDamage (Lbcb;)Z
+		ARG 1 stack
+	METHOD c areItemsEqualIgnoreDamage (Lbcb;Lbcb;)Z
+		ARG 0 left
+		ARG 1 right
 	METHOD c setTag (Lib;)V
+		ARG 1 tag
 	METHOD c removeSubTag (Ljava/lang/String;)V
 		ARG 1 key
-	METHOD d canStack ()Z
-	METHOD d setUpdateCooldown (I)V
-	METHOD d areEqualIgnoreDurability (Lbcb;Lbcb;)Z
-		ARG 0 a
-		ARG 1 b
-	METHOD e hasDurability ()Z
-	METHOD e setAmount (I)V
+	METHOD d isStackable ()Z
+	METHOD d setCooldown (I)V
+		ARG 1 cooldown
+	METHOD d areItemsEqual (Lbcb;Lbcb;)Z
+		ARG 0 left
+		ARG 1 right
+	METHOD d parseBlockTag (Ljava/lang/String;)Ljava/util/Collection;
+		ARG 0 tag
+	METHOD e isDamageable ()Z
+	METHOD e setCount (I)V
+		ARG 1 count
 	METHOD f isDamaged ()Z
-	METHOD f addAmount (I)V
+	METHOD f increment (I)V
+		ARG 1 amount
 	METHOD g getDamage ()I
-	METHOD g subtractAmount (I)V
-	METHOD h getDurability ()I
+	METHOD g decrement (I)V
+		ARG 1 amount
+	METHOD h getMaxDamage ()I
 	METHOD i copy ()Lbcb;
 	METHOD j getTranslationKey ()Ljava/lang/String;
 	METHOD k getMaxUseTime ()I
 	METHOD l getUseAction ()Lbdl;
+	METHOD m isUsedOnRelease ()Z
 	METHOD n hasTag ()Z
 	METHOD o getTag ()Lib;
 	METHOD p getOrCreateTag ()Lib;
-	METHOD q getEnchantmentList ()Lii;
-	METHOD r getDisplayName ()Ljm;
-	METHOD s removeDisplayName ()V
-	METHOD t hasDisplayName ()Z
+	METHOD q getEnchantments ()Lii;
+	METHOD r getCustomName ()Ljm;
+	METHOD s removeCustomName ()V
+	METHOD t hasCustomName ()Z
 	METHOD u hasEnchantmentGlint ()Z
 	METHOD v getRarity ()Lbco;
 	METHOD w isEnchantable ()Z
 	METHOD x hasEnchantments ()Z
-	METHOD y isHeldInItemFrame ()Z
-	METHOD z getHoldingItemFrame ()Latf;
+	METHOD y isInFrame ()Z
+	METHOD z getFrame ()Latf;
