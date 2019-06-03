@@ -11,7 +11,7 @@ CLASS uz net/minecraft/server/world/ChunkTicketManager
 			ARG 4 distance
 		METHOD d isPlayerInChunk (J)Z
 			ARG 1 chunkPos
-	CLASS uz$d NearbyChunkTicketUpdater
+	CLASS uz$c NearbyChunkTicketUpdater
 		FIELD e watchDistance I
 		FIELD f distances Lit/unimi/dsi/fastutil/longs/Long2IntMap;
 		FIELD g positionsAffected Lit/unimi/dsi/fastutil/longs/LongSet;
@@ -29,26 +29,23 @@ CLASS uz net/minecraft/server/world/ChunkTicketManager
 	FIELD a LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD b NEARBY_PLAYER_TICKET_LEVEL I
 	FIELD c playersByChunkPos Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
-	FIELD d playersByChunkSectionPos Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
-	FIELD e ticketsByPosition Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap;
-	FIELD f distanceFromTicketTracker Luz$a;
-	FIELD g shouldEntityTickTracker Luz$c;
-	FIELD h viewDistance I
-	FIELD i distanceFromNearestPlayerTracker Luz$b;
-	FIELD j nearbyChunkTicketUpdater Luz$d;
-	FIELD k chunkHolders Ljava/util/Set;
-	FIELD l levelUpdateListener Lur$c;
-	FIELD m playerTicketThrottler Lagm;
-	FIELD n playerTicketThrottlerSorter Lagm;
-	FIELD o chunkPositions Lit/unimi/dsi/fastutil/longs/LongSet;
-	FIELD p mainThreadExecutor Ljava/util/concurrent/Executor;
-	FIELD q location J
+	FIELD d ticketsByPosition Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap;
+	FIELD e distanceFromTicketTracker Luz$a;
+	FIELD f distanceFromNearestPlayerTracker Luz$b;
+	FIELD g nearbyChunkTicketUpdater Luz$c;
+	FIELD h chunkHolders Ljava/util/Set;
+	FIELD i levelUpdateListener Lur$c;
+	FIELD j playerTicketThrottler Lagn;
+	FIELD k playerTicketThrottlerSorter Lagn;
+	FIELD l chunkPositions Lit/unimi/dsi/fastutil/longs/LongSet;
+	FIELD m mainThreadExecutor Ljava/util/concurrent/Executor;
+	FIELD n location J
 	METHOD <init> (Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)V
 		ARG 1 workerExecutor
 		ARG 2 mainThreadExecutor
 	METHOD a purge ()V
-	METHOD a setViewDistance (I)V
-		ARG 1 distance
+	METHOD a setWatchDistance (I)V
+		ARG 1 viewDistance
 	METHOD a isUnloaded (J)Z
 		ARG 1 pos
 	METHOD a setLevel (JILur;I)Lur;
@@ -58,24 +55,21 @@ CLASS uz net/minecraft/server/world/ChunkTicketManager
 	METHOD a addTicket (JLvk;)V
 		ARG 1 position
 		ARG 3 ticket
-	METHOD a setChunkForced (Lbgu;Z)V
+	METHOD a setChunkForced (Lbgv;Z)V
 		ARG 1 pos
 		ARG 2 forced
 	METHOD a handleChunkEnter (Lfo;Lvh;)V
 		ARG 1 pos
-		ARG 2 player
 	METHOD a getLevel (Lit/unimi/dsi/fastutil/objects/ObjectSortedSet;)I
 		ARG 1 ticketSet
 	METHOD a tick (Lus;)Z
 		ARG 1 chunkStorage
-	METHOD a addTicketWithLevel (Lvl;Lbgu;ILjava/lang/Object;)V
+	METHOD a addTicketWithLevel (Lvl;Lbgv;ILjava/lang/Object;)V
 		ARG 1 type
 		ARG 2 pos
 		ARG 3 level
 		ARG 4 argument
 	METHOD b getLevelCount ()I
-	METHOD b setWatchDistance (I)V
-		ARG 1 viewDistance
 	METHOD b getChunkHolder (J)Lur;
 		ARG 1 pos
 	METHOD b removeTicket (JLvk;)V
@@ -84,19 +78,19 @@ CLASS uz net/minecraft/server/world/ChunkTicketManager
 	METHOD b handleChunkLeave (Lfo;Lvh;)V
 		ARG 1 pos
 		ARG 2 player
-	METHOD b removeTicketWithLevel (Lvl;Lbgu;ILjava/lang/Object;)V
+	METHOD b removeTicketWithLevel (Lvl;Lbgv;ILjava/lang/Object;)V
 		ARG 1 type
 		ARG 2 pos
 		ARG 3 level
 		ARG 4 argument
-	METHOD c addTicket (Lvl;Lbgu;ILjava/lang/Object;)V
+	METHOD c addTicket (Lvl;Lbgv;ILjava/lang/Object;)V
 		ARG 1 type
 		ARG 2 pos
 		ARG 3 radius
 		ARG 4 argument
 	METHOD d getTicketSet (J)Lit/unimi/dsi/fastutil/objects/ObjectSortedSet;
 		ARG 1 position
-	METHOD d removeTicket (Lvl;Lbgu;ILjava/lang/Object;)V
+	METHOD d removeTicket (Lvl;Lbgv;ILjava/lang/Object;)V
 		ARG 1 type
 		ARG 2 pos
 		ARG 3 radius
