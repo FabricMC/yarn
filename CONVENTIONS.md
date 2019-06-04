@@ -8,9 +8,17 @@ Use `UpperCamelCase` for class names. Use `lowerCamelCase` for method, variable,
 
 To make code as easy to read as possible, keep names in the natural English language order. For example, a class representing a "chest block entity" should be named `ChestBlockEntity`, not `BlockEntityChest`. Though using prefix naming may be helpful for grouping classes together in the IDE's tree view, reading and writing code is done much more often than browsing files.
 
+Avoid redundant words, but don't omit important words: the purpose of names is to give as much information about what the class, field, or method does.
+
 ## Acronym and abbreviations
 
-Try to avoid acronyms and abbreviations unless it's a common one that everyone knows, and other yarn names involving the same word all use its abbreviated form. Full names are easier to read quickly and remember ("Which words were abbreviated?") and they often don't take more time to type due to IDE autocompletion.
+Try to avoid acronyms and abbreviations unless it's a common one that everyone knows, and other yarn names involving the same word all use its abbreviated form. Full names are easier to read quickly and remember ("Which words were abbreviated?") and they often don't take more time to type thanks to IDE autocompletion. The common abbreviations you *should* use are:
+
+ - "id" for "identifier"
+ - "pos" for "position"
+ - "NBT" for "named binary tag"
+ - "init" for "initialize"
+ - Any abbreviations used by Java or libraries ("json", "html", etc.)
 
 Treat acronyms as single words rather than capitalising every letter. This improves readability (compare `JsonObject` and `JSONObject`) and is consistent with Mojang naming (a known name is `NbtIo`).
 
@@ -24,6 +32,15 @@ However, there are three exceptions to this rule (all have open issues suggestin
  - Use "container" for what Mojang calls "menu"
  - Use "inventory" for what Mojang calls "container"
  - Use "world" for what Mojang calls "level"
+
+## Common names
+
+
+### Collections
+
+Use a plural name for collections and maps (ex. rather than the words "list", "set", "array", etc., unless it's a collection of collections (ex, `entityLists` for an array of entity lists) or there are several collections of different types containing the same objects.
+
+When it's enough, name maps based on the value type. Otherwise, name it `valuesByKeys`.
 
 ## Other conventions
 
