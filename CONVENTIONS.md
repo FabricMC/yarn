@@ -17,8 +17,8 @@ classes together in an IDE's tree view, reading and writing code is done much mo
 Use American English (`color`, not `colour`) for consistency throughout Yarn and with known Mojang names.
 
 Omit words that are redundant because of method parameter or the owner class's name. For example, use `getChunk(BlockPos pos)`
-rather than `getChunkAtPosition(BlockPos pos)`, and `create` rather than `createAchievement` for a method is in the `Achievement`
-class. Don't avoid overloading methods or shadowing fields.
+rather than `getChunkAtPosition(BlockPos pos)`, and `create` rather than `createAchievement` for a method is in the
+`Achievement` class. Don't avoid overloading methods or shadowing fields.
 
 Names should be as descriptive as possible, so don't omit important words. When naming something always look at all its usages
 (including overriding methods and inheriting classes).
