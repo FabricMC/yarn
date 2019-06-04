@@ -5,10 +5,10 @@
 Use `UpperCamelCase` for class names. Use `lowerCamelCase` for method names, variable names, and names of fields that are not
 static and final. Always use `UPPER_SNAKE_CASE` for names of fields that are both static and final.
 
-Method names should always be verbal phrases (`tick`, `getCarversForStep`), except for builder methods. Class names and
-non-boolean field and variable names should be noun phrases (`ChunkRegion`, `color`). Boolean field and variable names should
-always be adjectival phrases or present tense verbal phrases (`powered`, `canOpen`), avoiding the `is` and `has` prefixes when
-possible (`colored`, not `isColored` or `hasColor`).
+Method names should always be verbal phrases (`tick`, `getCarversForStep`), except for builder methods and "withX" methods.
+Class names and non-boolean field and variable names should be noun phrases (`ChunkRegion`, `color`). Boolean field and
+variable names should always be adjectival phrases or present tense verbal phrases (`powered`, `canOpen`), avoiding the `is`
+and `has` prefixes when possible (`colored`, not `isColored` or `hasColor`).
 
 To make code as easy to read as possible, keep names in the natural language order. For example, a class representing a "chest
 block entity" should be named `ChestBlockEntity`, not `BlockEntityChest`. Though prefix naming may be helpful for grouping
@@ -76,14 +76,16 @@ Use "tick" for updates done once per tick. Use "update" for other kind of update
 
 Use the word "last" for the value that something had last tick (`lastX`, `lastWidth`, etc.).
 
-### Getters, setters, with-ers, and creators
+### Getters, setters, withers, and creators
 
 Use "get" for getters and other methods that calculate some property with no side effects other than caching a value in a
 private field.
 
-Use "set" for methods that set some property.
+Use "set" for methods that set some property. Name the parameter the same as the property (`setColor(color)`, not
+`setColor(newColor)`).
 
-Use "with" for methods that return a copy of an object with a different value for some property.
+Use "with" for methods that return a copy of an object with a different value for some property. Name the parameter the same
+as the property.
 
 Use "create" for methods that create a new instance of some object. Use "get or create" for methods that create a new
 instance only if one does not already exist. Don't use "get or create" for lazy initialization, though. 
@@ -93,8 +95,8 @@ instance only if one does not already exist. Don't use "get or create" for lazy 
 Use "serializer" for objects whose purpose is serializing or deserializing some type of object (`RecipeSerializer`). Use
 "serialize" and "deserialize" for methods only when serializing or deserializing an object other than the one the method is in.
 
-Use "from" for static methods that create an object of the method owner's type (`fromJson`, `fromNbt`, `fromString`, etc.). Use
-"to" for methods that convert an object to another type (`toString`, `toLong`, `toNbt`, etc.).
+Use "from" for static methods that create an object of the method owner's type (`fromJson`, `fromNbt`, `fromString`). Use "to"
+for methods that convert an object to another type (`toString`, `toLong`, `toNbt`).
 
 Use "read" for non-static methods that load data into a class. Use "write" for methods that save data to an *existing* object
 passed as a parameter.
@@ -109,7 +111,7 @@ as the field they're setting, without any prefix.
 ### Collections
 
 Use a plural name for collections and maps rather than the words "list", "set", "array", etc., unless it's a collection of
-collection or there are several collections of different types containing the same objects (`entities`, `entityLists`, etc.).
+collection or there are several collections of different types containing the same objects (`entities`, `entityLists`).
 
 When it's enough, name maps based on the value type. Otherwise, name it in the "`valuesByKeys`" format.
 
