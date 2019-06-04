@@ -3,29 +3,29 @@
 ## General
 
 Use `UpperCamelCase` for class names. Use `lowerCamelCase` for method names, variable names, and names of fields that are not
-both static and final. Always use `UPPER_SNAKE_CASE` for names of fields that are both static and final.
+both static and final. Use `UPPER_SNAKE_CASE` for names of fields that are both static and final.
 
-Method names should always be verbal phrases (`tick`, `getCarversForStep`), except for builder methods and "withX" methods.
+Method names should always be verb phrases (`tick`, `getCarversForStep`), except for builder methods and "withX" methods.
 Class names and non-boolean field and variable names should be noun phrases (`ChunkRegion`, `color`). Boolean field and
-variable names should always be adjectival phrases or present tense verbal phrases (`powered`, `canOpen`), avoiding the `is`
+variable names should always be adjective phrases or present tense verb phrases (`powered`, `canOpen`), avoiding the `is`
 and `has` prefixes when possible (`colored`, not `isColored` or `hasColor`).
 
-To make code as easy to read as possible, keep names in the natural language order. For example, a class representing a "chest
-block entity" should be named `ChestBlockEntity`, not `BlockEntityChest`. Though prefix naming may be helpful for grouping
-classes together in an IDE's tree view, reading and writing code is done much more often than browsing files.
+To make code as easy to read as possible, keep names in the natural language order. For example, a class representing a chest
+block entity should be named `ChestBlockEntity` rather than `BlockEntityChest`. Though prefix naming may be helpful for
+grouping classes together in an IDE's tree view, reading and writing code is done much more often than browsing files.
 
-Use American English (`color`, not `colour`) for consistency throughout Yarn and with known Mojang names.
+## Spelling
 
-Omit words that are unnecessary thanks to parameter names or owner class names. For example, use `getChunk(BlockPos pos)`
-rather than `getChunkAtPosition(BlockPos pos)`, and `create` rather than `createBox` for a method is in the `Box` class.
-Don't avoid overloading methods or shadowing fields.
+Use American English for consistency throughout Yarn and with known Mojang names.
 
-Names should be as descriptive as possible, so don't omit important words. When naming something always look at all its usages
-(including overriding methods and inheriting classes).
+## Conciseness
 
-Consistency is important as it makes code more readable and names easier to memorize. When possible, use terms that are present
-in other Yarn names, in libraries used by Minecraft, or in vanilla strings. See the "Common names" and "Mojang names" sections
-for more information.
+Omit words that are made redundant by parameter names or owner class names. For example, use `getChunk(BlockPos pos)` rather
+than `getChunkAtPosition(BlockPos pos)` and `Box.create` rather than `Box.createBox`. Don't avoid overloading methods or
+shadowing fields.
+
+However, it's more important for a name to be descriptive rather than short, so don't omit important words. When naming something
+always look at all its usages, including overriding methods and inheriting classes.
 
 ## Abbreviations
 
@@ -42,31 +42,16 @@ time to type thanks to IDE autocompletion. Common abbreviations you should use a
 Treat acronyms as single words rather than capitalising every letter. This improves readability (compare `JsonObject` and
 `JSONObject`) and it's consistent with Mojang naming (a known name is `NbtIo`).
 
-## Mojang names
-
-Use names that match names in strings in the vanilla code, unless that string is outdated or inaccurate. This avoids confusion,
-especially from new modders who may not understand what an class exception message is referring to.
-
-Even if a known Mojang name doesn't appear in any strings, it's a good idea to use it since the official name is a good
-indicator of the the class's actual purpose and makes it less likely the name will have to be changed in the future. For
-example, don't name a class that Mojang calls `BedrockBlock` `NoSpawningBlock`, even if its only purpose is to disable mob
-spawning, because Mojang may decide to override more methods in that class, breaking mods that were using it in an unexpected
-way.
-
-There are however three exceptions to this rule:
- - Use "world" for what Mojang calls "level" (see https://github.com/FabricMC/yarn/issues/89)
- - Use "container" for what Mojang calls "menu" (see https://github.com/FabricMC/yarn/issues/386)
- - Use "inventory" for what Mojang calls "container" (no issue yet, requires renaming "container" first)
-
 ## Packages
 
 Package names should always be singular to respect Java conventions. Try to respect the Mojang package structure to avoid
 visibility problems in the future.
 
-## Common names
+## Consistency
 
-This section lists common names that are used throughout Yarn. There's no particular reason these are the names are being used
-instead of others, but you should use them for consistency.
+Consistency is important as it makes code more readable and names easier to memorize. When possible, use terms that are present
+in other Yarn names, in libraries used by Minecraft, or in vanilla strings. The rest of this section lists common names and
+name patterns you should use.
 
 ### Ticks and updates
 
@@ -90,7 +75,7 @@ as the property.
 Use "create" for methods that create a new instance of some object. Use "get or create" for methods that create a new
 instance only if one does not already exist. Don't use "get or create" for lazy initialization, though. 
 
-### Serializing and deserializing
+### Serialization
 
 Use "serializer" for objects whose purpose is serializing or deserializing some type of object (`RecipeSerializer`). Use
 "serialize" and "deserialize" for methods only when serializing or deserializing an object other than the one the method is in.
@@ -115,9 +100,25 @@ collection or there are several collections of different types containing the sa
 
 When it's enough, name maps based on the value type. Otherwise, name it in the "`valuesByKeys`" format.
 
-## Information that should not be present in names
+## Mojang names
 
-Avoid naming methods based on implementation details.
+Use names that match names in strings in the vanilla code, unless that string is outdated or inaccurate. This avoids confusion,
+especially from new modders who may not understand what an class exception message is referring to.
+
+Even if a known Mojang name doesn't appear in any strings, it's a good idea to use it since the official name is a good
+indicator of the the class's actual purpose and makes it less likely the name will have to be changed in the future. For
+example, don't name a class that Mojang calls `BedrockBlock` `NoSpawningBlock`, even if its only purpose is to disable mob
+spawning, because Mojang may decide to override more methods in that class, breaking mods that were using it in an unexpected
+way.
+
+There are however three exceptions to this rule:
+ - Use "world" for what Mojang calls "level" (see https://github.com/FabricMC/yarn/issues/89)
+ - Use "container" for what Mojang calls "menu" (see https://github.com/FabricMC/yarn/issues/386)
+ - Use "inventory" for what Mojang calls "container" (no issue yet, requires renaming "container" first)
+
+## Things to avoid
+
+Don't naming methods based on implementation details. Names should describe what methods do, now how they work.
 
 Avoid including Java-related information in names. For example, don't prefix class names with `I`, `Enum`, or `Abstract` and
 don't prefix methods with `private`. Instead, try to find meaningful names to describe differences between classes. In the
