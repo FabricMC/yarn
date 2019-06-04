@@ -3,7 +3,7 @@
 ## General
 
 Use `UpperCamelCase` for class names. Use `lowerCamelCase` for method names, variable names, and names of fields that are not
-static and final. Always use `UPPER_SNAKE_CASE` for names of fields that are both static and final.
+both static and final. Always use `UPPER_SNAKE_CASE` for names of fields that are both static and final.
 
 Method names should always be verbal phrases (`tick`, `getCarversForStep`), except for builder methods and "withX" methods.
 Class names and non-boolean field and variable names should be noun phrases (`ChunkRegion`, `color`). Boolean field and
