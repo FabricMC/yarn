@@ -1,4 +1,4 @@
-il# Naming conventions
+# Naming conventions
 
 ## General
 
