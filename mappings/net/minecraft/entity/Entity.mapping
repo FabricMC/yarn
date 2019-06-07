@@ -2,6 +2,9 @@ CLASS ail net/minecraft/entity/Entity
 	FIELD A velocityModified Z
 	FIELD B movementMultiplier Lcsa;
 	FIELD C removed Z
+	FIELD D previousHorizontalSpeed F
+	FIELD E horizontalSpeed F
+	FIELD F distanceWalked F
 	FIELD G fallDistance F
 	FIELD H prevRenderX D
 	FIELD I prevRenderY D
@@ -13,22 +16,30 @@ CLASS ail net/minecraft/entity/Entity
 	FIELD O age I
 	FIELD P insideWater Z
 	FIELD Q waterHeight D
+	FIELD R wet Z
 	FIELD S inLava Z
+	FIELD T regenTimer I
+	FIELD U firstUpdate Z
 	FIELD V dataTracker Lql;
 	FIELD W FLAGS Lqi;
 	FIELD X POSE Lqi;
+	FIELD Y updateNeeded Z
 	FIELD Z chunkX I
 	FIELD aA NAME_VISIBLE Lqi;
 	FIELD aB SILENT Lqi;
 	FIELD aC NO_GRAVITY Lqi;
 	FIELD aD invulnerable Z
 	FIELD aE scoreboardTags Ljava/util/Set;
+	FIELD aF teleportRequested Z
 	FIELD aG pistonMovementDelta [D
 	FIELD aH pistonMovementTick J
 	FIELD aI size Laim;
 	FIELD aJ standingEyeHeight F
 	FIELD aa chunkY I
 	FIELD ab chunkZ I
+	FIELD ac trackedXPosition J
+	FIELD ad trackedYPosition J
+	FIELD ae trackedZPosition J
 	FIELD af ignoreCameraFrustum Z
 	FIELD ag velocityDirty Z
 	FIELD ah portalCooldown I
@@ -36,13 +47,17 @@ CLASS ail net/minecraft/entity/Entity
 	FIELD aj portalTime I
 	FIELD ak dimension Lbyh;
 	FIELD al lastPortalPosition Lev;
+	FIELD am lastPortalDirectionVector Lcsa;
+	FIELD an lastPortalDirection Lfa;
 	FIELD ao uuid Ljava/util/UUID;
 	FIELD ap uuidString Ljava/lang/String;
 	FIELD aq glowing Z
 	FIELD ar passengerList Ljava/util/List;
 	FIELD as vehicle Lail;
 	FIELD at velocity Lcsa;
-	FIELD au boundingBox Lcrv;
+	FIELD au entityBounds Lcrv;
+	FIELD av nextStepDistance F
+	FIELD aw nextAerialStepDistance F
 	FIELD ax fireTime I
 	FIELD ay BREATH Lqi;
 	FIELD az CUSTOM_NAME Lqi;
@@ -53,6 +68,7 @@ CLASS ail net/minecraft/entity/Entity
 	FIELD f type Laip;
 	FIELD g entityId I
 	FIELD h LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD i inanimate Z
 	FIELD j ridingCooldown I
 	FIELD k teleporting Z
 	FIELD l world Lbhl;
@@ -92,21 +108,23 @@ CLASS ail net/minecraft/entity/Entity
 		ARG 1 cursorDeltaX
 		ARG 3 cursorDeltaY
 	METHOD a requestTeleport (DDD)V
-		ARG 1 x
-		ARG 3 y
-		ARG 5 z
+		ARG 1 destX
+		ARG 3 destY
+		ARG 5 destZ
 	METHOD a setPositionAnglesAndUpdate (DDDFF)V
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
 		ARG 7 yaw
 		ARG 8 pitch
-	METHOD a setPositionAndRotations (DDDFFIZ)V
+	METHOD a updateClientPositionAndAngles (DDDFFIZ)V
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
 		ARG 7 yaw
 		ARG 8 pitch
+		ARG 9 interpolationSteps
+		ARG 10 interpolate
 	METHOD a rayTrace (DFZ)Lcry;
 		ARG 1 maxDistance
 		ARG 3 tickDelta
@@ -119,18 +137,31 @@ CLASS ail net/minecraft/entity/Entity
 	METHOD a setRotation (FF)V
 		ARG 1 yaw
 		ARG 2 pitch
+	METHOD a updateClientHeadRotation (FI)V
+		ARG 1 yaw
+		ARG 2 pitch
 	METHOD a updateVelocity (FLcsa;)V
 		ARG 1 speed
 		ARG 2 movementInput
 	METHOD a damage (Lahu;F)Z
 		ARG 1 source
 		ARG 2 amount
+	METHOD a (Laij;)Ljava/util/stream/Stream;
+		ARG 1 collissionVector
 	METHOD a updateKilledAdvancementCriterion (Lail;ILahu;)V
 		ARG 1 killer
 		ARG 2 score
 		ARG 3 damageSource
+	METHOD a calculateMotionVector (Lail;Lcsa;Lcrv;Lbhl;Lcsf;Lzx;)Lcsa;
+		ARG 0 subject
+		ARG 1 collissionVector
+		ARG 2 observerBounds
+		ARG 3 world
+		ARG 4 context
+		ARG 5 collissions
 	METHOD a startRiding (Lail;Z)Z
 		ARG 1 entity
+		ARG 2 force
 	METHOD a setEquippedStack (Laiq;Lbce;)V
 		ARG 1 slot
 		ARG 2 stack
@@ -192,6 +223,8 @@ CLASS ail net/minecraft/entity/Entity
 		ARG 2 target
 	METHOD a setBoundingBox (Lcrv;)V
 		ARG 1 boundingBox
+	METHOD a applyPistonMovement (Lcsa;)Lcsa;
+		ARG 1 offset
 	METHOD a movementInputToVelocity (Lcsa;FF)Lcsa;
 		ARG 0 movementInput
 		ARG 1 speed
@@ -199,6 +232,17 @@ CLASS ail net/minecraft/entity/Entity
 	METHOD a clipSneakingMovement (Lcsa;Laiz;)Lcsa;
 		ARG 1 offset
 		ARG 2 type
+	METHOD a calculatePerpendicularMotionVector (Lcsa;Lcrv;Lbho;Lail;)Lcsa;
+		ARG 0 collisionVector
+		ARG 1 observerBounds
+		ARG 2 world
+		ARG 3 subject
+	METHOD a calculateTangentalMotionVector (Lcsa;Lcrv;Lbho;Lcsf;Lzx;)Lcsa;
+		ARG 0 collissionVector
+		ARG 1 observerBounds
+		ARG 2 world
+		ARG 3 context
+		ARG 4 collissions
 	METHOD a isTeamPlayer (Lctc;)Z
 		ARG 1 team
 	METHOD a populateCrashReport (Le;)V
@@ -210,6 +254,8 @@ CLASS ail net/minecraft/entity/Entity
 	METHOD a playStepSound (Lev;Lbvn;)V
 		ARG 1 pos
 		ARG 2 state
+	METHOD a calculatePistonMovementFactor (Lfa$a;D)D
+		ARG 2 offsetFactor
 	METHOD a readCustomDataFromTag (Lic;)V
 		ARG 1 tag
 	METHOD a hasPassengerType (Ljava/lang/Class;)Z
@@ -231,6 +277,9 @@ CLASS ail net/minecraft/entity/Entity
 	METHOD a isInFluid (Lze;Z)Z
 		ARG 1 fluidTag
 		ARG 2 requireLoadedChunk
+	METHOD a collectPassengers (ZLjava/util/Set;)V
+		ARG 1 playersOnly
+		ARG 2 output
 	METHOD a toListTag ([D)Lij;
 		ARG 1 values
 	METHOD a toListTag ([F)Lij;
@@ -252,7 +301,7 @@ CLASS ail net/minecraft/entity/Entity
 	METHOD aO getMountedHeightOffset ()D
 	METHOD aP isLiving ()Z
 	METHOD aQ removeAllPassengers ()V
-	METHOD aR getBoundingBoxMarginForTargeting ()F
+	METHOD aR getTargettingDistance ()F
 	METHOD aS getRotationVector ()Lcsa;
 	METHOD aT getRotationClient ()Lcrz;
 	METHOD aU getRotationVecClient ()Lcsa;
@@ -269,11 +318,13 @@ CLASS ail net/minecraft/entity/Entity
 	METHOD ac setOnFireFromLava ()V
 	METHOD ad extinguish ()V
 	METHOD ae destroy ()V
+	METHOD af calculateNextStepDistance ()F
 	METHOD ag moveToBoundingBoxCenter ()V
 	METHOD ah getSwimSound ()Lym;
 	METHOD ai getSplashSound ()Lym;
 	METHOD aj getHighSpeedSplashSound ()Lym;
 	METHOD ak checkBlockCollision ()V
+	METHOD al isJesus ()Z
 	METHOD am isSilent ()Z
 	METHOD an hasNoGravity ()Z
 	METHOD ao canClimb ()Z
@@ -285,10 +336,15 @@ CLASS ail net/minecraft/entity/Entity
 	METHOD au isInsideWaterOrBubbleColumn ()Z
 	METHOD av isInWater ()Z
 	METHOD aw updateSwimming ()V
+	METHOD ax checkWaterState ()Z
 	METHOD ay onSwimmingStart ()V
 	METHOD az attemptSprintingParticles ()V
 	METHOD b setRenderDistanceMultiplier (D)V
 		ARG 0 value
+	METHOD b updateTrackedPosition (DDD)V
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
 	METHOD b setPositionAndAngles (DDDFF)V
 		ARG 1 x
 		ARG 3 y
@@ -303,6 +359,8 @@ CLASS ail net/minecraft/entity/Entity
 		ARG 2 value
 	METHOD b isInvulnerableTo (Lahu;)Z
 		ARG 1 damageSource
+	METHOD b (Laij;)Z
+		ARG 1 e
 	METHOD b onKilledOther (Laiu;)V
 		ARG 1 other
 	METHOD b setPose (Laje;)V
@@ -345,10 +403,12 @@ CLASS ail net/minecraft/entity/Entity
 	METHOD bQ getServer ()Lnet/minecraft/server/MinecraftServer;
 	METHOD bR isImmuneToExplosion ()Z
 	METHOD bS entityDataRequiresOperator ()Z
+	METHOD bT teleportRequested ()Z
 	METHOD bU getPrimaryPassenger ()Lail;
 	METHOD bV getPassengerList ()Ljava/util/List;
 	METHOD bW getPassengersDeep ()Ljava/util/Collection;
-	METHOD bY getTopmostVehicle ()Lail;
+	METHOD bX hasPlayerJockey ()Z
+	METHOD bY getPrimaryVehicle ()Lail;
 	METHOD bZ isLogicalSideForUpdatingMovement ()Z
 	METHOD ba getItemsEquipped ()Ljava/lang/Iterable;
 	METHOD bb isOnFire ()Z
@@ -367,10 +427,12 @@ CLASS ail net/minecraft/entity/Entity
 	METHOD bo getMaxBreath ()I
 	METHOD bp getBreath ()I
 	METHOD bq getHeadYaw ()F
-	METHOD br canPlayerAttack ()Z
+	METHOD br isAttackable ()Z
 	METHOD bs isInvulnerable ()Z
 	METHOD bt canUsePortals ()Z
 	METHOD bu getSafeFallDistance ()I
+	METHOD bw getLastPortalDirectionVector ()Lcsa;
+	METHOD bx getLastPortalDirection ()Lfa;
 	METHOD by canAvoidTraps ()Z
 	METHOD bz doesRenderOnFire ()Z
 	METHOD c setPosition (DDD)V
@@ -398,6 +460,7 @@ CLASS ail net/minecraft/entity/Entity
 		ARG 1 silent
 	METHOD ca getVehicle ()Lail;
 	METHOD cb getSoundCategory ()Lyo;
+	METHOD cc getBurningDuration ()I
 	METHOD cd getCommandSource ()Lcd;
 	METHOD ce getWaterHeight ()D
 	METHOD cf getWidth ()F
@@ -413,6 +476,8 @@ CLASS ail net/minecraft/entity/Entity
 	METHOD d getOppositeRotationVector (FF)Lcsa;
 		ARG 1 pitch
 		ARG 2 yaw
+	METHOD d calculatePoseBounds (Laje;)Lcrv;
+		ARG 1 pos
 	METHOD d setVelocity (Lcsa;)V
 		ARG 1 velocity
 	METHOD d saveToTag (Lic;)Z
@@ -423,10 +488,14 @@ CLASS ail net/minecraft/entity/Entity
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
+	METHOD e calculateNextAerialStepDistance (F)F
+		ARG 1 distance
 	METHOD e setEntityId (I)V
 		ARG 1 id
 	METHOD e getEyeHeight (Laje;)F
 		ARG 1 pose
+	METHOD e handleCollissions (Lcsa;)Lcsa;
+		ARG 1 motionOffset
 	METHOD e toTag (Lic;)Lic;
 		ARG 1 tag
 	METHOD e setSneaking (Z)V
@@ -483,9 +552,16 @@ CLASS ail net/minecraft/entity/Entity
 	METHOD i setInvisible (Z)V
 		ARG 1 invisible
 	METHOD j stopRiding ()V
+	METHOD j teleport (DDD)V
+		ARG 1 destX
+		ARG 3 destY
+		ARG 5 destZ
 	METHOD j getCameraPosVec (F)Lcsa;
 		ARG 1 tickDelta
 	METHOD j allowsPermissionLevel (I)Z
+		ARG 1 permissionLevel
+	METHOD j getHardCollissionBox (Lail;)Lcrv;
+		ARG 1 colliddingEntity
 	METHOD j onBubbleColumnSurfaceCollision (Z)V
 		ARG 1 drag
 	METHOD k isBeingRainedOn ()Z
@@ -506,10 +582,12 @@ CLASS ail net/minecraft/entity/Entity
 		ARG 1 passenger
 	METHOD l setInvulnerable (Z)V
 		ARG 1 invulnerable
+	METHOD m updateInWater ()V
 	METHOD m startRiding (Lail;)Z
 		ARG 1 entity
 	METHOD m setCustomNameVisible (Z)V
 		ARG 1 visible
+	METHOD n updateWetState ()V
 	METHOD n canStartRiding (Lail;)Z
 		ARG 1 entity
 	METHOD o addPassenger (Lail;)V
@@ -523,10 +601,13 @@ CLASS ail net/minecraft/entity/Entity
 	METHOD s isPartOf (Lail;)Z
 		ARG 1 entity
 	METHOD t isSpectator ()Z
-	METHOD t handlePlayerAttack (Lail;)Z
+	METHOD t onAttack (Lail;)Z
+		ARG 1 attacker
 	METHOD u copyPositionAndRotation (Lail;)V
 		ARG 1 entity
 	METHOD u_ initDataTracker ()V
+	METHOD v initNewDimention (Lail;)V
+		ARG 1 original
 	METHOD w hasPassenger (Lail;)Z
 		ARG 1 passenger
 	METHOD x isConnectedThroughVehicle (Lail;)Z
