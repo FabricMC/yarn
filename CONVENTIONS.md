@@ -1,12 +1,11 @@
-# Naming conventions
+il# Naming conventions
 
 ## General
 
 Use `UpperCamelCase` for class names. Use `lowerCamelCase` for method names, variable names, and names of fields that are not
 both static and final. Use `UPPER_SNAKE_CASE` for names of fields that are both static and final.
 
-Method names should always be verb phrases (`tick`, `getCarversForStep`), except for builder methods and "withX" methods.
-Class names and non-boolean field and variable names should be noun phrases (`ChunkRegion`, `color`). Boolean field and
+Method names should generally be verb phrases (`tick`, `getCarversForStep`), except for "withX", "toX", "fromX", "of" and builder methods. Class names and non-boolean field and variable names should be noun phrases (`ChunkRegion`, `color`). Boolean field and
 variable names should always be adjective phrases or present tense verb phrases (`powered`, `canOpen`), avoiding the `is`
 and `has` prefixes when possible (`colored`, not `isColored` or `hasColor`).
 
@@ -35,7 +34,7 @@ time to type thanks to IDE autocompletion. Common abbreviations you should use a
 
  - "id" for "identifier"
  - "pos" for "position"
- - "NBT" for "named binary tag"
+ - "nbt" for "named binary tag"
  - "init" for "initialize"
  - Any abbreviations used by Java or libraries ("json", "html", etc.)
 
