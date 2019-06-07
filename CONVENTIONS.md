@@ -117,7 +117,7 @@ There are however three exceptions to this rule:
 
 ## Things to avoid
 
-Don't naming methods based on implementation details. Names should describe what methods do, now how they work.
+Don't name methods based on implementation details. Names should describe what methods do, now how they work.
 
 Avoid including Java-related information in names. For example, don't prefix class names with `I`, `Enum`, or `Abstract` and
 don't prefix methods with `private`. Instead, try to find meaningful names to describe differences between classes. In the
