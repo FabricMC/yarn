@@ -1,9 +1,12 @@
 CLASS bhy net/minecraft/server/world/ServerTickScheduler
 	FIELD a invalidObjPredicate Ljava/util/function/Predicate;
 	FIELD b idToName Ljava/util/function/Function;
+	FIELD c nameToId Ljava/util/function/Function;
 	FIELD d ticksScheduled Ljava/util/Set;
+	FIELD e ticksScheduledInOrder Ljava/util/TreeSet;
 	FIELD f world Lvi;
 	FIELD g ticksCurrent Ljava/util/Queue;
+	FIELD h ticksConsumed Ljava/util/List;
 	FIELD i tickConsumer Ljava/util/function/Consumer;
 	METHOD <init> (Lvi;Ljava/util/function/Predicate;Ljava/util/function/Function;Ljava/util/function/Function;Ljava/util/function/Consumer;)V
 		ARG 1 world
@@ -14,10 +17,21 @@ CLASS bhy net/minecraft/server/world/ServerTickScheduler
 	METHOD a tick ()V
 	METHOD a toTag (Lbgx;)Lij;
 	METHOD a getScheduledTicksInChunk (Lbgx;ZZ)Ljava/util/List;
+		ARG 2 updateState
+		ARG 3 getStaleTicks
+	METHOD a addScheduledTick (Lbib;)V
 	METHOD a copyScheduledTicks (Lchw;Lev;)V
 		ARG 1 box
 		ARG 2 offset
 	METHOD a getScheduledTicks (Lchw;ZZ)Ljava/util/List;
+		ARG 1 bounds
+		ARG 2 updateState
+		ARG 3 getStaleTicks
+	METHOD a transferTicksInBounds (Ljava/util/List;Ljava/util/Collection;Lchw;Z)Ljava/util/List;
+		ARG 1 dst
+		ARG 2 src
+		ARG 3 bounds
+		ARG 4 move
 	METHOD a serializeScheduledTicks (Ljava/util/function/Function;Ljava/lang/Iterable;J)Lij;
 		ARG 0 identifierProvider
 		ARG 1 scheduledTicks
