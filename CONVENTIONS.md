@@ -18,6 +18,9 @@ grouping classes together in an IDE's tree view, reading and writing code is don
 
 Use American English for consistency throughout Yarn and with known Mojang names.
 
+If there are two accepted spellings of the same word, first check if one is already being used in Yarn or by Mojang, and if
+not, use the most common spelling.
+
 ## Conciseness
 
 Omit words that are made redundant by parameter names or owner class names. For example, use `getChunk(BlockPos pos)` rather
