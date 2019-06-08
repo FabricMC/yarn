@@ -26,6 +26,9 @@ shadowing fields.
 However, it's more important for a name to be descriptive rather than short, so don't omit important words. When naming something
 always look at all its usages, including overriding methods and inheriting classes.
 
+It's important to be concise especially with names used in many places throughout the code, while more obscure names can be
+longer and more descriptive.
+
 ## Abbreviations
 
 Avoid abbreviations unless it's a common one everyone knows and other yarn names involving the same word use its abbreviated
@@ -62,8 +65,8 @@ Use the word "last" for the value that something had last tick (`lastX`, `lastWi
 
 ### Getters, setters, withers, and creators
 
-Use "get" for getters and other methods that calculate some property with no side effects other than caching a value in a
-private field.
+Use "get" for non-boolean getters and other methods that calculate some property with no side effects other than caching a value in a
+private field. For boolean getters, use "is".
 
 Use "set" for methods that set some property. Name the parameter the same as the property (`setColor(color)`, not
 `setColor(newColor)`).
@@ -99,6 +102,13 @@ collection or there are several collections of different types containing the sa
 
 When it's enough, name maps based on the value type. Otherwise, name it in the "`valuesByKeys`" format.
 
+### Coordinates
+
+Coordinates can be named `x`, `y`, and `z` when it's clear what they represent. If clarification is needed, add a word in
+front of the coordinate (`velocityX`, not `xVelocity`).
+
+Name screen coordinates `x` and `y`, rather than `left` and `top`.
+
 ## Mojang names
 
 Use names that match names in strings in the vanilla code, unless that string is outdated or inaccurate. This avoids confusion,
@@ -119,6 +129,6 @@ There are however three exceptions to this rule:
 
 Don't name methods based on implementation details. Names should describe what methods do, now how they work.
 
-Avoid including Java-related information in names. For example, don't prefix class names with `I`, `Enum`, or `Abstract` and
+Avoid including Java-related information in names. For example, don't prefix class names with `I`, or `Enum` and
 don't prefix methods with `private`. Instead, try to find meaningful names to describe differences between classes. In the
 case of abstract classes, this may involve renaming subclasses to more specific names.
