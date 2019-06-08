@@ -5,9 +5,10 @@
 Use `UpperCamelCase` for class names. Use `lowerCamelCase` for method names, variable names, and names of fields that are not
 both static and final. Use `UPPER_SNAKE_CASE` for names of fields that are both static and final.
 
-Method names should generally be verb phrases (`tick`, `getCarversForStep`), except for "withX", "toX", "fromX", "of" and builder methods. Class names and non-boolean field and variable names should be noun phrases (`ChunkRegion`, `color`). Boolean field and
-variable names should always be adjective phrases or present tense verb phrases (`powered`, `canOpen`), avoiding the `is`
-and `has` prefixes when possible (`colored`, not `isColored` or `hasColor`).
+Method names should generally be verb phrases (`tick`, `getCarversForStep`), except for "withX", "toX", "fromX", "of" and
+builder methods. Class names and non-boolean field and variable names should be noun phrases (`ChunkRegion`, `color`).
+Boolean field and variable names should always be adjective phrases or present tense verb phrases (`powered`, `canOpen`),
+avoiding the `is` and `has` prefixes when possible (`colored`, not `isColored` or `hasColor`).
 
 To make code as easy to read as possible, keep names in the natural language order. For example, a class representing a chest
 block entity should be named `ChestBlockEntity` rather than `BlockEntityChest`. Though prefix naming may be helpful for
@@ -23,8 +24,8 @@ Omit words that are made redundant by parameter names or owner class names. For 
 than `getChunkAtPosition(BlockPos pos)` and `Box.create` rather than `Box.createBox`. Don't avoid overloading methods or
 shadowing fields.
 
-However, it's more important for a name to be descriptive rather than short, so don't omit important words. When naming something
-always look at all its usages, including overriding methods and inheriting classes.
+However, it's more important for a name to be descriptive rather than short, so don't omit important words. When naming
+something always look at all its usages, including overriding methods and inheriting classes.
 
 It's important to be concise especially with names used in many places throughout the code, while more obscure names can be
 longer and more descriptive.
@@ -65,8 +66,8 @@ Use the word "last" for the value that something had last tick (`lastX`, `lastWi
 
 ### Getters, setters, withers, and creators
 
-Use "get" for non-boolean getters and other methods that calculate some property with no side effects other than caching a value in a
-private field. For boolean getters, use "is".
+Use "get" for non-boolean getters and other methods that calculate some property with no side effects other than caching a value
+in a private field. For boolean getters, use "is".
 
 Use "set" for methods that set some property. Name the parameter the same as the property (`setColor(color)`, not
 `setColor(newColor)`).
