@@ -17,6 +17,12 @@ However, it is a good idea to consult name changes with other people - use pull 
 2. Run `./gradlew yarn` (Linux, macOS) or `gradlew yarn` (Windows)
 3. Profit
 
+To use Yarn in your IDE of choice, or as part of a full Fabric development environment, check out the [Fabric example mod](https://github.com/FabricMC/fabric-example-mod).
+
+1. Fork/Clone the repo
+2. Run `./gradlew genSources [idea|eclipse]`, selecting one of `idea` or `eclipse` based on whether you want to use IntelliJ or Eclipse.
+3. Import `build.gradle`, or the repository itself, into your IDE.
+
 ## Gradle
 Yarn uses Gradle to provide a number of utility tasks for working with the mappings.
 
