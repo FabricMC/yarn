@@ -9,6 +9,7 @@ CLASS avo net/minecraft/entity/passive/VillagerEntity
 	FIELD bI foodLevel B
 	FIELD bJ gossip Lapb;
 	FIELD bK gossipStartTime J
+	FIELD bL lastGossipDecay J
 	FIELD bM experience I
 	FIELD bN lastRestock J
 	FIELD bO MEMORY_MODULES Lcom/google/common/collect/ImmutableList;
@@ -17,6 +18,13 @@ CLASS avo net/minecraft/entity/passive/VillagerEntity
 		ARG 1 entityType
 		ARG 2 world
 		ARG 3 type
+	METHOD a canSummonGolem (J)Z
+		ARG 1 time
+	METHOD a summonGolem (JI)V
+		ARG 1 time
+		ARG 3 requiredVillagerCount
+	METHOD a notifyDeath (Lail;)V
+		ARG 1 killer
 	METHOD a initBrain (Lajj;)V
 		ARG 1 brain
 	METHOD a releaseTicketFor (Lape;)V
@@ -26,22 +34,33 @@ CLASS avo net/minecraft/entity/passive/VillagerEntity
 		ARG 1 villagerData
 	METHOD a reinitializeBrain (Lvi;)V
 		ARG 1 world
+	METHOD b setGolemLastSeenTime (J)V
+		ARG 1 time
 	METHOD b setOffers (Lbgq;)V
 		ARG 1 offers
+	METHOD c hasSeenGolemRecently (J)Z
+		ARG 1 currentTime
+	METHOD d hasRecentlyWorkedAndSlept (J)Z
+		ARG 1 worldTime
 	METHOD eA getAvailableFood ()I
+	METHOD eB craftBread ()V
+	METHOD eC decayGossip ()V
 	METHOD eD spawnIronGolem ()Lard;
 	METHOD ek restock ()V
 	METHOD el playWorkSound ()V
 	METHOD en isReadyToBreed ()Z
 	METHOD eo consumeAvailableFood ()V
+	METHOD ep eatForBreeding ()V
 	METHOD eq wantsToStartBreeding ()Z
 	METHOD er canBreed ()Z
 	METHOD es hasSeedToPlant ()Z
 	METHOD et getLastRestock ()J
 	METHOD ev sayNo ()V
 	METHOD ew clearCurrentBonus ()V
+	METHOD ex lacksFood ()Z
 	METHOD ey canLevelUp ()Z
 	METHOD ez levelUp ()V
+	METHOD f getReputationFor (Lawb;)I
 	METHOD g beginTradeWith (Lawb;)V
 		ARG 1 customer
 	METHOD h prepareRecipesFor (Lawb;)V
