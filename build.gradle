@@ -45,11 +45,14 @@ configurations {
 			cacheChangingModulesFor 0, "seconds"
 		}
 	}
+	cfrRuntime
 }
 
 dependencies {
 	enigmaRuntime "net.fabricmc:stitch:0.2.0.52"
 	enigmaRuntime "cuchaz:enigma:0.14.0.120:all"
+
+	cfrRuntime 'org.benf:cfr:0.144'
 }
 
 def setupGroup = "jar setup"
@@ -473,6 +476,15 @@ task mapNamedJar(dependsOn: [buildTinyWithEnum, mapIntermediaryJar]) {
 	}
 }
 
+task decompileCFR(dependsOn: mapNamedJar, type: JavaExec) {
+	doFirst {
+		file('src').deleteDir()
+	}
+
+	classpath = configurations.cfrRuntime
+	main = 'org.benf.cfr.reader.Main'
+	args '--outputdir', 'src', namedJar.getAbsolutePath()
+}
 
 publishing {
 	publications {
