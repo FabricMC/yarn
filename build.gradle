@@ -88,6 +88,9 @@ import net.fabricmc.weave.CommandFindMappingErrors
 import net.fabricmc.weave.CommandTinyify
 import org.apache.commons.io.FileUtils
 
+import java.util.stream.Stream
+import java.util.stream.Collectors
+
 import java.util.zip.GZIPOutputStream
 
 boolean validateChecksum(File file, String checksum) {
@@ -483,7 +486,7 @@ task decompileCFR(dependsOn: mapNamedJar, type: JavaExec) {
 
 	classpath = configurations.cfrRuntime
 	main = 'org.benf.cfr.reader.Main'
-	args '--outputdir', 'src', namedJar.getAbsolutePath()
+	args '--outputdir', 'src', '--extraclasspath', Stream.of(libraries.listFiles()).map{it.name}.collect(Collectors.joining(";")), namedJar.getAbsolutePath()
 }
 
 publishing {
