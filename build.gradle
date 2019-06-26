@@ -8,7 +8,7 @@ buildscript {
 	}
 	dependencies {
 		classpath "net.fabricmc:weave:0.4.0.19"
-		classpath "net.fabricmc:stitch:0.2.0.52"
+		classpath "net.fabricmc:stitch:0.2.0.53"
 		classpath "commons-io:commons-io:2.6"
 		classpath "com.google.guava:guava:28.0-jre"
 		classpath 'de.undercouch:gradle-download-task:3.4.3'
@@ -22,7 +22,7 @@ plugins {
 	id 'maven-publish'
 }
 
-def minecraft_version = "1.14.3"
+def minecraft_version = "1.14_combat-212796"
 
 def ENV = System.getenv()
 // Fetch build number from Jenkins
@@ -48,7 +48,7 @@ configurations {
 }
 
 dependencies {
-	enigmaRuntime "net.fabricmc:stitch:0.2.0.52"
+	enigmaRuntime /*fileTree(dir: 'enigmaruntime', include: '*.jar')*/"net.fabricmc:stitch:0.2.0.53"
 	enigmaRuntime "cuchaz:enigma:0.14.0.120:all"
 }
 
@@ -112,30 +112,35 @@ task downloadVersionsManifest {
 }
 
 def getManifestVersion(File manifestFile, String minecraft_version) {
-	def manifest = manifestFile.exists() ? new JsonSlurper().parseText(FileUtils.readFileToString(manifestFile)) : null
-	return manifest != null ? manifest.versions.stream().filter({it.id.equals(minecraft_version)}).findFirst() : java.util.Optional.empty()
+	return java.util.Optional.of("${minecraft_version}.json")
+	//def manifest = manifestFile.exists() ? new JsonSlurper().parseText(FileUtils.readFileToString(manifestFile)) : null
+	//return manifest != null ? manifest.versions.stream().filter({it.id.equals(minecraft_version)}).findFirst() : java.util.Optional.empty()
 }
 
-task downloadWantedVersionManifest(dependsOn: downloadVersionsManifest) {
+task downloadWantedVersionManifest(dependsOn: downloadVersionsManifest, type: Copy) {
 	group = setupGroup
 	def manifestFile = downloadVersionsManifest.outputs.files.singleFile
 	def manifestVersion = getManifestVersion(manifestFile, minecraft_version)
 
 	//have to grab the release time as there's a current timestamp on each element?!
-	inputs.property "releaseTime", manifestVersion.isPresent() ? manifestVersion.get().releaseTime : -1
+	inputs.property "releaseTime", -1 //manifestVersion.isPresent() ? manifestVersion.get().releaseTime : -1
 
-	outputs.file versionFile
+	//outputs.file versionFile
+	destinationDir = versionFile.parentFile
+	from (new File("${minecraft_version}.json")) {
+		rename {"${minecraft_version}.json"}
+	}
 
 	doLast {
-		manifestVersion = getManifestVersion(manifestFile, minecraft_version) //nb need to re-read here in case it didn't exist before
-		if (manifestVersion.isPresent() || versionFile.exists()) {
-
-			if (manifestVersion.isPresent()) {
-				FileUtils.copyURLToFile(new URL(manifestVersion.get().url), versionFile)
-			}
-		} else {
-			throw new RuntimeException("No version data for Minecraft version ${minecraft_version}")
-		}
+		//manifestVersion = getManifestVersion(manifestFile, minecraft_version) //nb need to re-read here in case it didn't exist before
+		//if (manifestVersion.isPresent() || versionFile.exists()) {
+//
+		//	if (manifestVersion.isPresent()) {
+		//		FileUtils.copyURLToFile(new URL(manifestVersion.get().url), versionFile)
+		//	}
+		//} else {
+		//	throw new RuntimeException("No version data for Minecraft version ${minecraft_version}")
+		//}
 	}
 
 }
