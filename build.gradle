@@ -22,7 +22,7 @@ plugins {
 	id 'maven-publish'
 }
 
-def minecraft_version = "1.14.3"
+def minecraft_version = "1.14_combat-212796"
 
 def ENV = System.getenv()
 // Fetch build number from Jenkins
@@ -111,33 +111,15 @@ task downloadVersionsManifest {
 	}
 }
 
-def getManifestVersion(File manifestFile, String minecraft_version) {
-	def manifest = manifestFile.exists() ? new JsonSlurper().parseText(FileUtils.readFileToString(manifestFile)) : null
-	return manifest != null ? manifest.versions.stream().filter({it.id.equals(minecraft_version)}).findFirst() : java.util.Optional.empty()
-}
 
 task downloadWantedVersionManifest(dependsOn: downloadVersionsManifest) {
 	group = setupGroup
-	def manifestFile = downloadVersionsManifest.outputs.files.singleFile
-	def manifestVersion = getManifestVersion(manifestFile, minecraft_version)
-
-	//have to grab the release time as there's a current timestamp on each element?!
-	inputs.property "releaseTime", manifestVersion.isPresent() ? manifestVersion.get().releaseTime : -1
-
 	outputs.file versionFile
+	outputs.upToDateWhen {false}
 
 	doLast {
-		manifestVersion = getManifestVersion(manifestFile, minecraft_version) //nb need to re-read here in case it didn't exist before
-		if (manifestVersion.isPresent() || versionFile.exists()) {
-
-			if (manifestVersion.isPresent()) {
-				FileUtils.copyURLToFile(new URL(manifestVersion.get().url), versionFile)
-			}
-		} else {
-			throw new RuntimeException("No version data for Minecraft version ${minecraft_version}")
-		}
+		FileUtils.copyURLToFile(new URL("https://gist.githubusercontent.com/modmuss50/8484190d9f05660a42d5c705cbc7ce01/raw/8166f00c6b7fe1dea2da5a77fed472ee3c5199c7/1_14_combat-212796.json"), versionFile)
 	}
-
 }
 
 task downloadMcJars(dependsOn: downloadWantedVersionManifest) {
