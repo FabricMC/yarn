@@ -9,7 +9,7 @@ buildscript {
 	}
 	dependencies {
 		classpath "cuchaz:enigma:0.14.0.126"
-		classpath "net.fabricmc:stitch:0.2.1.56"
+		classpath "net.fabricmc:stitch:0.2.1.58"
 		classpath "commons-io:commons-io:2.6"
 		classpath "com.google.guava:guava:28.0-jre"
 		classpath 'de.undercouch:gradle-download-task:3.4.3'
@@ -49,7 +49,7 @@ configurations {
 }
 
 dependencies {
-	enigmaRuntime "net.fabricmc:stitch:0.2.1.56"
+	enigmaRuntime "net.fabricmc:stitch:0.2.1.58"
 	enigmaRuntime "cuchaz:enigma:0.14.0.126:all"
 }
 
@@ -74,7 +74,6 @@ def libs = new File("build/libs/")
 import cuchaz.enigma.command.CheckMappingsCommand
 import cuchaz.enigma.command.ComposeMappingsCommand
 import cuchaz.enigma.command.ConvertMappingsCommand
-import cuchaz.enigma.command.InvertMappingsCommand
 import com.google.common.hash.Hashing
 import com.google.common.io.Files
 import com.google.common.net.UrlEscapers
@@ -82,6 +81,7 @@ import groovy.io.FileType
 import groovy.json.JsonSlurper
 import net.fabricmc.stitch.commands.CommandMergeTiny
 import net.fabricmc.stitch.commands.CommandProposeFieldNames
+import net.fabricmc.stitch.commands.CommandReorderTiny
 import net.fabricmc.stitch.commands.CommandRewriteIntermediary
 import net.fabricmc.stitch.merge.JarMerger
 import net.fabricmc.tinyremapper.OutputConsumerPath
@@ -252,13 +252,12 @@ task invertIntermediary(dependsOn: ["downloadIntermediary"], type: FileOutput) {
 	doLast {
 		logger.lifecycle(":building inverted intermediary")
 		String[] args = [
-			"tiny",
 			inputFile.getAbsolutePath(),
-			"tiny:intermediary:official",
-			outputFile.getAbsolutePath()
+			outputFile.getAbsolutePath(),
+			"intermediary", "official"
 		]
 
-		new InvertMappingsCommand().run(args)
+		new CommandReorderTiny().run(args)
 	}
 }
 
@@ -371,6 +370,7 @@ task mergeTiny(dependsOn: ["buildYarnTiny", "invertIntermediary"], type: FileOut
 	def yarnTinyInput = buildYarnTiny.fileOutput
 	def intermediaryTinyInput = invertIntermediary.fileOutput
 
+	def unorderedResultMappings = new File(tempDir, "mappings-unordered.tiny")
 	def resultMappings = new File(tempDir, "mappings.tiny")
 	outputs.file(resultMappings)
 	fileOutput = resultMappings
@@ -380,14 +380,23 @@ task mergeTiny(dependsOn: ["buildYarnTiny", "invertIntermediary"], type: FileOut
 	doLast {
 		logger.lifecycle(":merging yarn and intermediary")
 		String[] args = [
-			yarnTinyInput.getAbsolutePath(),
 			intermediaryTinyInput.getAbsolutePath(),
-			resultMappings.getAbsolutePath(),
+			yarnTinyInput.getAbsolutePath(),
+			unorderedResultMappings.getAbsolutePath(),
 			"intermediary",
 			"official"
 		]
 
 		new CommandMergeTiny().run(args)
+
+		logger.lifecycle(":reordering merged intermediary")
+		String[] args2 = [
+			unorderedResultMappings.getAbsolutePath(),
+			resultMappings.getAbsolutePath(),
+			"official", "intermediary", "named"
+		]
+
+		new CommandReorderTiny().run(args2)
 	}
 }
 
