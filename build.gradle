@@ -7,7 +7,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath "net.fabricmc:weave:0.4.0.19"
+		classpath "cuchaz:enigma:0.14.0.122"
 		classpath "net.fabricmc:stitch:0.2.0.52"
 		classpath "commons-io:commons-io:2.6"
 		classpath "com.google.guava:guava:28.0-jre"
@@ -49,7 +49,7 @@ configurations {
 
 dependencies {
 	enigmaRuntime "net.fabricmc:stitch:0.2.0.52"
-	enigmaRuntime "cuchaz:enigma:0.14.0.120:all"
+	enigmaRuntime "cuchaz:enigma:0.14.0.122:all"
 }
 
 def setupGroup = "jar setup"
@@ -69,6 +69,8 @@ def serverJar = new File(cacheFilesMinecraft, "${minecraft_version}-server.jar")
 def libraries = new File(cacheFilesMinecraft, "${minecraft_version}-libraries")
 def libs = new File("build/libs/")
 
+import cuchaz.enigma.command.CheckMappingsCommand
+import cuchaz.enigma.command.ConvertMappingsCommand
 import com.google.common.hash.Hashing
 import com.google.common.io.Files
 import com.google.common.net.UrlEscapers
@@ -81,8 +83,6 @@ import net.fabricmc.stitch.merge.JarMerger
 import net.fabricmc.tinyremapper.OutputConsumerPath
 import net.fabricmc.tinyremapper.TinyRemapper
 import net.fabricmc.tinyremapper.TinyUtils
-import net.fabricmc.weave.CommandFindMappingErrors
-import net.fabricmc.weave.CommandTinyify
 import org.apache.commons.io.FileUtils
 
 import java.util.zip.GZIPOutputStream
@@ -239,7 +239,7 @@ task checkMappings {
 			mappingsDir.getAbsolutePath()
 		]
 
-		new CommandFindMappingErrors().run(args)
+		new CheckMappingsCommand().run(args)
 	}
 }
 
@@ -289,14 +289,13 @@ task buildYarnTiny(dependsOn: "mergeJars",type: FileOutput) {
 		logger.lifecycle(":generating tiny mappings")
 
 		String[] args = [
-			mergedFile.getAbsolutePath(),
+			"enigma",
 			mappingsDir.getAbsolutePath(),
-			yarnTiny.getAbsolutePath(),
-			"official",
-			"named"
+			"tiny:official:named",
+			yarnTiny.getAbsolutePath()
 		]
 
-		new CommandTinyify().run(args)
+		new ConvertMappingsCommand().run(args)
 	}
 }
 
