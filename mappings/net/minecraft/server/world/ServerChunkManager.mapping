@@ -1,63 +1,63 @@
-CLASS vg net/minecraft/server/world/ServerChunkManager
-	CLASS a MainThreadExecutor
-	FIELD a threadedAnvilChunkStorage Luu;
-	FIELD b CHUNKS_ELIGIBLE_FOR_SPAWNING I
-	FIELD c CHUNK_STATUSES Ljava/util/List;
-	FIELD d ticketManager Lvb;
-	FIELD e chunkGenerator Lbxd;
-	FIELD f world Lvi;
-	FIELD g serverThread Ljava/lang/Thread;
-	FIELD h lightProvider Lvl;
-	FIELD i mainThreadExecutor Lvg$a;
-	FIELD j persistentStateManager Lcof;
-	FIELD k lastMobSpawningTime J
-	FIELD l spawnMonsters Z
-	FIELD m spawnAnimals Z
-	FIELD n chunkPosCache [J
-	FIELD o chunkStatusCache [Lbxh;
-	FIELD p chunkCache [Lbxc;
+CLASS net/minecraft/class_3215 net/minecraft/server/world/ServerChunkManager
+	CLASS class_4212 MainThreadExecutor
+	FIELD field_13920 CHUNKS_ELIGIBLE_FOR_SPAWNING I
+	FIELD field_13921 lightProvider Lnet/minecraft/class_3227;
+	FIELD field_13928 lastMobSpawningTime J
+	FIELD field_13929 spawnMonsters Z
+	FIELD field_13934 CHUNK_STATUSES Ljava/util/List;
+	FIELD field_13939 chunkGenerator Lnet/minecraft/class_2794;
+	FIELD field_13941 spawnAnimals Z
+	FIELD field_13945 world Lnet/minecraft/class_3218;
+	FIELD field_17252 ticketManager Lnet/minecraft/class_3204;
+	FIELD field_17253 serverThread Ljava/lang/Thread;
+	FIELD field_17254 threadedAnvilChunkStorage Lnet/minecraft/class_3898;
+	FIELD field_17708 persistentStateManager Lnet/minecraft/class_26;
+	FIELD field_18809 mainThreadExecutor Lnet/minecraft/class_3215$class_4212;
+	FIELD field_19335 chunkPosCache [J
+	FIELD field_19336 chunkStatusCache [Lnet/minecraft/class_2806;
+	FIELD field_19337 chunkCache [Lnet/minecraft/class_2791;
 	METHOD <init> (Lvi;Ljava/io/File;Lcom/mojang/datafixers/DataFixer;Lcjk;Ljava/util/concurrent/Executor;Lbxd;ILvr;Ljava/util/function/Supplier;)V
 		ARG 5 workerExecutor
-	METHOD a applyViewDistance (I)V
-		ARG 1 watchDistance
-	METHOD a getChunkHolder (J)Lut;
-		ARG 1 pos
 	METHOD a (JLjava/util/function/Function;)Z
 		ARG 1 pos
-	METHOD a sendToNearbyPlayers (Lail;Lkb;)V
+	METHOD method_14096 updateCameraPosition (Lnet/minecraft/class_3222;)V
+		ARG 1 player
+	METHOD method_14128 markForUpdate (Lnet/minecraft/class_2338;)V
+		ARG 1 pos
+	METHOD method_14131 getChunkHolder (J)Lnet/minecraft/class_3193;
+		ARG 1 pos
+	METHOD method_14134 getChunkFuture (IILnet/minecraft/class_2806;Z)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 chunkX
+		ARG 2 chunkZ
+		ARG 3 leastStatus
+		ARG 4 create
+	METHOD method_14144 applyViewDistance (I)V
+		ARG 1 watchDistance
+	METHOD method_14151 getLoadedChunkCount ()I
+	METHOD method_14161 tickChunks ()V
+	METHOD method_16155 tick ()Z
+	METHOD method_17294 getDebugString (Lnet/minecraft/class_1923;)Ljava/lang/String;
+		ARG 1 pos
+	METHOD method_17297 addTicket (Lnet/minecraft/class_3230;Lnet/minecraft/class_1923;ILjava/lang/Object;)V
+	METHOD method_17298 save (Z)V
+		ARG 1 flush
+	METHOD method_17299 getChunkFutureSyncOnMainThread (IILnet/minecraft/class_2806;Z)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 chunkX
+		ARG 2 chunkZ
+		ARG 3 leastStatus
+		ARG 4 create
+	METHOD method_17300 removeTicket (Lnet/minecraft/class_3230;Lnet/minecraft/class_1923;ILjava/lang/Object;)V
+	METHOD method_17301 getTotalChunksLoadedCount ()I
+	METHOD method_17981 getPersistentStateManager ()Lnet/minecraft/class_26;
+	METHOD method_18751 sendToNearbyPlayers (Lnet/minecraft/class_1297;Lnet/minecraft/class_2596;)V
 		ARG 1 entity
 		ARG 2 packet
-	METHOD a isMissingForLevel (Lut;I)Z
+	METHOD method_18752 isMissingForLevel (Lnet/minecraft/class_3193;I)Z
 		ARG 1 holder
 		ARG 2 maxLevel
-	METHOD a updateCameraPosition (Lvj;)V
-		ARG 1 player
-	METHOD a addTicket (Lvn;Lbgy;ILjava/lang/Object;)V
-	METHOD a save (Z)V
-		ARG 1 flush
-	METHOD b getTotalChunksLoadedCount ()I
-	METHOD b getChunkFutureSyncOnMainThread (IILbxh;Z)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 chunkX
-		ARG 2 chunkZ
-		ARG 3 leastStatus
-		ARG 4 create
-	METHOD b sendToOtherNearbyPlayers (Lail;Lkb;)V
-	METHOD b getDebugString (Lbgy;)Ljava/lang/String;
-		ARG 1 pos
-	METHOD b markForUpdate (Lev;)V
-		ARG 1 pos
-	METHOD b removeTicket (Lvn;Lbgy;ILjava/lang/Object;)V
-	METHOD c getChunkFuture (IILbxh;Z)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 chunkX
-		ARG 2 chunkZ
-		ARG 3 leastStatus
-		ARG 4 create
-	METHOD c unloadEntity (Lail;)V
-	METHOD d executeQueuedTasks ()Z
-	METHOD d loadEntity (Lail;)V
-	METHOD g getLoadedChunkCount ()I
-	METHOD h getPersistentStateManager ()Lcof;
-	METHOD i getPointOfInterestStorage ()Laqk;
-	METHOD l initChunkCaches ()V
-	METHOD m tick ()Z
-	METHOD n tickChunks ()V
+	METHOD method_18753 unloadEntity (Lnet/minecraft/class_1297;)V
+	METHOD method_18754 sendToOtherNearbyPlayers (Lnet/minecraft/class_1297;Lnet/minecraft/class_2596;)V
+	METHOD method_18755 loadEntity (Lnet/minecraft/class_1297;)V
+	METHOD method_19492 executeQueuedTasks ()Z
+	METHOD method_19493 getPointOfInterestStorage ()Lnet/minecraft/class_4153;
+	METHOD method_20587 initChunkCaches ()V

@@ -2,13 +2,14 @@ buildscript {
 	repositories {
 		jcenter()
 		maven {
-			name "Modmuss50 Repository"
-			url 'https://maven.modmuss50.me'
+			name "Fabric Repository"
+			url 'https://maven.fabricmc.net'
 		}
+		mavenLocal()
 	}
 	dependencies {
-		classpath "cuchaz:enigma:0.14.0.122"
-		classpath "net.fabricmc:stitch:0.2.0.52"
+		classpath "cuchaz:enigma:0.14.0.126"
+		classpath "net.fabricmc:stitch:0.2.1.56"
 		classpath "commons-io:commons-io:2.6"
 		classpath "com.google.guava:guava:28.0-jre"
 		classpath 'de.undercouch:gradle-download-task:3.4.3'
@@ -33,8 +34,8 @@ def yarnVersion = "${minecraft_version}+build.$build_number"
 repositories {
 	mavenCentral()
 	maven {
-		name "Modmuss50 Repository"
-		url 'https://maven.modmuss50.me'
+		name "Fabric Repository"
+		url 'https://maven.fabricmc.net'
 	}
 }
 
@@ -48,8 +49,8 @@ configurations {
 }
 
 dependencies {
-	enigmaRuntime "net.fabricmc:stitch:0.2.0.52"
-	enigmaRuntime "cuchaz:enigma:0.14.0.122:all"
+	enigmaRuntime "net.fabricmc:stitch:0.2.1.56"
+	enigmaRuntime "cuchaz:enigma:0.14.0.126:all"
 }
 
 def setupGroup = "jar setup"
@@ -57,6 +58,7 @@ def yarnGroup = "yarn"
 def buildMappingGroup = "mapping build"
 def mapJarGroup = "jar mapping"
 def mappingsDir = file("mappings")
+def mappingsExportOfficialDir = file("mappings_official")
 def cacheFilesMinecraft = file(".gradle/minecraft")
 def tempDir = file(".gradle/temp")
 def mergedFile = file("${minecraft_version}-merged.jar")
@@ -66,11 +68,13 @@ def namedJar = file("${minecraft_version}-named.jar")
 def versionFile = new File(cacheFilesMinecraft, "${minecraft_version}.json")
 def clientJar = new File(cacheFilesMinecraft, "${minecraft_version}-client.jar")
 def serverJar = new File(cacheFilesMinecraft, "${minecraft_version}-server.jar")
-def libraries = new File(cacheFilesMinecraft, "${minecraft_version}-libraries")
+def libraries = new File(cacheFilesMinecraft, "libraries")
 def libs = new File("build/libs/")
 
 import cuchaz.enigma.command.CheckMappingsCommand
+import cuchaz.enigma.command.ComposeMappingsCommand
 import cuchaz.enigma.command.ConvertMappingsCommand
+import cuchaz.enigma.command.InvertMappingsCommand
 import com.google.common.hash.Hashing
 import com.google.common.io.Files
 import com.google.common.net.UrlEscapers
@@ -173,6 +177,13 @@ task downloadMcJars(dependsOn: downloadWantedVersionManifest) {
 	}
 }
 
+task downloadIntermediary(type: Download){
+	group = buildMappingGroup
+	def url = "https://github.com/FabricMC/intermediary/raw/master/mappings/${minecraft_version}.tiny"
+	src UrlEscapers.urlFragmentEscaper().escape(url)
+	dest new File(cacheFilesMinecraft, "${minecraft_version}-intermediary.tiny")
+}
+
 task mergeJars(dependsOn: downloadMcJars) {
 	group = setupGroup
 	inputs.files downloadMcJars.outputs.files.files
@@ -195,59 +206,60 @@ task mergeJars(dependsOn: downloadMcJars) {
 
 }
 
-task setupYarn(dependsOn: mergeJars) {
-	group = yarnGroup
-}
+task downloadMcLibs(dependsOn: downloadWantedVersionManifest) {
+	group = setupGroup
+	inputs.files versionFile
 
-task yarn(dependsOn: setupYarn) {
-	group = yarnGroup
+	outputs.file(libraries)
+
+	outputs.upToDateWhen {false}
+
 	doLast {
-		ant.setLifecycleLogLevel "WARN"
-		ant.java(
-			classname: 'cuchaz.enigma.Main',
-			classpath: configurations.enigmaRuntime.asPath,
-			fork: true,
-			spawn: true
-		) {
-			jvmarg(value: "-Xmx2048m")
-			arg(value: '-jar')
-			arg(value: mergedFile.getAbsolutePath())
-			arg(value: '-mappings')
-			arg(value: mappingsDir.getAbsolutePath())
-			arg(value: '-profile')
-			arg(value: 'enigma_profile.json')
+		if (!versionFile.exists()) {
+			throw new RuntimeException("Can't download the jars without the ${versionFile.name} file!")
+		}
+
+		def version = new JsonSlurper().parseText(FileUtils.readFileToString(versionFile))
+
+		logger.lifecycle(":downloading minecraft libraries")
+
+		if (!libraries.exists()) {
+			libraries.mkdirs()
+		}
+
+		version.libraries.each {
+			def downloadUrl = it.downloads.artifact.url
+
+			download {
+				src downloadUrl
+				dest new File(libraries, downloadUrl.substring(downloadUrl.lastIndexOf("/") + 1))
+				overwrite false
+			}
 		}
 	}
 }
 
-task buildEnigma(type: Zip) {
+task invertIntermediary(dependsOn: ["downloadIntermediary"], type: FileOutput) {
 	group = buildMappingGroup
-	from mappingsDir
-	include "**/*"
-	archiveName "yarn-enigma-${yarnVersion}.zip"
-	destinationDir(file("build/libs"))
-}
+	def inputFile = downloadIntermediary.dest
 
-task checkMappings {
-	group = buildMappingGroup
-	inputs.dir mappingsDir
+	def outputFile = new File(cacheFilesMinecraft, "${minecraft_version}-intermediary-inverted.tiny")
+	outputs.file(outputFile)
+	fileOutput = outputFile
+
+	outputs.upToDateWhen {false}
+
 	doLast {
-		logger.lifecycle(":checking mappings")
-
+		logger.lifecycle(":building inverted intermediary")
 		String[] args = [
-			mergedFile.getAbsolutePath(),
-			mappingsDir.getAbsolutePath()
+			"tiny",
+			inputFile.getAbsolutePath(),
+			"tiny:intermediary:official",
+			outputFile.getAbsolutePath()
 		]
 
-		new CheckMappingsCommand().run(args)
+		new InvertMappingsCommand().run(args)
 	}
-}
-
-task downloadIntermediary(type: Download){
-	group = buildMappingGroup
-	def url = "https://github.com/FabricMC/intermediary/raw/master/mappings/${minecraft_version}.tiny"
-	src UrlEscapers.urlFragmentEscaper().escape(url)
-	dest new File(cacheFilesMinecraft, "${minecraft_version}-intermediary.tiny")
 }
 
 task patchIntermediary(dependsOn: ["mergeJars", "downloadIntermediary"], type: FileOutput) {
@@ -273,6 +285,61 @@ task patchIntermediary(dependsOn: ["mergeJars", "downloadIntermediary"], type: F
 	}
 }
 
+task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJars]) {
+	group = mapJarGroup
+	inputs.files downloadMcLibs.outputs.files.files
+	outputs.file(intermediaryJar)
+
+	//Force the task to always run
+	outputs.upToDateWhen {false}
+
+	doLast {
+		logger.lifecycle(":mapping minecraft to intermediary")
+		def tinyInput = new File(cacheFilesMinecraft, "${minecraft_version}-intermediary.tiny")
+		mapJar(intermediaryJar, mergedFile, tinyInput, libraries, "official", "intermediary")
+	}
+}
+
+task setupYarn(dependsOn: mapIntermediaryJar) {
+	group = yarnGroup
+}
+
+task yarn(dependsOn: setupYarn) {
+	group = yarnGroup
+	doLast {
+		ant.setLifecycleLogLevel "WARN"
+		ant.java(
+			classname: 'cuchaz.enigma.Main',
+			classpath: configurations.enigmaRuntime.asPath,
+			fork: true,
+			spawn: true
+		) {
+			jvmarg(value: "-Xmx2048m")
+			arg(value: '-jar')
+			arg(value: intermediaryJar.getAbsolutePath())
+			arg(value: '-mappings')
+			arg(value: mappingsDir.getAbsolutePath())
+			arg(value: '-profile')
+			arg(value: 'enigma_profile.json')
+		}
+	}
+}
+
+task checkMappings {
+	group = buildMappingGroup
+	inputs.dir mappingsDir
+	doLast {
+		logger.lifecycle(":checking mappings")
+
+		String[] args = [
+			mergedFile.getAbsolutePath(),
+			mappingsDir.getAbsolutePath()
+		]
+
+		new CheckMappingsCommand().run(args)
+	}
+}
+
 task buildYarnTiny(dependsOn: "mergeJars",type: FileOutput) {
 	group = buildMappingGroup
 	inputs.dir mappingsDir
@@ -291,7 +358,7 @@ task buildYarnTiny(dependsOn: "mergeJars",type: FileOutput) {
 		String[] args = [
 			"enigma",
 			mappingsDir.getAbsolutePath(),
-			"tiny:official:named",
+			"tiny:intermediary:named",
 			yarnTiny.getAbsolutePath()
 		]
 
@@ -299,10 +366,10 @@ task buildYarnTiny(dependsOn: "mergeJars",type: FileOutput) {
 	}
 }
 
-task mergeTiny(dependsOn: ["buildYarnTiny", "patchIntermediary"], type: FileOutput) {
+task mergeTiny(dependsOn: ["buildYarnTiny", "invertIntermediary"], type: FileOutput) {
 	group = buildMappingGroup
 	def yarnTinyInput = buildYarnTiny.fileOutput
-	def intermediaryTinyInput = patchIntermediary.fileOutput
+	def intermediaryTinyInput = invertIntermediary.fileOutput
 
 	def resultMappings = new File(tempDir, "mappings.tiny")
 	outputs.file(resultMappings)
@@ -369,58 +436,9 @@ clean.doFirst {
 }
 
 tasks.build.dependsOn "compressTiny"
-tasks.build.dependsOn "buildEnigma"
 tasks.build.dependsOn "tinyJar"
 
-task downloadMcLibs(dependsOn: downloadWantedVersionManifest) {
-	group = setupGroup
-	inputs.files versionFile
-
-	outputs.file(libraries)
-
-	outputs.upToDateWhen {false}
-
-	doLast {
-		if (!versionFile.exists()) {
-			throw new RuntimeException("Can't download the jars without the ${versionFile.name} file!")
-		}
-
-		def version = new JsonSlurper().parseText(FileUtils.readFileToString(versionFile))
-
-		logger.lifecycle(":downloading minecraft libraries")
-
-		if (!libraries.exists()) {
-			libraries.mkdirs()
-		}
-
-		version.libraries.each {
-			def downloadUrl = it.downloads.artifact.url
-
-			download {
-				src downloadUrl
-				dest new File(libraries, downloadUrl.substring(downloadUrl.lastIndexOf("/") + 1))
-				overwrite false
-			}
-		}
-	}
-}
-
-task mapIntermediaryJar(dependsOn: [downloadMcLibs, build]) {
-	group = mapJarGroup
-	inputs.files downloadMcLibs.outputs.files.files
-	outputs.file(intermediaryJar)
-
-	//Force the task to always run
-	outputs.upToDateWhen {false}
-
-	doLast {
-		logger.lifecycle(":mapping minecraft to intermdiary")
-		def tinyInput = new File("build/libs/yarn-tiny-${yarnVersion}.gz")
-		mapJar(intermediaryJar, mergedFile, tinyInput, libraries, "official", "intermediary")
-	}
-}
-
-task mapYarnJar(dependsOn: mapIntermediaryJar) {
+task mapYarnJar(dependsOn: ["compressTiny", "mapIntermediaryJar"]) {
 	group = mapJarGroup
 	inputs.files downloadMcLibs.outputs.files.files
 	outputs.file(yarnJar)
@@ -436,12 +454,51 @@ task mapYarnJar(dependsOn: mapIntermediaryJar) {
 	}
 }
 
+task exportMappingsOfficial(dependsOn: "downloadIntermediary") {
+	def composeInput = downloadIntermediary.dest
+
+	doLast {
+		logger.lifecycle(":exporting mappings")
+		String[] args = [
+			"tiny",
+			composeInput.getAbsolutePath(),	
+			"enigma",
+			file("mappings/").getAbsolutePath(),
+			"enigma",
+			file("mappings_official/").getAbsolutePath(),
+			"right"
+		]
+
+		new ComposeMappingsCommand().run(args)
+	}
+}
+
+task importMappingsOfficial(dependsOn: "invertIntermediary") {
+	def composeInput = invertIntermediary.fileOutput
+
+	doLast {
+		logger.lifecycle(":importing mappings")
+		String[] args = [
+			"tiny",
+			composeInput.getAbsolutePath(),	
+			"enigma",
+			file("mappings_official/").getAbsolutePath(),
+			"enigma",
+			file("mappings/").getAbsolutePath(),
+			"right"
+		]
+
+		new ComposeMappingsCommand().run(args)
+	}
+}
+
 task buildTinyWithEnum(dependsOn: "mergeTiny", type: FileOutput) {
 	group = buildMappingGroup
 	def noEnum = mergeTiny.fileOutput
 	def namedWithEnum = new File(tempDir, "named-with-enum.tiny")
 	fileOutput = namedWithEnum
 
+	outputs.file(namedWithEnum)
 	outputs.upToDateWhen { false }
 
 	doLast {
@@ -483,9 +540,6 @@ publishing {
 			artifact (compressTiny.fileOutput) {
 				classifier "tiny"
 				builtBy compressTiny
-			}
-			artifact (buildEnigma) {
-				classifier "enigma"
 			}
 			artifact (tinyJar)
 		}
