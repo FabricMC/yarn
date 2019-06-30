@@ -16,6 +16,8 @@ Please remember that copying and pasting mappings from alternate projects under 
 owners of said mappings. Discussing the naming approaches used in said projects is also not welcome - you have been warned.
 However, it is a good idea to consult name changes with other people - use pull requests or our community spaces to ask questions!
 
+Please have a look at the [naming conventions](/CONVENTIONS.md) before submitting mappings.
+
 ### Getting Started
 
 1. Fork and clone the repo
