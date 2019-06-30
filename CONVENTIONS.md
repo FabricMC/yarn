@@ -89,8 +89,8 @@ Use "serializer" for objects whose purpose is serializing or deserializing some 
 Use "from" for static methods that create an object of the method owner's type (`fromJson`, `fromNbt`, `fromString`). Use "to"
 for methods that convert an object to another type (`toString`, `toLong`, `toNbt`).
 
-Use "read" for non-static methods that load data into a class. Use "write" for methods that save data to an *existing* object
-passed as a parameter.
+Use "read" for non-static methods that load data into the object. Use "write" for methods that save data to an *existing* 
+object passed as a parameter.
 
 ### Factories and builders
 
@@ -102,7 +102,7 @@ as the field they're setting, without any prefix.
 ### Collections
 
 Use a plural name for collections and maps rather than the words "list", "set", "array", etc., unless it's a collection of
-collection or there are several collections of different types containing the same objects (`entities`, `entityLists`).
+collections or there are several collections of different types containing the same objects (`entities`, `entityLists`).
 
 When it's enough, name maps based on the value type. Otherwise, name it in the "`valuesByKeys`" format.
 
@@ -131,7 +131,7 @@ There are however three exceptions to this rule:
 
 ## Things to avoid
 
-Don't name methods based on implementation details. Names should describe what methods do, now how they work.
+Don't name methods based on implementation details. Names should describe what methods do, not how they work.
 
 Avoid including Java-related information in names. For example, don't prefix class names with `I`, or `Enum` and
 don't prefix methods with `private`. Instead, try to find meaningful names to describe differences between classes. In the
