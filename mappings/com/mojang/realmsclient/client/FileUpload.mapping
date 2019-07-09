@@ -1,0 +1,54 @@
+CLASS net/minecraft/class_4337 com/mojang/realmsclient/client/FileUpload
+	CLASS class_4338 CustomInputStreamEntity
+		FIELD field_19562 length J
+		FIELD field_19563 content Ljava/io/InputStream;
+		FIELD field_19564 uploadStatus Lnet/minecraft/class_4351;
+		METHOD <init> (Ljava/io/InputStream;JLnet/minecraft/class_4351;)V
+			ARG 1 content
+			ARG 2 length
+			ARG 4 uploadStatus
+		METHOD writeTo (Ljava/io/OutputStream;)V
+			ARG 1 outstream
+	FIELD field_19550 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_19551 file Ljava/io/File;
+	FIELD field_19552 worldId J
+	FIELD field_19553 slotId I
+	FIELD field_19554 uploadInfo Lcom/mojang/realmsclient/dto/UploadInfo;
+	FIELD field_19555 sessionId Ljava/lang/String;
+	FIELD field_19556 username Ljava/lang/String;
+	FIELD field_19557 clientVersion Ljava/lang/String;
+	FIELD field_19558 uploadStatus Lnet/minecraft/class_4351;
+	FIELD field_19559 cancelled Ljava/util/concurrent/atomic/AtomicBoolean;
+	FIELD field_19560 uploadTask Ljava/util/concurrent/CompletableFuture;
+	FIELD field_19561 requestConfig Lorg/apache/http/client/config/RequestConfig;
+	METHOD <init> (Ljava/io/File;JILcom/mojang/realmsclient/dto/UploadInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lnet/minecraft/class_4351;)V
+		ARG 1 file
+		ARG 2 worldId
+		ARG 4 slotId
+		ARG 5 uploadInfo
+		ARG 6 sessionId
+		ARG 7 username
+		ARG 8 clientVersion
+		ARG 9 uploadStatus
+	METHOD method_20970 cancel ()V
+	METHOD method_20971 requestUpload (I)Lnet/minecraft/class_4429;
+		ARG 1 currentAttempt
+	METHOD method_20972 shouldRetry (JI)Z
+		ARG 1 retryDelaySeconds
+		ARG 3 currentAttempt
+	METHOD method_20973 upload (Ljava/util/function/Consumer;)V
+		ARG 1 callback
+	METHOD method_20974 getRetryDelaySeconds (Lorg/apache/http/HttpResponse;)J
+		ARG 1 response
+	METHOD method_20975 handleResponse (Lorg/apache/http/HttpResponse;Lnet/minecraft/class_4429$class_4430;)V
+		ARG 1 response
+		ARG 2 uploadResultBuilder
+	METHOD method_20976 setupRequest (Lorg/apache/http/client/methods/HttpPost;)V
+		ARG 1 request
+	METHOD method_20977 cleanup (Lorg/apache/http/client/methods/HttpPost;Lorg/apache/http/impl/client/CloseableHttpClient;)V
+		ARG 1 request
+		ARG 2 client
+	METHOD method_20978 isFinished ()Z
+	METHOD method_20979 retryUploadAfter (JI)Lnet/minecraft/class_4429;
+		ARG 1 retryDelaySeconds
+		ARG 3 currentAttempt
