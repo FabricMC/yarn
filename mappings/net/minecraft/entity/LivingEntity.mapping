@@ -78,13 +78,16 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6287 movementSpeed F
 	METHOD <init> (Lnet/minecraft/class_1299;Lnet/minecraft/class_1937;)V
 		ARG 1 type
+		ARG 2 world
 	METHOD method_16077 dropLoot (Lnet/minecraft/class_1282;Z)V
 		ARG 1 source
-		ARG 2 killedByPlayer
+		ARG 2 causedByPlayer
 	METHOD method_16078 dropInventory ()V
 	METHOD method_16079 getLootContextBuilder (ZLnet/minecraft/class_1282;)Lnet/minecraft/class_47$class_48;
-		ARG 1 killedByPlayer
+		ARG 1 causedByPlayer
+		ARG 2 source
 	METHOD method_16080 drop (Lnet/minecraft/class_1282;)V
+		ARG 1 source
 	METHOD method_16212 getBlockState ()Lnet/minecraft/class_2680;
 	METHOD method_16826 setDespawnCounter (I)V
 		ARG 1 despawnCounter
@@ -108,16 +111,24 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_18400 wakeUp ()V
 	METHOD method_18401 getSleepingDirection ()Lnet/minecraft/class_2350;
 	METHOD method_18402 setSleepingPosition (Lnet/minecraft/class_2338;)V
+		ARG 1 pos
 	METHOD method_18403 sleep (Lnet/minecraft/class_2338;)V
 		ARG 1 pos
 	METHOD method_18406 isSleepingInBed ()Z
 	METHOD method_18801 applyClimbingSpeed (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 1 motion
 	METHOD method_18802 getMovementSpeed (F)F
+		ARG 1 slipperiness
 	METHOD method_18807 getDrinkSound (Lnet/minecraft/class_1799;)Lnet/minecraft/class_3414;
 		ARG 1 stack
 	METHOD method_18808 getArrowType (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1799;
 	METHOD method_18865 applyFoodEffects (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)V
+		ARG 1 stack
+		ARG 2 world
+		ARG 3 targetEntity
 	METHOD method_18866 eatFood (Lnet/minecraft/class_1937;Lnet/minecraft/class_1799;)Lnet/minecraft/class_1799;
+		ARG 1 world
+		ARG 2 stack
 	METHOD method_18867 deserializeBrain (Lcom/mojang/datafixers/Dynamic;)Lnet/minecraft/class_4095;
 	METHOD method_18868 getBrain ()Lnet/minecraft/class_4095;
 	METHOD method_18869 getEatSound (Lnet/minecraft/class_1799;)Lnet/minecraft/class_3414;
@@ -125,42 +136,51 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_20235 sendEquipmentBreakStatus (Lnet/minecraft/class_1304;)V
 		ARG 1 slot
 	METHOD method_20236 sendToolBreakStatus (Lnet/minecraft/class_1268;)V
+		ARG 1 hand
 	METHOD method_20237 getEquipmentBreakStatus (Lnet/minecraft/class_1304;)B
+		ARG 0 slot
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
 	METHOD method_5989 getLootTable ()Lnet/minecraft/class_2960;
 	METHOD method_5996 getAttributeInstance (Lnet/minecraft/class_1320;)Lnet/minecraft/class_1324;
+		ARG 1 attribute
 	METHOD method_5997 attackLivingEntity (Lnet/minecraft/class_1309;)V
 		ARG 1 target
 	METHOD method_5998 getStackInHand (Lnet/minecraft/class_1268;)Lnet/minecraft/class_1799;
+		ARG 1 hand
 	METHOD method_5999 isUndead ()Z
 	METHOD method_6001 initAttributes ()V
 	METHOD method_6002 getDeathSound ()Lnet/minecraft/class_3414;
 	METHOD method_6003 getRoll ()I
 	METHOD method_6005 takeKnockback (Lnet/minecraft/class_1297;FDD)V
-		ARG 1 source
-		ARG 2 scale
-		ARG 3 x
-		ARG 5 z
+		ARG 1 attacker
+		ARG 2 speed
+		ARG 3 xMovement
+		ARG 5 zMovement
 	METHOD method_6006 setNearbySongPlaying (Lnet/minecraft/class_2338;Z)V
-		ARG 1 songSource
+		ARG 1 songPosition
 		ARG 2 playing
 	METHOD method_6007 tickMovement ()V
 	METHOD method_6009 onStatusEffectUpgraded (Lnet/minecraft/class_1293;Z)V
+		ARG 1 effect
+		ARG 2 reapplyEffect
 	METHOD method_6010 swimUpward (Lnet/minecraft/class_3494;)V
 		ARG 1 fluid
 	METHOD method_6011 getHurtSound (Lnet/minecraft/class_1282;)Lnet/minecraft/class_3414;
 		ARG 1 source
 	METHOD method_6012 clearStatusEffects ()Z
 	METHOD method_6013 playHurtSound (Lnet/minecraft/class_1282;)V
-		ARG 1 damageSource
+		ARG 1 source
 	METHOD method_6014 getItemUseTimeLeft ()I
 	METHOD method_6015 setAttacker (Lnet/minecraft/class_1309;)V
 		ARG 1 attacker
 	METHOD method_6016 removeStatusEffect (Lnet/minecraft/class_1291;)Z
+		ARG 1 effect
 	METHOD method_6017 getSoundPitch ()F
 	METHOD method_6019 setCurrentHand (Lnet/minecraft/class_1268;)V
+		ARG 1 hand
 	METHOD method_6020 onStatusEffectApplied (Lnet/minecraft/class_1293;)V
+		ARG 1 effect
 	METHOD method_6021 clearActiveItem ()V
 	METHOD method_6022 getStuckArrows ()I
 	METHOD method_6023 tickNewAi ()V
@@ -173,25 +193,30 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6029 getMovementSpeed ()F
 	METHOD method_6030 getActiveItem ()Lnet/minecraft/class_1799;
 	METHOD method_6031 turnHead (FF)F
-		ARG 1 yaw
+		ARG 1 bodyRotation
+		ARG 2 headRotation
 	METHOD method_6032 getHealth ()F
 	METHOD method_6033 setHealth (F)V
+		ARG 1 health
 	METHOD method_6034 canMoveVoluntarily ()Z
 	METHOD method_6035 push (Lnet/minecraft/class_238;Lnet/minecraft/class_238;)V
+		ARG 1 a
+		ARG 2 b
 	METHOD method_6036 applyEnchantmentsToDamage (Lnet/minecraft/class_1282;F)F
 		ARG 1 source
 		ARG 2 amount
 	METHOD method_6037 spawnItemParticles (Lnet/minecraft/class_1799;I)V
-		ARG 1 item
-		ARG 2 count
+		ARG 1 stack
+		ARG 2 particleCount
 	METHOD method_6038 onDismounted (Lnet/minecraft/class_1297;)V
+		ARG 1 vehicle
 	METHOD method_6039 isBlocking ()Z
 	METHOD method_6040 consumeItem ()V
 	METHOD method_6041 getFallSound (I)Lnet/minecraft/class_3414;
-		ARG 1 fallDistance
+		ARG 1 distance
 	METHOD method_6043 jump ()V
 	METHOD method_6045 playEquipmentBreakEffects (Lnet/minecraft/class_1799;)V
-		ARG 1 item
+		ARG 1 stack
 	METHOD method_6046 getGroup ()Lnet/minecraft/class_1310;
 	METHOD method_6047 getMainHandStack ()Lnet/minecraft/class_1799;
 	METHOD method_6048 getItemUseTime ()I
@@ -213,6 +238,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6060 knockback (Lnet/minecraft/class_1309;)V
 		ARG 1 target
 	METHOD method_6061 tryUseShield (Lnet/minecraft/class_1282;)Z
+		ARG 1 source
 	METHOD method_6062 isImmobile ()Z
 	METHOD method_6063 getMaximumHealth ()F
 	METHOD method_6064 getNextBreathInAir (I)I
@@ -229,12 +255,14 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 amount
 	METHOD method_6074 applyDamage (Lnet/minecraft/class_1282;F)V
 		ARG 1 source
-		ARG 2 damage
+		ARG 2 amount
 	METHOD method_6075 stopUsingItem ()V
 	METHOD method_6076 tickActiveItemStack ()V
 	METHOD method_6077 canEnterTrapdoor (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Z
+		ARG 1 pos
+		ARG 2 state
 	METHOD method_6078 onDeath (Lnet/minecraft/class_1282;)V
-		ARG 1 damageSource
+		ARG 1 source
 	METHOD method_6079 getOffHandStack ()Lnet/minecraft/class_1799;
 	METHOD method_6081 getRecentDamageSource ()Lnet/minecraft/class_1282;
 	METHOD method_6082 teleport (DDDZ)Z
@@ -244,16 +272,18 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 7 particleEffects
 	METHOD method_6083 getLastAttackTime ()I
 	METHOD method_6084 hasStackEquipped (Lnet/minecraft/class_1304;)Z
+		ARG 1 slot
 	METHOD method_6085 setLivingFlag (IZ)V
 		ARG 1 mask
 		ARG 2 value
 	METHOD method_6086 isAffectedBySplashPotions ()Z
 	METHOD method_6087 pushAway (Lnet/minecraft/class_1297;)V
+		ARG 1 entity
 	METHOD method_6088 getActiveStatusEffects ()Ljava/util/Map;
 	METHOD method_6089 containsOnlyAmbientEffects (Ljava/util/Collection;)Z
 		ARG 0 effects
 	METHOD method_6090 takeShieldHit (Lnet/minecraft/class_1309;)V
-		ARG 1 source
+		ARG 1 attacker
 	METHOD method_6091 travel (Lnet/minecraft/class_243;)V
 		ARG 1 movementInput
 	METHOD method_6092 addStatusEffect (Lnet/minecraft/class_1293;)Z
@@ -261,15 +291,17 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6093 knockDownwards ()V
 	METHOD method_6094 canBreatheInWater ()Z
 	METHOD method_6095 tryUseTotem (Lnet/minecraft/class_1282;)Z
+		ARG 1 source
 	METHOD method_6096 getArmor ()I
 	METHOD method_6097 setStuckArrows (I)V
+		ARG 1 stuckArrows
 	METHOD method_6098 spawnConsumptionEffects (Lnet/minecraft/class_1799;I)V
-		ARG 1 item
+		ARG 1 stack
 		ARG 2 particleCount
 	METHOD method_6099 dropEquipment (Lnet/minecraft/class_1282;IZ)V
-		ARG 1 damageSource
-		ARG 2 addedDropChance
-		ARG 3 dropAllowed
+		ARG 1 source
+		ARG 2 lootingMultiplier
+		ARG 3 allowDrops
 	METHOD method_6100 setJumping (Z)V
 		ARG 1 jumping
 	METHOD method_6101 isClimbing ()Z
@@ -277,6 +309,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 item
 		ARG 2 count
 	METHOD method_6104 swingHand (Lnet/minecraft/class_1268;)V
+		ARG 1 hand
 	METHOD method_6105 damageArmor (F)V
 		ARG 1 amount
 	METHOD method_6106 getJumpVelocity ()F
@@ -286,6 +319,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6110 getCurrentExperience (Lnet/minecraft/class_1657;)I
 		ARG 1 player
 	METHOD method_6111 removePotionEffect (Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;
+		ARG 1 effect
 	METHOD method_6112 getStatusEffect (Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;
 	METHOD method_6113 isSleeping ()Z
 	METHOD method_6114 onAttacking (Lnet/minecraft/class_1297;)V
@@ -301,6 +335,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 target
 	METHOD method_6122 setStackInHand (Lnet/minecraft/class_1268;Lnet/minecraft/class_1799;)V
 		ARG 1 hand
+		ARG 2 stack
 	METHOD method_6123 isUsingRiptide ()Z
 	METHOD method_6124 getPrimeAdversary ()Lnet/minecraft/class_1309;
 	METHOD method_6125 setMovementSpeed (F)V
@@ -310,9 +345,10 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6127 getAttributes ()Lnet/minecraft/class_1325;
 	METHOD method_6128 isFallFlying ()Z
 	METHOD method_6129 onStatusEffectRemoved (Lnet/minecraft/class_1293;)V
+		ARG 1 effect
 	METHOD method_6130 getNextBreathInWater (I)I
 		ARG 1 breath
 	METHOD method_6131 getDespawnCounter ()I
 	METHOD method_6132 applyArmorToDamage (Lnet/minecraft/class_1282;F)F
 		ARG 1 source
-		ARG 2 damage
+		ARG 2 amount
