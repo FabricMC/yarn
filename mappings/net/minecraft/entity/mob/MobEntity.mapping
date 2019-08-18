@@ -1,6 +1,6 @@
 CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
-	FIELD field_18074 walkTarget Lnet/minecraft/class_2338;
-	FIELD field_18075 walkTargetRange F
+	FIELD field_18074 positionTarget Lnet/minecraft/class_2338;
+	FIELD field_18075 positionTargetRange F
 	FIELD field_18279 holdingEntityId I
 	FIELD field_6184 lootTableSeed J
 	FIELD field_6185 targetSelector Lnet/minecraft/class_1355;
@@ -14,7 +14,7 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	FIELD field_6193 MOB_FLAGS Lnet/minecraft/class_2940;
 	FIELD field_6194 experiencePoints I
 	FIELD field_6195 handItems Lnet/minecraft/class_2371;
-	FIELD field_6196 pathNodeTypeWeights Ljava/util/Map;
+	FIELD field_6196 pathfindingPenalties Ljava/util/Map;
 	FIELD field_6198 lootTable Lnet/minecraft/class_2960;
 	FIELD field_6199 target Lnet/minecraft/class_1309;
 	FIELD field_6200 persistent Z
@@ -29,14 +29,19 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 1 type
 	METHOD e (FF)F
 		ARG 1 yaw
+	METHOD isWalkTargetCompleted (Lnet/minecraft/class_2338;)Z
+		ARG 1 pos
 	METHOD method_17326 cannotDespawn ()Z
 	METHOD method_18407 isInWalkTargetRange (Lnet/minecraft/class_2338;)Z
-	METHOD method_18408 setWalkTarget (Lnet/minecraft/class_2338;I)V
+		ARG 1 pos
+	METHOD method_18408 setPositionTarget (Lnet/minecraft/class_2338;I)V
+		ARG 1 target
+		ARG 2 range
 	METHOD method_18409 sendAiDebugData ()V
-	METHOD method_18410 hasWalkTargetRange ()Z
+	METHOD method_18410 hasPositionTarget ()Z
 	METHOD method_18411 isInWalkTargetRange ()Z
-	METHOD method_18412 getWalkTarget ()Lnet/minecraft/class_2338;
-	METHOD method_18413 getWalkTargetRange ()F
+	METHOD method_18412 getPositionTarget ()Lnet/minecraft/class_2338;
+	METHOD method_18413 getPositionTargetRange ()F
 	METHOD method_18809 isHolding (Lnet/minecraft/class_1792;)Z
 	METHOD method_18810 setHoldingEntityId (I)V
 		ARG 1 id
@@ -62,9 +67,9 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 1 sidewaysMovement
 	METHOD method_5939 canPickupItem (Lnet/minecraft/class_1799;)Z
 	METHOD method_5940 deserializeLeashTag ()V
-	METHOD method_5941 setPathNodeTypeWeight (Lnet/minecraft/class_7;F)V
-		ARG 1 type
-		ARG 2 weight
+	METHOD method_5941 setPathfindingPenalty (Lnet/minecraft/class_7;F)V
+		ARG 1 nodeType
+		ARG 2 penalty
 	METHOD method_5942 getNavigation ()Lnet/minecraft/class_1408;
 	METHOD method_5943 initialize (Lnet/minecraft/class_1936;Lnet/minecraft/class_1266;Lnet/minecraft/class_3730;Lnet/minecraft/class_1315;Lnet/minecraft/class_2487;)Lnet/minecraft/class_1315;
 		ARG 1 world
@@ -72,8 +77,8 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 3 spawnType
 		ARG 4 entityData
 		ARG 5 entityTag
-	METHOD method_5944 getPathNodeTypeWeight (Lnet/minecraft/class_7;)F
-		ARG 1 type
+	METHOD method_5944 getPathfindingPenalty (Lnet/minecraft/class_7;)F
+		ARG 1 nodeType
 	METHOD method_5945 getLimitPerChunk ()I
 	METHOD method_5946 setEquipmentDropChance (Lnet/minecraft/class_1304;F)V
 		ARG 1 slot
