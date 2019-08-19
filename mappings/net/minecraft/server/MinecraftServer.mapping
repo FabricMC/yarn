@@ -69,6 +69,11 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4606 levelStorage Lnet/minecraft/class_32;
 	FIELD field_4607 resourcePackUrl Ljava/lang/String;
 	FIELD field_4608 gameProfileRepo Lcom/mojang/authlib/GameProfileRepository;
+	METHOD <init> (Ljava/io/File;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_2170;Lcom/mojang/authlib/yggdrasil/YggdrasilAuthenticationService;Lcom/mojang/authlib/minecraft/MinecraftSessionService;Lcom/mojang/authlib/GameProfileRepository;Lnet/minecraft/class_3312;Lnet/minecraft/class_3950;Ljava/lang/String;)V
+		ARG 1 gameDir
+		ARG 5 authService
+		ARG 6 sessionService
+		ARG 10 levelName
 	METHOD main ([Ljava/lang/String;)V
 		ARG 0 args
 	METHOD method_15876 getMetricsData ()Lnet/minecraft/class_3517;
@@ -89,6 +94,12 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 locked
 	METHOD method_20383 setEraseCache (Z)V
 		ARG 1 eraseCache
+	METHOD method_21613 dump (Ljava/nio/file/Path;)V
+	METHOD method_21614 dumpExampleCrash (Ljava/nio/file/Path;)V
+	METHOD method_21615 dumpGamerules (Ljava/nio/file/Path;)V
+	METHOD method_21616 dumpClasspath (Ljava/nio/file/Path;)V
+	METHOD method_21692 dumpStats (Ljava/nio/file/Path;)V
+	METHOD method_21713 dumpThreads (Ljava/nio/file/Path;)V
 	METHOD method_3716 getKeyPair ()Ljava/security/KeyPair;
 	METHOD method_3717 start ()V
 	METHOD method_3718 isFlightEnabled ()Z
@@ -104,6 +115,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 source
 	METHOD method_3729 isWhitelistEnabled ()Z
 	METHOD method_3730 setDemo (Z)V
+		ARG 1 demo
 	METHOD method_3731 setWhitelistEnabled (Z)V
 		ARG 1 whitelistEnabled
 	METHOD method_3732 shouldBroadcastRconToOps ()Z
@@ -123,6 +135,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3743 warn (Ljava/lang/String;)V
 	METHOD method_3744 setCrashReport (Lnet/minecraft/class_128;)V
 	METHOD method_3745 setFlightEnabled (Z)V
+		ARG 1 flightEnabled
 	METHOD method_3747 stop (Z)V
 	METHOD method_3748 tick (Ljava/util/function/BooleanSupplier;)V
 	METHOD method_3749 getMaxWorldBorderRadius ()I
@@ -140,12 +153,14 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 2 cheatsAllowed
 		ARG 3 port
 	METHOD method_3764 setPreventProxyConnections (Z)V
+		ARG 1 preventProxyConnections
 	METHOD method_3765 getServerMetadata ()Lnet/minecraft/class_2926;
 	METHOD method_3766 isDebuggingEnabled ()Z
 	METHOD method_3767 getGameRules ()Lnet/minecraft/class_1928;
 	METHOD method_3768 setLoadingStage (Lnet/minecraft/class_2561;)V
 		ARG 1 loadingStage
 	METHOD method_3769 setSpawnNpcs (Z)V
+		ARG 1 spawnNpcs
 	METHOD method_3770 log (Ljava/lang/String;)V
 	METHOD method_3771 hasIconFile ()Z
 	METHOD method_3772 getRecipeManager ()Lnet/minecraft/class_1863;
@@ -154,7 +169,9 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3775 shouldPreventProxyConnections ()Z
 	METHOD method_3776 setDifficulty (Lnet/minecraft/class_1267;Z)V
 	METHOD method_3778 setBonusChest (Z)V
+		ARG 1 bonusChest
 	METHOD method_3779 setServerPort (I)V
+		ARG 1 serverPort
 	METHOD method_3780 getTicks ()I
 	METHOD method_3781 getLevelStorage ()Lnet/minecraft/class_32;
 	METHOD method_3782 shutdown ()V
@@ -171,6 +188,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3792 shouldGenerateStructures ()Z
 	METHOD method_3793 getUserCache ()Lnet/minecraft/class_3312;
 	METHOD method_3794 setForceGameMode (Z)V
+		ARG 1 forceGameMode
 	METHOD method_3795 getSnooper ()Lnet/minecraft/class_1276;
 	METHOD method_3796 shouldSpawnAnimals ()Z
 	METHOD method_3797 setForceWorldUpgrade (Z)V
@@ -181,15 +199,19 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3801 getTagManager ()Lnet/minecraft/class_3505;
 	METHOD method_3802 getMaxPlayerCount ()I
 	METHOD method_3803 setPlayerIdleTimeout (I)V
+		ARG 1 playerIdleTimeout
 	METHOD method_3805 getResourcePackHash ()Ljava/lang/String;
 	METHOD method_3806 isRunning ()Z
 	METHOD method_3809 getDataManager ()Lnet/minecraft/class_3296;
 	METHOD method_3811 getUserName ()Ljava/lang/String;
 	METHOD method_3812 areCommandBlocksEnabled ()Z
 	METHOD method_3813 tickWorlds (Ljava/util/function/BooleanSupplier;)V
+	METHOD method_3814 hasGameDir ()Z
 	METHOD method_3815 setPvpEnabled (Z)V
+		ARG 1 pvpEnabled
 	METHOD method_3816 isDedicated ()Z
 	METHOD method_3817 setUserName (Ljava/lang/String;)V
+		ARG 1 userName
 	METHOD method_3818 getServerMotd ()Ljava/lang/String;
 	METHOD method_3819 getServerIp ()Ljava/lang/String;
 	METHOD method_3820 isLoading ()Z
@@ -199,11 +221,13 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3827 getVersion ()Ljava/lang/String;
 	METHOD method_3828 isOnlineMode ()Z
 	METHOD method_3829 getSpawnRadius (Lnet/minecraft/class_3218;)I
+		ARG 1 world
 	METHOD method_3830 getTickTime ()F
 	METHOD method_3831 getRunDirectory ()Ljava/io/File;
 	METHOD method_3832 enableProfiler ()V
 	METHOD method_3833 getWorldHeight ()I
 	METHOD method_3834 setMotd (Ljava/lang/String;)V
+		ARG 1 motd
 	METHOD method_3835 getPermissionLevel (Lcom/mojang/authlib/GameProfile;)I
 		ARG 1 profile
 	METHOD method_3836 getDataPackContainerManager ()Lnet/minecraft/class_3283;
@@ -211,17 +235,22 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3838 setDefaultGameMode (Lnet/minecraft/class_1934;)V
 	METHOD method_3839 isNetherAllowed ()Z
 	METHOD method_3840 setSpawnAnimals (Z)V
+		ARG 1 spawnAnimals
 	METHOD method_3841 getSpawnProtectionRadius ()I
 	METHOD method_3842 setServerIp (Ljava/lang/String;)V
+		ARG 1 serverIp
 	METHOD method_3843 setResourcePack (Ljava/lang/String;Ljava/lang/String;)V
 		ARG 1 url
+		ARG 2 hash
 	METHOD method_3844 getSessionService ()Lcom/mojang/authlib/minecraft/MinecraftSessionService;
 	METHOD method_3845 getScoreboard ()Lnet/minecraft/class_2995;
 	METHOD method_3846 setPlayerManager (Lnet/minecraft/class_3324;)V
 	METHOD method_3847 getWorld (Lnet/minecraft/class_2874;)Lnet/minecraft/class_3218;
 	METHOD method_3848 reload ()V
 	METHOD method_3849 setServerName (Ljava/lang/String;)V
+		ARG 1 serverName
 	METHOD method_3850 setWorldHeight (I)V
+		ARG 1 worldHeight
 	METHOD method_3851 getAdvancementManager ()Lnet/minecraft/class_2989;
 	METHOD method_3852 isPvpEnabled ()Z
 	METHOD method_3853 setKeyPair (Ljava/security/KeyPair;)V
@@ -236,6 +265,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 2 worldSaveHandler
 	METHOD method_3862 getPlayerIdleTimeout ()I
 	METHOD method_3864 setOnlineMode (Z)V
+		ARG 1 onlineMode
 	METHOD method_3865 getLevelName ()Ljava/lang/String;
 	METHOD method_3866 shouldKeepTicking ()Z
 	METHOD method_5387 isMainThread ()Z
