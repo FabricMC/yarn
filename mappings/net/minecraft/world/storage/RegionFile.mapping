@@ -1,8 +1,47 @@
 CLASS net/minecraft/class_2861 net/minecraft/world/storage/RegionFile
 	CLASS class_2862 ChunkBuffer
 		FIELD field_17656 pos Lnet/minecraft/class_1923;
-	METHOD method_12419 getOffset (Lnet/minecraft/class_1923;)I
+		METHOD <init> (Lnet/minecraft/class_1923;)V
+			ARG 1 pos
+	FIELD field_20434 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_20435 ZERO Ljava/nio/ByteBuffer;
+	FIELD field_20436 channel Ljava/nio/channels/FileChannel;
+	FIELD field_20437 outputChunkStreamVersion Lnet/minecraft/class_4486;
+	FIELD field_20438 header Ljava/nio/ByteBuffer;
+	FIELD field_20439 sectorData Ljava/nio/IntBuffer;
+	FIELD field_20440 saveTimes Ljava/nio/IntBuffer;
+	FIELD field_20441 sectors Lnet/minecraft/class_4485;
+	METHOD <init> (Ljava/io/File;)V
+		ARG 1 file
+	METHOD <init> (Ljava/nio/file/Path;Lnet/minecraft/class_4486;)V
+		ARG 1 path
+		ARG 2 outputChunkStreamVersion
+	METHOD method_12419 getSectorData (Lnet/minecraft/class_1923;)I
 		ARG 1 pos
 	METHOD method_12423 hasChunk (Lnet/minecraft/class_1923;)Z
 		ARG 1 pos
-	METHOD method_17909 getPackedRegionRelativePosition (Lnet/minecraft/class_1923;)I
+	METHOD method_17909 getIndex (Lnet/minecraft/class_1923;)I
+		ARG 0 pos
+	METHOD method_21870 writeHeader ()V
+	METHOD method_21871 getSize (I)I
+		ARG 0 sectorData
+	METHOD method_21872 packSectorData (II)I
+		ARG 1 offset
+		ARG 2 size
+	METHOD method_21873 getChunkInputStream (Lnet/minecraft/class_1923;)Ljava/io/DataInputStream;
+		ARG 1 pos
+	METHOD method_21874 writeChunk (Lnet/minecraft/class_1923;Ljava/nio/ByteBuffer;)V
+		ARG 1 pos
+		ARG 2 buffer
+	METHOD method_21876 getInputStream (Ljava/nio/ByteBuffer;I)Ljava/io/ByteArrayInputStream;
+		ARG 0 buffer
+		ARG 1 length
+	METHOD method_21877 fillLastSector ()V
+	METHOD method_21878 getOffset (I)I
+		ARG 0 sectorData
+	METHOD method_21879 isChunkValid (Lnet/minecraft/class_1923;)Z
+		ARG 1 pos
+	METHOD method_21880 getSectorCount (I)I
+		ARG 0 byteCount
+	METHOD method_21881 getChunkOutputStream (Lnet/minecraft/class_1923;)Ljava/io/DataOutputStream;
+		ARG 1 pos
