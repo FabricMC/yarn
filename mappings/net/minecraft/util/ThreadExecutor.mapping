@@ -1,21 +1,28 @@
 CLASS net/minecraft/class_1255 net/minecraft/util/ThreadExecutor
 	FIELD field_18318 name Ljava/lang/String;
-	FIELD field_18319 waitCount I
 	FIELD field_5750 taskQueue Ljava/util/Queue;
 	FIELD field_5751 LOGGER Lorg/apache/logging/log4j/Logger;
+	METHOD <init> (Ljava/lang/String;)V
+		ARG 1 name
 	METHOD method_16075 executeQueuedTask ()Z
-	METHOD method_16211 prepareRunnable (Ljava/lang/Runnable;)Ljava/lang/Runnable;
+	METHOD method_16211 createTask (Ljava/lang/Runnable;)Ljava/lang/Runnable;
+		ARG 1 runnable
 	METHOD method_18854 isOnThread ()Z
-	METHOD method_18855 clear ()V
-	METHOD method_18856 canRun (Ljava/lang/Runnable;)Z
+	METHOD method_18855 clearTasks ()V
+	METHOD method_18856 canExecute (Ljava/lang/Runnable;)Z
 		ARG 1 task
-	METHOD method_18857 waitFor (Ljava/util/function/BooleanSupplier;)V
-	METHOD method_18859 runSafely (Ljava/lang/Runnable;)V
+	METHOD method_18857 executeTasks (Ljava/util/function/BooleanSupplier;)V
+		ARG 1 stopCondition
+	METHOD method_18859 executeTask (Ljava/lang/Runnable;)V
+		ARG 1 task
 	METHOD method_19537 executeSync (Ljava/lang/Runnable;)V
 		ARG 1 runnable
+	METHOD method_20813 waitForTasks ()V
+	METHOD method_21684 getTaskQueueSize ()I
 	METHOD method_3777 getThread ()Ljava/lang/Thread;
-	METHOD method_5382 executeFuture (Ljava/lang/Runnable;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_5382 createFuture (Ljava/lang/Runnable;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 runnable
-	METHOD method_5383 executeTaskQueue ()V
-	METHOD method_5384 shouldRunAsync ()Z
-	METHOD method_5385 executeFuture (Ljava/util/function/Supplier;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_5383 executeQueuedTasks ()V
+	METHOD method_5384 shouldExecuteAsync ()Z
+	METHOD method_5385 supply (Ljava/util/function/Supplier;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 supplier
