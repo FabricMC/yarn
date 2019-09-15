@@ -1,25 +1,43 @@
 CLASS net/minecraft/class_2861 net/minecraft/world/storage/RegionFile
 	CLASS class_2862 ChunkBuffer
 		FIELD field_17656 pos Lnet/minecraft/class_1923;
-	FIELD field_13025 file Ljava/io/RandomAccessFile;
-	FIELD field_13026 chunkTimestamps [I
-	FIELD field_13029 offsets [I
-	FIELD field_13030 sectorFree Ljava/util/List;
-	FIELD field_13031 EMPTY_SECTOR [B
-	METHOD method_12419 getOffset (Lnet/minecraft/class_1923;)I
+	FIELD field_20434 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_20435 ZERO Ljava/nio/ByteBuffer;
+	FIELD field_20436 channel Ljava/nio/channels/FileChannel;
+	FIELD field_20437 outputChunkStreamVersion Lnet/minecraft/class_4486;
+	FIELD field_20438 header Ljava/nio/ByteBuffer;
+	FIELD field_20439 sectorData Ljava/nio/IntBuffer;
+	FIELD field_20440 saveTimes Ljava/nio/IntBuffer;
+	FIELD field_20441 sectors Lnet/minecraft/class_4485;
+	METHOD <init> (Ljava/io/File;Ljava/io/File;)V
+		ARG 1 file
+	METHOD <init> (Ljava/nio/file/Path;Ljava/nio/file/Path;Lnet/minecraft/class_4486;)V
+		ARG 1 path
+	METHOD method_12419 getSectorData (Lnet/minecraft/class_1923;)I
 		ARG 1 pos
-	METHOD method_12420 isChunkPresent (Lnet/minecraft/class_1923;)Z
-		ARG 1 pos
-	METHOD method_12421 getChunkDataInputStream (Lnet/minecraft/class_1923;)Ljava/io/DataInputStream;
-		ARG 1 pos
-	METHOD method_12422 setOffset (Lnet/minecraft/class_1923;I)V
 	METHOD method_12423 hasChunk (Lnet/minecraft/class_1923;)Z
 		ARG 1 pos
-	METHOD method_12424 write (I[BI)V
-		ARG 1 sectorNumber
-		ARG 2 data
-	METHOD method_12425 getChunkDataOutputStream (Lnet/minecraft/class_1923;)Ljava/io/DataOutputStream;
-	METHOD method_12427 setTimestamp (Lnet/minecraft/class_1923;I)V
-	METHOD method_12428 write (Lnet/minecraft/class_1923;[BI)V
-	METHOD method_17909 getPackedRegionRelativePosition (Lnet/minecraft/class_1923;)I
+	METHOD method_17909 getIndex (Lnet/minecraft/class_1923;)I
+		ARG 0 pos
+	METHOD method_21870 writeHeader ()V
+	METHOD method_21871 getSize (I)I
+		ARG 0 sectorData
+	METHOD method_21872 packSectorData (II)I
+		ARG 1 offset
+		ARG 2 size
+	METHOD method_21873 getChunkInputStream (Lnet/minecraft/class_1923;)Ljava/io/DataInputStream;
+		ARG 1 pos
+	METHOD method_21874 writeChunk (Lnet/minecraft/class_1923;Ljava/nio/ByteBuffer;)V
+		ARG 1 pos
+	METHOD method_21876 getInputStream (Ljava/nio/ByteBuffer;I)Ljava/io/ByteArrayInputStream;
+		ARG 0 buffer
+		ARG 1 length
+	METHOD method_21877 fillLastSector ()V
+	METHOD method_21878 getOffset (I)I
+		ARG 0 sectorData
+	METHOD method_21879 isChunkValid (Lnet/minecraft/class_1923;)Z
+		ARG 1 pos
+	METHOD method_21880 getSectorCount (I)I
+		ARG 0 byteCount
+	METHOD method_21881 getChunkOutputStream (Lnet/minecraft/class_1923;)Ljava/io/DataOutputStream;
 		ARG 1 pos
