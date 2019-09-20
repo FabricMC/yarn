@@ -8,8 +8,8 @@ buildscript {
 		mavenLocal()
 	}
 	dependencies {
-		classpath "cuchaz:enigma:0.14.1.130"
-		classpath "net.fabricmc:stitch:0.2.1.61"
+		classpath "cuchaz:enigma:0.14.1-local"
+		classpath "net.fabricmc:stitch:0.2.1-local"
 		classpath "commons-io:commons-io:2.6"
 		classpath "com.google.guava:guava:28.0-jre"
 		classpath 'de.undercouch:gradle-download-task:3.4.3'
@@ -37,6 +37,7 @@ repositories {
 		name "Fabric Repository"
 		url 'https://maven.fabricmc.net'
 	}
+	mavenLocal()
 }
 
 configurations {
@@ -49,8 +50,8 @@ configurations {
 }
 
 dependencies {
-	enigmaRuntime "net.fabricmc:stitch:0.2.1.61"
-	enigmaRuntime "cuchaz:enigma:0.14.1.130:all"
+	enigmaRuntime "net.fabricmc:stitch:0.2.1-local"
+	enigmaRuntime "cuchaz:enigma:0.14.1-local"
 }
 
 def setupGroup = "jar setup"
@@ -91,6 +92,10 @@ import org.apache.commons.io.FileUtils
 
 import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPOutputStream
+import net.fabricmc.stitch.commands.tinyv2.CommandReorderTinyV2
+import net.fabricmc.stitch.commands.tinyv2.CommandMergeTinyV2
+import net.fabricmc.stitch.commands.tinyv2.CommandProposeV2FieldNames
+
 
 boolean validateChecksum(File file, String checksum) {
 	if (file != null) {
@@ -180,7 +185,9 @@ task downloadMcJars(dependsOn: downloadWantedVersionManifest) {
 
 task downloadIntermediary(type: Download){
 	group = buildMappingGroup
-	def url = "https://github.com/FabricMC/intermediary/raw/master/mappings/${minecraft_version}.tiny"
+	//TODO
+//	def url = "https://github.com/FabricMC/intermediary/raw/master/mappings/${minecraft_version}.tiny"
+	def url = "https://github.com/natanfudge/intermediary/raw/master/mappings/${minecraft_version}.tiny2"
 	src UrlEscapers.urlFragmentEscaper().escape(url)
 	dest new File(cacheFilesMinecraft, "${minecraft_version}-intermediary.tiny")
 }
@@ -258,7 +265,7 @@ task invertIntermediary(dependsOn: ["downloadIntermediary"], type: FileOutput) {
 			"intermediary", "official"
 		]
 
-		new CommandReorderTiny().run(args)
+		new CommandReorderTinyV2().run(args)
 	}
 }
 
@@ -358,7 +365,7 @@ task buildYarnTiny(dependsOn: "mergeJars", type: FileOutput) {
 		String[] args = [
 			"enigma",
 			mappingsDir.getAbsolutePath(),
-			"tiny:intermediary:named",
+			"tinyv2:intermediary:named",
 			yarnTiny.getAbsolutePath()
 		]
 
@@ -388,7 +395,7 @@ task mergeTiny(dependsOn: ["buildYarnTiny", "invertIntermediary"], type: FileOut
 			"official"
 		]
 
-		new CommandMergeTiny().run(args)
+		new CommandMergeTinyV2().run(args)
 
 		logger.lifecycle(":reordering merged intermediary")
 		String[] args2 = [
@@ -397,7 +404,7 @@ task mergeTiny(dependsOn: ["buildYarnTiny", "invertIntermediary"], type: FileOut
 			"official", "intermediary", "named"
 		]
 
-		new CommandReorderTiny().run(args2)
+		new CommandReorderTinyV2().run(args2)
 	}
 }
 
@@ -415,6 +422,7 @@ task tinyJar(type: Jar, dependsOn: "mergeTiny") {
 task compressTiny(dependsOn: ["tinyJar", "mergeTiny"], type: FileOutput){
 	group = buildMappingGroup
 	def outputFile = new File(libs, "yarn-tiny-${yarnVersion}.gz")
+	println("file = $outputFile")
 	outputs.file(outputFile)
 	fileOutput = outputFile
 
@@ -519,7 +527,7 @@ task buildTinyWithEnum(dependsOn: "mergeTiny", type: FileOutput) {
 			namedWithEnum.getAbsolutePath()
 		]
 
-		new CommandProposeFieldNames().run(argsPropose)
+		new CommandProposeV2FieldNames().run(argsPropose)
 	}
 }
 
