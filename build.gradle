@@ -649,6 +649,8 @@ publishing {
 				builtBy compressTiny
 			}
 			artifact (tinyJar)
+
+
 		}
 
 		unmergedYarn(MavenPublication) {
@@ -663,6 +665,21 @@ publishing {
 			artifact(v2UnmergedYarnJar){
 				classifier "v2"
 			}
+
+			pom.withXml {
+				def dependenciesNode = asNode().appendNode('dependencies')
+
+				def v1DependencyNode = dependenciesNode.appendNode('dependency')
+				v1DependencyNode.appendNode('groupId', "net.fabricmc")
+				v1DependencyNode.appendNode('artifactId', "intermediary")
+				v1DependencyNode.appendNode('version', minecraft_version)
+				v1DependencyNode.appendNode('scope', 'compile')
+
+				def v2DependencyNode = v1DependencyNode.clone()
+				dependenciesNode.append(v2DependencyNode)
+				v2DependencyNode.appendNode('classifier','v2')
+			}
+
 
 		}
 	}
