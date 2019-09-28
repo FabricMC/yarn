@@ -1,12 +1,21 @@
 CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
+	FIELD field_13963 healthScore F
+	FIELD field_13965 levelScore I
 	FIELD field_13966 statHandler Lnet/minecraft/class_3442;
 	FIELD field_13967 pingMilliseconds I
+	FIELD field_13968 airScore I
 	FIELD field_13969 seenCredits Z
 	FIELD field_13970 advancementManager Lnet/minecraft/class_2985;
+	FIELD field_13972 syncedSaturationIsZero Z
 	FIELD field_13974 interactionManager Lnet/minecraft/class_3225;
 	FIELD field_13975 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_13976 lastActionTime J
+	FIELD field_13978 syncedExperience I
+	FIELD field_13979 syncedFoodLevel I
+	FIELD field_13980 experienceScore I
 	FIELD field_13981 clientLanguage Ljava/lang/String;
+	FIELD field_13982 armorScore I
+	FIELD field_13983 foodScore I
 	FIELD field_13984 cameraEntity Lnet/minecraft/class_1297;
 	FIELD field_13985 inTeleportationState Z
 	FIELD field_13986 containerSyncId I
@@ -18,6 +27,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_13994 enteredNetherPos Lnet/minecraft/class_243;
 	FIELD field_13995 server Lnet/minecraft/server/MinecraftServer;
 	FIELD field_13996 recipeBook Lnet/minecraft/class_3441;
+	FIELD field_13997 syncedHealth F
 	METHOD method_14203 copyFrom (Lnet/minecraft/class_3222;Z)V
 		ARG 1 oldPlayer
 		ARG 2 alive
@@ -27,12 +37,17 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14208 isInTeleportationState ()Z
 	METHOD method_14209 getServerBrand ()Ljava/lang/String;
 	METHOD method_14211 onStartedTracking (Lnet/minecraft/class_1297;)V
+	METHOD method_14212 updateScores (Lnet/minecraft/class_274;I)V
+		ARG 1 criterion
+		ARG 2 score
 	METHOD method_14213 setClientSettings (Lnet/minecraft/class_2803;)V
 	METHOD method_14216 sendBlockEntityUpdate (Lnet/minecraft/class_2586;)V
+	METHOD method_14217 markHealthDirty ()V
 	METHOD method_14219 getLastActionTime ()J
 	METHOD method_14220 getServerWorld ()Lnet/minecraft/class_3218;
 	METHOD method_14224 setCameraEntity (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
+	METHOD method_14226 playerTick ()V
 	METHOD method_14228 setExperiencePoints (I)V
 	METHOD method_14232 getCameraPosition ()Lnet/minecraft/class_4076;
 	METHOD method_14234 updateLastActionTime ()V
@@ -45,9 +60,17 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14248 getStatHandler ()Lnet/minecraft/class_3442;
 	METHOD method_14249 onStoppedTracking (Lnet/minecraft/class_1297;)V
 	METHOD method_14251 teleport (Lnet/minecraft/class_3218;DDDFF)V
+		ARG 1 world
+		ARG 2 x
+		ARG 4 y
+		ARG 6 z
+		ARG 8 yaw
+		ARG 9 pitch
 	METHOD method_14252 setExperienceLevel (I)V
 		ARG 1 level
 	METHOD method_14253 getRecipeBook ()Lnet/minecraft/class_3441;
 	METHOD method_14254 sendChatMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_2556;)V
 	METHOD method_17668 setCameraPosition (Lnet/minecraft/class_4076;)V
 		ARG 1 cameraPosition
+	METHOD method_18783 dimensionChanged (Lnet/minecraft/class_3218;)V
+		ARG 1 targetWorld
