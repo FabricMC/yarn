@@ -8,7 +8,6 @@ CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
 	FIELD field_12839 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_12840 sections [Lnet/minecraft/class_2826;
 	FIELD field_12841 blockTickScheduler Lnet/minecraft/class_1951;
-	FIELD field_12842 biomeArray [Lnet/minecraft/class_1959;
 	FIELD field_12843 inhabitedTime J
 	FIELD field_12844 lastSaveTime J
 	FIELD field_12845 structureReferences Ljava/util/Map;
@@ -26,13 +25,14 @@ CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
 	FIELD field_12858 world Lnet/minecraft/class_1937;
 	METHOD <init> (Lnet/minecraft/class_1937;Lnet/minecraft/class_2839;)V
 		ARG 1 world
+	METHOD method_12023 getLightingProvider ()Lnet/minecraft/class_3568;
 	METHOD method_12200 getWorld ()Lnet/minecraft/class_1937;
 	METHOD method_12201 getBlockEntity (Lnet/minecraft/class_2338;Lnet/minecraft/class_2818$class_2819;)Lnet/minecraft/class_2586;
 		ARG 1 pos
 	METHOD method_12203 remove (Lnet/minecraft/class_1297;)V
 	METHOD method_12204 loadBlockEntity (Lnet/minecraft/class_2338;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2586;
 		ARG 1 pos
-	METHOD method_12205 appendEntities (Lnet/minecraft/class_1297;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
+	METHOD method_12205 getEntities (Lnet/minecraft/class_1297;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
 		ARG 1 except
 		ARG 2 box
 		ARG 3 entityList
@@ -40,10 +40,11 @@ CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
 	METHOD method_12207 setLevelTypeProvider (Ljava/util/function/Supplier;)V
 		ARG 1 levelTypeProvider
 	METHOD method_12208 createBlockEntity (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2586;
-	METHOD method_12210 appendEntities (Ljava/lang/Class;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
+	METHOD method_12210 getEntities (Ljava/lang/Class;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
 		ARG 1 entityClass
 		ARG 2 box
-		ARG 3 entityList
+		ARG 3 result
+		ARG 4 predicate
 	METHOD method_12214 getBlockEntities ()Ljava/util/Map;
 	METHOD method_12215 getEntitySectionArray ()[Lnet/minecraft/class_3509;
 	METHOD method_12216 addBlockEntity (Lnet/minecraft/class_2586;)V
@@ -52,20 +53,15 @@ CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
 	METHOD method_12220 markDirty ()V
 	METHOD method_12221 runPostProcessing ()V
 	METHOD method_12223 isEmpty ()Z
-	METHOD method_12224 loadFromPacket (Lnet/minecraft/class_2540;Lnet/minecraft/class_2487;IZ)V
-		ARG 1 data
-		ARG 2 nbt
-		ARG 3 updatedSectionsBits
-		ARG 4 clearOld
+	METHOD method_12224 loadFromPacket (Lnet/minecraft/class_4548;Lnet/minecraft/class_2540;Lnet/minecraft/class_2487;I)V
 	METHOD method_12225 getLevelType ()Lnet/minecraft/class_3193$class_3194;
 	METHOD method_12226 setLoadedToWorld (Z)V
 	METHOD method_12232 setUnsaved (Z)V
 		ARG 1 unsaved
-	METHOD method_12233 getLightLevel (Lnet/minecraft/class_2338;I)I
 	METHOD method_12234 getFluidState (III)Lnet/minecraft/class_3610;
 		ARG 1 x
 		ARG 2 y
-	METHOD method_18029 appendEntities (Lnet/minecraft/class_1299;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
+	METHOD method_18029 getEntities (Lnet/minecraft/class_1299;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
 		ARG 1 type
 		ARG 2 box
 		ARG 3 list
