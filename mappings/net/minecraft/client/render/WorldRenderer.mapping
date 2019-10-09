@@ -25,7 +25,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_4086 chunkInfos Ljava/util/List;
 	FIELD field_4088 client Lnet/minecraft/class_310;
 	FIELD field_4089 regularEntityCount I
-	FIELD field_4090 entityOutlinesUpdateNecessary Z
+	FIELD field_4090 shouldCaptureFrustum Z
 	FIELD field_4091 forcedFrustumPosition Lnet/minecraft/class_1161;
 	FIELD field_4092 chunkRendererList Lnet/minecraft/class_758;
 	FIELD field_4094 cloudsBuffer Lnet/minecraft/class_291;
@@ -63,7 +63,23 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 5 maxY
 		ARG 6 maxZ
 	METHOD method_22710 render (Lnet/minecraft/class_4587;FJZLnet/minecraft/class_4184;Lnet/minecraft/class_757;Lnet/minecraft/class_765;)V
+		ARG 1 matrix
+		ARG 2 tickDelta
+		ARG 3 limitTime
+		ARG 5 renderBlockOutline
+		ARG 6 camera
+		ARG 7 gameRenderer
+		ARG 8 lightmapTextureManager
 	METHOD method_22712 drawBlockOutline (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Lnet/minecraft/class_1297;Lnet/minecraft/class_239;IDDD)V
+	METHOD method_22977 renderEntity (Lnet/minecraft/class_1297;DDDFLnet/minecraft/class_4587;Lnet/minecraft/class_4597;)V
+		ARG 1 entity
+		ARG 2 cameraX
+		ARG 4 cameraY
+		ARG 6 cameraZ
+		ARG 8 tickDelta
+		ARG 9 matrix
+	METHOD method_22979 checkEmpty (Lnet/minecraft/class_4587;)V
+		ARG 1 matrix
 	METHOD method_3239 renderClouds (Lnet/minecraft/class_287;DDDLnet/minecraft/class_243;)V
 		ARG 8 color
 	METHOD method_3241 getAdjacentChunkRenderer (Lnet/minecraft/class_2338;Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_2350;)Lnet/minecraft/class_846$class_851;
@@ -77,7 +93,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	METHOD method_3245 updateBlockEntities (Ljava/util/Collection;Ljava/util/Collection;)V
 		ARG 1 removed
 		ARG 2 added
-	METHOD method_3246 getChunkNumber ()I
+	METHOD method_3246 getCompletedChunkCount ()I
 	METHOD method_3247 updateEntitiesForSong (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Z)V
 		ARG 1 world
 		ARG 2 pos
@@ -104,6 +120,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	METHOD method_3270 canDrawEntityOutlines ()Z
 	METHOD method_3272 getEntitiesDebugString ()Ljava/lang/String;
 	METHOD method_3273 setUpTerrain (Lnet/minecraft/class_4184;Lnet/minecraft/class_4604;ZIZ)V
+	METHOD method_3275 captureFrustum (Lnet/minecraft/class_1159;Lnet/minecraft/class_1159;DDDLnet/minecraft/class_4604;)V
 	METHOD method_3276 addParticle (Lnet/minecraft/class_2394;DDDDDD)V
 		ARG 1 parameters
 		ARG 2 x
