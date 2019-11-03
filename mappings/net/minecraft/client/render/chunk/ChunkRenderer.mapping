@@ -22,7 +22,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkRenderer
 			METHOD <init> (D)V
 				ARG 1 priority
 			METHOD compareTo (Lnet/minecraft/class_846$class_851$class_4577;)I
-				ARG 1 o
+				ARG 1 task
 			METHOD method_22782 cancel ()V
 			METHOD method_22783 run (Lnet/minecraft/class_750;)Ljava/util/concurrent/CompletableFuture;
 				ARG 1 buffers
@@ -44,14 +44,16 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkRenderer
 		FIELD field_4459 data Ljava/util/concurrent/atomic/AtomicReference;
 		FIELD field_4461 sortTask Lnet/minecraft/class_846$class_851$class_4579;
 		FIELD field_4462 buffers Ljava/util/Map;
-		FIELD field_4463 rebuildOnClientThread Z
-		FIELD field_4464 rebuildScheduled Z
+		FIELD field_4463 needsImportantRebuild Z
+		FIELD field_4464 needsRebuild Z
 		FIELD field_4467 origin Lnet/minecraft/class_2338$class_2339;
 		FIELD field_4471 rebuildFrame I
 		FIELD field_4472 neighborPositions [Lnet/minecraft/class_2338$class_2339;
-		METHOD method_22773 (Lnet/minecraft/class_1921;Lnet/minecraft/class_846;)Z
+		METHOD method_22773 scheduleSort (Lnet/minecraft/class_1921;Lnet/minecraft/class_846;)Z
 			ARG 1 layer
 			ARG 2 chunkRenderer
+		METHOD method_22777 scheduleRebuild (Lnet/minecraft/class_846;)V
+			ARG 1 chunkRenderer
 		METHOD method_22781 rebuild ()V
 		METHOD method_3651 isChunkNonEmpty (Lnet/minecraft/class_2338;)Z
 			ARG 1 pos
@@ -60,20 +62,20 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkRenderer
 			ARG 2 y
 			ARG 3 z
 		METHOD method_3654 scheduleRebuild (Z)V
-			ARG 1 rebuildOnClientThread
+			ARG 1 important
 		METHOD method_3655 beginBufferBuilding (Lnet/minecraft/class_287;)V
 			ARG 1 buffer
 		METHOD method_3656 getBuffer (Lnet/minecraft/class_1921;)Lnet/minecraft/class_291;
 			ARG 1 layer
 		METHOD method_3659 delete ()V
-		METHOD method_3661 shouldRebuildOnClientThread ()Z
+		METHOD method_3661 needsImportantRebuild ()Z
 		METHOD method_3662 cancelRebuild ()V
 		METHOD method_3663 cancel ()V
 		METHOD method_3668 getSquaredCameraDistance ()D
 		METHOD method_3670 getOrigin ()Lnet/minecraft/class_2338;
 		METHOD method_3671 setRebuildFrame (I)Z
 			ARG 1 frame
-		METHOD method_3672 shouldRebuild ()Z
+		METHOD method_3672 needsRebuild ()Z
 		METHOD method_3673 shouldBuild ()Z
 		METHOD method_3674 createRebuildTask ()Lnet/minecraft/class_846$class_851$class_4577;
 		METHOD method_3675 clear ()V

@@ -4,10 +4,16 @@ CLASS net/minecraft/class_778 net/minecraft/client/render/block/BlockModelRender
 		FIELD field_4191 faces [Lnet/minecraft/class_2350;
 		METHOD method_3378 getData (Lnet/minecraft/class_2350;)Lnet/minecraft/class_778$class_779;
 	CLASS class_780 AmbientOcclusionCalculator
-		FIELD field_4194 brightness [I
-		FIELD field_4196 colorMultiplier [F
+		FIELD field_4194 light [I
+		FIELD field_4196 brightness [F
 		METHOD method_3386 getAmbientOcclusionBrightness (IIII)I
 		METHOD method_3388 apply (Lnet/minecraft/class_1920;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;[FLjava/util/BitSet;)V
+			ARG 1 world
+			ARG 2 state
+			ARG 3 pos
+			ARG 4 direction
+			ARG 5 box
+			ARG 6 flags
 		METHOD method_3389 getBrightness (IIIIFFFF)I
 	CLASS class_781 Translation
 		FIELD field_4198 thirdCorner I
@@ -34,31 +40,83 @@ CLASS net/minecraft/class_778 net/minecraft/client/render/block/BlockModelRender
 	FIELD field_4179 brightnessCache Ljava/lang/ThreadLocal;
 	METHOD method_20544 enableBrightnessCache ()V
 	METHOD method_20545 disableBrightnessCache ()V
-	METHOD method_3361 tesselateSmooth (Lnet/minecraft/class_1920;Lnet/minecraft/class_1087;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;ZLjava/util/Random;JI)Z
-		ARG 1 view
+	METHOD method_23073 renderQuad (Lnet/minecraft/class_1920;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_4588;Lnet/minecraft/class_1159;Lnet/minecraft/class_4581;Lnet/minecraft/class_777;FFFFIIIII)V
+		ARG 1 world
+		ARG 2 state
+		ARG 3 pos
+		ARG 4 vertexConsumer
+		ARG 5 modelMatrix
+		ARG 6 normalMatrix
+		ARG 7 quad
+		ARG 8 brightness1
+		ARG 9 brightness2
+		ARG 10 brightness3
+		ARG 11 brightness4
+		ARG 12 light1
+		ARG 13 light2
+		ARG 14 light3
+		ARG 15 light4
+		ARG 16 overlay
+	METHOD method_3361 renderSmooth (Lnet/minecraft/class_1920;Lnet/minecraft/class_1087;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;ZLjava/util/Random;JI)Z
+		ARG 1 world
 		ARG 2 model
 		ARG 3 state
 		ARG 4 pos
 		ARG 5 buffer
-	METHOD method_3363 tesselateQuadsSmooth (Lnet/minecraft/class_1920;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Ljava/util/List;[FLjava/util/BitSet;Lnet/minecraft/class_778$class_780;I)V
-		ARG 1 view
-	METHOD method_3364 updateShape (Lnet/minecraft/class_1920;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;[ILnet/minecraft/class_2350;[FLjava/util/BitSet;)V
-		ARG 3 state
+		ARG 6 vertexConsumer
+		ARG 7 cull
+		ARG 8 random
+		ARG 9 seed
+		ARG 11 overlay
+	METHOD method_3363 renderQuadsSmooth (Lnet/minecraft/class_1920;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Ljava/util/List;[FLjava/util/BitSet;Lnet/minecraft/class_778$class_780;I)V
+		ARG 1 world
+		ARG 2 state
+		ARG 3 pos
+		ARG 4 matrix
+		ARG 5 vertexConsumer
+		ARG 6 quads
+		ARG 7 box
+		ARG 8 flags
+		ARG 9 ambientOcclusionCalculator
+		ARG 10 overlay
+	METHOD method_3364 getQuadDimensions (Lnet/minecraft/class_1920;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;[ILnet/minecraft/class_2350;[FLjava/util/BitSet;)V
+		ARG 1 world
+		ARG 2 state
+		ARG 3 pos
 		ARG 4 vertexData
-		ARG 5 facing
-		ARG 6 faceShape
+		ARG 5 face
+		ARG 6 box
+		ARG 7 flags
 	METHOD method_3365 renderQuad (Lnet/minecraft/class_1159;Lnet/minecraft/class_4581;Lnet/minecraft/class_4588;FFFLjava/util/List;II)V
 	METHOD method_3367 render (Lnet/minecraft/class_1159;Lnet/minecraft/class_4581;Lnet/minecraft/class_4588;Lnet/minecraft/class_2680;Lnet/minecraft/class_1087;FFFII)V
-	METHOD method_3370 tesselateQuadsFlat (Lnet/minecraft/class_1920;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;IIZLnet/minecraft/class_4587;Lnet/minecraft/class_4588;Ljava/util/List;Ljava/util/BitSet;)V
-		ARG 4 brightness
-	METHOD method_3373 tesselateFlat (Lnet/minecraft/class_1920;Lnet/minecraft/class_1087;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;ZLjava/util/Random;JI)Z
+	METHOD method_3370 renderQuadsFlat (Lnet/minecraft/class_1920;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;IIZLnet/minecraft/class_4587;Lnet/minecraft/class_4588;Ljava/util/List;Ljava/util/BitSet;)V
+		ARG 1 world
+		ARG 2 state
+		ARG 3 pos
+		ARG 4 light
+		ARG 5 overlay
+		ARG 6 useWorldLight
+		ARG 7 matrix
+		ARG 8 vertexConsumer
+		ARG 9 quads
+		ARG 10 flags
+	METHOD method_3373 renderFlat (Lnet/minecraft/class_1920;Lnet/minecraft/class_1087;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;ZLjava/util/Random;JI)Z
 		ARG 1 view
 		ARG 2 model
 		ARG 3 state
 		ARG 4 pos
 		ARG 5 buffer
-	METHOD method_3374 tesselate (Lnet/minecraft/class_1920;Lnet/minecraft/class_1087;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;ZLjava/util/Random;JI)Z
+		ARG 6 vertexConsumer
+		ARG 7 cull
+		ARG 8 random
+	METHOD method_3374 render (Lnet/minecraft/class_1920;Lnet/minecraft/class_1087;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;ZLjava/util/Random;JI)Z
 		ARG 1 view
 		ARG 2 model
 		ARG 3 state
 		ARG 4 pos
+		ARG 5 matrix
+		ARG 6 vertexConsumer
+		ARG 7 cull
+		ARG 8 random
+		ARG 9 seed
+		ARG 11 overlay
