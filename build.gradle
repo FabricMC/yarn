@@ -1,5 +1,6 @@
 buildscript {
 	repositories {
+		mavenLocal()
 		jcenter()
 		maven {
 			name "Fabric Repository"
@@ -8,7 +9,7 @@ buildscript {
 	}
 	dependencies {
 		classpath "cuchaz:enigma:0.14.2.134"
-		classpath "net.fabricmc:stitch:0.3.0.65"
+		classpath "net.fabricmc:stitch:0.3.1"
 		classpath "commons-io:commons-io:2.6"
 		classpath "com.google.guava:guava:28.0-jre"
 		classpath 'de.undercouch:gradle-download-task:3.4.3'
@@ -73,6 +74,7 @@ def libs = new File("build/libs/")
 
 
 import com.google.common.hash.Hashing
+import com.google.common.collect.Iterables
 import cuchaz.enigma.command.CheckMappingsCommand
 import cuchaz.enigma.command.ComposeMappingsCommand
 import cuchaz.enigma.command.ConvertMappingsCommand
@@ -190,7 +192,7 @@ task downloadMcJars(dependsOn: downloadWantedVersionManifest) {
 task extractIntermediary(type: FileOutput) {
 	group = buildMappingGroup
 
-	def v1Input = configurations.intermediary.files[0]
+	def v1Input = Iterables.getOnlyElement(configurations.intermediary.files)
 
 	output = new File(cacheFilesMinecraft.getPath(), "${minecraft_version}-intermediary.tiny")
 
