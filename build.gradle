@@ -79,10 +79,10 @@ import cuchaz.enigma.command.ComposeMappingsCommand
 import cuchaz.enigma.command.ConvertMappingsCommand
 import groovy.io.FileType
 import groovy.json.JsonSlurper
+import net.fabricmc.stitch.commands.CommandMergeTiny
 
 //import com.google.common.io.Files
 
-import net.fabricmc.stitch.commands.CommandMergeTiny
 import net.fabricmc.stitch.commands.CommandProposeFieldNames
 import net.fabricmc.stitch.commands.CommandReorderTiny
 import net.fabricmc.stitch.commands.CommandRewriteIntermediary
@@ -194,14 +194,17 @@ task extractIntermediary(type: FileOutput) {
 
 	output = new File(cacheFilesMinecraft.getPath(), "${minecraft_version}-intermediary.tiny")
 
-	FileSystems.newFileSystem(v1Input.toPath(), null).withCloseable {
-		Path fileToExtract = it.getPath("mappings/mappings.tiny")
-		try {
-			Files.copy(fileToExtract, output.toPath())
-		} catch (Exception ignored) {
-		} // fuck groovy
+	doLast {
+		FileSystems.newFileSystem(v1Input.toPath(), null).withCloseable {
+			Path fileToExtract = it.getPath("mappings/mappings.tiny")
+			try {
+				Files.copy(fileToExtract, output.toPath())
+			} catch (Exception ignored) {
+			} // fuck groovy
 
+		}
 	}
+
 }
 
 
