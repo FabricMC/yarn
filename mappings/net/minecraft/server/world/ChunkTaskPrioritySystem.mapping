@@ -1,5 +1,5 @@
 CLASS net/minecraft/class_3900 net/minecraft/server/world/ChunkTaskPrioritySystem
-	CLASS class_3946 RunnableMessage
+	CLASS class_3946 Task
 		FIELD field_17446 function Ljava/util/function/Function;
 		FIELD field_17447 pos J
 		FIELD field_17448 lastLevelUpdatedToProvider Ljava/util/function/IntSupplier;
@@ -10,6 +10,9 @@ CLASS net/minecraft/class_3900 net/minecraft/server/world/ChunkTaskPrioritySyste
 	CLASS class_3947 SorterMessage
 		FIELD field_17449 runnable Ljava/lang/Runnable;
 		FIELD field_17450 pos J
+		METHOD <init> (Ljava/lang/Runnable;JZ)V
+			ARG 1 runnable
+			ARG 2 pos
 	FIELD field_17248 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_17249 queues Ljava/util/Map;
 	FIELD field_17250 actors Ljava/util/Set;
@@ -21,17 +24,19 @@ CLASS net/minecraft/class_3900 net/minecraft/server/world/ChunkTaskPrioritySyste
 	METHOD method_17282 execute (Lnet/minecraft/class_3906;Ljava/util/function/Function;JLjava/util/function/IntSupplier;Z)V
 		ARG 1 actor
 		ARG 5 lastLevelUpdatedToProvider
-	METHOD method_17614 createSortingActor (Lnet/minecraft/class_3906;)Lnet/minecraft/class_3906;
-		ARG 1 actor
+	METHOD method_17614 createSorterExecutor (Lnet/minecraft/class_3906;)Lnet/minecraft/class_3906;
+		ARG 1 executor
 	METHOD method_17615 sort (Lnet/minecraft/class_3906;JLjava/lang/Runnable;Z)V
-	METHOD method_17622 createExecutingActor (Lnet/minecraft/class_3906;Z)Lnet/minecraft/class_3906;
-		ARG 1 actor
-	METHOD method_17626 createRunnableMessage (Ljava/lang/Runnable;JLjava/util/function/IntSupplier;)Lnet/minecraft/class_3900$class_3946;
+	METHOD method_17622 createExecutor (Lnet/minecraft/class_3906;Z)Lnet/minecraft/class_3906;
+		ARG 1 executor
+	METHOD method_17626 createMessage (Ljava/lang/Runnable;JLjava/util/function/IntSupplier;)Lnet/minecraft/class_3900$class_3946;
 		ARG 0 runnable
 		ARG 1 pos
 		ARG 3 lastLevelUpdatedToProvider
 	METHOD method_17627 createSorterMessage (Ljava/lang/Runnable;JZ)Lnet/minecraft/class_3900$class_3947;
-	METHOD method_17629 createExecutorMessage (Lnet/minecraft/class_3193;Ljava/lang/Runnable;)Lnet/minecraft/class_3900$class_3946;
+		ARG 0 runnable
+		ARG 1 pos
+	METHOD method_17629 createMessage (Lnet/minecraft/class_3193;Ljava/lang/Runnable;)Lnet/minecraft/class_3900$class_3946;
 		ARG 0 holder
 		ARG 1 runnable
 	METHOD method_17630 (Lnet/minecraft/class_3899;Lnet/minecraft/class_3906;)V
