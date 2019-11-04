@@ -13,10 +13,22 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBatcher
 		METHOD method_3645 isEmpty ()Z
 		METHOD method_3650 isVisibleThrough (Lnet/minecraft/class_2350;Lnet/minecraft/class_2350;)Z
 	CLASS class_851 ChunkRenderer
+		CLASS class_4577 Task
+			FIELD field_20835 priority D
+			FIELD field_20836 cancelled Ljava/util/concurrent/atomic/AtomicBoolean;
+			METHOD <init> (Lnet/minecraft/class_846$class_851;D)V
+				ARG 2 priority
+			METHOD method_22782 cancel ()V
+			METHOD method_22783 scheduleBatching (Lnet/minecraft/class_750;)Ljava/util/concurrent/CompletableFuture;
+		CLASS class_4578 UploadTask
+			FIELD field_20838 region Lnet/minecraft/class_853;
+		CLASS class_4579 BuildTask
+			FIELD field_20841 data Lnet/minecraft/class_846$class_849;
+		FIELD field_20834 uploadTask Lnet/minecraft/class_846$class_851$class_4578;
 		FIELD field_4457 blockEntities Ljava/util/Set;
 		FIELD field_4458 boundingBox Lnet/minecraft/class_238;
 		FIELD field_4459 data Ljava/util/concurrent/atomic/AtomicReference;
-		FIELD field_4461 task Lnet/minecraft/class_846$class_851$class_4579;
+		FIELD field_4461 buildTask Lnet/minecraft/class_846$class_851$class_4579;
 		FIELD field_4462 buffers Ljava/util/Map;
 		FIELD field_4463 rebuildOnClientThread Z
 		FIELD field_4464 rebuildScheduled Z
@@ -44,6 +56,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBatcher
 		METHOD method_3676 getNeighborPosition (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338;
 			ARG 1 direction
 		METHOD method_3677 getData ()Lnet/minecraft/class_846$class_849;
+	CLASS class_4690 Result
 	FIELD field_18766 cameraPosition Lnet/minecraft/class_243;
 	FIELD field_4435 pendingChunks Ljava/util/PriorityQueue;
 	FIELD field_4443 pendingUploads Ljava/util/Queue;

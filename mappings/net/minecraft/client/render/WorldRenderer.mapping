@@ -3,10 +3,12 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		FIELD field_4124 renderer Lnet/minecraft/class_846$class_851;
 		METHOD <init> (Lnet/minecraft/class_761;Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_2350;I)V
 			ARG 1 renderer
+	FIELD field_20950 blockBreakingProgressions Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
+	FIELD field_20951 layeredBufferBuilderStorage Lnet/minecraft/class_4599;
 	FIELD field_4055 blockEntities Ljava/util/Set;
 	FIELD field_4056 forcedFrustum Lnet/minecraft/class_4604;
 	FIELD field_4057 textureManager Lnet/minecraft/class_1060;
-	FIELD field_4058 partiallyBrokenBlocks Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+	FIELD field_4058 blockBreakingInfos Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 	FIELD field_4059 entityOutlineShader Lnet/minecraft/class_279;
 	FIELD field_4060 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_4061 END_SKY_TEX Lnet/minecraft/class_2960;
@@ -62,13 +64,12 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 4 maxX
 		ARG 5 maxY
 		ARG 6 maxZ
-	METHOD method_22710 render (Lnet/minecraft/class_4587;FJZLnet/minecraft/class_4184;Lnet/minecraft/class_757;Lnet/minecraft/class_765;)V
+	METHOD method_22710 render (Lnet/minecraft/class_4587;FJZLnet/minecraft/class_4184;Lnet/minecraft/class_757;Lnet/minecraft/class_765;Lnet/minecraft/class_1159;)V
 		ARG 1 matrix
 		ARG 2 tickDelta
 		ARG 3 limitTime
 		ARG 5 renderBlockOutline
 		ARG 6 camera
-		ARG 7 gameRenderer
 		ARG 8 lightmapTextureManager
 	METHOD method_22712 drawBlockOutline (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Lnet/minecraft/class_1297;DDDLnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 	METHOD method_22977 renderEntity (Lnet/minecraft/class_1297;DDDFLnet/minecraft/class_4587;Lnet/minecraft/class_4597;)V
@@ -80,6 +81,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 9 matrix
 	METHOD method_22979 checkEmpty (Lnet/minecraft/class_4587;)V
 		ARG 1 matrix
+	METHOD method_22987 removeBlockBreakingInfo (Lnet/minecraft/class_3191;)V
 	METHOD method_3239 renderClouds (Lnet/minecraft/class_287;DDDLnet/minecraft/class_243;)V
 		ARG 8 color
 	METHOD method_3241 getAdjacentChunkRenderer (Lnet/minecraft/class_2338;Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_2350;)Lnet/minecraft/class_846$class_851;
@@ -194,7 +196,10 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 9 velocityX
 		ARG 11 velocityY
 		ARG 13 velocityZ
-	METHOD method_8569 setBlockBreakingProgress (ILnet/minecraft/class_2338;I)V
+	METHOD method_8569 setBlockBreakingInfo (ILnet/minecraft/class_2338;I)V
+		ARG 1 entityId
+		ARG 2 pos
+		ARG 3 stage
 	METHOD method_8570 updateBlock (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;I)V
 		ARG 2 pos
 	METHOD method_8571 scheduleBlockRender (III)V
