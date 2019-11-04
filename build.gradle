@@ -1,6 +1,5 @@
 buildscript {
 	repositories {
-		mavenLocal()
 		jcenter()
 		maven {
 			name "Fabric Repository"
@@ -8,8 +7,8 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath "cuchaz:enigma:0.15.0"
-		classpath "net.fabricmc:stitch:0.3.0"
+		classpath "cuchaz:enigma:0.14.2.134"
+		classpath "net.fabricmc:stitch:0.2.1.61"
 		classpath "commons-io:commons-io:2.6"
 		classpath "com.google.guava:guava:28.0-jre"
 		classpath 'de.undercouch:gradle-download-task:3.4.3'
@@ -23,7 +22,7 @@ plugins {
 	id 'maven-publish'
 }
 
-def minecraft_version = "1.14.4"
+def minecraft_version = "19w44a"
 
 def ENV = System.getenv()
 // Fetch build number from Jenkins
@@ -32,7 +31,6 @@ def build_number = ENV.BUILD_NUMBER ?: "local"
 def yarnVersion = "${minecraft_version}+build.$build_number"
 
 repositories {
-	mavenLocal()
 	mavenCentral()
 	maven {
 		name "Fabric Repository"
@@ -51,8 +49,8 @@ configurations {
 }
 
 dependencies {
-	enigmaRuntime "net.fabricmc:stitch:0.2.1-local"
-	enigmaRuntime "cuchaz:enigma:0.14.1-local"
+	enigmaRuntime "net.fabricmc:stitch:0.2.1.61"
+	enigmaRuntime "cuchaz:enigma:0.14.2.134"
 	intermediary "net.fabricmc:intermediary:$minecraft_version"
 	intermediary "net.fabricmc:intermediary:$minecraft_version:v2"
 }
@@ -62,7 +60,6 @@ def yarnGroup = "yarn"
 def buildMappingGroup = "mapping build"
 def mapJarGroup = "jar mapping"
 def mappingsDir = file("mappings")
-def mappingsExportOfficialDir = file("mappings_official")
 def cacheFilesMinecraft = file(".gradle/minecraft")
 def tempDir = file(".gradle/temp")
 def mergedFile = file("${minecraft_version}-merged.jar")
