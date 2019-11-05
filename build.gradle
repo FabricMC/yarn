@@ -475,6 +475,7 @@ clean.doFirst {
 
 tasks.build.dependsOn "compressTiny"
 tasks.build.dependsOn "tinyJar"
+tasks.build.dependsOn "v2UnmergedYarnJar"
 
 task mapYarnJar(dependsOn: [compressTiny, mapIntermediaryJar]) {
 	group = mapJarGroup
@@ -610,31 +611,11 @@ publishing {
 				builtBy compressTiny
 			}
 			artifact(tinyJar)
-
-
-		}
-
-		unmergedYarn(MavenPublication) {
-			groupId 'net.fabricmc'
-			artifactId "v2-yarn"
-			version yarnVersion
-
-			artifact(v2UnmergedYarnJar)
-
-			pom.withXml {
-				def dependenciesNode = asNode().appendNode('dependencies')
-
-				def dependencyNode = dependenciesNode.appendNode('dependency')
-				dependencyNode.appendNode('groupId', "net.fabricmc")
-				dependencyNode.appendNode('artifactId', "intermediary")
-				dependencyNode.appendNode('version', minecraft_version)
-				dependencyNode.appendNode('scope', 'compile')
-				dependencyNode.appendNode('classifier', 'v2')
-
+			artifact(v2UnmergedYarnJar) {
+				classifier "v2"
 			}
-
-
 		}
+
 	}
 	repositories {
 		maven {
