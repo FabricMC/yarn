@@ -1,0 +1,125 @@
+CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
+	CLASS class_849 ChunkData
+		CLASS 1
+			METHOD isVisibleThrough (Lnet/minecraft/class_2350;Lnet/minecraft/class_2350;)Z
+				ARG 1 direction
+		FIELD field_4450 nonEmpty Ljava/util/Set;
+		FIELD field_4451 EMPTY Lnet/minecraft/class_846$class_849;
+		FIELD field_4452 initialized Ljava/util/Set;
+		FIELD field_4453 bufferState Lnet/minecraft/class_287$class_288;
+		FIELD field_4454 empty Z
+		FIELD field_4455 occlusionGraph Lnet/minecraft/class_854;
+		FIELD field_4456 blockEntities Ljava/util/List;
+		METHOD method_3641 isEmpty (Lnet/minecraft/class_1921;)Z
+			ARG 1 layer
+		METHOD method_3642 getBlockEntities ()Ljava/util/List;
+		METHOD method_3645 isEmpty ()Z
+		METHOD method_3650 isVisibleThrough (Lnet/minecraft/class_2350;Lnet/minecraft/class_2350;)Z
+	CLASS class_851 BuiltChunk
+		CLASS class_4577 Task
+			FIELD field_20835 priority D
+			FIELD field_20836 cancelled Ljava/util/concurrent/atomic/AtomicBoolean;
+			METHOD <init> (D)V
+				ARG 1 priority
+			METHOD compareTo (Lnet/minecraft/class_846$class_851$class_4577;)I
+				ARG 1 task
+			METHOD method_22782 cancel ()V
+			METHOD method_22783 run (Lnet/minecraft/class_750;)Ljava/util/concurrent/CompletableFuture;
+				ARG 1 buffers
+		CLASS class_4578 RebuildTask
+			FIELD field_20838 region Lnet/minecraft/class_853;
+			METHOD <init> (DLnet/minecraft/class_853;)V
+				ARG 1 priority
+				ARG 3 region
+			METHOD run (Lnet/minecraft/class_750;)Ljava/util/concurrent/CompletableFuture;
+				ARG 1 buffers
+		CLASS class_4579 SortTask
+			FIELD field_20841 data Lnet/minecraft/class_846$class_849;
+			METHOD <init> (DLnet/minecraft/class_846$class_849;)V
+				ARG 1 priority
+				ARG 3 data
+		FIELD field_20834 rebuildTask Lnet/minecraft/class_846$class_851$class_4578;
+		FIELD field_4457 blockEntities Ljava/util/Set;
+		FIELD field_4458 boundingBox Lnet/minecraft/class_238;
+		FIELD field_4459 data Ljava/util/concurrent/atomic/AtomicReference;
+		FIELD field_4461 sortTask Lnet/minecraft/class_846$class_851$class_4579;
+		FIELD field_4462 buffers Ljava/util/Map;
+		FIELD field_4463 needsImportantRebuild Z
+		FIELD field_4464 needsRebuild Z
+		FIELD field_4467 origin Lnet/minecraft/class_2338$class_2339;
+		FIELD field_4471 rebuildFrame I
+		FIELD field_4472 neighborPositions [Lnet/minecraft/class_2338$class_2339;
+		METHOD method_22773 scheduleSort (Lnet/minecraft/class_1921;Lnet/minecraft/class_846;)Z
+			ARG 1 layer
+			ARG 2 chunkRenderer
+		METHOD method_22777 scheduleRebuild (Lnet/minecraft/class_846;)V
+			ARG 1 chunkRenderer
+		METHOD method_22781 rebuild ()V
+		METHOD method_3651 isChunkNonEmpty (Lnet/minecraft/class_2338;)Z
+			ARG 1 pos
+		METHOD method_3653 setOrigin (III)V
+			ARG 1 x
+			ARG 2 y
+			ARG 3 z
+		METHOD method_3654 scheduleRebuild (Z)V
+			ARG 1 important
+		METHOD method_3655 beginBufferBuilding (Lnet/minecraft/class_287;)V
+			ARG 1 buffer
+		METHOD method_3656 getBuffer (Lnet/minecraft/class_1921;)Lnet/minecraft/class_291;
+			ARG 1 layer
+		METHOD method_3659 delete ()V
+		METHOD method_3661 needsImportantRebuild ()Z
+		METHOD method_3662 cancelRebuild ()V
+		METHOD method_3663 cancel ()V
+		METHOD method_3668 getSquaredCameraDistance ()D
+		METHOD method_3670 getOrigin ()Lnet/minecraft/class_2338;
+		METHOD method_3671 setRebuildFrame (I)Z
+			ARG 1 frame
+		METHOD method_3672 needsRebuild ()Z
+		METHOD method_3673 shouldBuild ()Z
+		METHOD method_3674 createRebuildTask ()Lnet/minecraft/class_846$class_851$class_4577;
+		METHOD method_3675 clear ()V
+		METHOD method_3676 getNeighborPosition (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338;
+			ARG 1 direction
+		METHOD method_3677 getData ()Lnet/minecraft/class_846$class_849;
+	CLASS class_4690 Result
+	FIELD field_18766 cameraPosition Lnet/minecraft/class_243;
+	FIELD field_20827 threadBuffers Ljava/util/Queue;
+	FIELD field_20828 buffers Lnet/minecraft/class_750;
+	FIELD field_20829 mailbox Lnet/minecraft/class_3846;
+	FIELD field_20830 executor Ljava/util/concurrent/Executor;
+	FIELD field_20831 world Lnet/minecraft/class_1937;
+	FIELD field_20832 worldRenderer Lnet/minecraft/class_761;
+	FIELD field_20992 queuedTaskCount I
+	FIELD field_20993 bufferCount I
+	FIELD field_4435 rebuildQueue Ljava/util/PriorityQueue;
+	FIELD field_4443 uploadQueue Ljava/util/Queue;
+	FIELD field_4445 LOGGER Lorg/apache/logging/log4j/Logger;
+	METHOD <init> (Lnet/minecraft/class_1937;Lnet/minecraft/class_761;Ljava/util/concurrent/Executor;ZLnet/minecraft/class_750;)V
+		ARG 1 world
+		ARG 2 worldRenderer
+		ARG 3 executor
+		ARG 4 is64Bits
+		ARG 5 buffers
+	METHOD method_19419 setCameraPosition (Lnet/minecraft/class_243;)V
+		ARG 1 cameraPosition
+	METHOD method_19420 getCameraPosition ()Lnet/minecraft/class_243;
+	METHOD method_22752 setWorld (Lnet/minecraft/class_1937;)V
+		ARG 1 world
+	METHOD method_22756 send (Lnet/minecraft/class_846$class_851$class_4577;)V
+		ARG 1 task
+	METHOD method_22759 upload (Lnet/minecraft/class_287;Lnet/minecraft/class_291;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 buffer
+		ARG 2 glBuffer
+	METHOD method_22761 upload ()Z
+	METHOD method_22763 scheduleRunTasks ()V
+	METHOD method_3619 stop ()V
+	METHOD method_3622 getDebugString ()Ljava/lang/String;
+	METHOD method_3627 rebuild (Lnet/minecraft/class_846$class_851;)V
+		ARG 1 chunk
+	METHOD method_3630 isEmpty ()Z
+	METHOD method_3632 reset ()V
+	METHOD method_3633 clear ()V
+	METHOD method_3635 scheduleUpload (Lnet/minecraft/class_287;Lnet/minecraft/class_291;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 buffer
+		ARG 2 glBuffer
