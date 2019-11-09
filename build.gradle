@@ -7,7 +7,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath "cuchaz:enigma:0.14.2.134"
+		classpath "cuchaz:enigma:0.14.2.143"
 		classpath "net.fabricmc:stitch:0.3.0.66"
 		classpath "commons-io:commons-io:2.6"
 		classpath "com.google.guava:guava:28.0-jre"
@@ -45,13 +45,11 @@ configurations {
 			cacheChangingModulesFor 0, "seconds"
 		}
 	}
-	intermediary
 }
 
 dependencies {
 	enigmaRuntime "net.fabricmc:stitch:0.3.0.66"
-	enigmaRuntime "cuchaz:enigma:0.14.2.134"
-	intermediary "net.fabricmc:intermediary:$minecraft_version"
+	enigmaRuntime "cuchaz:enigma:0.14.2.143"
 }
 
 def setupGroup = "jar setup"
@@ -185,26 +183,12 @@ task downloadMcJars(dependsOn: downloadWantedVersionManifest) {
 	}
 }
 
-task extractIntermediary(type: FileOutput) {
+task downloadIntermediary(type: Download) {
 	group = buildMappingGroup
-
-	def v1Input = Iterables.getOnlyElement(configurations.intermediary.files)
-
-	output = new File(cacheFilesMinecraft.getPath(), "${minecraft_version}-intermediary.tiny")
-
-	doLast {
-		FileSystems.newFileSystem(v1Input.toPath(), null).withCloseable {
-			Path fileToExtract = it.getPath("mappings/mappings.tiny")
-			try {
-				Files.copy(fileToExtract, output.toPath())
-			} catch (Exception ignored) {
-			} // fuck groovy
-
-		}
-	}
-
+	def url = "https://github.com/FabricMC/intermediary/raw/master/mappings/${minecraft_version}.tiny"
+	src com.google.common.net.UrlEscapers.urlFragmentEscaper().escape(url)
+	dest new File(cacheFilesMinecraft, "${minecraft_version}-intermediary.tiny")
 }
-
 
 task mergeJars(dependsOn: downloadMcJars) {
 	group = setupGroup
@@ -261,9 +245,9 @@ task downloadMcLibs(dependsOn: downloadWantedVersionManifest) {
 	}
 }
 
-task invertIntermediary(dependsOn: extractIntermediary, type: FileOutput) {
+task invertIntermediary(dependsOn: downloadIntermediary, type: FileOutput) {
 	group = buildMappingGroup
-	def v1Input = extractIntermediary.output
+	def v1Input = downloadIntermediary.dest
 
 	output = new File(cacheFilesMinecraft, "${minecraft_version}-intermediary-inverted.tiny")
 	outputs.file(output)
@@ -283,9 +267,9 @@ task invertIntermediary(dependsOn: extractIntermediary, type: FileOutput) {
 	}
 }
 
-task patchIntermediary(dependsOn: [mergeJars, extractIntermediary]) {
+task patchIntermediary(dependsOn: [mergeJars, downloadIntermediary]) {
 	group = buildMappingGroup
-	def intermediaryTinyInput = extractIntermediary.output
+	def intermediaryTinyInput = downloadIntermediary.dest
 
 	def outputFile = new File(cacheFilesMinecraft, "${minecraft_version}-intermediary-full.tiny")
 	outputs.file(outputFile)
@@ -305,7 +289,7 @@ task patchIntermediary(dependsOn: [mergeJars, extractIntermediary]) {
 	}
 }
 
-task mapIntermediaryJar(dependsOn: [downloadMcLibs, extractIntermediary, mergeJars]) {
+task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJars]) {
 	group = mapJarGroup
 	inputs.files downloadMcLibs.outputs.files.files
 	outputs.file(intermediaryJar)
@@ -315,7 +299,7 @@ task mapIntermediaryJar(dependsOn: [downloadMcLibs, extractIntermediary, mergeJa
 
 	doLast {
 		logger.lifecycle(":mapping minecraft to intermediary")
-		def tinyInput = extractIntermediary.output
+		def tinyInput = downloadIntermediary.dest
 		mapJar(intermediaryJar, mergedFile, tinyInput, libraries, "official", "intermediary")
 	}
 }
@@ -491,8 +475,8 @@ task mapYarnJar(dependsOn: [compressTiny, mapIntermediaryJar]) {
 	}
 }
 
-task exportMappingsOfficial(dependsOn: extractIntermediary) {
-	def composeInput = extractIntermediary.output
+task exportMappingsOfficial(dependsOn: downloadIntermediary) {
+	def composeInput = downloadIntermediary.dest
 
 	doLast {
 		logger.lifecycle(":exporting mappings")
