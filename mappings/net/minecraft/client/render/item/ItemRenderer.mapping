@@ -1,4 +1,5 @@
 CLASS net/minecraft/class_918 net/minecraft/client/render/item/ItemRenderer
+	FIELD field_21010 ENCHANTED_ITEM_GLINT_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_4728 WITHOUT_MODELS Ljava/util/Set;
 	FIELD field_4729 textureManager Lnet/minecraft/class_1060;
 	FIELD field_4730 zOffset F
@@ -6,11 +7,53 @@ CLASS net/minecraft/class_918 net/minecraft/client/render/item/ItemRenderer
 	FIELD field_4733 colorMap Lnet/minecraft/class_325;
 	METHOD <init> (Lnet/minecraft/class_1060;Lnet/minecraft/class_1092;Lnet/minecraft/class_325;)V
 		ARG 3 colorMap
-	METHOD method_23181 getArmorVertexConsumer (Lnet/minecraft/class_4597;Lnet/minecraft/class_1921;ZZ)Lnet/minecraft/class_4588;
-		ARG 0 vertexConsumers
+	METHOD method_23177 render (Lnet/minecraft/class_1309;Lnet/minecraft/class_1799;Lnet/minecraft/class_809$class_811;ZLnet/minecraft/class_4587;Lnet/minecraft/class_4597;Lnet/minecraft/class_1937;II)V
+		ARG 1 entity
+		ARG 2 stack
+		ARG 3 transformType
+		ARG 4 leftHand
+		ARG 5 matrices
+		ARG 6 vertexConsumerProvider
+		ARG 7 world
+		ARG 8 light
+		ARG 9 overlay
+	METHOD method_23178 render (Lnet/minecraft/class_1799;Lnet/minecraft/class_809$class_811;IILnet/minecraft/class_4587;Lnet/minecraft/class_4597;)V
+		ARG 1 stack
+		ARG 2 transformType
+		ARG 3 light
+		ARG 4 overlay
+		ARG 5 matrices
+		ARG 6 vertexConsumerProvider
+	METHOD method_23179 renderItemModel (Lnet/minecraft/class_1799;Lnet/minecraft/class_809$class_811;ZLnet/minecraft/class_4587;Lnet/minecraft/class_4597;IILnet/minecraft/class_1087;)V
+		ARG 1 stack
+		ARG 2 transformType
+		ARG 3 leftHand
+		ARG 4 matrices
+		ARG 5 vertexConsumerProvider
+		ARG 6 light
+		ARG 7 overlay
+		ARG 8 model
+	METHOD method_23180 drawQuads (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Ljava/util/List;Lnet/minecraft/class_1799;II)V
+		ARG 1 matrices
+		ARG 2 vertexConsumer
+		ARG 3 quads
+		ARG 4 stack
+		ARG 5 light
+		ARG 6 overlay
+	METHOD method_23181 getEnchantedVertexConsumer (Lnet/minecraft/class_4597;Lnet/minecraft/class_1921;ZZ)Lnet/minecraft/class_4588;
+		ARG 0 vertexConsumerProvider
 		ARG 1 layer
+		ARG 2 inGui
 		ARG 3 glint
+	METHOD method_23182 drawFaces (Lnet/minecraft/class_1087;Lnet/minecraft/class_1799;IILnet/minecraft/class_4587;Lnet/minecraft/class_4588;)V
+		ARG 1 model
+		ARG 2 stack
+		ARG 3 light
+		ARG 4 overlay
+		ARG 5 matrices
+		ARG 6 vertexConsumer
 	METHOD method_4004 renderGuiQuad (Lnet/minecraft/class_287;IIIIIIII)V
+		ARG 1 bufferBuilder
 		ARG 2 x
 		ARG 3 y
 		ARG 4 width
@@ -19,19 +62,25 @@ CLASS net/minecraft/class_918 net/minecraft/client/render/item/ItemRenderer
 		ARG 7 green
 		ARG 8 blue
 		ARG 9 alpha
-	METHOD method_4010 renderGuiItemIcon (Lnet/minecraft/class_1799;II)V
+	METHOD method_4010 renderInGui (Lnet/minecraft/class_1799;II)V
 		ARG 1 stack
 		ARG 2 x
 		ARG 3 y
 	METHOD method_4012 getModels ()Lnet/minecraft/class_763;
-	METHOD method_4019 getHeldItemModel (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)Lnet/minecraft/class_1087;
+	METHOD method_4019 getModel (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)Lnet/minecraft/class_1087;
 		ARG 1 stack
+		ARG 2 world
+		ARG 3 entity
 	METHOD method_4020 getOverriddenModel (Lnet/minecraft/class_1087;Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)Lnet/minecraft/class_1087;
+		ARG 1 original
 		ARG 2 stack
+		ARG 3 world
+		ARG 4 entity
 	METHOD method_4021 renderGuiItemModel (Lnet/minecraft/class_1799;IILnet/minecraft/class_1087;)V
 		ARG 1 itemStack
 		ARG 2 x
 		ARG 3 y
+		ARG 4 model
 	METHOD method_4022 renderGuiItemOverlay (Lnet/minecraft/class_327;Lnet/minecraft/class_1799;IILjava/lang/String;)V
 		ARG 1 fontRenderer
 		ARG 2 stack
@@ -48,6 +97,7 @@ CLASS net/minecraft/class_918 net/minecraft/client/render/item/ItemRenderer
 		ARG 3 x
 		ARG 4 y
 	METHOD method_4026 renderGuiItem (Lnet/minecraft/class_1309;Lnet/minecraft/class_1799;II)V
+		ARG 1 holder
 		ARG 2 itemStack
 		ARG 3 x
 		ARG 4 y
