@@ -10,7 +10,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_20798 SNOW Lnet/minecraft/class_2960;
 	FIELD field_20950 blockBreakingProgressions Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 	FIELD field_20951 bufferBuilders Lnet/minecraft/class_4599;
-	FIELD field_4055 blockEntities Ljava/util/Set;
+	FIELD field_4055 blockEntitiesRenderedFar Ljava/util/Set;
 	FIELD field_4056 capturedFrustum Lnet/minecraft/class_4604;
 	FIELD field_4057 textureManager Lnet/minecraft/class_1060;
 	FIELD field_4058 blockBreakingInfos Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
@@ -29,7 +29,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_4083 lastTranslucentSortX D
 	FIELD field_4084 cameraChunkX I
 	FIELD field_4085 world Lnet/minecraft/class_638;
-	FIELD field_4086 chunkInfos Ljava/util/List;
+	FIELD field_4086 visibleChunks Ljava/util/List;
 	FIELD field_4088 client Lnet/minecraft/class_310;
 	FIELD field_4089 regularEntityCount I
 	FIELD field_4090 shouldCaptureFrustum Z
@@ -48,7 +48,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_4109 entityRenderDispatcher Lnet/minecraft/class_898;
 	FIELD field_4110 blockEntityCount I
 	FIELD field_4111 SUN Lnet/minecraft/class_2960;
-	FIELD field_4112 renderedChunks Lnet/minecraft/class_769;
+	FIELD field_4112 chunks Lnet/minecraft/class_769;
 	FIELD field_4113 starsBuffer Lnet/minecraft/class_291;
 	FIELD field_4115 lastCameraPitch D
 	FIELD field_4118 lastTranslucentSortZ D
@@ -113,14 +113,14 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	METHOD method_22987 removeBlockBreakingInfo (Lnet/minecraft/class_3191;)V
 	METHOD method_3239 renderClouds (Lnet/minecraft/class_287;DDDLnet/minecraft/class_243;)V
 		ARG 8 color
-	METHOD method_3241 getAdjacentChunkRenderer (Lnet/minecraft/class_2338;Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_2350;)Lnet/minecraft/class_846$class_851;
+	METHOD method_3241 getAdjacentChunk (Lnet/minecraft/class_2338;Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_2350;)Lnet/minecraft/class_846$class_851;
 		ARG 1 pos
-		ARG 2 chunkRenderer
+		ARG 2 chunk
 		ARG 3 direction
 	METHOD method_3242 onResized (II)V
 	METHOD method_3243 renderWorldBorder (Lnet/minecraft/class_4184;)V
 	METHOD method_3244 setWorld (Lnet/minecraft/class_638;)V
-	METHOD method_3245 updateBlockEntities (Ljava/util/Collection;Ljava/util/Collection;)V
+	METHOD method_3245 updateBlockEntitiesRenderedFar (Ljava/util/Collection;Ljava/util/Collection;)V
 		ARG 1 removed
 		ARG 2 added
 	METHOD method_3246 getCompletedChunkCount ()I
@@ -155,7 +155,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 1 limitTime
 	METHOD method_3270 canDrawEntityOutlines ()Z
 	METHOD method_3272 getEntitiesDebugString ()Ljava/lang/String;
-	METHOD method_3273 setUpTerrain (Lnet/minecraft/class_4184;Lnet/minecraft/class_4604;ZIZ)V
+	METHOD method_3273 setupTerrain (Lnet/minecraft/class_4184;Lnet/minecraft/class_4604;ZIZ)V
 		ARG 1 camera
 		ARG 2 frustum
 		ARG 3 hasForcedFrustum
