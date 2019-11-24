@@ -7,7 +7,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath "cuchaz:enigma:0.14.2.143"
+		classpath "cuchaz:enigma:0.14.2.144"
 		classpath "net.fabricmc:stitch:0.4.0.67"
 		classpath "commons-io:commons-io:2.6"
 		classpath "com.google.guava:guava:28.0-jre"
@@ -49,7 +49,7 @@ configurations {
 
 dependencies {
 	enigmaRuntime "net.fabricmc:stitch:0.4.0.67"
-	enigmaRuntime "cuchaz:enigma:0.14.2.143"
+	enigmaRuntime "cuchaz:enigma:0.14.2.144"
 }
 
 def setupGroup = "jar setup"
@@ -75,6 +75,7 @@ import com.google.common.collect.Iterables
 import cuchaz.enigma.command.CheckMappingsCommand
 import cuchaz.enigma.command.ComposeMappingsCommand
 import cuchaz.enigma.command.ConvertMappingsCommand
+import cuchaz.enigma.command.MapSpecializedMethodsCommand
 import groovy.io.FileType
 import groovy.json.JsonSlurper
 import net.fabricmc.stitch.commands.CommandMergeTiny
@@ -344,7 +345,7 @@ task checkMappings {
 	}
 }
 
-task buildYarnTiny(dependsOn: mergeJars, type: WithV2FileOutput) {
+task buildYarnTiny(dependsOn: mapIntermediaryJar, type: WithV2FileOutput) {
 	group = buildMappingGroup
 	inputs.dir mappingsDir
 	if (!libs.exists()) {
@@ -359,22 +360,19 @@ task buildYarnTiny(dependsOn: mergeJars, type: WithV2FileOutput) {
 	doLast {
 		logger.lifecycle(":generating tiny mappings")
 
-		String[] v1Args = [
-				"enigma",
-				mappingsDir.getAbsolutePath(),
-				"tiny:intermediary:named",
-				v1Output.getAbsolutePath()
-		]
+		new MapSpecializedMethodsCommand().run(
+			intermediaryJar.getAbsolutePath(),
+			"enigma",
+			mappingsDir.getAbsolutePath(),
+			"tinyv2:intermediary:named",
+			v2Output.getAbsolutePath()
+		)
 
-		String[] v2Args = [
-				"enigma",
-				mappingsDir.getAbsolutePath(),
-				"tinyv2:intermediary:named",
-				v2Output.getAbsolutePath()
-		]
-
-		new ConvertMappingsCommand().run(v1Args)
-		new ConvertMappingsCommand().run(v2Args)
+		new ConvertMappingsCommand().run(
+			"tinyv2",
+			v2Output.getAbsolutePath(),
+			"tiny:intermediary:named",
+			v1Output.getAbsolutePath())
 	}
 }
 
