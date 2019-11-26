@@ -1,5 +1,5 @@
 CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
-	CLASS class_762 BuiltChunkInfo
+	CLASS class_762 ChunkInfo
 		FIELD field_4124 chunk Lnet/minecraft/class_846$class_851;
 		METHOD <init> (Lnet/minecraft/class_761;Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_2350;I)V
 			ARG 1 renderer
@@ -10,7 +10,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_20798 SNOW Lnet/minecraft/class_2960;
 	FIELD field_20950 blockBreakingProgressions Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 	FIELD field_20951 bufferBuilders Lnet/minecraft/class_4599;
-	FIELD field_4055 blockEntities Ljava/util/Set;
+	FIELD field_4055 noCullingBlockEntities Ljava/util/Set;
 	FIELD field_4056 capturedFrustum Lnet/minecraft/class_4604;
 	FIELD field_4057 textureManager Lnet/minecraft/class_1060;
 	FIELD field_4058 blockBreakingInfos Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
@@ -22,14 +22,18 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_4069 lastCameraX D
 	FIELD field_4070 lastCameraChunkUpdateZ D
 	FIELD field_4071 FORCEFIELD Lnet/minecraft/class_2960;
+	FIELD field_4072 lastCloudsColor Lnet/minecraft/class_243;
 	FIELD field_4073 ticks I
 	FIELD field_4075 chunksToRebuild Ljava/util/Set;
 	FIELD field_4077 needsTerrainUpdate Z
+	FIELD field_4080 lastCloudsRenderMode Lnet/minecraft/class_4063;
 	FIELD field_4081 lastCameraY D
+	FIELD field_4082 lastCloudsBlockX I
 	FIELD field_4083 lastTranslucentSortX D
 	FIELD field_4084 cameraChunkX I
 	FIELD field_4085 world Lnet/minecraft/class_638;
-	FIELD field_4086 chunkInfos Ljava/util/List;
+	FIELD field_4086 visibleChunks Ljava/util/List;
+	FIELD field_4087 lightSkyBuffer Lnet/minecraft/class_291;
 	FIELD field_4088 client Lnet/minecraft/class_310;
 	FIELD field_4089 regularEntityCount I
 	FIELD field_4090 shouldCaptureFrustum Z
@@ -37,8 +41,11 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_4094 cloudsBuffer Lnet/minecraft/class_291;
 	FIELD field_4095 DIRECTIONS [Lnet/minecraft/class_2350;
 	FIELD field_4096 lastCameraZ D
+	FIELD field_4097 lastCloudsBlockY I
 	FIELD field_4098 MOON_PHASES Lnet/minecraft/class_2960;
+	FIELD field_4100 skyVertexFormat Lnet/minecraft/class_293;
 	FIELD field_4101 entityOutlinesFramebuffer Lnet/minecraft/class_276;
+	FIELD field_4102 darkSkyBuffer Lnet/minecraft/class_291;
 	FIELD field_4103 lastTranslucentSortY D
 	FIELD field_4104 lastCameraChunkUpdateX D
 	FIELD field_4105 cameraChunkY I
@@ -48,9 +55,10 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_4109 entityRenderDispatcher Lnet/minecraft/class_898;
 	FIELD field_4110 blockEntityCount I
 	FIELD field_4111 SUN Lnet/minecraft/class_2960;
-	FIELD field_4112 renderedChunks Lnet/minecraft/class_769;
+	FIELD field_4112 chunks Lnet/minecraft/class_769;
 	FIELD field_4113 starsBuffer Lnet/minecraft/class_291;
 	FIELD field_4115 lastCameraPitch D
+	FIELD field_4116 lastCloudsBlockZ I
 	FIELD field_4118 lastTranslucentSortZ D
 	FIELD field_4119 playingSongs Ljava/util/Map;
 	FIELD field_4120 lastCameraChunkUpdateY D
@@ -77,7 +85,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 2 old
 		ARG 3 updated
 	METHOD method_22710 render (Lnet/minecraft/class_4587;FJZLnet/minecraft/class_4184;Lnet/minecraft/class_757;Lnet/minecraft/class_765;Lnet/minecraft/class_1159;)V
-		ARG 1 matrix
+		ARG 1 matrices
 		ARG 2 tickDelta
 		ARG 3 limitTime
 		ARG 5 renderBlockOutline
@@ -115,15 +123,19 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	METHOD method_23793 getLightmapCoordinates (Lnet/minecraft/class_1920;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;)I
 	METHOD method_23794 getLightmapCoordinates (Lnet/minecraft/class_1920;Lnet/minecraft/class_2338;)I
 	METHOD method_3239 renderClouds (Lnet/minecraft/class_287;DDDLnet/minecraft/class_243;)V
+		ARG 1 bufferBuilder
+		ARG 2 x
+		ARG 4 y
+		ARG 6 z
 		ARG 8 color
-	METHOD method_3241 getAdjacentChunkRenderer (Lnet/minecraft/class_2338;Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_2350;)Lnet/minecraft/class_846$class_851;
+	METHOD method_3241 getAdjacentChunk (Lnet/minecraft/class_2338;Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_2350;)Lnet/minecraft/class_846$class_851;
 		ARG 1 pos
-		ARG 2 chunkRenderer
+		ARG 2 chunk
 		ARG 3 direction
 	METHOD method_3242 onResized (II)V
 	METHOD method_3243 renderWorldBorder (Lnet/minecraft/class_4184;)V
 	METHOD method_3244 setWorld (Lnet/minecraft/class_638;)V
-	METHOD method_3245 updateBlockEntities (Ljava/util/Collection;Ljava/util/Collection;)V
+	METHOD method_3245 updateNoCullingBlockEntities (Ljava/util/Collection;Ljava/util/Collection;)V
 		ARG 1 removed
 		ARG 2 added
 	METHOD method_3246 getCompletedChunkCount ()I
@@ -151,14 +163,20 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 15 blue
 		ARG 16 alpha
 	METHOD method_3259 renderClouds (Lnet/minecraft/class_4587;FDDD)V
+		ARG 1 matrices
+		ARG 2 tickDelta
+		ARG 3 cameraX
+		ARG 5 cameraY
+		ARG 7 cameraZ
 	METHOD method_3262 drawBox (Lnet/minecraft/class_4588;DDDDDDFFFF)V
+	METHOD method_3265 renderDarkSky ()V
 	METHOD method_3268 getRandomParticleSpawnChance (Z)Lnet/minecraft/class_4066;
 		ARG 1 canSpawnOnMinimal
 	METHOD method_3269 updateChunks (J)V
 		ARG 1 limitTime
 	METHOD method_3270 canDrawEntityOutlines ()Z
 	METHOD method_3272 getEntitiesDebugString ()Ljava/lang/String;
-	METHOD method_3273 setUpTerrain (Lnet/minecraft/class_4184;Lnet/minecraft/class_4604;ZIZ)V
+	METHOD method_3273 setupTerrain (Lnet/minecraft/class_4184;Lnet/minecraft/class_4604;ZIZ)V
 		ARG 1 camera
 		ARG 2 frustum
 		ARG 3 hasForcedFrustum
@@ -178,6 +196,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 8 velocityX
 		ARG 10 velocityY
 		ARG 12 velocityZ
+	METHOD method_3277 renderLightSky ()V
 	METHOD method_3279 reload ()V
 	METHOD method_3280 clearChunkRenderers ()V
 	METHOD method_3281 isTerrainRenderComplete ()Z
@@ -190,10 +209,10 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 9 velocityX
 		ARG 11 velocityY
 		ARG 13 velocityZ
-	METHOD method_3283 (Lnet/minecraft/class_287;FZ)V
+	METHOD method_3283 renderSkyHalf (Lnet/minecraft/class_287;FZ)V
 		ARG 1 buffer
 		ARG 2 y
-		ARG 3 flipX
+		ARG 3 bottom
 	METHOD method_3285 getOpenChunkFaces (Lnet/minecraft/class_2338;)Ljava/util/Set;
 		ARG 1 pos
 	METHOD method_3288 spawnParticle (Lnet/minecraft/class_2394;ZZDDDDDD)Lnet/minecraft/class_703;
