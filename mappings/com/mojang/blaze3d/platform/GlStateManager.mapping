@@ -6,17 +6,21 @@ CLASS net/minecraft/class_4493 com/mojang/blaze3d/platform/GlStateManager
 		FIELD field_5044 func I
 	CLASS class_1017 BlendFuncState
 		FIELD field_5045 capState Lnet/minecraft/class_4493$class_1018;
-		FIELD field_5046 dstAlpha I
-		FIELD field_5047 srcAlpha I
-		FIELD field_5048 dfactor I
-		FIELD field_5049 sfactor I
+		FIELD field_5046 dstFactorAlpha I
+		FIELD field_5047 srcFactorAlpha I
+		FIELD field_5048 dstFactorRGB I
+		FIELD field_5049 srcFactorRGB I
 	CLASS class_1018 CapabilityTracker
 		FIELD field_5050 cap I
 		FIELD field_5051 state Z
+		METHOD <init> (I)V
+			ARG 1 cap
 		METHOD method_4469 disable ()V
 		METHOD method_4470 setState (Z)V
+			ARG 1 state
 		METHOD method_4471 enable ()V
 	CLASS class_1019 ClearState
+		FIELD field_16202 clearStencil I
 		FIELD field_5052 clearColor Lnet/minecraft/class_4493$class_1020;
 		FIELD field_5053 clearDepth D
 	CLASS class_1020 Color4
@@ -24,9 +28,14 @@ CLASS net/minecraft/class_4493 com/mojang/blaze3d/platform/GlStateManager
 		FIELD field_5055 blue F
 		FIELD field_5056 green F
 		FIELD field_5057 red F
+		METHOD <init> (FFFF)V
+			ARG 1 red
+			ARG 2 green
+			ARG 3 blue
+			ARG 4 alpha
 	CLASS class_1021 LogicOpState
 		FIELD field_5058 capState Lnet/minecraft/class_4493$class_1018;
-		FIELD field_5059 opcode I
+		FIELD field_5059 op I
 	CLASS class_1022 ColorMask
 		FIELD field_5060 alpha Z
 		FIELD field_5061 blue Z
@@ -44,7 +53,9 @@ CLASS net/minecraft/class_4493 com/mojang/blaze3d/platform/GlStateManager
 		FIELD field_5075 func I
 		FIELD field_5076 mask Z
 	CLASS class_1028 FogMode
-		FIELD field_5093 glValue I
+		FIELD field_5093 value I
+		METHOD <init> (I)V
+			ARG 1 value
 	CLASS class_1029 FogState
 		FIELD field_5098 end F
 		FIELD field_5099 start F
@@ -52,21 +63,32 @@ CLASS net/minecraft/class_4493 com/mojang/blaze3d/platform/GlStateManager
 		FIELD field_5101 density F
 		FIELD field_5102 mode I
 	CLASS class_1030 LogicOp
-		FIELD field_5108 glValue I
+		FIELD field_5108 value I
+		METHOD <init> (I)V
+			ARG 1 value
 	CLASS class_1031 PolygonOffsetState
 		FIELD field_5121 capLine Lnet/minecraft/class_4493$class_1018;
 		FIELD field_5122 units F
 		FIELD field_5123 capFill Lnet/minecraft/class_4493$class_1018;
 		FIELD field_5124 factor F
 	CLASS class_1034 StencilSubState
+		FIELD field_16203 ref I
+		FIELD field_5147 mask I
 		FIELD field_5148 func I
 	CLASS class_1035 StencilState
 		FIELD field_5149 subState Lnet/minecraft/class_4493$class_1034;
+		FIELD field_5150 dppass I
+		FIELD field_5151 dpfail I
+		FIELD field_5152 sfail I
+		FIELD field_5153 mask I
 	CLASS class_1036 TexCoord
 	CLASS class_1037 TexGenCoordState
 		FIELD field_5159 capState Lnet/minecraft/class_4493$class_1018;
 		FIELD field_5160 mode I
 		FIELD field_5161 coord I
+		METHOD <init> (II)V
+			ARG 1 coord
+			ARG 2 cap
 	CLASS class_1038 TexGenState
 		FIELD field_5162 s Lnet/minecraft/class_4493$class_1037;
 		FIELD field_5163 t Lnet/minecraft/class_4493$class_1037;
@@ -80,8 +102,12 @@ CLASS net/minecraft/class_4493 com/mojang/blaze3d/platform/GlStateManager
 		FIELD field_5170 width I
 		FIELD field_5171 y I
 		FIELD field_5172 x I
-	CLASS class_4534 DestFactor
-	CLASS class_4535 SourceFactor
+	CLASS class_4534 DstFactor
+		METHOD <init> (I)V
+			ARG 1 value
+	CLASS class_4535 SrcFactor
+		METHOD <init> (I)V
+			ARG 1 value
 	FIELD field_20466 MATRIX_BUFFER Ljava/nio/FloatBuffer;
 	FIELD field_20468 ALPHA_TEST Lnet/minecraft/class_4493$class_1016;
 	FIELD field_20469 LIGHTING Lnet/minecraft/class_4493$class_1018;
@@ -98,23 +124,31 @@ CLASS net/minecraft/class_4493 com/mojang/blaze3d/platform/GlStateManager
 	FIELD field_20480 STENCIL Lnet/minecraft/class_4493$class_1035;
 	FIELD field_20482 activeTexture I
 	FIELD field_20483 TEXTURES [Lnet/minecraft/class_4493$class_1039;
-	FIELD field_20484 shadeModel I
+	FIELD field_20484 modelShadeMode I
 	FIELD field_20485 RESCALE_NORMAL Lnet/minecraft/class_4493$class_1018;
 	FIELD field_20486 COLOR_MASK Lnet/minecraft/class_4493$class_1022;
 	FIELD field_20487 COLOR Lnet/minecraft/class_4493$class_1020;
 	FIELD field_20488 fboMode Lnet/minecraft/class_4493$class_1010;
+	FIELD field_20771 colorBuffer Ljava/nio/FloatBuffer;
+	FIELD field_20772 DIFFUSE_LIGHT_0_POSITION Lnet/minecraft/class_1160;
+	FIELD field_20773 DIFFUSE_LIGHT_1_POSITION Lnet/minecraft/class_1160;
 	METHOD method_21906 enableColorLogicOp ()V
 	METHOD method_21907 matrixMode (I)V
+		ARG 0 mode
 	METHOD method_21908 disableColorLogicOp ()V
 	METHOD method_21910 enableTexture ()V
 	METHOD method_21911 disableClientState (I)V
+		ARG 0 cap
 	METHOD method_21912 disableTexture ()V
 	METHOD method_21913 enableClientState (I)V
+		ARG 0 cap
 	METHOD method_21914 getTexLevelParameter ()I
 	METHOD method_21920 enableRescaleNormal ()V
 	METHOD method_21921 getString (I)Ljava/lang/String;
+		ARG 0 name
 	METHOD method_21922 disableRescaleNormal ()V
 	METHOD method_21923 getInteger (I)I
+		ARG 0 pname
 	METHOD method_21924 loadIdentity ()V
 	METHOD method_21926 pushMatrix ()V
 	METHOD method_21928 popMatrix ()V
@@ -122,157 +156,427 @@ CLASS net/minecraft/class_4493 com/mojang/blaze3d/platform/GlStateManager
 	METHOD method_21934 getError ()I
 	METHOD method_21935 pushLightingAttributes ()V
 	METHOD method_21936 clearDepth (D)V
+		ARG 0 depth
 	METHOD method_21937 scaled (DDD)V
-	METHOD method_21938 rotated (DDD)V
+		ARG 0 x
+		ARG 2 y
+		ARG 4 z
+	METHOD method_21938 translated (DDD)V
+		ARG 0 x
+		ARG 2 y
+		ARG 4 z
 	METHOD method_21939 ortho (DDDDDD)V
+		ARG 0 l
+		ARG 2 r
+		ARG 4 b
+		ARG 6 t
+		ARG 8 n
+		ARG 10 f
 	METHOD method_21940 fogDensity (F)V
+		ARG 0 density
 	METHOD method_21941 polygonOffset (FF)V
+		ARG 0 factor
+		ARG 1 units
 	METHOD method_21942 normal3f (FFF)V
+		ARG 0 nx
+		ARG 1 ny
+		ARG 2 nz
 	METHOD method_21943 clearColor (FFFF)V
+		ARG 0 red
+		ARG 1 green
+		ARG 2 blue
+		ARG 3 alpha
 	METHOD method_21944 enableLight (I)V
+		ARG 0 light
 	METHOD method_21945 alphaFunc (IF)V
 		ARG 0 func
 		ARG 1 ref
 	METHOD method_21946 multiTexCoords2f (IFF)V
+		ARG 0 texture
+		ARG 1 s
+		ARG 2 t
 	METHOD method_21947 colorMaterial (II)V
 		ARG 0 face
 		ARG 1 mode
 	METHOD method_21949 texEnv (III)V
+		ARG 0 target
+		ARG 1 pname
+		ARG 2 param
 	METHOD method_21950 blendFuncSeparate (IIII)V
-		ARG 0 sfactor
-		ARG 1 dfactor
-		ARG 2 srcAlpha
-		ARG 3 dstAlpha
+		ARG 0 srcFactorRGB
+		ARG 1 dstFactorRGB
+		ARG 2 srcFactorAlpha
+		ARG 3 dstFactorAlpha
 	METHOD method_21951 framebufferTexture2D (IIIII)V
+		ARG 0 target
+		ARG 1 attachment
+		ARG 2 textureTarget
+		ARG 3 texture
+		ARG 4 level
 	METHOD method_21953 texSubImage2D (IIIIIIIIJ)V
+		ARG 0 target
+		ARG 1 level
+		ARG 2 offsetX
+		ARG 3 offsetY
+		ARG 4 width
+		ARG 5 height
+		ARG 6 format
+		ARG 7 type
+		ARG 8 pixels
 	METHOD method_21954 texImage2D (IIIIIIIILjava/nio/IntBuffer;)V
+		ARG 0 target
+		ARG 1 level
+		ARG 2 internalFormat
+		ARG 3 width
+		ARG 4 height
+		ARG 5 border
+		ARG 6 format
+		ARG 7 type
+		ARG 8 pixels
 	METHOD method_21956 readPixels (IIIIIILjava/nio/ByteBuffer;)V
+		ARG 0 x
+		ARG 1 y
+		ARG 2 width
+		ARG 3 height
+		ARG 4 format
+		ARG 5 type
+		ARG 6 pixels
 	METHOD method_21957 getTexImage (IIIIJ)V
+		ARG 0 target
+		ARG 1 level
+		ARG 2 format
+		ARG 3 type
+		ARG 4 pixels
 	METHOD method_21960 light (IILjava/nio/FloatBuffer;)V
+		ARG 0 light
+		ARG 1 pname
+		ARG 2 params
 	METHOD method_21961 shaderSource (ILjava/lang/CharSequence;)V
+		ARG 0 shader
+		ARG 1 source
 	METHOD method_21962 bufferData (ILjava/nio/ByteBuffer;I)V
+		ARG 0 target
+		ARG 1 data
+		ARG 2 usage
 	METHOD method_21963 lightModel (ILjava/nio/FloatBuffer;)V
+		ARG 0 pname
+		ARG 1 params
 	METHOD method_21964 uniform1 (ILjava/nio/IntBuffer;)V
+		ARG 0 location
+		ARG 1 value
 	METHOD method_21965 clear (IZ)V
 		ARG 0 mask
 		ARG 1 getError
 	METHOD method_21966 uniformMatrix2 (IZLjava/nio/FloatBuffer;)V
+		ARG 0 location
+		ARG 1 transpose
+		ARG 2 value
 	METHOD method_21968 enableTexGen (Lnet/minecraft/class_4493$class_1036;)V
+		ARG 0 coord
 	METHOD method_21969 texGenMode (Lnet/minecraft/class_4493$class_1036;I)V
+		ARG 0 coord
+		ARG 1 mode
 	METHOD method_21970 texGenParam (Lnet/minecraft/class_4493$class_1036;ILjava/nio/FloatBuffer;)V
+		ARG 0 coord
+		ARG 1 pname
+		ARG 2 params
 	METHOD method_21971 multMatrix (Lnet/minecraft/class_1159;)V
+		ARG 0 matrix
 	METHOD method_21972 multMatrix (Ljava/nio/FloatBuffer;)V
+		ARG 0 matrix
 	METHOD method_21973 initFramebufferSupport (Lorg/lwjgl/opengl/GLCapabilities;)Ljava/lang/String;
 		ARG 0 capabilities
 	METHOD method_21974 depthMask (Z)V
 		ARG 0 mask
 	METHOD method_21975 colorMask (ZZZZ)V
+		ARG 0 red
+		ARG 1 green
+		ARG 2 blue
+		ARG 3 alpha
 	METHOD method_21976 pushTextureAttributes ()V
 	METHOD method_21978 fogStart (F)V
+		ARG 0 start
 	METHOD method_21980 scalef (FFF)V
+		ARG 0 x
+		ARG 1 y
+		ARG 2 z
 	METHOD method_21981 rotatef (FFFF)V
+		ARG 0 angle
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
 	METHOD method_21983 pixelTransfer (IF)V
+		ARG 0 pname
+		ARG 1 param
 	METHOD method_21984 blendFunc (II)V
-		ARG 0 sfactor
-		ARG 1 dfactor
+		ARG 0 srcFactor
+		ARG 1 dstFactor
 	METHOD method_21985 texParameter (IIF)V
+		ARG 0 target
+		ARG 1 pname
+		ARG 2 param
 	METHOD method_21986 texParameter (III)V
+		ARG 0 target
+		ARG 1 pname
+		ARG 2 param
 	METHOD method_21987 renderbufferStorage (IIII)V
+		ARG 0 target
+		ARG 1 internalFormat
+		ARG 2 width
+		ARG 3 height
 	METHOD method_21989 texEnv (ILjava/nio/FloatBuffer;)V
+		ARG 0 pname
+		ARG 1 params
 	METHOD method_21990 getUniformLocation (ILjava/lang/CharSequence;)I
+		ARG 0 program
+		ARG 1 name
 	METHOD method_21991 uniform1 (ILjava/nio/FloatBuffer;)V
+		ARG 0 location
+		ARG 1 value
 	METHOD method_21992 uniform2 (ILjava/nio/IntBuffer;)V
+		ARG 0 location
+		ARG 1 value
 	METHOD method_21993 uniformMatrix3 (IZLjava/nio/FloatBuffer;)V
+		ARG 0 location
+		ARG 1 transpose
+		ARG 2 value
 	METHOD method_21995 disableTexGen (Lnet/minecraft/class_4493$class_1036;)V
+		ARG 0 coord
 	METHOD method_21997 popAttributes ()V
 	METHOD method_21998 fogEnd (F)V
+		ARG 0 end
 	METHOD method_21999 translatef (FFF)V
+		ARG 0 x
+		ARG 1 y
+		ARG 2 z
 	METHOD method_22000 color4f (FFFF)V
+		ARG 0 red
+		ARG 1 green
+		ARG 2 blue
+		ARG 3 alpha
 	METHOD method_22001 depthFunc (I)V
 		ARG 0 func
 	METHOD method_22002 getProgram (II)I
+		ARG 0 program
+		ARG 1 pname
 	METHOD method_22003 getTexLevelParameter (III)I
+		ARG 0 target
+		ARG 1 level
+		ARG 2 pname
 	METHOD method_22004 framebufferRenderbuffer (IIII)V
 		ARG 0 target
 		ARG 1 attachment
-		ARG 2 renderBufferTarget
-		ARG 3 renderBuffer
+		ARG 2 renderbufferTarget
+		ARG 3 renderbuffer
 	METHOD method_22006 getAttribLocation (ILjava/lang/CharSequence;)I
+		ARG 0 program
+		ARG 1 name
 	METHOD method_22007 uniform2 (ILjava/nio/FloatBuffer;)V
+		ARG 0 location
+		ARG 1 value
 	METHOD method_22008 uniform3 (ILjava/nio/IntBuffer;)V
+		ARG 0 location
+		ARG 1 value
 	METHOD method_22009 uniformMatrix4 (IZLjava/nio/FloatBuffer;)V
+		ARG 0 location
+		ARG 1 transpose
+		ARG 2 value
 	METHOD method_22010 getGenCoordState (Lnet/minecraft/class_4493$class_1036;)Lnet/minecraft/class_4493$class_1037;
 		ARG 0 coord
 	METHOD method_22012 disableAlphaTest ()V
 	METHOD method_22013 lineWidth (F)V
+		ARG 0 width
 	METHOD method_22015 blendEquation (I)V
+		ARG 0 mode
 	METHOD method_22016 attachShader (II)V
+		ARG 0 program
+		ARG 1 shader
 	METHOD method_22017 stencilFunc (III)V
-	METHOD method_22018 blendFuncseparate (IIII)V
+		ARG 0 func
+		ARG 1 ref
+		ARG 2 mask
+	METHOD method_22018 blendFuncSeparateUntracked (IIII)V
+		ARG 0 srcFactorRGB
+		ARG 1 dstFactorRGB
+		ARG 2 srcFactorAlpha
+		ARG 3 dstFactorAlpha
 	METHOD method_22019 uniform3 (ILjava/nio/FloatBuffer;)V
+		ARG 0 location
+		ARG 1 value
 	METHOD method_22020 uniform4 (ILjava/nio/IntBuffer;)V
+		ARG 0 location
+		ARG 1 value
 	METHOD method_22021 enableAlphaTest ()V
 	METHOD method_22023 getShader (II)I
+		ARG 0 shader
+		ARG 1 pname
 	METHOD method_22024 stencilOp (III)V
+		ARG 0 sfail
+		ARG 1 dpfail
+		ARG 2 dppass
 	METHOD method_22025 viewport (IIII)V
+		ARG 0 x
+		ARG 1 y
+		ARG 2 width
+		ARG 3 height
 	METHOD method_22026 uniform4 (ILjava/nio/FloatBuffer;)V
+		ARG 0 location
+		ARG 1 value
 	METHOD method_22028 enableLighting ()V
 	METHOD method_22029 deleteShader (I)V
+		ARG 0 shader
 	METHOD method_22030 uniform1 (II)V
+		ARG 0 location
+		ARG 1 value
 	METHOD method_22031 normalPointer (IIJ)V
+		ARG 0 type
+		ARG 1 stride
+		ARG 2 pointer
 	METHOD method_22032 texCoordPointer (IIIJ)V
+		ARG 0 size
+		ARG 1 type
+		ARG 2 stride
+		ARG 3 pointer
 	METHOD method_22033 fog (I[F)V
+		ARG 0 pname
+		ARG 1 params
 	METHOD method_22034 disableLighting ()V
 	METHOD method_22035 createShader (I)I
+		ARG 0 type
 	METHOD method_22036 bindBuffers (II)V
+		ARG 0 target
+		ARG 1 buffer
 	METHOD method_22037 drawArrays (III)V
+		ARG 0 mode
+		ARG 1 first
+		ARG 2 count
 	METHOD method_22038 vertexPointer (IIIJ)V
+		ARG 0 size
+		ARG 1 type
+		ARG 2 stride
+		ARG 3 pointer
 	METHOD method_22040 enableColorMaterial ()V
 	METHOD method_22041 compileShader (I)V
+		ARG 0 shader
 	METHOD method_22042 bindFramebuffer (II)V
 		ARG 0 target
 		ARG 1 framebuffer
 	METHOD method_22043 colorPointer (IIIJ)V
+		ARG 0 size
+		ARG 1 type
+		ARG 2 stride
+		ARG 3 pointer
 	METHOD method_22044 disableColorMaterial ()V
 	METHOD method_22045 useProgram (I)V
+		ARG 0 program
 	METHOD method_22046 bindRenderbuffer (II)V
 		ARG 0 target
 		ARG 1 renderbuffer
 	METHOD method_22047 disableDepthTest ()V
 	METHOD method_22048 deleteProgram (I)V
+		ARG 0 program
 	METHOD method_22049 getShaderInfoLog (II)Ljava/lang/String;
+		ARG 0 shader
+		ARG 1 maxLength
 	METHOD method_22050 enableDepthTest ()V
 	METHOD method_22051 linkProgram (I)V
+		ARG 0 program
 	METHOD method_22052 getProgramInfoLog (II)Ljava/lang/String;
+		ARG 0 program
+		ARG 1 maxLength
 	METHOD method_22053 disableBlend ()V
 	METHOD method_22054 deleteBuffers (I)V
+		ARG 0 buffer
 	METHOD method_22055 fogi (II)V
+		ARG 0 pname
+		ARG 1 param
 	METHOD method_22056 enableBlend ()V
 	METHOD method_22057 deleteRenderbuffers (I)V
+		ARG 0 renderbuffers
 	METHOD method_22058 polygonMode (II)V
+		ARG 0 face
+		ARG 1 mode
 	METHOD method_22060 deleteFramebuffers (I)V
+		ARG 0 framebuffers
 	METHOD method_22062 createProgram ()I
 	METHOD method_22063 checkFramebufferStatus (I)I
+		ARG 0 target
 	METHOD method_22065 genBuffers ()I
+	METHOD method_22066 activeTextureUntracked (I)V
+		ARG 0 texture
 	METHOD method_22067 pixelStore (II)V
+		ARG 0 pname
+		ARG 1 param
 	METHOD method_22068 genFramebuffers ()I
 	METHOD method_22069 clientActiveTexture (I)V
+		ARG 0 texture
 	METHOD method_22070 genRenderbuffers ()I
 	METHOD method_22071 fogMode (I)V
+		ARG 0 mode
 	METHOD method_22072 enableFog ()V
 	METHOD method_22074 disableFog ()V
 	METHOD method_22075 logicOp (I)V
+		ARG 0 op
 	METHOD method_22076 enableCull ()V
 	METHOD method_22077 activeTexture (I)V
+		ARG 0 texture
 	METHOD method_22078 disableCull ()V
 	METHOD method_22079 deleteTexture (I)V
+		ARG 0 texture
 	METHOD method_22080 enablePolygonOffset ()V
 	METHOD method_22081 bindTexture (I)V
+		ARG 0 texture
 	METHOD method_22082 disablePolygonOffset ()V
 	METHOD method_22083 shadeModel (I)V
+		ARG 0 mode
 	METHOD method_22084 enableLineOffset ()V
 	METHOD method_22085 stencilMask (I)V
+		ARG 0 mask
 	METHOD method_22086 disableLineOffset ()V
 	METHOD method_22087 clearStencil (I)V
+		ARG 0 stencil
 	METHOD method_22606 enableVertexAttribArray (I)V
+		ARG 0 index
+	METHOD method_22607 (I)V
+		ARG 0 index
 	METHOD method_22609 vertexAttribPointer (IIIZIJ)V
+		ARG 0 index
+		ARG 1 size
+		ARG 2 type
+		ARG 3 normalized
+		ARG 4 stride
+		ARG 5 pointer
+	METHOD method_22610 setupOverlayColor (II)V
+		ARG 0 texture
+		ARG 1 size
+	METHOD method_22613 getBuffer (FFFF)Ljava/nio/FloatBuffer;
+		ARG 0 a
+		ARG 1 b
+		ARG 2 c
+		ARG 3 d
+	METHOD method_22616 setupLevelDiffuseLighting (Lnet/minecraft/class_1159;)V
+		ARG 0 modelMatrix
+	METHOD method_22617 setupGuiDiffuseLighting (Lnet/minecraft/class_1159;)V
+		ARG 0 modelMatrix
+	METHOD method_22618 teardownOverlayColor ()V
+	METHOD method_22883 blendColor (FFFF)V
+		ARG 0 red
+		ARG 1 green
+		ARG 2 blue
+		ARG 3 alpha
+	METHOD method_22885 combineColor (IIII)V
+		ARG 0 combineColor
+		ARG 1 source0Color
+		ARG 2 source1Color
+		ARG 3 source2Color
+	METHOD method_22886 combineAlpha (II)V
+		ARG 0 combineAlpha
+		ARG 1 source0Alpha
+	METHOD method_22887 setupEndPortalTexGen ()V
+	METHOD method_22888 clearTexGen ()V
+	METHOD method_22889 mulTextureByProjModelView ()V
+	METHOD method_23281 combineColor (II)V
+		ARG 0 combineColor
+		ARG 1 source0Color
+	METHOD method_23282 setupOutline ()V
+	METHOD method_23283 teardownOutline ()V
