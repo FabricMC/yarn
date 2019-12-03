@@ -1,4 +1,5 @@
 CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
+	FIELD field_20791 vertexFormat Lnet/minecraft/class_293;
 	FIELD field_20792 frame I
 	FIELD field_20797 RAIN Lnet/minecraft/class_2960;
 	FIELD field_20798 SNOW Lnet/minecraft/class_2960;
@@ -119,6 +120,8 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 20 blue
 	METHOD method_22982 drawBox (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Lnet/minecraft/class_238;FFFF)V
 	METHOD method_22987 removeBlockBreakingInfo (Lnet/minecraft/class_3191;)V
+	METHOD method_22989 renderChunkDebugInfo (Lnet/minecraft/class_4184;)V
+		ARG 1 camera
 	METHOD method_22990 getEntityOutlinesFramebuffer ()Lnet/minecraft/class_276;
 	METHOD method_23793 getLightmapCoordinates (Lnet/minecraft/class_1920;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;)I
 		ARG 0 view
@@ -286,13 +289,17 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 2 y
 		ARG 3 z
 	CLASS class_762 ChunkInfo
+		FIELD field_4122 propagationLevel I
 		FIELD field_4124 chunk Lnet/minecraft/class_846$class_851;
 		FIELD field_4125 direction Lnet/minecraft/class_2350;
+		FIELD field_4126 cullingState B
 		METHOD <init> (Lnet/minecraft/class_761;Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_2350;I)V
 			ARG 1 renderer
 			ARG 2 chunk
 			ARG 3 direction
-		METHOD method_3298 (Lnet/minecraft/class_2350;)Z
-			ARG 1 direction
-		METHOD method_3299 (BLnet/minecraft/class_2350;)V
-			ARG 2 direction
+			ARG 4 propagationLevel
+		METHOD method_3298 canCull (Lnet/minecraft/class_2350;)Z
+			ARG 1 from
+		METHOD method_3299 updateCullingState (BLnet/minecraft/class_2350;)V
+			ARG 1 parentCullingState
+			ARG 2 from
