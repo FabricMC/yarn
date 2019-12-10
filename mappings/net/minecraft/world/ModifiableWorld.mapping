@@ -12,6 +12,28 @@ CLASS net/minecraft/class_1945 net/minecraft/world/ModifiableWorld
 		ARG 2 drop
 		ARG 3 breakingEntity
 	METHOD method_8652 setBlockState (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;I)Z
+		COMMENT Updates the blockstate at a position within this world calling all appropriate callbacks and event handlers.
+		COMMENT
+		COMMENT <p>When called on the server, the new blockstate is stored and propagated to clients and listeners as dictated
+		COMMENT by the supplied flags. Note that calling this on the client will update the world locally, but may not see the
+		COMMENT change persisted across loads. It's recommended to check whether running on the client or server before
+		COMMENT interacting with the world in this way.</p>
+		COMMENT
+		COMMENT <p>Accepted values of the flags are a bitset combination of the following:</p>
+		COMMENT <ul>
+		COMMENT <li>0b0000000 // 0 - DEFAULT/NONE - nothing is notified. The state is merely stored without any visual changes</li>
+		COMMENT <li>0b0000001 // 1 - PROPAGATE_CHANGE - Propagates a change event to surrounding blocks.</li>
+		COMMENT <li>0b0000010 // 2 - NOTIFY_LISTENERS - Notifies listeners and clients who need to react when the block changes</li>
+		COMMENT <li>0b0000100 // 4 - NO_REDRAW - Used in conjunction with NOTIFY_LISTENERS to suppress the render pass on clients.</li>
+		COMMENT <li>0b0001000 // 8 - REDRAW_ON_MAIN_THREAD - Forces a synchronous redraw on clients.</li>
+		COMMENT <li>0b0010000 // 16 - FORCE_STATE - Bypass virtual blockstate changes and forces the passed state to be stored as-is.</li>
+		COMMENT <li>0b0100000 // 32 - SKIP_DROPS - Prevents the previous block (container) from dropping items when destroyed.</li>
+		COMMENT <li>0b1000000 // 64 - IS_MECHANICAL_UPDATE - Signals that this is a mechanical update, usually caused by pistons moving blocks.</li>
+		COMMENT </ul>
+		COMMENT
 		ARG 1 pos
+			COMMENT The position of the blockstate to be replaced.
 		ARG 2 state
+			COMMENT The state of the blockstate to set at this position.
 		ARG 3 flags
+			COMMENT Update/listener flags for how the change must be propagated to the client and surrounding blocks.
