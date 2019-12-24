@@ -6,8 +6,12 @@ CLASS net/minecraft/class_746 net/minecraft/client/network/ClientPlayerEntity
 	FIELD field_3914 lastRenderPitch F
 	FIELD field_3915 usingItem Z
 	FIELD field_3916 renderPitch F
+	FIELD field_3917 wateriness I
+	FIELD field_3918 alreadyUpdatedHealth Z
 	FIELD field_3919 lastSprinting Z
 	FIELD field_3920 lastOnGround Z
+	FIELD field_3921 ticksSinceSprintingChanged I
+	FIELD field_3923 ticksSinceLastPositionPacketSent I
 	FIELD field_3924 lastZ D
 	FIELD field_3925 lastPitch F
 	FIELD field_3926 lastX D
@@ -18,6 +22,8 @@ CLASS net/minecraft/class_746 net/minecraft/client/network/ClientPlayerEntity
 	FIELD field_3931 lastRenderYaw F
 	FIELD field_3932 renderYaw F
 	FIELD field_3933 tickables Ljava/util/List;
+	FIELD field_3934 ticksToNextAutojump I
+	FIELD field_3935 ticksLeftToDoubleTapSprint I
 	FIELD field_3936 lastIsHoldingSneakKey Z
 	FIELD field_3937 client Lnet/minecraft/class_310;
 	FIELD field_3940 lastBaseY D
@@ -28,8 +34,14 @@ CLASS net/minecraft/class_746 net/minecraft/client/network/ClientPlayerEntity
 	FIELD field_3945 activeHand Lnet/minecraft/class_1268;
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_638;Lnet/minecraft/class_634;Lnet/minecraft/class_3469;Lnet/minecraft/class_299;)V
 		ARG 1 client
+		ARG 3 networkHandler
+		ARG 4 stats
+		ARG 5 recipeBook
 	METHOD method_18654 updateNausea ()V
 	METHOD method_20303 isHoldingSneakKey ()Z
+	METHOD method_20623 isWalking ()Z
+	METHOD method_22119 canAutojump ()Z
+	METHOD method_22120 isInputtingMovement ()Z
 	METHOD method_22419 showsDeathScreen ()Z
 	METHOD method_22420 setShowsDeathScreen (Z)V
 		ARG 1 shouldShow
@@ -42,8 +54,11 @@ CLASS net/minecraft/class_746 net/minecraft/client/network/ClientPlayerEntity
 	METHOD method_3136 sendMovementPackets ()V
 	METHOD method_3137 closeScreen ()V
 	METHOD method_3138 updateHealth (F)V
+		ARG 1 newHealth
+	METHOD method_3140 getVisibilityReductionFromWater ()F
 	METHOD method_3141 onRecipeDisplayed (Lnet/minecraft/class_1860;)V
 	METHOD method_3142 sendChatMessage (Ljava/lang/String;)V
+		ARG 1 message
 	METHOD method_3143 getStats ()Lnet/minecraft/class_3469;
 	METHOD method_3144 isRiding ()Z
 	METHOD method_3145 setExperience (FII)V
@@ -53,6 +68,10 @@ CLASS net/minecraft/class_746 net/minecraft/client/network/ClientPlayerEntity
 	METHOD method_3146 setServerBrand (Ljava/lang/String;)V
 		ARG 1 serverBrand
 	METHOD method_3147 setClientPermissionLevel (I)V
+		ARG 1 clientPermissionLevel
+	METHOD method_3148 autoJump (FF)V
+		ARG 1 dx
+		ARG 2 dz
 	METHOD method_3149 getLastAutoJump ()Z
 	METHOD method_3150 cannotFitAt (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
