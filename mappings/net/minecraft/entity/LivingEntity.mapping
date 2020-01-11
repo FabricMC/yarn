@@ -182,8 +182,14 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6014 getItemUseTimeLeft ()I
 	METHOD method_6015 setAttacker (Lnet/minecraft/class_1309;)V
 		ARG 1 attacker
-	METHOD method_6016 tryRemoveStatusEffect (Lnet/minecraft/class_1291;)Z
-		ARG 1 effect
+	METHOD method_6016 removeStatusEffect (Lnet/minecraft/class_1291;)Z
+		COMMENT Removes a status effect from this entity.
+		COMMENT 
+		COMMENT <p> Calling this method will call cleanup methods on the status effect and trigger synchronization of effect particles with watching clients. If this entity is a player,
+		COMMENT the change in the list of effects will also be synchronized with the corresponding client.
+		COMMENT 
+		COMMENT @return {@code true} if a {@link net.minecraft.entity.effect.StatusEffectInstance} with the given type was in effect before the removal.
+		ARG 1 type
 	METHOD method_6017 getSoundPitch ()F
 	METHOD method_6019 setCurrentHand (Lnet/minecraft/class_1268;)V
 		ARG 1 hand
@@ -329,8 +335,12 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6109 isBaby ()Z
 	METHOD method_6110 getCurrentExperience (Lnet/minecraft/class_1657;)I
 		ARG 1 player
-	METHOD method_6111 removeStatusEffect (Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;
-		ARG 1 effect
+	METHOD method_6111 removeStatusEffectInternal (Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;
+		COMMENT Removes a status effect from this entity without calling any listener.
+		COMMENT 
+		COMMENT <p> This method does not perform any cleanup or synchronization operation.
+		COMMENT Under most circumstances, calling {@link net.minecraft.entity.LivingEntity#removeStatusEffect(net.minecraft.entity.effect.StatusEffect)} is highly preferable.
+		ARG 1 type
 	METHOD method_6112 getStatusEffect (Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;
 		ARG 1 effect
 	METHOD method_6113 isSleeping ()Z
