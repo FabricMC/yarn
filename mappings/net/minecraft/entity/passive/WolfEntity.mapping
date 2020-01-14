@@ -1,6 +1,6 @@
 CLASS net/minecraft/class_1493 net/minecraft/entity/passive/WolfEntity
 	FIELD field_18004 FOLLOW_TAMED_PREDICATE Ljava/util/function/Predicate;
-	FIELD field_6944 wet Z
+	FIELD field_6944 furWet Z
 	FIELD field_6945 lastShakeProgress F
 	FIELD field_6946 BEGGING Lnet/minecraft/class_2940;
 	FIELD field_6947 shakeProgress F
@@ -8,13 +8,23 @@ CLASS net/minecraft/class_1493 net/minecraft/entity/passive/WolfEntity
 	FIELD field_6950 COLLAR_COLOR Lnet/minecraft/class_2940;
 	FIELD field_6951 canShakeWaterOff Z
 	FIELD field_6952 begAnimationProgress F
-	METHOD method_6707 getWetBrightnessMultiplier (F)F
+	METHOD method_6707 getFurWetBrightnessMultiplier (F)F
+		COMMENT Returns this wolf's brightness multiplier based on the fur wetness.
+		COMMENT <p>
+		COMMENT The brightness multiplier represents how much darker the wolf gets while its fur is wet. The multiplier changes (from 0.75 to 1.0 incrementally) when a wolf shakes.
+		COMMENT 
+		COMMENT @param tickDelta Progress for linearly interpolating between the previous and current game state.
+		COMMENT @return Brightness as a float value between 0.75 and 1.0.
+		COMMENT @see net.minecraft.client.render.entity.model.TintableAnimalModel#setColorMultiplier(float, float, float)
 		ARG 1 tickDelta
 	METHOD method_6708 setCollarColor (Lnet/minecraft/class_1767;)V
 		ARG 1 color
 	METHOD method_6709 isAngry ()Z
 	METHOD method_6710 isBegging ()Z
-	METHOD method_6711 isWet ()Z
+	METHOD method_6711 isFurWet ()Z
+		COMMENT Returns whether this wolf's fur is wet.
+		COMMENT <p>
+		COMMENT The wolf's fur will remain wet until the wolf shakes.
 	METHOD method_6712 setBegging (Z)V
 		ARG 1 begging
 	METHOD method_6713 getCollarColor ()Lnet/minecraft/class_1767;
