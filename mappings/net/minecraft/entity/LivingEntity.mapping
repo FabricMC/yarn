@@ -142,9 +142,24 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_20237 getEquipmentBreakStatus (Lnet/minecraft/class_1304;)B
 		ARG 0 slot
 	METHOD method_21753 getStingerCount ()I
+	METHOD method_21754 isHoldingOntoLadder ()Z
+		COMMENT @return {@code true} if this entity should not lose height while in a climbing state
+		COMMENT @see net.minecraft.entity.LivingEntity
 	METHOD method_21755 setStingerCount (I)V
 		ARG 1 stingerCount
+	METHOD method_22382 shouldSpawnConsumptionEffects ()Z
+	METHOD method_23328 playBlockFallSound ()V
+	METHOD method_23329 computeFallDamage (FF)I
+		ARG 1 fallDistance
+		ARG 2 damageMultiplier
 	METHOD method_23667 swingHand (Lnet/minecraft/class_1268;Z)V
+	METHOD method_23733 onKilledBy (Lnet/minecraft/class_1309;)V
+		COMMENT Performs secondary effects after this mob has been killed.
+		COMMENT
+		COMMENT <p> The default behaviour spawns a wither rose if {@code adversary} is a {@code WitherEntity}.
+		ARG 1 adversary
+			COMMENT the main adversary responsible for this entity's death
+	METHOD method_23883 dropXp ()V
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
 	METHOD method_5989 getLootTable ()Lnet/minecraft/class_2960;
@@ -184,13 +199,14 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 attacker
 	METHOD method_6016 removeStatusEffect (Lnet/minecraft/class_1291;)Z
 		COMMENT Removes a status effect from this entity.
-		COMMENT 
+		COMMENT
 		COMMENT <p> Calling this method will call cleanup methods on the status effect and trigger synchronization of effect particles with watching clients. If this entity is a player,
 		COMMENT the change in the list of effects will also be synchronized with the corresponding client.
-		COMMENT 
+		COMMENT
 		COMMENT @return {@code true} if a {@link net.minecraft.entity.effect.StatusEffectInstance} with the given type was in effect before the removal.
 		ARG 1 type
 	METHOD method_6017 getSoundPitch ()F
+	METHOD method_6018 setPushCooldown (I)V
 	METHOD method_6019 setCurrentHand (Lnet/minecraft/class_1268;)V
 		ARG 1 hand
 	METHOD method_6020 onStatusEffectApplied (Lnet/minecraft/class_1293;)V
@@ -337,7 +353,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 player
 	METHOD method_6111 removeStatusEffectInternal (Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;
 		COMMENT Removes a status effect from this entity without calling any listener.
-		COMMENT 
+		COMMENT
 		COMMENT <p> This method does not perform any cleanup or synchronization operation.
 		COMMENT Under most circumstances, calling {@link net.minecraft.entity.LivingEntity#removeStatusEffect(net.minecraft.entity.effect.StatusEffect)} is highly preferable.
 		ARG 1 type
@@ -375,20 +391,3 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6132 applyArmorToDamage (Lnet/minecraft/class_1282;F)F
 		ARG 1 source
 		ARG 2 amount
-	METHOD method_23883 dropXp ()V
-	METHOD method_23733 onKilledBy (Lnet/minecraft/class_1309;)V
-		COMMENT Performs secondary effects after this mob has been killed.
-		COMMENT 
-		COMMENT <p> The default behaviour spawns a wither rose if {@code adversary} is a {@code WitherEntity}.
-		COMMENT 
-		ARG 1 adversary
-			COMMENT the main adversary responsible for this entity's death
-	METHOD method_23329 computeFallDamage (FF)I
-		ARG 1 fallDistance
-		ARG 2 damageMultiplier
-	METHOD method_23328 playBlockFallSound ()V
-	METHOD method_21754 isHoldingOntoLadder ()Z
-		COMMENT @return {@code true} if this entity should not lose height while in a climbing state
-		COMMENT @see net.minecraft.entity.LivingEntity#applyClimbingSpeed(net.minecraft.util.math.Vec3d) 
-	METHOD method_22382 shouldSpawnConsumptionEffects ()Z
-	METHOD method_6018 setPushCooldown (I)V
