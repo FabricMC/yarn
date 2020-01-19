@@ -11,7 +11,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_5954 trackedZ J
 	FIELD field_5955 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_5956 fireTicks I
-	FIELD field_5957 insideWater Z
+	FIELD field_5957 touchingWater Z
 	FIELD field_5958 glowing Z
 	FIELD field_5959 chunkY I
 	FIELD field_5960 noClip Z
@@ -48,7 +48,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_5995 NO_GRAVITY Lnet/minecraft/class_2940;
 	FIELD field_5996 pistonMovementTick J
 	FIELD field_5999 renderDistanceMultiplier D
-	FIELD field_6000 inWater Z
+	FIELD field_6000 submergedInWater Z
 	FIELD field_6001 trackedX J
 	FIELD field_6002 world Lnet/minecraft/class_1937;
 	FIELD field_6003 nextStepSoundDistance F
@@ -233,7 +233,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5628 getEntityId ()I
 	METHOD method_5629 doesNotCollide (Lnet/minecraft/class_238;)Z
 		ARG 1 box
-	METHOD method_5630 updateWetState ()V
+	METHOD method_5630 updateSubmergedInWaterState ()V
 	METHOD method_5631 getRotationVector (FF)Lnet/minecraft/class_243;
 		ARG 1 pitch
 		ARG 2 yaw
@@ -244,7 +244,12 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5634 getSoundCategory ()Lnet/minecraft/class_3419;
 	METHOD method_5636 setYaw (F)V
 		ARG 1 yaw
-	METHOD method_5637 isTouchingWater ()Z
+	METHOD method_5637 isWet ()Z
+		COMMENT Returns whether this entity is touching water, or is being rained on, or is inside a bubble column...
+		COMMENT 
+		COMMENT @see net.minecraft.entity.Entity#isTouchingWater() 
+		COMMENT @see net.minecraft.entity.Entity#isBeingRainedOn() 
+		COMMENT @see net.minecraft.entity.Entity#isInsideBubbleColumn() 
 	METHOD method_5638 shouldSetPositionOnLoad ()Z
 	METHOD method_5639 setOnFireFor (I)V
 		ARG 1 seconds
@@ -388,7 +393,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5719 copyPositionAndRotation (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
 	METHOD method_5720 getRotationVector ()Lnet/minecraft/class_243;
-	METHOD method_5721 isInsideWaterOrRain ()Z
+	METHOD method_5721 isTouchingWaterOrRain ()Z
 	METHOD method_5722 isTeammate (Lnet/minecraft/class_1297;)Z
 		ARG 1 other
 	METHOD method_5723 dealDamage (Lnet/minecraft/class_1309;Lnet/minecraft/class_1297;)V
@@ -528,7 +533,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5796 setSwimming (Z)V
 		ARG 1 swimming
 	METHOD method_5798 isInsideBubbleColumn ()Z
-	METHOD method_5799 isInsideWater ()Z
+	METHOD method_5799 isTouchingWater ()Z
+		COMMENT Returns whether this entity's hitbox is touching water fluid.
 	METHOD method_5800 onStruckByLightning (Lnet/minecraft/class_1538;)V
 		ARG 1 lightning
 	METHOD method_5801 playFlySound (F)F
@@ -636,7 +642,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5868 collectPassengers (ZLjava/util/Set;)V
 		ARG 1 playersOnly
 		ARG 2 output
-	METHOD method_5869 isInWater ()Z
+	METHOD method_5869 isSubmergedInWater ()Z
+		COMMENT Returns whether this entity's hitbox is fully submerged in water.
 	METHOD method_5870 dropItem (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1542;
 		ARG 1 item
 		ARG 2 yOffset
@@ -651,7 +658,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 other
 	METHOD method_5875 setNoGravity (Z)V
 		ARG 1 noGravity
-	METHOD method_5876 updateInWater ()V
+	METHOD method_5876 updateWaterState ()V
 	METHOD method_5877 getItemsHand ()Ljava/lang/Iterable;
 	METHOD method_5878 copyFrom (Lnet/minecraft/class_1297;)V
 		ARG 1 original
