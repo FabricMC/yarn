@@ -124,9 +124,8 @@ example, don't name a class that Mojang calls `BedrockBlock` `NoSpawningBlock`, 
 spawning, because Mojang may decide to override more methods in that class, breaking mods that were using it in an unexpected
 way.
 
-There are however three exceptions to this rule:
+There are however two exceptions to this rule:
  - Use "world" for what Mojang calls "level" (see https://github.com/FabricMC/yarn/issues/89)
- - Use "container" for what Mojang calls "menu" (see https://github.com/FabricMC/yarn/issues/386)
  - Use "inventory" for what Mojang calls "container" (no issue yet, requires renaming "container" first)
 
 ## Things to avoid
