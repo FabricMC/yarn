@@ -27,7 +27,7 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	METHOD method_21740 getTemperature (Lnet/minecraft/class_2338;)F
 		ARG 1 blockPos
 	METHOD method_24218 calculateSkyColor ()I
-	METHOD method_24374 getNoiseDistance (Lnet/minecraft/class_1959$class_4762;)F
+	METHOD method_24374 getNoisePenalty (Lnet/minecraft/class_1959$class_4762;)F
 		ARG 1 noise
 	METHOD method_24376 getFogColor ()I
 	METHOD method_24377 getSpecialEffects ()Lnet/minecraft/class_4763;
@@ -166,9 +166,26 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 			ARG 2 weight
 			ARG 3 minGroupSize
 			ARG 4 maxGroupSize
-	CLASS class_4762 Noise
-		FIELD field_22047 reduction F
+	CLASS class_4762 MixedNoisePoint
+		COMMENT Represents a point in a multi-dimensional cartesian plane. Mixed-noise
+		COMMENT biome generator picks the closest noise point from its selected point
+		COMMENT and choose the biome associated to that closest point. Another factor,
+		COMMENT influence, allows a farther point
+		FIELD field_22043 heat F
+		FIELD field_22044 humidity F
+		FIELD field_22045 hilliness F
+		FIELD field_22046 style F
+		FIELD field_22047 penaltyPeak F
+			COMMENT This value awards another point with value farthest from this one; i.e.
+			COMMENT unlike other points where closer distance is better, for this value the
+			COMMENT farther the better. The result of the different values can be
+			COMMENT approximately modeled by a hyperbola weight=cosh(peak-1) as used by the
+			COMMENT mixed-noise generator.
 		METHOD <init> (FFFFF)V
-			ARG 5 reduction
-		METHOD method_24381 getDistance (Lnet/minecraft/class_1959$class_4762;)F
+			ARG 1 heat
+			ARG 2 humidity
+			ARG 3 hilliness
+			ARG 4 style
+			ARG 5 penaltyPeak
+		METHOD method_24381 getPenalty (Lnet/minecraft/class_1959$class_4762;)F
 			ARG 1 other
