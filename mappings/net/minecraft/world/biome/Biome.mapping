@@ -27,8 +27,8 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	METHOD method_21740 getTemperature (Lnet/minecraft/class_2338;)F
 		ARG 1 blockPos
 	METHOD method_24218 calculateSkyColor ()I
-	METHOD method_24374 getNoisePenalty (Lnet/minecraft/class_1959$class_4762;)F
-		ARG 1 noise
+	METHOD method_24374 getNoiseDistance (Lnet/minecraft/class_1959$class_4762;)F
+		ARG 1 from
 	METHOD method_24376 getFogColor ()I
 	METHOD method_24377 getEffects ()Lnet/minecraft/class_4763;
 	METHOD method_24378 getParticleConfig ()Ljava/util/Optional;
@@ -188,5 +188,18 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 			ARG 3 hilliness
 			ARG 4 style
 			ARG 5 rarityPotential
-		METHOD method_24381 getPenalty (Lnet/minecraft/class_1959$class_4762;)F
+		METHOD method_24381 calculateDistanceTo (Lnet/minecraft/class_1959$class_4762;)F
+			COMMENT Calculates the distance from this noise point to another one. The
+			COMMENT distance is a squared distance in a multi-dimensional cartesian plane
+			COMMENT from a mathematical point of view, with a special parameter that
+			COMMENT reduces the calculated distance.
+			COMMENT
+			COMMENT <p>For most fields except rarity potential, smaller difference between
+			COMMENT two points' fields will lead to smaller distance. For rarity potential,
+			COMMENT larger differences lead to smaller distance.
+			COMMENT
+			COMMENT <p>This distance is used by the mixed-noise biome layer source. The
+			COMMENT layer source calculates an arbitrary noise point, and selects the
+			COMMENT biome that offers a closest point to its arbitrary point.
 			ARG 1 other
+				COMMENT the other noise point
