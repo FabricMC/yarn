@@ -1,15 +1,4 @@
 CLASS net/minecraft/class_2680 net/minecraft/block/BlockState
-	CLASS class_3752 ShapeCache
-		FIELD field_16555 lightSubtracted I
-		FIELD field_16556 translucent Z
-		FIELD field_16557 fullOpaque Z
-		FIELD field_16558 opaque Z
-		FIELD field_16559 DIRECTIONS [Lnet/minecraft/class_2350;
-		FIELD field_16560 shapes [Lnet/minecraft/class_265;
-		FIELD field_19360 collisionShape Lnet/minecraft/class_265;
-		FIELD field_19429 solidFullSquare [Z
-		METHOD <init> (Lnet/minecraft/class_2680;)V
-			ARG 1 state
 	FIELD field_12290 shapeCache Lnet/minecraft/class_2680$class_3752;
 	FIELD field_16553 luminance I
 	FIELD field_16554 hasSidedTransparency Z
@@ -34,7 +23,7 @@ CLASS net/minecraft/class_2680 net/minecraft/block/BlockState
 		ARG 2 pos
 		ARG 3 oldState
 		ARG 4 moved
-	METHOD method_11581 getLightSubtracted (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)I
+	METHOD method_11581 getOpacity (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)I
 		ARG 1 view
 		ARG 2 pos
 	METHOD method_11582 canSuffocate (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
@@ -97,6 +86,7 @@ CLASS net/minecraft/class_2680 net/minecraft/block/BlockState
 	METHOD method_11606 getOutlineShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
 		ARG 1 view
 		ARG 2 pos
+		ARG 3 context
 	METHOD method_11607 getRayTraceShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
 		ARG 1 view
 		ARG 2 pos
@@ -117,7 +107,7 @@ CLASS net/minecraft/class_2680 net/minecraft/block/BlockState
 		ARG 2 pos
 		ARG 3 entity
 	METHOD method_11614 getBlock ()Lnet/minecraft/class_2248;
-	METHOD method_11615 (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
+	METHOD method_11615 getCullingShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
 		ARG 1 view
 		ARG 2 pos
 	METHOD method_11616 hasRandomTicks ()Z
@@ -150,6 +140,8 @@ CLASS net/minecraft/class_2680 net/minecraft/block/BlockState
 		ARG 1 world
 		ARG 2 pos
 	METHOD method_11628 getCollisionShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
+		ARG 1 view
+		ARG 2 pos
 	METHOD method_11629 activate (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;Lnet/minecraft/class_3965;)Z
 		ARG 1 world
 		ARG 2 player
@@ -183,7 +175,7 @@ CLASS net/minecraft/class_2680 net/minecraft/block/BlockState
 		ARG 1 view
 		ARG 2 pos
 		ARG 3 ePos
-	METHOD method_16384 getCullShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Lnet/minecraft/class_265;
+	METHOD method_16384 getCullingFace (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Lnet/minecraft/class_265;
 		ARG 1 view
 		ARG 2 pos
 		ARG 3 facing
@@ -191,7 +183,7 @@ CLASS net/minecraft/class_2680 net/minecraft/block/BlockState
 	METHOD method_16550 serialize (Lcom/mojang/datafixers/types/DynamicOps;Lnet/minecraft/class_2680;)Lcom/mojang/datafixers/Dynamic;
 		ARG 0 ops
 		ARG 1 state
-	METHOD method_17526 createContainerProvider (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)Lnet/minecraft/class_3908;
+	METHOD method_17526 createContainerFactory (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)Lnet/minecraft/class_3908;
 		ARG 1 world
 		ARG 2 pos
 	METHOD method_17770 getOutlineShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
@@ -203,3 +195,17 @@ CLASS net/minecraft/class_2680 net/minecraft/block/BlockState
 		ARG 3 hitResult
 		ARG 4 projectile
 	METHOD method_20827 isSideSolidFullSquare (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Z
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 direction
+	CLASS class_3752 ShapeCache
+		FIELD field_16555 lightSubtracted I
+		FIELD field_16556 translucent Z
+		FIELD field_16557 fullOpaque Z
+		FIELD field_16558 opaque Z
+		FIELD field_16559 DIRECTIONS [Lnet/minecraft/class_2350;
+		FIELD field_16560 shapes [Lnet/minecraft/class_265;
+		FIELD field_19360 collisionShape Lnet/minecraft/class_265;
+		FIELD field_19429 solidFullSquare [Z
+		METHOD <init> (Lnet/minecraft/class_2680;)V
+			ARG 1 state

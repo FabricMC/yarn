@@ -10,21 +10,21 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_5953 firstUpdate Z
 	FIELD field_5954 trackedZ J
 	FIELD field_5955 LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD field_5956 fireTime I
-	FIELD field_5957 insideWater Z
+	FIELD field_5956 fireTicks I
+	FIELD field_5957 touchingWater Z
 	FIELD field_5958 glowing Z
 	FIELD field_5959 chunkY I
 	FIELD field_5960 noClip Z
 	FIELD field_5961 type Lnet/minecraft/class_1299;
 	FIELD field_5962 SILENT Lnet/minecraft/class_2940;
-	FIELD field_5963 inPortal Z
+	FIELD field_5963 inNetherPortal Z
 	FIELD field_5964 waterHeight D
 	FIELD field_5965 pitch F
 	FIELD field_5966 teleportRequested Z
 	FIELD field_5968 pushSpeedReduction F
 	FIELD field_5969 prevZ D
-	FIELD field_5971 prevRenderY D
-	FIELD field_5972 portalTime I
+	FIELD field_5971 lastRenderY D
+	FIELD field_5972 netherPortalTime I
 	FIELD field_5973 horizontalSpeed F
 	FIELD field_5974 random Ljava/util/Random;
 	FIELD field_5975 NAME_VISIBLE Lnet/minecraft/class_2940;
@@ -39,19 +39,19 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_5986 entityId I
 	FIELD field_5987 x D
 	FIELD field_5988 removed Z
-	FIELD field_5989 prevRenderZ D
+	FIELD field_5989 lastRenderZ D
 	FIELD field_5990 FLAGS Lnet/minecraft/class_2940;
-	FIELD field_5991 lastPortalPosition Lnet/minecraft/class_2338;
+	FIELD field_5991 lastNetherPortalPosition Lnet/minecraft/class_2338;
 	FIELD field_5992 verticalCollision Z
 	FIELD field_5993 pistonMovementDelta [D
-	FIELD field_5994 distanceWalked F
+	FIELD field_5994 distanceTraveled F
 	FIELD field_5995 NO_GRAVITY Lnet/minecraft/class_2940;
 	FIELD field_5996 pistonMovementTick J
 	FIELD field_5999 renderDistanceMultiplier D
-	FIELD field_6000 inWater Z
+	FIELD field_6000 submergedInWater Z
 	FIELD field_6001 trackedX J
 	FIELD field_6002 world Lnet/minecraft/class_1937;
-	FIELD field_6003 nextStepDistance F
+	FIELD field_6003 nextStepSoundDistance F
 	FIELD field_6004 prevPitch F
 	FIELD field_6005 entityBounds Lnet/minecraft/class_238;
 	FIELD field_6007 velocityDirty Z
@@ -65,26 +65,26 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_6015 collided Z
 	FIELD field_6016 updateNeeded Z
 	FIELD field_6017 fallDistance F
-	FIELD field_6018 portalCooldown I
-	FIELD field_6020 lastPortalDirectionVector Lnet/minecraft/class_243;
+	FIELD field_6018 netherPortalCooldown I
+	FIELD field_6020 lastNetherPortalDirectionVector Lnet/minecraft/class_243;
 	FIELD field_6021 uuid Ljava/util/UUID;
-	FIELD field_6022 aerialStepDelta F
+	FIELD field_6022 nextFlySoundDistance F
 	FIELD field_6023 trackedY J
 	FIELD field_6024 chunkX I
 	FIELD field_6025 NULL_BOX Lnet/minecraft/class_238;
 	FIELD field_6026 dimension Lnet/minecraft/class_2874;
 	FIELD field_6027 CUSTOM_NAME Lnet/minecraft/class_2940;
-	FIELD field_6028 lastPortalDirection Lnet/minecraft/class_2350;
+	FIELD field_6028 lastNetherPortalDirection Lnet/minecraft/class_2350;
 	FIELD field_6029 scoreboardTags Ljava/util/Set;
 	FIELD field_6030 EMPTY_STACK_LIST Ljava/util/List;
 	FIELD field_6031 yaw F
-	FIELD field_6032 BREATH Lnet/minecraft/class_2940;
+	FIELD field_6032 AIR Lnet/minecraft/class_2940;
 	FIELD field_6033 inanimate Z
 	FIELD field_6034 vehicle Lnet/minecraft/class_1297;
 	FIELD field_6035 z D
 	FIELD field_6036 prevY D
 	FIELD field_6037 velocityModified Z
-	FIELD field_6038 prevRenderX D
+	FIELD field_6038 lastRenderX D
 	FIELD field_6039 prevHorizontalSpeed F
 	METHOD <init> (Lnet/minecraft/class_1299;Lnet/minecraft/class_1937;)V
 		ARG 1 type
@@ -99,8 +99,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 2 world
 		ARG 3 context
 		ARG 4 collisions
-	METHOD method_17835 handleCollisions (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
-		ARG 1 motionOffset
+	METHOD method_17835 adjustMovementForCollisions (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 1 movement
 	METHOD method_17996 squaredHorizontalLength (Lnet/minecraft/class_243;)D
 		ARG 0 vector
 	METHOD method_18002 createSpawnPacket ()Lnet/minecraft/class_2596;
@@ -115,22 +115,23 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_18378 getEyeHeight (Lnet/minecraft/class_4050;Lnet/minecraft/class_4048;)F
 		ARG 1 pose
 		ARG 2 dimensions
-	METHOD method_18379 tickPortal ()V
+	METHOD method_18379 tickNetherPortal ()V
 	METHOD method_18380 setPose (Lnet/minecraft/class_4050;)V
 		ARG 1 pose
 	METHOD method_18381 getEyeHeight (Lnet/minecraft/class_4050;)F
 		ARG 1 pose
 	METHOD method_18382 calculateDimensions ()V
-	METHOD method_18794 applyPistonMovement (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
-		ARG 1 offset
+	METHOD method_18794 adjustMovementForPiston (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 1 movement
 	METHOD method_18795 movementInputToVelocity (Lnet/minecraft/class_243;FF)Lnet/minecraft/class_243;
 		ARG 0 movementInput
 		ARG 1 speed
 		ARG 2 yaw
-	METHOD method_18796 clipSneakingMovement (Lnet/minecraft/class_243;Lnet/minecraft/class_1313;)Lnet/minecraft/class_243;
-		ARG 1 offset
+	METHOD method_18796 adjustMovementForSneaking (Lnet/minecraft/class_243;Lnet/minecraft/class_1313;)Lnet/minecraft/class_243;
+		ARG 1 movement
 		ARG 2 type
 	METHOD method_18797 calculatePistonMovementFactor (Lnet/minecraft/class_2350$class_2351;D)D
+		ARG 1 axis
 		ARG 2 offsetFactor
 	METHOD method_18798 getVelocity ()Lnet/minecraft/class_243;
 	METHOD method_18799 setVelocity (Lnet/minecraft/class_243;)V
@@ -157,10 +158,10 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 destX
 		ARG 3 destY
 		ARG 5 destZ
-	METHOD method_20736 calculateMotionVector (Lnet/minecraft/class_1297;Lnet/minecraft/class_243;Lnet/minecraft/class_238;Lnet/minecraft/class_1937;Lnet/minecraft/class_3726;Lnet/minecraft/class_3538;)Lnet/minecraft/class_243;
-		ARG 0 subject
-		ARG 1 collisionVector
-		ARG 2 observerBounds
+	METHOD method_20736 adjustMovementForCollisions (Lnet/minecraft/class_1297;Lnet/minecraft/class_243;Lnet/minecraft/class_238;Lnet/minecraft/class_1937;Lnet/minecraft/class_3726;Lnet/minecraft/class_3538;)Lnet/minecraft/class_243;
+		ARG 0 entity
+		ARG 1 movement
+		ARG 2 entityBoundingBox
 		ARG 3 world
 		ARG 4 context
 		ARG 5 collisions
@@ -170,8 +171,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5623 fall (DZLnet/minecraft/class_2680;Lnet/minecraft/class_2338;)V
 		ARG 1 heightDifference
 		ARG 3 onGround
-		ARG 4 blockState
-		ARG 5 blockPos
+		ARG 4 landedState
+		ARG 5 landedPosition
 	METHOD method_5624 isSprinting ()Z
 	METHOD method_5625 getSplashSound ()Lnet/minecraft/class_3414;
 	METHOD method_5626 hasPassenger (Lnet/minecraft/class_1297;)Z
@@ -181,7 +182,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5628 getEntityId ()I
 	METHOD method_5629 doesNotCollide (Lnet/minecraft/class_238;)Z
 		ARG 1 box
-	METHOD method_5630 updateWetState ()V
+	METHOD method_5630 updateSubmergedInWaterState ()V
 	METHOD method_5631 getRotationVector (FF)Lnet/minecraft/class_243;
 		ARG 1 pitch
 		ARG 2 yaw
@@ -193,13 +194,18 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5635 getLightmapCoordinates ()I
 	METHOD method_5636 setYaw (F)V
 		ARG 1 yaw
-	METHOD method_5637 isTouchingWater ()Z
+	METHOD method_5637 isWet ()Z
+		COMMENT Returns whether this entity is touching water, or is being rained on, or is inside a bubble column...
+		COMMENT 
+		COMMENT @see net.minecraft.entity.Entity#isTouchingWater() 
+		COMMENT @see net.minecraft.entity.Entity#isBeingRainedOn() 
+		COMMENT @see net.minecraft.entity.Entity#isInsideBubbleColumn() 
 	METHOD method_5638 shouldSetPositionOnLoad ()Z
 	METHOD method_5639 setOnFireFor (I)V
 		ARG 1 seconds
-	METHOD method_5640 shouldRenderAtDistance (D)Z
+	METHOD method_5640 shouldRender (D)Z
 		ARG 1 distance
-	METHOD method_5641 setPositionAnglesAndUpdate (DDDFF)V
+	METHOD method_5641 updatePositionAndAngles (DDDFF)V
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
@@ -233,7 +239,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 3 offsetY
 		ARG 5 offsetZ
 	METHOD method_5655 isInvulnerable ()Z
-	METHOD method_5656 getLastPortalDirectionVector ()Lnet/minecraft/class_243;
+	METHOD method_5656 getLastNetherPortalDirectionVector ()Lnet/minecraft/class_243;
 	METHOD method_5657 getPistonBehavior ()Lnet/minecraft/class_3619;
 	METHOD method_5658 canClimb ()Z
 	METHOD method_5659 isImmuneToExplosion ()Z
@@ -252,11 +258,11 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5666 attemptSprintingParticles ()V
 	METHOD method_5667 getUuid ()Ljava/util/UUID;
 	METHOD method_5668 getRootVehicle ()Lnet/minecraft/class_1297;
-	METHOD method_5669 getBreath ()I
+	METHOD method_5669 getAir ()I
 	METHOD method_5670 baseTick ()V
 	METHOD method_5671 getCommandSource ()Lnet/minecraft/class_2168;
 	METHOD method_5672 getHighSpeedSplashSound ()Lnet/minecraft/class_3414;
-	METHOD method_5673 setEquippedStack (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
+	METHOD method_5673 equipStack (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
 		ARG 1 slot
 		ARG 2 stack
 	METHOD method_5674 onTrackedDataSet (Lnet/minecraft/class_2940;)V
@@ -301,7 +307,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 drag
 	METHOD method_5701 isSilent ()Z
 	METHOD method_5702 lookAt (Lnet/minecraft/class_2183$class_2184;Lnet/minecraft/class_243;)V
-		ARG 1 anchor
+		ARG 1 anchorPoint
 		ARG 2 target
 	METHOD method_5703 hasPassengerType (Ljava/lang/Class;)Z
 		ARG 1 clazz
@@ -331,13 +337,13 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 killer
 		ARG 2 score
 		ARG 3 damageSource
-	METHOD method_5717 setInPortal (Lnet/minecraft/class_2338;)V
+	METHOD method_5717 setInNetherPortal (Lnet/minecraft/class_2338;)V
 		ARG 1 pos
 	METHOD method_5718 getBrightnessAtEyes ()F
 	METHOD method_5719 copyPositionAndRotation (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
 	METHOD method_5720 getRotationVector ()Lnet/minecraft/class_243;
-	METHOD method_5721 isInsideWaterOrRain ()Z
+	METHOD method_5721 isTouchingWaterOrRain ()Z
 	METHOD method_5722 isTeammate (Lnet/minecraft/class_1297;)Z
 		ARG 1 other
 	METHOD method_5723 dealDamage (Lnet/minecraft/class_1309;Lnet/minecraft/class_1297;)V
@@ -346,16 +352,16 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5724 updateVelocity (FLnet/minecraft/class_243;)V
 		ARG 1 speed
 		ARG 2 movementInput
-	METHOD method_5725 setPositionAndAngles (Lnet/minecraft/class_2338;FF)V
+	METHOD method_5725 refreshPositionAndAngles (Lnet/minecraft/class_2338;FF)V
 		ARG 1 pos
 		ARG 2 yaw
 		ARG 3 pitch
 	METHOD method_5726 toListTag ([F)Lnet/minecraft/class_2499;
 		ARG 1 values
-	METHOD method_5727 shouldRenderFrom (DDD)Z
-		ARG 1 x
-		ARG 3 y
-		ARG 5 z
+	METHOD method_5727 shouldRender (DDD)Z
+		ARG 1 cameraX
+		ARG 3 cameraY
+		ARG 5 cameraZ
 	METHOD method_5728 setSprinting (Z)V
 		ARG 1 sprinting
 	METHOD method_5729 setFlag (IZ)V
@@ -376,7 +382,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5739 distanceTo (Lnet/minecraft/class_1297;)F
 		ARG 1 entity
 	METHOD method_5740 hasNoGravity ()Z
-	METHOD method_5741 getMaxPortalTime ()I
+	METHOD method_5741 getMaxNetherPortalTime ()I
 	METHOD method_5742 onStoppedTrackingBy (Lnet/minecraft/class_3222;)V
 		ARG 1 player
 	METHOD method_5743 getItemsEquipped ()Ljava/lang/Iterable;
@@ -391,7 +397,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5747 handleFallDamage (FF)V
 		ARG 1 fallDistance
 		ARG 2 damageMultiplier
-	METHOD method_5748 getMaxBreath ()I
+	METHOD method_5748 getMaxAir ()I
 	METHOD method_5749 readCustomDataFromTag (Lnet/minecraft/class_2487;)V
 		ARG 1 tag
 	METHOD method_5750 setVelocityClient (DDD)V
@@ -403,7 +409,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5753 isFireImmune ()Z
 	METHOD method_5754 teleportRequested ()Z
 	METHOD method_5755 getMovementDirection ()Lnet/minecraft/class_2350;
-	METHOD method_5756 canSeePlayer (Lnet/minecraft/class_1657;)Z
+	METHOD method_5756 isInvisibleTo (Lnet/minecraft/class_1657;)Z
 		ARG 1 player
 	METHOD method_5757 isInsideWall ()Z
 	METHOD method_5758 equip (ILnet/minecraft/class_1799;)Z
@@ -417,7 +423,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 8 pitch
 		ARG 9 interpolationSteps
 		ARG 10 interpolate
-	METHOD method_5760 tickPortalCooldown ()V
+	METHOD method_5760 tickNetherPortalCooldown ()V
 	METHOD method_5762 addVelocity (DDD)V
 		ARG 1 deltaX
 		ARG 3 deltaY
@@ -458,7 +464,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 3 pitch
 	METHOD method_5784 move (Lnet/minecraft/class_1313;Lnet/minecraft/class_243;)V
 		ARG 1 type
-		ARG 2 offset
+		ARG 2 movement
 	METHOD method_5785 scheduleVelocityUpdate ()V
 	METHOD method_5786 saveSelfToTag (Lnet/minecraft/class_2487;)Z
 		ARG 1 tag
@@ -476,10 +482,11 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5796 setSwimming (Z)V
 		ARG 1 swimming
 	METHOD method_5798 isInsideBubbleColumn ()Z
-	METHOD method_5799 isInsideWater ()Z
+	METHOD method_5799 isTouchingWater ()Z
+		COMMENT Returns whether this entity's hitbox is touching water fluid.
 	METHOD method_5800 onStruckByLightning (Lnet/minecraft/class_1538;)V
 		ARG 1 lightning
-	METHOD method_5801 calculateAerialStepDelta (F)F
+	METHOD method_5801 playFlySound (F)F
 		ARG 1 distance
 	METHOD method_5802 getRotationClient ()Lnet/minecraft/class_241;
 	METHOD method_5803 setSilent (Z)V
@@ -487,9 +494,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5804 startRiding (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_5805 isAlive ()Z
-	METHOD method_5806 getDefaultPortalCooldown ()I
+	METHOD method_5806 getDefaultNetherPortalCooldown ()I
 	METHOD method_5807 isCustomNameVisible ()Z
-	METHOD method_5808 setPositionAndAngles (DDDFF)V
+	METHOD method_5808 refreshPositionAndAngles (DDDFF)V
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
@@ -498,7 +505,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5809 isOnFire ()Z
 	METHOD method_5810 isPushable ()Z
 	METHOD method_5812 getPosVector ()Lnet/minecraft/class_243;
-	METHOD method_5814 setPosition (DDD)V
+	METHOD method_5814 updatePosition (DDD)V
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
@@ -538,10 +545,10 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 0 value
 	METHOD method_5841 getDataTracker ()Lnet/minecraft/class_2945;
 	METHOD method_5842 tickRiding ()V
-	METHOD method_5843 getLastPortalDirection ()Lnet/minecraft/class_2350;
+	METHOD method_5843 getLastNetherPortalDirection ()Lnet/minecraft/class_2350;
 	METHOD method_5844 slowMovement (Lnet/minecraft/class_2680;Lnet/minecraft/class_243;)V
 		ARG 1 state
-		ARG 2 multipliers
+		ARG 2 multiplier
 	METHOD method_5845 getUuidAsString ()Ljava/lang/String;
 	METHOD method_5846 toListTag ([D)Lnet/minecraft/class_2499;
 		ARG 1 values
@@ -558,8 +565,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 4 state
 		ARG 5 explosionPower
 	METHOD method_5854 getVehicle ()Lnet/minecraft/class_1297;
-	METHOD method_5855 setBreath (I)V
-		ARG 1 breath
+	METHOD method_5855 setAir (I)V
+		ARG 1 air
 	METHOD method_5856 removeClickEvents (Lnet/minecraft/class_2561;)V
 		ARG 0 textComponent
 	METHOD method_5857 setBoundingBox (Lnet/minecraft/class_238;)V
@@ -580,11 +587,12 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 passenger
 	METHOD method_5866 setWorld (Lnet/minecraft/class_1937;)V
 		ARG 1 world
-	METHOD method_5867 calculateStepDelta ()F
+	METHOD method_5867 calculateNextStepSoundDistance ()F
 	METHOD method_5868 collectPassengers (ZLjava/util/Set;)V
 		ARG 1 playersOnly
 		ARG 2 output
-	METHOD method_5869 isInWater ()Z
+	METHOD method_5869 isSubmergedInWater ()Z
+		COMMENT Returns whether this entity's hitbox is fully submerged in water.
 	METHOD method_5870 dropItem (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1542;
 		ARG 1 item
 		ARG 2 yOffset
@@ -599,7 +607,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 other
 	METHOD method_5875 setNoGravity (Z)V
 		ARG 1 noGravity
-	METHOD method_5876 updateInWater ()V
+	METHOD method_5876 updateWaterState ()V
 	METHOD method_5877 getItemsHand ()Ljava/lang/Iterable;
 	METHOD method_5878 copyFrom (Lnet/minecraft/class_1297;)V
 		ARG 1 original

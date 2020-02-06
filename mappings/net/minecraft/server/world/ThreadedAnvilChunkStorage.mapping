@@ -1,29 +1,4 @@
 CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStorage
-	CLASS class_3208 EntityTracker
-		FIELD field_18246 entry Lnet/minecraft/class_3231;
-		FIELD field_18247 entity Lnet/minecraft/class_1297;
-		FIELD field_18248 maxDistance I
-		FIELD field_18249 lastCameraPosition Lnet/minecraft/class_4076;
-		FIELD field_18250 playersTracking Ljava/util/Set;
-		METHOD <init> (Lnet/minecraft/class_3898;Lnet/minecraft/class_1297;IIZ)V
-			ARG 2 maxDistance
-			ARG 3 tickInterval
-		METHOD equals (Ljava/lang/Object;)Z
-			ARG 1 o
-		METHOD method_18728 stopTracking ()V
-		METHOD method_18729 updateCameraPosition (Ljava/util/List;)V
-			ARG 1 players
-		METHOD method_18730 sendToOtherNearbyPlayers (Lnet/minecraft/class_2596;)V
-			ARG 1 packet
-		METHOD method_18733 stopTracking (Lnet/minecraft/class_3222;)V
-		METHOD method_18734 sendToNearbyPlayers (Lnet/minecraft/class_2596;)V
-			ARG 1 packet
-		METHOD method_18736 updateCameraPosition (Lnet/minecraft/class_3222;)V
-			ARG 1 players
-	CLASS class_3216 TicketManager
-		METHOD <init> (Lnet/minecraft/class_3898;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)V
-			ARG 1 workerExecutor
-			ARG 2 mainThreadExecutor
 	FIELD field_17212 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_17213 currentChunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 	FIELD field_17214 world Lnet/minecraft/class_3218;
@@ -34,8 +9,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	FIELD field_17221 unloadedChunks Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_17222 chunkHolderListDirty Z
 	FIELD field_17223 chunkTaskPrioritySystem Lnet/minecraft/class_3900;
-	FIELD field_17224 worldgenActor Lnet/minecraft/class_3906;
-	FIELD field_17226 mainActor Lnet/minecraft/class_3906;
+	FIELD field_17224 worldgenExecutor Lnet/minecraft/class_3906;
+	FIELD field_17226 mainExecutor Lnet/minecraft/class_3906;
 	FIELD field_17228 ticketManager Lnet/minecraft/class_3898$class_3216;
 	FIELD field_17230 totalChunksLoadedCount Ljava/util/concurrent/atomic/AtomicInteger;
 	FIELD field_17442 worldGenerationProgressListener Lnet/minecraft/class_3949;
@@ -52,6 +27,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 3 dataFixer
 		ARG 5 workerExecutor
 		ARG 6 mainThreadExecutor
+		ARG 7 chunkProvider
 		ARG 8 chunkGenerator
 		ARG 9 worldGenerationProgressListener
 	METHOD method_17212 getLightProvider ()Lnet/minecraft/class_3227;
@@ -75,6 +51,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 1 centerChunkTargetStatus
 		ARG 2 distance
 	METHOD method_17233 tick (Ljava/util/function/BooleanSupplier;)V
+		ARG 1 shouldKeepTicking
 	METHOD method_17235 createTickingFuture (Lnet/minecraft/class_3193;)Ljava/util/concurrent/CompletableFuture;
 	METHOD method_17236 createChunkFuture (Lnet/minecraft/class_3193;Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
 	METHOD method_17241 sendWatchPackets (Lnet/minecraft/class_3222;Lnet/minecraft/class_1923;[Lnet/minecraft/class_2596;ZZ)V
@@ -133,3 +110,28 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_19488 getPointOfInterestStorage ()Lnet/minecraft/class_4153;
 	METHOD method_20580 createBorderFuture (Lnet/minecraft/class_3193;)Ljava/util/concurrent/CompletableFuture;
 	METHOD method_21619 exportChunks (Ljava/io/Writer;)V
+	CLASS class_3208 EntityTracker
+		FIELD field_18246 entry Lnet/minecraft/class_3231;
+		FIELD field_18247 entity Lnet/minecraft/class_1297;
+		FIELD field_18248 maxDistance I
+		FIELD field_18249 lastCameraPosition Lnet/minecraft/class_4076;
+		FIELD field_18250 playersTracking Ljava/util/Set;
+		METHOD <init> (Lnet/minecraft/class_3898;Lnet/minecraft/class_1297;IIZ)V
+			ARG 2 maxDistance
+			ARG 3 tickInterval
+		METHOD equals (Ljava/lang/Object;)Z
+			ARG 1 o
+		METHOD method_18728 stopTracking ()V
+		METHOD method_18729 updateCameraPosition (Ljava/util/List;)V
+			ARG 1 players
+		METHOD method_18730 sendToOtherNearbyPlayers (Lnet/minecraft/class_2596;)V
+			ARG 1 packet
+		METHOD method_18733 stopTracking (Lnet/minecraft/class_3222;)V
+		METHOD method_18734 sendToNearbyPlayers (Lnet/minecraft/class_2596;)V
+			ARG 1 packet
+		METHOD method_18736 updateCameraPosition (Lnet/minecraft/class_3222;)V
+			ARG 1 players
+	CLASS class_3216 TicketManager
+		METHOD <init> (Lnet/minecraft/class_3898;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)V
+			ARG 1 workerExecutor
+			ARG 2 mainThreadExecutor
