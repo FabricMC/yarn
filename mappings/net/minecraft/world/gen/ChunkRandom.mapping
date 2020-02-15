@@ -2,32 +2,57 @@ CLASS net/minecraft/class_2919 net/minecraft/world/gen/ChunkRandom
 	FIELD field_13276 sampleCount I
 	METHOD <init> (J)V
 		ARG 1 seed
-	METHOD method_12659 setSeed (II)J
-		ARG 1 x
-		ARG 2 z
-	METHOD method_12660 consume (I)V
-		ARG 1 count
-	METHOD method_12661 setSeed (JII)J
+	METHOD method_12659 setTerrainSeed (II)J
+		COMMENT Seeds the randomizer to generate the surface terrain blocks(such as grass, sand, etc)
+		COMMENT and the bedrock patterns.
+		COMMENT
+		COMMENT Note that the terrain seed is NOT world seed dependant and only gets affected by
+		COMMENT chunk coordinates.
+		ARG 1 chunkX
+		ARG 2 chunkZ
+	METHOD method_12660 skip (I)V
+		COMMENT Skips the provided number of calls to the randomizer.
+		COMMENT
+		COMMENT Functionally, this method serves no purpose since the combination of multiple linear
+		COMMENT congruential calls is equivalent to another LCG.
+		ARG 1 callsCount
+	METHOD method_12661 setPopulationSeed (JII)J
+		COMMENT Seeds the randomizer to create population features such as decorators and animals.
+		COMMENT
+		COMMENT This method takes in the world seed and the negative-most block coordinates of the
+		COMMENT chunk. The coordinate pair provided is equivalent to (chunkX * 16, chunkZ * 16). The
+		COMMENT three values are mixed together through some layers of hashing to produce the
+		COMMENT population seed.
+		COMMENT
+		COMMENT This function has been proved to be reversible through some exploitation of the underlying
+		COMMENT nextLong() weaknesses.
 		ARG 1 worldSeed
-		ARG 3 x
-		ARG 4 z
-	METHOD method_12662 create (IIJJ)Ljava/util/Random;
-		ARG 0 x
-		ARG 1 z
+		ARG 3 posX
+		ARG 4 posZ
+	METHOD method_12662 getSlimeRandom (IIJJ)Ljava/util/Random;
+		ARG 0 chunkX
+		ARG 1 chunkZ
 		ARG 2 worldSeed
-		ARG 4 localSeed
-	METHOD method_12663 setStructureSeed (JII)J
+		ARG 4 scrambler
+	METHOD method_12663 setCarverSeed (JII)J
 		ARG 1 worldSeed
-		ARG 3 x
-		ARG 4 z
-	METHOD method_12664 setFeatureSeed (JII)J
+		ARG 3 chunkX
+		ARG 4 chunkZ
+	METHOD method_12664 setDecoratorSeed (JII)J
+		COMMENT Seeds the randomizer to generate a given feature.
+		COMMENT
+		COMMENT @param populationSeed The population seed computed in setPopulationSeed().
+		COMMENT @param index The index of the feature in the feature list.
+		COMMENT @param step The generation step's ordinal for this feature.
+		COMMENT
+		COMMENT The salt, in the form of {index + 10000 * step} assures that each feature is seeded
+		COMMENT differently, making the decoration feel more random. Even though it does a good job
+		COMMENT at doing so, many entropy issues arise from the salt being so small and result in
+		COMMENT weird alignments between features that have an index close apart.
+	METHOD method_12665 setRegionSeed (JIII)J
 		ARG 1 worldSeed
-		ARG 3 index
-		ARG 4 step
-	METHOD method_12665 setStructureSeed (JIII)J
-		ARG 1 worldSeed
-		ARG 3 x
-		ARG 4 z
-		ARG 5 seedModifier
+		ARG 3 regionX
+		ARG 4 regionZ
+		ARG 5 salt
 	METHOD next (I)I
 		ARG 1 bound
