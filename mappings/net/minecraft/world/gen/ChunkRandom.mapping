@@ -25,7 +25,9 @@ CLASS net/minecraft/class_2919 net/minecraft/world/gen/ChunkRandom
 		COMMENT population seed.
 		COMMENT
 		COMMENT This function has been proved to be reversible through some exploitation of the underlying
-		COMMENT nextLong() weaknesses.
+		COMMENT nextLong() weaknesses. It is also important to remember that since setSeed()
+		COMMENT truncates the 16 upper bits of world seed, only the 48 lowest bits affect the population
+		COMMENT seed output.
 		ARG 1 worldSeed
 		ARG 3 posX
 		ARG 4 posZ
@@ -35,6 +37,11 @@ CLASS net/minecraft/class_2919 net/minecraft/world/gen/ChunkRandom
 		ARG 2 worldSeed
 		ARG 4 scrambler
 	METHOD method_12663 setCarverSeed (JII)J
+		COMMENT Seeds the randomizer to generate larger features such as caves, ravines, minehafts
+		COMMENT and strongholds.
+		COMMENT
+		COMMENT Similar to the population seed, only the 48 lowest bits of the world seed affect the
+		COMMENT output since it the upper 16 bits are truncated in the setSeed() call.
 		ARG 1 worldSeed
 		ARG 3 chunkX
 		ARG 4 chunkZ
@@ -49,10 +56,22 @@ CLASS net/minecraft/class_2919 net/minecraft/world/gen/ChunkRandom
 		COMMENT differently, making the decoration feel more random. Even though it does a good job
 		COMMENT at doing so, many entropy issues arise from the salt being so small and result in
 		COMMENT weird alignments between features that have an index close apart.
+		ARG 1 populationSeed
+		ARG 3 index
+		ARG 4 step
 	METHOD method_12665 setRegionSeed (JIII)J
+		COMMENT Seeds the randomizer to determine the start position of structure features such as
+		COMMENT temples, monuments and buried treasures within a region.
+		COMMENT
+		COMMENT The region coordinates pair corresponds to the coordinates of the region the seeded
+		COMMENT chunk lies in. For example, a swamp hut region is 32 by 32 chunks meaning that all
+		COMMENT chunks that lie within that region get seeded the same way.
+		COMMENT
+		COMMENT Similarly, the upper 16 bits of world seed also do not affect the region seed because
+		COMMENT they get truncated in the setSeed() call.
 		ARG 1 worldSeed
 		ARG 3 regionX
 		ARG 4 regionZ
 		ARG 5 salt
-	METHOD next (I)I
+	METHOD next next (I)I
 		ARG 1 bound
