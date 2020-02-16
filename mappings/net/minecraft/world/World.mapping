@@ -30,7 +30,10 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 4 profiler
 		ARG 5 isClient
 	METHOD method_16107 getProfiler ()Lnet/minecraft/class_3695;
-	METHOD method_16109 scheduleBlockRender (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)V
+	METHOD method_16109 checkBlockRerender (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)V
+		ARG 1 pos
+		ARG 2 old
+		ARG 3 updated
 	METHOD method_17452 addImportantParticle (Lnet/minecraft/class_2394;ZDDDDDD)V
 		ARG 1 parameters
 		ARG 2 alwaysSpawn
@@ -56,6 +59,10 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 2 oldBlock
 		ARG 3 newBlock
 	METHOD method_8413 updateListeners (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;I)V
+		ARG 1 pos
+		ARG 2 oldState
+		ARG 3 newState
+		ARG 4 flags
 	METHOD method_8419 isRaining ()Z
 	METHOD method_8421 sendEntityStatus (Lnet/minecraft/class_1297;B)V
 		ARG 1 entity
@@ -106,7 +113,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8455 updateHorizontalAdjacent (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;)V
 		ARG 1 pos
 	METHOD method_8456 getEffectiveHeight ()I
-	METHOD method_8457 getChunkProviderStatus ()Ljava/lang/String;
+	METHOD method_8457 getDebugString ()Ljava/lang/String;
 	METHOD method_8458 isSavingDisabled ()Z
 	METHOD method_8459 isEmittingRedstonePower (Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Z
 		ARG 1 pos
@@ -140,7 +147,8 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 2 block
 	METHOD method_8476 isHeightInvalid (I)Z
 		ARG 0 y
-	METHOD method_8477 isHeightValidAndBlockLoaded (Lnet/minecraft/class_2338;)Z
+	METHOD method_8477 canSetBlock (Lnet/minecraft/class_2338;)Z
+		ARG 1 pos
 	METHOD method_8478 getThunderGradient (F)F
 	METHOD method_8479 isReceivingRedstonePower (Lnet/minecraft/class_2338;)Z
 	METHOD method_8480 hasHighHumidity (Lnet/minecraft/class_2338;)Z
@@ -157,8 +165,9 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 4 skipExistingChunks
 	METHOD method_8488 getReceivedStrongRedstonePower (Lnet/minecraft/class_2338;)I
 	METHOD method_8492 updateNeighbor (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338;)V
-		ARG 1 pos
+		ARG 1 sourcePos
 		ARG 2 sourceBlock
+		ARG 3 neighborPos
 	METHOD method_8494 addImportantParticle (Lnet/minecraft/class_2394;DDDDDD)V
 		ARG 1 parameters
 		ARG 2 x
@@ -182,15 +191,17 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8508 updateNeighborsExcept (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2350;)V
 		ARG 1 pos
 		ARG 2 sourceBlock
-	METHOD method_8509 setTicksSinceLightning (I)V
-		ARG 1 ticksSinceLightning
+	METHOD method_8509 setLightningTicksLeft (I)V
+		ARG 1 lightningTicksLeft
 	METHOD method_8510 getTime ()J
 	METHOD method_8513 setDefaultSpawnClient ()V
 	METHOD method_8514 getTagManager ()Lnet/minecraft/class_3505;
-	METHOD method_8515 doesBlockHaveSolidTopSurface (Lnet/minecraft/class_2338;Lnet/minecraft/class_1297;)Z
+	METHOD method_8515 isTopSolid (Lnet/minecraft/class_2338;Lnet/minecraft/class_1297;)Z
+		ARG 1 pos
+		ARG 2 entity
 	METHOD method_8516 setTime (J)V
 		ARG 1 time
-	METHOD method_8517 setBlockBreakingProgress (ILnet/minecraft/class_2338;I)V
+	METHOD method_8517 setBlockBreakingInfo (ILnet/minecraft/class_2338;I)V
 		ARG 1 entityId
 		ARG 2 pos
 		ARG 3 progress
@@ -209,7 +220,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 pos
 	METHOD method_8527 getGeneratorType ()Lnet/minecraft/class_1942;
 	METHOD method_8529 getTicksSinceLightning ()I
-	METHOD method_8530 isDaylight ()Z
+	METHOD method_8530 isDay ()Z
 	METHOD method_8532 getTimeOfDay ()J
 	METHOD method_8533 calculateAmbientDarkness ()V
 	METHOD method_8534 isAreaNotEmpty (Lnet/minecraft/class_238;)Z
