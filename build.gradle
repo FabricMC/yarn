@@ -5,13 +5,18 @@ buildscript {
 			name "Fabric Repository"
 			url 'https://maven.fabricmc.net'
 		}
+		maven {
+			name "Choco Repository"
+			url 'https://jitpack.io'
+		}
 	}
 	dependencies {
-		classpath "cuchaz:enigma:0.14.3.147"
+		classpath files("enigma-0.14.3.jar")
 		classpath "net.fabricmc:stitch:0.4.3.71"
 		classpath "commons-io:commons-io:2.6"
 		classpath "com.google.guava:guava:28.0-jre"
 		classpath 'de.undercouch:gradle-download-task:3.4.3'
+		classpath 'com.github.Chocohead:Tiny-Mappings-Parser:d5b3b4a'
 		classpath 'net.fabricmc:tiny-remapper:+'
 	}
 }
@@ -22,7 +27,7 @@ plugins {
 	id 'maven-publish'
 }
 
-def minecraft_version = "20w07a"
+def minecraft_version = "1.2.5"
 
 def ENV = System.getenv()
 // Fetch build number from Jenkins
@@ -49,7 +54,7 @@ configurations {
 
 dependencies {
 	enigmaRuntime "net.fabricmc:stitch:0.4.3.71"
-	enigmaRuntime "cuchaz:enigma:0.14.3.147"
+	enigmaRuntime files("enigma-0.14.3.jar")
 }
 
 def setupGroup = "jar setup"
@@ -186,8 +191,8 @@ task downloadMcJars(dependsOn: downloadWantedVersionManifest) {
 
 task downloadIntermediary(type: Download) {
 	group = buildMappingGroup
-	def url = "https://github.com/FabricMC/intermediary/raw/master/mappings/${minecraft_version}.tiny"
-	src com.google.common.net.UrlEscapers.urlFragmentEscaper().escape(url)
+	def url = "https://gist.githubusercontent.com/Chocohead/b7ea04058776495a93ed2d13f34d697a/raw/1.2.5 Merge.tiny"
+	src url.replaceAll(" ", "%20")
 	dest new File(cacheFilesMinecraft, "${minecraft_version}-intermediary.tiny")
 }
 
@@ -235,7 +240,9 @@ task downloadMcLibs(dependsOn: downloadWantedVersionManifest) {
 		}
 
 		version.libraries.each {
-			def downloadUrl = it.downloads.artifact.url
+			def artifact = it.downloads.artifact
+            if(artifact == null) return
+            def downloadUrl = artifact.url
 
 			download {
 				src downloadUrl
@@ -630,7 +637,6 @@ void mapJar(File output, File input, File mappings, File libraries, String from,
 		libraries.eachFileRecurse(FileType.FILES) { file ->
 			remapper.readClassPath(file.toPath())
 		}
-		remapper.apply(outputConsumer)
 		outputConsumer.close()
 		remapper.finish()
 	} catch (Exception e) {
