@@ -1,10 +1,13 @@
 CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	FIELD field_18134 POSE_DIMENSIONS Ljava/util/Map;
 	FIELD field_18135 STANDING_DIMENSIONS Lnet/minecraft/class_4048;
+	FIELD field_19428 shoulderEntityAddedTime J
+	FIELD field_7483 strideDistance F
 	FIELD field_7484 itemCooldownManager Lnet/minecraft/class_1796;
 	FIELD field_7486 enderChestInventory Lnet/minecraft/class_1730;
 	FIELD field_7487 sleepTimer I
 	FIELD field_7488 MAIN_ARM Lnet/minecraft/class_2940;
+	FIELD field_7489 abilityResyncCountdown I
 	FIELD field_7490 isSubmergedInWater Z
 	FIELD field_7491 ABSORPTION_AMOUNT Lnet/minecraft/class_2940;
 	FIELD field_7493 hungerManager Lnet/minecraft/class_1702;
@@ -12,9 +15,13 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	FIELD field_7495 totalExperience I
 	FIELD field_7496 LEFT_SHOULDER_ENTITY Lnet/minecraft/class_2940;
 	FIELD field_7498 playerContainer Lnet/minecraft/class_1723;
+	FIELD field_7499 capeZ D
+	FIELD field_7500 capeX D
 	FIELD field_7501 spawnPosition Lnet/minecraft/class_2338;
+	FIELD field_7502 prevCapeY D
 	FIELD field_7503 abilities Lnet/minecraft/class_1656;
 	FIELD field_7504 experiencePickUpDelay I
+	FIELD field_7505 prevStrideDistance F
 	FIELD field_7506 RIGHT_SHOULDER_ENTITY Lnet/minecraft/class_2940;
 	FIELD field_7507 gameProfile Lcom/mojang/authlib/GameProfile;
 	FIELD field_7508 lastPlayedLevelUpSoundTime I
@@ -26,7 +33,10 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	FIELD field_7515 spawnForced Z
 	FIELD field_7518 PLAYER_MODEL_PARTS Lnet/minecraft/class_2940;
 	FIELD field_7520 experienceLevel I
+	FIELD field_7521 capeY D
+	FIELD field_7522 prevCapeZ D
 	FIELD field_7523 reducedDebugInfo Z
+	FIELD field_7524 prevCapeX D
 	FIELD field_7525 selectedItem Lnet/minecraft/class_1799;
 	METHOD <init> (Lnet/minecraft/class_1937;Lcom/mojang/authlib/GameProfile;)V
 		ARG 1 world
@@ -54,6 +64,9 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_21823 shouldCancelInteraction ()Z
 	METHOD method_21824 shouldDismount ()Z
 	METHOD method_21825 clipAtLedge ()Z
+	METHOD method_23668 checkFallFlying ()Z
+	METHOD method_23669 startFallFlying ()V
+	METHOD method_23670 stopFallFlying ()V
 	METHOD method_7254 unlockRecipes (Ljava/util/Collection;)I
 		ARG 1 recipes
 	METHOD method_7255 addExperience (I)V
@@ -64,9 +77,14 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7258 isSpawnForced ()Z
 	METHOD method_7259 incrementStat (Lnet/minecraft/class_3445;)V
 		ARG 1 stat
+	METHOD method_7260 increaseRidingMotionStats (DDD)V
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
 	METHOD method_7261 getAttackCooldownProgress (F)F
 		ARG 1 baseTime
 	METHOD method_7262 dropShoulderEntities ()V
+	METHOD method_7263 spawnSweepAttackParticles ()V
 	METHOD method_7264 isWithinSleepingRange (Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Z
 		ARG 1 sleepPos
 		ARG 2 direction
@@ -95,6 +113,10 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7280 getSpawnPosition ()Lnet/minecraft/class_2338;
 	METHOD method_7281 incrementStat (Lnet/minecraft/class_2960;)V
 		ARG 1 stat
+	METHOD method_7282 increaseTravelMotionStats (DDD)V
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
 	METHOD method_7283 setMainArm (Lnet/minecraft/class_1306;)V
 		ARG 1 arm
 	METHOD method_7284 disableShield (Z)V
@@ -112,6 +134,9 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 1 spawnPos
 		ARG 2 allowNonBed
 	METHOD method_7289 setPlayerSpawn (Lnet/minecraft/class_2338;ZZ)V
+		ARG 1 pos
+		ARG 2 forced
+		ARG 3 announceChange
 	METHOD method_7290 dropSelectedItem (Z)Z
 		ARG 1 dropEntireStack
 	METHOD method_7291 openHorseInventory (Lnet/minecraft/class_1496;Lnet/minecraft/class_1263;)V
@@ -119,6 +144,8 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7293 vanishCursedItems ()V
 	METHOD method_7294 canModifyWorld ()Z
 	METHOD method_7295 updateWaterSubmersionState ()Z
+	METHOD method_7296 dropShoulderEntity (Lnet/minecraft/class_2487;)V
+		ARG 1 compound
 	METHOD method_7297 getSleepTimer ()I
 	METHOD method_7298 addShoulderEntity (Lnet/minecraft/class_2487;)Z
 		ARG 1 tag
@@ -135,6 +162,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7310 getOfflinePlayerUuid (Ljava/lang/String;)Ljava/util/UUID;
 		ARG 0 nickname
 	METHOD method_7311 openEditSignScreen (Lnet/minecraft/class_2625;)V
+	METHOD method_7313 updateCapeAngles ()V
 	METHOD method_7315 openEditBookScreen (Lnet/minecraft/class_1799;Lnet/minecraft/class_1268;)V
 		ARG 1 book
 		ARG 2 hand
@@ -154,8 +182,11 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7327 getScoreboard ()Lnet/minecraft/class_269;
 	METHOD method_7328 dropItem (Lnet/minecraft/class_1799;Z)Lnet/minecraft/class_1542;
 		ARG 1 stack
+		ARG 2 retainOwnership
 	METHOD method_7329 dropItem (Lnet/minecraft/class_1799;ZZ)Lnet/minecraft/class_1542;
 		ARG 1 stack
+		ARG 2 spreadItems
+		ARG 3 retainOwnership
 	METHOD method_7330 updateTurtleHelmet ()V
 	METHOD method_7331 requestRespawn ()V
 	METHOD method_7332 canConsume (Z)Z
