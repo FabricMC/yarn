@@ -29,6 +29,8 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 		ARG 0 a
 		ARG 1 b
 	METHOD method_15349 atan2 (DD)D
+		ARG 0 y
+		ARG 2 x
 	METHOD method_15350 clamp (DDD)D
 		ARG 0 value
 		ARG 2 min
@@ -45,17 +47,11 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 		ARG 0 first
 		ARG 1 second
 	METHOD method_15357 floor (D)I
-	METHOD method_15358 parseDouble (Ljava/lang/String;DD)D
-		ARG 0 string
-		ARG 1 fallback
 	METHOD method_15359 roundUp (II)I
 	METHOD method_15360 binarySearch (IILjava/util/function/IntPredicate;)I
 		ARG 0 start
 		ARG 1 end
 		ARG 2 leftPredicate
-	METHOD method_15361 parseDouble (Ljava/lang/String;D)D
-		ARG 0 string
-		ARG 1 fallback
 	METHOD method_15362 cos (F)F
 	METHOD method_15363 clamp (FFF)F
 		ARG 0 value
@@ -76,10 +72,16 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 		ARG 0 hue
 		ARG 1 saturation
 		ARG 2 value
-	METHOD method_15370 minusDiv (DDD)D
-		ARG 0 numerator
-		ARG 2 delta
-		ARG 4 denominator
+	METHOD method_15370 getLerpProgress (DDD)D
+		COMMENT Gets the fraction of the way that {@code value} is between {@code start} and {@code end}.
+		COMMENT This is the delta value needed to lerp between {@code start} and {@code end} to get {@code value}.
+		COMMENT In other words, {@code getLerpProgress(lerp(delta, start, end), start, end) == delta}.
+		ARG 0 value
+			COMMENT The result of the lerp function
+		ARG 2 start
+			COMMENT The value interpolated from
+		ARG 4 end
+			COMMENT The value interpolated to
 	METHOD method_15371 hashCode (III)J
 		ARG 0 x
 		ARG 1 y
@@ -92,7 +94,6 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 	METHOD method_15378 randomUuid (Ljava/util/Random;)Ljava/util/UUID;
 		ARG 0 random
 	METHOD method_15379 abs (F)F
-	METHOD method_15380 absFloor (D)I
 	METHOD method_15381 subtractAngles (FF)F
 		ARG 0 start
 		ARG 1 end
@@ -109,13 +110,13 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 	METHOD method_15389 hashCode (Lnet/minecraft/class_2382;)J
 		ARG 0 vec
 	METHOD method_15390 clampedLerp (DDD)D
-		ARG 0 first
-		ARG 2 second
+		ARG 0 start
+		ARG 2 end
 		ARG 4 delta
 	METHOD method_15391 absMax (DD)D
 	METHOD method_15392 wrapDegrees (I)I
 	METHOD method_15393 wrapDegrees (F)F
-	METHOD method_15394 randomUUID ()Ljava/util/UUID;
+	METHOD method_15394 randomUuid ()Ljava/util/UUID;
 	METHOD method_15395 nextInt (Ljava/util/Random;II)I
 		ARG 0 random
 		ARG 1 min
@@ -123,23 +124,54 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 	METHOD method_16435 perlinFade (D)D
 	METHOD method_16436 lerp (DDD)D
 		ARG 0 delta
-		ARG 2 first
-		ARG 4 second
+		ARG 2 start
+		ARG 4 end
 	METHOD method_16437 lerp2 (DDDDDD)D
+		COMMENT A two-dimensional lerp between values on the 4 corners of the unit square. Arbitrary values are specified for the corners and the output is interpolated between them.
 		ARG 0 deltaX
+			COMMENT The x-coordinate on the unit square
 		ARG 2 deltaY
+			COMMENT The y-coordinate on the unit square
+		ARG 4 val00
+			COMMENT The output if {@code deltaX} is 0 and {@code deltaY} is 0
+		ARG 6 val10
+			COMMENT The output if {@code deltaX} is 1 and {@code deltaY} is 0
+		ARG 8 val01
+			COMMENT The output if {@code deltaX} is 0 and {@code deltaY} is 1
+		ARG 10 val11
+			COMMENT The output if {@code deltaX} is 1 and {@code deltaY} is 1
 	METHOD method_16438 lerp3 (DDDDDDDDDDD)D
+		COMMENT A three-dimensional lerp between values on the 8 corners of the unit cube. Arbitrary values are specified for the corners and the output is interpolated between them.
 		ARG 0 deltaX
+			COMMENT The x-coordinate on the unit cube
 		ARG 2 deltaY
+			COMMENT The y-coordinate on the unit cube
 		ARG 4 deltaZ
+			COMMENT The z-coordinate on the unit cube
+		ARG 6 val000
+			COMMENT The output if {@code deltaX} is 0, {@code deltaY} is 0 and {@code deltaZ} is 0
+		ARG 8 val100
+			COMMENT The output if {@code deltaX} is 1, {@code deltaY} is 0 and {@code deltaZ} is 0
+		ARG 10 val010
+			COMMENT The output if {@code deltaX} is 0, {@code deltaY} is 1 and {@code deltaZ} is 0
+		ARG 12 val110
+			COMMENT The output if {@code deltaX} is 1, {@code deltaY} is 1 and {@code deltaZ} is 0
+		ARG 14 val001
+			COMMENT The output if {@code deltaX} is 0, {@code deltaY} is 0 and {@code deltaZ} is 1
+		ARG 16 val101
+			COMMENT The output if {@code deltaX} is 1, {@code deltaY} is 0 and {@code deltaZ} is 1
+		ARG 18 val011
+			COMMENT The output if {@code deltaX} is 0, {@code deltaY} is 1 and {@code deltaZ} is 1
+		ARG 20 val111
+			COMMENT The output if {@code deltaX} is 1, {@code deltaY} is 1 and {@code deltaZ} is 1
 	METHOD method_16439 lerp (FFF)F
 		ARG 0 delta
-		ARG 1 first
-		ARG 2 second
+		ARG 1 start
+		ARG 2 end
 	METHOD method_17821 lerpAngleDegrees (FFF)F
 		ARG 0 delta
-		ARG 1 first
-		ARG 2 second
+		ARG 1 start
+		ARG 2 end
 	METHOD method_17822 sign (D)I
 	METHOD method_20306 capRotation (FFF)F
 		ARG 0 start
@@ -156,6 +188,7 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 		ARG 0 start
 		ARG 1 end
 		ARG 2 delta
+	METHOD method_22860 fwrapDegrees (D)F
 	METHOD method_23278 fastInverseCbrt (F)F
 		ARG 0 x
 	METHOD method_24156 clamp (JJJ)J
