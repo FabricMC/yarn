@@ -19,7 +19,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_13983 lastFoodScore I
 	FIELD field_13984 cameraEntity Lnet/minecraft/class_1297;
 	FIELD field_13985 inTeleportationState Z
-	FIELD field_13986 screenHandlerSyncId I
+	FIELD field_13986 menuSyncId I
 	FIELD field_13987 networkHandler Lnet/minecraft/class_3244;
 	FIELD field_13988 removedEntities Ljava/util/List;
 	FIELD field_13989 notInAnyWorld Z
@@ -38,8 +38,8 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14203 copyFrom (Lnet/minecraft/class_3222;Z)V
 		ARG 1 oldPlayer
 		ARG 2 alive
-	METHOD method_14204 openHandledScreen (Lnet/minecraft/class_1703;)V
-		ARG 1 handler
+	METHOD method_14204 openMenu (Lnet/minecraft/class_1703;)V
+		ARG 1 menu
 	METHOD method_14205 sendInitialChunkPackets (Lnet/minecraft/class_1923;Lnet/minecraft/class_2596;Lnet/minecraft/class_2596;)V
 	METHOD method_14207 handleFall (DZ)V
 		ARG 1 heightDifference
@@ -66,14 +66,17 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14232 getCameraPosition ()Lnet/minecraft/class_4076;
 	METHOD method_14234 updateLastActionTime ()V
 	METHOD method_14236 getAdvancementTracker ()Lnet/minecraft/class_2985;
-	METHOD method_14237 incrementScreenHandlerSyncId ()V
+	METHOD method_14237 incrementMenuSyncId ()V
 	METHOD method_14238 getClientChatVisibility ()Lnet/minecraft/class_1659;
 	METHOD method_14240 onTeleportationDone ()V
 	METHOD method_14242 getCameraEntity ()Lnet/minecraft/class_1297;
 	METHOD method_14245 moveToSpawn (Lnet/minecraft/class_3218;)V
 		ARG 1 world
 	METHOD method_14246 sendUnloadChunkPacket (Lnet/minecraft/class_1923;)V
-	METHOD method_14247 closeCurrentScreen ()V
+	METHOD method_14247 onMenuClosed ()V
+		COMMENT Finishes closing the current menu and resets the field to the {@link #playerMenu}.
+		COMMENT
+		COMMENT <p>This method gets called by {@link #closeMenu()} and when the client closes a menu.
 	METHOD method_14248 getStatHandler ()Lnet/minecraft/class_3442;
 	METHOD method_14249 onStoppedTracking (Lnet/minecraft/class_1297;)V
 	METHOD method_14251 teleport (Lnet/minecraft/class_3218;DDDFF)V
