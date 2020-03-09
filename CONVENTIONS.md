@@ -126,7 +126,7 @@ way.
 
 There are however two exceptions to this rule:
  - Use "world" for what Mojang calls "level" (see https://github.com/FabricMC/yarn/issues/89)
- - Use "inventory" for what Mojang calls "container" (no issue yet, requires renaming "container" first)
+ - Use "inventory" for what Mojang calls "container" (no issue yet)
 
 ## Things to avoid
 
