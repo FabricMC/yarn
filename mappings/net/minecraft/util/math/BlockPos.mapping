@@ -69,6 +69,12 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 	METHOD method_10093 offset (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338;
 		ARG 1 direction
 	METHOD method_10094 iterate (IIIIII)Ljava/lang/Iterable;
+		ARG 0 startX
+		ARG 1 startY
+		ARG 2 startZ
+		ARG 3 endX
+		ARG 4 endY
+		ARG 5 endZ
 	METHOD method_10095 north ()Lnet/minecraft/class_2338;
 	METHOD method_10096 add (JIII)J
 		ARG 0 value
@@ -76,21 +82,76 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		ARG 3 y
 		ARG 4 z
 	METHOD method_10097 iterate (Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Ljava/lang/Iterable;
-		ARG 0 pos1
-		ARG 1 pos2
+		ARG 0 start
+		ARG 1 end
 	METHOD method_17962 stream (IIIIII)Ljava/util/stream/Stream;
+		ARG 0 startX
+		ARG 1 startY
+		ARG 2 startZ
+		ARG 3 endX
+		ARG 4 endY
+		ARG 5 endZ
 	METHOD method_19438 deserialize (Lcom/mojang/datafixers/Dynamic;)Lnet/minecraft/class_2338;
 		ARG 0 dynamic
 	METHOD method_20437 stream (Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Ljava/util/stream/Stream;
-		ARG 0 pos1
-		ARG 1 pos2
+		ARG 0 start
+		ARG 1 end
 	METHOD method_23627 stream (Lnet/minecraft/class_3341;)Ljava/util/stream/Stream;
 		ARG 0 box
 	METHOD method_25503 mutableCopy ()Lnet/minecraft/class_2338$class_2339;
+	METHOD method_25996 manhattanIterate (Lnet/minecraft/class_2338;III)Ljava/lang/Iterable;
+		COMMENT Iterates block positions around the {@code center}. The iteration order
+		COMMENT is mainly based on the manhattan distance of the position from the
+		COMMENT center.
+		COMMENT
+		COMMENT <p>For the same manhattan distance, the positions are iterated by y
+		COMMENT offset, from negative to positive. For the same y offset, the positions
+		COMMENT are iterated by x offset, from negative to positive. For the two
+		COMMENT positions with the same x and y offsets and the same manhattan distance,
+		COMMENT the one with a positive z offset is visited first before the one with a
+		COMMENT negative z offset.
+		ARG 0 center
+			COMMENT the center of iteration
+		ARG 1 xRadius
+			COMMENT the maximum x difference for iteration
+		ARG 2 yRadius
+			COMMENT the maximum y difference for iteration
+		ARG 3 zRadius
+			COMMENT the maximum z difference for iteration
+	METHOD method_25997 findClosest (Lnet/minecraft/class_2338;IILjava/util/function/Predicate;)Ljava/util/Optional;
+		ARG 0 pos
+		ARG 1 horizontalRange
+		ARG 2 verticalRange
+		ARG 3 condition
+	METHOD method_25998 manhattanStream (Lnet/minecraft/class_2338;III)Ljava/util/stream/Stream;
+		ARG 0 center
+		ARG 1 maxX
+		ARG 2 maxY
+		ARG 3 maxZ
+	CLASS 1
+		FIELD field_23094 maxDistance I
+		FIELD field_23095 maxX I
+		FIELD field_23096 maxY I
+		FIELD field_23097 maxZ I
+		FIELD field_23098 center Lnet/minecraft/class_2338;
+		FIELD field_23099 manhattanDistance I
+		FIELD field_23100 limitX I
+		FIELD field_23101 limitY I
+		FIELD field_23102 dx I
+		FIELD field_23103 dy I
+		FIELD field_23104 pendingOpposite Lnet/minecraft/class_2338;
+	CLASS 2
+		FIELD field_23105 size I
+		FIELD field_23106 sizeX I
+		FIELD field_23107 sizeY I
+		FIELD field_23108 startX I
+		FIELD field_23109 startY I
+		FIELD field_23110 startZ I
+		FIELD field_23111 index I
 	CLASS class_2339 Mutable
-		METHOD method_10098 setOffset (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338$class_2339;
+		METHOD method_10098 move (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338$class_2339;
 			ARG 1 direction
-		METHOD method_10100 setOffset (III)Lnet/minecraft/class_2338$class_2339;
+		METHOD method_10100 move (III)Lnet/minecraft/class_2338$class_2339;
 			ARG 1 x
 			ARG 2 y
 			ARG 3 z
@@ -104,7 +165,7 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 			ARG 1 x
 			ARG 2 y
 			ARG 3 z
-		METHOD method_10104 setOffset (Lnet/minecraft/class_2350;I)Lnet/minecraft/class_2338$class_2339;
+		METHOD method_10104 move (Lnet/minecraft/class_2350;I)Lnet/minecraft/class_2338$class_2339;
 			ARG 1 direction
 			ARG 2 distance
 		METHOD method_16363 set (J)Lnet/minecraft/class_2338$class_2339;
@@ -114,10 +175,11 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 			ARG 2 x
 			ARG 3 y
 			ARG 4 z
-		METHOD method_25504 setOffset (Lnet/minecraft/class_2382;III)Lnet/minecraft/class_2338$class_2339;
+		METHOD method_25504 set (Lnet/minecraft/class_2382;III)Lnet/minecraft/class_2338$class_2339;
 			ARG 1 pos
 			ARG 2 x
 			ARG 3 y
 			ARG 4 z
-		METHOD method_25505 move (Lnet/minecraft/class_2382;Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338$class_2339;
+		METHOD method_25505 set (Lnet/minecraft/class_2382;Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338$class_2339;
 			ARG 1 pos
+			ARG 2 direction
