@@ -4,7 +4,7 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 	METHOD method_22445 fromTag (Lnet/minecraft/class_2499;)Ljava/util/Map;
 		COMMENT Loads enchantments from a list named binary tag.
 		ARG 0 tag
-	METHOD method_24365 getRandomEnchantedEquipment (Lnet/minecraft/class_1887;Lnet/minecraft/class_1309;Ljava/util/function/Predicate;)Ljava/util/Map$Entry;
+	METHOD method_24365 chooseEquipmentWith (Lnet/minecraft/class_1887;Lnet/minecraft/class_1309;Ljava/util/function/Predicate;)Ljava/util/Map$Entry;
 		COMMENT Returns a pair of an equipment slot and the item stack in the supplied
 		COMMENT entity's slot, indicating the item stack has the enchantment supplied
 		COMMENT and fulfills the extra condition.
@@ -12,8 +12,11 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 		COMMENT <p>If multiple equipment slots' item stacks are valid, a random pair is
 		COMMENT returned.
 		ARG 0 enchantment
+			COMMENT the enchantment the equipped item stack must have
 		ARG 1 entity
+			COMMENT the entity to choose equipments from
 		ARG 2 condition
+			COMMENT extra conditions for the item stack to pass for selection
 	METHOD method_25951 hasSoulSpeed (Lnet/minecraft/class_1309;)Z
 		ARG 0 entity
 	METHOD method_8199 getFireAspect (Lnet/minecraft/class_1309;)I
@@ -31,15 +34,19 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 		COMMENT Returns the highest level of the passed enchantment in the enchantment's
 		COMMENT applicable equipment slots' item stacks.
 		ARG 0 enchantment
+			COMMENT the enchantment
 		ARG 1 entity
-	METHOD method_8204 getRandomEnchantedEquipment (Lnet/minecraft/class_1887;Lnet/minecraft/class_1309;)Ljava/util/Map$Entry;
+			COMMENT the entity whose equipment slots are checked
+	METHOD method_8204 chooseEquipmentWith (Lnet/minecraft/class_1887;Lnet/minecraft/class_1309;)Ljava/util/Map$Entry;
 		COMMENT Returns a pair of an equipment slot and the item stack in the supplied
 		COMMENT entity's slot, indicating the item stack has the enchantment supplied.
 		COMMENT
 		COMMENT <p>If multiple equipment slots' item stacks are valid, a random pair is
 		COMMENT returned.
 		ARG 0 enchantment
+			COMMENT the enchantment the equipped item stack must have
 		ARG 1 entity
+			COMMENT the entity to choose equipments from
 	METHOD method_8205 getKnockback (Lnet/minecraft/class_1309;)I
 		ARG 0 entity
 	METHOD method_8206 getLoyalty (Lnet/minecraft/class_1799;)I
@@ -99,7 +106,7 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 		COMMENT Returns the required experience level for an enchanting option in the
 		COMMENT enchanting table's screen, or the enchantment screen.
 		ARG 0 random
-			COMMENT the seed
+			COMMENT the random, which guarantees consistent results with the same seed
 		ARG 1 slotIndex
 			COMMENT the index of the enchanting option
 		ARG 2 bookshelfCount
