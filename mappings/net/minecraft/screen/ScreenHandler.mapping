@@ -36,20 +36,26 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	METHOD method_7590 setPlayerRestriction (Lnet/minecraft/class_1657;Z)V
 		ARG 1 player
 		ARG 2 unrestricted
-	METHOD method_7591 packClickData (II)I
-		ARG 0 buttonId
-		ARG 1 quickCraftStage
+	METHOD method_7591 packQuickCraftData (II)I
+		ARG 0 quickCraftStage
+		ARG 1 buttonId
 	METHOD method_7592 canInsertItemIntoSlot (Lnet/minecraft/class_1735;Lnet/minecraft/class_1799;Z)Z
 		ARG 0 slot
 		ARG 1 stack
 		ARG 2 allowOverflow
 	METHOD method_7593 onSlotClick (IILnet/minecraft/class_1713;Lnet/minecraft/class_1657;)Lnet/minecraft/class_1799;
+		COMMENT Performs a slot click. This can behave in many different ways depending mainly on the action type.
+		COMMENT @return The stack that was clicked on before anything changed, used mostly for verifying that the client and server are in sync
 		ARG 1 slotId
+			COMMENT The ID of the slot clicked on. -999 is a special value used for the cursor stack
 		ARG 2 clickData
+			COMMENT Metadata for the click. Usually equal to the button ID, but can have different meanings depending on the action type. Check the docs for each SlotActionType value
 		ARG 3 actionType
+			COMMENT The type of slot click. Check the docs for each SlotActionType value for details
 		ARG 4 player
-	METHOD method_7594 unpackButtonId (I)I
-		ARG 0 clickData
+			COMMENT The player
+	METHOD method_7594 unpackQuickCraftStage (I)I
+		ARG 0 quickCraftData
 	METHOD method_7595 close (Lnet/minecraft/class_1657;)V
 		ARG 1 player
 	METHOD method_7596 addListener (Lnet/minecraft/class_1712;)V
@@ -109,8 +115,8 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	METHOD method_7619 setStackInSlot (ILnet/minecraft/class_1799;)V
 		ARG 1 slot
 		ARG 2 stack
-	METHOD method_7620 unpackQuickCraftStage (I)I
-		ARG 0 clickData
+	METHOD method_7620 unpackQuickCraftButton (I)I
+		ARG 0 quickCraftData
 	METHOD method_7621 addSlot (Lnet/minecraft/class_1735;)Lnet/minecraft/class_1735;
 		ARG 1 slot
 	METHOD method_7622 isNotRestricted (Lnet/minecraft/class_1657;)Z
