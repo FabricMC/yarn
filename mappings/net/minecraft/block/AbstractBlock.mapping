@@ -9,6 +9,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	FIELD field_23161 randomTicks Z
 	FIELD field_23162 soundGroup Lnet/minecraft/class_2498;
 	FIELD field_23163 slipperiness F
+	FIELD field_23164 velocityMultiplier F
 	FIELD field_23165 slowDownMultiplier F
 	METHOD <init> (Lnet/minecraft/class_4970$class_2251;)V
 		ARG 1 settings
@@ -16,12 +17,19 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	METHOD method_17454 createScreenHandlerFactory (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)Lnet/minecraft/class_3908;
 	METHOD method_19286 onProjectileHit (Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_3965;Lnet/minecraft/class_1676;)V
 	METHOD method_22358 canBucketPlace (Lnet/minecraft/class_2680;Lnet/minecraft/class_3611;)Z
+	METHOD method_25959 getSidesShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
+	METHOD method_26159 getVisualShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
+	METHOD method_26160 asBlock ()Lnet/minecraft/class_2248;
+	METHOD method_26161 hasBlockEntity ()Z
+	METHOD method_26162 getDropTableID ()Lnet/minecraft/class_2960;
+	METHOD method_26163 getMaterialColor ()Ljava/util/function/Function;
 	METHOD method_8389 asItem ()Lnet/minecraft/class_1792;
 	METHOD method_9498 hasComparatorOutput (Lnet/minecraft/class_2680;)Z
 	METHOD method_9505 getOpacity (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)I
 	METHOD method_9506 emitsRedstonePower (Lnet/minecraft/class_2680;)Z
 	METHOD method_9514 scheduledTick (Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Ljava/util/Random;)V
 	METHOD method_9516 canPathfindThrough (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_10;)Z
+	METHOD method_9517 prepare (Lnet/minecraft/class_2680;Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;I)V
 	METHOD method_9522 isSideInvisible (Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;Lnet/minecraft/class_2350;)Z
 	METHOD method_9524 getWeakRedstonePower (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)I
 	METHOD method_9526 hasSidedTransparency (Lnet/minecraft/class_2680;)Z
@@ -69,6 +77,12 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		FIELD field_21209 slowDownMultiplier F
 		FIELD field_23179 velocityMultiplier F
 		FIELD field_23180 isAir Z
+		FIELD field_23181 allowsSpawningPredicate Lnet/minecraft/class_4970$class_4972;
+		FIELD field_23182 solidBlockPredicate Lnet/minecraft/class_4970$class_4973;
+		FIELD field_23183 suffocationPredicate Lnet/minecraft/class_4970$class_4973;
+		FIELD field_23184 blockVisionPredicate Lnet/minecraft/class_4970$class_4973;
+		FIELD field_23185 postProcessPredicate Lnet/minecraft/class_4970$class_4973;
+		FIELD field_23186 inWallOverlayPredicate Lnet/minecraft/class_4970$class_4973;
 		METHOD <init> (Lnet/minecraft/class_3614;Lnet/minecraft/class_3620;)V
 			ARG 1 material
 			ARG 2 materialColor
@@ -80,6 +94,13 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 velocityMultiplier
 		METHOD method_23352 jumpVelocityMultiplier (F)Lnet/minecraft/class_4970$class_2251;
 			ARG 1 jumpVelocityMultiplier
+		METHOD method_26235 allowsSpawning (Lnet/minecraft/class_4970$class_4972;)Lnet/minecraft/class_4970$class_2251;
+		METHOD method_26236 solidBlock (Lnet/minecraft/class_4970$class_4973;)Lnet/minecraft/class_4970$class_2251;
+		METHOD method_26240 of (Lnet/minecraft/class_3614;Ljava/util/function/Function;)Lnet/minecraft/class_4970$class_2251;
+		METHOD method_26243 suffocates (Lnet/minecraft/class_4970$class_4973;)Lnet/minecraft/class_4970$class_2251;
+		METHOD method_26245 blockVision (Lnet/minecraft/class_4970$class_4973;)Lnet/minecraft/class_4970$class_2251;
+		METHOD method_26247 postProcess (Lnet/minecraft/class_4970$class_4973;)Lnet/minecraft/class_4970$class_2251;
+		METHOD method_26249 inWallOverlay (Lnet/minecraft/class_4970$class_4973;)Lnet/minecraft/class_4970$class_2251;
 		METHOD method_26250 air ()Lnet/minecraft/class_4970$class_2251;
 		METHOD method_9617 of (Lnet/minecraft/class_3614;Lnet/minecraft/class_1767;)Lnet/minecraft/class_4970$class_2251;
 			ARG 0 material
@@ -108,10 +129,16 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		FIELD field_23166 shapeCache Lnet/minecraft/class_4970$class_4971$class_3752;
 		FIELD field_23167 luminance I
 		FIELD field_23168 hasSidedTransparency Z
+		FIELD field_23169 isAir Z
 		FIELD field_23170 material Lnet/minecraft/class_3614;
 		FIELD field_23171 materialColor Ljava/util/function/Function;
 		FIELD field_23172 hardness F
 		FIELD field_23173 opaque Z
+		FIELD field_23174 solidBlockPredicate Lnet/minecraft/class_4970$class_4973;
+		FIELD field_23175 suffocationPredicate Lnet/minecraft/class_4970$class_4973;
+		FIELD field_23176 blockVisionPredicate Lnet/minecraft/class_4970$class_4973;
+		FIELD field_23177 postProcessPredicate Lnet/minecraft/class_4970$class_4973;
+		FIELD field_23178 inWallOverlayPredicate Lnet/minecraft/class_4970$class_4973;
 		METHOD method_26164 isIn (Lnet/minecraft/class_3494;)Z
 		METHOD method_26165 calcBlockBreakingDelta (Lnet/minecraft/class_1657;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)F
 		METHOD method_26166 canReplace (Lnet/minecraft/class_1750;)Z
@@ -119,6 +146,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		METHOD method_26168 hasSolidTopSurface (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_1297;)Z
 		METHOD method_26169 hasSolidTopSurface (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_1297;Lnet/minecraft/class_2350;)Z
 		METHOD method_26170 allowsSpawning (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_1299;)Z
+		METHOD method_26171 canPathfindThrough (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_10;)Z
 		METHOD method_26172 getOutlineShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
 		METHOD method_26173 getCullingFace (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Lnet/minecraft/class_265;
 		METHOD method_26174 onUse (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;Lnet/minecraft/class_3965;)Lnet/minecraft/class_1269;
@@ -130,6 +158,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		METHOD method_26180 onStacksDropped (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1799;)V
 		METHOD method_26181 neighborUpdate (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338;Z)V
 		METHOD method_26182 onBlockAdded (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Z)V
+		METHOD method_26183 updateNeighbors (Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;I)V
 		METHOD method_26184 canPlaceAt (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z
 		METHOD method_26185 mirror (Lnet/minecraft/class_2415;)Lnet/minecraft/class_2680;
 		METHOD method_26186 rotate (Lnet/minecraft/class_2470;)Lnet/minecraft/class_2680;
@@ -144,8 +173,11 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		METHOD method_26195 getWeakRedstonePower (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)I
 		METHOD method_26196 createScreenHandlerFactory (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)Lnet/minecraft/class_3908;
 		METHOD method_26197 onBlockRemoved (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Z)V
+		METHOD method_26198 prepare (Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;I)V
 		METHOD method_26199 scheduledTick (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Ljava/util/Random;)V
 		METHOD method_26200 initShapeCache ()V
+		METHOD method_26201 getCullingShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
+		METHOD method_26202 getVisualShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
 		METHOD method_26203 getStrongRedstonePower (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)I
 		METHOD method_26204 getBlock ()Lnet/minecraft/class_2248;
 		METHOD method_26205 getTopMaterialColor (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_3620;
@@ -155,19 +187,25 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		METHOD method_26209 exceedsCube ()Z
 		METHOD method_26210 getAmbientOcclusionLightLevel (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)F
 		METHOD method_26211 hasSidedTransparency ()Z
+		METHOD method_26212 isSolidBlock (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
 		METHOD method_26213 getLuminance ()I
 		METHOD method_26214 getHardness (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)F
 		METHOD method_26215 isAir ()Z
+		METHOD method_26216 isOpaqueFullCube (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
 		METHOD method_26217 getRenderType ()Lnet/minecraft/class_2464;
 		METHOD method_26218 getOutlineShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
 		METHOD method_26219 emitsRedstonePower ()Z
 		METHOD method_26220 getCollisionShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
 		METHOD method_26221 hasComparatorOutput ()Z
+		METHOD method_26222 getSidesShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
 		METHOD method_26223 getPistonBehavior ()Lnet/minecraft/class_3619;
 		METHOD method_26224 getRayTraceShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
 		METHOD method_26225 isOpaque ()Z
+		METHOD method_26226 getModelOffset (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
 		METHOD method_26227 getFluidState ()Lnet/minecraft/class_3610;
+		METHOD method_26228 shouldSuffocate (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
 		METHOD method_26229 hasRandomTicks ()Z
+		METHOD method_26230 shouldBlockVision (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
 		METHOD method_26231 getSoundGroup ()Lnet/minecraft/class_2498;
 		METHOD method_26232 shouldPostProcess (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
 		METHOD method_26233 asBlockState ()Lnet/minecraft/class_2680;
