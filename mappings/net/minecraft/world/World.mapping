@@ -57,6 +57,13 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 2 oldBlock
 		ARG 3 newBlock
 	METHOD method_23886 isNight ()Z
+	METHOD method_24367 getWorldProfiler ()Ljava/util/function/Supplier;
+	METHOD method_24794 isValidPos (Lnet/minecraft/class_2338;)Z
+		ARG 0 pos
+	METHOD method_25952 isValidY (I)Z
+		ARG 0 y
+	METHOD method_25953 (Lnet/minecraft/class_2338;)Z
+		ARG 0 pos
 	METHOD method_8413 updateListeners (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;I)V
 		ARG 1 pos
 		ARG 2 oldState
@@ -91,21 +98,29 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 6 z
 		ARG 8 power
 	METHOD method_8438 addBlockEntity (Lnet/minecraft/class_2586;)Z
+		ARG 1 entity
 	METHOD method_8442 getSkyAngleRadians (F)F
 	METHOD method_8447 addBlockEntities (Ljava/util/Collection;)V
+		ARG 1 entities
 	METHOD method_8449 playSoundFromEntity (Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
+		ARG 1 player
+		ARG 2 entity
+		ARG 3 sound
 		ARG 5 volume
 		ARG 6 pitch
 	METHOD method_8450 getGameRules ()Lnet/minecraft/class_1928;
 	METHOD method_8452 updateNeighborsAlways (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;)V
 		ARG 1 pos
+		ARG 2 block
 	METHOD method_8454 createExplosion (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;DDDFZLnet/minecraft/class_1927$class_4179;)Lnet/minecraft/class_1927;
 		ARG 1 entity
+		ARG 2 damageSource
 		ARG 3 x
 		ARG 5 y
 		ARG 7 z
 		ARG 9 power
 		ARG 10 createFire
+		ARG 11 destructionType
 	METHOD method_8455 updateComparators (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;)V
 		ARG 1 pos
 	METHOD method_8457 getDebugString ()Ljava/lang/String;
@@ -153,6 +168,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 5 z
 		ARG 7 sound
 	METHOD method_8488 getReceivedStrongRedstonePower (Lnet/minecraft/class_2338;)I
+		ARG 1 pos
 	METHOD method_8492 updateNeighbor (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338;)V
 		ARG 1 sourcePos
 		ARG 2 sourceBlock
@@ -166,6 +182,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 10 velocityY
 		ARG 12 velocityZ
 	METHOD method_8495 getTopNonAirState (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;
+		ARG 1 pos
 	METHOD method_8496 setThunderGradient (F)V
 		ARG 1 thunderGradient
 	METHOD method_8499 getEmittedRedstonePower (Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)I
@@ -173,6 +190,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8500 getWorldChunk (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2818;
 	METHOD method_8501 setBlockState (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Z
 		ARG 1 pos
+		ARG 2 state
 	METHOD method_8503 getServer ()Lnet/minecraft/server/MinecraftServer;
 	METHOD method_8505 canPlayerModifyAt (Lnet/minecraft/class_1657;Lnet/minecraft/class_2338;)Z
 		ARG 1 player
@@ -180,6 +198,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8508 updateNeighborsExcept (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2350;)V
 		ARG 1 pos
 		ARG 2 sourceBlock
+		ARG 3 direction
 	METHOD method_8509 setLightningTicksLeft (I)V
 		ARG 1 lightningTicksLeft
 	METHOD method_8510 getTime ()J
@@ -203,6 +222,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 packet
 	METHOD method_8524 markDirty (Lnet/minecraft/class_2338;Lnet/minecraft/class_2586;)V
 		ARG 1 pos
+		ARG 2 entity
 	METHOD method_8525 disconnect ()V
 	METHOD method_8526 setBlockEntity (Lnet/minecraft/class_2338;Lnet/minecraft/class_2586;)V
 		ARG 1 pos
