@@ -1,13 +1,40 @@
 CLASS net/minecraft/class_4546 net/minecraft/world/biome/source/VoronoiBiomeAccessType
+	COMMENT The voronoi biome access type distorts the biome volume's voxel points
+	COMMENT and finds the closest distorted biome voxel point from a block position
+	COMMENT as if in a euclidean voronoi diagram and returns the biome stored in that
+	COMMENT biome voxel point.
 	METHOD method_22397 sqr (D)D
+		COMMENT Returns the square of {@code d}.
 		ARG 0 d
-	METHOD method_22398 distribute (J)D
+	METHOD method_22398 calculateShift (J)D
+		COMMENT Calculates the shift, in the biome voxel's axis unit, of the weight
+		COMMENT center of a biome position from the regular grid position in an axis.
+		COMMENT
+		COMMENT <p>It takes the 25th to 34th lowest bits of the seed, divides it by
+		COMMENT 1024, minuses it by 0.5, and multiply it by 0.9 to get a shift between
+		COMMENT -0.45 and 0.45 in the biome voxel's axis unit.
 		ARG 0 seed
-	METHOD method_22399 calcChance (JIIIDDD)D
+			COMMENT the seed
+	METHOD method_22399 calculateSquaredDistance (JIIIDDD)D
+		COMMENT Calculates the squared euclidean distance from an accessed (voxel) point
+		COMMENT to the distorted biome (voxel) point based on an original biome point.
+		COMMENT
+		COMMENT <p>A consistent set of seed and biome x/y/z arguments is always going
+		COMMENT to lead to the same distorted point.
 		ARG 0 seed
-		ARG 2 x
-		ARG 3 y
-		ARG 4 z
-		ARG 5 xFraction
-		ARG 7 yFraction
-		ARG 9 zFraction
+			COMMENT the seed for choosing the distorted biome point
+		ARG 2 biomeX
+			COMMENT the x position of the original biome point
+		ARG 3 biomeY
+			COMMENT the y position of the original biome point
+		ARG 4 biomeZ
+			COMMENT the z position of the original biome point
+		ARG 5 distanceX
+			COMMENT distance in biome voxel x-axis unit from the accessed
+			COMMENT point to the original biome point
+		ARG 7 distanceY
+			COMMENT distance in biome voxel y-axis unit from the accessed
+			COMMENT point to the original biome point
+		ARG 9 distanceZ
+			COMMENT distance in biome voxel z-axis unit from the accessed
+			COMMENT point to the original biome point
