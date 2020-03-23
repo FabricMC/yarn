@@ -76,9 +76,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6284 serverYaw D
 	FIELD field_6285 effectsChanged Z
 	FIELD field_6287 movementSpeed F
-	METHOD <init> (Lnet/minecraft/class_1299;Lnet/minecraft/class_1937;)V
-		ARG 1 type
-		ARG 2 world
 	METHOD method_16077 dropLoot (Lnet/minecraft/class_1282;Z)V
 		ARG 1 source
 		ARG 2 causedByPlayer
@@ -123,6 +120,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_18807 getDrinkSound (Lnet/minecraft/class_1799;)Lnet/minecraft/class_3414;
 		ARG 1 stack
 	METHOD method_18808 getArrowType (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1799;
+		ARG 1 stack
 	METHOD method_18865 applyFoodEffects (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)V
 		ARG 1 stack
 		ARG 2 world
@@ -131,7 +129,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 world
 		ARG 2 stack
 	METHOD method_18867 deserializeBrain (Lcom/mojang/datafixers/Dynamic;)Lnet/minecraft/class_4095;
-		ARG 1 dynamic
+		ARG 1 data
 	METHOD method_18868 getBrain ()Lnet/minecraft/class_4095;
 	METHOD method_18869 getEatSound (Lnet/minecraft/class_1799;)Lnet/minecraft/class_3414;
 		ARG 1 stack
@@ -142,9 +140,27 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_20237 getEquipmentBreakStatus (Lnet/minecraft/class_1304;)B
 		ARG 0 slot
 	METHOD method_21753 getStingerCount ()I
+	METHOD method_21754 isHoldingOntoLadder ()Z
+		COMMENT @return {@code true} if this entity should not lose height while in a climbing state
+		COMMENT @see net.minecraft.entity.LivingEntity
 	METHOD method_21755 setStingerCount (I)V
 		ARG 1 stingerCount
+	METHOD method_22382 shouldSpawnConsumptionEffects ()Z
+	METHOD method_23328 playBlockFallSound ()V
+	METHOD method_23329 computeFallDamage (FF)I
+		ARG 1 fallDistance
+		ARG 2 damageMultiplier
 	METHOD method_23667 swingHand (Lnet/minecraft/class_1268;Z)V
+	METHOD method_23733 onKilledBy (Lnet/minecraft/class_1309;)V
+		COMMENT Performs secondary effects after this mob has been killed.
+		COMMENT
+		COMMENT <p> The default behaviour spawns a wither rose if {@code adversary} is a {@code WitherEntity}.
+		ARG 1 adversary
+			COMMENT the main adversary responsible for this entity's death
+	METHOD method_23883 dropXp ()V
+	METHOD method_24518 isHolding (Lnet/minecraft/class_1792;)Z
+	METHOD method_24520 isHolding (Ljava/util/function/Predicate;)Z
+	METHOD method_24831 getPoses ()Lcom/google/common/collect/ImmutableList;
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
 	METHOD method_5989 getLootTable ()Lnet/minecraft/class_2960;
@@ -159,11 +175,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6001 initAttributes ()V
 	METHOD method_6002 getDeathSound ()Lnet/minecraft/class_3414;
 	METHOD method_6003 getRoll ()I
-	METHOD method_6005 takeKnockback (Lnet/minecraft/class_1297;FDD)V
-		ARG 1 attacker
-		ARG 2 speed
-		ARG 3 xMovement
-		ARG 5 zMovement
+	METHOD method_6005 takeKnockback (FDD)V
 	METHOD method_6006 setNearbySongPlaying (Lnet/minecraft/class_2338;Z)V
 		ARG 1 songPosition
 		ARG 2 playing
@@ -182,9 +194,16 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6014 getItemUseTimeLeft ()I
 	METHOD method_6015 setAttacker (Lnet/minecraft/class_1309;)V
 		ARG 1 attacker
-	METHOD method_6016 tryRemoveStatusEffect (Lnet/minecraft/class_1291;)Z
-		ARG 1 effect
+	METHOD method_6016 removeStatusEffect (Lnet/minecraft/class_1291;)Z
+		COMMENT Removes a status effect from this entity.
+		COMMENT
+		COMMENT <p> Calling this method will call cleanup methods on the status effect and trigger synchronization of effect particles with watching clients. If this entity is a player,
+		COMMENT the change in the list of effects will also be synchronized with the corresponding client.
+		COMMENT
+		COMMENT @return {@code true} if a {@link net.minecraft.entity.effect.StatusEffectInstance} with the given type was in effect before the removal.
+		ARG 1 type
 	METHOD method_6017 getSoundPitch ()F
+	METHOD method_6018 setPushCooldown (I)V
 	METHOD method_6019 setCurrentHand (Lnet/minecraft/class_1268;)V
 		ARG 1 hand
 	METHOD method_6020 onStatusEffectApplied (Lnet/minecraft/class_1293;)V
@@ -316,21 +335,27 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6100 setJumping (Z)V
 		ARG 1 jumping
 	METHOD method_6101 isClimbing ()Z
+	METHOD method_6102 isMobOrPlayer ()Z
 	METHOD method_6103 sendPickup (Lnet/minecraft/class_1297;I)V
 		ARG 1 item
 		ARG 2 count
 	METHOD method_6104 swingHand (Lnet/minecraft/class_1268;)V
 		ARG 1 hand
-	METHOD method_6105 damageArmor (F)V
-		ARG 1 amount
+	METHOD method_6105 damageArmor (Lnet/minecraft/class_1282;F)V
+		ARG 1 source
+		ARG 2 amount
 	METHOD method_6106 getJumpVelocity ()F
 	METHOD method_6107 getSoundVolume ()F
 	METHOD method_6108 updatePostDeath ()V
 	METHOD method_6109 isBaby ()Z
 	METHOD method_6110 getCurrentExperience (Lnet/minecraft/class_1657;)I
 		ARG 1 player
-	METHOD method_6111 removeStatusEffect (Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;
-		ARG 1 effect
+	METHOD method_6111 removeStatusEffectInternal (Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;
+		COMMENT Removes a status effect from this entity without calling any listener.
+		COMMENT
+		COMMENT <p> This method does not perform any cleanup or synchronization operation.
+		COMMENT Under most circumstances, calling {@link net.minecraft.entity.LivingEntity#removeStatusEffect(net.minecraft.entity.effect.StatusEffect)} is highly preferable.
+		ARG 1 type
 	METHOD method_6112 getStatusEffect (Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;
 		ARG 1 effect
 	METHOD method_6113 isSleeping ()Z

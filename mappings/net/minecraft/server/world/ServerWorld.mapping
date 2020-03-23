@@ -19,14 +19,12 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	FIELD field_18263 wanderingTraderManager Lnet/minecraft/class_3990;
 	FIELD field_18264 ticking Z
 	FIELD field_18811 raidManager Lnet/minecraft/class_3767;
-	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_29;Lnet/minecraft/class_31;Lnet/minecraft/class_2874;Lnet/minecraft/class_3695;Lnet/minecraft/class_3949;)V
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_29;Lnet/minecraft/class_31;Lnet/minecraft/class_2874;Lnet/minecraft/class_3949;)V
 		ARG 1 server
 		ARG 2 workerExecutor
 		ARG 3 worldSaveHandler
 		ARG 4 properties
 		ARG 5 dimensionType
-		ARG 6 profiler
-		ARG 7 worldGenerationProgressListener
 	METHOD method_14166 spawnParticles (Lnet/minecraft/class_3222;Lnet/minecraft/class_2394;ZDDDIDDDD)Z
 		ARG 1 viewer
 		ARG 2 particle
@@ -88,7 +86,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 2 randomTickSpeed
 	METHOD method_18207 onPlayerTeleport (Lnet/minecraft/class_3222;)V
 		ARG 1 player
-	METHOD method_18210 (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2338;
+	METHOD method_18210 getSurface (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2338;
 		ARG 1 pos
 	METHOD method_18211 onPlayerChangeDimension (Lnet/minecraft/class_3222;)V
 		ARG 1 player
@@ -103,6 +101,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_18764 unloadEntities (Lnet/minecraft/class_2818;)V
 		ARG 1 chunk
 	METHOD method_18765 tick (Ljava/util/function/BooleanSupplier;)V
+		ARG 1 shouldKeepTicking
 	METHOD method_18766 getPlayers (Ljava/util/function/Predicate;)Ljava/util/List;
 		ARG 1 predicate
 	METHOD method_18767 checkChunk (Lnet/minecraft/class_1297;)V
@@ -129,6 +128,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_19495 getRaidManager ()Lnet/minecraft/class_3767;
 	METHOD method_19496 handleInteraction (Lnet/minecraft/class_4151;Lnet/minecraft/class_1297;Lnet/minecraft/class_4094;)V
 		ARG 1 interaction
+		ARG 2 entity
 		ARG 3 observer
 	METHOD method_19497 isNearOccupiedPointOfInterest (Lnet/minecraft/class_2338;I)Z
 		ARG 1 pos
@@ -142,11 +142,20 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_19503 hasRaidAt (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
 	METHOD method_20588 isNearOccupiedPointOfInterest (Lnet/minecraft/class_4076;)Z
-	METHOD method_21624 exportEntities (Ljava/io/Writer;Ljava/lang/Iterable;)V
-	METHOD method_21626 exportBlockEntities (Ljava/io/Writer;)V
+		ARG 1 sectionPos
+	METHOD method_21624 dumpEntities (Ljava/io/Writer;Ljava/lang/Iterable;)V
+		ARG 0 writer
+		ARG 1 entities
+	METHOD method_21625 dump (Ljava/nio/file/Path;)V
+	METHOD method_21626 dumpBlockEntities (Ljava/io/Writer;)V
+		ARG 1 writer
+	METHOD method_23658 clearUpdatesInArea (Lnet/minecraft/class_3341;)V
+		ARG 1 box
+	METHOD method_23660 wakeSleepingPlayers ()V
+	METHOD method_24500 locateBiome (Lnet/minecraft/class_1959;Lnet/minecraft/class_2338;II)Lnet/minecraft/class_2338;
 	METHOD method_8414 init (Lnet/minecraft/class_1940;)V
 		ARG 1 levelInfo
 	METHOD method_8416 addLightning (Lnet/minecraft/class_1538;)V
-	METHOD method_8448 updatePlayersSleeping ()V
+	METHOD method_8448 updateSleepingPlayers ()V
 	METHOD method_8468 checkSessionLock ()V
 	METHOD method_8487 locateStructure (Ljava/lang/String;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;

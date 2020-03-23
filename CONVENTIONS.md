@@ -126,8 +126,8 @@ way.
 
 There are however three exceptions to this rule:
  - Use "world" for what Mojang calls "level" (see https://github.com/FabricMC/yarn/issues/89)
- - Use "container" for what Mojang calls "menu" (see https://github.com/FabricMC/yarn/issues/386)
- - Use "inventory" for what Mojang calls "container" (no issue yet, requires renaming "container" first)
+ - Use "screen handler" or "handler" (depending on context; if the screen part is obvious it can be omitted) for what Mojang calls "menu" (see https://github.com/FabricMC/yarn/pull/1106)
+ - Use "inventory" for what Mojang calls "container" (no issue yet)
 
 ## Things to avoid
 
