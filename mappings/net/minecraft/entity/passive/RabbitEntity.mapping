@@ -7,12 +7,21 @@ CLASS net/minecraft/class_1463 net/minecraft/entity/passive/RabbitEntity
 	FIELD field_6851 jumpTicks I
 	FIELD field_6852 RABBIT_TYPE Lnet/minecraft/class_2940;
 	METHOD method_20669 canSpawn (Lnet/minecraft/class_1299;Lnet/minecraft/class_1936;Lnet/minecraft/class_3730;Lnet/minecraft/class_2338;Ljava/util/Random;)Z
+		ARG 0 type
+		ARG 1 world
+		ARG 2 spawnType
+		ARG 3 pos
+		ARG 4 random
+	METHOD method_6605 getJumpProgress (F)F
+		ARG 1 delta
 	METHOD method_6606 setSpeed (D)V
 		ARG 1 speed
 	METHOD method_6607 wantsCarrots ()Z
 	METHOD method_6608 scheduleJump ()V
 	METHOD method_6610 getRabbitType ()I
+	METHOD method_6611 markInJump ()V
 	METHOD method_6614 isBreedingItem (Lnet/minecraft/class_1792;)Z
+		ARG 1 item
 	METHOD method_6615 getJumpSound ()Lnet/minecraft/class_3414;
 	METHOD method_6616 lookTowards (DD)V
 		ARG 1 x
@@ -20,6 +29,8 @@ CLASS net/minecraft/class_1463 net/minecraft/entity/passive/RabbitEntity
 	METHOD method_6617 setRabbitType (I)V
 		ARG 1 rabbitType
 	METHOD method_6618 startJump ()V
+	METHOD method_6619 onLanded ()V
+	METHOD method_6621 markJustLanded ()V
 	METHOD method_6622 chooseType (Lnet/minecraft/class_1936;)I
 		ARG 1 world
 	CLASS class_1464 RabbitAttackGoal
@@ -39,10 +50,15 @@ CLASS net/minecraft/class_1463 net/minecraft/entity/passive/RabbitEntity
 			ARG 1 type
 	CLASS class_1467 RabbitJumpControl
 		FIELD field_6855 rabbit Lnet/minecraft/class_1463;
+		FIELD field_6856 inJump Z
 		METHOD <init> (Lnet/minecraft/class_1463;Lnet/minecraft/class_1463;)V
 			ARG 2 owner
+		METHOD method_6623 setInJump (Z)V
+			ARG 1 inJump
 		METHOD method_6624 isActive ()Z
+		METHOD method_6625 isInJump ()Z
 	CLASS class_1468 RabbitMoveControl
+		FIELD field_6858 movingSpeed D
 		FIELD field_6859 rabbit Lnet/minecraft/class_1463;
 		METHOD <init> (Lnet/minecraft/class_1463;)V
 			ARG 1 owner
@@ -52,6 +68,7 @@ CLASS net/minecraft/class_1463 net/minecraft/entity/passive/RabbitEntity
 			ARG 1 rabbit
 			ARG 2 speed
 	CLASS class_1470 EatCarrotCropGoal
+		FIELD field_6861 foundMatureCarrot Z
 		FIELD field_6862 wantsCarrots Z
 		FIELD field_6863 rabbit Lnet/minecraft/class_1463;
 		METHOD <init> (Lnet/minecraft/class_1463;)V
