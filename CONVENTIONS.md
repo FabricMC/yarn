@@ -115,6 +115,8 @@ Name screen coordinates `x` and `y`, rather than `left` and `top`.
 
 ## Mojang names
 
+**Do not use names from Mojang's obfuscation maps.**
+
 Use names that match names in strings in the vanilla code, unless that string is outdated or inaccurate. This avoids confusion,
 especially from new modders who may not understand what an class exception message is referring to.
 
