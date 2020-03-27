@@ -1,4 +1,11 @@
 CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
+	COMMENT Represents the position of a block in a three-dimensional volume.
+	COMMENT
+	COMMENT <p>The position is integer-valued.
+	COMMENT
+	COMMENT <p>A block position may be mutable; hence, when using block positions
+	COMMENT obtained from other places as map keys, etc., you should call {@link
+	COMMENT #toImmutable()} to obtain an immutable block position.
 	FIELD field_10973 BITS_Z J
 	FIELD field_10974 BITS_Y J
 	FIELD field_10975 SIZE_BITS_Y I
@@ -6,6 +13,7 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 	FIELD field_10977 SIZE_BITS_Z I
 	FIELD field_10978 SIZE_BITS_X I
 	FIELD field_10980 ORIGIN Lnet/minecraft/class_2338;
+		COMMENT The block position which x, y, and z values are all zero.
 	FIELD field_10981 BIT_SHIFT_X I
 	FIELD field_10983 BIT_SHIFT_Z I
 	FIELD field_18789 LOGGER Lorg/apache/logging/log4j/Logger;
@@ -23,6 +31,11 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 	METHOD method_10061 unpackLongX (J)I
 		ARG 0 x
 	METHOD method_10062 toImmutable ()Lnet/minecraft/class_2338;
+		COMMENT Returns an immutable block position with the same x, y, and z as this
+		COMMENT position.
+		COMMENT
+		COMMENT <p>This method should be called when a block position is used as map
+		COMMENT keys as to prevent side effects of mutations of mutable block positions.
 	METHOD method_10063 asLong ()J
 	METHOD method_10064 asLong (III)J
 		ARG 0 x
@@ -69,12 +82,12 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 	METHOD method_10093 offset (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338;
 		ARG 1 direction
 	METHOD method_10094 iterate (IIIIII)Ljava/lang/Iterable;
-		ARG 0 minX
-		ARG 1 minY
-		ARG 2 minZ
-		ARG 3 maxX
-		ARG 4 maxY
-		ARG 5 maxZ
+		ARG 0 startX
+		ARG 1 startY
+		ARG 2 startZ
+		ARG 3 endX
+		ARG 4 endY
+		ARG 5 endZ
 	METHOD method_10095 north ()Lnet/minecraft/class_2338;
 	METHOD method_10096 add (JIII)J
 		ARG 0 value
@@ -82,44 +95,83 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		ARG 3 y
 		ARG 4 z
 	METHOD method_10097 iterate (Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Ljava/lang/Iterable;
-		ARG 0 pos1
-		ARG 1 pos2
+		ARG 0 start
+		ARG 1 end
 	METHOD method_17962 stream (IIIIII)Ljava/util/stream/Stream;
-		ARG 0 minX
-		ARG 1 minY
-		ARG 2 minZ
-		ARG 3 maxX
-		ARG 4 maxY
-		ARG 5 maxZ
+		ARG 0 startX
+		ARG 1 startY
+		ARG 2 startZ
+		ARG 3 endX
+		ARG 4 endY
+		ARG 5 endZ
 	METHOD method_19438 deserialize (Lcom/mojang/datafixers/Dynamic;)Lnet/minecraft/class_2338;
 		ARG 0 dynamic
 	METHOD method_20437 stream (Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Ljava/util/stream/Stream;
-		ARG 0 pos1
-		ARG 1 pos2
+		ARG 0 start
+		ARG 1 end
 	METHOD method_23627 stream (Lnet/minecraft/class_3341;)Ljava/util/stream/Stream;
 		ARG 0 box
 	METHOD method_25503 mutableCopy ()Lnet/minecraft/class_2338$class_2339;
+		COMMENT Returns a mutable copy of this block position.
+		COMMENT
+		COMMENT <p>If this block position is a mutable one, mutation to this block
+		COMMENT position won't affect the returned position.
+	METHOD method_25996 iterateOutwards (Lnet/minecraft/class_2338;III)Ljava/lang/Iterable;
+		COMMENT Iterates block positions around the {@code center}. The iteration order
+		COMMENT is mainly based on the manhattan distance of the position from the
+		COMMENT center.
+		COMMENT
+		COMMENT <p>For the same manhattan distance, the positions are iterated by y
+		COMMENT offset, from negative to positive. For the same y offset, the positions
+		COMMENT are iterated by x offset, from negative to positive. For the two
+		COMMENT positions with the same x and y offsets and the same manhattan distance,
+		COMMENT the one with a positive z offset is visited first before the one with a
+		COMMENT negative z offset.
+		ARG 0 center
+			COMMENT the center of iteration
+		ARG 1 xRange
+			COMMENT the maximum x difference from the center
+		ARG 2 yRange
+			COMMENT the maximum y difference from the center
+		ARG 3 zRange
+			COMMENT the maximum z difference from the center
+	METHOD method_25997 findClosest (Lnet/minecraft/class_2338;IILjava/util/function/Predicate;)Ljava/util/Optional;
+		ARG 0 pos
+		ARG 1 horizontalRange
+		ARG 2 verticalRange
+		ARG 3 condition
+	METHOD method_25998 streamOutwards (Lnet/minecraft/class_2338;III)Ljava/util/stream/Stream;
+		ARG 0 center
+		ARG 1 maxX
+		ARG 2 maxY
+		ARG 3 maxZ
 	CLASS 1
-		FIELD field_17676 connector Lnet/minecraft/class_3980;
-		FIELD field_18231 position Lnet/minecraft/class_2338$class_2339;
-		METHOD tryAdvance (Ljava/util/function/Consumer;)Z
-			ARG 1 consumer
+		FIELD field_23094 maxDistance I
+		FIELD field_23095 xRange I
+		FIELD field_23096 yRange I
+		FIELD field_23097 zRange I
+		FIELD field_23099 manhattanDistance I
+		FIELD field_23100 limitX I
+		FIELD field_23101 limitY I
+		FIELD field_23102 dx I
+		FIELD field_23103 dy I
 	CLASS 2
-		FIELD field_10990 maxZ I
-		FIELD field_10991 maxY I
-		FIELD field_10992 maxX I
-		FIELD field_10993 minZ I
-		FIELD field_10994 minY I
-		FIELD field_10995 minX I
-		FIELD field_17596 iterator Lnet/minecraft/class_3980;
-		FIELD field_18232 pos Lnet/minecraft/class_2338$class_2339;
+		FIELD field_23105 size I
+		FIELD field_23106 sizeX I
+		FIELD field_23107 sizeY I
+		FIELD field_23108 startX I
+		FIELD field_23109 startY I
+		FIELD field_23110 startZ I
+		FIELD field_23111 index I
 	CLASS class_2339 Mutable
-		METHOD method_10098 setOffset (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338$class_2339;
+		METHOD method_10098 move (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338$class_2339;
+			COMMENT Moves this mutable block position by 1 block in the given direction.
 			ARG 1 direction
-		METHOD method_10100 setOffset (III)Lnet/minecraft/class_2338$class_2339;
-			ARG 1 x
-			ARG 2 y
-			ARG 3 z
+		METHOD method_10100 move (III)Lnet/minecraft/class_2338$class_2339;
+			COMMENT Moves the mutable block position by the delta x, y, and z provided.
+			ARG 1 dx
+			ARG 2 dy
+			ARG 3 dz
 		METHOD method_10101 set (Lnet/minecraft/class_2382;)Lnet/minecraft/class_2338$class_2339;
 			ARG 1 pos
 		METHOD method_10102 set (DDD)Lnet/minecraft/class_2338$class_2339;
@@ -127,10 +179,13 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 			ARG 3 y
 			ARG 5 z
 		METHOD method_10103 set (III)Lnet/minecraft/class_2338$class_2339;
+			COMMENT Sets the x, y, and z of this mutable block position.
 			ARG 1 x
 			ARG 2 y
 			ARG 3 z
-		METHOD method_10104 setOffset (Lnet/minecraft/class_2350;I)Lnet/minecraft/class_2338$class_2339;
+		METHOD method_10104 move (Lnet/minecraft/class_2350;I)Lnet/minecraft/class_2338$class_2339;
+			COMMENT Moves this mutable block position by the given distance in the given
+			COMMENT direction.
 			ARG 1 direction
 			ARG 2 distance
 		METHOD method_16363 set (J)Lnet/minecraft/class_2338$class_2339;
@@ -140,10 +195,15 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 			ARG 2 x
 			ARG 3 y
 			ARG 4 z
-		METHOD method_25504 setOffset (Lnet/minecraft/class_2382;III)Lnet/minecraft/class_2338$class_2339;
+		METHOD method_25504 set (Lnet/minecraft/class_2382;III)Lnet/minecraft/class_2338$class_2339;
+			COMMENT Sets this mutable block position to the sum of the given position and the
+			COMMENT given x, y, and z.
 			ARG 1 pos
 			ARG 2 x
 			ARG 3 y
 			ARG 4 z
-		METHOD method_25505 move (Lnet/minecraft/class_2382;Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338$class_2339;
+		METHOD method_25505 set (Lnet/minecraft/class_2382;Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338$class_2339;
+			COMMENT Sets this mutable block position to the offset position of the given
+			COMMENT pos by the given direction.
 			ARG 1 pos
+			ARG 2 direction
