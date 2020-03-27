@@ -1,9 +1,22 @@
 CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 	METHOD method_17884 (Ljava/util/Map;Lnet/minecraft/class_2487;Lnet/minecraft/class_1887;)V
 		ARG 2 enchantment
-	METHOD method_22445 getEnchantments (Lnet/minecraft/class_2499;)Ljava/util/Map;
+	METHOD method_22445 fromTag (Lnet/minecraft/class_2499;)Ljava/util/Map;
+		COMMENT Loads enchantments from an NBT list.
 		ARG 0 tag
-	METHOD method_24365 getMatchingEnchantedEquipment (Lnet/minecraft/class_1887;Lnet/minecraft/class_1309;Ljava/util/function/Predicate;)Ljava/util/Map$Entry;
+	METHOD method_24365 chooseEquipmentWith (Lnet/minecraft/class_1887;Lnet/minecraft/class_1309;Ljava/util/function/Predicate;)Ljava/util/Map$Entry;
+		COMMENT Returns a pair of an equipment slot and the item stack in the supplied
+		COMMENT entity's slot, indicating the item stack has the enchantment supplied
+		COMMENT and fulfills the extra condition.
+		COMMENT
+		COMMENT <p>If multiple equipment slots' item stacks are valid, a random pair is
+		COMMENT returned.
+		ARG 0 enchantment
+			COMMENT the enchantment the equipped item stack must have
+		ARG 1 entity
+			COMMENT the entity to choose equipments from
+		ARG 2 condition
+			COMMENT extra conditions for the item stack to pass for selection
 	METHOD method_25951 hasSoulSpeed (Lnet/minecraft/class_1309;)Z
 		ARG 0 entity
 	METHOD method_8199 getFireAspect (Lnet/minecraft/class_1309;)I
@@ -18,15 +31,28 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 	METHOD method_8202 getRiptide (Lnet/minecraft/class_1799;)I
 		ARG 0 stack
 	METHOD method_8203 getEquipmentLevel (Lnet/minecraft/class_1887;Lnet/minecraft/class_1309;)I
-		ARG 0 ench
+		COMMENT Returns the highest level of the passed enchantment in the enchantment's
+		COMMENT applicable equipment slots' item stacks.
+		ARG 0 enchantment
+			COMMENT the enchantment
 		ARG 1 entity
-	METHOD method_8204 getRandomEnchantedEquipment (Lnet/minecraft/class_1887;Lnet/minecraft/class_1309;)Ljava/util/Map$Entry;
+			COMMENT the entity whose equipment slots are checked
+	METHOD method_8204 chooseEquipmentWith (Lnet/minecraft/class_1887;Lnet/minecraft/class_1309;)Ljava/util/Map$Entry;
+		COMMENT Returns a pair of an equipment slot and the item stack in the supplied
+		COMMENT entity's slot, indicating the item stack has the enchantment supplied.
+		COMMENT
+		COMMENT <p>If multiple equipment slots' item stacks are valid, a random pair is
+		COMMENT returned.
+		ARG 0 enchantment
+			COMMENT the enchantment the equipped item stack must have
+		ARG 1 entity
+			COMMENT the entity to choose equipments from
 	METHOD method_8205 getKnockback (Lnet/minecraft/class_1309;)I
 		ARG 0 entity
 	METHOD method_8206 getLoyalty (Lnet/minecraft/class_1799;)I
 		ARG 0 stack
-	METHOD method_8209 accept (Lnet/minecraft/class_1890$class_1891;Ljava/lang/Iterable;)V
-		ARG 0 enchantmentHandler
+	METHOD method_8209 forEachEnchantment (Lnet/minecraft/class_1890$class_1891;Ljava/lang/Iterable;)V
+		ARG 0 action
 		ARG 1 stacks
 	METHOD method_8210 onUserDamaged (Lnet/minecraft/class_1309;Lnet/minecraft/class_1297;)V
 		ARG 0 user
@@ -37,6 +63,13 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 		ARG 0 user
 		ARG 1 target
 	METHOD method_8214 set (Ljava/util/Map;Lnet/minecraft/class_1799;)V
+		COMMENT Sets the enchantments on an item stack.
+		COMMENT
+		COMMENT <p>For enchanted books, it sets the enchantments to the item stack's
+		COMMENT stored enchantments than regular enchantments.
+		COMMENT
+		COMMENT @see net.minecraft.item.ItemStack#getEnchantments()
+		COMMENT @see net.minecraft.item.EnchantedBookItem#getEnchantmentTag(net.minecraft.item.ItemStack)
 		ARG 0 enchantments
 		ARG 1 stack
 	METHOD method_8215 getLure (Lnet/minecraft/class_1799;)I
@@ -51,48 +84,74 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 	METHOD method_8219 getProtectionAmount (Ljava/lang/Iterable;Lnet/minecraft/class_1282;)I
 		ARG 0 equipment
 		ARG 1 source
-	METHOD method_8220 accept (Lnet/minecraft/class_1890$class_1891;Lnet/minecraft/class_1799;)V
-		ARG 0 enchantmentHandler
+	METHOD method_8220 forEachEnchantment (Lnet/minecraft/class_1890$class_1891;Lnet/minecraft/class_1799;)V
+		ARG 0 action
 		ARG 1 stack
 	METHOD method_8221 hasVanishingCurse (Lnet/minecraft/class_1799;)Z
 		ARG 0 stack
-	METHOD method_8222 getEnchantments (Lnet/minecraft/class_1799;)Ljava/util/Map;
+	METHOD method_8222 get (Lnet/minecraft/class_1799;)Ljava/util/Map;
+		COMMENT Gets the enchantments on an item stack.
+		COMMENT
+		COMMENT <p>For enchanted books, it retrieves from the item stack's stored than
+		COMMENT regular enchantments.
+		COMMENT
+		COMMENT @see net.minecraft.item.ItemStack#getEnchantments()
+		COMMENT @see net.minecraft.item.EnchantedBookItem#getEnchantmentTag(net.minecraft.item.ItemStack)
 		ARG 0 stack
 	METHOD method_8223 getLuckOfTheSea (Lnet/minecraft/class_1799;)I
 		ARG 0 stack
 	METHOD method_8224 hasBindingCurse (Lnet/minecraft/class_1799;)Z
 		ARG 0 stack
 	METHOD method_8225 getLevel (Lnet/minecraft/class_1887;Lnet/minecraft/class_1799;)I
+		COMMENT Gets the level of an enchantment on an item stack.
 		ARG 0 enchantment
 		ARG 1 stack
 	METHOD method_8226 getLooting (Lnet/minecraft/class_1309;)I
 		ARG 0 entity
-	METHOD method_8227 calculateEnchantmentPower (Ljava/util/Random;IILnet/minecraft/class_1799;)I
+	METHOD method_8227 calculateRequiredExperienceLevel (Ljava/util/Random;IILnet/minecraft/class_1799;)I
+		COMMENT Returns the required experience level for an enchanting option in the
+		COMMENT enchanting table's screen, or the enchantment screen.
 		ARG 0 random
-		ARG 1 num
-		ARG 2 enchantmentPower
-		ARG 3 rstack
+			COMMENT the random, which guarantees consistent results with the same seed
+		ARG 1 slotIndex
+			COMMENT the index of the enchanting option
+		ARG 2 bookshelfCount
+			COMMENT the number of bookshelves
+		ARG 3 stack
+			COMMENT the item stack to enchant
 	METHOD method_8228 hasChanneling (Lnet/minecraft/class_1799;)Z
 		ARG 0 stack
-	METHOD method_8229 getHighestApplicableEnchantmentsAtPower (ILnet/minecraft/class_1799;Z)Ljava/util/List;
+	METHOD method_8229 getPossibleEntries (ILnet/minecraft/class_1799;Z)Ljava/util/List;
+		COMMENT Gets all the possible entries for enchanting the {@code stack} at the
+		COMMENT given {@code power}.
 		ARG 0 power
 		ARG 1 stack
 		ARG 2 treasureAllowed
-	METHOD method_8230 getEnchantments (Ljava/util/Random;Lnet/minecraft/class_1799;IZ)Ljava/util/List;
+	METHOD method_8230 generateEnchantments (Ljava/util/Random;Lnet/minecraft/class_1799;IZ)Ljava/util/List;
+		COMMENT Generate the enchantments for enchanting the {@code stack}.
 		ARG 0 random
 		ARG 1 stack
 		ARG 2 level
-		ARG 3 hasTreasure
-	METHOD method_8231 remove (Ljava/util/List;Lnet/minecraft/class_1889;)V
-		ARG 0 infos
-		ARG 1 info
+		ARG 3 treasureAllowed
+	METHOD method_8231 removeConflicts (Ljava/util/List;Lnet/minecraft/class_1889;)V
+		COMMENT Remove entries conflicting with the picked entry from the possible
+		COMMENT entries.
+		ARG 0 possibleEntries
+			COMMENT the possible entries
+		ARG 1 pickedEntry
+			COMMENT the picked entry
 	METHOD method_8232 getDepthStrider (Lnet/minecraft/class_1309;)I
 		ARG 0 entity
 	METHOD method_8233 enchant (Ljava/util/Random;Lnet/minecraft/class_1799;IZ)Lnet/minecraft/class_1799;
+		COMMENT Enchants the {@code target} item stack and returns it.
 		ARG 0 random
+			COMMENT the seed
 		ARG 1 target
+			COMMENT the item stack to enchant
 		ARG 2 level
-		ARG 3 hasTreasure
+			COMMENT the experience level
+		ARG 3 treasureAllowed
+			COMMENT whether treasure enchantments may appear
 	METHOD method_8234 getEfficiency (Lnet/minecraft/class_1309;)I
 		ARG 0 entity
 	CLASS class_1891 Consumer

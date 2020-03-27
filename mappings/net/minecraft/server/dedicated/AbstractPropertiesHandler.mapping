@@ -1,30 +1,91 @@
 CLASS net/minecraft/class_3808 net/minecraft/server/dedicated/AbstractPropertiesHandler
 	FIELD field_16848 properties Ljava/util/Properties;
 	FIELD field_16849 LOGGER Lorg/apache/logging/log4j/Logger;
-	METHOD method_16720 parseIntWithOperation (Ljava/lang/String;Ljava/util/function/UnaryOperator;I)I
-	METHOD method_16721 wrapNumberParsingFunction (Ljava/util/function/Function;)Ljava/util/function/Function;
-	METHOD method_16722 wrapIntParsingFunction (Ljava/util/function/IntFunction;Ljava/util/function/Function;)Ljava/util/function/Function;
-	METHOD method_16723 getProperties ()Ljava/util/Properties;
+	METHOD <init> (Ljava/util/Properties;)V
+		ARG 1 properties
+	METHOD method_16720 transformedParseInt (Ljava/lang/String;Ljava/util/function/UnaryOperator;I)I
+		ARG 1 key
+		ARG 2 transformer
+		ARG 3 fallback
+	METHOD method_16721 wrapNumberParser (Ljava/util/function/Function;)Ljava/util/function/Function;
+		ARG 0 parser
+	METHOD method_16722 combineParser (Ljava/util/function/IntFunction;Ljava/util/function/Function;)Ljava/util/function/Function;
+		ARG 0 intParser
+		ARG 1 fallbackParser
+	METHOD method_16723 copyProperties ()Ljava/util/Properties;
 	METHOD method_16724 accessor (Ljava/lang/String;Ljava/util/function/Function;Ljava/util/function/Function;Ljava/lang/Object;)Lnet/minecraft/class_3808$class_3809;
+		ARG 1 key
+		ARG 2 parser
+		ARG 3 stringifier
+		ARG 4 fallback
 	METHOD method_16725 parseLong (Ljava/lang/String;J)J
+		ARG 1 key
+		ARG 2 fallback
 	METHOD method_16726 getInt (Ljava/lang/String;I)I
-	METHOD method_16727 load (Ljava/nio/file/Path;)Ljava/util/Properties;
-	METHOD method_16728 store (Ljava/nio/file/Path;)V
+		ARG 1 key
+		ARG 2 fallback
+	METHOD method_16727 loadProperties (Ljava/nio/file/Path;)Ljava/util/Properties;
+		COMMENT Loads a map of properties from the {@code path}.
+		ARG 0 path
+	METHOD method_16728 saveProperties (Ljava/nio/file/Path;)V
+		COMMENT Saves the properties of this handler to the {@code path}.
+		ARG 1 path
 	METHOD method_16730 accessor (Ljava/lang/String;Ljava/util/function/Function;Ljava/lang/Object;)Lnet/minecraft/class_3808$class_3809;
+		ARG 1 key
+		ARG 2 parser
+		ARG 3 fallback
 	METHOD method_16732 getString (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+		ARG 1 key
+		ARG 2 fallback
 	METHOD method_16734 getStringValue (Ljava/lang/String;)Ljava/lang/String;
-	METHOD method_16735 getWithOperation (Ljava/lang/String;Ljava/util/function/Function;Ljava/util/function/UnaryOperator;Ljava/util/function/Function;Ljava/lang/Object;)Ljava/lang/Object;
+		ARG 1 key
+	METHOD method_16735 get (Ljava/lang/String;Ljava/util/function/Function;Ljava/util/function/UnaryOperator;Ljava/util/function/Function;Ljava/lang/Object;)Ljava/lang/Object;
+		ARG 1 key
+		ARG 2 parser
+		ARG 3 parsedTransformer
+		ARG 4 stringifier
+		ARG 5 fallback
 	METHOD method_16736 getDeprecatedBoolean (Ljava/lang/String;)Ljava/lang/Boolean;
-	METHOD method_16737 getString (Ljava/lang/String;Ljava/util/function/Function;Ljava/lang/Object;)Ljava/lang/Object;
+		ARG 1 key
+	METHOD method_16737 get (Ljava/lang/String;Ljava/util/function/Function;Ljava/lang/Object;)Ljava/lang/Object;
+		ARG 1 key
+		ARG 2 parser
+		ARG 3 fallback
 	METHOD method_16738 getDeprecatedString (Ljava/lang/String;)Ljava/lang/String;
+		ARG 1 key
 	METHOD method_16739 create (Ljava/util/Properties;)Lnet/minecraft/class_3808;
+		COMMENT Creates another property handler with the same type as this one from the
+		COMMENT passed new map of properties.
+		ARG 1 properties
 	METHOD method_16740 parseBoolean (Ljava/lang/String;Z)Z
+		ARG 1 key
+		ARG 2 fallback
 	METHOD method_16741 get (Ljava/lang/String;Ljava/util/function/Function;Ljava/util/function/Function;Ljava/lang/Object;)Ljava/lang/Object;
+		ARG 1 key
+		ARG 2 parser
+		ARG 3 stringifier
+		ARG 4 fallback
 	METHOD method_16742 getDeprecated (Ljava/lang/String;Ljava/util/function/Function;)Ljava/lang/Object;
+		ARG 1 key
+		ARG 2 stringifier
 	METHOD method_16743 intAccessor (Ljava/lang/String;I)Lnet/minecraft/class_3808$class_3809;
+		ARG 1 key
+		ARG 2 fallback
 	METHOD method_16744 booleanAccessor (Ljava/lang/String;Z)Lnet/minecraft/class_3808$class_3809;
+		ARG 1 key
+		ARG 2 fallback
 	CLASS class_3809 PropertyAccessor
 		FIELD field_16850 value Ljava/lang/Object;
-		FIELD field_16851 stringify Ljava/util/function/Function;
+		FIELD field_16851 stringifier Ljava/util/function/Function;
 		FIELD field_16852 key Ljava/lang/String;
+		METHOD <init> (Lnet/minecraft/class_3808;Ljava/lang/String;Ljava/lang/Object;Ljava/util/function/Function;)V
+			ARG 2 key
+			ARG 3 value
+			ARG 4 stringifier
 		METHOD method_16745 set (Ljava/lang/Object;)Lnet/minecraft/class_3808;
+			COMMENT Returns a new property handler with another map of property in which
+			COMMENT the property handled by this accessor is updated.
+			COMMENT
+			COMMENT <p>This method does not mutate the original property where this accessor
+			COMMENT is from.
+			ARG 1 value
