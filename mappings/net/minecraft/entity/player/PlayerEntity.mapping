@@ -4,7 +4,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	FIELD field_19428 shoulderEntityAddedTime J
 	FIELD field_7483 strideDistance F
 	FIELD field_7484 itemCooldownManager Lnet/minecraft/class_1796;
-	FIELD field_7486 enderChestInventory Lnet/minecraft/class_1730;
+	FIELD field_7486 enderChestChestLikeObject Lnet/minecraft/class_1730;
 	FIELD field_7487 sleepTimer I
 	FIELD field_7488 MAIN_ARM Lnet/minecraft/class_2940;
 	FIELD field_7489 abilityResyncCountdown I
@@ -14,7 +14,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	FIELD field_7494 enchantmentTableSeed I
 	FIELD field_7495 totalExperience I
 	FIELD field_7496 LEFT_SHOULDER_ENTITY Lnet/minecraft/class_2940;
-	FIELD field_7498 playerScreenHandler Lnet/minecraft/class_1723;
+	FIELD field_7498 playerMenuHandler Lnet/minecraft/class_1723;
 	FIELD field_7499 capeZ D
 	FIELD field_7500 capeX D
 	FIELD field_7502 prevCapeY D
@@ -26,9 +26,9 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	FIELD field_7508 lastPlayedLevelUpSoundTime I
 	FIELD field_7510 experienceProgress F
 	FIELD field_7511 SCORE Lnet/minecraft/class_2940;
-	FIELD field_7512 currentScreenHandler Lnet/minecraft/class_1703;
+	FIELD field_7512 currentMenuHandler Lnet/minecraft/class_1703;
 	FIELD field_7513 fishHook Lnet/minecraft/class_1536;
-	FIELD field_7514 inventory Lnet/minecraft/class_1661;
+	FIELD field_7514 chestLikeObject Lnet/minecraft/class_1661;
 	FIELD field_7518 PLAYER_MODEL_PARTS Lnet/minecraft/class_2940;
 	FIELD field_7520 experienceLevel I
 	FIELD field_7521 capeY D
@@ -39,7 +39,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD <init> (Lnet/minecraft/class_1937;Lcom/mojang/authlib/GameProfile;)V
 		ARG 1 world
 		ARG 2 profile
-	METHOD method_16354 openJigsawScreen (Lnet/minecraft/class_3751;)V
+	METHOD method_16354 openJigsawMenu (Lnet/minecraft/class_3751;)V
 		ARG 1 jigsaw
 	METHOD method_16475 spawnParticles (Lnet/minecraft/class_2394;)V
 		ARG 1 parameters
@@ -50,7 +50,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 4 experience
 		ARG 5 leveled
 		ARG 6 refreshable
-	METHOD method_17355 openHandledScreen (Lnet/minecraft/class_3908;)Ljava/util/OptionalInt;
+	METHOD method_17355 openHandledMenu (Lnet/minecraft/class_3908;)Ljava/util/OptionalInt;
 		ARG 1 factory
 	METHOD method_17356 playSound (Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
 		ARG 1 event
@@ -76,8 +76,8 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 1 experience
 	METHOD method_7256 shouldDamagePlayer (Lnet/minecraft/class_1657;)Z
 		ARG 1 player
-	METHOD method_7257 openCommandBlockMinecartScreen (Lnet/minecraft/class_1918;)V
-		ARG 1 commandBlockExecutor
+	METHOD method_7257 openCommandWorldlyItemMinecartMenu (Lnet/minecraft/class_1918;)V
+		ARG 1 commandWorldlyItemExecutor
 	METHOD method_7259 incrementStat (Lnet/minecraft/class_3445;)V
 		ARG 1 stat
 	METHOD method_7260 increaseRidingMotionStats (DDD)V
@@ -103,7 +103,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7272 getScore ()I
 	METHOD method_7273 setShoulderEntityLeft (Lnet/minecraft/class_2487;)V
 		ARG 1 entityTag
-	METHOD method_7274 getEnderChestInventory ()Lnet/minecraft/class_1730;
+	METHOD method_7274 getEnderChestChestLikeObject ()Lnet/minecraft/class_1730;
 	METHOD method_7276 isSleepingLongEnough ()Z
 	METHOD method_7277 addCritParticles (Lnet/minecraft/class_1297;)V
 		ARG 1 target
@@ -129,9 +129,9 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 2 hand
 	METHOD method_7290 dropSelectedItem (Z)Z
 		ARG 1 dropEntireStack
-	METHOD method_7291 openHorseInventory (Lnet/minecraft/class_1496;Lnet/minecraft/class_1263;)V
+	METHOD method_7291 openHorseChestLikeObject (Lnet/minecraft/class_1496;Lnet/minecraft/class_1263;)V
 		ARG 1 horse
-		ARG 2 inventory
+		ARG 2 chestLikeObject
 	METHOD method_7292 getLuck ()F
 	METHOD method_7293 vanishCursedItems ()V
 	METHOD method_7294 canModifyWorld ()Z
@@ -144,20 +144,20 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7299 addTellClickEvent (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
 		ARG 1 component
 	METHOD method_7302 getReducedDebugInfo ()Z
-	METHOD method_7303 openStructureBlockScreen (Lnet/minecraft/class_2633;)V
-		ARG 1 structureBlock
+	METHOD method_7303 openStructureWorldlyItemMenu (Lnet/minecraft/class_2633;)V
+		ARG 1 structureWorldlyItem
 	METHOD method_7304 addEnchantedHitParticles (Lnet/minecraft/class_1297;)V
 		ARG 1 target
 	METHOD method_7305 isUsingEffectiveTool (Lnet/minecraft/class_2680;)Z
-		ARG 1 block
+		ARG 1 worldlyItem
 	METHOD method_7306 getNameAndUuid ()Lnet/minecraft/class_2561;
 	METHOD method_7308 getShoulderEntityRight ()Lnet/minecraft/class_2487;
 	METHOD method_7310 getOfflinePlayerUuid (Ljava/lang/String;)Ljava/util/UUID;
 		ARG 0 nickname
-	METHOD method_7311 openEditSignScreen (Lnet/minecraft/class_2625;)V
+	METHOD method_7311 openEditSignMenu (Lnet/minecraft/class_2625;)V
 		ARG 1 sign
 	METHOD method_7313 updateCapeAngles ()V
-	METHOD method_7315 openEditBookScreen (Lnet/minecraft/class_1799;Lnet/minecraft/class_1268;)V
+	METHOD method_7315 openEditBookMenu (Lnet/minecraft/class_1799;Lnet/minecraft/class_1268;)V
 		ARG 1 book
 		ARG 2 hand
 	METHOD method_7316 addExperienceLevels (I)V
@@ -168,8 +168,8 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 1 score
 	METHOD method_7322 addExhaustion (F)V
 		ARG 1 exhaustion
-	METHOD method_7323 openCommandBlockScreen (Lnet/minecraft/class_2593;)V
-		ARG 1 commandBlock
+	METHOD method_7323 openCommandWorldlyItemMenu (Lnet/minecraft/class_2593;)V
+		ARG 1 commandWorldlyItem
 	METHOD method_7324 attack (Lnet/minecraft/class_1297;)V
 		ARG 1 target
 	METHOD method_7326 doesNotSuffocate (Lnet/minecraft/class_2338;)Z
@@ -212,13 +212,13 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7344 getHungerManager ()Lnet/minecraft/class_1702;
 	METHOD method_7345 setShoulderEntityRight (Lnet/minecraft/class_2487;)V
 		ARG 1 entityTag
-	METHOD method_7346 closeHandledScreen ()V
+	METHOD method_7346 closeHandledMenu ()V
 	METHOD method_7348 isPartVisible (Lnet/minecraft/class_1664;)Z
 		ARG 1 modelPart
 	METHOD method_7349 getNextLevelExperience ()I
 	METHOD method_7350 resetLastAttackedTicks ()V
-	METHOD method_7351 getBlockBreakingSpeed (Lnet/minecraft/class_2680;)F
-		ARG 1 block
+	METHOD method_7351 getWorldlyItemBreakingSpeed (Lnet/minecraft/class_2680;)F
+		ARG 1 worldlyItem
 	METHOD method_7353 addMessage (Lnet/minecraft/class_2561;Z)V
 		ARG 1 message
 		ARG 2 actionBar

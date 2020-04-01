@@ -3,13 +3,13 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_20792 frame I
 	FIELD field_20797 RAIN Lnet/minecraft/class_2960;
 	FIELD field_20798 SNOW Lnet/minecraft/class_2960;
-	FIELD field_20950 blockBreakingProgressions Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
+	FIELD field_20950 worldlyItemBreakingProgressions Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 	FIELD field_20951 bufferBuilders Lnet/minecraft/class_4599;
 	FIELD field_21799 chunkUpdateSmoother Lnet/minecraft/class_4740;
-	FIELD field_4055 noCullingBlockEntities Ljava/util/Set;
+	FIELD field_4055 noCullingWorldlyItemEntities Ljava/util/Set;
 	FIELD field_4056 capturedFrustum Lnet/minecraft/class_4604;
 	FIELD field_4057 textureManager Lnet/minecraft/class_1060;
-	FIELD field_4058 blockBreakingInfos Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+	FIELD field_4058 worldlyItemBreakingInfos Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 	FIELD field_4059 entityOutlineShader Lnet/minecraft/class_279;
 	FIELD field_4060 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_4061 END_SKY Lnet/minecraft/class_2960;
@@ -25,7 +25,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_4077 needsTerrainUpdate Z
 	FIELD field_4080 lastCloudsRenderMode Lnet/minecraft/class_4063;
 	FIELD field_4081 lastCameraY D
-	FIELD field_4082 lastCloudsBlockX I
+	FIELD field_4082 lastCloudsWorldlyItemX I
 	FIELD field_4083 lastTranslucentSortX D
 	FIELD field_4084 cameraChunkX I
 	FIELD field_4085 world Lnet/minecraft/class_638;
@@ -38,7 +38,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_4094 cloudsBuffer Lnet/minecraft/class_291;
 	FIELD field_4095 DIRECTIONS [Lnet/minecraft/class_2350;
 	FIELD field_4096 lastCameraZ D
-	FIELD field_4097 lastCloudsBlockY I
+	FIELD field_4097 lastCloudsWorldlyItemY I
 	FIELD field_4098 MOON_PHASES Lnet/minecraft/class_2960;
 	FIELD field_4100 skyVertexFormat Lnet/minecraft/class_293;
 	FIELD field_4101 entityOutlinesFramebuffer Lnet/minecraft/class_276;
@@ -50,12 +50,12 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_4107 cloudsDirty Z
 	FIELD field_4108 CLOUDS Lnet/minecraft/class_2960;
 	FIELD field_4109 entityRenderDispatcher Lnet/minecraft/class_898;
-	FIELD field_4110 blockEntityCount I
+	FIELD field_4110 worldlyItemEntityCount I
 	FIELD field_4111 SUN Lnet/minecraft/class_2960;
 	FIELD field_4112 chunks Lnet/minecraft/class_769;
 	FIELD field_4113 starsBuffer Lnet/minecraft/class_291;
 	FIELD field_4115 lastCameraPitch D
-	FIELD field_4116 lastCloudsBlockZ I
+	FIELD field_4116 lastCloudsWorldlyItemZ I
 	FIELD field_4118 lastTranslucentSortZ D
 	FIELD field_4119 playingSongs Ljava/util/Map;
 	FIELD field_4120 lastCameraChunkUpdateY D
@@ -66,18 +66,18 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	METHOD method_16037 scheduleSectionRender (Lnet/minecraft/class_2338;Z)V
 		ARG 1 pos
 		ARG 2 important
-	METHOD method_18145 scheduleBlockRenders (III)V
+	METHOD method_18145 scheduleWorldlyItemRenders (III)V
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
-	METHOD method_18146 scheduleBlockRenders (IIIIII)V
+	METHOD method_18146 scheduleWorldlyItemRenders (IIIIII)V
 		ARG 1 minX
 		ARG 2 minY
 		ARG 3 minZ
 		ARG 4 maxX
 		ARG 5 maxY
 		ARG 6 maxZ
-	METHOD method_21596 checkBlockRerender (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)V
+	METHOD method_21596 checkWorldlyItemRerender (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)V
 		ARG 1 pos
 		ARG 2 old
 		ARG 3 updated
@@ -85,11 +85,11 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 1 matrices
 		ARG 2 tickDelta
 		ARG 3 limitTime
-		ARG 5 renderBlockOutline
+		ARG 5 renderWorldlyItemOutline
 		ARG 6 camera
 		ARG 7 gameRenderer
 		ARG 8 lightmapTextureManager
-	METHOD method_22712 drawBlockOutline (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Lnet/minecraft/class_1297;DDDLnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
+	METHOD method_22712 drawWorldlyItemOutline (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Lnet/minecraft/class_1297;DDDLnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 	METHOD method_22713 (Lnet/minecraft/class_4184;)V
 		ARG 1 camera
 	METHOD method_22714 renderWeather (Lnet/minecraft/class_765;FDDD)V
@@ -119,7 +119,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 19 green
 		ARG 20 blue
 	METHOD method_22982 drawBox (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Lnet/minecraft/class_238;FFFF)V
-	METHOD method_22987 removeBlockBreakingInfo (Lnet/minecraft/class_3191;)V
+	METHOD method_22987 removeWorldlyItemBreakingInfo (Lnet/minecraft/class_3191;)V
 	METHOD method_22989 renderChunkDebugInfo (Lnet/minecraft/class_4184;)V
 		ARG 1 camera
 	METHOD method_22990 getEntityOutlinesFramebuffer ()Lnet/minecraft/class_276;
@@ -144,7 +144,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	METHOD method_3243 renderWorldBorder (Lnet/minecraft/class_4184;)V
 		ARG 1 camera
 	METHOD method_3244 setWorld (Lnet/minecraft/class_638;)V
-	METHOD method_3245 updateNoCullingBlockEntities (Ljava/util/Collection;Ljava/util/Collection;)V
+	METHOD method_3245 updateNoCullingWorldlyItemEntities (Ljava/util/Collection;Ljava/util/Collection;)V
 		ARG 1 removed
 		ARG 2 added
 	METHOD method_3246 getCompletedChunkCount ()I
@@ -274,17 +274,17 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 9 velocityX
 		ARG 11 velocityY
 		ARG 13 velocityZ
-	METHOD method_8569 setBlockBreakingInfo (ILnet/minecraft/class_2338;I)V
+	METHOD method_8569 setWorldlyItemBreakingInfo (ILnet/minecraft/class_2338;I)V
 		ARG 1 entityId
 		ARG 2 pos
 		ARG 3 stage
-	METHOD method_8570 updateBlock (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;I)V
+	METHOD method_8570 updateWorldlyItem (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;I)V
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 oldState
 		ARG 4 newState
 		ARG 5 flags
-	METHOD method_8571 scheduleBlockRender (III)V
+	METHOD method_8571 scheduleWorldlyItemRender (III)V
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
