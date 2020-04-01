@@ -1,0 +1,103 @@
+CLASS net/minecraft/class_3204 com/mojang/minecraft/level/access/server/ChunkTicketManager
+	FIELD field_13894 age J
+	FIELD field_13895 ticketsByPosition Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap;
+	FIELD field_16210 chunkHolders Ljava/util/Set;
+	FIELD field_16211 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_17452 NEARBY_PLAYER_TICKET_LEVEL I
+	FIELD field_17453 playersByChunkPos Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
+	FIELD field_17454 distanceFromNearestPlayerTracker Lnet/minecraft/class_3204$class_3205;
+	FIELD field_17455 nearbyChunkTicketUpdater Lnet/minecraft/class_3204$class_3948;
+	FIELD field_17456 levelUpdateListener Lnet/minecraft/class_3900;
+	FIELD field_17457 playerTicketThrottler Lnet/minecraft/class_3906;
+	FIELD field_17458 playerTicketThrottlerSorter Lnet/minecraft/class_3906;
+	FIELD field_17459 chunkPositions Lit/unimi/dsi/fastutil/longs/LongSet;
+	FIELD field_17460 mainThreadExecutor Ljava/util/concurrent/Executor;
+	FIELD field_18252 distanceFromTicketTracker Lnet/minecraft/class_3204$class_4077;
+	METHOD <init> (Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)V
+		ARG 1 workerExecutor
+		ARG 2 mainThreadExecutor
+	METHOD method_14035 isUnloaded (J)Z
+		ARG 1 pos
+	METHOD method_14036 setChunkForced (Lnet/minecraft/class_1923;Z)V
+		ARG 1 pos
+		ARG 2 forced
+	METHOD method_14038 getChunkHolder (J)Lnet/minecraft/class_3193;
+		ARG 1 pos
+	METHOD method_14042 addTicket (JLnet/minecraft/class_3228;)V
+		ARG 1 position
+		ARG 3 ticket
+	METHOD method_14045 purge ()V
+	METHOD method_14046 getLevel (Lnet/minecraft/class_4706;)I
+	METHOD method_14048 handleChunkEnter (Lnet/minecraft/class_4076;Lnet/minecraft/class_3222;)V
+		ARG 1 pos
+	METHOD method_14049 setWatchDistance (I)V
+		ARG 1 viewDistance
+	METHOD method_14050 getTicketSet (J)Lnet/minecraft/class_4706;
+		ARG 1 position
+	METHOD method_14051 handleChunkLeave (Lnet/minecraft/class_4076;Lnet/minecraft/class_3222;)V
+		ARG 1 pos
+		ARG 2 player
+	METHOD method_14052 getLevelCount ()I
+	METHOD method_14053 setLevel (JILnet/minecraft/class_3193;I)Lnet/minecraft/class_3193;
+		ARG 1 pos
+		ARG 3 level
+		ARG 4 holder
+	METHOD method_15892 tick (Lnet/minecraft/class_3898;)Z
+		ARG 1 chunkStorage
+	METHOD method_17290 addTicketWithLevel (Lnet/minecraft/class_3230;Lnet/minecraft/class_1923;ILjava/lang/Object;)V
+		ARG 1 type
+		ARG 2 pos
+		ARG 3 level
+		ARG 4 argument
+	METHOD method_17291 addTicket (Lnet/minecraft/class_3230;Lnet/minecraft/class_1923;ILjava/lang/Object;)V
+		ARG 1 type
+		ARG 2 pos
+		ARG 3 radius
+		ARG 4 argument
+	METHOD method_17292 removeTicket (Lnet/minecraft/class_3230;Lnet/minecraft/class_1923;ILjava/lang/Object;)V
+		ARG 1 type
+		ARG 2 pos
+		ARG 3 radius
+		ARG 4 argument
+	METHOD method_17645 removeTicket (JLnet/minecraft/class_3228;)V
+		ARG 1 pos
+		ARG 3 ticket
+	METHOD method_20444 removeTicketWithLevel (Lnet/minecraft/class_3230;Lnet/minecraft/class_1923;ILjava/lang/Object;)V
+		ARG 1 type
+		ARG 2 pos
+		ARG 3 level
+		ARG 4 argument
+	METHOD method_21623 getTicket (J)Ljava/lang/String;
+		ARG 1 pos
+	METHOD method_21683 toDumpString ()Ljava/lang/String;
+	CLASS class_3205 DistanceFromNearestPlayerTracker
+		FIELD field_13896 distanceFromNearestPlayer Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
+		FIELD field_17461 maxDistance I
+		METHOD <init> (Lnet/minecraft/class_3204;I)V
+			ARG 1 maxDistance
+		METHOD method_14056 isPlayerInChunk (J)Z
+			ARG 1 chunkPos
+		METHOD method_14057 updateLevels ()V
+		METHOD method_17657 onDistanceChange (JII)V
+			ARG 1 pos
+			ARG 3 oldDistance
+			ARG 4 distance
+	CLASS class_3948 NearbyChunkTicketUpdater
+		FIELD field_17464 watchDistance I
+		FIELD field_17465 distances Lit/unimi/dsi/fastutil/longs/Long2IntMap;
+		FIELD field_17466 positionsAffected Lit/unimi/dsi/fastutil/longs/LongSet;
+		METHOD method_17658 setWatchDistance (I)V
+			ARG 1 watchDistance
+		METHOD method_17660 updateTicket (JIZZ)V
+			ARG 1 pos
+			ARG 3 distance
+			ARG 4 oldWithinViewDistance
+			ARG 5 withinViewDistance
+		METHOD method_17664 isWithinViewDistance (I)Z
+			ARG 1 distance
+	CLASS class_4077 TicketDistanceLevelPropagator
+		METHOD method_18746 update (I)I
+			ARG 1 distance
+
+
+
