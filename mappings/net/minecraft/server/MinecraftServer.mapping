@@ -12,6 +12,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_20850 dataCommandStorage Lnet/minecraft/class_4565;
 	FIELD field_20851 predicateManager Lnet/minecraft/class_4567;
 	FIELD field_22250 tickTimeTracker Lnet/minecraft/class_4757;
+	FIELD field_23784 session Lnet/minecraft/class_32$class_5143;
 	FIELD field_4543 onlineMode Z
 	FIELD field_4544 running Z
 	FIELD field_4545 forceGameMode Z
@@ -84,7 +85,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 properties
 	METHOD method_19465 sendDifficulty (Lnet/minecraft/class_3222;)V
 		ARG 1 player
-	METHOD method_19466 isOwner (Lcom/mojang/authlib/GameProfile;)Z
+	METHOD method_19466 isHost (Lcom/mojang/authlib/GameProfile;)Z
 		ARG 1 profile
 	METHOD method_19467 setDifficultyLocked (Z)V
 		ARG 1 locked
@@ -137,6 +138,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 tickable
 	METHOD method_3743 warn (Ljava/lang/String;)V
 	METHOD method_3744 setCrashReport (Lnet/minecraft/class_128;)V
+		ARG 1 report
 	METHOD method_3745 setFlightEnabled (Z)V
 		ARG 1 flightEnabled
 	METHOD method_3747 stop (Z)V
@@ -153,6 +155,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3761 shouldForceGameMode ()Z
 	METHOD method_3762 logError (Ljava/lang/String;)V
 	METHOD method_3763 openToLan (Lnet/minecraft/class_1934;ZI)Z
+		ARG 1 gameMode
 		ARG 2 cheatsAllowed
 		ARG 3 port
 	METHOD method_3764 setPreventProxyConnections (Z)V
@@ -180,6 +183,9 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3783 isMonsterSpawningEnabled ()Z
 	METHOD method_3784 getResourcePackUrl ()Ljava/lang/String;
 	METHOD method_3785 isSpawnProtected (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)Z
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 player
 	METHOD method_3786 createWorlds (Lnet/minecraft/class_29;Lnet/minecraft/class_31;Lnet/minecraft/class_1940;Lnet/minecraft/class_3949;)V
 		ARG 2 properties
 	METHOD method_3787 getNetworkIo ()Lnet/minecraft/class_3242;
@@ -194,10 +200,12 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3795 getSnooper ()Lnet/minecraft/class_1276;
 	METHOD method_3796 shouldSpawnAnimals ()Z
 	METHOD method_3797 setForceWorldUpgrade (Z)V
+		ARG 1 forceWorldUpgrade
 	METHOD method_3798 getOpPermissionLevel ()I
 	METHOD method_3799 isDemo ()Z
 	METHOD method_3800 loadWorldDataPacks (Ljava/io/File;Lnet/minecraft/class_31;)V
 		ARG 1 worldDir
+		ARG 2 properties
 	METHOD method_3801 getTagManager ()Lnet/minecraft/class_3505;
 	METHOD method_3802 getMaxPlayerCount ()I
 	METHOD method_3803 setPlayerIdleTimeout (I)V
@@ -235,6 +243,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3836 getDataPackManager ()Lnet/minecraft/class_3283;
 	METHOD method_3837 getBossBarManager ()Lnet/minecraft/class_3004;
 	METHOD method_3838 setDefaultGameMode (Lnet/minecraft/class_1934;)V
+		ARG 1 gameMode
 	METHOD method_3839 isNetherAllowed ()Z
 	METHOD method_3840 setSpawnAnimals (Z)V
 		ARG 1 spawnAnimals
@@ -247,6 +256,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3844 getSessionService ()Lcom/mojang/authlib/minecraft/MinecraftSessionService;
 	METHOD method_3845 getScoreboard ()Lnet/minecraft/class_2995;
 	METHOD method_3846 setPlayerManager (Lnet/minecraft/class_3324;)V
+		ARG 1 playerManager
 	METHOD method_3847 getWorld (Lnet/minecraft/class_2874;)Lnet/minecraft/class_3218;
 	METHOD method_3848 reload ()V
 	METHOD method_3849 setServerName (Ljava/lang/String;)V
@@ -256,6 +266,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3851 getAdvancementLoader ()Lnet/minecraft/class_2989;
 	METHOD method_3852 isPvpEnabled ()Z
 	METHOD method_3853 setKeyPair (Ljava/security/KeyPair;)V
+		ARG 1 keyPair
 	METHOD method_3855 getDataFixer ()Lcom/mojang/datafixers/DataFixer;
 	METHOD method_3856 forcePlayerSampleUpdate ()V
 	METHOD method_3857 getLootManager ()Lnet/minecraft/class_60;
