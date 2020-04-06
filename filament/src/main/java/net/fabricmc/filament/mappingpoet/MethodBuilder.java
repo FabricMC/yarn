@@ -1,14 +1,11 @@
 package net.fabricmc.mappingpoet;
 
 import com.squareup.javapoet.ArrayTypeName;
-import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import net.fabricmc.mappings.EntryTriple;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.ParameterNode;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
@@ -31,8 +28,12 @@ public class MethodBuilder {
 	}
 
 	private MethodSpec.Builder createBuilder() {
-		return MethodSpec.methodBuilder(methodNode.name)
+		MethodSpec.Builder builder = MethodSpec.methodBuilder(methodNode.name)
 				.addModifiers(new ModifierBuilder(methodNode.access).getModifiers(ModifierBuilder.Type.METHOD));
+		if (methodNode.name.equals("<init>") || !java.lang.reflect.Modifier.isInterface(classNode.access)) {
+			builder.modifiers.remove(Modifier.DEFAULT);
+		}
+		return builder;
 	}
 
 	private void setReturnType() {
@@ -44,8 +45,8 @@ public class MethodBuilder {
 
 		TypeName typeName = FieldBuilder.getFieldType(returnDesc);
 		builder.returns(typeName);
-		if (typeName != TypeName.VOID && !java.lang.reflect.Modifier.isAbstract(methodNode.access)) {
-			builder.addStatement("throw new RuntimeException();");
+		if (typeName != TypeName.VOID && !builder.modifiers.contains(Modifier.ABSTRACT)) {
+			builder.addStatement("throw new RuntimeException()");
 		}
 	}
 
@@ -103,7 +104,7 @@ public class MethodBuilder {
 				type = ClassBuilder.getClassName(clazz);
 		}
 
-		paramTypes.add(new ParamType("fixme", type, paramTypes.size()));
+		paramTypes.add(new ParamType(mappings.getParamName(new EntryTriple(classNode.name, methodNode.name, methodNode.desc), paramTypes.size() + 1), type, paramTypes.size()));
 		getParams(desc.substring(width), paramTypes);
 	}
 
@@ -113,7 +114,7 @@ public class MethodBuilder {
 		private final Modifier[] modifiers;
 
 		public ParamType(String name, TypeName type, int index) {
-			this.name = getValidName(type) + "_" + index;
+			this.name = name != null ? name : getValidName(type) + "_" + index;
 			this.type = type;
 			this.modifiers = new ModifierBuilder(0)
 					.getModifiers(ModifierBuilder.Type.PARAM);

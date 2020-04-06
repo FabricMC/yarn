@@ -32,10 +32,12 @@ public class ModifierBuilder {
 
 		if (java.lang.reflect.Modifier.isAbstract(access)) {
 			modifiers.add(Modifier.ABSTRACT);
-		}
-		if (java.lang.reflect.Modifier.isStatic(access)) {
+		} else if (java.lang.reflect.Modifier.isStatic(access)) {
 			modifiers.add(Modifier.STATIC);
+		} else if (type == Type.METHOD) {
+			modifiers.add(Modifier.DEFAULT);
 		}
+
 		if (java.lang.reflect.Modifier.isFinal(access)) {
 			modifiers.add(Modifier.FINAL);
 		}

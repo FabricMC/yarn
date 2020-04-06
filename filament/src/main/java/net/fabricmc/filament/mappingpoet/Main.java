@@ -11,8 +11,12 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -56,10 +60,26 @@ public class Main {
 
 	public static void generate(Path mappings, Path inputJar, Path outputDirectory) {
 		final MappingsStore mapping = new MappingsStore(mappings);
-		forEachClass(inputJar, classNode -> writeClass(mapping, classNode, outputDirectory));
+		Map<String, ClassBuilder> classes = new HashMap<>();
+		forEachClass(inputJar, classNode -> writeClass(mapping, classNode, classes));
+
+		classes.values().stream()
+				.filter(classBuilder -> !classBuilder.getClassName().contains("$"))
+				.forEach(classBuilder -> {
+					JavaFile javaFile = JavaFile.builder(classBuilder.getClassName().replaceAll("/", ".").substring(0, classBuilder.getClassName().lastIndexOf("/")), classBuilder.build())
+							.build();
+					try {
+						javaFile.writeTo(outputDirectory);
+					} catch (IOException e) {
+						throw new RuntimeException("Failed to write class", e);
+					}
+				});
+
+
 	}
 
 	private static void forEachClass(Path jar, Consumer<ClassNode> classNodeConsumer) {
+		List<ClassNode> classes = new ArrayList<>();
 		try (final JarFile jarFile = new JarFile(jar.toFile())) {
 			Enumeration<JarEntry> entryEnumerator = jarFile.entries();
 
@@ -75,30 +95,40 @@ public class Main {
 					ClassNode classNode = new ClassNode();
 					reader.accept(classNode, 0);
 
-					classNodeConsumer.accept(classNode);
+					classes.add(classNode);
 				}
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+
+		//Sort all the classes making sure that inner classes come after the parent classes
+		classes.sort(Comparator.comparing(o -> o.name));
+
+		classes.forEach(classNodeConsumer::accept);
 	}
 
-	private static void writeClass(MappingsStore mappings, ClassNode classNode, Path outputDirectory) {
-		if (classNode.name.contains("$")) {
-			return; //TODO inner classes
+	private static void writeClass(MappingsStore mappings, ClassNode classNode, Map<String, ClassBuilder> existingClasses) {
+		try {
+			//Awful code to skip anonymous classes
+			Integer.parseInt(classNode.name.substring(classNode.name.lastIndexOf('$') + 1));
+			return;
+		} catch (Exception e) {
+			//Nope all good if this fails
 		}
+
 		ClassBuilder classBuilder = new ClassBuilder(mappings, classNode);
 
-		JavaFile javaFile = JavaFile.builder(classNode.name.replaceAll("/", ".").substring(0, classNode.name.lastIndexOf("/")), classBuilder.buildTypeSpec())
-				.build();
-
-//		Path output = outputDirectory.resolve(classNode.name + ".java");
-
-		try {
-			javaFile.writeTo(outputDirectory);
-		} catch (IOException e) {
-			throw new RuntimeException("Failed to write class", e);
+		if (classNode.name.contains("$")) {
+			String parentClass = classNode.name.substring(0, classNode.name.lastIndexOf("$"));
+			if (!existingClasses.containsKey(parentClass)) {
+				throw new RuntimeException("Could not find parent class: " + parentClass + " for " + classNode.name);
+			}
+			existingClasses.get(parentClass).addInnerClass(classBuilder);
 		}
+
+		existingClasses.put(classNode.name, classBuilder);
+
 	}
 
 	private static TypeSpec.Builder createTypeSpecBuilder(ClassNode classNode) {

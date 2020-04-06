@@ -8,6 +8,9 @@ import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ClassBuilder {
 
@@ -15,6 +18,7 @@ public class ClassBuilder {
 	private final ClassNode classNode;
 
 	private final TypeSpec.Builder builder;
+	private final List<ClassBuilder> innerClasses = new ArrayList<>();
 
 	public ClassBuilder(MappingsStore mappings, ClassNode classNode) {
 		this.mappings = mappings;
@@ -27,9 +31,18 @@ public class ClassBuilder {
 	}
 
 	private TypeSpec.Builder setupBuilder() {
-		return TypeSpec.classBuilder(getClassName(classNode.name))
-				.addModifiers(new ModifierBuilder(classNode.access).getModifiers(ModifierBuilder.Type.CLASS))
-				.superclass(getClassName(classNode.superName));
+		TypeSpec.Builder builder;
+		if (Modifier.isInterface(classNode.access)) {
+			builder = TypeSpec.interfaceBuilder(getClassName(classNode.name));
+		} else if (classNode.superName.equals("java.lang.Enum")) {
+			builder = TypeSpec.enumBuilder(getClassName(classNode.name));
+		} else {
+			builder = TypeSpec.classBuilder(getClassName(classNode.name))
+					.superclass(getClassName(classNode.superName));
+		}
+
+		return builder
+				.addModifiers(new ModifierBuilder(classNode.access).getModifiers(ModifierBuilder.Type.CLASS));
 	}
 
 	private void addInterfaces() {
@@ -67,12 +80,32 @@ public class ClassBuilder {
 		}
 	}
 
-	public TypeSpec buildTypeSpec() {
+	public void addInnerClass(ClassBuilder classBuilder) {
+		classBuilder.builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC);
+		classBuilder.builder.addModifiers(javax.lang.model.element.Modifier.STATIC);
+		innerClasses.add(classBuilder);
+	}
+
+	public String getClassName() {
+		return classNode.name;
+	}
+
+	public TypeSpec build() {
+		innerClasses.stream()
+				.map(ClassBuilder::build)
+				.forEach(builder::addType);
 		return builder.build();
 	}
 
 	public static ClassName getClassName(String input) {
 		int lastDelim = input.lastIndexOf("/");
-		return ClassName.get(input.substring(0, lastDelim).replaceAll("/", ".").replaceAll("\\$", "."), input.substring(lastDelim + 1));
+		String packageName = input.substring(0, lastDelim).replaceAll("/", ".");
+		String className = input.substring(lastDelim + 1).replaceAll("/", ".");
+
+		List<String> classSplit = new ArrayList<>(Arrays.asList(className.split("\\$")));
+		String parentClass = classSplit.get(0);
+		classSplit.remove(0);
+
+		return ClassName.get(packageName, parentClass, classSplit.toArray(new String[]{}));
 	}
 }

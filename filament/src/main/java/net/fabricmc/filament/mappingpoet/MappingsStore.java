@@ -52,6 +52,21 @@ public class MappingsStore {
 		return fieldDef != null ? fieldDef.getComment() : null;
 	}
 
+	public String getParamName(EntryTriple methodEntry, int index) {
+		MethodDef methodDef = methods.get(methodEntry);
+		if (methodDef != null) {
+			if (methodDef.getParameters().isEmpty()) {
+				return null;
+			}
+			return methodDef.getParameters().stream()
+					.filter(param -> param.getLocalVariableIndex() == index)
+					.map(param -> param.getName(namespace))
+					.findFirst()
+					.orElse(null);
+		}
+		return null;
+	}
+
 	public String getMethodDoc(EntryTriple methodEntry) {
 		MethodDef methodDef = methods.get(methodEntry);
 
