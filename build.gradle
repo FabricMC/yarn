@@ -694,7 +694,7 @@ tasks.getByName("javadoc") {
 		source = "8"
 		encoding = 'UTF-8'
 		charSet = 'UTF-8'
-		memberLevel = JavadocMemberLevel.PACKAGE
+		memberLevel = JavadocMemberLevel.PRIVATE
 		links(
 				'https://guava.dev/releases/21.0/api/docs/',
 				'https://www.javadoc.io/doc/com.google.code.gson/gson/2.8.0/',
@@ -714,12 +714,8 @@ tasks.getByName("javadoc") {
 		// Disable the crazy super-strict doclint tool in Java 8
 		addStringOption('Xdoclint:none', '-quiet')
 	}
-	source(fakeSourceDir)
-	FileCollection collection = configurations.javadocClasspath
-	libraries.eachFileRecurse(FileType.FILES) {
-		collection = collection.plus project.files(it)
-	}
-	classpath = collection
+	source fakeSourceDir
+	classpath = configurations.javadocClasspath.plus downloadMcLibs.outputs.files.asFileTree 
 }
 
 task javadocJar(type: Jar, dependsOn: ["javadoc"]) {
