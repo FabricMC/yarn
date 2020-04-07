@@ -6,8 +6,7 @@ node {
    stage 'Build'
 
    sh "rm -rf build/libs/"
-   sh "chmod +x gradlew"
-   sh "./gradlew build publish --refresh-dependencies"
+   sh "./gradlew build javadocJar publish --refresh-dependencies"
 
    stage "Archive artifacts"
 
