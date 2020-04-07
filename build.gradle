@@ -48,11 +48,14 @@ configurations {
 			cacheChangingModulesFor 0, "seconds"
 		}
 	}
+	javadocClasspath
 }
 
 dependencies {
 	enigmaRuntime "net.fabricmc:stitch:0.4.3.71"
 	enigmaRuntime "cuchaz:enigma:0.15.153"
+	javadocClasspath "net.fabricmc:fabric-loader:0.8.2+build.194"
+	javadocClasspath "com.google.code.findbugs:jsr305:3.0.2"
 }
 
 def setupGroup = "jar setup"
@@ -696,14 +699,15 @@ javadoc {
 		links(
 				'https://guava.dev/releases/21.0/api/docs/',
 				'https://docs.oracle.com/javase/8/docs/api/',
-				'https://logging.apache.org/log4j/2.x/log4j-api/apidocs/'
-				// Need to add minecraft jd publication etc once there is one available
+				'https://logging.apache.org/log4j/2.x/log4j-api/apidocs/',
+				'https://www.javadoc.io/doc/com.google.code.findbugs/jsr305/3.0.2/'
+				// Need to add loader jd publication for env annotations!
 		)
 		// Disable the crazy super-strict doclint tool in Java 8
 		addStringOption('Xdoclint:none', '-quiet')
 	}
 	source(fakeSourceDir)
-	classpath = files(files(libraries).asFileTree.matching{ include "**.jar" }.files)
+	classpath = files(files(libraries).asFileTree.matching{ include "**.jar" }.files).plus configurations.javadocClasspath
 }
 
 task javadocJar(type: Jar, dependsOn: ["javadoc"]) {
