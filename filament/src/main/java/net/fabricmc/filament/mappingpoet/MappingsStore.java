@@ -3,7 +3,6 @@ package net.fabricmc.mappingpoet;
 import net.fabricmc.mapping.tree.ClassDef;
 import net.fabricmc.mapping.tree.FieldDef;
 import net.fabricmc.mapping.tree.MethodDef;
-import net.fabricmc.mapping.tree.ParameterDef;
 import net.fabricmc.mapping.tree.TinyMappingFactory;
 import net.fabricmc.mapping.tree.TinyTree;
 import net.fabricmc.mappings.EntryTriple;
@@ -12,10 +11,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.AbstractMap;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 //Taken from loom
 public class MappingsStore {
@@ -52,54 +52,51 @@ public class MappingsStore {
 		return fieldDef != null ? fieldDef.getComment() : null;
 	}
 
-	public String getParamName(EntryTriple methodEntry, int index) {
-		MethodDef methodDef = methods.get(methodEntry);
+	public Map.Entry<String, String> getParamNameAndDoc(Function<String, Collection<String>> superGetters, EntryTriple methodEntry, int index) {
+		MethodDef methodDef = searchMethod(superGetters, methodEntry);
 		if (methodDef != null) {
 			if (methodDef.getParameters().isEmpty()) {
 				return null;
 			}
 			return methodDef.getParameters().stream()
 					.filter(param -> param.getLocalVariableIndex() == index)
-					.map(param -> param.getName(namespace))
+					.map(param -> new AbstractMap.SimpleImmutableEntry<>(param.getName(namespace), param.getComment()))
 					.findFirst()
 					.orElse(null);
 		}
 		return null;
 	}
 
-	public String getMethodDoc(EntryTriple methodEntry) {
-		MethodDef methodDef = methods.get(methodEntry);
+	public String getMethodDoc(Function<String, Collection<String>> superGetters, EntryTriple methodEntry) {
+		MethodDef methodDef = searchMethod(superGetters, methodEntry);
 
 		if (methodDef != null) {
-			List<String> parts = new ArrayList<>();
-
-			if (methodDef.getComment() != null) {
-				parts.add(methodDef.getComment());
-			}
-
-			boolean addedParam = false;
-
-			for (ParameterDef param : methodDef.getParameters()) {
-				String comment = param.getComment();
-
-				if (comment != null) {
-					if (!addedParam && methodDef.getComment() != null) {
-						//Add a blank line before params when the method has a comment
-						parts.add("");
-						addedParam = true;
-					}
-
-					parts.add(String.format("@param %s %s", param.getName(namespace), comment));
-				}
-			}
-
-			if (parts.isEmpty()) {
-				return null;
-			}
-
-			return String.join("\n", parts);
+			return methodDef.getComment(); // comment doc handled separately by javapoet
 		}
 
+		return null;
+	}
+	
+	private MethodDef searchMethod(Function<String, Collection<String>> superGetters, EntryTriple methodEntry) {
+		String className = methodEntry.getOwner();
+		if (!classes.containsKey(className)) {
+			return null;
+		}
+
+		if (methods.containsKey(methodEntry)) {
+			return methods.get(methodEntry); // Nullable!
+		}
+		
+		for (String superName : superGetters.apply(className)) {
+			EntryTriple triple = new EntryTriple(superName, methodEntry.getName(), methodEntry.getDesc());
+			MethodDef ret = searchMethod(superGetters, triple);
+			if (ret != null) {
+				methods.put(triple, ret);
+				return ret;
+			}
+		}
+		
+		methods.put(methodEntry, null);
 		return null;
 	}
 

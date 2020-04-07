@@ -30,15 +30,17 @@ public class ModifierBuilder {
 			modifiers.add(Modifier.PROTECTED);
 		}
 
-		if (java.lang.reflect.Modifier.isAbstract(access)) {
+		if (java.lang.reflect.Modifier.isAbstract(access) && type != Type.ENUM) {
 			modifiers.add(Modifier.ABSTRACT);
-		} else if (java.lang.reflect.Modifier.isStatic(access)) {
+		} 
+		if (java.lang.reflect.Modifier.isStatic(access)) {
 			modifiers.add(Modifier.STATIC);
-		} else if (type == Type.METHOD) {
+		}
+		if (!java.lang.reflect.Modifier.isAbstract(access) && !java.lang.reflect.Modifier.isStatic(access) && type == Type.METHOD) {
 			modifiers.add(Modifier.DEFAULT);
 		}
 
-		if (java.lang.reflect.Modifier.isFinal(access)) {
+		if (java.lang.reflect.Modifier.isFinal(access) && type != Type.ENUM) {
 			modifiers.add(Modifier.FINAL);
 		}
 		if (java.lang.reflect.Modifier.isTransient(access) && type == Type.FIELD) {
@@ -62,6 +64,7 @@ public class ModifierBuilder {
 
 	public enum Type {
 		CLASS,
+		ENUM,
 		METHOD,
 		FIELD,
 		PARAM
