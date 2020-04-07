@@ -13,6 +13,7 @@ buildscript {
 		classpath "com.google.guava:guava:28.0-jre"
 		classpath 'de.undercouch:gradle-download-task:4.0.2'
 		classpath 'net.fabricmc:tiny-remapper:0.2.1.63'
+		classpath 'net.fabricmc:mappingpoet:0.1.0+build.1'
 	}
 }
 
@@ -20,6 +21,7 @@ plugins {
 	id 'de.undercouch.download' version '3.4.3'
 	id 'base'
 	id 'maven-publish'
+	id 'java' // for jd gen
 }
 
 def minecraft_version = "20w14a"
@@ -45,11 +47,14 @@ configurations {
 			cacheChangingModulesFor 0, "seconds"
 		}
 	}
+	javadocClasspath
 }
 
 dependencies {
 	enigmaRuntime "net.fabricmc:stitch:0.4.3.71"
 	enigmaRuntime "cuchaz:enigma:0.15.153"
+	javadocClasspath "net.fabricmc:fabric-loader:0.8.2+build.194"
+	javadocClasspath "com.google.code.findbugs:jsr305:3.0.2"
 }
 
 def setupGroup = "jar setup"
@@ -662,6 +667,66 @@ task v2MergedYarnJar(dependsOn: ["mergeV2"], type: Jar) {
 	destinationDirectory.set(file("build/libs"))
 }
 
+def fakeSourceDir = file(".gradle/temp/fakeSource")
+task genFakeSource(dependsOn: ["buildYarnTiny", "mapNamedJar"]) {
+	group = "javadoc generation"
+	outputs.upToDateWhen { false }
+
+	doLast {
+		String[] args = [
+			buildYarnTiny.v2Output.getAbsolutePath(),
+			namedJar.getAbsolutePath(),
+			fakeSourceDir.getAbsolutePath()
+		]
+
+		net.fabricmc.mappingpoet.Main.main(args)
+
+		logger.lifecycle ":Fake source generated"
+	}
+}
+
+tasks.getByName("javadoc") {
+	dependsOn genFakeSource
+	dependsOn downloadMcLibs
+	group = "javadoc generation"
+	outputs.upToDateWhen { false }
+	options {
+		source = "8"
+		encoding = 'UTF-8'
+		charSet = 'UTF-8'
+		memberLevel = JavadocMemberLevel.PRIVATE
+		links(
+				'https://guava.dev/releases/21.0/api/docs/',
+				'https://www.javadoc.io/doc/com.google.code.gson/gson/2.8.0/',
+				'https://logging.apache.org/log4j/2.x/log4j-api/apidocs/',
+				// jsr305 need to come before jdk or the anno links are broken
+				'https://www.javadoc.io/doc/com.google.code.findbugs/jsr305/3.0.2/',
+				'https://javadoc.lwjgl.org/',
+				'http://fastutil.di.unimi.it/docs/',
+				'https://commons.apache.org/proper/commons-logging/javadocs/api-1.1.3/',
+				'https://commons.apache.org/proper/commons-lang/javadocs/api-3.5',
+				'https://commons.apache.org/proper/commons-io/javadocs/api-2.5',
+				'https://commons.apache.org/proper/commons-codec/archives/1.10/apidocs',
+				'https://commons.apache.org/proper/commons-compress/javadocs/api-1.8.1/',
+				'https://docs.oracle.com/javase/8/docs/api/'
+				// Need to add loader jd publication for env annotations!
+		)
+		// Disable the crazy super-strict doclint tool in Java 8
+		addStringOption('Xdoclint:none', '-quiet')
+	}
+	source fakeSourceDir
+	classpath = configurations.javadocClasspath.plus downloadMcLibs.outputs.files.asFileTree 
+}
+
+task javadocJar(type: Jar, dependsOn: ["javadoc"]) {
+	group = "javadoc generation"
+
+	from javadoc.destinationDir
+
+	archiveVersion.set yarnVersion
+	classifier = 'javadoc'
+}
+
 publishing {
 	publications {
 		maven(MavenPublication) {
@@ -680,6 +745,7 @@ publishing {
 			artifact(v2MergedYarnJar) {
 				classifier "mergedv2"
 			}
+			artifact javadocJar
 		}
 
 	}
