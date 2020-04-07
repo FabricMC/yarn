@@ -13,8 +13,7 @@ buildscript {
 		classpath "com.google.guava:guava:28.0-jre"
 		classpath 'de.undercouch:gradle-download-task:4.0.2'
 		classpath 'net.fabricmc:tiny-remapper:0.2.1.63'
-		//classpath 'net.fabricmc:mappingpoet:'
-		classpath fileTree(dir: "bsdep", include: "**.jar")
+		classpath 'net.fabricmc:mappingpoet:0.1.0+build.1'
 	}
 }
 
@@ -698,9 +697,9 @@ javadoc {
 		memberLevel = JavadocMemberLevel.PACKAGE
 		links(
 				'https://guava.dev/releases/21.0/api/docs/',
-				'https://docs.oracle.com/javase/8/docs/api/',
 				'https://logging.apache.org/log4j/2.x/log4j-api/apidocs/',
-				'https://www.javadoc.io/doc/com.google.code.findbugs/jsr305/3.0.2/'
+				'https://www.javadoc.io/doc/com.google.code.findbugs/jsr305/3.0.2/',
+				'https://docs.oracle.com/javase/8/docs/api/'
 				// Need to add loader jd publication for env annotations!
 		)
 		// Disable the crazy super-strict doclint tool in Java 8
@@ -715,6 +714,7 @@ task javadocJar(type: Jar, dependsOn: ["javadoc"]) {
 
 	from javadoc.destinationDir
 
+	archiveVersion.set yarnVersion
 	classifier = 'javadoc'
 }
 
