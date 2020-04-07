@@ -13,6 +13,7 @@ buildscript {
 		classpath "com.google.guava:guava:28.0-jre"
 		classpath 'de.undercouch:gradle-download-task:4.0.2'
 		classpath 'net.fabricmc:tiny-remapper:0.2.1.63'
+		classpath fileTree(dir: "bsdep", include: "**.jar")
 	}
 }
 
@@ -20,6 +21,7 @@ plugins {
 	id 'de.undercouch.download' version '3.4.3'
 	id 'base'
 	id 'maven-publish'
+	id 'java' // for jd gen
 }
 
 def minecraft_version = "20w14a"
@@ -660,6 +662,56 @@ task v2MergedYarnJar(dependsOn: ["mergeV2"], type: Jar) {
 		rename mappings.name, "mappings/mappings.tiny"
 	}
 	destinationDirectory.set(file("build/libs"))
+}
+
+def fakeSourceDir = file(".gradle/temp/fakeSource")
+task genFakeSource(dependsOn: ["buildYarnTiny", "mapNamedJar"]) {
+	group = "javadoc generation"
+	outputs.upToDateWhen { false }
+
+	doLast {
+		String[] args = [
+			buildYarnTiny.v2Output.getAbsolutePath(),
+			namedJar.getAbsolutePath(),
+			fakeSourceDir.getAbsolutePath()
+		]
+
+		net.fabricmc.mappingpoet.Main.main(args)
+
+		logger.lifecycle ":Fake source generated"
+	}
+}
+
+javadoc {
+	dependsOn genFakeSource
+	dependsOn downloadMcLibs
+	group = "javadoc generation"
+	outputs.upToDateWhen { false }
+	options {
+		source = "8"
+		encoding = 'UTF-8'
+		charSet = 'UTF-8'
+		memberLevel = JavadocMemberLevel.PACKAGE
+		links(
+				'https://guava.dev/releases/21.0/api/docs/',
+				'https://docs.oracle.com/javase/8/docs/api/',
+				'https://logging.apache.org/log4j/2.x/log4j-api/apidocs/'
+				// Need to add minecraft jd publication etc once there is one available
+		)
+		// Disable the crazy super-strict doclint tool in Java 8
+		addStringOption('Xdoclint:none', '-quiet')
+	}
+	source(fakeSourceDir)
+	classpath = files(files(libraries).asFileTree.matching{ include "**.jar" }.files)
+	failOnError false
+}
+
+task javadocJar(type: Jar, dependsOn: ["javadoc"]) {
+	group = "javadoc generation"
+
+	from javadoc.destinationDir
+
+	classifier = 'javadoc'
 }
 
 publishing {
