@@ -685,7 +685,7 @@ task genFakeSource(dependsOn: ["buildYarnTiny", "mapNamedJar"]) {
 	}
 }
 
-javadoc {
+tasks.getByName("javadoc") {
 	dependsOn genFakeSource
 	dependsOn downloadMcLibs
 	group = "javadoc generation"
@@ -715,7 +715,11 @@ javadoc {
 		addStringOption('Xdoclint:none', '-quiet')
 	}
 	source(fakeSourceDir)
-	classpath = files(files(libraries).asFileTree.matching{ include "**.jar" }.files).plus configurations.javadocClasspath
+	FileCollection collection = configurations.javadocClasspath
+	libraries.eachFileRecurse(FileType.FILES) { file ->
+		collection = collection.plus project.files(file)
+	}
+	classpath = collection
 }
 
 task javadocJar(type: Jar, dependsOn: ["javadoc"]) {
