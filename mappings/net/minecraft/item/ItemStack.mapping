@@ -10,7 +10,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	FIELD field_8037 EMPTY Lnet/minecraft/class_1799;
 	FIELD field_8038 item Lnet/minecraft/class_1792;
 	FIELD field_8039 lastDestroyPos Lnet/minecraft/class_2694;
-	FIELD field_8040 tag Lnet/minecraft/class_2487;
+	FIELD field_8040 nbt Lnet/minecraft/class_2487;
 	FIELD field_8041 frame Lnet/minecraft/class_1533;
 	METHOD <init> (Lnet/minecraft/class_1935;)V
 		ARG 1 item
@@ -18,7 +18,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 1 item
 		ARG 2 count
 	METHOD <init> (Lnet/minecraft/class_2487;)V
-		ARG 1 tag
+		ARG 1 nbt
 	METHOD method_17869 (Ljava/util/List;Lnet/minecraft/class_2487;Lnet/minecraft/class_1887;)V
 		ARG 2 e
 	METHOD method_17870 appendEnchantments (Ljava/util/List;Lnet/minecraft/class_2499;)V
@@ -31,7 +31,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7910 finishUsing (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)Lnet/minecraft/class_1799;
 		ARG 1 world
 		ARG 2 user
-	METHOD method_7911 getOrCreateSubTag (Ljava/lang/String;)Lnet/minecraft/class_2487;
+	METHOD method_7911 getOrCreateNbtSubTag (Ljava/lang/String;)Lnet/minecraft/class_2487;
 		ARG 1 key
 	METHOD method_7912 setCooldown (I)V
 		ARG 1 cooldown
@@ -40,8 +40,8 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 2 user
 		ARG 3 hand
 	METHOD method_7914 getMaxCount ()I
-	METHOD method_7915 fromTag (Lnet/minecraft/class_2487;)Lnet/minecraft/class_1799;
-		ARG 0 tag
+	METHOD method_7915 fromNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_1799;
+		ARG 0 nbt
 	METHOD method_7916 addAttributeModifier (Lnet/minecraft/class_1320;Lnet/minecraft/class_1322;Lnet/minecraft/class_1304;)V
 		ARG 2 modifier
 		ARG 3 slot
@@ -89,7 +89,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7940 canDestroy (Lnet/minecraft/class_3505;Lnet/minecraft/class_2694;)Z
 		ARG 1 manager
 		ARG 2 pos
-	METHOD method_7941 getSubTag (Ljava/lang/String;)Lnet/minecraft/class_2487;
+	METHOD method_7941 getNbtSubTag (Ljava/lang/String;)Lnet/minecraft/class_2487;
 		ARG 1 key
 	METHOD method_7942 hasEnchantments ()Z
 	METHOD method_7943 setFrame (Lnet/minecraft/class_1533;)V
@@ -100,7 +100,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7945 getFrame ()Lnet/minecraft/class_1533;
 	METHOD method_7946 isStackable ()Z
 	METHOD method_7947 getCount ()I
-	METHOD method_7948 getOrCreateTag ()Lnet/minecraft/class_2487;
+	METHOD method_7948 getOrCreateNbt ()Lnet/minecraft/class_2487;
 	METHOD method_7949 usageTick (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;I)V
 		ARG 1 world
 		ARG 2 user
@@ -115,7 +115,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 2 state
 		ARG 3 pos
 		ARG 4 miner
-	METHOD method_7953 toTag (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
+	METHOD method_7953 saveToNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
 		ARG 1 tag
 	METHOD method_7954 toHoverableText ()Lnet/minecraft/class_2561;
 	METHOD method_7955 (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
@@ -126,9 +126,9 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 3 breakCallback
 	METHOD method_7957 updateEmptyState ()V
 	METHOD method_7958 hasEnchantmentGlint ()Z
-	METHOD method_7959 putSubTag (Ljava/lang/String;Lnet/minecraft/class_2520;)V
+	METHOD method_7959 putNbtSubTag (Ljava/lang/String;Lnet/minecraft/class_2520;)V
 		ARG 1 key
-		ARG 2 tag
+		ARG 2 subTag
 	METHOD method_7960 isEmpty ()Z
 	METHOD method_7961 isInFrame ()Z
 	METHOD method_7962 isItemEqualIgnoreDamage (Lnet/minecraft/class_1799;)Z
@@ -141,7 +141,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7967 isUsedOnRelease ()Z
 	METHOD method_7968 isEqual (Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
-	METHOD method_7969 getTag ()Lnet/minecraft/class_2487;
+	METHOD method_7969 getNbt ()Lnet/minecraft/class_2487;
 	METHOD method_7970 damage (ILjava/util/Random;Lnet/minecraft/class_3222;)Z
 		ARG 1 amount
 		ARG 2 random
@@ -154,7 +154,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 1 right
 	METHOD method_7974 setDamage (I)V
 		ARG 1 damage
-	METHOD method_7975 areTagsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+	METHOD method_7975 hasEqualNbt (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 0 left
 		ARG 1 right
 	METHOD method_7976 getUseAction ()Lnet/minecraft/class_1839;
@@ -166,20 +166,20 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7979 postHit (Lnet/minecraft/class_1309;Lnet/minecraft/class_1657;)V
 		ARG 1 target
 		ARG 2 attacker
-	METHOD method_7980 setTag (Lnet/minecraft/class_2487;)V
-		ARG 1 tag
+	METHOD method_7980 setNbt (Lnet/minecraft/class_2487;)V
+		ARG 1 nbt
 	METHOD method_7981 useOnBlock (Lnet/minecraft/class_1838;)Lnet/minecraft/class_1269;
 		ARG 1 context
 	METHOD method_7982 onCraft (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;I)V
 		ARG 1 world
 		ARG 2 player
 		ARG 3 amount
-	METHOD method_7983 removeSubTag (Ljava/lang/String;)V
+	METHOD method_7983 removeNbtSubTag (Ljava/lang/String;)V
 		ARG 1 key
 	METHOD method_7984 areItemsEqualIgnoreDamage (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 0 left
 		ARG 1 right
-	METHOD method_7985 hasTag ()Z
+	METHOD method_7985 hasNbt ()Z
 	METHOD method_7986 isDamaged ()Z
 	METHOD method_7987 areItemsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 0 left
