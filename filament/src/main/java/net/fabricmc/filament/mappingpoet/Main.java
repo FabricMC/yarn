@@ -16,11 +16,6 @@
 
 package net.fabricmc.mappingpoet;
 
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.TypeSpec;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.tree.ClassNode;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,10 +31,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeSpec;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.tree.ClassNode;
 
 public class Main {
 
@@ -111,7 +110,7 @@ public class Main {
 					continue;
 				}
 
-				try(InputStream is = jarFile.getInputStream(entry)) {
+				try (InputStream is = jarFile.getInputStream(entry)) {
 					ClassReader reader = new ClassReader(is);
 					ClassNode classNode = new ClassNode();
 					reader.accept(classNode, 0);
@@ -139,7 +138,7 @@ public class Main {
 		Function<String, Collection<String>> superGetter = k -> supers.getOrDefault(k, Collections.emptyList());
 		classes.forEach(node -> classNodeConsumer.accept(superGetter, node));
 	}
-	
+
 	private static boolean isDigit(char ch) {
 		return ch >= '0' && ch <= '9';
 	}
@@ -151,8 +150,10 @@ public class Main {
 			int lastSearch = name.length();
 			while (lastSearch != -1) {
 				lastSearch = name.lastIndexOf('$', lastSearch - 1);
-				if (isDigit(name.charAt(lastSearch + 1))) // names starting with digit is illegal java
+				// names starting with digit is illegal java
+				if (isDigit(name.charAt(lastSearch + 1))) {
 					return;
+				}
 			}
 		}
 
@@ -166,6 +167,7 @@ public class Main {
 			existingClasses.get(parentClass).addInnerClass(classBuilder);
 		}
 
+		classBuilder.addMembers();
 		existingClasses.put(name, classBuilder);
 
 	}

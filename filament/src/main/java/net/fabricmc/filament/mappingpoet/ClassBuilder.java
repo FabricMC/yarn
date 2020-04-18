@@ -42,6 +42,7 @@ public class ClassBuilder {
 
 	private Signatures.ClassSignature signature;
 	private boolean enumClass;
+	private boolean instanceInner = false;
 
 	public ClassBuilder(MappingsStore mappings, ClassNode classNode, Function<String, Collection<String>> superGetter) {
 		this.mappings = mappings;
@@ -50,9 +51,12 @@ public class ClassBuilder {
 		this.builder = setupBuilder();
 		addInterfaces();
 		addDirectAnnotations();
+		addJavaDoc();
+	}
+
+	public void addMembers() {
 		addMethods();
 		addFields();
-		addJavaDoc();
 	}
 
 	public static ClassName parseInternalName(String internalName) {
@@ -150,6 +154,7 @@ public class ClassBuilder {
 			if (method.name.equals("<clinit>")) {
 				continue;
 			}
+			int formalParamStartIndex = 0;
 			if (enumClass) {
 				// Skip enum sugar methods
 				if (method.name.equals("values") && method.desc.equals("()[L" + classNode.name + ";")) {
@@ -158,8 +163,16 @@ public class ClassBuilder {
 				if (method.name.equals("valueOf") && method.desc.equals("(Ljava/lang/String;)L" + classNode.name + ";")) {
 					continue;
 				}
+				if (method.name.equals("<init>")) {
+					formalParamStartIndex = 2; // 0 String 1 int
+				}
 			}
-			builder.addMethod(new MethodBuilder(mappings, classNode, method, superGetter).build());
+			if (instanceInner) {
+				if (method.name.equals("<init>")) {
+					formalParamStartIndex = 1; // 0 this$0
+				}
+			}
+			builder.addMethod(new MethodBuilder(mappings, classNode, method, superGetter, formalParamStartIndex).build());
 		}
 	}
 
@@ -202,6 +215,7 @@ public class ClassBuilder {
 			classBuilder.builder.addModifiers(javax.lang.model.element.Modifier.STATIC);
 		} else {
 			classBuilder.builder.addModifiers(new ModifierBuilder(innerClassNode.access).getModifiers(classBuilder.enumClass ? ModifierBuilder.Type.ENUM : ModifierBuilder.Type.CLASS));
+			if (!Modifier.isStatic(innerClassNode.access)) classBuilder.instanceInner = true;
 		}
 		innerClasses.add(classBuilder);
 	}

@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,14 +51,16 @@ public class MethodBuilder {
 	private final MethodNode methodNode;
 	private final MethodSpec.Builder builder;
 	private final Function<String, Collection<String>> superGetter;
+	private final int formalParamStartIndex;
 
 	private Signatures.MethodSignature signature;
 
-	public MethodBuilder(MappingsStore mappings, ClassNode classNode, MethodNode methodNode, Function<String, Collection<String>> superGetter) {
+	public MethodBuilder(MappingsStore mappings, ClassNode classNode, MethodNode methodNode, Function<String, Collection<String>> superGetter, int formalParamStartIndex) {
 		this.mappings = mappings;
 		this.classNode = classNode;
 		this.methodNode = methodNode;
 		this.superGetter = superGetter;
+		this.formalParamStartIndex = formalParamStartIndex;
 		this.builder = createBuilder();
 		addJavaDoc();
 		addDirectAnnotations();
@@ -184,11 +187,7 @@ public class MethodBuilder {
 		List<ParamType> paramTypes = new ArrayList<>();
 		boolean instanceMethod = !builder.modifiers.contains(Modifier.STATIC);
 		Set<String> usedParamNames = new HashSet<>(RESERVED_KEYWORDS);
-		if (signature != null) {
-			getGenericParams(paramTypes, instanceMethod, usedParamNames);
-		} else {
-			getDescParams(paramTypes, instanceMethod, usedParamNames);
-		}
+		getParams(paramTypes, instanceMethod, usedParamNames);
 
 		List<AnnotationNode>[] visibleParameterAnnotations = methodNode.visibleParameterAnnotations;
 		List<AnnotationNode>[] invisibleParameterAnnotations = methodNode.invisibleParameterAnnotations;
@@ -206,20 +205,10 @@ public class MethodBuilder {
 		}
 	}
 
-	private void getGenericParams(List<ParamType> paramTypes, boolean instance, Set<String> usedParamNames) {
-		int slot = instance ? 1 : 0;
-		for (TypeName each : signature.parameters) {
-			paramTypes.add(new ParamType(mappings.getParamNameAndDoc(superGetter, new EntryTriple(classNode.name, methodNode.name, methodNode.desc), slot), each, usedParamNames, slot));
-			slot++;
-			if (each.equals(TypeName.DOUBLE) || each.equals(TypeName.LONG)) {
-				slot++;
-			}
-		}
-	}
-
-	private void getDescParams(List<ParamType> paramTypes, boolean instance, Set<String> usedParamNames) {
+	private void getParams(List<ParamType> paramTypes, boolean instance, Set<String> usedParamNames) {
 		int slot = instance ? 1 : 0;
 		final String desc = methodNode.desc;
+		int paramIndex = 0;
 		int index = 0;
 
 		if (desc.charAt(index) != '(') {
@@ -227,16 +216,23 @@ public class MethodBuilder {
 		}
 		index++; // consume '('
 
+		Iterator<TypeName> signatureParamIterator = signature == null ? Collections.emptyIterator() : signature.parameters.iterator();
 		while (desc.charAt(index) != ')') {
 			Map.Entry<Integer, TypeName> parsedParam = FieldBuilder.parseType(desc, index);
 			index = parsedParam.getKey();
 			TypeName paramType = parsedParam.getValue();
 
-			paramTypes.add(new ParamType(mappings.getParamNameAndDoc(superGetter, new EntryTriple(classNode.name, methodNode.name, methodNode.desc), slot), paramType, usedParamNames, slot));
+			if (paramIndex >= formalParamStartIndex) { // skip guessed synthetic/implicit params
+				if (signatureParamIterator.hasNext()) {
+					paramType = signatureParamIterator.next();
+				}
+				paramTypes.add(new ParamType(mappings.getParamNameAndDoc(superGetter, new EntryTriple(classNode.name, methodNode.name, methodNode.desc), slot), paramType, usedParamNames, slot));
+			}
 			slot++;
 			if (paramType.equals(TypeName.DOUBLE) || paramType.equals(TypeName.LONG)) {
 				slot++;
 			}
+			paramIndex++;
 		}
 		/* bruh, we don't care about return type
 		index++; // consume ')'
