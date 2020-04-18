@@ -1,5 +1,5 @@
 CLASS net/minecraft/class_3499 net/minecraft/structure/Structure
-	FIELD field_15586 blocks Ljava/util/List;
+	FIELD field_15586 blockInfoLists Ljava/util/List;
 	FIELD field_15587 size Lnet/minecraft/class_2338;
 	FIELD field_15588 author Ljava/lang/String;
 	FIELD field_15589 entities Ljava/util/List;
@@ -15,6 +15,8 @@ CLASS net/minecraft/class_3499 net/minecraft/structure/Structure
 		ARG 3 secondCorner
 	METHOD method_15165 getInfosForBlock (Lnet/minecraft/class_2338;Lnet/minecraft/class_3492;Lnet/minecraft/class_2248;Z)Ljava/util/List;
 		ARG 1 pos
+		ARG 2 placementData
+		ARG 3 block
 		ARG 4 transformed
 	METHOD method_15166 getRotatedSize (Lnet/minecraft/class_2470;)Lnet/minecraft/class_2338;
 	METHOD method_15167 offsetByTransformedSize (Lnet/minecraft/class_2338;Lnet/minecraft/class_2415;Lnet/minecraft/class_2470;)Lnet/minecraft/class_2338;
@@ -28,6 +30,7 @@ CLASS net/minecraft/class_3499 net/minecraft/structure/Structure
 	METHOD method_15172 place (Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;Lnet/minecraft/class_3492;I)Z
 		ARG 1 world
 		ARG 2 pos
+		ARG 4 placementData
 	METHOD method_15174 saveFromWorld (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;ZLnet/minecraft/class_2248;)V
 		ARG 1 world
 		ARG 2 start
@@ -39,6 +42,9 @@ CLASS net/minecraft/class_3499 net/minecraft/structure/Structure
 	METHOD method_15176 transformAround (Lnet/minecraft/class_243;Lnet/minecraft/class_2415;Lnet/minecraft/class_2470;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
 		ARG 0 point
 		ARG 3 pivot
+	METHOD method_15177 loadPalettedBlockInfo (Lnet/minecraft/class_2499;Lnet/minecraft/class_2499;)V
+		ARG 1 paletteTag
+		ARG 2 blocksTag
 	METHOD method_15178 placeAndNotifyListeners (Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;Lnet/minecraft/class_3492;)V
 		ARG 1 world
 		ARG 2 pos
@@ -71,6 +77,7 @@ CLASS net/minecraft/class_3499 net/minecraft/structure/Structure
 	METHOD method_16445 getInfosForBlock (Lnet/minecraft/class_2338;Lnet/minecraft/class_3492;Lnet/minecraft/class_2248;)Ljava/util/List;
 		ARG 1 pos
 		ARG 2 placementData
+		ARG 3 block
 	METHOD method_16446 process (Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;Lnet/minecraft/class_3492;Ljava/util/List;)Ljava/util/List;
 		ARG 0 world
 		ARG 1 pos
@@ -108,3 +115,11 @@ CLASS net/minecraft/class_3499 net/minecraft/structure/Structure
 			ARG 1 pos
 			ARG 2 blockPos
 			ARG 3 tag
+	CLASS class_5162 PalettedBlockInfoList
+		FIELD field_23913 infos Ljava/util/List;
+		FIELD field_23914 blockToInfos Ljava/util/Map;
+		METHOD <init> (Ljava/util/List;)V
+			ARG 1 infos
+		METHOD method_27125 getAll ()Ljava/util/List;
+		METHOD method_27126 getAllOf (Lnet/minecraft/class_2248;)Ljava/util/List;
+			ARG 1 block
