@@ -3,6 +3,7 @@ CLASS net/minecraft/class_327 net/minecraft/client/font/TextRenderer
 	FIELD field_1999 rightToLeft Z
 	FIELD field_2000 fontHeight I
 	FIELD field_2001 random Ljava/util/Random;
+	FIELD field_24237 FORWARD_SHIFT Lnet/minecraft/class_1160;
 	METHOD <init> (Ljava/util/function/Function;)V
 		ARG 1 fontStorageAccessor
 	METHOD method_1710 drawGlyph (Lnet/minecraft/class_382;ZZFFFLnet/minecraft/class_1159;Lnet/minecraft/class_4588;FFFFI)V
@@ -20,6 +21,7 @@ CLASS net/minecraft/class_327 net/minecraft/client/font/TextRenderer
 		ARG 12 alpha
 		ARG 13 light
 	METHOD method_1712 drawTrimmed (Lnet/minecraft/class_2561;IIII)V
+		ARG 1 text
 		ARG 2 x
 		ARG 3 y
 		ARG 4 maxWidth
@@ -32,9 +34,15 @@ CLASS net/minecraft/class_327 net/minecraft/client/font/TextRenderer
 	METHOD method_1719 setRightToLeft (Z)V
 		ARG 1 rightToLeft
 	METHOD method_1720 drawWithShadow (Lnet/minecraft/class_4587;Ljava/lang/String;FFI)I
+		ARG 1 matrices
+		ARG 2 text
+		ARG 3 x
+		ARG 4 y
+		ARG 5 color
 	METHOD method_1721 mirror (Ljava/lang/String;)Ljava/lang/String;
 		ARG 1 text
 	METHOD method_1723 drawInternal (Lnet/minecraft/class_2561;FFIZLnet/minecraft/class_1159;Lnet/minecraft/class_4597;ZII)I
+		ARG 1 text
 		ARG 2 x
 		ARG 3 y
 		ARG 4 color
@@ -56,17 +64,99 @@ CLASS net/minecraft/class_327 net/minecraft/client/font/TextRenderer
 		ARG 9 underlineColor
 		ARG 10 light
 	METHOD method_1726 isRightToLeft ()Z
-	METHOD method_1727 getStringWidth (Ljava/lang/String;)I
+	METHOD method_1727 getWidth (Ljava/lang/String;)I
+		ARG 1 text
 	METHOD method_1728 wrapStringToWidthAsList (Lnet/minecraft/class_2561;I)Ljava/util/List;
+		ARG 1 text
 		ARG 2 width
 	METHOD method_1729 draw (Lnet/minecraft/class_4587;Ljava/lang/String;FFI)I
+		ARG 1 matrices
+		ARG 2 text
+		ARG 3 x
+		ARG 4 y
+		ARG 5 color
 	METHOD method_22941 draw (Lnet/minecraft/class_2561;FFILnet/minecraft/class_1159;Z)I
+		ARG 1 text
 		ARG 2 x
 		ARG 3 y
 		ARG 4 color
 		ARG 5 matrix
 		ARG 6 shadow
 	METHOD method_22942 draw (Lnet/minecraft/class_2561;FFIZLnet/minecraft/class_1159;Lnet/minecraft/class_4597;ZII)I
+		ARG 1 text
+		ARG 2 x
+		ARG 3 y
+		ARG 4 color
+		ARG 5 shadow
+		ARG 6 matrix
+		ARG 7 vertexConsumers
+		ARG 8 seeThrough
+		ARG 9 backgroundColor
+		ARG 10 light
+	METHOD method_27515 tweakTransparency (I)I
+		ARG 0 argb
+	METHOD method_27517 drawWithShadow (Lnet/minecraft/class_4587;Lnet/minecraft/class_2561;FFI)I
+		ARG 1 matrices
+		ARG 2 text
+		ARG 3 x
+		ARG 4 y
+		ARG 5 color
+	METHOD method_27520 draw (Ljava/lang/String;FFILnet/minecraft/class_1159;ZZ)I
+		ARG 1 text
+		ARG 2 x
+		ARG 3 y
+		ARG 4 color
+		ARG 5 matrix
+		ARG 6 shadow
+		ARG 7 rightToLeft
+	METHOD method_27521 draw (Ljava/lang/String;FFIZLnet/minecraft/class_1159;Lnet/minecraft/class_4597;ZII)I
+		ARG 1 text
+		ARG 2 x
+		ARG 3 y
+		ARG 4 color
+		ARG 5 shadow
+		ARG 6 matrix
+		ARG 7 vertexConsumers
+		ARG 8 seeThrough
+		ARG 9 backgroundColor
+		ARG 10 light
+	METHOD method_27522 draw (Ljava/lang/String;FFIZLnet/minecraft/class_1159;Lnet/minecraft/class_4597;ZIIZ)I
+		ARG 1 text
+		ARG 2 x
+		ARG 3 y
+		ARG 4 color
+		ARG 5 shadow
+		ARG 6 matrix
+		ARG 7 vertexConsumers
+		ARG 8 seeThrough
+		ARG 9 backgroundColor
+		ARG 10 light
+		ARG 11 rightToLeft
+	METHOD method_27525 getWidth (Lnet/minecraft/class_2561;)I
+		ARG 1 text
+	METHOD method_27526 getFontStorage (Lnet/minecraft/class_2960;)Lnet/minecraft/class_377;
+		ARG 1 id
+	METHOD method_27527 getTextHandler ()Lnet/minecraft/class_5225;
+	METHOD method_27528 draw (Lnet/minecraft/class_4587;Lnet/minecraft/class_2561;FFI)I
+		ARG 1 matrices
+		ARG 2 text
+		ARG 3 x
+		ARG 4 y
+		ARG 5 color
+	METHOD method_27529 drawInternal (Ljava/lang/String;FFIZLnet/minecraft/class_1159;Lnet/minecraft/class_4597;ZIIZ)I
+		ARG 1 text
+		ARG 2 x
+		ARG 3 y
+		ARG 4 color
+		ARG 5 shadow
+		ARG 6 matrix
+		ARG 7 vertexConsumers
+		ARG 8 seeThrough
+		ARG 9 backgroundColor
+		ARG 10 light
+		ARG 11 rightToLeft
+	METHOD method_27530 drawLayer (Lnet/minecraft/class_2561;FFIZLnet/minecraft/class_1159;Lnet/minecraft/class_4597;ZII)F
+		ARG 1 text
 		ARG 2 x
 		ARG 3 y
 		ARG 4 color
@@ -74,9 +164,10 @@ CLASS net/minecraft/class_327 net/minecraft/client/font/TextRenderer
 		ARG 6 matrix
 		ARG 7 vertexConsumerProvider
 		ARG 8 seeThrough
-		ARG 9 backgroundColor
+		ARG 9 underlineColor
 		ARG 10 light
-	METHOD method_27526 getFontStorage (Lnet/minecraft/class_2960;)Lnet/minecraft/class_377;
-		ARG 1 id
-	CLASS class_5232
+	CLASS class_5232 ShadowDrawer
 		FIELD field_24239 vertexConsumers Lnet/minecraft/class_4597;
+		METHOD method_27531 drawLayer (IF)F
+			ARG 1 underlineColor
+			ARG 2 x
