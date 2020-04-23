@@ -1,133 +1,189 @@
 CLASS net/minecraft/class_2784 net/minecraft/world/border/WorldBorder
 	FIELD field_12730 listeners Ljava/util/List;
-	FIELD field_12731 buffer D
-	FIELD field_12732 maxWorldBorderRadius I
+	FIELD field_12731 safeZone D
+	FIELD field_12732 maxRadius I
 	FIELD field_12733 damagePerBlock D
 	FIELD field_12734 warningBlocks I
 	FIELD field_12735 warningTime I
 	FIELD field_12736 area Lnet/minecraft/class_2784$class_2785;
+		COMMENT The active area of the world border. Either a transitioning/changing area, or a stationary/fixed area.
 	FIELD field_12737 centerZ D
 	FIELD field_12738 centerX D
-	FIELD field_24122 DEFAULT_BORDER Lnet/minecraft/class_2784$class_5200;
+	FIELD field_24122 DEFAULT_TEMPLATE Lnet/minecraft/class_2784$class_5200;
 	METHOD method_11951 contains (Lnet/minecraft/class_1923;)Z
 		ARG 1 pos
 	METHOD method_11952 contains (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
 	METHOD method_11953 getDamagePerBlock ()D
-	METHOD method_11954 getTargetSize ()D
+		COMMENT The increase in hearts damage dealt for every block an entity
+		COMMENT reaches beyond the border, and the save zone distance.
+		COMMENT
+		COMMENT Default value is 2.
+	METHOD method_11954 getSizeLerpTarget ()D
+		COMMENT The target size. This is the final size the world border will have after interpolation/animation is complete.
+		COMMENT
+		COMMENT See {@link #getSizeLerpTime} for the duration of the animation.
 	METHOD method_11955 setDamagePerBlock (D)V
+		COMMENT Sets the damage per blocks to be dealt and notifies all listeners.
 		ARG 1 damagePerBlock
 	METHOD method_11956 getWarningTime ()I
-	METHOD method_11957 interpolateSize (DDJ)V
-		ARG 1 fromSize
-		ARG 3 toSize
-		ARG 5 time
-	METHOD method_11958 getBoundNorth ()D
-	METHOD method_11959 getMaxWorldBorderRadius ()I
-	METHOD method_11961 getDistanceInsideBorder (DD)D
+		COMMENT The warning time, in ticks, between a player leaving the world border and a message being displayed
+		COMMENT to notify them that they've gone too far.
+	METHOD method_11957 changeSize (DDJ)V
+		COMMENT Sets the current size of the world border and notifies all listeners.
+		COMMENT If the beginning and ending size are not the same, will trigger a transition between the two
+		COMMENT using the specified duration.
+		ARG 1 from
+		ARG 3 to
+		ARG 5 duration
+	METHOD method_11958 getNorthEdge ()D
+	METHOD method_11959 getMaxRadius ()I
+		COMMENT The maximum possible teleport radius of the world, in blocks.
+		COMMENT
+		COMMENT The default value is 29999984.
+	METHOD method_11961 distanceToEdge (DD)D
+		COMMENT Gives the straight-line distance from a position inside the
+		COMMENT world  to the nearest edge of this border around the world.
 		ARG 1 x
 		ARG 3 z
-	METHOD method_11962 getTargetRemainingTime ()J
-	METHOD method_11963 getBoundEast ()D
+	METHOD method_11962 getSizeLerpTime ()J
+		COMMENT The amount of time, in ticks, for interpolation to take from beginning to end.
+		COMMENT
+		COMMENT If the world border began changing at time T, then interpolation will end at time T+LerpTime
+		COMMENT where the new size will be the same as the value returned by {@link #getSizeLerpTarget}
+	METHOD method_11963 getEastEdge ()D
 	METHOD method_11964 getCenterX ()D
 	METHOD method_11965 getSize ()D
 	METHOD method_11966 contains (Lnet/minecraft/class_238;)Z
 		ARG 1 box
 	METHOD method_11967 setWarningBlocks (I)V
+		COMMENT Sets the warning distance and notifies all listeners.
 		ARG 1 warningBlocks
-	METHOD method_11968 getStage ()Lnet/minecraft/class_2789;
+	METHOD method_11968 getMode ()Lnet/minecraft/class_2789;
+		COMMENT The current transition mode of the world border. May be fixed (stationary), or changing (shrinking, or growing).
 	METHOD method_11969 setSize (D)V
+		COMMENT Force-sets the current size of the world border and notifies all listeners. If the world border was transitioning
+		COMMENT the transition will be stopped immediately, and the size will be set to the requested value.
 		ARG 1 size
 	METHOD method_11970 getListeners ()Ljava/util/List;
-	METHOD method_11971 getBuffer ()D
+	METHOD method_11971 getSafeZone ()D
+		COMMENT An extra, added distance around the outside of world border where entities won't take any damage.
+		COMMENT This adds a bit of leniency in allowing players to get back into the world if they do end up outside the border
+		COMMENT and also prevents things like items and mobs from being killed as soon as they touch the edge.
+		COMMENT
+		COMMENT This value can be configured via the /worldborder command
 	METHOD method_11972 getWarningBlocks ()I
-	METHOD method_11973 setMaxWorldBorderRadius (I)V
-		ARG 1 radius
-	METHOD method_11974 getShrinkingSpeed ()D
+		COMMENT The minimum distance, in blocks, an entity can approach the edge of the world border before it will
+		COMMENT begin to display a warning.
+	METHOD method_11973 setMaxRadius (I)V
+		COMMENT Sets the maximum radius and notifies all listeners.
+		ARG 1 maxRadius
+	METHOD method_11974 getTransitionSpeed ()D
+		COMMENT Represents the speed at which this world border is changing its size whilst transitioning.
 	METHOD method_11975 setWarningTime (I)V
+		COMMENT Sets a new warning time and notifies all listeners.
 		ARG 1 warningTime
-	METHOD method_11976 getBoundWest ()D
-	METHOD method_11977 getBoundSouth ()D
+	METHOD method_11976 getWestEdge ()D
+	METHOD method_11977 getSouthEdge ()D
 	METHOD method_11978 setCenter (DD)V
 		ARG 1 x
 		ARG 3 z
-	METHOD method_11979 getDistanceInsideBorder (Lnet/minecraft/class_1297;)D
+	METHOD method_11979 distanceToEdge (Lnet/minecraft/class_1297;)D
+		COMMENT Gives the straight-line distance from this entity's position inside the
+		COMMENT world to the nearest edge of this border around the world.
 		ARG 1 entity
+			COMMENT The reference entity from which you wish to measure the distance.
 	METHOD method_11980 getCenterZ ()D
-	METHOD method_11981 setBuffer (D)V
-		ARG 1 buffer
+	METHOD method_11981 setSafeZone (D)V
+		COMMENT Changes the safe zone and notifies all listeners.
+		ARG 1 safeZone
 	METHOD method_11982 tick ()V
 	METHOD method_11983 addListener (Lnet/minecraft/class_2780;)V
 		ARG 1 listener
-	METHOD method_17903 asVoxelShape ()Lnet/minecraft/class_265;
+	METHOD method_17903 asShape ()Lnet/minecraft/class_265;
+		COMMENT Returns a VoxelShape representation of this world border in its current state. The shape
+		COMMENT is essentially a snapshot of the world border's dimensions at that moment in time.
+		COMMENT
+		COMMENT It's advised to check {@link WorldBorder#getMode} before calling this in a hot spot as a new shape will be
+		COMMENT created on every invokation whilst transitioning.
 	METHOD method_17905 load (Lnet/minecraft/class_2784$class_5200;)V
-		ARG 1 properties
-	METHOD method_27355 write ()Lnet/minecraft/class_2784$class_5200;
+		COMMENT Loads this world border's state from a stored set of configuration settings.
+		ARG 1 template
+	METHOD method_27355 toTemplate ()Lnet/minecraft/class_2784$class_5200;
 	CLASS class_2785 Area
 		METHOD method_11984 getSize ()D
-		METHOD method_11985 getBoundSouth ()D
-		METHOD method_11986 getAreaInstance ()Lnet/minecraft/class_2784$class_2785;
-		METHOD method_11987 getShrinkingSpeed ()D
-		METHOD method_11988 getTargetSize ()D
-		METHOD method_11989 onMaxWorldBorderRadiusChanged ()V
+		METHOD method_11985 getSouthernEdge ()D
+		METHOD method_11986 computeNext ()Lnet/minecraft/class_2784$class_2785;
+		METHOD method_11987 getTransitionSpeed ()D
+		METHOD method_11988 getSizeLerpTarget ()D
+		METHOD method_11989 onMaxRadiusChanged ()V
 		METHOD method_11990 onCenterChanged ()V
-		METHOD method_11991 getBoundEast ()D
-		METHOD method_11992 getBoundNorth ()D
-		METHOD method_11993 getTargetRemainingTime ()J
-		METHOD method_11994 getBoundWest ()D
-		METHOD method_11995 getStage ()Lnet/minecraft/class_2789;
-		METHOD method_17906 asVoxelShape ()Lnet/minecraft/class_265;
-	CLASS class_2786 MovingArea
-		FIELD field_12739 newSize D
-		FIELD field_12740 oldSize D
-		FIELD field_12741 timeStart J
-		FIELD field_12742 timeEnd J
-		FIELD field_12744 timeDuration D
+		METHOD method_11991 getEastEdge ()D
+		METHOD method_11992 getNorthEdge ()D
+		METHOD method_11993 getSizeLerpTime ()J
+		METHOD method_11994 getWestEdge ()D
+		METHOD method_11995 getMode ()Lnet/minecraft/class_2789;
+		METHOD method_17906 asShape ()Lnet/minecraft/class_265;
+	CLASS class_2786 TransitioningArea
+		FIELD field_12739 toSize D
+		FIELD field_12740 fromSize D
+		FIELD field_12741 startTime J
+		FIELD field_12742 endTime J
+		FIELD field_12744 duration D
 		METHOD <init> (Lnet/minecraft/class_2784;DDJ)V
-			ARG 2 oldSize
-			ARG 4 newSize
+			ARG 2 fromSize
+			ARG 4 toSize
 			ARG 6 duration
-	CLASS class_2787 StaticArea
-		FIELD field_12745 boundNorth D
-		FIELD field_12746 boundWest D
+	CLASS class_2787 StationaryArea
+		FIELD field_12745 north D
+		FIELD field_12746 west D
 		FIELD field_12747 size D
-		FIELD field_12749 boundSouth D
-		FIELD field_12750 boundEast D
+		FIELD field_12749 south D
+		FIELD field_12750 east D
 		FIELD field_17653 shape Lnet/minecraft/class_265;
 		METHOD <init> (Lnet/minecraft/class_2784;D)V
-			ARG 1 size
+			ARG 2 size
 		METHOD method_11996 recalculateBounds ()V
-	CLASS class_5200 Properties
+	CLASS class_5200 Template
 		FIELD field_24123 centerX D
 		FIELD field_24124 centerZ D
 		FIELD field_24125 damagePerBlock D
-		FIELD field_24126 buffer D
+		FIELD field_24126 safeZone D
 		FIELD field_24127 warningBlocks I
 		FIELD field_24128 warningTime I
 		FIELD field_24129 size D
-		FIELD field_24130 targetRemainingTime J
-		FIELD field_24131 targetSize D
+		FIELD field_24130 sizeLerpTime J
+		FIELD field_24131 sizeLerpTarget D
 		METHOD <init> (DDDDIIDJD)V
 			ARG 1 centerX
 			ARG 3 centerZ
 			ARG 5 damagePerBlock
-			ARG 7 buffer
+			ARG 7 safeZone
 			ARG 9 warningBlocks
 			ARG 10 warningTime
 			ARG 11 size
-			ARG 13 targetRemainingTime
-			ARG 15 targetSize
+			ARG 13 sizeLerpTime
+			ARG 15 sizeLerpTarget
 		METHOD <init> (Lnet/minecraft/class_2784;)V
-			ARG 1 worldBorder
+			ARG 1 border
 		METHOD method_27356 getCenterX ()D
 		METHOD method_27357 toTag (Lnet/minecraft/class_2487;)V
+			COMMENT Saves this config back into the passed Nbt structure.
 			ARG 1 tag
+				COMMENT The compound tag to modify.
 		METHOD method_27358 fromDynamic (Lcom/mojang/serialization/DynamicLike;Lnet/minecraft/class_2784$class_5200;)Lnet/minecraft/class_2784$class_5200;
+			COMMENT Loads a new world border config from an existing, template config, and the passed in dynamic data structure.
+			COMMENT As no values (other than the tag itself) are required, and values present will be merged in
+			COMMENT on top of what exists in the template whilst missing ones will fall back to the template as a default.
+			ARG 0 dynamic
+				COMMENT Dynamic data to load
+			ARG 1 template
+				COMMENT The template "parent" config to be used as a fallback when loading.
 		METHOD method_27359 getCenterZ ()D
 		METHOD method_27360 getDamagePerBlock ()D
-		METHOD method_27361 getBuffer ()D
+		METHOD method_27361 getSafeZone ()D
 		METHOD method_27362 getWarningBlocks ()I
 		METHOD method_27363 getWarningTime ()I
 		METHOD method_27364 getSize ()D
-		METHOD method_27365 getTargetRemainingTime ()J
-		METHOD method_27366 getTargetSize ()D
+		METHOD method_27365 getSizeLerpTime ()J
+		METHOD method_27366 getSizeLerpTarget ()D
