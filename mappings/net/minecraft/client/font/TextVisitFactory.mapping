@@ -1,0 +1,108 @@
+CLASS net/minecraft/class_5223 net/minecraft/client/font/TextVisitFactory
+	COMMENT A utility class for visiting the characters of strings, handling surrogate
+	COMMENT code points and formatting codes.
+	FIELD field_24215 VISIT_TERMINATED Ljava/util/Optional;
+	METHOD method_27471 validateSurrogates (Ljava/lang/String;)Ljava/lang/String;
+		COMMENT Returns a new string that has all surrogate characters within validated
+		COMMENT from an original string.
+		ARG 0 text
+			COMMENT the original string
+	METHOD method_27472 visitFormatted (Ljava/lang/String;ILnet/minecraft/class_2583;Lnet/minecraft/class_5223$class_5224;)Z
+		COMMENT Visits the code points of a string, applying the formatting codes within.
+		COMMENT
+		COMMENT <p>The visit is in forward direction.</p>
+		COMMENT
+		COMMENT @return {@code true} if the full string was visited, or {@code false} indicating
+		COMMENT the {@code visitor} terminated half-way
+		ARG 0 text
+			COMMENT the string visited
+		ARG 1 startIndex
+			COMMENT the starting index of the visit
+		ARG 2 style
+			COMMENT the style of the string
+		ARG 3 visitor
+	METHOD method_27473 visitFormatted (Ljava/lang/String;ILnet/minecraft/class_2583;Lnet/minecraft/class_2583;Lnet/minecraft/class_5223$class_5224;)Z
+		COMMENT Visits the code points of a string, applying the formatting codes within.
+		COMMENT
+		COMMENT <p>The visit is in forward direction.</p>
+		COMMENT
+		COMMENT @return {@code true} if the full string was visited, or {@code false} indicating
+		COMMENT the {@code visitor} terminated half-way
+		ARG 0 text
+			COMMENT the string visited
+		ARG 1 startIndex
+			COMMENT the starting index of the visit
+		ARG 2 startingStyle
+			COMMENT the style of the string when the visit starts
+		ARG 3 resetStyle
+			COMMENT the style to reset to when a {@code §r} formatting code is encountered
+		ARG 4 visitor
+			COMMENT the visitor
+	METHOD method_27474 visitForwards (Ljava/lang/String;Lnet/minecraft/class_2583;Lnet/minecraft/class_5223$class_5224;)Z
+		COMMENT Visits the code points of a string in forward (left to right) direction.
+		COMMENT
+		COMMENT @return {@code true} if the full string was visited, or {@code false} indicating
+		COMMENT the {@code visitor} terminated half-way
+		ARG 0 text
+			COMMENT the string
+		ARG 1 style
+			COMMENT the style of the string
+		ARG 2 visitor
+			COMMENT the visitor of characters
+	METHOD method_27476 visitFormatted (Lnet/minecraft/class_2561;Lnet/minecraft/class_2583;Lnet/minecraft/class_5223$class_5224;)Z
+		COMMENT Visits the code points for every {@link Text#asString() partial string}
+		COMMENT of the texts in {@code text} and its siblings, applying the formatting
+		COMMENT codes within.
+		COMMENT
+		COMMENT <p>The visit is in forward direction.</p>
+		COMMENT
+		COMMENT @return {@code true} if the full string was visited, or {@code false} indicating
+		COMMENT the {@code visitor} terminated half-way
+		COMMENT @see Text#visit(Text.StyledVisitor, Style)
+		ARG 0 text
+		ARG 1 style
+		ARG 2 visitor
+	METHOD method_27477 visitRegularCharacter (Lnet/minecraft/class_2583;Lnet/minecraft/class_5223$class_5224;IC)Z
+		ARG 0 style
+		ARG 1 visitor
+		ARG 2 index
+		ARG 3 c
+	METHOD method_27478 visitBackwards (Ljava/lang/String;Lnet/minecraft/class_2583;Lnet/minecraft/class_5223$class_5224;)Z
+		COMMENT Visits the code points of a string in backward (right to left) direction.
+		COMMENT
+		COMMENT @return {@code true} if the full string was visited, or {@code false} indicating
+		COMMENT the {@code visitor} terminated half-way
+		ARG 0 text
+			COMMENT the string
+		ARG 1 style
+			COMMENT the style of the string
+		ARG 2 visitor
+			COMMENT the visitor
+	METHOD method_27479 visitFormatted (Ljava/lang/String;Lnet/minecraft/class_2583;Lnet/minecraft/class_5223$class_5224;)Z
+		COMMENT Visits the code points of a string, applying the formatting codes within.
+		COMMENT
+		COMMENT <p>The visit is in forward direction.</p>
+		COMMENT
+		COMMENT @return {@code true} if the full string was visited, or {@code false} indicating
+		COMMENT the {@code visitor} terminated half-way
+		ARG 0 text
+			COMMENT the string visited
+		ARG 1 style
+			COMMENT the style of the string
+		ARG 2 visitor
+			COMMENT the visitor
+	CLASS class_5224 CharacterVisitor
+		COMMENT A visitor for single characters in a string.
+		METHOD onChar onChar (ILnet/minecraft/class_2583;I)Z
+			COMMENT Visits a single character.
+			COMMENT
+			COMMENT <p>Multiple surrogate characters are converted into one single {@code
+			COMMENT codePoint} when passed into this method.</p>
+			COMMENT
+			COMMENT @return {@code true} to continue visiting other characters, or {@code false} to terminate the visit
+			ARG 1 index
+				COMMENT the current index of the character
+			ARG 2 style
+				COMMENT the style of the character, containing formatting and font information
+			ARG 3 codePoint
+				COMMENT the code point of the character

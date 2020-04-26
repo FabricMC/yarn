@@ -1,0 +1,145 @@
+CLASS net/minecraft/class_5225 net/minecraft/client/font/TextHandler
+	FIELD field_24216 widthRetriever Lnet/minecraft/class_5225$class_5231;
+	METHOD <init> (Lnet/minecraft/class_5225$class_5231;)V
+		ARG 1 widthRetriever
+	METHOD method_27482 getWidth (Ljava/lang/String;)F
+		COMMENT Returns the width of a string.
+		ARG 1 text
+	METHOD method_27483 moveCursorByWords (Ljava/lang/String;IIZ)I
+		ARG 0 text
+		ARG 1 offset
+		ARG 2 cursor
+		ARG 3 consumeSpaceOrBreak
+	METHOD method_27484 getTrimmedLength (Ljava/lang/String;ILnet/minecraft/class_2583;)I
+		COMMENT Returns the length of a string when it is trimmed to be at most {@code
+		COMMENT maxWidth} wide.
+		ARG 1 text
+			COMMENT the string to trim
+		ARG 2 maxWidth
+			COMMENT the max width of the trimmed string
+		ARG 3 style
+			COMMENT the style of the trimmed string
+	METHOD method_27485 wrapLines (Ljava/lang/String;ILnet/minecraft/class_2583;ZLnet/minecraft/class_5225$class_5229;)V
+		ARG 1 text
+		ARG 2 maxWidth
+		ARG 3 style
+		ARG 4 retainTrailingWordSplit
+		ARG 5 consumer
+	METHOD method_27488 getWidth (Lnet/minecraft/class_2561;)F
+		COMMENT Returns the width of a text.
+		ARG 1 text
+	METHOD method_27489 trimToWidth (Lnet/minecraft/class_2561;I)Lnet/minecraft/class_2561;
+		COMMENT Trim a text to be at most {@code maxWidth} wide.
+		COMMENT
+		COMMENT @return the trimmed text
+		ARG 1 text
+			COMMENT the text
+		ARG 2 maxWidth
+			COMMENT the max width of the trimmed text
+	METHOD method_27490 trimToWidth (Lnet/minecraft/class_2561;ILnet/minecraft/class_2583;)Lnet/minecraft/class_5250;
+		ARG 1 text
+		ARG 2 width
+		ARG 3 style
+	METHOD method_27491 wrapLines (Lnet/minecraft/class_2561;ILnet/minecraft/class_2583;Z)Ljava/util/List;
+		ARG 1 text
+			COMMENT the content to split
+		ARG 2 maxWidth
+			COMMENT the max width of a line
+		ARG 3 style
+			COMMENT a parent style applied to all the lines
+		ARG 4 retainTrailingWordSplit
+			COMMENT whether an original trailing space or newline is removed after a ling wrap
+	METHOD method_27494 trimToWidth (Ljava/lang/String;ILnet/minecraft/class_2583;)Ljava/lang/String;
+		COMMENT Trim a string to be at most {@code maxWidth} wide.
+		COMMENT
+		COMMENT @return the trimmed string
+		ARG 1 text
+			COMMENT the string to trim
+		ARG 2 maxWidth
+			COMMENT the max width of the trimmed string
+		ARG 3 style
+			COMMENT the style of the trimmed string
+	METHOD method_27495 wrapLines (Lnet/minecraft/class_2561;ILnet/minecraft/class_2583;)Ljava/util/List;
+		ARG 1 text
+		ARG 2 maxWidth
+		ARG 3 style
+	METHOD method_27497 trimToWidthBackwards (Ljava/lang/String;ILnet/minecraft/class_2583;)Ljava/lang/String;
+		COMMENT Trim a string from right to left to be at most {@code maxWidth} wide.
+		COMMENT
+		COMMENT @return the trimmed string
+		ARG 1 text
+			COMMENT the string to trim
+		ARG 2 maxWidth
+			COMMENT the max width of the trimmed string
+		ARG 3 style
+			COMMENT the style of the trimmed string
+	METHOD method_27498 wrapLines (Ljava/lang/String;ILnet/minecraft/class_2583;)Ljava/util/List;
+		ARG 1 text
+		ARG 2 maxWidth
+		ARG 3 style
+	CLASS 1
+		FIELD field_24219 collector Lnet/minecraft/class_5222;
+	CLASS class_5226 LineWrappingCollector
+		FIELD field_24220 parts Ljava/util/List;
+		FIELD field_24221 joined Ljava/lang/String;
+		METHOD <init> (Ljava/util/List;)V
+			ARG 1 parts
+		METHOD method_27499 collectRemainers ()Lnet/minecraft/class_2561;
+		METHOD method_27500 charAt (I)C
+			ARG 1 index
+		METHOD method_27501 collectLine (IILnet/minecraft/class_2583;)Lnet/minecraft/class_2561;
+			ARG 1 lineLength
+			ARG 2 skippedLength
+			ARG 3 style
+	CLASS class_5227 LineBreakingVisitor
+		FIELD field_24223 maxWidth F
+		FIELD field_24224 endIndex I
+		FIELD field_24225 endStyle Lnet/minecraft/class_2583;
+		FIELD field_24226 nonEmpty Z
+		FIELD field_24227 totalWidth F
+		FIELD field_24228 lastSpaceBreak I
+		FIELD field_24229 lastSpaceStyle Lnet/minecraft/class_2583;
+		FIELD field_24230 count I
+		FIELD field_24231 startOffset I
+		METHOD <init> (Lnet/minecraft/class_5225;F)V
+			ARG 2 maxWidth
+		METHOD method_27505 getEndingIndex ()I
+		METHOD method_27506 offset (I)V
+			ARG 1 extraOffset
+		METHOD method_27507 breakLine (ILnet/minecraft/class_2583;)Z
+			ARG 1 finishIndex
+			ARG 2 finishStyle
+		METHOD method_27508 getEndingStyle ()Lnet/minecraft/class_2583;
+		METHOD method_27509 hasLineBreak ()Z
+	CLASS class_5228 FormattedString
+		FIELD field_24232 text Ljava/lang/String;
+		FIELD field_24233 style Lnet/minecraft/class_2583;
+		METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_2583;)V
+			ARG 1 text
+			ARG 2 style
+		METHOD method_27510 getText ()Lnet/minecraft/class_5250;
+	CLASS class_5229 LineWrappingConsumer
+		COMMENT A consumer of the line-breaking information.
+		METHOD accept accept (Lnet/minecraft/class_2583;II)V
+			COMMENT Accepts the information on a line-wrap segment.
+			ARG 1 style
+				COMMENT the style of this line segment
+			ARG 2 start
+				COMMENT the start index of this segment in the original string, inclusive
+			ARG 3 end
+				COMMENT the end index of this segment in the original string, exclusive
+	CLASS class_5230 WidthLimitingVisitor
+		FIELD field_24235 widthLeft F
+		FIELD field_24236 length I
+		METHOD <init> (Lnet/minecraft/class_5225;F)V
+			ARG 2 maxWidth
+		METHOD method_27513 getLength ()I
+		METHOD method_27514 resetLength ()V
+	CLASS class_5231 WidthRetriever
+		COMMENT A retriever of character width.
+		METHOD getWidth getWidth (ILnet/minecraft/class_2583;)F
+			COMMENT Returns the width of a character.
+			ARG 1 codePoint
+				COMMENT the character's code point
+			ARG 2 style
+				COMMENT the style of the character, carrying font and formatting information
