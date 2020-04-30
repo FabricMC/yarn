@@ -23,13 +23,16 @@ CLASS net/minecraft/class_2048 net/minecraft/predicate/entity/EntityPredicate
 		ARG 9 fishingHook
 		ARG 10 team
 		ARG 11 catType
+	METHOD method_27802 createAdvancementEntityLootContext (Lnet/minecraft/class_3222;Lnet/minecraft/class_1297;)Lnet/minecraft/class_47;
+		ARG 0 player
+		ARG 1 target
 	METHOD method_8909 test (Lnet/minecraft/class_3218;Lnet/minecraft/class_243;Lnet/minecraft/class_1297;)Z
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 entity
 	METHOD method_8912 toJson ()Lcom/google/gson/JsonElement;
 	METHOD method_8913 fromJson (Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2048;
-		ARG 0 el
+		ARG 0 json
 	METHOD method_8914 test (Lnet/minecraft/class_3222;Lnet/minecraft/class_1297;)Z
 		ARG 1 player
 		ARG 2 entity
@@ -75,3 +78,38 @@ CLASS net/minecraft/class_2048 net/minecraft/predicate/entity/EntityPredicate
 			ARG 1 effects
 		METHOD method_8924 distance (Lnet/minecraft/class_2025;)Lnet/minecraft/class_2048$class_2049;
 			ARG 1 distance
+	CLASS class_5258 Extended
+		FIELD field_24388 EMPTY Lnet/minecraft/class_2048$class_5258;
+		FIELD field_24389 conditions [Lnet/minecraft/class_4570;
+		FIELD field_24390 combinedCondition Ljava/util/function/Predicate;
+		METHOD <init> ([Lnet/minecraft/class_4570;)V
+			ARG 1 conditions
+		METHOD method_27803 ofLegacy (Lnet/minecraft/class_2048;)Lnet/minecraft/class_2048$class_5258;
+			ARG 0 predicate
+		METHOD method_27804 toJson (Lnet/minecraft/class_5267;)Lcom/google/gson/JsonElement;
+			ARG 1 saver
+		METHOD method_27805 getInJson (Lcom/google/gson/JsonObject;Ljava/lang/String;Lnet/minecraft/class_5257;)Lnet/minecraft/class_2048$class_5258;
+			COMMENT Parses an extended entity check in a sub-value in JSON, accepting objects
+			COMMENT as simple entity predicates or array as list of loot conditions.
+			COMMENT
+			COMMENT @see <a href="https://www.minecraft.net/en-us/article/minecraft-snapshot-20w18a">
+			COMMENT Mojang description</a>
+			ARG 0 root
+			ARG 1 key
+			ARG 2 loader
+		METHOD method_27806 test (Lnet/minecraft/class_47;)Z
+			ARG 1 context
+		METHOD method_27807 fromJson (Ljava/lang/String;Lnet/minecraft/class_5257;Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2048$class_5258;
+			ARG 0 key
+			ARG 1 loader
+			ARG 2 json
+		METHOD method_27808 toPredicatesJsonArray ([Lnet/minecraft/class_2048$class_5258;Lnet/minecraft/class_5267;)Lcom/google/gson/JsonElement;
+			ARG 0 predicates
+			ARG 1 saver
+		METHOD method_27809 requireInJson (Lcom/google/gson/JsonObject;Ljava/lang/String;Lnet/minecraft/class_5257;)[Lnet/minecraft/class_2048$class_5258;
+			COMMENT Parses an extended entity check in a sub-value in JSON. The value must
+			COMMENT be absent, JSON null, or an array, or the parser will error. In other
+			COMMENT words, it does not accept object sub-values.
+			ARG 0 root
+			ARG 1 key
+			ARG 2 loader
