@@ -6,7 +6,6 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_17439 worldGenerationProgressListenerFactory Lnet/minecraft/class_3950;
 	FIELD field_17601 serverId Ljava/lang/String;
 	FIELD field_17704 DEMO_LEVEL_INFO Lnet/minecraft/class_1940;
-	FIELD field_19237 eraseCache Z
 	FIELD field_19249 waitingForNextTick Z
 	FIELD field_20279 COMPLETED_UNIT_FUTURE Ljava/util/concurrent/CompletableFuture;
 	FIELD field_20850 dataCommandStorage Lnet/minecraft/class_4565;
@@ -37,13 +36,10 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4566 recipeManager Lnet/minecraft/class_1863;
 	FIELD field_4567 advancementLoader Lnet/minecraft/class_2989;
 	FIELD field_4568 serverGuiTickables Ljava/util/List;
-	FIELD field_4569 bonusChest Z
 	FIELD field_4570 enforceWhitelist Z
 	FIELD field_4571 timeReference J
 	FIELD field_4572 ticks I
 	FIELD field_4573 lastTickLengths [J
-	FIELD field_4574 displayName Ljava/lang/String;
-	FIELD field_4575 spawnAnimals Z
 	FIELD field_4576 dataManager Lnet/minecraft/class_3296;
 	FIELD field_4577 iconFilePresent Z
 	FIELD field_4578 userName Ljava/lang/String;
@@ -53,11 +49,9 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4583 tagManager Lnet/minecraft/class_3505;
 	FIELD field_4584 resourcePackHash Ljava/lang/String;
 	FIELD field_4585 serverIp Ljava/lang/String;
-	FIELD field_4586 forceWorldUpgrade Z
 	FIELD field_4587 dataFixer Lcom/mojang/datafixers/DataFixer;
 	FIELD field_4588 USER_CACHE_FILE Ljava/io/File;
 	FIELD field_4589 worlds Ljava/util/Map;
-	FIELD field_4590 spawnNpcs Z
 	FIELD field_4591 commandFunctionManager Lnet/minecraft/class_2991;
 	FIELD field_4592 tickTime F
 	FIELD field_4593 metadata Lnet/minecraft/class_2926;
@@ -65,7 +59,6 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4596 playerIdleTimeout I
 	FIELD field_4597 profilerStartQueued Z
 	FIELD field_4599 proxy Ljava/net/Proxy;
-	FIELD field_4601 loadingStage Lnet/minecraft/class_2561;
 	FIELD field_4602 random Ljava/util/Random;
 	FIELD field_4603 sessionService Lcom/mojang/authlib/minecraft/MinecraftSessionService;
 	FIELD field_4604 pvpEnabled Z
@@ -81,7 +74,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 serverId
 	METHOD method_17976 initScoreboard (Lnet/minecraft/class_26;)V
 		ARG 1 persistentStateManager
-	METHOD method_17977 setToDebugWorldProperties (Lnet/minecraft/class_31;)V
+	METHOD method_17977 setToDebugWorldProperties (Lnet/minecraft/class_5219;)V
 		ARG 1 properties
 	METHOD method_19465 sendDifficulty (Lnet/minecraft/class_3222;)V
 		ARG 1 player
@@ -89,8 +82,6 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 profile
 	METHOD method_19467 setDifficultyLocked (Z)V
 		ARG 1 locked
-	METHOD method_20383 setEraseCache (Z)V
-		ARG 1 eraseCache
 	METHOD method_21613 dump (Ljava/nio/file/Path;)V
 		ARG 1 path
 	METHOD method_21614 dumpExampleCrash (Ljava/nio/file/Path;)V
@@ -113,11 +104,9 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3717 start ()V
 	METHOD method_3718 isFlightEnabled ()Z
 	METHOD method_3719 getGameProfileRepo ()Lcom/mojang/authlib/GameProfileRepository;
-	METHOD method_3722 getDefaultDifficulty ()Lnet/minecraft/class_1267;
 	METHOD method_3723 save (ZZZ)Z
 	METHOD method_3724 isSinglePlayer ()Z
 	METHOD method_3725 getIconFile ()Ljava/io/File;
-	METHOD method_3726 getServerName ()Ljava/lang/String;
 	METHOD method_3727 hasGui ()Z
 	METHOD method_3728 kickNonWhitelistedPlayers (Lnet/minecraft/class_2168;)V
 		ARG 1 source
@@ -128,7 +117,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 whitelistEnabled
 	METHOD method_3732 shouldBroadcastRconToOps ()Z
 	METHOD method_3734 getCommandManager ()Lnet/minecraft/class_2170;
-	METHOD method_3735 loadWorld (Ljava/lang/String;JLnet/minecraft/class_4952;)V
+	METHOD method_3735 loadWorld ()V
 	METHOD method_3736 shouldSpawnNpcs ()Z
 	METHOD method_3738 getWorlds ()Ljava/lang/Iterable;
 	METHOD method_3739 getCommandSource ()Lnet/minecraft/class_2168;
@@ -144,7 +133,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 shouldKeepTicking
 	METHOD method_3749 getMaxWorldBorderRadius ()I
 	METHOD method_3750 isStopped ()Z
-	METHOD method_3752 reloadDataPacks (Lnet/minecraft/class_31;)V
+	METHOD method_3752 reloadDataPacks ()V
 	METHOD method_3754 isHardcore ()Z
 	METHOD method_3756 getServerPort ()I
 	METHOD method_3758 getFile (Ljava/lang/String;)Ljava/io/File;
@@ -159,48 +148,35 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 preventProxyConnections
 	METHOD method_3765 getServerMetadata ()Lnet/minecraft/class_2926;
 	METHOD method_3767 getGameRules ()Lnet/minecraft/class_1928;
-	METHOD method_3768 setLoadingStage (Lnet/minecraft/class_2561;)V
-		ARG 1 loadingStage
-	METHOD method_3769 setSpawnNpcs (Z)V
-		ARG 1 spawnNpcs
 	METHOD method_3771 hasIconFile ()Z
 	METHOD method_3772 getRecipeManager ()Lnet/minecraft/class_1863;
 	METHOD method_3773 getNetworkCompressionThreshold ()I
 	METHOD method_3774 prepareStartRegion (Lnet/minecraft/class_3949;)V
 	METHOD method_3775 shouldPreventProxyConnections ()Z
 	METHOD method_3776 setDifficulty (Lnet/minecraft/class_1267;Z)V
-	METHOD method_3778 setBonusChest (Z)V
-		ARG 1 bonusChest
 	METHOD method_3779 setServerPort (I)V
 		ARG 1 serverPort
 	METHOD method_3780 getTicks ()I
 	METHOD method_3782 shutdown ()V
 	METHOD method_3783 isMonsterSpawningEnabled ()Z
 	METHOD method_3784 getResourcePackUrl ()Ljava/lang/String;
-	METHOD method_3785 isSpawnProtected (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)Z
-		ARG 1 world
+	METHOD method_3785 isSpawnProtected (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)Z
 		ARG 2 pos
 		ARG 3 player
-	METHOD method_3786 createWorlds (Lnet/minecraft/class_29;Lnet/minecraft/class_31;Lnet/minecraft/class_1940;Lnet/minecraft/class_3949;)V
-		ARG 2 properties
+	METHOD method_3786 createWorlds (Lnet/minecraft/class_3949;)V
 	METHOD method_3787 getNetworkIo ()Lnet/minecraft/class_3242;
 	METHOD method_3788 getCurrentPlayerCount ()I
 	METHOD method_3790 getDefaultGameMode ()Lnet/minecraft/class_1934;
 	METHOD method_3791 setFavicon (Lnet/minecraft/class_2926;)V
 		ARG 1 metadata
-	METHOD method_3792 shouldGenerateStructures ()Z
 	METHOD method_3793 getUserCache ()Lnet/minecraft/class_3312;
 	METHOD method_3794 setForceGameMode (Z)V
 		ARG 1 forceGameMode
 	METHOD method_3795 getSnooper ()Lnet/minecraft/class_1276;
 	METHOD method_3796 shouldSpawnAnimals ()Z
-	METHOD method_3797 setForceWorldUpgrade (Z)V
-		ARG 1 forceWorldUpgrade
 	METHOD method_3798 getOpPermissionLevel ()I
 	METHOD method_3799 isDemo ()Z
-	METHOD method_3800 loadWorldDataPacks (Ljava/io/File;Lnet/minecraft/class_31;)V
-		ARG 1 worldDir
-		ARG 2 properties
+	METHOD method_3800 loadWorldDataPacks ()V
 	METHOD method_3801 getTagManager ()Lnet/minecraft/class_3505;
 	METHOD method_3802 getMaxPlayerCount ()I
 	METHOD method_3803 setPlayerIdleTimeout (I)V
@@ -215,8 +191,6 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3815 setPvpEnabled (Z)V
 		ARG 1 pvpEnabled
 	METHOD method_3816 isDedicated ()Z
-	METHOD method_3817 setUserName (Ljava/lang/String;)V
-		ARG 1 userName
 	METHOD method_3818 getServerMotd ()Ljava/lang/String;
 	METHOD method_3819 getServerIp ()Ljava/lang/String;
 	METHOD method_3820 isLoading ()Z
@@ -240,8 +214,6 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3838 setDefaultGameMode (Lnet/minecraft/class_1934;)V
 		ARG 1 gameMode
 	METHOD method_3839 isNetherAllowed ()Z
-	METHOD method_3840 setSpawnAnimals (Z)V
-		ARG 1 spawnAnimals
 	METHOD method_3841 getSpawnProtectionRadius ()I
 	METHOD method_3842 setServerIp (Ljava/lang/String;)V
 		ARG 1 serverIp
@@ -268,9 +240,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3858 getPlayerNames ()[Ljava/lang/String;
 	METHOD method_3859 populateCrashReport (Lnet/minecraft/class_128;)Lnet/minecraft/class_128;
 	METHOD method_3860 isRemote ()Z
-	METHOD method_3861 loadWorldResourcePack (Ljava/lang/String;Lnet/minecraft/class_29;)V
-		ARG 1 worldName
-		ARG 2 worldSaveHandler
+	METHOD method_3861 loadWorldResourcePack ()V
 	METHOD method_3862 getPlayerIdleTimeout ()I
 	METHOD method_3864 setOnlineMode (Z)V
 		ARG 1 onlineMode

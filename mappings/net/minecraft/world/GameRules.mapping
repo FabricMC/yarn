@@ -2,6 +2,8 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 	FIELD field_19410 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_9196 rules Ljava/util/Map;
 	FIELD field_9197 RULE_TYPES Ljava/util/Map;
+	METHOD <init> (Ljava/util/Map;)V
+		ARG 1 rules
 	METHOD method_20744 forEachType (Lnet/minecraft/class_1928$class_4311;)V
 		ARG 0 action
 	METHOD method_20745 accept (Lnet/minecraft/class_1928$class_4311;Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
@@ -26,6 +28,12 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 	METHOD method_22386 (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4310;)V
 		ARG 0 server
 		ARG 1 rule
+	METHOD method_27321 setValue (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928;Lnet/minecraft/server/MinecraftServer;)V
+		ARG 1 key
+		ARG 3 server
+	METHOD method_27322 setAllValues (Lnet/minecraft/class_1928;Lnet/minecraft/server/MinecraftServer;)V
+		ARG 2 server
+	METHOD method_27325 copy ()Lnet/minecraft/class_1928;
 	METHOD method_8355 getBoolean (Lnet/minecraft/class_1928$class_4313;)Z
 		ARG 1 rule
 	METHOD method_8356 getInt (Lnet/minecraft/class_1928$class_4313;)I
@@ -33,9 +41,10 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 	METHOD method_8357 load (Lnet/minecraft/class_2487;)V
 		ARG 1 nbt
 	METHOD method_8358 toNbt ()Lnet/minecraft/class_2487;
-	METHOD method_8359 register (Ljava/lang/String;Lnet/minecraft/class_1928$class_4314;)Lnet/minecraft/class_1928$class_4313;
+	METHOD method_8359 register (Ljava/lang/String;Lnet/minecraft/class_1928$class_5198;Lnet/minecraft/class_1928$class_4314;)Lnet/minecraft/class_1928$class_4313;
 		ARG 0 name
-		ARG 1 type
+		ARG 1 category
+		ARG 2 type
 	METHOD method_8361 (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4310;)V
 		ARG 0 server
 		ARG 1 rule
@@ -62,6 +71,12 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		METHOD method_20762 accept (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
 			ARG 1 key
 			ARG 2 type
+		METHOD method_27329 acceptBoolean (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+			ARG 1 key
+			ARG 2 type
+		METHOD method_27330 acceptInt (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+			ARG 1 key
+			ARG 2 type
 	CLASS class_4312 IntRule
 		FIELD field_19412 value I
 		METHOD <init> (Lnet/minecraft/class_1928$class_4314;I)V
@@ -79,25 +94,35 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		METHOD method_20768 create (I)Lnet/minecraft/class_1928$class_4314;
 			ARG 0 initialValue
 		METHOD method_20769 parseInt (Ljava/lang/String;)I
-			ARG 0 string
+			ARG 0 input
+		METHOD method_27332 validate (Ljava/lang/String;)Z
+			COMMENT Validates that an input is valid for this rule.
+			ARG 1 input
 	CLASS class_4313 RuleKey
 		FIELD field_19413 name Ljava/lang/String;
-		METHOD <init> (Ljava/lang/String;)V
+		FIELD field_24103 category Lnet/minecraft/class_1928$class_5198;
+		METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_1928$class_5198;)V
 			ARG 1 name
+			ARG 2 category
 		METHOD equals (Ljava/lang/Object;)Z
 			ARG 1 obj
 		METHOD method_20771 getName ()Ljava/lang/String;
+		METHOD method_27334 getTranslationKey ()Ljava/lang/String;
+		METHOD method_27335 getCategory ()Lnet/minecraft/class_1928$class_5198;
 	CLASS class_4314 RuleType
 		FIELD field_19414 argumentType Ljava/util/function/Supplier;
 		FIELD field_19415 ruleFactory Ljava/util/function/Function;
 		FIELD field_19416 changeCallback Ljava/util/function/BiConsumer;
-		METHOD <init> (Ljava/util/function/Supplier;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)V
+		METHOD <init> (Ljava/util/function/Supplier;Ljava/util/function/Function;Ljava/util/function/BiConsumer;Lnet/minecraft/class_1928$class_5199;)V
 			ARG 1 argumentType
 			ARG 2 ruleFactory
 			ARG 3 changeCallback
 		METHOD method_20773 createRule ()Lnet/minecraft/class_1928$class_4315;
 		METHOD method_20775 argument (Ljava/lang/String;)Lcom/mojang/brigadier/builder/RequiredArgumentBuilder;
 			ARG 1 name
+		METHOD method_27336 (Lnet/minecraft/class_1928$class_4311;Lnet/minecraft/class_1928$class_4313;)V
+			ARG 1 consumer
+			ARG 2 key
 	CLASS class_4315 Rule
 		FIELD field_19417 type Lnet/minecraft/class_1928$class_4314;
 		METHOD <init> (Lnet/minecraft/class_1928$class_4314;)V
@@ -115,3 +140,17 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 			ARG 2 name
 		METHOD method_20781 getCommandResult ()I
 		METHOD method_20782 getThis ()Lnet/minecraft/class_1928$class_4315;
+		METHOD method_27337 setValue (Lnet/minecraft/class_1928$class_4315;Lnet/minecraft/server/MinecraftServer;)V
+			ARG 1 rule
+			ARG 2 server
+		METHOD method_27338 copy ()Lnet/minecraft/class_1928$class_4315;
+	CLASS class_5198 RuleCategory
+		FIELD field_24101 category Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
+			ARG 3 category
+		METHOD method_27328 getCategory ()Ljava/lang/String;
+	CLASS class_5199 RuleAcceptor
+		METHOD call (Lnet/minecraft/class_1928$class_4311;Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+			ARG 1 consumer
+			ARG 2 key
+			ARG 3 type

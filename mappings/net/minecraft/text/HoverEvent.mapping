@@ -1,23 +1,72 @@
 CLASS net/minecraft/class_2568 net/minecraft/text/HoverEvent
-	FIELD field_11755 value Lnet/minecraft/class_2561;
-	FIELD field_11756 action Lnet/minecraft/class_2568$class_2569;
-	METHOD <init> (Lnet/minecraft/class_2568$class_2569;Lnet/minecraft/class_2561;)V
+	FIELD field_11755 contents Ljava/lang/Object;
+	FIELD field_11756 action Lnet/minecraft/class_2568$class_5247;
+	FIELD field_24341 LOGGER Lorg/apache/logging/log4j/Logger;
+	METHOD <init> (Lnet/minecraft/class_2568$class_5247;Ljava/lang/Object;)V
 		ARG 1 action
-		ARG 2 value
+		ARG 2 contents
 	METHOD equals (Ljava/lang/Object;)Z
 		ARG 1 obj
-	METHOD method_10891 getValue ()Lnet/minecraft/class_2561;
-	METHOD method_10892 getAction ()Lnet/minecraft/class_2568$class_2569;
-	CLASS class_2569 Action
-		FIELD field_11758 BY_NAME Ljava/util/Map;
-		FIELD field_11759 userDefinable Z
-		FIELD field_11763 name Ljava/lang/String;
-		METHOD <init> (Ljava/lang/String;ILjava/lang/String;Z)V
-			ARG 3 name
-			ARG 4 userDefinable
-		METHOD method_10893 getName ()Ljava/lang/String;
-		METHOD method_10894 (Lnet/minecraft/class_2568$class_2569;)Lnet/minecraft/class_2568$class_2569;
-			ARG 0 a
-		METHOD method_10895 isUserDefinable ()Z
-		METHOD method_10896 byName (Ljava/lang/String;)Lnet/minecraft/class_2568$class_2569;
+	METHOD method_10891 getValue (Lnet/minecraft/class_2568$class_5247;)Ljava/lang/Object;
+		ARG 1 action
+	METHOD method_10892 getAction ()Lnet/minecraft/class_2568$class_5247;
+	METHOD method_27664 fromJson (Lcom/google/gson/JsonObject;)Lnet/minecraft/class_2568;
+		ARG 0 json
+	METHOD method_27665 toJson ()Lcom/google/gson/JsonObject;
+	CLASS class_5247 Action
+		FIELD field_24345 BY_NAME Ljava/util/Map;
+		FIELD field_24346 name Ljava/lang/String;
+		FIELD field_24347 parsable Z
+		FIELD field_24348 deserializer Ljava/util/function/Function;
+		FIELD field_24349 serializer Ljava/util/function/Function;
+		FIELD field_24350 legacyDeserializer Ljava/util/function/Function;
+		METHOD <init> (Ljava/lang/String;ZLjava/util/function/Function;Ljava/util/function/Function;Ljava/util/function/Function;)V
+			ARG 1 name
+			ARG 2 parsable
+			ARG 3 deserializer
+			ARG 4 serializer
+			ARG 5 legacyDeserializer
+		METHOD method_27667 isParsable ()Z
+		METHOD method_27668 buildHoverEvent (Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2568;
+			ARG 1 contents
+		METHOD method_27669 contentsToJson (Ljava/lang/Object;)Lcom/google/gson/JsonElement;
+			ARG 1 contents
+		METHOD method_27670 byName (Ljava/lang/String;)Lnet/minecraft/class_2568$class_5247;
 			ARG 0 name
+		METHOD method_27671 buildHoverEvent (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2568;
+			ARG 1 value
+		METHOD method_27674 getName ()Ljava/lang/String;
+		METHOD method_27676 cast (Ljava/lang/Object;)Ljava/lang/Object;
+			ARG 1 o
+	CLASS class_5248 EntityContent
+		FIELD field_24351 entityType Lnet/minecraft/class_1299;
+		FIELD field_24352 uuid Ljava/util/UUID;
+		FIELD field_24353 name Lnet/minecraft/class_2561;
+		FIELD field_24354 tooltip Ljava/util/List;
+		METHOD <init> (Lnet/minecraft/class_1299;Ljava/util/UUID;Lnet/minecraft/class_2561;)V
+			ARG 1 entityType
+			ARG 2 uuid
+			ARG 3 name
+		METHOD method_27679 toJson ()Lcom/google/gson/JsonElement;
+		METHOD method_27680 parse (Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2568$class_5248;
+			ARG 0 json
+		METHOD method_27681 parse (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2568$class_5248;
+			ARG 0 text
+		METHOD method_27682 asTooltip ()Ljava/util/List;
+	CLASS class_5249 ItemStackContent
+		FIELD field_24355 item Lnet/minecraft/class_1792;
+		FIELD field_24356 count I
+		FIELD field_24357 tag Lnet/minecraft/class_2487;
+		FIELD field_24358 stack Lnet/minecraft/class_1799;
+		METHOD <init> (Lnet/minecraft/class_1792;ILnet/minecraft/class_2487;)V
+			ARG 1 item
+			ARG 2 count
+			ARG 3 tag
+		METHOD <init> (Lnet/minecraft/class_1799;)V
+			ARG 1 stack
+		METHOD method_27683 asStack ()Lnet/minecraft/class_1799;
+		METHOD method_27687 toJson ()Lcom/google/gson/JsonElement;
+		METHOD method_27688 parse (Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2568$class_5249;
+			ARG 0 json
+		METHOD method_27689 parse (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2568$class_5249;
+			ARG 0 text

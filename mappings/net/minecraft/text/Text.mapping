@@ -1,31 +1,83 @@
 CLASS net/minecraft/class_2561 net/minecraft/text/Text
-	METHOD method_10850 copy ()Lnet/minecraft/class_2561;
+	COMMENT A text. Can be converted to and from JSON format.
+	COMMENT
+	COMMENT <p>Each text has a tree structure, embodying all its {@link
+	COMMENT #getSiblings() siblings}. To iterate contents in the text and all
+	COMMENT its siblings, call {@code visit} methods.</p>
+	COMMENT
+	COMMENT <p>This interface does not expose mutation operations. For mutation,
+	COMMENT refer to {@link MutableText}.</p>
+	COMMENT
+	COMMENT @see MutableText
+	FIELD field_24340 TERMINATE_VISIT Ljava/util/Optional;
+		COMMENT An {@link Optional} that indicates a text visitor should be terminated.
+		COMMENT
+		COMMENT @see Visitor#accept(String)
+		COMMENT @see StyledVisitor#accept(Style, String)
+	METHOD getString getString ()Ljava/lang/String;
+		COMMENT Returns the full string representation of this text, including siblings.
+		COMMENT
+		COMMENT {@inheritDoc}
 	METHOD method_10851 asString ()Ljava/lang/String;
-	METHOD method_10852 append (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
-		ARG 1 text
-	METHOD method_10853 deepCopy ()Lnet/minecraft/class_2561;
-	METHOD method_10854 formatted (Lnet/minecraft/class_124;)Lnet/minecraft/class_2561;
-		ARG 1 formatting
+		COMMENT Returns the string representation of this text itself, excluding siblings.
 	METHOD method_10855 getSiblings ()Ljava/util/List;
-	METHOD method_10856 formatted ([Lnet/minecraft/class_124;)Lnet/minecraft/class_2561;
-		ARG 1 formatting
-	METHOD method_10857 copyWithoutChildren (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
-		ARG 0 text
+		COMMENT Returns the siblings of this text.
 	METHOD method_10858 asTruncatedString (I)Ljava/lang/String;
+		COMMENT Returns the full string representation of this text, truncated beyond
+		COMMENT the supplied {@code length}.
 		ARG 1 length
-	METHOD method_10859 styled (Ljava/util/function/Consumer;)Lnet/minecraft/class_2561;
-		ARG 1 transformer
-	METHOD method_10860 streamCopied ()Ljava/util/stream/Stream;
-	METHOD method_10861 (Ljava/lang/StringBuilder;Lnet/minecraft/class_2561;)V
-		ARG 1 text
-	METHOD method_10862 setStyle (Lnet/minecraft/class_2583;)Lnet/minecraft/class_2561;
-		ARG 1 style
-	METHOD method_10863 asFormattedString ()Ljava/lang/String;
-	METHOD method_10864 append (Ljava/lang/String;)Lnet/minecraft/class_2561;
-		ARG 1 text
-	METHOD method_10865 stream ()Ljava/util/stream/Stream;
+			COMMENT the max length allowed for the string representation of the text
 	METHOD method_10866 getStyle ()Lnet/minecraft/class_2583;
+		COMMENT Returns the style of this text.
+	METHOD method_27657 visit (Lnet/minecraft/class_2561$class_5245;)Ljava/util/Optional;
+		COMMENT Visits this text and its siblings.
+		COMMENT
+		COMMENT <p>When the visitor returns a {@link Optional#isPresent() non-empty
+		COMMENT optional} during visit, the visit is immediately terminated and the
+		COMMENT result is returned.</p>
+		COMMENT
+		COMMENT @return what the visitor returns, or {@link Optional#empty()} if the
+		COMMENT visitor always returned {@code Optional.empty()}.
+		ARG 1 visitor
+			COMMENT the text visitor
+	METHOD method_27658 visit (Lnet/minecraft/class_2561$class_5246;Lnet/minecraft/class_2583;)Ljava/util/Optional;
+		COMMENT Visits the code points of in each {@link Text#asString() partial string}
+		COMMENT representation of {@code text} and its siblings, applying the formatting
+		COMMENT codes within.
+		COMMENT
+		COMMENT <p>The visit is in forward direction.</p>
+		COMMENT
+		COMMENT @return {@code true} if the full string was visited, or {@code false} indicating
+		COMMENT the {@code visitor} terminated half-way
+		COMMENT @see Text#visit(Text.StyledVisitor, Style)
+		ARG 1 visitor
+			COMMENT the styled text visitor
+		ARG 2 style
+			COMMENT the starting style
+	METHOD method_27659 visitSelf (Lnet/minecraft/class_2561$class_5245;)Ljava/util/Optional;
+		COMMENT Visits the text itself.
+		COMMENT
+		COMMENT @see #visit(Visitor)
+		COMMENT @return the visitor's return value
+		ARG 1 visitor
+			COMMENT the visitor
+	METHOD method_27660 visitSelf (Lnet/minecraft/class_2561$class_5246;Lnet/minecraft/class_2583;)Ljava/util/Optional;
+		COMMENT Visits the text itself.
+		COMMENT
+		COMMENT @see #visit(StyledVisitor, Style)
+		COMMENT @return the visitor's return value
+		ARG 1 visitor
+			COMMENT the visitor
+		ARG 2 style
+			COMMENT the current style
+	METHOD method_27661 shallowCopy ()Lnet/minecraft/class_5250;
+		COMMENT Copies the text itself, the style, and the siblings.
+		COMMENT
+		COMMENT <p>A shallow copy is made for the siblings.</p>
+	METHOD method_27662 copy ()Lnet/minecraft/class_5250;
+		COMMENT Copies the text itself, excluding the styles or siblings.
 	CLASS class_2562 Serializer
+		COMMENT A JSON serializer for {@link Text}.
 		FIELD field_11752 JSON_READER_LINE_START Ljava/lang/reflect/Field;
 		FIELD field_11753 JSON_READER_POS Ljava/lang/reflect/Field;
 		FIELD field_11754 GSON Lcom/google/gson/Gson;
@@ -37,17 +89,17 @@ CLASS net/minecraft/class_2561 net/minecraft/text/Text
 			ARG 0 text
 		METHOD method_10868 toJsonTree (Lnet/minecraft/class_2561;)Lcom/google/gson/JsonElement;
 			ARG 0 text
-		METHOD method_10872 fromJson (Lcom/google/gson/JsonElement;)Lnet/minecraft/class_2561;
+		METHOD method_10872 fromJson (Lcom/google/gson/JsonElement;)Lnet/minecraft/class_5250;
 			ARG 0 json
-		METHOD method_10873 fromLenientJson (Ljava/lang/String;)Lnet/minecraft/class_2561;
+		METHOD method_10873 fromLenientJson (Ljava/lang/String;)Lnet/minecraft/class_5250;
 			ARG 0 json
 		METHOD method_10875 addStyle (Lnet/minecraft/class_2583;Lcom/google/gson/JsonObject;Lcom/google/gson/JsonSerializationContext;)V
 			ARG 1 style
 			ARG 2 json
 			ARG 3 context
-		METHOD method_10877 fromJson (Ljava/lang/String;)Lnet/minecraft/class_2561;
+		METHOD method_10877 fromJson (Ljava/lang/String;)Lnet/minecraft/class_5250;
 			ARG 0 json
-		METHOD method_10879 fromJson (Lcom/mojang/brigadier/StringReader;)Lnet/minecraft/class_2561;
+		METHOD method_10879 fromJson (Lcom/mojang/brigadier/StringReader;)Lnet/minecraft/class_5250;
 			ARG 0 reader
 		METHOD method_10880 getPosition (Lcom/google/gson/stream/JsonReader;)I
 			ARG 0 reader
@@ -55,3 +107,27 @@ CLASS net/minecraft/class_2561 net/minecraft/text/Text
 			ARG 1 text
 			ARG 2 type
 			ARG 3 context
+	CLASS class_5245 Visitor
+		COMMENT A visitor for text content.
+		METHOD accept accept (Ljava/lang/String;)Ljava/util/Optional;
+			COMMENT Visits a text's {@link Text#asString() asString result}.
+			COMMENT
+			COMMENT <p>When a {@link Optional#isPresent() present optional} is returned,
+			COMMENT the visit is terminated before visiting all text. Can return {@link
+			COMMENT Text#TERMINATE_VISIT} for convenience.</p>
+			ARG 1 asString
+	CLASS class_5246 StyledVisitor
+		COMMENT A visitor for text content and a contextual {@link Style}.
+		METHOD accept accept (Lnet/minecraft/class_2583;Ljava/lang/String;)Ljava/util/Optional;
+			COMMENT Visits a text's contextual style and {@link Text#asString() asString
+			COMMENT result}.
+			COMMENT
+			COMMENT <p>A contextual style is obtained by calling {@link Style#withParent(Style)}
+			COMMENT on the current's text style, passing the previous contextual style or
+			COMMENT the starting style if it is the beginning of a visit.</p>
+			COMMENT
+			COMMENT <p>When a {@link Optional#isPresent() present optional} is returned,
+			COMMENT the visit is terminated before visiting all text. Can return {@link
+			COMMENT Text#TERMINATE_VISIT} for convenience.</p>
+			ARG 1 style
+			ARG 2 asString
