@@ -6,7 +6,9 @@ CLASS net/minecraft/class_4703 net/minecraft/client/render/debug/BeeDebugRendere
 	METHOD <init> (Lnet/minecraft/class_310;)V
 		ARG 1 client
 	METHOD method_23805 addBee (Lnet/minecraft/class_4703$class_5243;)V
+		ARG 1 bee
 	METHOD method_23806 getPositionString (Lnet/minecraft/class_4703$class_5243;Lnet/minecraft/class_2338;)Ljava/lang/String;
+		ARG 1 bee
 		ARG 2 pos
 	METHOD method_23807 addHive (Lnet/minecraft/class_4703$class_4705;)V
 		ARG 1 hive
@@ -40,6 +42,7 @@ CLASS net/minecraft/class_4703 net/minecraft/client/render/debug/BeeDebugRendere
 		ARG 3 color
 	METHOD method_23819 removeOutdatedHives ()V
 	METHOD method_23820 drawPath (Lnet/minecraft/class_4703$class_5243;)V
+		ARG 1 bee
 	METHOD method_23821 drawHiveInfo (Lnet/minecraft/class_4703$class_4705;Ljava/util/Collection;)V
 		ARG 1 hive
 		ARG 2 blacklistingBees
@@ -47,28 +50,57 @@ CLASS net/minecraft/class_4703 net/minecraft/client/render/debug/BeeDebugRendere
 		ARG 1 hivePos
 	METHOD method_23823 render ()V
 	METHOD method_23824 drawBee (Lnet/minecraft/class_4703$class_5243;)V
+		ARG 1 bee
 	METHOD method_23825 toString (Ljava/util/Collection;)Ljava/lang/String;
 		ARG 0 bees
 	METHOD method_23826 drawFlowers ()V
 	METHOD method_23827 isTargeted (Lnet/minecraft/class_4703$class_5243;)Z
+		ARG 1 bee
 	METHOD method_23828 getCameraPos ()Lnet/minecraft/class_4184;
 	METHOD method_23829 isInRange (Lnet/minecraft/class_4703$class_5243;)Z
+		ARG 1 bee
 	METHOD method_23830 getBeesByHive ()Ljava/util/Map;
 	METHOD method_23832 updateTargetedEntity ()V
 	METHOD method_23952 removeInvalidBees ()V
 	METHOD method_24081 addToMap (Ljava/util/Map;Lnet/minecraft/class_4703$class_5243;Lnet/minecraft/class_2338;)V
 		ARG 0 map
+		ARG 1 bee
 		ARG 2 pos
 	METHOD method_24084 getBlacklistingBees ()Ljava/util/Map;
 	CLASS class_4705 Hive
 		FIELD field_21543 pos Lnet/minecraft/class_2338;
+		FIELD field_21544 label Ljava/lang/String;
 		FIELD field_21545 beeCount I
 		FIELD field_21546 time J
 		FIELD field_21625 honeyLevel I
 		FIELD field_21626 sedated Z
 		METHOD <init> (Lnet/minecraft/class_2338;Ljava/lang/String;IIZJ)V
 			ARG 1 pos
+			ARG 2 label
 			ARG 3 beeCount
 			ARG 4 honeyLevel
 			ARG 5 sedated
 			ARG 6 time
+	CLASS class_5243 Bee
+		FIELD field_24322 uuid Ljava/util/UUID;
+		FIELD field_24323 entityId I
+		FIELD field_24324 position Lnet/minecraft/class_2374;
+		FIELD field_24325 path Lnet/minecraft/class_11;
+		FIELD field_24326 hive Lnet/minecraft/class_2338;
+		FIELD field_24327 flower Lnet/minecraft/class_2338;
+		FIELD field_24328 travelTicks I
+		FIELD field_24329 labels Ljava/util/List;
+		FIELD field_24330 blacklist Ljava/util/Set;
+		METHOD <init> (Ljava/util/UUID;ILnet/minecraft/class_2374;Lnet/minecraft/class_11;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;I)V
+			ARG 1 uuid
+			ARG 2 entityId
+			ARG 3 position
+			ARG 4 path
+			ARG 5 hive
+			ARG 6 flower
+			ARG 7 travelTicks
+		METHOD method_27648 getUuid ()Ljava/util/UUID;
+		METHOD method_27649 isHiveAt (Lnet/minecraft/class_2338;)Z
+			ARG 1 pos
+		METHOD method_27650 getName ()Ljava/lang/String;
+		METHOD method_27651 hasFlower ()Z
