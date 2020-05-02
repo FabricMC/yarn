@@ -3,8 +3,8 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 	FIELD field_18070 dimensions Lnet/minecraft/class_4048;
 	FIELD field_18981 fireImmune Z
 	FIELD field_19423 spawnableFarFromPlayer Z
-	FIELD field_22469 immediateDespawnDistance I
-	FIELD field_22470 minimumDespawnDistance I
+	FIELD field_22469 immediateDespawnRange I
+	FIELD field_22470 despawnStartRange I
 	FIELD field_24085 maxTrackDistance I
 	FIELD field_24086 trackTickInterval I
 	FIELD field_6056 saveable Z
@@ -21,8 +21,8 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 		ARG 4 summonable
 		ARG 5 fireImmune
 		ARG 6 spawnableFarFromPlayer
-		ARG 7 immediateDespawnDistance
-		ARG 8 minimumDespawnDistance
+		ARG 7 immediateDespawnRange
+		ARG 8 despawnStartRange
 		ARG 9 dimensions
 		ARG 10 maxTrackDistance
 		ARG 11 trackTickInterval
@@ -44,22 +44,27 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 		ARG 1 world
 	METHOD method_18386 getDimensions ()Lnet/minecraft/class_4048;
 	METHOD method_18387 getMaxTrackDistance ()I
+		COMMENT Returns the tracking distance, <b>in chunks</b>, of this type of entity
+		COMMENT for clients. This will be then modified by the server's tracking
+		COMMENT distance multiplier.
 	METHOD method_18388 getTrackTickInterval ()I
 	METHOD method_18389 alwaysUpdateVelocity ()Z
 	METHOD method_19946 isFireImmune ()Z
 	METHOD method_20210 isIn (Lnet/minecraft/class_3494;)Z
 		ARG 1 tag
 	METHOD method_20814 isSpawnableFarFromPlayer ()Z
-	METHOD method_24908 getImmediateDespawnDistance ()I
-	METHOD method_24909 getMinimumDespawnDistance ()I
+	METHOD method_24908 getImmediateDespawnRange ()I
+	METHOD method_24909 getDespawnStartRange ()I
 	METHOD method_5881 loadFromEntityTag (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_2487;)V
 		ARG 0 world
 		ARG 1 player
+		ARG 2 entity
 		ARG 3 itemTag
 	METHOD method_5882 getTranslationKey ()Ljava/lang/String;
 	METHOD method_5883 create (Lnet/minecraft/class_1937;)Lnet/minecraft/class_1297;
 		ARG 1 world
 	METHOD method_5884 getOriginY (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;ZLnet/minecraft/class_238;)D
+		ARG 0 world
 		ARG 1 pos
 		ARG 2 invertY
 		ARG 3 boundingBox
@@ -110,13 +115,13 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 		ARG 7 alignPosition
 		ARG 8 invertY
 	CLASS class_1300 Builder
-		FIELD field_18071 size Lnet/minecraft/class_4048;
+		FIELD field_18071 dimensions Lnet/minecraft/class_4048;
 		FIELD field_18982 fireImmune Z
 		FIELD field_19424 spawnableFarFromPlayer Z
-		FIELD field_22471 immediateDespawnDistance I
-		FIELD field_22472 minimumDespawnDistance I
-		FIELD field_24087 maxTrackDistance I
-		FIELD field_24088 trackTickInterval I
+		FIELD field_22471 immediateDespawnRange I
+		FIELD field_22472 despawnStartRange I
+		FIELD field_24087 maxTrackingRange I
+		FIELD field_24088 trackingTickInterval I
 		FIELD field_6148 factory Lnet/minecraft/class_1299$class_4049;
 		FIELD field_6149 category Lnet/minecraft/class_1311;
 		FIELD field_6150 summonable Z
@@ -129,12 +134,12 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 			ARG 2 height
 		METHOD method_19947 makeFireImmune ()Lnet/minecraft/class_1299$class_1300;
 		METHOD method_20815 spawnableFarFromPlayer ()Lnet/minecraft/class_1299$class_1300;
-		METHOD method_24910 setImmediateDespawnDistance (I)Lnet/minecraft/class_1299$class_1300;
-			ARG 1 distance
-		METHOD method_27299 setMaxTrackDistance (I)Lnet/minecraft/class_1299$class_1300;
-			ARG 1 distance
-		METHOD method_27300 setTrackTickInterval (I)Lnet/minecraft/class_1299$class_1300;
-			ARG 1 interval
+		METHOD method_24910 immediateDespawnRange (I)Lnet/minecraft/class_1299$class_1300;
+			ARG 1 immediateDespawnRange
+		METHOD method_27299 maxTrackingRange (I)Lnet/minecraft/class_1299$class_1300;
+			ARG 1 maxTrackingRange
+		METHOD method_27300 trackingTickInterval (I)Lnet/minecraft/class_1299$class_1300;
+			ARG 1 trackingTickInterval
 		METHOD method_5901 disableSummon ()Lnet/minecraft/class_1299$class_1300;
 		METHOD method_5902 create (Lnet/minecraft/class_1311;)Lnet/minecraft/class_1299$class_1300;
 			ARG 0 category
