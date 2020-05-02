@@ -1,22 +1,43 @@
 CLASS net/minecraft/class_1860 net/minecraft/recipe/Recipe
-	METHOD method_17447 getRecipeKindIcon ()Lnet/minecraft/class_1799;
+	METHOD method_17447 getIconStack ()Lnet/minecraft/class_1799;
+		COMMENT The Item stack to be displayed on the recipe book tab containing this recipe.
+		COMMENT Used in conjunction with {@link #getGroup()}
 	METHOD method_17716 getType ()Lnet/minecraft/class_3956;
 	METHOD method_31583 (Lnet/minecraft/class_1856;)Z
 		ARG 0 ingredient
 	METHOD method_31584 isEmpty ()Z
 	METHOD method_8110 getOutput ()Lnet/minecraft/class_1799;
-	METHOD method_8111 getRemainingStacks (Lnet/minecraft/class_1263;)Lnet/minecraft/class_2371;
+	METHOD method_8111 getRemainder (Lnet/minecraft/class_1263;)Lnet/minecraft/class_2371;
+		COMMENT Returns the remaining stacks to be left in the crafting grid after crafting is complete.
+		COMMENT Should return the same number of items as the input grid contains in the same order they're expected
+		COMMENT to appear in that grid.
+		COMMENT
+		COMMENT <p>Default implementation simply returns a grid of all empty stacks where all stacks from the
+		COMMENT input grid have been replaced with the result of calling {@link Item#getRecipeRemainder()} on them.</p>
 		ARG 1 inventory
 	METHOD method_8112 getGroup ()Ljava/lang/String;
+		COMMENT Optional group this recipe belongs in. Used to group recipes into different cateories by the recipe book.
 	METHOD method_8113 fits (II)Z
+		COMMENT Determines whether this recipe's pattern will fit into the available crafting area.
 		ARG 1 width
 		ARG 2 height
 	METHOD method_8114 getId ()Lnet/minecraft/class_2960;
 	METHOD method_8115 matches (Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;)Z
-		ARG 1 inv
+		COMMENT Determines whether this recipe matches the contents currently placed inside the available crafting grid.
+		ARG 1 inventory
 		ARG 2 world
 	METHOD method_8116 craft (Lnet/minecraft/class_1263;)Lnet/minecraft/class_1799;
-		ARG 1 inv
-	METHOD method_8117 getPreviewInputs ()Lnet/minecraft/class_2371;
+		COMMENT Crafts this recipe. Usually only returns the  output but may be used to do additional transformations to
+		COMMENT the passed in crafting inventory.
+		COMMENT
+		COMMENT <p>Important to note that where {@link #getOutput()} might return the internal output stack (as an accessor)
+		COMMENT this method explicity has to return a copy safe for mutation.</p>
+		COMMENT
+		COMMENT @return The resulting item stack
+		ARG 1 inventory
+	METHOD method_8117 getIngredients ()Lnet/minecraft/class_2371;
+		COMMENT The ingredients accepted as inputs for this recipe. Used by the recipe book
+		COMMENT when displaying a ghost form of this recipe on the crafting grid as well as for
+		COMMENT previewing the possible inputs in the book itself.
 	METHOD method_8118 isIgnoredInRecipeBook ()Z
 	METHOD method_8119 getSerializer ()Lnet/minecraft/class_1865;
