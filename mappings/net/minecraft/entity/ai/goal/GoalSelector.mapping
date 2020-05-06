@@ -1,11 +1,24 @@
 CLASS net/minecraft/class_1355 net/minecraft/entity/ai/goal/GoalSelector
-	FIELD field_18410 activeGoal Lnet/minecraft/class_4135;
+	COMMENT Manages a set of goals, which are competing for certain controls on the mob.
+	COMMENT Multiple goals can run at the same time, so long as they they are all using different controls.
+	COMMENT
+	COMMENT <p>A running goal will always be replaced with a goal with a <i>lower</i> priority, if
+	COMMENT such a goal exists, it's competing for the same control and its
+	COMMENT {@link Goal#canStart() canStart()} method returns true. (Note that some goals randomize
+	COMMENT this method.)</p>
+	COMMENT
+	COMMENT <p>If two goals have the same priority and are competing for the same control, then one
+	COMMENT goal cannot replace the other if it's running. The goal selector tries to run goals in the order
+	COMMENT they were added.</p>
+	FIELD field_18410 REPLACEABLE_GOAL Lnet/minecraft/class_4135;
 	FIELD field_18411 goalsByControl Ljava/util/Map;
 	FIELD field_6461 goals Ljava/util/Set;
 	FIELD field_6462 disabledControls Ljava/util/EnumSet;
 	FIELD field_6463 profiler Ljava/util/function/Supplier;
 	FIELD field_6464 timeInterval I
 	FIELD field_6466 LOGGER Lorg/apache/logging/log4j/Logger;
+	METHOD <init> (Ljava/util/function/Supplier;)V
+		ARG 1 profiler
 	METHOD method_19048 getRunningGoals ()Ljava/util/stream/Stream;
 	METHOD method_6273 enableControl (Lnet/minecraft/class_1352$class_4134;)V
 		ARG 1 control
@@ -16,7 +29,9 @@ CLASS net/minecraft/class_1355 net/minecraft/entity/ai/goal/GoalSelector
 		ARG 1 control
 		ARG 2 enabled
 	METHOD method_6277 add (ILnet/minecraft/class_1352;)V
-		ARG 1 weight
+		COMMENT Adds a goal with a certain priority. Goals with <i>lower</i> priorities will replace running goals
+		COMMENT with a higher priority.
+		ARG 1 priority
 		ARG 2 goal
 	METHOD method_6280 remove (Lnet/minecraft/class_1352;)V
 		ARG 1 goal
