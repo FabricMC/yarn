@@ -1,39 +1,58 @@
 CLASS net/minecraft/class_3675 net/minecraft/client/util/InputUtil
-	FIELD field_16237 UNKNOWN_KEYCODE Lnet/minecraft/class_3675$class_306;
+	FIELD field_16237 UNKNOWN_KEY Lnet/minecraft/class_3675$class_306;
 	FIELD field_20333 GLFW_RAW_MOUSE_MOTION_SUPPORTED_HANDLE Ljava/lang/invoke/MethodHandle;
 	FIELD field_20334 GLFW_RAW_MOUSE_MOTION I
-	METHOD method_15981 fromName (Ljava/lang/String;)Lnet/minecraft/class_3675$class_306;
-		ARG 0 s
+	METHOD method_15981 fromTranslationKey (Ljava/lang/String;)Lnet/minecraft/class_3675$class_306;
+		ARG 0 translationKey
 	METHOD method_15983 setMouseCallbacks (JLorg/lwjgl/glfw/GLFWCursorPosCallbackI;Lorg/lwjgl/glfw/GLFWMouseButtonCallbackI;Lorg/lwjgl/glfw/GLFWScrollCallbackI;)V
 		ARG 0 handle
+		ARG 2 cursorPosCallback
+		ARG 3 mouseButtonCallback
+		ARG 4 scrollCallback
 	METHOD method_15984 setCursorParameters (JIDD)V
-	METHOD method_15985 getKeyCode (II)Lnet/minecraft/class_3675$class_306;
+		ARG 0 handler
+	METHOD method_15985 fromKeyCode (II)Lnet/minecraft/class_3675$class_306;
+		ARG 0 keyCode
+		ARG 1 scanCode
 	METHOD method_15986 setKeyboardCallbacks (JLorg/lwjgl/glfw/GLFWKeyCallbackI;Lorg/lwjgl/glfw/GLFWCharModsCallbackI;)V
 		ARG 0 handle
+		ARG 2 keyCallback
+		ARG 3 charModsCallback
 	METHOD method_15987 isKeyPressed (JI)Z
 		ARG 0 handle
+		ARG 2 code
 	METHOD method_21735 isRawMouseMotionSupported ()Z
 	METHOD method_21736 setRawMouseMotionMode (JZ)V
 		ARG 0 window
 		ARG 2 value
-	CLASS class_306 KeyCode
-		FIELD field_1663 name Ljava/lang/String;
-		FIELD field_1664 NAMES Ljava/util/Map;
-		FIELD field_1665 keyCode I
+	CLASS class_306 Key
+		FIELD field_1663 translationKey Ljava/lang/String;
+		FIELD field_1664 KEYS Ljava/util/Map;
+		FIELD field_1665 code I
 		FIELD field_1666 type Lnet/minecraft/class_3675$class_307;
+		FIELD field_24196 localizedText Lnet/minecraft/class_3528;
 		METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_3675$class_307;I)V
-			ARG 1 keyName
+			ARG 1 translationKey
 			ARG 2 type
+			ARG 3 code
 		METHOD equals (Ljava/lang/Object;)Z
-			ARG 1 o
-		METHOD method_1441 getName ()Ljava/lang/String;
+			ARG 1 other
+		METHOD method_1441 getTranslationKey ()Ljava/lang/String;
 		METHOD method_1442 getCategory ()Lnet/minecraft/class_3675$class_307;
-		METHOD method_1444 getKeyCode ()I
+		METHOD method_1444 getCode ()I
+		METHOD method_27445 getLocalizedText ()Lnet/minecraft/class_2561;
 	CLASS class_307 Type
 		FIELD field_1673 name Ljava/lang/String;
 		FIELD field_1674 map Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+		FIELD field_24197 textTranslator Ljava/util/function/BiFunction;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;Ljava/util/function/BiFunction;)V
+			ARG 3 name
+			ARG 4 textTranslator
 		METHOD method_1446 mapKey (Lnet/minecraft/class_3675$class_307;Ljava/lang/String;I)V
 			ARG 0 type
-			ARG 1 name
+			ARG 1 translationKey
 			ARG 2 keyCode
 		METHOD method_1447 createFromCode (I)Lnet/minecraft/class_3675$class_306;
+			ARG 1 code
+		METHOD method_27448 (I)Lnet/minecraft/class_3675$class_306;
+			ARG 1 code
