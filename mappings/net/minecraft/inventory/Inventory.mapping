@@ -1,42 +1,44 @@
 CLASS net/minecraft/class_1263 net/minecraft/inventory/Inventory
 	METHOD method_18861 count (Lnet/minecraft/class_1792;)I
-		COMMENT Returns the number of times the specified item occurs in this inventory across all stored stacks.
+		COMMENT @return the total count of the item across all stacks
 		ARG 1 item
 	METHOD method_18862 containsAny (Ljava/util/Set;)Z
-		COMMENT Determines whether this inventory contains any of the given candidate items.
+		COMMENT @return whether or not this inventory contains any of the specified items
 		ARG 1 items
 	METHOD method_5431 markDirty ()V
-	METHOD method_5432 onClose (Lnet/minecraft/class_1657;)V
+	METHOD method_5432 onFinishAccess (Lnet/minecraft/class_1657;)V
 		ARG 1 player
 	METHOD method_5434 removeStack (II)Lnet/minecraft/class_1799;
-		COMMENT Removes a specific number of items from the given slot.
+		COMMENT Removes a specific number of items in the given slot.
 		COMMENT
 		COMMENT @return the removed items as a stack
 		ARG 1 slot
 		ARG 2 amount
-	METHOD method_5435 onOpen (Lnet/minecraft/class_1657;)V
+	METHOD method_5435 onStartAccess (Lnet/minecraft/class_1657;)V
 		ARG 1 player
-	METHOD method_5437 isValid (ILnet/minecraft/class_1799;)Z
-		COMMENT Returns whether the given stack is a valid for the indicated slot position.
+	METHOD method_5437 canInsert (ILnet/minecraft/class_1799;)Z
+		COMMENT @return whether or not the stack can be inserted into the specified slot
 		ARG 1 slot
 		ARG 2 stack
 	METHOD method_5438 getStack (I)Lnet/minecraft/class_1799;
-		COMMENT Fetches the stack currently stored at the given slot. If the slot is empty,
-		COMMENT or is outside the bounds of this inventory, returns see {@link ItemStack#EMPTY}.
+		COMMENT Fetches the stack currently stored in the given slot. If the stack in the slot
+		COMMENT is empty or the index is outside the bounds of this inventory, returns {@link ItemStack#EMPTY}.
+		COMMENT
+		COMMENT @return the stack in the given slot
 		ARG 1 slot
 	METHOD method_5439 size ()I
 	METHOD method_5441 removeStack (I)Lnet/minecraft/class_1799;
-		COMMENT Removes the stack currently stored at the indicated slot.
+		COMMENT Removes the stack currently stored at the indicated index.
 		COMMENT
-		COMMENT @return the stack previously stored at the indicated slot.
+		COMMENT @return the stack previously stored at the indicated index
 		ARG 1 slot
 	METHOD method_5442 isEmpty ()Z
-	METHOD method_5443 canPlayerUse (Lnet/minecraft/class_1657;)Z
+	METHOD method_5443 canAccess (Lnet/minecraft/class_1657;)Z
 		ARG 1 player
 	METHOD method_5444 getMaxCountPerStack ()I
 		COMMENT Returns the maximum number of items a stack can contain when placed inside this inventory.
-		COMMENT No slots may have more than this number of items. It is effectively the
-		COMMENT stacking limit for this inventory's slots.
+		COMMENT No slot may have a stack with a count greater than this. It is effectively the
+		COMMENT stacking limit for each stack in the inventory.
 		COMMENT
 		COMMENT @return the max {@link ItemStack#getCount() count} of item stacks in this inventory
 	METHOD method_5447 setStack (ILnet/minecraft/class_1799;)V
