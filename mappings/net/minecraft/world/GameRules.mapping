@@ -1,5 +1,53 @@
 CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
+	FIELD field_19387 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether fire should spread in a world.
+	FIELD field_19388 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether a Mob's action can modify the world.
+		COMMENT
+		COMMENT <p>This includes:
+		COMMENT <ul>
+		COMMENT <li>Whether explosions from a Creeper destory blocks
+		COMMENT <li>Whether a zombie can break down a door
+		COMMENT <li>Whether a wither killing an entity will place or drop a wither rose.
+		COMMENT </ul>
+	FIELD field_19389 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether a player should keep their inventory's contents upon death.
+	FIELD field_19390 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether mobs should spawn naturally.
+	FIELD field_19391 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether a mob should drop items.
+	FIELD field_19392 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether items should be dropped when a block is broken.
+	FIELD field_19398 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether death messages should be broadcast in chat.
+	FIELD field_19401 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether clients should use reduced debug info.
+		COMMENT
+		COMMENT <p>When the value of this rule is changed, all connected clients will be notified how much debug info to display.
+		COMMENT This includes the visiblity of coordinates on the client in the DebugHud.
+	FIELD field_19402 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether players in spectator mode should be able to generate chunks.
+	FIELD field_19405 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates how many entities must be crammed into a block before cramming damage occurs.
+	FIELD field_19409 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether a player recieving an advancement should be announced in chat.
 	FIELD field_19410 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_19422 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether raids should occur.
+		COMMENT
+		COMMENT <p>If this rule is set to {@code true} while raids are occuring, the raids will be stopped.
+	FIELD field_20634 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether a player is immune to drowning.
+	FIELD field_20635 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether a player is immune to fall damage.
+	FIELD field_20636 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether a player is immune to fire damage.
+	FIELD field_20638 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether a player should immediately respawn upon death.
+	FIELD field_21831 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether patrols should spawn.
+	FIELD field_21832 Lnet/minecraft/class_1928$class_4313;
+		COMMENT A GameRule which regulates whether wandering traders should spawn.
 	FIELD field_9196 rules Ljava/util/Map;
 	FIELD field_9197 RULE_TYPES Ljava/util/Map;
 	METHOD <init> (Ljava/util/Map;)V
@@ -30,9 +78,13 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		ARG 1 rule
 	METHOD method_27321 setValue (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928;Lnet/minecraft/server/MinecraftServer;)V
 		ARG 1 key
+		ARG 2 rules
 		ARG 3 server
 	METHOD method_27322 setAllValues (Lnet/minecraft/class_1928;Lnet/minecraft/server/MinecraftServer;)V
+		ARG 1 rules
 		ARG 2 server
+	METHOD method_27323 (Lnet/minecraft/class_1928;Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4313;)V
+		ARG 3 key
 	METHOD method_27325 copy ()Lnet/minecraft/class_1928;
 	METHOD method_8355 getBoolean (Lnet/minecraft/class_1928$class_4313;)Z
 		ARG 1 rule
@@ -112,14 +164,16 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		FIELD field_19414 argumentType Ljava/util/function/Supplier;
 		FIELD field_19415 ruleFactory Ljava/util/function/Function;
 		FIELD field_19416 changeCallback Ljava/util/function/BiConsumer;
+		FIELD field_24104 ruleAcceptor Lnet/minecraft/class_1928$class_5199;
 		METHOD <init> (Ljava/util/function/Supplier;Ljava/util/function/Function;Ljava/util/function/BiConsumer;Lnet/minecraft/class_1928$class_5199;)V
 			ARG 1 argumentType
 			ARG 2 ruleFactory
 			ARG 3 changeCallback
+			ARG 4 ruleAcceptor
 		METHOD method_20773 createRule ()Lnet/minecraft/class_1928$class_4315;
 		METHOD method_20775 argument (Ljava/lang/String;)Lcom/mojang/brigadier/builder/RequiredArgumentBuilder;
 			ARG 1 name
-		METHOD method_27336 (Lnet/minecraft/class_1928$class_4311;Lnet/minecraft/class_1928$class_4313;)V
+		METHOD method_27336 accept (Lnet/minecraft/class_1928$class_4311;Lnet/minecraft/class_1928$class_4313;)V
 			ARG 1 consumer
 			ARG 2 key
 	CLASS class_4315 Rule
