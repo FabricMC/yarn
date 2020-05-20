@@ -11,10 +11,18 @@ CLASS net/minecraft/class_4095 net/minecraft/entity/ai/brain/Brain
 	FIELD field_22282 forgettingActivityMemories Ljava/util/Map;
 		COMMENT The map from activities to the memories to forget after the activity is
 		COMMENT completed.
+	FIELD field_24656 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_24657 codecSupplier Ljava/util/function/Supplier;
+	METHOD <init> (Ljava/util/Collection;Ljava/util/Collection;Lcom/google/common/collect/ImmutableList;Ljava/util/function/Supplier;)V
+		ARG 1 memories
+		ARG 2 sensors
+		ARG 3 memoryEntries
+		ARG 4 codecSupplier
 	METHOD method_18871 refreshActivities (JJ)V
 		ARG 1 timeOfDay
 		ARG 3 time
 	METHOD method_18874 canDoActivity (Lnet/minecraft/class_4168;)Z
+		ARG 1 activity
 	METHOD method_18875 forget (Lnet/minecraft/class_4140;)V
 		ARG 1 type
 	METHOD method_18876 isMemoryInState (Lnet/minecraft/class_4140;Lnet/minecraft/class_4141;)Z
@@ -27,43 +35,63 @@ CLASS net/minecraft/class_4095 net/minecraft/entity/ai/brain/Brain
 		ARG 1 type
 		ARG 2 value
 	METHOD method_18880 resetPossibleActivities (Lnet/minecraft/class_4168;)V
+		ARG 1 except
 	METHOD method_18881 setTaskList (Lnet/minecraft/class_4168;Lcom/google/common/collect/ImmutableList;)V
 		ARG 1 activity
 		ARG 2 indexedTasks
 	METHOD method_18882 setTaskList (Lnet/minecraft/class_4168;ILcom/google/common/collect/ImmutableList;)V
+		ARG 1 activity
+		ARG 2 begin
+		ARG 3 list
 	METHOD method_18884 setSchedule (Lnet/minecraft/class_4170;)V
 		ARG 1 schedule
 	METHOD method_18890 setCoreActivities (Ljava/util/Set;)V
 		ARG 1 coreActivities
 	METHOD method_18891 startTasks (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)V
+		ARG 1 world
+		ARG 2 entity
 	METHOD method_18894 getSchedule ()Lnet/minecraft/class_4170;
 	METHOD method_18896 hasMemoryModule (Lnet/minecraft/class_4140;)Z
 		ARG 1 type
 	METHOD method_18897 setDefaultActivity (Lnet/minecraft/class_4168;)V
+		ARG 1 activity
 	METHOD method_18900 stopAllTasks (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)V
+		ARG 1 world
+		ARG 2 entity
 	METHOD method_18904 getOptionalMemory (Lnet/minecraft/class_4140;)Ljava/util/Optional;
 		ARG 1 type
 	METHOD method_18906 hasActivity (Lnet/minecraft/class_4168;)Z
+		ARG 1 activitiy
 	METHOD method_18911 copy ()Lnet/minecraft/class_4095;
 	METHOD method_19542 tick (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)V
+		ARG 1 world
 		ARG 2 entity
 	METHOD method_19545 updateTasks (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)V
+		ARG 1 world
+		ARG 2 entity
 	METHOD method_19948 isEmptyCollection (Ljava/lang/Object;)Z
 		ARG 1 value
 	METHOD method_24524 indexTaskList (ILcom/google/common/collect/ImmutableList;)Lcom/google/common/collect/ImmutableList;
 		ARG 1 begin
 			COMMENT The beginning of the index of tasks, exclusive
+		ARG 2 tasks
 	METHOD method_24525 remember (Lnet/minecraft/class_4140;Ljava/lang/Object;J)V
 		ARG 1 type
 		ARG 2 value
 		ARG 3 startTime
+	METHOD method_24526 doExclusively (Lnet/minecraft/class_4168;)V
+		ARG 1 activity
 	METHOD method_24527 setTaskList (Lnet/minecraft/class_4168;ILcom/google/common/collect/ImmutableList;Lnet/minecraft/class_4140;)V
+		ARG 1 activity
+		ARG 2 begin
 		ARG 3 tasks
+		ARG 4 memoryType
 	METHOD method_24529 setTaskList (Lnet/minecraft/class_4168;Lcom/google/common/collect/ImmutableList;Ljava/util/Set;)V
 		ARG 1 activity
 		ARG 2 indexedTasks
 		ARG 3 requiredMemories
 	METHOD method_24530 setTaskList (Lnet/minecraft/class_4168;Lcom/google/common/collect/ImmutableList;Ljava/util/Set;Ljava/util/Set;)V
+		ARG 1 activity
 		ARG 2 indexedTasks
 		ARG 3 requiredMemories
 		ARG 4 forgettingMemories
@@ -72,4 +100,45 @@ CLASS net/minecraft/class_4095 net/minecraft/entity/ai/brain/Brain
 		ARG 1 type
 		ARG 2 memory
 	METHOD method_24536 resetPossibleActivities ()V
+	METHOD method_24537 forgetIrrelevantMemories (Lnet/minecraft/class_4168;)V
+		ARG 1 except
 	METHOD method_24538 getFirstPossibleNonCoreActivity ()Ljava/util/Optional;
+	METHOD method_27073 tickSensors (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)V
+		ARG 1 world
+		ARG 2 entity
+	METHOD method_27074 getRunningTasks ()Ljava/util/List;
+	METHOD method_27075 tickMemories ()V
+	METHOD method_28310 encode (Lcom/mojang/serialization/DynamicOps;)Lcom/mojang/serialization/DataResult;
+		ARG 1 ops
+	METHOD method_28311 createProfile (Ljava/util/Collection;Ljava/util/Collection;)Lnet/minecraft/class_4095$class_5303;
+		ARG 0 memoryModules
+		ARG 1 sensors
+	METHOD method_28313 createBrainCodec (Ljava/util/Collection;Ljava/util/Collection;)Lcom/mojang/serialization/Codec;
+		ARG 0 memoryModules
+		ARG 1 sensors
+	METHOD method_28315 steramMemories ()Ljava/util/stream/Stream;
+	CLASS class_5302 MemoryEntry
+		FIELD field_24661 type Lnet/minecraft/class_4140;
+		FIELD field_24662 data Ljava/util/Optional;
+		METHOD <init> (Lnet/minecraft/class_4140;Ljava/util/Optional;)V
+			ARG 1 type
+			ARG 2 data
+		METHOD method_28328 apply (Lnet/minecraft/class_4095;)V
+			ARG 1 brain
+		METHOD method_28330 serialize (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/RecordBuilder;)V
+			ARG 1 ops
+			ARG 2 builder
+		METHOD method_28333 of (Lnet/minecraft/class_4140;Ljava/util/Optional;)Lnet/minecraft/class_4095$class_5302;
+			ARG 0 type
+			ARG 1 data
+	CLASS class_5303 Profile
+		COMMENT A simple profile of a brain. Indicates what types of memory modules and
+		COMMENT sensors a brain can have.
+		FIELD field_24663 memoryModules Ljava/util/Collection;
+		FIELD field_24664 sensors Ljava/util/Collection;
+		FIELD field_24665 codec Lcom/mojang/serialization/Codec;
+		METHOD <init> (Ljava/util/Collection;Ljava/util/Collection;)V
+			ARG 1 memoryModules
+			ARG 2 sensors
+		METHOD method_28335 deserialize (Lcom/mojang/serialization/Dynamic;)Lnet/minecraft/class_4095;
+			ARG 1 data
