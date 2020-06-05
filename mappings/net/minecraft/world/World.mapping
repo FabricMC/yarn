@@ -3,6 +3,13 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	FIELD field_17086 thread Ljava/lang/Thread;
 	FIELD field_18139 unloadedBlockEntities Ljava/util/List;
 	FIELD field_20639 biomeAccess Lnet/minecraft/class_4543;
+	FIELD field_24496 debugWorld Z
+	FIELD field_25176 registryKey Lnet/minecraft/class_5321;
+	FIELD field_25177 dimensionRegistryKey Lnet/minecraft/class_5321;
+	FIELD field_25178 CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_25179 OVERWORLD Lnet/minecraft/class_5321;
+	FIELD field_25180 NETHER Lnet/minecraft/class_5321;
+	FIELD field_25181 END Lnet/minecraft/class_5321;
 	FIELD field_9223 border Lnet/minecraft/class_2784;
 	FIELD field_9224 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_9226 ambientDarkness I
@@ -21,8 +28,10 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	FIELD field_9251 thunderGradientPrev F
 	FIELD field_9253 rainGradientPrev F
 	FIELD field_9256 lcgBlockSeed I
+	METHOD <init> (Lnet/minecraft/class_5269;Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;Lnet/minecraft/class_2874;Ljava/util/function/Supplier;ZZJ)V
+		ARG 5 profiler
 	METHOD method_16107 getProfiler ()Lnet/minecraft/class_3695;
-	METHOD method_16109 checkBlockRerender (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)V
+	METHOD method_16109 scheduleBlockRerenderIfNeeded (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)V
 		ARG 1 pos
 		ARG 2 old
 		ARG 3 updated
@@ -62,6 +71,8 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_26372 getCollisionHeightAt (Lnet/minecraft/class_2338;)D
 		ARG 1 pos
 	METHOD method_27982 isDebugWorld ()Z
+	METHOD method_27983 getRegistryKey ()Lnet/minecraft/class_5321;
+	METHOD method_29287 getDimensionRegistryKey ()Lnet/minecraft/class_5321;
 	METHOD method_8413 updateListeners (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;I)V
 		ARG 1 pos
 		ARG 2 oldState
@@ -71,14 +82,9 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8421 sendEntityStatus (Lnet/minecraft/class_1297;B)V
 		ARG 1 entity
 		ARG 2 status
-	METHOD method_8422 containsBlockWithMaterial (Lnet/minecraft/class_238;Lnet/minecraft/class_3614;)Z
-		ARG 1 area
-		ARG 2 material
 	METHOD method_8424 setMobSpawnOptions (ZZ)V
 		ARG 1 spawnMonsters
 		ARG 2 spawnAnimals
-	METHOD method_8425 doesAreaContainFireSource (Lnet/minecraft/class_238;)Z
-		ARG 1 box
 	METHOD method_8426 getPendingBlockEntity (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2586;
 		ARG 1 pos
 	METHOD method_8427 addSyncedBlockEvent (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;II)V
@@ -112,15 +118,9 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8452 updateNeighborsAlways (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;)V
 		ARG 1 pos
 		ARG 2 block
-	METHOD method_8454 createExplosion (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;DDDFZLnet/minecraft/class_1927$class_4179;)Lnet/minecraft/class_1927;
+	METHOD method_8454 createExplosion (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1927$class_4179;)Lnet/minecraft/class_1927;
 		ARG 1 entity
 		ARG 2 damageSource
-		ARG 3 x
-		ARG 5 y
-		ARG 7 z
-		ARG 9 power
-		ARG 10 createFire
-		ARG 11 destructionType
 	METHOD method_8455 updateComparators (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;)V
 		ARG 1 pos
 		ARG 2 block
@@ -153,9 +153,6 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 eventId
 		ARG 2 pos
 		ARG 3 data
-	METHOD method_8475 getBlockState (Lnet/minecraft/class_238;Lnet/minecraft/class_2248;)Lnet/minecraft/class_2680;
-		ARG 1 area
-		ARG 2 block
 	METHOD method_8476 isHeightInvalid (I)Z
 		ARG 0 y
 	METHOD method_8477 canSetBlock (Lnet/minecraft/class_2338;)Z
@@ -234,8 +231,6 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8530 isDay ()Z
 	METHOD method_8532 getTimeOfDay ()J
 	METHOD method_8533 calculateAmbientDarkness ()V
-	METHOD method_8534 isAreaNotEmpty (Lnet/minecraft/class_238;)Z
-		ARG 1 box
 	METHOD method_8536 getRandomPosInChunk (IIII)Lnet/minecraft/class_2338;
 		ARG 1 x
 		ARG 2 y

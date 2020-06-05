@@ -10,7 +10,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	FIELD field_13957 savingDisabled Z
 	FIELD field_13959 server Lnet/minecraft/server/MinecraftServer;
 	FIELD field_13960 entitiesByUuid Ljava/util/Map;
-	FIELD field_17913 globalEntities Ljava/util/List;
 	FIELD field_17915 entitiesById Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 	FIELD field_18260 entitiesToLoad Ljava/util/Queue;
 	FIELD field_18261 players Ljava/util/List;
@@ -18,9 +17,14 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	FIELD field_18264 inEntityTick Z
 	FIELD field_18811 raidManager Lnet/minecraft/class_3767;
 	FIELD field_23787 structureAccessor Lnet/minecraft/class_5138;
+	FIELD field_24624 serverChunkManager Lnet/minecraft/class_3215;
 	FIELD field_25142 enderDragonFight Lnet/minecraft/class_2881;
-	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5268;Lnet/minecraft/class_2874;Lnet/minecraft/class_3949;Lnet/minecraft/class_2794;ZJLjava/util/List;Z)V
-		ARG 5 dimensionType
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5268;Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;Lnet/minecraft/class_2874;Lnet/minecraft/class_3949;Lnet/minecraft/class_2794;ZJLjava/util/List;Z)V
+		ARG 1 server
+		ARG 2 workerExecutor
+		ARG 3 session
+		ARG 4 properties
+		ARG 8 generationProgressListener
 	METHOD method_14166 spawnParticles (Lnet/minecraft/class_3222;Lnet/minecraft/class_2394;ZDDDIDDDD)Z
 		ARG 1 viewer
 		ARG 2 particle
@@ -92,6 +96,10 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_18215 onPlayerRespawned (Lnet/minecraft/class_3222;)V
 		ARG 1 player
 	METHOD method_18762 tickEntity (Lnet/minecraft/class_1297;)V
+		ARG 1 entity
+	METHOD method_18763 tickPassenger (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;)V
+		ARG 1 vehicle
+		ARG 2 passenger
 	METHOD method_18764 unloadEntities (Lnet/minecraft/class_2818;)V
 		ARG 1 chunk
 	METHOD method_18765 tick (Ljava/util/function/BooleanSupplier;)V
@@ -149,7 +157,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_24500 locateBiome (Lnet/minecraft/class_1959;Lnet/minecraft/class_2338;II)Lnet/minecraft/class_2338;
 	METHOD method_27056 getStructureAccessor ()Lnet/minecraft/class_5138;
 	METHOD method_27909 iterateEntities ()Ljava/lang/Iterable;
-	METHOD method_8416 addLightning (Lnet/minecraft/class_1538;)V
+	METHOD method_27911 getSpawnPos ()Lnet/minecraft/class_2338;
 	METHOD method_8448 updateSleepingPlayers ()V
 	METHOD method_8487 locateStructure (Lnet/minecraft/class_3195;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
 	METHOD method_8554 setSpawnPos (Lnet/minecraft/class_2338;)V

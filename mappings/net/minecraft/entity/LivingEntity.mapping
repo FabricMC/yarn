@@ -4,7 +4,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_18073 SLEEPING_POSITION Lnet/minecraft/class_2940;
 	FIELD field_18321 brain Lnet/minecraft/class_4095;
 	FIELD field_20348 STINGER_COUNT Lnet/minecraft/class_2940;
-	FIELD field_23128 SOUL_SPEED_BOOST_ATTRIBUTE_MODIFIER_ID Ljava/util/UUID;
+	FIELD field_23128 SOUL_SPEED_BOOST_ID Ljava/util/UUID;
 	FIELD field_6210 bodyTrackingIncrements I
 	FIELD field_6211 lastLimbDistance F
 	FIELD field_6212 sidewaysSpeed F
@@ -23,13 +23,13 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6228 jumpingCooldown I
 	FIELD field_6229 lastHandSwingProgress F
 	FIELD field_6230 lastAttackedTime I
-	FIELD field_6231 ATTR_SPRINTING_SPEED_BOOST Lnet/minecraft/class_1322;
+	FIELD field_6231 SPRINTING_SPEED_BOOST Lnet/minecraft/class_1322;
 	FIELD field_6232 scoreAmount I
 	FIELD field_6233 stepBobbingAmount F
 	FIELD field_6234 equippedHand Lnet/minecraft/class_2371;
 	FIELD field_6235 hurtTime I
 	FIELD field_6236 attacking Lnet/minecraft/class_1309;
-	FIELD field_6237 ATTR_SPRINTING_SPEED_BOOST_ID Ljava/util/UUID;
+	FIELD field_6237 SPRINTING_SPEED_BOOST_ID Ljava/util/UUID;
 	FIELD field_6238 playerHitTimer I
 	FIELD field_6239 roll I
 	FIELD field_6240 POTION_SWIRLS_COLOR Lnet/minecraft/class_2940;
@@ -60,7 +60,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6265 headTrackingIncrements I
 	FIELD field_6266 preferredHand Lnet/minecraft/class_1268;
 	FIELD field_6268 lastBlockPos Lnet/minecraft/class_2338;
-	FIELD field_6269 defaultMaximumHealth I
+	FIELD field_6269 defaultMaxHealth I
 	FIELD field_6270 lastAttackTime I
 	FIELD field_6271 knockbackVelocity F
 	FIELD field_6272 dead Z
@@ -170,6 +170,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT <p>This checks both the entity's main and off hand.
 	METHOD method_24831 getPoses ()Lcom/google/common/collect/ImmutableList;
 	METHOD method_24833 getBoundingBox (Lnet/minecraft/class_4050;)Lnet/minecraft/class_238;
+	METHOD method_25937 applySoulSpeedClientEffects ()V
 	METHOD method_26319 canWalkOnLava (Lnet/minecraft/class_3611;)Z
 	METHOD method_26825 getAttributeValue (Lnet/minecraft/class_1320;)D
 		ARG 1 attribute
@@ -177,6 +178,9 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 attribute
 	METHOD method_26827 createLivingAttributes ()Lnet/minecraft/class_5132$class_5133;
 	METHOD method_27071 shouldDropLoot ()Z
+	METHOD method_27302 shouldGetSoulSpeedBoost ()Z
+	METHOD method_27303 isOnSoulSpeedBlock ()Z
+	METHOD method_28306 createBrainProfile ()Lnet/minecraft/class_4095$class_5303;
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
 	METHOD method_5989 getLootTable ()Lnet/minecraft/class_2960;
@@ -285,7 +289,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6061 blockedByShield (Lnet/minecraft/class_1282;)Z
 		ARG 1 source
 	METHOD method_6062 isImmobile ()Z
-	METHOD method_6063 getMaximumHealth ()F
+	METHOD method_6063 getMaxHealth ()F
 	METHOD method_6064 getNextAirOnLand (I)I
 		ARG 1 air
 	METHOD method_6065 getAttacker ()Lnet/minecraft/class_1309;
@@ -393,7 +397,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6124 getPrimeAdversary ()Lnet/minecraft/class_1309;
 	METHOD method_6125 setMovementSpeed (F)V
 		ARG 1 movementSpeed
-	METHOD method_6126 applyFrostWalker (Lnet/minecraft/class_2338;)V
+	METHOD method_6126 applyMovementEffects (Lnet/minecraft/class_2338;)V
 		ARG 1 pos
 	METHOD method_6127 getAttributes ()Lnet/minecraft/class_5131;
 	METHOD method_6128 isFallFlying ()Z
