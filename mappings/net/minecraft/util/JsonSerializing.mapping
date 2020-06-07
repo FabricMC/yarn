@@ -1,0 +1,42 @@
+CLASS net/minecraft/class_5330 net/minecraft/util/JsonSerializing
+	METHOD method_29306 createTypeHandler (Lnet/minecraft/class_2378;Ljava/lang/String;Ljava/lang/String;Ljava/util/function/Function;)Lnet/minecraft/class_5330$class_5331;
+		ARG 0 registry
+		ARG 1 rootFieldName
+		ARG 2 idFieldName
+		ARG 3 typeIdentification
+	CLASS class_5331 TypeHandler
+		COMMENT A handler of JSON serializable types that can either obtain a type from
+		COMMENT a registry to handle JSON conversion or handle with a custom logic bound
+		COMMENT to a type.
+		COMMENT
+		COMMENT <p>When the root element read is an object, the handler obtains the type
+		COMMENT from registry to handle reading; otherwise, it falls back to custom
+		COMMENT logic.</p>
+		FIELD field_25192 registry Lnet/minecraft/class_2378;
+		FIELD field_25193 rootFieldName Ljava/lang/String;
+		FIELD field_25194 idFieldName Ljava/lang/String;
+		FIELD field_25195 typeIdentification Ljava/util/function/Function;
+		FIELD field_25196 customSerializer Lcom/mojang/datafixers/util/Pair;
+		METHOD <init> (Lnet/minecraft/class_2378;Ljava/lang/String;Ljava/lang/String;Ljava/util/function/Function;)V
+			ARG 1 registry
+			ARG 2 rootFieldName
+			ARG 3 idFieldName
+			ARG 4 typeIdentification
+		METHOD method_29307 createGsonSerializer ()Ljava/lang/Object;
+	CLASS class_5332 CustomSerializer
+		METHOD method_29308 fromJson (Lcom/google/gson/JsonElement;Lcom/google/gson/JsonDeserializationContext;)Ljava/lang/Object;
+			ARG 1 json
+			ARG 2 context
+		METHOD method_29309 toJson (Ljava/lang/Object;Lcom/google/gson/JsonSerializationContext;)Lcom/google/gson/JsonElement;
+			ARG 1 object
+			ARG 2 context
+	CLASS class_5333 GsonSerializer
+		FIELD field_25197 registry Lnet/minecraft/class_2378;
+		FIELD field_25198 rootFieldName Ljava/lang/String;
+		FIELD field_25199 idFieldName Ljava/lang/String;
+		FIELD field_25200 typeIdentification Ljava/util/function/Function;
+		FIELD field_25201 elementSerializer Lcom/mojang/datafixers/util/Pair;
+		METHOD <init> (Lnet/minecraft/class_2378;Ljava/lang/String;Ljava/lang/String;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Pair;)V
+			ARG 2 rootFieldName
+			ARG 3 idFieldName
+			ARG 4 typeIdentification
