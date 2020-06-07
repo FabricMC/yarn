@@ -3,7 +3,9 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_18072 SLEEPING_DIMENSIONS Lnet/minecraft/class_4048;
 	FIELD field_18073 SLEEPING_POSITION Lnet/minecraft/class_2940;
 	FIELD field_18321 brain Lnet/minecraft/class_4095;
+	FIELD field_20347 stuckStingerTimer I
 	FIELD field_20348 STINGER_COUNT Lnet/minecraft/class_2940;
+	FIELD field_22418 climbingPos Ljava/util/Optional;
 	FIELD field_23128 SOUL_SPEED_BOOST_ID Ljava/util/UUID;
 	FIELD field_6210 bodyTrackingIncrements I
 	FIELD field_6211 lastLimbDistance F
@@ -152,6 +154,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 fallDistance
 		ARG 2 damageMultiplier
 	METHOD method_23667 swingHand (Lnet/minecraft/class_1268;Z)V
+		ARG 1 hand
 	METHOD method_23733 onKilledBy (Lnet/minecraft/class_1309;)V
 		COMMENT Performs secondary effects after this mob has been killed.
 		COMMENT
@@ -169,9 +172,14 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT
 		COMMENT <p>This checks both the entity's main and off hand.
 	METHOD method_24831 getPoses ()Lcom/google/common/collect/ImmutableList;
+	METHOD method_24832 getClimbingPos ()Ljava/util/Optional;
 	METHOD method_24833 getBoundingBox (Lnet/minecraft/class_4050;)Lnet/minecraft/class_238;
+		ARG 1 pose
 	METHOD method_25937 applySoulSpeedClientEffects ()V
-	METHOD method_26319 canWalkOnLava (Lnet/minecraft/class_3611;)Z
+	METHOD method_26082 applyStatusEffect (Lnet/minecraft/class_1293;)V
+		ARG 1 effect
+	METHOD method_26319 canWalkOnFluid (Lnet/minecraft/class_3611;)Z
+		ARG 1 fluid
 	METHOD method_26825 getAttributeValue (Lnet/minecraft/class_1320;)D
 		ARG 1 attribute
 	METHOD method_26826 getAttributeBaseValue (Lnet/minecraft/class_1320;)D
@@ -181,6 +189,10 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_27302 shouldGetSoulSpeedBoost ()Z
 	METHOD method_27303 isOnSoulSpeedBlock ()Z
 	METHOD method_28306 createBrainProfile ()Lnet/minecraft/class_4095$class_5303;
+	METHOD method_29503 hurtByWater ()Z
+	METHOD method_29504 isDead ()Z
+	METHOD method_29505 setAttacking (Lnet/minecraft/class_1657;)V
+		ARG 1 attacking
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
 	METHOD method_5989 getLootTable ()Lnet/minecraft/class_2960;
