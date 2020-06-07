@@ -36,6 +36,20 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		ARG 9 clamp
 		ARG 10 mipmap
 		ARG 11 close
+	METHOD method_24030 getAlpha (I)I
+		ARG 0 color
+	METHOD method_24031 getAbgrColor (IIII)I
+		COMMENT The resulting color of this operation is stored as least to most significant bits.
+		ARG 0 alpha
+		ARG 1 blue
+		ARG 2 green
+		ARG 3 red
+	METHOD method_24033 getRed (I)I
+		ARG 0 color
+	METHOD method_24034 getGreen (I)I
+		ARG 0 color
+	METHOD method_24035 getBlue (I)I
+		ARG 0 color
 	METHOD method_24036 getBytes ()[B
 	METHOD method_4300 resizeSubRectTo (IIIILnet/minecraft/class_1011;)V
 		ARG 1 x
@@ -59,7 +73,11 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		ARG 6 height
 		ARG 7 flipX
 		ARG 8 flipY
-	METHOD method_4305 setPixelRgba (III)V
+	METHOD method_4305 setPixelColor (III)V
+		COMMENT Sets the color of a pixel on this native image.
+		COMMENT The color to be set using this method should be in a ABGR format.
+		COMMENT
+		COMMENT <p>This is only supported when this native image's format is {@link NativeImage#Format#ABGR ABGR}
 		ARG 1 x
 		ARG 2 y
 		ARG 3 color
@@ -85,7 +103,12 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 	METHOD method_4313 setTextureClamp (Z)V
 		ARG 0 clamp
 	METHOD method_4314 writeFile (Ljava/nio/file/Path;)V
-	METHOD method_4315 getPixelRgba (II)I
+		ARG 1 path
+	METHOD method_4315 getPixelColor (II)I
+		COMMENT Gets the color of a pixel on this native image.
+		COMMENT The color returned by this method will be in a ABGR format.
+		COMMENT
+		COMMENT <p>This is only supported when this native image's format is {@link NativeImage#Format#AGBR ABGR}.
 		ARG 1 x
 		ARG 2 y
 	METHOD method_4316 makeGlyphBitmapSubpixel (Lorg/lwjgl/stb/STBTTFontinfo;IIIFFFFII)V
@@ -133,8 +156,10 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		FIELD field_4993 pixelDataFormat I
 		FIELD field_4994 channelCount I
 		FIELD field_4996 writeable Z
+		FIELD field_4997 ABGR Lnet/minecraft/class_1011$class_1012;
 		FIELD field_4999 hasAlpha Z
 		FIELD field_5000 hasLuminance Z
+		FIELD field_5001 BGR Lnet/minecraft/class_1011$class_1012;
 		FIELD field_5003 hasBlue Z
 		FIELD field_5004 hasGreen Z
 		FIELD field_5005 hasRed Z
@@ -169,6 +194,8 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		METHOD method_4339 setPackAlignment ()V
 		METHOD method_4340 setUnpackAlignment ()V
 	CLASS class_1013 GLFormat
+		FIELD field_5011 BGR Lnet/minecraft/class_1011$class_1013;
+		FIELD field_5012 ABGR Lnet/minecraft/class_1011$class_1013;
 		FIELD field_5015 glConstant I
 		METHOD <init> (Ljava/lang/String;II)V
 			ARG 3 glConstant
