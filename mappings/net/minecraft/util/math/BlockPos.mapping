@@ -80,12 +80,21 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 	METHOD method_10093 offset (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338;
 		ARG 1 direction
 	METHOD method_10094 iterate (IIIIII)Ljava/lang/Iterable;
+		COMMENT Iterates over all block positions within a given area.
+		COMMENT
+		COMMENT <p>Note that the same object is returned each time.
 		ARG 0 startX
+			COMMENT The lower x coordinate
 		ARG 1 startY
+			COMMENT The lower y coordinate
 		ARG 2 startZ
+			COMMENT The lower z coordinate
 		ARG 3 endX
+			COMMENT The upper x coordinate (inclusive)
 		ARG 4 endY
+			COMMENT The upper y coordinate (inclusive)
 		ARG 5 endZ
+			COMMENT The upper z coordinate (inclusive)
 	METHOD method_10095 north ()Lnet/minecraft/class_2338;
 	METHOD method_10096 add (JIII)J
 		ARG 0 value
@@ -123,6 +132,8 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		COMMENT positions with the same x and y offsets and the same manhattan distance,
 		COMMENT the one with a positive z offset is visited first before the one with a
 		COMMENT negative z offset.
+		COMMENT
+		COMMENT <p>Note that the same object is returned each time.
 		ARG 0 center
 			COMMENT the center of iteration
 		ARG 1 xRange
@@ -141,6 +152,38 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		ARG 1 maxX
 		ARG 2 maxY
 		ARG 3 maxZ
+	METHOD method_27156 iterateRandom (Ljava/util/Random;IIIIIII)Ljava/lang/Iterable;
+		COMMENT Iterates random block positions in a given area.
+		COMMENT The same coordinates can ber returned multiple times.
+		COMMENT
+		COMMENT <p>Note that the same object is returned each time.
+		ARG 0 random
+			COMMENT The {@code Random} object used to randomize coordinates
+		ARG 1 count
+			COMMENT The amount of random coordinates to return
+		ARG 2 startX
+			COMMENT The lower x coordinate
+		ARG 3 startY
+			COMMENT The lower y coordinate
+		ARG 4 startZ
+			COMMENT The lower z coordinate
+		ARG 5 endX
+			COMMENT The upper x coordinate (inclusive)
+		ARG 6 endY
+			COMMENT The upper y coordinate (inclusive)
+		ARG 7 endZ
+			COMMENT The upper z coordinate (inclusive)
+	CLASS 1
+		FIELD field_23945 blockPos Lnet/minecraft/class_2338$class_2339;
+		FIELD field_23946 stepsRemaining I
+		FIELD field_23947 count I
+		FIELD field_23948 startX I
+		FIELD field_23949 random Ljava/util/Random;
+		FIELD field_23950 sizeX I
+		FIELD field_23951 startY I
+		FIELD field_23952 sizeY I
+		FIELD field_23953 startZ I
+		FIELD field_23954 sizeZ I
 	CLASS 2
 		FIELD field_23094 maxDistance I
 		FIELD field_23095 xRange I
@@ -151,6 +194,11 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		FIELD field_23101 limitY I
 		FIELD field_23102 dx I
 		FIELD field_23103 dy I
+		FIELD field_23375 centerZ I
+		FIELD field_23376 centerX I
+		FIELD field_23377 centerY I
+		FIELD field_23378 blockPos Lnet/minecraft/class_2338$class_2339;
+		FIELD field_23379 swapZ Z
 	CLASS 3
 		FIELD field_23105 size I
 		FIELD field_23106 sizeX I
@@ -159,6 +207,7 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		FIELD field_23109 startY I
 		FIELD field_23110 startZ I
 		FIELD field_23111 index I
+		FIELD field_23380 blockPos Lnet/minecraft/class_2338$class_2339;
 	CLASS class_2339 Mutable
 		METHOD method_10098 move (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338$class_2339;
 			COMMENT Moves this mutable block position by 1 block in the given direction.
@@ -203,3 +252,6 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 			COMMENT pos by the given direction.
 			ARG 1 pos
 			ARG 2 direction
+		METHOD method_27158 clampAxis (Lnet/minecraft/class_2350$class_2351;II)Lnet/minecraft/class_2338$class_2339;
+			ARG 2 minValue
+			ARG 3 maxValue
