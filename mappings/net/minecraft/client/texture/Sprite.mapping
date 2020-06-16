@@ -13,7 +13,15 @@ CLASS net/minecraft/class_1058 net/minecraft/client/texture/Sprite
 	FIELD field_5270 uMin F
 	FIELD field_5271 animationMetadata Lnet/minecraft/class_1079;
 	FIELD field_5272 frameTicks I
+		COMMENT The tick position within the current frame.
+		COMMENT Resets to 0 on every frame advance.
 	FIELD field_5273 frameIndex I
+	METHOD <init> (Lnet/minecraft/class_1059;Lnet/minecraft/class_1058$class_4727;IIIIILnet/minecraft/class_1011;)V
+		ARG 3 maxLevel
+		ARG 4 atlasWidth
+		ARG 5 atlasHeight
+		ARG 6 x
+		ARG 7 y
 	METHOD method_23841 getFrameDeltaFactor ()F
 	METHOD method_23842 getAnimationFrameDelta ()F
 	METHOD method_24108 getTextureSpecificVertexConsumer (Lnet/minecraft/class_4588;)Lnet/minecraft/class_4588;
@@ -60,3 +68,19 @@ CLASS net/minecraft/class_1058 net/minecraft/client/texture/Sprite
 		FIELD field_21758 images [Lnet/minecraft/class_1011;
 		METHOD <init> (Lnet/minecraft/class_1058;Lnet/minecraft/class_1058$class_4727;I)V
 			ARG 3 mipmap
+		METHOD method_24128 apply ()V
+			COMMENT Linearly interpolate between the current and next frame on all miplevels
+			COMMENT based on the tick position within the current frame,
+			COMMENT and upload the results to the currently bound texture to the frame slot at position (0,0).
+		METHOD method_24129 lerp (DII)I
+			COMMENT Purely mathematical single-value linear interpolation.
+			COMMENT {@code lerp(0, a, b) == b}, {@code lerp(1, a, b) == a}.
+			ARG 1 delta
+			ARG 3 to
+			ARG 4 from
+		METHOD method_24130 getPixelColor (IIII)I
+			COMMENT Returns the pixel color at frame {@code frameIndex} within mipmap {@code layer} at sprite relative coordinates.
+			ARG 1 frameIndex
+			ARG 2 layer
+			ARG 3 x
+			ARG 4 y
