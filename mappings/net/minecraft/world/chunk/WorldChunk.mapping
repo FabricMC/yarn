@@ -49,7 +49,7 @@ CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
 	METHOD method_12204 loadBlockEntity (Lnet/minecraft/class_2338;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2586;
 		ARG 1 pos
 		ARG 2 tag
-	METHOD method_12205 getEntities (Lnet/minecraft/class_1297;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
+	METHOD method_12205 getSurroundingEntities (Lnet/minecraft/class_1297;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
 		ARG 1 except
 		ARG 2 box
 		ARG 3 entityList
@@ -58,11 +58,20 @@ CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
 		ARG 1 levelTypeProvider
 	METHOD method_12208 createBlockEntity (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2586;
 		ARG 1 pos
-	METHOD method_12210 getEntities (Ljava/lang/Class;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
+	METHOD method_12210 collectEntitiesByClass (Ljava/lang/Class;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
+		COMMENT Collects a list of entities of some runtime type and appends them to the given list. The type of
+		COMMENT the collected entities will be a subclass of the given class.
+		COMMENT
+		COMMENT @throws IllegalArgumentException If {@code entityClass} is an interface or is not a subclass
+		COMMENT of {@link Entity}.
 		ARG 1 entityClass
+			COMMENT The class object representing the type collected entities must extend.
 		ARG 2 box
+			COMMENT The box in which the collected entities must be.
 		ARG 3 result
+			COMMENT A list in which to store the collected entities.
 		ARG 4 predicate
+			COMMENT A predicate which entities must satisfy in order to be considered.
 	METHOD method_12214 getBlockEntities ()Ljava/util/Map;
 	METHOD method_12215 getEntitySectionArray ()[Lnet/minecraft/class_3509;
 	METHOD method_12216 addBlockEntity (Lnet/minecraft/class_2586;)V
@@ -85,11 +94,20 @@ CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
-	METHOD method_18029 getEntities (Lnet/minecraft/class_1299;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
+	METHOD method_18029 collectEntities (Lnet/minecraft/class_1299;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
+		COMMENT Collects a list of entities and appends them to the given list according to the specified criteria.
+		COMMENT
+		COMMENT <strong>Warning:<strong> If {@code null} is passed as the entity type filter, care should be
+		COMMENT taken that the type argument {@code T} is set to {@link Entity}, otherwise heap pollution
+		COMMENT or bad casts can occur.
 		ARG 1 type
+			COMMENT The entity type of the entities to collect. If null, entities of all types are collected.
 		ARG 2 box
+			COMMENT The box within which collected entities must be.
 		ARG 3 list
+			COMMENT A list in which to store the collected entities.
 		ARG 4 predicate
+			COMMENT A predicate which entities must satisfy in order to be considered.
 	METHOD method_20471 enableTickSchedulers (Lnet/minecraft/class_3218;)V
 		ARG 1 world
 	METHOD method_20530 disableTickSchedulers ()V
