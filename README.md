@@ -22,8 +22,9 @@ Please have a look at the [naming conventions](/CONVENTIONS.md) before submittin
 ### Getting Started
 
 1. Fork and clone the repo
-2. Run `./gradlew yarn` (Linux, macOS) or `gradlew yarn` (Windows)
-3. Profit
+2. Run `./gradlew yarn` (Linux, macOS) or `gradlew yarn` (Windows) to open [Enigma](https://github.com/FabricMC/Enigma), a user interface to easily edit the mappings
+3. Commit and push your work to your fork
+4. Open a pull request with your changes
 
 ## Gradle
 Yarn uses Gradle to provide a number of utility tasks for working with the mappings.
