@@ -2,8 +2,19 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	COMMENT In charge of shaping, adding biome specific surface blocks, and carving chunks,
 	COMMENT as well as populating the generated chunks with {@linkplain net.minecraft.world.gen.feature.Feature features} and {@linkplain net.minecraft.entity.Entity entities}.
 	COMMENT Biome placement starts here, however all vanilla and most modded chunk generators delegate this to a {@linkplain net.minecraft.world.biome.source.BiomeSource biome source}.
-	FIELD field_12761 biomeSource Lnet/minecraft/class_1966;
+	FIELD field_12761 effectiveSource Lnet/minecraft/class_1966;
+		COMMENT effectiveSource is used for feature/structure generation, while actualSource is what is saved and displayed.
+		COMMENT
+		COMMENT This is used by {@link FlatChunkGenerator} to overwrite biome properties like whether lakes generate, while preserving the original biome ID.
 	FIELD field_16567 config Lnet/minecraft/class_5311;
+	FIELD field_24746 GENERATOR_CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_24747 actualSource Lnet/minecraft/class_1966;
+	FIELD field_24748 seed J
+	FIELD field_24749 strongholds Ljava/util/List;
+	METHOD <init> (Lnet/minecraft/class_1966;Lnet/minecraft/class_1966;Lnet/minecraft/class_5311;J)V
+		ARG 1 effectiveSource
+		ARG 2 actualSource
+		ARG 4 seed
 	METHOD method_12088 populateNoise (Lnet/minecraft/class_1936;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;)V
 		COMMENT Generates the base shape of the chunk out of the basic block states as decided by this chunk generator's config.
 		ARG 1 world
@@ -62,3 +73,6 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		ARG 2 z
 	METHOD method_27997 withSeed (J)Lnet/minecraft/class_2794;
 		ARG 1 seed
+	METHOD method_28506 getCodec ()Lcom/mojang/serialization/Codec;
+	METHOD method_28507 isStronghold (Lnet/minecraft/class_1923;)Z
+	METHOD method_28509 populateStrongholds ()V
