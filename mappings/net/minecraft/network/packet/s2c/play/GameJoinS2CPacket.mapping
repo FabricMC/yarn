@@ -4,18 +4,33 @@ CLASS net/minecraft/class_2678 net/minecraft/network/packet/s2c/play/GameJoinS2C
 	FIELD field_12280 playerEntityId I
 	FIELD field_12281 hardcore Z
 	FIELD field_12282 gameMode Lnet/minecraft/class_1934;
-	FIELD field_12284 dimensionTracker Lnet/minecraft/class_5318$class_5319;
+	FIELD field_12284 registryTracker Lnet/minecraft/class_5318$class_5319;
+		COMMENT Accessor to dimension types.
 	FIELD field_19145 chunkLoadDistance I
 	FIELD field_20665 sha256Seed J
+		COMMENT The server world's seed after a SHA256 hash. Used for fuzzy biome borders.
 	FIELD field_20666 flatWorld Z
 	FIELD field_24618 reducedDebugInfo Z
 	FIELD field_24619 showDeathScreen Z
-	FIELD field_25134 dimensionId Lnet/minecraft/class_5321;
+	FIELD field_25134 world Lnet/minecraft/class_5321;
+		COMMENT The key of the world which the player joins.
+	FIELD field_25320 worlds Ljava/util/Set;
+		COMMENT A collection of possible worlds on the server, currently only used by
+		COMMENT clientside command suggestions before server sends an accurate list of
+		COMMENT suggestions.
+	FIELD field_25321 dimensionType Lnet/minecraft/class_5321;
+		COMMENT The key of the dimension type of the world which the player joins.
+	FIELD field_25713 previousGameMode Lnet/minecraft/class_1934;
 	METHOD <init> (ILnet/minecraft/class_1934;Lnet/minecraft/class_1934;JZLjava/util/Set;Lnet/minecraft/class_5318$class_5319;Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;IIZZZZ)V
 		ARG 1 playerEntityId
 		ARG 2 gameMode
+		ARG 3 previousGameMode
 		ARG 4 sha256Seed
 		ARG 6 hardcore
+		ARG 7 worlds
+		ARG 8 registryTracker
+		ARG 9 dimensionType
+		ARG 10 world
 		ARG 11 maxPlayers
 		ARG 12 chunkLoadDistance
 		ARG 13 reducedDebugInfo
@@ -25,11 +40,14 @@ CLASS net/minecraft/class_2678 net/minecraft/network/packet/s2c/play/GameJoinS2C
 	METHOD method_11561 getGameMode ()Lnet/minecraft/class_1934;
 	METHOD method_11562 hasReducedDebugInfo ()Z
 	METHOD method_11564 getEntityId ()I
-	METHOD method_11565 getDimension ()Lnet/minecraft/class_5318;
+	METHOD method_11565 getRegistryTracker ()Lnet/minecraft/class_5318;
 	METHOD method_11568 isFlatWorld ()Z
 	METHOD method_20204 getChunkLoadDistance ()I
 	METHOD method_22423 getSha256Seed ()J
 	METHOD method_22424 showsDeathScreen ()Z
 	METHOD method_28118 isHardcore ()Z
 	METHOD method_28119 isDebugWorld ()Z
-	METHOD method_29176 getDimensionId ()Lnet/minecraft/class_5321;
+	METHOD method_29176 getWorld ()Lnet/minecraft/class_5321;
+	METHOD method_29443 getWorlds ()Ljava/util/Set;
+	METHOD method_29444 getDimensionType ()Lnet/minecraft/class_5321;
+	METHOD method_30116 getPreviousGameMode ()Lnet/minecraft/class_1934;
