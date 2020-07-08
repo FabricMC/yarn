@@ -7,18 +7,15 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	FIELD field_9323 BIOMES Ljava/util/Set;
 	FIELD field_9324 FOLIAGE_NOISE Lnet/minecraft/class_3543;
 	FIELD field_9325 spawns Ljava/util/Map;
-	FIELD field_9326 features Ljava/util/Map;
+	FIELD field_9326 features Ljava/util/List;
 	FIELD field_9327 precipitation Lnet/minecraft/class_1959$class_1963;
-	FIELD field_9328 PARENT_BIOME_ID_MAP Lnet/minecraft/class_2361;
 	FIELD field_9329 category Lnet/minecraft/class_1959$class_1961;
 	FIELD field_9330 LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD field_9331 translationKey Ljava/lang/String;
 	FIELD field_9332 parent Ljava/lang/String;
 	FIELD field_9333 carvers Ljava/util/Map;
 	FIELD field_9334 flowerFeatures Ljava/util/List;
 	FIELD field_9335 TEMPERATURE_NOISE Lnet/minecraft/class_3543;
-	FIELD field_9336 surfaceBuilder Lnet/minecraft/class_3504;
-	FIELD field_9337 structureFeatures Ljava/util/Map;
+	FIELD field_9336 surfaceBuilder Ljava/util/function/Supplier;
 	FIELD field_9338 downfall F
 	FIELD field_9339 temperature F
 	FIELD field_9341 scale F
@@ -34,7 +31,6 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	METHOD method_24935 getLoopSound ()Ljava/util/Optional;
 	METHOD method_24936 getMoodSound ()Ljava/util/Optional;
 	METHOD method_24937 getAdditionsSound ()Ljava/util/Optional;
-	METHOD method_27342 streamNoises ()Ljava/util/stream/Stream;
 	METHOD method_27835 getSpawnDensity (Lnet/minecraft/class_1299;)Lnet/minecraft/class_1959$class_5265;
 		ARG 1 type
 	METHOD method_27836 addSpawnDensity (Lnet/minecraft/class_1299;DD)V
@@ -50,13 +46,11 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	METHOD method_8686 getScale ()F
 	METHOD method_8687 getWaterColor ()I
 	METHOD method_8688 getCategory ()Lnet/minecraft/class_1959$class_1961;
-	METHOD method_8689 getTranslationKey ()Ljava/lang/String;
 	METHOD method_8690 getMaxSpawnChance ()F
 	METHOD method_8691 addCarver (Lnet/minecraft/class_2893$class_2894;Lnet/minecraft/class_2922;)V
 		ARG 1 step
 		ARG 2 configuredCarver
-	METHOD method_8692 getSurfaceBuilder ()Lnet/minecraft/class_3504;
-	METHOD method_8693 getName ()Lnet/minecraft/class_2561;
+	METHOD method_8692 getSurfaceBuilder ()Ljava/util/function/Supplier;
 	METHOD method_8694 getPrecipitation ()Lnet/minecraft/class_1959$class_1963;
 	METHOD method_8695 getDepth ()F
 	METHOD method_8696 canSetSnow (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z
@@ -66,13 +60,7 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	METHOD method_8698 getFoliageColor ()I
 	METHOD method_8700 getEntitySpawnList (Lnet/minecraft/class_1311;)Ljava/util/List;
 		ARG 1 group
-	METHOD method_8702 generateFeatureStep (Lnet/minecraft/class_2893$class_2895;Lnet/minecraft/class_5138;Lnet/minecraft/class_2794;Lnet/minecraft/class_5281;JLnet/minecraft/class_2919;Lnet/minecraft/class_2338;)V
-		ARG 1 step
-		ARG 2 structureAccessor
-		ARG 3 chunkGenerator
-		ARG 5 populationSeed
-		ARG 7 chunkRandom
-		ARG 8 pos
+	METHOD method_8702 generateFeatureStep (Lnet/minecraft/class_5138;Lnet/minecraft/class_2794;Lnet/minecraft/class_3233;JLnet/minecraft/class_2919;Lnet/minecraft/class_2338;)V
 	METHOD method_8703 buildSurface (Ljava/util/Random;Lnet/minecraft/class_2791;IIIDLnet/minecraft/class_2680;Lnet/minecraft/class_2680;IJ)V
 		ARG 1 random
 		ARG 2 chunk
@@ -100,26 +88,17 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 		ARG 3 z
 	METHOD method_8712 getTemperature ()F
 	METHOD method_8713 getWaterFogColor ()I
-	METHOD method_8714 configureCarver (Lnet/minecraft/class_2939;Lnet/minecraft/class_2920;)Lnet/minecraft/class_2922;
-		ARG 0 carver
-		ARG 1 config
 	METHOD method_8715 getRainfall ()F
-	METHOD method_8716 getModifiedBiome (Lnet/minecraft/class_1959;)Lnet/minecraft/class_1959;
-		ARG 0 biome
 	METHOD method_8717 getCarversForStep (Lnet/minecraft/class_2893$class_2894;)Ljava/util/List;
 		ARG 1 carver
 	METHOD method_8718 getFlowerFeatures ()Ljava/util/List;
 	METHOD method_8719 addFeature (Lnet/minecraft/class_2893$class_2895;Lnet/minecraft/class_2975;)V
 		ARG 1 step
-		ARG 2 configuredFeature
-	METHOD method_8721 getFeaturesForStep (Lnet/minecraft/class_2893$class_2895;)Ljava/util/List;
-		ARG 1 feature
 	METHOD method_8722 getSurfaceConfig ()Lnet/minecraft/class_3531;
 	METHOD method_8723 hasParent ()Z
 	METHOD method_8724 hasHighHumidity ()Z
 	METHOD method_8725 getParent ()Ljava/lang/String;
 	CLASS class_1960 Settings
-		FIELD field_22041 noises Ljava/util/List;
 		FIELD field_22042 specialEffects Lnet/minecraft/class_4763;
 		FIELD field_9344 depth Ljava/lang/Float;
 		FIELD field_9345 category Lnet/minecraft/class_1959$class_1961;
@@ -128,20 +107,15 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 		FIELD field_9349 temperature Ljava/lang/Float;
 		FIELD field_9351 downfall Ljava/lang/Float;
 		FIELD field_9352 parent Ljava/lang/String;
-		FIELD field_9353 surfaceBuilder Lnet/minecraft/class_3504;
+		FIELD field_9353 surfaceBuilder Ljava/util/function/Supplier;
 		METHOD method_24379 effects (Lnet/minecraft/class_4763;)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 effects
-		METHOD method_24380 noises (Ljava/util/List;)Lnet/minecraft/class_1959$class_1960;
-			ARG 1 noises
 		METHOD method_8727 downfall (F)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 downfall
-		METHOD method_8731 surfaceBuilder (Lnet/minecraft/class_3504;)Lnet/minecraft/class_1959$class_1960;
-			ARG 1 surfaceBuilder
+		METHOD method_8731 surfaceBuilder (Ljava/util/function/Supplier;)Lnet/minecraft/class_1959$class_1960;
 		METHOD method_8735 precipitation (Lnet/minecraft/class_1959$class_1963;)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 precipitation
-		METHOD method_8737 configureSurfaceBuilder (Lnet/minecraft/class_3523;Lnet/minecraft/class_3531;)Lnet/minecraft/class_1959$class_1960;
-			ARG 1 surfaceBuilder
-			ARG 2 config
+		METHOD method_8737 configureSurfaceBuilder (Lnet/minecraft/class_3504;)Lnet/minecraft/class_1959$class_1960;
 		METHOD method_8738 category (Lnet/minecraft/class_1959$class_1961;)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 category
 		METHOD method_8740 depth (F)Lnet/minecraft/class_1959$class_1960;
