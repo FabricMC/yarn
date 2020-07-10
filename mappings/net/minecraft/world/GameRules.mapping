@@ -38,8 +38,11 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 	FIELD field_9197 RULE_TYPES Ljava/util/Map;
 	METHOD <init> (Ljava/util/Map;)V
 		ARG 1 rules
-	METHOD method_20744 forEachType (Lnet/minecraft/class_1928$class_4311;)V
-		ARG 0 action
+	METHOD method_20744 accept (Lnet/minecraft/class_1928$class_4311;)V
+		COMMENT Make the visitor visit all registered game rules.
+		COMMENT
+		COMMENT <p>The visitation involves calling both {@link #accept(GameRules.Key, GameRules.Type)} and {@code acceptX} for every game rule, where X is the current rule's concrete type such as a boolean.
+		ARG 0 visitor
 	METHOD method_20745 accept (Lnet/minecraft/class_1928$class_4311;Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
 		ARG 0 consumer
 		ARG 1 key
@@ -104,14 +107,24 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		METHOD method_20760 create (ZLjava/util/function/BiConsumer;)Lnet/minecraft/class_1928$class_4314;
 			ARG 0 initialValue
 			ARG 1 changeCallback
-	CLASS class_4311 TypeConsumer
-		METHOD method_20762 accept (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+	CLASS class_4311 Visitor
+		COMMENT A visitor used to visit all game rules.
+		METHOD method_20762 visit (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+			COMMENT Visit a game rule.
+			COMMENT
+			COMMENT <p>It is expected all game rules regardless of type will be visited using this method.
 			ARG 1 key
 			ARG 2 type
-		METHOD method_27329 acceptBoolean (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+		METHOD method_27329 visitBoolean (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+			COMMENT Visit a boolean rule.
+			COMMENT
+			COMMENT <p>Note {@link #accept(GameRules.Key, GameRules.Type)} will be called before this method.
 			ARG 1 key
 			ARG 2 type
-		METHOD method_27330 acceptInt (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+		METHOD method_27330 visitInt (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+			COMMENT Visit an integer rule.
+			COMMENT
+			COMMENT <p>Note {@link #accept(GameRules.Key, GameRules.Type)} will be called before this method.
 			ARG 1 key
 			ARG 2 type
 	CLASS class_4312 IntRule
