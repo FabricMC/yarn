@@ -1,7 +1,7 @@
-CLASS net/minecraft/class_5455 net/minecraft/util/registry/RegistryTracker
+CLASS net/minecraft/class_5455 net/minecraft/util/registry/DynamicRegistryManager
 	FIELD field_25918 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_25919 INFOS Ljava/util/Map;
-	METHOD method_30518 getDimensionTypeRegistry ()Lnet/minecraft/class_2378;
+	METHOD method_30518 getDimensionType ()Lnet/minecraft/class_2378;
 	METHOD method_30519 load (Lnet/minecraft/class_3300;)Lnet/minecraft/class_5455$class_5457;
 		ARG 0 resourceManager
 	METHOD method_30520 register (Lcom/google/common/collect/ImmutableMap$Builder;Lnet/minecraft/class_5321;Lcom/mojang/serialization/MapCodec;Z)Lcom/google/common/collect/ImmutableMap$Builder;
@@ -10,19 +10,20 @@ CLASS net/minecraft/class_5455 net/minecraft/util/registry/RegistryTracker
 		ARG 2 elementCodec
 		ARG 3 synced
 	METHOD method_30524 addBuiltinEntries (Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_2378;)V
-		ARG 0 tracker
+		ARG 0 manager
 		ARG 1 registry
 	METHOD method_30525 setupBuiltin (Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_5321;)V
-		ARG 0 tracker
+		ARG 0 manager
 		ARG 1 registryRef
 	METHOD method_30526 load (Lnet/minecraft/class_5382;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_5455$class_5456;)V
 		ARG 0 ops
-		ARG 1 tracker
-	METHOD method_30527 getRegistrySafely (Lnet/minecraft/class_5321;)Ljava/util/Optional;
-		ARG 1 registryRef
+		ARG 1 manager
+		ARG 2 info
+	METHOD method_30527 getOptional (Lnet/minecraft/class_5321;)Ljava/util/Optional;
+		ARG 1 key
 	METHOD method_30528 create ()Lnet/minecraft/class_5455$class_5457;
-	METHOD method_30530 getRegistry (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2385;
-		ARG 1 registryRef
+	METHOD method_30530 get (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2385;
+		ARG 1 key
 	CLASS class_5456 Info
 		FIELD field_25920 registryRef Lnet/minecraft/class_5321;
 		FIELD field_25921 elementCodec Lcom/mojang/serialization/MapCodec;
@@ -40,7 +41,7 @@ CLASS net/minecraft/class_5455 net/minecraft/util/registry/RegistryTracker
 		METHOD <init> (Ljava/util/Map;)V
 			ARG 1 registries
 		METHOD method_30538 fromRegistryCodecs (Lcom/mojang/serialization/codecs/UnboundedMapCodec;)Lcom/mojang/serialization/Codec;
-		METHOD method_30546 createCodec ()Lcom/mojang/serialization/Codec;
+		METHOD method_30546 setupCodec ()Lcom/mojang/serialization/Codec;
 		METHOD method_30547 getDataResultForCodec (Lnet/minecraft/class_5321;)Lcom/mojang/serialization/DataResult;
 			ARG 0 registryRef
 		METHOD method_30548 createRegistry (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2370;
