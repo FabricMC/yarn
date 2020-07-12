@@ -5,6 +5,7 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 	FIELD field_19423 spawnableFarFromPlayer Z
 	FIELD field_24085 maxTrackDistance I
 	FIELD field_24086 trackTickInterval I
+	FIELD field_25355 canSpawnInside Lcom/google/common/collect/ImmutableSet;
 	FIELD field_6056 saveable Z
 	FIELD field_6072 summonable Z
 	FIELD field_6088 LOGGER Lorg/apache/logging/log4j/Logger;
@@ -46,6 +47,13 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 	METHOD method_20210 isIn (Lnet/minecraft/class_3494;)Z
 		ARG 1 tag
 	METHOD method_20814 isSpawnableFarFromPlayer ()Z
+	METHOD method_29496 isInvalidSpawn (Lnet/minecraft/class_2680;)Z
+		COMMENT Returns whether the EntityType can spawn inside the given block.
+		COMMENT
+		COMMENT Non fire-immune mobs can't spawn in / on blocks dealing fire damage.
+		COMMENT Mobs can't spawn in wither roses, sweet berry bush, or cacti.
+		COMMENT
+		COMMENT This can be overwritten via @link EntityType.Builder.allowSpawningInside
 	METHOD method_5881 loadFromEntityTag (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_2487;)V
 		ARG 0 world
 		ARG 1 player
@@ -108,6 +116,7 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 		FIELD field_19424 spawnableFarFromPlayer Z
 		FIELD field_24087 maxTrackingRange I
 		FIELD field_24088 trackingTickInterval I
+		FIELD field_25356 canSpawnInside Lcom/google/common/collect/ImmutableSet;
 		FIELD field_6148 factory Lnet/minecraft/class_1299$class_4049;
 		FIELD field_6149 spawnGroup Lnet/minecraft/class_1311;
 		FIELD field_6150 summonable Z
@@ -124,6 +133,14 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 			ARG 1 maxTrackingRange
 		METHOD method_27300 trackingTickInterval (I)Lnet/minecraft/class_1299$class_1300;
 			ARG 1 trackingTickInterval
+		METHOD method_29497 allowingSpawningInside ([Lnet/minecraft/class_2248;)Lnet/minecraft/class_1299$class_1300;
+			COMMENT Allows the EntityType to spawn inside the given block.
+			COMMENT
+			COMMENT Takes precidence over #prevent_mob_spawning_inside tag,
+			COMMENT     wither rose, sweet berry bush and cactus blacklist
+			COMMENT     as well as non fire resistant mobs not being able to spawn on/in fire damage dealing blocks
+			COMMENT
+			COMMENT (e.g. used so only wither skeletons can spawn in wither roses)
 		METHOD method_5901 disableSummon ()Lnet/minecraft/class_1299$class_1300;
 		METHOD method_5902 create (Lnet/minecraft/class_1311;)Lnet/minecraft/class_1299$class_1300;
 			ARG 0 spawnGroup
