@@ -12,7 +12,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_23784 session Lnet/minecraft/class_32$class_5143;
 	FIELD field_24370 structureManager Lnet/minecraft/class_3485;
 	FIELD field_24372 saveProperties Lnet/minecraft/class_5219;
-	FIELD field_25132 dimensionTracker Lnet/minecraft/class_5318$class_5319;
+	FIELD field_25132 registryManager Lnet/minecraft/class_5455$class_5457;
 	FIELD field_25318 serverResourceManager Lnet/minecraft/class_5350;
 	FIELD field_4543 onlineMode Z
 	FIELD field_4544 running Z
@@ -108,7 +108,10 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 2 safeMode
 	METHOD method_29740 startServer (Ljava/util/function/Function;)Lnet/minecraft/server/MinecraftServer;
 		ARG 0 serverFactory
+	METHOD method_29741 runServer ()V
 	METHOD method_30002 getOverworld ()Lnet/minecraft/class_3218;
+	METHOD method_30611 getRegistryManager ()Lnet/minecraft/class_5455;
+	METHOD method_30612 getRateLimit ()I
 	METHOD method_3716 getKeyPair ()Ljava/security/KeyPair;
 	METHOD method_3718 isFlightEnabled ()Z
 	METHOD method_3719 getGameProfileRepo ()Lcom/mojang/authlib/GameProfileRepository;
@@ -168,6 +171,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3783 isMonsterSpawningEnabled ()Z
 	METHOD method_3784 getResourcePackUrl ()Ljava/lang/String;
 	METHOD method_3785 isSpawnProtected (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)Z
+		ARG 1 world
 		ARG 2 pos
 		ARG 3 player
 	METHOD method_3786 createWorlds (Lnet/minecraft/class_3949;)V
@@ -183,7 +187,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3796 shouldSpawnAnimals ()Z
 	METHOD method_3798 getOpPermissionLevel ()I
 	METHOD method_3799 isDemo ()Z
-	METHOD method_3801 getTagManager ()Lnet/minecraft/class_3505;
+	METHOD method_3801 getTagManager ()Lnet/minecraft/class_5415;
 	METHOD method_3802 getMaxPlayerCount ()I
 	METHOD method_3803 setPlayerIdleTimeout (I)V
 		ARG 1 playerIdleTimeout
@@ -230,6 +234,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3846 setPlayerManager (Lnet/minecraft/class_3324;)V
 		ARG 1 playerManager
 	METHOD method_3847 getWorld (Lnet/minecraft/class_5321;)Lnet/minecraft/class_3218;
+		ARG 1 key
 	METHOD method_3849 setServerName (Ljava/lang/String;)V
 		ARG 1 serverName
 	METHOD method_3850 setWorldHeight (I)V
@@ -243,6 +248,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3857 getLootManager ()Lnet/minecraft/class_60;
 	METHOD method_3858 getPlayerNames ()[Ljava/lang/String;
 	METHOD method_3859 populateCrashReport (Lnet/minecraft/class_128;)Lnet/minecraft/class_128;
+		ARG 1 report
 	METHOD method_3860 isRemote ()Z
 	METHOD method_3861 loadWorldResourcePack ()V
 	METHOD method_3862 getPlayerIdleTimeout ()I
