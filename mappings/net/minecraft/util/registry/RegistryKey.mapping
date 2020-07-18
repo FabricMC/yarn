@@ -1,47 +1,102 @@
 CLASS net/minecraft/class_5321 net/minecraft/util/registry/RegistryKey
-	COMMENT Represents a key for a value in a registry in a context where a
-	COMMENT root registry is available.
+	COMMENT A sugarcoated {@link Identifier} with a specific type of usage.
 	COMMENT
-	COMMENT @param <T> the type of the value
+	COMMENT <p>Compared to a regular identifier, this class has an extra generic
+	COMMENT type {@code T} and {@link #registry another validation-purposed
+	COMMENT identifier} indicating the usage. Compared to using identifiers directly,
+	COMMENT this registry key can prevent accidental misusage of identifier, such as
+	COMMENT using an identifier intended for items to look up an entity type. The
+	COMMENT extra identifier guarantees the usage type at runtime while the generic
+	COMMENT guarantees the usage type at compile time.</p>
+	COMMENT
+	COMMENT <p>This class is immutable and compares by identity. Hence, all created
+	COMMENT instances are stored in {@link #INSTANCES a synchronized map}. Per
+	COMMENT Mojang employee fry (RainWarrior), comparison by identity offers a
+	COMMENT performance boost.</p>
+	COMMENT
+	COMMENT @param <T> the generice
 	COMMENT @see Registry#ROOT
 	FIELD field_25136 INSTANCES Ljava/util/Map;
 		COMMENT A cache of all registry keys ever created.
+		COMMENT
+		COMMENT <p>The keys are stored as joining the string form of two identifiers
+		COMMENT with a {@code :}, and the map is a synchronized identity hash map where
+		COMMENT the string keys used to look up keys are interned. <b>These details
+		COMMENT should not be relied on as they are implementation details that can be
+		COMMENT changed without affecting any user.</b></p>
 	FIELD field_25137 registry Lnet/minecraft/class_2960;
-		COMMENT The identifier of the registry in the root registry.
+		COMMENT The validated usage type of this registry key.
+		COMMENT
+		COMMENT <p>In most cases, this is the identifier of the registry in the root
+		COMMENT registry. For example, this value for a registry key for a
+		COMMENT {@link net.minecraft.block.Block} is {@code minecraft:block}.</p>
+		COMMENT
+		COMMENT <p>This usage type is only used internally for validation and is not
+		COMMENT meant to be exposed.</p>
 	FIELD field_25138 value Lnet/minecraft/class_2960;
-		COMMENT The identifier of the value in the registry specified by {@link #registry}.
+		COMMENT The actual identifier in the sugarcoat.
 	METHOD <init> (Lnet/minecraft/class_2960;Lnet/minecraft/class_2960;)V
 		ARG 1 registry
 		ARG 2 value
 	METHOD method_29177 getValue ()Lnet/minecraft/class_2960;
+		COMMENT Returns the identifier in the sugarcoat.
 	METHOD method_29178 createKeyFactory (Lnet/minecraft/class_5321;)Ljava/util/function/Function;
-		COMMENT Creates a function that converts an identifier to a registry key for the
-		COMMENT registry that {@code registry} refers to in the root registry.
+		COMMENT Creates a function that sugarcoats identifiers to registry keys.
+		COMMENT Requires another registry key of a registry to indicate the usage of
+		COMMENT the created registry keys.
+		COMMENT
+		COMMENT <p>For example, this can create a function that sugarcoat an identifer
+		COMMENT to a registry key for {@link net.minecraft.block.Block} when
+		COMMENT {@link Registry#BLOCK_KEY the registry key of the block registry} is
+		COMMENT passed.</p>
+		COMMENT
+		COMMENT @return the created factory function that sugarcoats identifiers
 		ARG 0 registry
-			COMMENT the reference to the value-holding registry in the root registry
+			COMMENT the id of the registry
 	METHOD method_29179 of (Lnet/minecraft/class_5321;Lnet/minecraft/class_2960;)Lnet/minecraft/class_5321;
-		COMMENT Creates a registry key for a value in a registry with a registry key for
-		COMMENT the value-holding registry in the root registry and an identifier of the
-		COMMENT value.
+		COMMENT Sugarcoats an identifier to a specific usage, given the registry key of
+		COMMENT the registry of that usage.
 		COMMENT
-		COMMENT <p>You can call it like {@code RegistryKey.of(Registry.ITEM_KEY, new Identifier("iron_ingot"))}
-		COMMENT to create a registry key for iron ingot.</p>
+		COMMENT <p>For example, you can sugarcoat an identifer for items with
+		COMMENT {@link Registry#ITEM_KEY the registry key of the item registry}.
+		COMMENT You can call it like {@code RegistryKey.of(Registry.ITEM_KEY, new Identifier("iron_ingot"))}
+		COMMENT to sugarcoat the id for iron ingot.</p>
 		COMMENT
-		COMMENT @param <T> the type of the value
+		COMMENT @param <T> the usage type
+		COMMENT @return the sugarcoated identifier
 		ARG 0 registry
-			COMMENT the registry key of the registry in the root registry
+			COMMENT the registry key of the registry of that usage, usually
+			COMMENT available in {@link Registry}
 		ARG 1 value
-			COMMENT the identifier of the value
+			COMMENT the identifier to sugarcoat
 	METHOD method_29180 ofRegistry (Lnet/minecraft/class_2960;)Lnet/minecraft/class_5321;
-		COMMENT Creates a registry key for a registry in the root registry (registry of
-		COMMENT all registries) with an identifier for the registry.
+		COMMENT Sugarcoats an identifier for accessing a specific type of registry in
+		COMMENT the root registry.
 		COMMENT
-		COMMENT <p>You can call it like {@code RegistryKey.of(new Identifier("block"))}
-		COMMENT to create a registry key for the block registry.</p>
+		COMMENT <p>You can call it like {@code RegistryKey.ofRegistry(new Identifier("block"))}
+		COMMENT to obtain a registry key of {@code RegistryKey<Registry<Block>>} type
+		COMMENT for the block registry.</p>
 		COMMENT
-		COMMENT @param <T> the element type of the registry
+		COMMENT <p><strong>Notice</strong>: This method can refit the generic {@code <T>}
+		COMMENT as any type, so it's on the user's discretion to assign a correct
+		COMMENT type!</p>
+		COMMENT
+		COMMENT @param <T> the element type of the registry, where {@code Registry<T>}
+		COMMENT            would be the actual usage of the returned key
+		COMMENT @return the sugarcoated identifier
 		ARG 0 registry
 			COMMENT the identifier of the registry
 	METHOD method_29181 of (Lnet/minecraft/class_2960;Lnet/minecraft/class_2960;)Lnet/minecraft/class_5321;
+		COMMENT Sugarcoats an identifier with a specific usage.
+		COMMENT
+		COMMENT <p>This method handles the identity-based handling of registry keys.</p>
+		COMMENT
+		COMMENT <p>Though this method is private, calling
+		COMMENT {@code RegistryKey.of(RegistryKey.ofRegistry(registry), value)} has the
+		COMMENT same effect.</p>
+		COMMENT
+		COMMENT @param <T> the usage type
 		ARG 0 registry
+			COMMENT the usage
 		ARG 1 value
+			COMMENT the sugarcoated identifier
