@@ -3,6 +3,8 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	FIELD field_1129 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_18034 NEXT_SERVER_WORKER_ID Ljava/util/concurrent/atomic/AtomicInteger;
 	FIELD field_18035 SERVER_WORKER_EXECUTOR Ljava/util/concurrent/ExecutorService;
+	FIELD field_24477 IO_WORKER_EXECUTOR Ljava/util/concurrent/ExecutorService;
+	FIELD field_24622 BOOTSTRAP_EXECUTOR Ljava/util/concurrent/ExecutorService;
 	FIELD field_25140 NIL_UUID Ljava/util/UUID;
 	METHOD method_17815 stream (Ljava/util/Optional;)Ljava/util/stream/Stream;
 	METHOD method_17974 ifPresentOrElse (Ljava/util/Optional;Ljava/util/function/Consumer;Ljava/lang/Runnable;)Ljava/util/Optional;
@@ -25,15 +27,50 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_27173 getRandom ([Ljava/lang/Object;Ljava/util/Random;)Ljava/lang/Object;
 		ARG 0 array
 		ARG 1 random
+	METHOD method_27760 backupAndReplace (Ljava/io/File;Ljava/io/File;Ljava/io/File;)V
+		ARG 0 current
+		ARG 1 newFile
+		ARG 2 backup
 	METHOD method_27761 moveCursor (Ljava/lang/String;II)I
 		COMMENT Moves the {@code cursor} in the {@code string} by a {@code delta} amount.
 		COMMENT Skips surrogate characters.
 		ARG 0 string
 		ARG 1 cursor
 		ARG 2 delta
+	METHOD method_27957 attemptShutdown (Ljava/util/concurrent/ExecutorService;)V
+		ARG 0 service
+	METHOD method_27958 getIoWorkerExecutor ()Ljava/util/concurrent/Executor;
+	METHOD method_27959 createIOWorker ()Ljava/util/concurrent/ExecutorService;
+	METHOD method_28122 createWorker (Ljava/lang/String;)Ljava/util/concurrent/ExecutorService;
+	METHOD method_28124 getBootstrapExecutor ()Ljava/util/concurrent/Executor;
 	METHOD method_29190 toIntArray (Ljava/util/stream/IntStream;I)Lcom/mojang/serialization/DataResult;
 		ARG 0 intStream
 		ARG 1 length
+	METHOD method_29476 startTimerHack ()V
+	METHOD method_29775 relativeCopy (Ljava/nio/file/Path;Ljava/nio/file/Path;Ljava/nio/file/Path;)V
+		COMMENT Copies a file contained in the folder {@code src} to the folder {@code dest}.
+		COMMENT This will replicate any path structure that may exist between {@code src} and {@code toCopy}.
+		ARG 0 src
+		ARG 1 dest
+		ARG 2 toCopy
+	METHOD method_30309 replaceInvalidChars (Ljava/lang/String;Lnet/minecraft/class_5462;)Ljava/lang/String;
+		ARG 1 predicate
+	METHOD method_30622 attemptTasks (ILjava/lang/String;[Ljava/util/function/BooleanSupplier;)Z
+		ARG 0 retries
+		ARG 1 taskName
+		ARG 2 tasks
+	METHOD method_30624 deleteTask (Ljava/nio/file/Path;)Ljava/util/function/BooleanSupplier;
+	METHOD method_30625 renameTask (Ljava/nio/file/Path;Ljava/nio/file/Path;)Ljava/util/function/BooleanSupplier;
+		ARG 0 src
+		ARG 1 dest
+	METHOD method_30626 backupAndReplace (Ljava/nio/file/Path;Ljava/nio/file/Path;Ljava/nio/file/Path;)V
+		COMMENT Copies {@code current} to {@code backup} and then replaces {@code current} with {@code newPath}
+		ARG 0 current
+		ARG 1 newPath
+		ARG 2 backup
+	METHOD method_30627 attemptTasks ([Ljava/util/function/BooleanSupplier;)Z
+	METHOD method_30628 deletionVerifyTask (Ljava/nio/file/Path;)Ljava/util/function/BooleanSupplier;
+	METHOD method_30629 existenceCheckTask (Ljava/nio/file/Path;)Ljava/util/function/BooleanSupplier;
 	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
 	METHOD method_646 createTranslationKey (Ljava/lang/String;Lnet/minecraft/class_2960;)Ljava/lang/String;
 		ARG 0 type
