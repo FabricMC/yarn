@@ -1,11 +1,48 @@
 CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
+	FIELD field_19388 DO_MOB_GRIEFING Lnet/minecraft/class_1928$class_4313;
+		COMMENT A {@linkplain Rule game rule} which regulates whether mobs can modify the world.
+		COMMENT
+		COMMENT <p>Generally one is expected to test this rule before an entity modifies the world.
+		COMMENT
+		COMMENT <p>In vanilla, this includes:
+		COMMENT <ul>
+		COMMENT <li>Whether creeper explosions destroy blocks
+		COMMENT <li>Whether a zombie can break down a door
+		COMMENT <li>Whether a wither killing an entity will place or drop a wither rose
+		COMMENT </ul>
+	FIELD field_19389 KEEP_INVENTORY Lnet/minecraft/class_1928$class_4313;
+		COMMENT A {@linkplain Rule game rule} which regulates whether player inventories should be persist through respawning.
+	FIELD field_19390 DO_MOB_SPAWNING Lnet/minecraft/class_1928$class_4313;
+		COMMENT A {@linkplain Rule game rule} which regulates whether mobs can spawn naturally.
+	FIELD field_19391 DO_MOB_LOOT Lnet/minecraft/class_1928$class_4313;
+		COMMENT A {@linkplain Rule game rule} which regulates whether mobs should drop loot on death.
+	FIELD field_19392 DO_TILE_DROPS Lnet/minecraft/class_1928$class_4313;
+		COMMENT A {@linkplain Rule game rule} which regulates whether blocks should drop their items when broken.
+	FIELD field_19401 REDUCED_DEBUG_INFO Lnet/minecraft/class_1928$class_4313;
+		COMMENT A {@linkplain Rule game rule} which regulates whether clients' {@linkplain net.minecraft.client.gui.hud.DebugHud debug HUD}s show reduced information.
+		COMMENT
+		COMMENT <p>When the value of this rule is changed, all connected clients will be notified to update their display.
+		COMMENT In vanilla, this includes the visibility of coordinates on the clients' debug HUDs.
+	FIELD field_19405 MAX_ENTITY_CRAMMING Lnet/minecraft/class_1928$class_4313;
+		COMMENT A {@linkplain Rule game rule} which regulates the number of entities that can be crammed into a block space before they incur cramming damage.
+	FIELD field_19409 ANNOUNCE_ADVANCEMENTS Lnet/minecraft/class_1928$class_4313;
+		COMMENT A {@linkplain Rule game rule} which regulates whether a player's advancements should be announced in chat.
 	FIELD field_19410 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_19422 DISABLE_RAIDS Lnet/minecraft/class_1928$class_4313;
+		COMMENT A {@linkplain Rule game rule} which regulates whether raids should occur.
+		COMMENT
+		COMMENT <p>If this rule is set to {@code true} while raids are occurring, the raids will be stopped.
+	FIELD field_20638 DO_IMMEDIATE_RESPAWN Lnet/minecraft/class_1928$class_4313;
+		COMMENT A {@linkplain Rule game rule} which regulates whether a player should immediately respawn upon death.
 	FIELD field_9196 rules Ljava/util/Map;
 	FIELD field_9197 RULE_TYPES Ljava/util/Map;
 	METHOD <init> (Ljava/util/Map;)V
 		ARG 1 rules
-	METHOD method_20744 forEachType (Lnet/minecraft/class_1928$class_4311;)V
-		ARG 0 action
+	METHOD method_20744 accept (Lnet/minecraft/class_1928$class_4311;)V
+		COMMENT Make the visitor visit all registered game rules.
+		COMMENT
+		COMMENT <p>The visitation involves calling both {@link Visitor#visit(GameRules.Key, GameRules.Type)} and {@code visitX} for every game rule, where X is the current rule's concrete type such as a boolean.
+		ARG 0 visitor
 	METHOD method_20745 accept (Lnet/minecraft/class_1928$class_4311;Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
 		ARG 0 consumer
 		ARG 1 key
@@ -30,9 +67,13 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		ARG 1 rule
 	METHOD method_27321 setValue (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928;Lnet/minecraft/server/MinecraftServer;)V
 		ARG 1 key
+		ARG 2 rules
 		ARG 3 server
 	METHOD method_27322 setAllValues (Lnet/minecraft/class_1928;Lnet/minecraft/server/MinecraftServer;)V
+		ARG 1 rules
 		ARG 2 server
+	METHOD method_27323 (Lnet/minecraft/class_1928;Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4313;)V
+		ARG 3 key
 	METHOD method_27325 copy ()Lnet/minecraft/class_1928;
 	METHOD method_8355 getBoolean (Lnet/minecraft/class_1928$class_4313;)Z
 		ARG 1 rule
@@ -66,14 +107,24 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		METHOD method_20760 create (ZLjava/util/function/BiConsumer;)Lnet/minecraft/class_1928$class_4314;
 			ARG 0 initialValue
 			ARG 1 changeCallback
-	CLASS class_4311 RuleTypeConsumer
-		METHOD method_20762 accept (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+	CLASS class_4311 Visitor
+		COMMENT A visitor used to visit all game rules.
+		METHOD method_20762 visit (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+			COMMENT Visit a game rule.
+			COMMENT
+			COMMENT <p>It is expected all game rules regardless of type will be visited using this method.
 			ARG 1 key
 			ARG 2 type
-		METHOD method_27329 acceptBoolean (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+		METHOD method_27329 visitBoolean (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+			COMMENT Visit a boolean rule.
+			COMMENT
+			COMMENT <p>Note {@link #visit(GameRules.Key, GameRules.Type)} will be called before this method.
 			ARG 1 key
 			ARG 2 type
-		METHOD method_27330 acceptInt (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+		METHOD method_27330 visitInt (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
+			COMMENT Visit an integer rule.
+			COMMENT
+			COMMENT <p>Note {@link #visit(GameRules.Key, GameRules.Type)} will be called before this method.
 			ARG 1 key
 			ARG 2 type
 	CLASS class_4312 IntRule
@@ -97,7 +148,7 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		METHOD method_27332 validate (Ljava/lang/String;)Z
 			COMMENT Validates that an input is valid for this rule.
 			ARG 1 input
-	CLASS class_4313 RuleKey
+	CLASS class_4313 Key
 		FIELD field_19413 name Ljava/lang/String;
 		FIELD field_24103 category Lnet/minecraft/class_1928$class_5198;
 		METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_1928$class_5198;)V
@@ -108,18 +159,20 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		METHOD method_20771 getName ()Ljava/lang/String;
 		METHOD method_27334 getTranslationKey ()Ljava/lang/String;
 		METHOD method_27335 getCategory ()Lnet/minecraft/class_1928$class_5198;
-	CLASS class_4314 RuleType
+	CLASS class_4314 Type
 		FIELD field_19414 argumentType Ljava/util/function/Supplier;
 		FIELD field_19415 ruleFactory Ljava/util/function/Function;
 		FIELD field_19416 changeCallback Ljava/util/function/BiConsumer;
+		FIELD field_24104 ruleAcceptor Lnet/minecraft/class_1928$class_5199;
 		METHOD <init> (Ljava/util/function/Supplier;Ljava/util/function/Function;Ljava/util/function/BiConsumer;Lnet/minecraft/class_1928$class_5199;)V
 			ARG 1 argumentType
 			ARG 2 ruleFactory
 			ARG 3 changeCallback
+			ARG 4 ruleAcceptor
 		METHOD method_20773 createRule ()Lnet/minecraft/class_1928$class_4315;
 		METHOD method_20775 argument (Ljava/lang/String;)Lcom/mojang/brigadier/builder/RequiredArgumentBuilder;
 			ARG 1 name
-		METHOD method_27336 (Lnet/minecraft/class_1928$class_4311;Lnet/minecraft/class_1928$class_4313;)V
+		METHOD method_27336 accept (Lnet/minecraft/class_1928$class_4311;Lnet/minecraft/class_1928$class_4313;)V
 			ARG 1 consumer
 			ARG 2 key
 	CLASS class_4315 Rule
@@ -143,12 +196,12 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 			ARG 1 rule
 			ARG 2 server
 		METHOD method_27338 copy ()Lnet/minecraft/class_1928$class_4315;
-	CLASS class_5198 RuleCategory
+	CLASS class_5198 Category
 		FIELD field_24101 category Ljava/lang/String;
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
 			ARG 3 category
 		METHOD method_27328 getCategory ()Ljava/lang/String;
-	CLASS class_5199 RuleAcceptor
+	CLASS class_5199 Acceptor
 		METHOD call (Lnet/minecraft/class_1928$class_4311;Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
 			ARG 1 consumer
 			ARG 2 key

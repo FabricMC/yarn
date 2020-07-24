@@ -7,12 +7,13 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_17601 serverId Ljava/lang/String;
 	FIELD field_17704 DEMO_LEVEL_INFO Lnet/minecraft/class_1940;
 	FIELD field_19249 waitingForNextTick Z
-	FIELD field_20279 COMPLETED_UNIT_FUTURE Ljava/util/concurrent/CompletableFuture;
 	FIELD field_20850 dataCommandStorage Lnet/minecraft/class_4565;
-	FIELD field_20851 predicateManager Lnet/minecraft/class_4567;
 	FIELD field_22250 tickTimeTracker Lnet/minecraft/class_4757;
 	FIELD field_23784 session Lnet/minecraft/class_32$class_5143;
 	FIELD field_24370 structureManager Lnet/minecraft/class_3485;
+	FIELD field_24372 saveProperties Lnet/minecraft/class_5219;
+	FIELD field_25132 registryManager Lnet/minecraft/class_5455$class_5457;
+	FIELD field_25318 serverResourceManager Lnet/minecraft/class_5350;
 	FIELD field_4543 onlineMode Z
 	FIELD field_4544 running Z
 	FIELD field_4545 forceGameMode Z
@@ -23,7 +24,6 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4550 playerManager Lnet/minecraft/class_3324;
 	FIELD field_4551 lastPlayerSampleUpdate J
 	FIELD field_4552 keyPair Ljava/security/KeyPair;
-	FIELD field_4553 fileDataPackProvider Lnet/minecraft/class_3279;
 	FIELD field_4554 flightEnabled Z
 	FIELD field_4555 serverPort I
 	FIELD field_4556 userCache Lnet/minecraft/class_3312;
@@ -31,23 +31,17 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4558 scoreboard Lnet/minecraft/class_2995;
 	FIELD field_4560 preventProxyConnections Z
 	FIELD field_4561 stopped Z
-	FIELD field_4562 commandManager Lnet/minecraft/class_2170;
 	FIELD field_4563 networkIo Lnet/minecraft/class_3242;
 	FIELD field_4564 motd Ljava/lang/String;
-	FIELD field_4566 recipeManager Lnet/minecraft/class_1863;
-	FIELD field_4567 advancementLoader Lnet/minecraft/class_2989;
 	FIELD field_4568 serverGuiTickables Ljava/util/List;
 	FIELD field_4570 enforceWhitelist Z
 	FIELD field_4571 timeReference J
 	FIELD field_4572 ticks I
 	FIELD field_4573 lastTickLengths [J
-	FIELD field_4576 dataManager Lnet/minecraft/class_3296;
 	FIELD field_4577 iconFilePresent Z
 	FIELD field_4578 userName Ljava/lang/String;
 	FIELD field_4579 worldHeight I
-	FIELD field_4580 lootManager Lnet/minecraft/class_60;
 	FIELD field_4582 snooper Lnet/minecraft/class_1276;
-	FIELD field_4583 tagManager Lnet/minecraft/class_3505;
 	FIELD field_4584 resourcePackHash Ljava/lang/String;
 	FIELD field_4585 serverIp Ljava/lang/String;
 	FIELD field_4587 dataFixer Lcom/mojang/datafixers/DataFixer;
@@ -68,7 +62,6 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_15876 getMetricsData ()Lnet/minecraft/class_3517;
 	METHOD method_16043 isStopping ()Z
 	METHOD method_16044 getProfiler ()Lnet/minecraft/class_3695;
-	METHOD method_17191 getWorkerExecutor ()Ljava/util/concurrent/Executor;
 	METHOD method_17819 setServerId (Ljava/lang/String;)V
 		ARG 1 serverId
 	METHOD method_17976 initScoreboard (Lnet/minecraft/class_26;)V
@@ -98,13 +91,28 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_24489 stopDebug ()Lnet/minecraft/class_3696;
 	METHOD method_24490 endMonitor (Lnet/minecraft/class_4758;)V
 		ARG 1 monitor
+	METHOD method_27050 getSavePath (Lnet/minecraft/class_5218;)Ljava/nio/file/Path;
 	METHOD method_27051 syncChunkWrites ()Z
+	METHOD method_27725 convertLevel (Lnet/minecraft/class_32$class_5143;)V
 	METHOD method_27727 getStructureManager ()Lnet/minecraft/class_3485;
+	METHOD method_27728 getSaveProperties ()Lnet/minecraft/class_5219;
+	METHOD method_27729 updateMobSpawnOptions ()V
+	METHOD method_27901 setupSpawn (Lnet/minecraft/class_3218;Lnet/minecraft/class_5268;ZZZ)V
 	METHOD method_27902 acceptsStatusQuery ()Z
 	METHOD method_27903 adjustTrackingDistance (I)I
 		ARG 1 initialDistance
+	METHOD method_29435 getWorldRegistryKeys ()Ljava/util/Set;
+	METHOD method_29439 reloadResources (Ljava/util/Collection;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_29736 loadDataPacks (Lnet/minecraft/class_3283;Lnet/minecraft/class_5359;Z)Lnet/minecraft/class_5359;
+		ARG 0 resourcePackManager
+		ARG 2 safeMode
+	METHOD method_29740 startServer (Ljava/util/function/Function;)Lnet/minecraft/server/MinecraftServer;
+		ARG 0 serverFactory
+	METHOD method_29741 runServer ()V
+	METHOD method_30002 getOverworld ()Lnet/minecraft/class_3218;
+	METHOD method_30611 getRegistryManager ()Lnet/minecraft/class_5455;
+	METHOD method_30612 getRateLimit ()I
 	METHOD method_3716 getKeyPair ()Ljava/security/KeyPair;
-	METHOD method_3717 start ()V
 	METHOD method_3718 isFlightEnabled ()Z
 	METHOD method_3719 getGameProfileRepo ()Lcom/mojang/authlib/GameProfileRepository;
 	METHOD method_3723 save (ZZZ)Z
@@ -136,7 +144,6 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 shouldKeepTicking
 	METHOD method_3749 getMaxWorldBorderRadius ()I
 	METHOD method_3750 isStopped ()Z
-	METHOD method_3752 reloadDataPacks ()V
 	METHOD method_3754 isHardcore ()Z
 	METHOD method_3756 getServerPort ()I
 	METHOD method_3758 getFile (Ljava/lang/String;)Ljava/io/File;
@@ -164,6 +171,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3783 isMonsterSpawningEnabled ()Z
 	METHOD method_3784 getResourcePackUrl ()Ljava/lang/String;
 	METHOD method_3785 isSpawnProtected (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)Z
+		ARG 1 world
 		ARG 2 pos
 		ARG 3 player
 	METHOD method_3786 createWorlds (Lnet/minecraft/class_3949;)V
@@ -179,14 +187,12 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3796 shouldSpawnAnimals ()Z
 	METHOD method_3798 getOpPermissionLevel ()I
 	METHOD method_3799 isDemo ()Z
-	METHOD method_3800 loadWorldDataPacks ()V
-	METHOD method_3801 getTagManager ()Lnet/minecraft/class_3505;
+	METHOD method_3801 getTagManager ()Lnet/minecraft/class_5415;
 	METHOD method_3802 getMaxPlayerCount ()I
 	METHOD method_3803 setPlayerIdleTimeout (I)V
 		ARG 1 playerIdleTimeout
 	METHOD method_3805 getResourcePackHash ()Ljava/lang/String;
 	METHOD method_3806 isRunning ()Z
-	METHOD method_3809 getDataManager ()Lnet/minecraft/class_3296;
 	METHOD method_3811 getUserName ()Ljava/lang/String;
 	METHOD method_3812 areCommandBlocksEnabled ()Z
 	METHOD method_3813 tickWorlds (Ljava/util/function/BooleanSupplier;)V
@@ -228,7 +234,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3846 setPlayerManager (Lnet/minecraft/class_3324;)V
 		ARG 1 playerManager
 	METHOD method_3847 getWorld (Lnet/minecraft/class_5321;)Lnet/minecraft/class_3218;
-	METHOD method_3848 reload ()V
+		ARG 1 key
 	METHOD method_3849 setServerName (Ljava/lang/String;)V
 		ARG 1 serverName
 	METHOD method_3850 setWorldHeight (I)V
@@ -242,6 +248,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3857 getLootManager ()Lnet/minecraft/class_60;
 	METHOD method_3858 getPlayerNames ()[Ljava/lang/String;
 	METHOD method_3859 populateCrashReport (Lnet/minecraft/class_128;)Lnet/minecraft/class_128;
+		ARG 1 report
 	METHOD method_3860 isRemote ()Z
 	METHOD method_3861 loadWorldResourcePack ()V
 	METHOD method_3862 getPlayerIdleTimeout ()I

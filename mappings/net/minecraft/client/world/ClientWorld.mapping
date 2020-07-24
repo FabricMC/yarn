@@ -1,6 +1,5 @@
 CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 	FIELD field_17675 mapStates Ljava/util/Map;
-	FIELD field_17777 globalEntities Ljava/util/List;
 	FIELD field_17778 regularEntities Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 	FIELD field_17780 worldRenderer Lnet/minecraft/class_761;
 	FIELD field_18226 players Ljava/util/List;
@@ -12,13 +11,9 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 	FIELD field_3727 netHandler Lnet/minecraft/class_634;
 	FIELD field_3729 client Lnet/minecraft/class_310;
 	FIELD field_3733 scoreboard Lnet/minecraft/class_269;
-	METHOD <init> (Lnet/minecraft/class_634;Lnet/minecraft/class_638$class_5271;Lnet/minecraft/class_2874;ILjava/util/function/Supplier;Lnet/minecraft/class_761;ZJ)V
-		ARG 4 chunkLoadDistance
 	METHOD method_18107 addPlayer (ILnet/minecraft/class_742;)V
 		ARG 1 id
 		ARG 2 player
-	METHOD method_18108 addLightning (Lnet/minecraft/class_1538;)V
-		ARG 1 lightning
 	METHOD method_18110 unloadBlockEntities (Lnet/minecraft/class_2818;)V
 		ARG 1 chunk
 	METHOD method_18112 getEntities ()Ljava/lang/Iterable;
@@ -40,7 +35,8 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 	METHOD method_18647 tickPassenger (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;)V
 		ARG 1 entity
 		ARG 2 passenger
-	METHOD method_18648 checkChunk (Lnet/minecraft/class_1297;)V
+	METHOD method_18648 checkEntityChunkPos (Lnet/minecraft/class_1297;)V
+		COMMENT Validates if an entity's current position matches its chunk position. If the entity's chunk position and actual position don't match, then the entity will be moved to its new chunk.
 		ARG 1 entity
 	METHOD method_23780 calculateColor (Lnet/minecraft/class_2338;Lnet/minecraft/world/level/ColorResolver;)I
 		ARG 1 pos
@@ -50,10 +46,12 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 	METHOD method_23785 getCloudsColor (F)Lnet/minecraft/class_243;
 		ARG 1 tickDelta
 	METHOD method_23789 getLightningTicksLeft ()I
-	METHOD method_27873 setSpawnPos (Lnet/minecraft/class_2338;)V
+	METHOD method_27873 setSpawnPos (Lnet/minecraft/class_2338;F)V
 		ARG 1 pos
+		ARG 2 angle
 	METHOD method_27874 getSpawnPos ()Lnet/minecraft/class_2338;
 	METHOD method_28103 getSkyProperties ()Lnet/minecraft/class_5294;
+	METHOD method_29090 tickTime ()V
 	METHOD method_2932 addParticle (DDDDDLnet/minecraft/class_2394;)V
 		ARG 1 minX
 		ARG 3 maxX
@@ -63,6 +61,8 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 		ARG 11 parameters
 	METHOD method_2936 finishRemovingEntities ()V
 	METHOD method_2937 setBlockStateWithoutNeighborUpdates (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
+		ARG 1 pos
+		ARG 2 state
 	METHOD method_2938 addParticle (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2394;Z)V
 		ARG 1 pos
 		ARG 2 state
@@ -70,6 +70,7 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 	METHOD method_2941 doRandomBlockDisplayTicks (III)V
 		ARG 1 xCenter
 		ARG 2 yCenter
+		ARG 3 zCenter
 	METHOD method_2942 addEntity (ILnet/minecraft/class_1297;)V
 		ARG 1 id
 		ARG 2 entity
@@ -84,6 +85,7 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 	METHOD method_2944 setScoreboard (Lnet/minecraft/class_269;)V
 		ARG 1 scoreboard
 	METHOD method_2945 removeEntity (I)V
+		ARG 1 entityId
 	METHOD method_2947 playSound (Lnet/minecraft/class_2338;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFZ)V
 		ARG 1 pos
 		ARG 2 sound
@@ -98,6 +100,7 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 		ARG 4 y
 	METHOD method_8435 setTimeOfDay (J)V
 	METHOD method_8441 tick (Ljava/util/function/BooleanSupplier;)V
+		ARG 1 shouldKeepTicking
 	CLASS class_5271 Properties
 		FIELD field_24433 hardcore Z
 		FIELD field_24434 gameRules Lnet/minecraft/class_1928;
@@ -114,9 +117,11 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 			ARG 1 difficulty
 			ARG 2 hardcore
 			ARG 3 flatWorld
-		METHOD method_27875 setDifficulty (Lnet/minecraft/class_1267;)V
 		METHOD method_165 setTimeOfDay (J)V
+			ARG 1 time
 		METHOD method_177 setTime (J)V
+			ARG 1 difficulty
+		METHOD method_27875 setDifficulty (Lnet/minecraft/class_1267;)V
 			ARG 1 difficulty
 		METHOD method_27876 setDifficultyLocked (Z)V
 			ARG 1 difficultyLocked

@@ -35,7 +35,7 @@ CLASS net/minecraft/class_1924 net/minecraft/world/EntityView
 	METHOD method_18466 getTargets (Ljava/lang/Class;Lnet/minecraft/class_4051;Lnet/minecraft/class_1309;Lnet/minecraft/class_238;)Ljava/util/List;
 		ARG 1 entityClass
 		ARG 2 targetPredicate
-		ARG 3 targettingEntity
+		ARG 3 targetingEntity
 		ARG 4 box
 	METHOD method_18467 getNonSpectatingEntities (Ljava/lang/Class;Lnet/minecraft/class_238;)Ljava/util/List;
 		ARG 1 entityClass
@@ -50,6 +50,9 @@ CLASS net/minecraft/class_1924 net/minecraft/world/EntityView
 	METHOD method_18470 getPlayerByUuid (Ljava/util/UUID;)Lnet/minecraft/class_1657;
 		ARG 1 uuid
 	METHOD method_20743 getEntityCollisions (Lnet/minecraft/class_1297;Lnet/minecraft/class_238;Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+		ARG 1 entity
+		ARG 2 box
+		ARG 3 predicate
 	METHOD method_21726 getClosestEntity (Ljava/lang/Class;Lnet/minecraft/class_4051;Lnet/minecraft/class_1309;DDDLnet/minecraft/class_238;)Lnet/minecraft/class_1309;
 		ARG 1 entityClass
 		ARG 2 targetPredicate
@@ -73,21 +76,39 @@ CLASS net/minecraft/class_1924 net/minecraft/world/EntityView
 		ARG 1 entityClass
 		ARG 2 box
 		ARG 3 predicate
-	METHOD method_8333 getEntities (Lnet/minecraft/class_1297;Lnet/minecraft/class_238;Ljava/util/function/Predicate;)Ljava/util/List;
+	METHOD method_8333 getOtherEntities (Lnet/minecraft/class_1297;Lnet/minecraft/class_238;Ljava/util/function/Predicate;)Ljava/util/List;
+		COMMENT Computes a list of entities within some box, excluding the given entity, that satisfy the given predicate.
+		COMMENT
+		COMMENT @return a list of entities within a box, excluding the given entity, all satisfying the given predicate
 		ARG 1 except
+			COMMENT the entity the box logically surrounds. This entity is ignored if it is inside the box.
 		ARG 2 box
+			COMMENT the box in which to search for entities
 		ARG 3 predicate
-	METHOD method_8335 getEntities (Lnet/minecraft/class_1297;Lnet/minecraft/class_238;)Ljava/util/List;
+			COMMENT a predicate which entities must satisfy in order to be included in the returned list.
+	METHOD method_8335 getOtherEntities (Lnet/minecraft/class_1297;Lnet/minecraft/class_238;)Ljava/util/List;
+		COMMENT Computes a list of entities within some box, excluding the given entity, that are not spectators.
+		COMMENT
+		COMMENT @return a list of entities within a box, excluding the given entity
+		COMMENT @see #getSurroundingEntities(Entity, Box, Predicate)
+		COMMENT @see Entity#isSpectator()
 		ARG 1 except
+			COMMENT the entity the box logically surrounds. This entity is ignored if it is inside the box.
 		ARG 2 box
-	METHOD method_8336 (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;)Ljava/util/stream/Stream;
-		ARG 1 e
+			COMMENT the box in which to search for entities
 	METHOD method_8338 (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;)Z
 		ARG 1 e
-	METHOD method_8390 getEntities (Ljava/lang/Class;Lnet/minecraft/class_238;Ljava/util/function/Predicate;)Ljava/util/List;
+	METHOD method_8390 getEntitiesByClass (Ljava/lang/Class;Lnet/minecraft/class_238;Ljava/util/function/Predicate;)Ljava/util/List;
+		COMMENT Computes a list of entities within some box whose runtime Java class is the same as or is
+		COMMENT a subclass of the given class.
+		COMMENT
+		COMMENT @return a list of entities within the box whose runtime class is a subclass of the given class
 		ARG 1 entityClass
+			COMMENT the class the list of entities must extend
 		ARG 2 box
+			COMMENT the box in which to search for entities
 		ARG 3 predicate
+			COMMENT a predicate which entities must satisfy in order to be included in the returned list
 	METHOD method_8604 getClosestPlayer (DDDDLjava/util/function/Predicate;)Lnet/minecraft/class_1657;
 		ARG 1 x
 		ARG 3 y

@@ -1,0 +1,46 @@
+CLASS net/minecraft/class_5314 net/minecraft/world/gen/chunk/StructureConfig
+	COMMENT Contains parameters for placement of a single type of {@link net.minecraft.world.gen.feature.StructureFeature} during chunk
+	COMMENT generation.
+	FIELD field_24917 CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_24918 spacing I
+		COMMENT Defines the width and height of a cell in the structure placement grid in chunks.
+		COMMENT <p>
+		COMMENT For each cell in the grid, the chunk generator will attempt to place the start of a structure.
+		COMMENT <p>
+		COMMENT Minimum is 1, which means the structure will potentially be placed in every chunk.
+		COMMENT 2 leads to one structure per 2x2 chunks, and so on.
+	FIELD field_24919 separation I
+		COMMENT Defines the margin of each cell in the placement grid, which leads to guaranteeing
+		COMMENT a certain minimum distance between each placed structure.
+		COMMENT <p>
+		COMMENT The margin is effectively subtracted from the width and height of a cell when
+		COMMENT trying to determine the actual starting chunk within the cell.
+		COMMENT <p>
+		COMMENT A value of 0 means that the structure can be placed in any chunk within a grid cell,
+		COMMENT which also means two structures from adjacent grid cells could be placed directly
+		COMMENT next to each other.
+		COMMENT <p>
+		COMMENT A value that equals {@link #spacing} - 1 will restrict placement of the structure to the
+		COMMENT chunk at 0,0 of the grid cell.
+		COMMENT <p>
+		COMMENT This value must be between 0 and {@link #spacing} - 1, and is expressed in chunks.
+	FIELD field_24920 salt I
+		COMMENT Used together with the world seed and a grid cell's x,y coordinates to seed the RNG when deciding
+		COMMENT whether a structure should really be placed in a grid cell or not.
+		COMMENT This is used to avoid that two types of structures that have the same spacing always occur
+		COMMENT in the same chunks of their placement grid, and thus in the same world chunk.
+	METHOD <init> (III)V
+		ARG 1 spacing
+		ARG 2 separation
+		ARG 3 salt
+	METHOD method_28803 getSpacing ()I
+	METHOD method_28804 (Lnet/minecraft/class_5314;)Ljava/lang/Integer;
+		ARG 0 config
+	METHOD method_28806 getSeparation ()I
+	METHOD method_28807 (Lnet/minecraft/class_5314;)Ljava/lang/Integer;
+		ARG 0 config
+	METHOD method_28808 getSalt ()I
+	METHOD method_28809 (Lnet/minecraft/class_5314;)Ljava/lang/Integer;
+		ARG 0 config
+	METHOD method_29298 (Lnet/minecraft/class_5314;)Lcom/mojang/serialization/DataResult;
+		ARG 0 config

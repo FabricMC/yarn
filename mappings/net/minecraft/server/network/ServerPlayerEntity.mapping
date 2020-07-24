@@ -16,7 +16,6 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_13978 syncedExperience I
 	FIELD field_13979 syncedFoodLevel I
 	FIELD field_13980 lastExperienceScore I
-	FIELD field_13981 clientLanguage Ljava/lang/String;
 	FIELD field_13982 lastArmorScore I
 	FIELD field_13983 lastFoodScore I
 	FIELD field_13984 cameraEntity Lnet/minecraft/class_1297;
@@ -26,15 +25,18 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_13988 removedEntities Ljava/util/List;
 	FIELD field_13989 notInAnyWorld Z
 	FIELD field_13990 cameraPosition Lnet/minecraft/class_4076;
+	FIELD field_13991 skipPacketSlotUpdates Z
 	FIELD field_13992 levitationStartPos Lnet/minecraft/class_243;
 	FIELD field_13993 clientChatVisibility Lnet/minecraft/class_1659;
 	FIELD field_13994 enteredNetherPos Lnet/minecraft/class_243;
 	FIELD field_13995 server Lnet/minecraft/server/MinecraftServer;
 	FIELD field_13996 recipeBook Lnet/minecraft/class_3441;
 	FIELD field_13997 syncedHealth F
+	FIELD field_13998 joinInvulnerabilityTicks I
 	FIELD field_23191 spawnPointDimension Lnet/minecraft/class_5321;
 	FIELD field_23192 spawnPointPosition Lnet/minecraft/class_2338;
 	FIELD field_23193 spawnPointSet Z
+	FIELD field_26353 spawnAngle F
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_3218;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_3225;)V
 		ARG 1 server
 		ARG 2 world
@@ -46,6 +48,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14204 openHandledScreen (Lnet/minecraft/class_1703;)V
 		ARG 1 handler
 	METHOD method_14205 sendInitialChunkPackets (Lnet/minecraft/class_1923;Lnet/minecraft/class_2596;Lnet/minecraft/class_2596;)V
+	METHOD method_14206 getPlayerListName ()Lnet/minecraft/class_2561;
 	METHOD method_14207 handleFall (DZ)V
 		ARG 1 heightDifference
 		ARG 3 onGround
@@ -57,6 +60,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 1 criterion
 		ARG 2 score
 	METHOD method_14213 setClientSettings (Lnet/minecraft/class_2803;)V
+		ARG 1 packet
 	METHOD method_14216 sendBlockEntityUpdate (Lnet/minecraft/class_2586;)V
 		ARG 1 blockEntity
 	METHOD method_14217 markHealthDirty ()V
@@ -103,20 +107,22 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14254 sendMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_2556;Ljava/util/UUID;)V
 		ARG 1 message
 		ARG 2 type
+		ARG 3 senderUuid
 	METHOD method_14255 sendResourcePackUrl (Ljava/lang/String;Ljava/lang/String;)V
 		ARG 1 url
 		ARG 2 hash
 	METHOD method_17668 setCameraPosition (Lnet/minecraft/class_4076;)V
 		ARG 1 cameraPosition
-	METHOD method_18783 dimensionChanged (Lnet/minecraft/class_3218;)V
+	METHOD method_18783 worldChanged (Lnet/minecraft/class_3218;)V
 		ARG 1 targetWorld
 	METHOD method_26280 getSpawnPointPosition ()Lnet/minecraft/class_2338;
 	METHOD method_26281 getSpawnPointDimension ()Lnet/minecraft/class_5321;
 	METHOD method_26282 isSpawnPointSet ()Z
-	METHOD method_26284 setSpawnPoint (Lnet/minecraft/class_5321;Lnet/minecraft/class_2338;ZZ)V
+	METHOD method_26284 setSpawnPoint (Lnet/minecraft/class_5321;Lnet/minecraft/class_2338;FZZ)V
 		ARG 1 dimension
 		ARG 2 pos
-		ARG 3 spawnPointSet
+		ARG 3 angle
+		ARG 4 spawnPointSet
 	METHOD method_26285 isBedTooFarAway (Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Z
 		ARG 1 pos
 		ARG 2 direction
@@ -125,3 +131,8 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 2 direction
 	METHOD method_26287 isBedTooFarAway (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
+	METHOD method_29779 forgiveMobAnger ()V
+	METHOD method_30313 createEndSpawnPlatform (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)V
+		ARG 1 world
+		ARG 2 centerPos
+	METHOD method_30631 getSpawnAngle ()F

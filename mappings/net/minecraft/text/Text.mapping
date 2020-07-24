@@ -9,15 +9,6 @@ CLASS net/minecraft/class_2561 net/minecraft/text/Text
 	COMMENT refer to {@link MutableText}.</p>
 	COMMENT
 	COMMENT @see MutableText
-	FIELD field_24340 TERMINATE_VISIT Ljava/util/Optional;
-		COMMENT An {@link Optional} that indicates a text visitor should be terminated.
-		COMMENT
-		COMMENT @see Visitor#accept(String)
-		COMMENT @see StyledVisitor#accept(Style, String)
-	METHOD getString ()Ljava/lang/String;
-		COMMENT Returns the full string representation of this text, including siblings.
-		COMMENT
-		COMMENT {@inheritDoc}
 	METHOD method_10851 asString ()Ljava/lang/String;
 		COMMENT Returns the string representation of this text itself, excluding siblings.
 	METHOD method_10855 getSiblings ()Ljava/util/List;
@@ -29,39 +20,14 @@ CLASS net/minecraft/class_2561 net/minecraft/text/Text
 			COMMENT the max length allowed for the string representation of the text
 	METHOD method_10866 getStyle ()Lnet/minecraft/class_2583;
 		COMMENT Returns the style of this text.
-	METHOD method_27657 visit (Lnet/minecraft/class_2561$class_5245;)Ljava/util/Optional;
-		COMMENT Visits this text and its siblings.
-		COMMENT
-		COMMENT <p>When the visitor returns a {@link Optional#isPresent() non-empty
-		COMMENT optional} during visit, the visit is immediately terminated and the
-		COMMENT result is returned.</p>
-		COMMENT
-		COMMENT @return what the visitor returns, or {@link Optional#empty()} if the
-		COMMENT visitor always returned {@code Optional.empty()}.
-		ARG 1 visitor
-			COMMENT the text visitor
-	METHOD method_27658 visit (Lnet/minecraft/class_2561$class_5246;Lnet/minecraft/class_2583;)Ljava/util/Optional;
-		COMMENT Visits the code points of in each {@link Text#asString() partial string}
-		COMMENT representation of {@code text} and its siblings, applying the formatting
-		COMMENT codes within.
-		COMMENT
-		COMMENT <p>The visit is in forward direction.</p>
-		COMMENT
-		COMMENT @return {@code true} if the full string was visited, or {@code false} indicating
-		COMMENT the {@code visitor} terminated half-way
-		COMMENT @see Text#visit(Text.StyledVisitor, Style)
-		ARG 1 visitor
-			COMMENT the styled text visitor
-		ARG 2 style
-			COMMENT the starting style
-	METHOD method_27659 visitSelf (Lnet/minecraft/class_2561$class_5245;)Ljava/util/Optional;
+	METHOD method_27659 visitSelf (Lnet/minecraft/class_5348$class_5245;)Ljava/util/Optional;
 		COMMENT Visits the text itself.
 		COMMENT
 		COMMENT @see #visit(Visitor)
 		COMMENT @return the visitor's return value
 		ARG 1 visitor
 			COMMENT the visitor
-	METHOD method_27660 visitSelf (Lnet/minecraft/class_2561$class_5246;Lnet/minecraft/class_2583;)Ljava/util/Optional;
+	METHOD method_27660 visitSelf (Lnet/minecraft/class_5348$class_5246;Lnet/minecraft/class_2583;)Ljava/util/Optional;
 		COMMENT Visits the text itself.
 		COMMENT
 		COMMENT @see #visit(StyledVisitor, Style)
@@ -107,27 +73,3 @@ CLASS net/minecraft/class_2561 net/minecraft/text/Text
 			ARG 1 text
 			ARG 2 type
 			ARG 3 context
-	CLASS class_5245 Visitor
-		COMMENT A visitor for text content.
-		METHOD accept (Ljava/lang/String;)Ljava/util/Optional;
-			COMMENT Visits a text's {@link Text#asString() asString result}.
-			COMMENT
-			COMMENT <p>When a {@link Optional#isPresent() present optional} is returned,
-			COMMENT the visit is terminated before visiting all text. Can return {@link
-			COMMENT Text#TERMINATE_VISIT} for convenience.</p>
-			ARG 1 asString
-	CLASS class_5246 StyledVisitor
-		COMMENT A visitor for text content and a contextual {@link Style}.
-		METHOD accept (Lnet/minecraft/class_2583;Ljava/lang/String;)Ljava/util/Optional;
-			COMMENT Visits a text's contextual style and {@link Text#asString() asString
-			COMMENT result}.
-			COMMENT
-			COMMENT <p>A contextual style is obtained by calling {@link Style#withParent(Style)}
-			COMMENT on the current's text style, passing the previous contextual style or
-			COMMENT the starting style if it is the beginning of a visit.</p>
-			COMMENT
-			COMMENT <p>When a {@link Optional#isPresent() present optional} is returned,
-			COMMENT the visit is terminated before visiting all text. Can return {@link
-			COMMENT Text#TERMINATE_VISIT} for convenience.</p>
-			ARG 1 style
-			ARG 2 asString

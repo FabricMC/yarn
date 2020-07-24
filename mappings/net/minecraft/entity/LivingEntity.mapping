@@ -3,7 +3,9 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_18072 SLEEPING_DIMENSIONS Lnet/minecraft/class_4048;
 	FIELD field_18073 SLEEPING_POSITION Lnet/minecraft/class_2940;
 	FIELD field_18321 brain Lnet/minecraft/class_4095;
+	FIELD field_20347 stuckStingerTimer I
 	FIELD field_20348 STINGER_COUNT Lnet/minecraft/class_2940;
+	FIELD field_22418 climbingPos Ljava/util/Optional;
 	FIELD field_23128 SOUL_SPEED_BOOST_ID Ljava/util/UUID;
 	FIELD field_6210 bodyTrackingIncrements I
 	FIELD field_6211 lastLimbDistance F
@@ -53,14 +55,14 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6258 attackingPlayer Lnet/minecraft/class_1657;
 	FIELD field_6259 prevHeadYaw F
 	FIELD field_6260 attributes Lnet/minecraft/class_5131;
-	FIELD field_6261 pushCooldown I
+	FIELD field_6261 riptideTicks I
 	FIELD field_6262 randomSmallSeed F
 	FIELD field_6263 serverZ D
 	FIELD field_6264 lastLeaningPitch F
 	FIELD field_6265 headTrackingIncrements I
 	FIELD field_6266 preferredHand Lnet/minecraft/class_1268;
 	FIELD field_6268 lastBlockPos Lnet/minecraft/class_2338;
-	FIELD field_6269 defaultMaximumHealth I
+	FIELD field_6269 defaultMaxHealth I
 	FIELD field_6270 lastAttackTime I
 	FIELD field_6271 knockbackVelocity F
 	FIELD field_6272 dead Z
@@ -152,10 +154,11 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 fallDistance
 		ARG 2 damageMultiplier
 	METHOD method_23667 swingHand (Lnet/minecraft/class_1268;Z)V
+		ARG 1 hand
 	METHOD method_23733 onKilledBy (Lnet/minecraft/class_1309;)V
 		COMMENT Performs secondary effects after this mob has been killed.
 		COMMENT
-		COMMENT <p> The default behaviour spawns a wither rose if {@code adversary} is a {@code WitherEntity}.
+		COMMENT <p> The default behavior spawns a wither rose if {@code adversary} is a {@code WitherEntity}.
 		ARG 1 adversary
 			COMMENT the main adversary responsible for this entity's death
 	METHOD method_23883 dropXp ()V
@@ -169,15 +172,29 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT
 		COMMENT <p>This checks both the entity's main and off hand.
 	METHOD method_24831 getPoses ()Lcom/google/common/collect/ImmutableList;
+	METHOD method_24832 getClimbingPos ()Ljava/util/Optional;
 	METHOD method_24833 getBoundingBox (Lnet/minecraft/class_4050;)Lnet/minecraft/class_238;
-	METHOD method_26319 canWalkOnLava (Lnet/minecraft/class_3611;)Z
+		ARG 1 pose
+	METHOD method_25937 displaySoulSpeedEffects ()V
+	METHOD method_26082 applyStatusEffect (Lnet/minecraft/class_1293;)V
+		ARG 1 effect
+	METHOD method_26319 canWalkOnFluid (Lnet/minecraft/class_3611;)Z
+		ARG 1 fluid
 	METHOD method_26825 getAttributeValue (Lnet/minecraft/class_1320;)D
 		ARG 1 attribute
 	METHOD method_26826 getAttributeBaseValue (Lnet/minecraft/class_1320;)D
 		ARG 1 attribute
 	METHOD method_26827 createLivingAttributes ()Lnet/minecraft/class_5132$class_5133;
 	METHOD method_27071 shouldDropLoot ()Z
+	METHOD method_27302 shouldDisplaySoulSpeedEffects ()Z
+	METHOD method_27303 isOnSoulSpeedBlock ()Z
 	METHOD method_28306 createBrainProfile ()Lnet/minecraft/class_4095$class_5303;
+	METHOD method_29501 removeSoulSpeedBoost ()V
+	METHOD method_29502 addSoulSpeedBoostIfNeeded ()V
+	METHOD method_29503 hurtByWater ()Z
+	METHOD method_29504 isDead ()Z
+	METHOD method_29505 setAttacking (Lnet/minecraft/class_1657;)V
+		ARG 1 attacking
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
 	METHOD method_5989 getLootTable ()Lnet/minecraft/class_2960;
@@ -219,7 +236,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT @return {@code true} if a {@link net.minecraft.entity.effect.StatusEffectInstance} with the given type was in effect before the removal.
 		ARG 1 type
 	METHOD method_6017 getSoundPitch ()F
-	METHOD method_6018 setPushCooldown (I)V
+	METHOD method_6018 setRiptideTicks (I)V
 	METHOD method_6019 setCurrentHand (Lnet/minecraft/class_1268;)V
 		ARG 1 hand
 	METHOD method_6020 onStatusEffectApplied (Lnet/minecraft/class_1293;)V
@@ -243,7 +260,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6033 setHealth (F)V
 		ARG 1 health
 	METHOD method_6034 canMoveVoluntarily ()Z
-	METHOD method_6035 push (Lnet/minecraft/class_238;Lnet/minecraft/class_238;)V
+	METHOD method_6035 tickRiptide (Lnet/minecraft/class_238;Lnet/minecraft/class_238;)V
 		ARG 1 a
 		ARG 2 b
 	METHOD method_6036 applyEnchantmentsToDamage (Lnet/minecraft/class_1282;F)F
@@ -286,7 +303,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6061 blockedByShield (Lnet/minecraft/class_1282;)Z
 		ARG 1 source
 	METHOD method_6062 isImmobile ()Z
-	METHOD method_6063 getMaximumHealth ()F
+	METHOD method_6063 getMaxHealth ()F
 	METHOD method_6064 getNextAirOnLand (I)I
 		ARG 1 air
 	METHOD method_6065 getAttacker ()Lnet/minecraft/class_1309;
@@ -406,6 +423,3 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6132 applyArmorToDamage (Lnet/minecraft/class_1282;F)F
 		ARG 1 source
 		ARG 2 amount
-	METHOD method_27303 isOnSoulSpeedBlock ()Z
-	METHOD method_25937 applySoulSpeedClientEffects ()V
-	METHOD method_27302 shouldGetSoulSpeedBoost ()Z

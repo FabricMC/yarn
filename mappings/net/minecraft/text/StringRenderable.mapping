@@ -1,0 +1,72 @@
+CLASS net/minecraft/class_5348 net/minecraft/text/StringRenderable
+	COMMENT An object that can supply strings to a visitor, with or without a style
+	COMMENT context, for rendering the strings.
+	FIELD field_25309 TERMINATE_VISIT Ljava/util/Optional;
+		COMMENT Convenience object indicating the termination of a string visit.
+	FIELD field_25310 EMPTY Lnet/minecraft/class_5348;
+		COMMENT An empty renderable that does not call the visitors.
+	METHOD method_27657 visit (Lnet/minecraft/class_5348$class_5245;)Ljava/util/Optional;
+		COMMENT Supplies this renderable's literal content to the visitor.
+		COMMENT
+		COMMENT @return {@code Optional.empty()} if the visit finished, or a terminating
+		COMMENT result from the {@code visitor}
+		ARG 1 visitor
+			COMMENT the visitor
+	METHOD method_27658 visit (Lnet/minecraft/class_5348$class_5246;Lnet/minecraft/class_2583;)Ljava/util/Optional;
+		COMMENT Supplies this renderable's literal content and contextual style to
+		COMMENT the visitor.
+		COMMENT
+		COMMENT @return {@code Optional.empty()} if the visit finished, or a terminating
+		COMMENT result from the {@code visitor}
+		ARG 1 styledVisitor
+			COMMENT the visitor
+		ARG 2 style
+			COMMENT the contextual style
+	METHOD method_29430 plain (Ljava/lang/String;)Lnet/minecraft/class_5348;
+		COMMENT Creates a renderable from a plain string.
+		ARG 0 string
+			COMMENT the plain string
+	METHOD method_29431 styled (Ljava/lang/String;Lnet/minecraft/class_2583;)Lnet/minecraft/class_5348;
+		COMMENT Creates a visitable from a plain string and a root style.
+		ARG 0 string
+			COMMENT the plain string
+		ARG 1 style
+			COMMENT the root style
+	METHOD method_29432 concat (Ljava/util/List;)Lnet/minecraft/class_5348;
+		COMMENT Concats multiple string renderables by the order they appear in the list.
+		ARG 0 visitables
+			COMMENT a list of visitables
+	METHOD method_29433 concat ([Lnet/minecraft/class_5348;)Lnet/minecraft/class_5348;
+		COMMENT Concats multiple string renderables by the order they appear in the array.
+		ARG 0 visitables
+			COMMENT an array or varargs of visitables
+	CLASS class_5245 Visitor
+		COMMENT A visitor for rendered string content.
+		METHOD accept (Ljava/lang/String;)Ljava/util/Optional;
+			COMMENT Visits a literal string.
+			COMMENT
+			COMMENT <p>When a {@link Optional#isPresent() present optional} is returned,
+			COMMENT the visit is terminated before visiting all text. Can return {@link
+			COMMENT StringRenderable#TERMINATE_VISIT} for convenience.</p>
+			COMMENT
+			COMMENT @return {@code Optional.empty()} to continue, a non-empty result to terminate
+			ARG 1 asString
+				COMMENT the literal string
+	CLASS class_5246 StyledVisitor
+		COMMENT A visitor for rendered string content and a contextual {@link Style}.
+		METHOD accept (Lnet/minecraft/class_2583;Ljava/lang/String;)Ljava/util/Optional;
+			COMMENT Visits a string's content with a contextual style.
+			COMMENT
+			COMMENT <p>A contextual style is obtained by calling {@link Style#withParent(Style)}
+			COMMENT on the current's text style, passing the previous contextual style or
+			COMMENT the starting style if it is the beginning of a visit.</p>
+			COMMENT
+			COMMENT <p>When a {@link Optional#isPresent() present optional} is returned,
+			COMMENT the visit is terminated before visiting all text. Can return {@link
+			COMMENT StringRenderable#TERMINATE_VISIT} for convenience.</p>
+			COMMENT
+			COMMENT @return {@code Optional.empty()} to continue, a non-empty result to terminate
+			ARG 1 style
+				COMMENT the current style
+			ARG 2 asString
+				COMMENT the literal string
