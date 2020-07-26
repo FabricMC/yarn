@@ -1,46 +1,54 @@
 CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	FIELD field_20335 temperatureCache Ljava/lang/ThreadLocal;
-	FIELD field_21806 skyColor I
 	FIELD field_22039 effects Lnet/minecraft/class_4763;
-	FIELD field_22040 noisePoints Ljava/util/List;
-	FIELD field_24406 spawnDensities Ljava/util/Map;
+	FIELD field_24677 REGISTRY_CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_25819 CODEC Lcom/mojang/serialization/MapCodec;
+	FIELD field_26393 weather Lnet/minecraft/class_1959$class_5482;
+	FIELD field_26394 generationSettings Lnet/minecraft/class_1959$class_5485;
+	FIELD field_26395 spawnSettings Lnet/minecraft/class_1959$class_5483;
 	FIELD field_9323 BIOMES Ljava/util/Set;
 	FIELD field_9324 FOLIAGE_NOISE Lnet/minecraft/class_3543;
-	FIELD field_9325 spawns Ljava/util/Map;
-	FIELD field_9326 features Ljava/util/Map;
-	FIELD field_9327 precipitation Lnet/minecraft/class_1959$class_1963;
-	FIELD field_9328 PARENT_BIOME_ID_MAP Lnet/minecraft/class_2361;
 	FIELD field_9329 category Lnet/minecraft/class_1959$class_1961;
 	FIELD field_9330 LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD field_9331 translationKey Ljava/lang/String;
 	FIELD field_9332 parent Ljava/lang/String;
-	FIELD field_9333 carvers Ljava/util/Map;
 	FIELD field_9334 flowerFeatures Ljava/util/List;
 	FIELD field_9335 TEMPERATURE_NOISE Lnet/minecraft/class_3543;
-	FIELD field_9336 surfaceBuilder Lnet/minecraft/class_3504;
-	FIELD field_9337 structureFeatures Ljava/util/Map;
-	FIELD field_9338 downfall F
-	FIELD field_9339 temperature F
 	FIELD field_9341 scale F
 	FIELD field_9343 depth F
 	METHOD <init> (Lnet/minecraft/class_1959$class_1960;)V
 		ARG 1 settings
+	METHOD <init> (Lnet/minecraft/class_1959$class_5482;Lnet/minecraft/class_1959$class_1961;FFLnet/minecraft/class_4763;Lnet/minecraft/class_1959$class_5485;Lnet/minecraft/class_1959$class_5483;Ljava/util/Optional;)V
+		ARG 1 weather
+		ARG 2 category
+		ARG 3 depth
+		ARG 4 scale
+		ARG 5 effects
+		ARG 6 generationSettings
+		ARG 7 spawnSettings
+		ARG 8 parent
 	METHOD method_21740 getTemperature (Lnet/minecraft/class_2338;)F
 		ARG 1 blockPos
-	METHOD method_24218 calculateSkyColor ()I
 	METHOD method_24376 getFogColor ()I
 	METHOD method_24377 getEffects ()Lnet/minecraft/class_4763;
 	METHOD method_24378 getParticleConfig ()Ljava/util/Optional;
 	METHOD method_24935 getLoopSound ()Ljava/util/Optional;
 	METHOD method_24936 getMoodSound ()Ljava/util/Optional;
 	METHOD method_24937 getAdditionsSound ()Ljava/util/Optional;
-	METHOD method_27342 streamNoises ()Ljava/util/stream/Stream;
+	METHOD method_27343 getMusic ()Ljava/util/Optional;
 	METHOD method_27835 getSpawnDensity (Lnet/minecraft/class_1299;)Lnet/minecraft/class_1959$class_5265;
 		ARG 1 type
 	METHOD method_27836 addSpawnDensity (Lnet/minecraft/class_1299;DD)V
 		ARG 1 type
 		ARG 2 maxMass
 		ARG 4 mass
+	METHOD method_28413 getStructureFeatures ()Ljava/lang/Iterable;
+	METHOD method_30350 addFeature (ILjava/util/function/Supplier;)V
+		ARG 1 stepIndex
+	METHOD method_30357 getFeatures ()Ljava/util/List;
+		COMMENT Returns the lists of features configured for each {@link net.minecraft.world.gen.GenerationStep.Feature feature generation step}, up to the highest step that has a configured feature.
+		COMMENT Entries are guaranteed to not be null, but may be empty lists if an earlier step has no features, but a later step does.
+	METHOD method_30773 getDefaultGrassColor ()I
+	METHOD method_30774 getDefaultFoliageColor ()I
 	METHOD method_8684 hasStructureFeature (Lnet/minecraft/class_3195;)Z
 		ARG 1 structureFeature
 	METHOD method_8685 canSetIce (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;Z)Z
@@ -50,13 +58,11 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	METHOD method_8686 getScale ()F
 	METHOD method_8687 getWaterColor ()I
 	METHOD method_8688 getCategory ()Lnet/minecraft/class_1959$class_1961;
-	METHOD method_8689 getTranslationKey ()Ljava/lang/String;
 	METHOD method_8690 getMaxSpawnChance ()F
 	METHOD method_8691 addCarver (Lnet/minecraft/class_2893$class_2894;Lnet/minecraft/class_2922;)V
 		ARG 1 step
 		ARG 2 configuredCarver
-	METHOD method_8692 getSurfaceBuilder ()Lnet/minecraft/class_3504;
-	METHOD method_8693 getName ()Lnet/minecraft/class_2561;
+	METHOD method_8692 getSurfaceBuilder ()Ljava/util/function/Supplier;
 	METHOD method_8694 getPrecipitation ()Lnet/minecraft/class_1959$class_1963;
 	METHOD method_8695 getDepth ()F
 	METHOD method_8696 canSetSnow (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z
@@ -66,13 +72,13 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	METHOD method_8698 getFoliageColor ()I
 	METHOD method_8700 getEntitySpawnList (Lnet/minecraft/class_1311;)Ljava/util/List;
 		ARG 1 group
-	METHOD method_8702 generateFeatureStep (Lnet/minecraft/class_2893$class_2895;Lnet/minecraft/class_5138;Lnet/minecraft/class_2794;Lnet/minecraft/class_5281;JLnet/minecraft/class_2919;Lnet/minecraft/class_2338;)V
-		ARG 1 step
-		ARG 2 structureAccessor
-		ARG 3 chunkGenerator
-		ARG 5 populationSeed
-		ARG 7 chunkRandom
-		ARG 8 pos
+	METHOD method_8702 generateFeatureStep (Lnet/minecraft/class_5138;Lnet/minecraft/class_2794;Lnet/minecraft/class_3233;JLnet/minecraft/class_2919;Lnet/minecraft/class_2338;)V
+		ARG 1 structureAccessor
+		ARG 2 chunkGenerator
+		ARG 3 region
+		ARG 4 populationSeed
+		ARG 6 random
+		ARG 7 pos
 	METHOD method_8703 buildSurface (Ljava/util/Random;Lnet/minecraft/class_2791;IIIDLnet/minecraft/class_2680;Lnet/minecraft/class_2680;IJ)V
 		ARG 1 random
 		ARG 2 chunk
@@ -89,7 +95,7 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 		ARG 1 world
 		ARG 2 blockPos
 	METHOD method_8707 computeTemperature (Lnet/minecraft/class_2338;)F
-		ARG 1 blockPos
+		ARG 1 pos
 	METHOD method_8708 addSpawn (Lnet/minecraft/class_1311;Lnet/minecraft/class_1959$class_1964;)V
 		ARG 1 group
 		ARG 2 spawnEntry
@@ -100,27 +106,21 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 		ARG 3 z
 	METHOD method_8712 getTemperature ()F
 	METHOD method_8713 getWaterFogColor ()I
-	METHOD method_8714 configureCarver (Lnet/minecraft/class_2939;Lnet/minecraft/class_2920;)Lnet/minecraft/class_2922;
-		ARG 0 carver
-		ARG 1 config
-	METHOD method_8715 getRainfall ()F
-	METHOD method_8716 getModifiedBiome (Lnet/minecraft/class_1959;)Lnet/minecraft/class_1959;
-		ARG 0 biome
+	METHOD method_8715 getDownfall ()F
 	METHOD method_8717 getCarversForStep (Lnet/minecraft/class_2893$class_2894;)Ljava/util/List;
 		ARG 1 carver
 	METHOD method_8718 getFlowerFeatures ()Ljava/util/List;
 	METHOD method_8719 addFeature (Lnet/minecraft/class_2893$class_2895;Lnet/minecraft/class_2975;)V
 		ARG 1 step
 		ARG 2 configuredFeature
-	METHOD method_8721 getFeaturesForStep (Lnet/minecraft/class_2893$class_2895;)Ljava/util/List;
-		ARG 1 feature
 	METHOD method_8722 getSurfaceConfig ()Lnet/minecraft/class_3531;
 	METHOD method_8723 hasParent ()Z
 	METHOD method_8724 hasHighHumidity ()Z
 	METHOD method_8725 getParent ()Ljava/lang/String;
 	CLASS class_1960 Settings
-		FIELD field_22041 noises Ljava/util/List;
 		FIELD field_22042 specialEffects Lnet/minecraft/class_4763;
+		FIELD field_26396 temperatureModifier Lnet/minecraft/class_1959$class_5484;
+		FIELD field_26397 creatureGenerationProbability F
 		FIELD field_9344 depth Ljava/lang/Float;
 		FIELD field_9345 category Lnet/minecraft/class_1959$class_1961;
 		FIELD field_9346 precipitation Lnet/minecraft/class_1959$class_1963;
@@ -128,20 +128,20 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 		FIELD field_9349 temperature Ljava/lang/Float;
 		FIELD field_9351 downfall Ljava/lang/Float;
 		FIELD field_9352 parent Ljava/lang/String;
-		FIELD field_9353 surfaceBuilder Lnet/minecraft/class_3504;
+		FIELD field_9353 surfaceBuilder Ljava/util/function/Supplier;
 		METHOD method_24379 effects (Lnet/minecraft/class_4763;)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 effects
-		METHOD method_24380 noises (Ljava/util/List;)Lnet/minecraft/class_1959$class_1960;
-			ARG 1 noises
+		METHOD method_30777 temperatureModifier (Lnet/minecraft/class_1959$class_5484;)Lnet/minecraft/class_1959$class_1960;
+			ARG 1 temperatureModifier
+		METHOD method_30778 creatureGenerationProbability (F)Lnet/minecraft/class_1959$class_1960;
+			ARG 1 probability
 		METHOD method_8727 downfall (F)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 downfall
-		METHOD method_8731 surfaceBuilder (Lnet/minecraft/class_3504;)Lnet/minecraft/class_1959$class_1960;
-			ARG 1 surfaceBuilder
+		METHOD method_8731 surfaceBuilder (Ljava/util/function/Supplier;)Lnet/minecraft/class_1959$class_1960;
 		METHOD method_8735 precipitation (Lnet/minecraft/class_1959$class_1963;)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 precipitation
-		METHOD method_8737 configureSurfaceBuilder (Lnet/minecraft/class_3523;Lnet/minecraft/class_3531;)Lnet/minecraft/class_1959$class_1960;
+		METHOD method_8737 surfaceBuilder (Lnet/minecraft/class_3504;)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 surfaceBuilder
-			ARG 2 config
 		METHOD method_8738 category (Lnet/minecraft/class_1959$class_1961;)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 category
 		METHOD method_8740 depth (F)Lnet/minecraft/class_1959$class_1960;
@@ -155,23 +155,35 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 		METHOD method_8747 temperature (F)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 temperature
 	CLASS class_1961 Category
-		FIELD field_9359 NAME_MAP Ljava/util/Map;
+		FIELD field_24678 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_9359 BY_NAME Ljava/util/Map;
 		FIELD field_9372 name Ljava/lang/String;
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
 			ARG 3 name
+		METHOD method_28424 byName (Ljava/lang/String;)Lnet/minecraft/class_1959$class_1961;
+			ARG 0 name
+		METHOD method_8748 (Lnet/minecraft/class_1959$class_1961;)Lnet/minecraft/class_1959$class_1961;
+			ARG 0 category
 		METHOD method_8749 getName ()Ljava/lang/String;
 	CLASS class_1962 TemperatureGroup
-		FIELD field_9374 NAME_MAP Ljava/util/Map;
+		FIELD field_9374 BY_NAME Ljava/util/Map;
 		FIELD field_9380 name Ljava/lang/String;
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
 			ARG 3 name
 		METHOD method_8750 getName ()Ljava/lang/String;
+		METHOD method_8751 (Lnet/minecraft/class_1959$class_1962;)Lnet/minecraft/class_1959$class_1962;
+			ARG 0 temperatureGroup
 	CLASS class_1963 Precipitation
-		FIELD field_9381 NAME_MAP Ljava/util/Map;
+		FIELD field_24680 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_9381 BY_NAME Ljava/util/Map;
 		FIELD field_9385 name Ljava/lang/String;
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
 			ARG 3 name
+		METHOD method_28431 byName (Ljava/lang/String;)Lnet/minecraft/class_1959$class_1963;
+			ARG 0 name
 		METHOD method_8752 getName ()Ljava/lang/String;
+		METHOD method_8753 (Lnet/minecraft/class_1959$class_1963;)Lnet/minecraft/class_1959$class_1963;
+			ARG 0 precipitation
 	CLASS class_1964 SpawnEntry
 		FIELD field_24681 CODEC Lcom/mojang/serialization/Codec;
 		FIELD field_9387 maxGroupSize I
@@ -226,6 +238,7 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 		COMMENT than a specific type of entity.
 		FIELD field_24407 gravityLimit D
 		FIELD field_24408 mass D
+		FIELD field_25820 CODEC Lcom/mojang/serialization/Codec;
 		METHOD <init> (DD)V
 			ARG 1 gravityLimit
 			ARG 3 mass
@@ -237,3 +250,52 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 		METHOD method_27838 getMass ()D
 			COMMENT Represents the mass of each entity spawned. Will affect gravity
 			COMMENT calculation.
+	CLASS class_5482 Weather
+		FIELD field_26398 CODEC Lcom/mojang/serialization/MapCodec;
+		FIELD field_26399 precipitation Lnet/minecraft/class_1959$class_1963;
+		FIELD field_26400 temperature F
+		FIELD field_26401 temperatureModifier Lnet/minecraft/class_1959$class_5484;
+		FIELD field_26402 downfall F
+		METHOD <init> (Lnet/minecraft/class_1959$class_1963;FLnet/minecraft/class_1959$class_5484;F)V
+			ARG 1 precipitation
+			ARG 2 temperature
+			ARG 3 temperatureModifier
+			ARG 4 downfall
+	CLASS class_5483 SpawnSettings
+		FIELD field_26403 CODEC Lcom/mojang/serialization/MapCodec;
+		FIELD field_26404 creatureSpawnProbability F
+		FIELD field_26405 spawners Ljava/util/Map;
+		FIELD field_26406 spawnCosts Ljava/util/Map;
+		METHOD <init> (F)V
+			ARG 1 creatureSpawnProbability
+		METHOD <init> (FLjava/util/Map;Ljava/util/Map;)V
+			ARG 1 creatureSpawnProbability
+			ARG 2 spawners
+			ARG 3 spawnCosts
+	CLASS class_5484 TemperatureModifier
+		FIELD field_26409 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_26410 name Ljava/lang/String;
+		FIELD field_26411 BY_NAME Ljava/util/Map;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
+			ARG 3 name
+		METHOD method_30797 (Lnet/minecraft/class_1959$class_5484;)Lnet/minecraft/class_1959$class_5484;
+			ARG 0 temperatureModifier
+		METHOD method_30798 getModifiedTemperature (Lnet/minecraft/class_2338;F)F
+			ARG 1 pos
+			ARG 2 temperature
+		METHOD method_30799 byName (Ljava/lang/String;)Lnet/minecraft/class_1959$class_5484;
+			ARG 0 name
+		METHOD method_30800 getName ()Ljava/lang/String;
+	CLASS class_5485 GenerationSettings
+		FIELD field_26413 CODEC Lcom/mojang/serialization/MapCodec;
+		FIELD field_26414 surfaceBuilder Ljava/util/function/Supplier;
+		FIELD field_26415 carvers Ljava/util/Map;
+		FIELD field_26416 features Ljava/util/List;
+		FIELD field_26417 starts Ljava/util/List;
+		METHOD <init> (Ljava/util/function/Supplier;)V
+			ARG 1 surfaceBuilder
+		METHOD <init> (Ljava/util/function/Supplier;Ljava/util/Map;Ljava/util/List;Ljava/util/List;)V
+			ARG 1 surfaceBuilder
+			ARG 2 carvers
+			ARG 3 features
+			ARG 4 starts

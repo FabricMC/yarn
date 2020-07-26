@@ -17,7 +17,9 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	FIELD field_18264 inEntityTick Z
 	FIELD field_18811 raidManager Lnet/minecraft/class_3767;
 	FIELD field_23787 structureAccessor Lnet/minecraft/class_5138;
+	FIELD field_24456 worldProperties Lnet/minecraft/class_5268;
 	FIELD field_24624 serverChunkManager Lnet/minecraft/class_3215;
+	FIELD field_25141 spawners Ljava/util/List;
 	FIELD field_25142 enderDragonFight Lnet/minecraft/class_2881;
 	FIELD field_25144 END_SPAWN_POS Lnet/minecraft/class_2338;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5268;Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;Lnet/minecraft/class_2874;Lnet/minecraft/class_3949;Lnet/minecraft/class_2794;ZJLjava/util/List;Z)V
@@ -26,6 +28,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 3 session
 		ARG 4 properties
 		ARG 8 generationProgressListener
+		ARG 13 spawners
 	METHOD method_14166 spawnParticles (Lnet/minecraft/class_3222;Lnet/minecraft/class_2394;ZDDDIDDDD)Z
 		ARG 1 viewer
 		ARG 2 particle
@@ -80,7 +83,20 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 x
 		ARG 2 z
 		ARG 3 forced
-	METHOD method_18198 getEntities (Lnet/minecraft/class_1299;Ljava/util/function/Predicate;)Ljava/util/List;
+	METHOD method_18198 getEntitiesByType (Lnet/minecraft/class_1299;Ljava/util/function/Predicate;)Ljava/util/List;
+		COMMENT Computes a list of entities of the given type.
+		COMMENT
+		COMMENT <strong>Warning:<strong> If {@code null} is passed as the entity type filter, care should be
+		COMMENT taken that the type argument {@code T} is set to {@link Entity}, otherwise heap pollution
+		COMMENT in the returned list or {@link ClassCastException} can occur.
+		COMMENT
+		COMMENT @return a list of entities of the given type
+		ARG 1 type
+			COMMENT the entity type of the returned entities, or {@code null} for any type of entity
+		ARG 2 predicate
+			COMMENT a predicate which returned entities must satisfy
+	METHOD method_18199 (Lnet/minecraft/class_1309;)Z
+		ARG 1 entity
 	METHOD method_18203 tickChunk (Lnet/minecraft/class_2818;I)V
 		ARG 1 chunk
 		ARG 2 randomTickSpeed
@@ -107,7 +123,9 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 shouldKeepTicking
 	METHOD method_18766 getPlayers (Ljava/util/function/Predicate;)Ljava/util/List;
 		ARG 1 predicate
-	METHOD method_18767 checkChunk (Lnet/minecraft/class_1297;)V
+	METHOD method_18767 checkEntityChunkPos (Lnet/minecraft/class_1297;)V
+		COMMENT Validates if an entity's current position matches its chunk position. If the entity's chunk position and actual position don't match, then the entity will be moved to its new chunk.
+		ARG 1 entity
 	METHOD method_18768 tryLoadEntity (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_18769 onDimensionChanged (Lnet/minecraft/class_1297;)V
@@ -118,11 +136,14 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 player
 	METHOD method_18772 unloadEntity (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
+	METHOD method_18773 (Lnet/minecraft/class_3222;)V
+		ARG 0 player
 	METHOD method_18774 removeEntity (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
+	METHOD method_18775 (Lnet/minecraft/class_3222;)Z
+		ARG 0 player
 	METHOD method_18776 getAliveEnderDragons ()Ljava/util/List;
 	METHOD method_18777 checkUuid (Lnet/minecraft/class_1297;)Z
-		ARG 1 entity
 	METHOD method_18778 loadEntityUnchecked (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
 	METHOD method_18779 getRandomAlivePlayer ()Lnet/minecraft/class_3222;
@@ -162,11 +183,21 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 3 radius
 	METHOD method_27056 getStructureAccessor ()Lnet/minecraft/class_5138;
 	METHOD method_27909 iterateEntities ()Ljava/lang/Iterable;
+	METHOD method_27910 setWeather (IIZZ)V
+		ARG 1 clearDuration
+		ARG 2 rainDuration
+		ARG 3 raining
+		ARG 4 thundering
 	METHOD method_27911 getSpawnPos ()Lnet/minecraft/class_2338;
 	METHOD method_28125 isFlat ()Z
 	METHOD method_29198 getEnderDragonFight ()Lnet/minecraft/class_2881;
+	METHOD method_29199 setTimeOfDay (J)V
+		ARG 1 timeOfDay
 	METHOD method_29200 createEndSpawnPlatform (Lnet/minecraft/class_3218;)V
 		ARG 0 world
+	METHOD method_29202 tickSpawners (ZZ)V
+		ARG 1 spawnMonsters
+		ARG 2 spawnAnimals
 	METHOD method_29203 tickTime ()V
 	METHOD method_8448 updateSleepingPlayers ()V
 	METHOD method_8487 locateStructure (Lnet/minecraft/class_3195;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
@@ -174,5 +205,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 2 pos
 		ARG 3 radius
 		ARG 4 skipExistingChunks
-	METHOD method_8554 setSpawnPos (Lnet/minecraft/class_2338;)V
+	METHOD method_8554 setSpawnPos (Lnet/minecraft/class_2338;F)V
 		ARG 1 pos
+		ARG 2 angle
