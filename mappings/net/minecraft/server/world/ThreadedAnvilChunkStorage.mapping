@@ -25,6 +25,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	FIELD field_18307 loadedChunks Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_18807 chunksToUnload Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 	FIELD field_18808 pointOfInterestStorage Lnet/minecraft/class_4153;
+	FIELD field_19343 unloadTaskQueue Ljava/util/Queue;
 	FIELD field_23786 chunkToType Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
 	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_3949;Ljava/util/function/Supplier;IZ)V
 		ARG 3 dataFixer
@@ -54,7 +55,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 2 distance
 	METHOD method_17233 tick (Ljava/util/function/BooleanSupplier;)V
 		ARG 1 shouldKeepTicking
-	METHOD method_17235 makeTickable (Lnet/minecraft/class_3193;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_17235 makeChunkTickable (Lnet/minecraft/class_3193;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 holder
 	METHOD method_17236 getChunk (Lnet/minecraft/class_3193;Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 holder
@@ -68,7 +69,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_17242 save (Z)V
 		ARG 1 flush
 	METHOD method_17244 updateHolderMap ()Z
-	METHOD method_17247 awaitEntitiesTickable (Lnet/minecraft/class_1923;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_17247 makeChunkEntitiesTickable (Lnet/minecraft/class_1923;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 pos
 	METHOD method_17253 getTotalChunksLoadedCount ()I
 	METHOD method_17255 getCurrentChunkHolder (J)Lnet/minecraft/class_3193;
@@ -117,7 +118,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 1 pos
 	METHOD method_20458 tryUnloadChunk (JLnet/minecraft/class_3193;)V
 		ARG 1 pos
-	METHOD method_20580 makeAccessible (Lnet/minecraft/class_3193;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_20576 enableTickSchedulers (Lnet/minecraft/class_2818;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_20580 makeChunkAccessible (Lnet/minecraft/class_3193;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 holder
 	METHOD method_20605 unloadChunks (Ljava/util/function/BooleanSupplier;)V
 		ARG 1 shouldKeepTicking
