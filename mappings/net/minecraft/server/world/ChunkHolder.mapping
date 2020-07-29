@@ -20,6 +20,13 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 	FIELD field_17210 playersWatchingChunkProvider Lnet/minecraft/class_3193$class_3897;
 	FIELD field_19238 accessible Z
 	FIELD field_19333 tickingFuture Ljava/util/concurrent/CompletableFuture;
+	FIELD field_25803 pendingBlockUpdates Z
+		COMMENT Indicates that {@link #blockUpdatesBySection} contains at least one entry.
+	FIELD field_25804 blockUpdatesBySection [Lit/unimi/dsi/fastutil/shorts/ShortSet;
+		COMMENT Contains the packed chunk-local positions that have been marked for update
+		COMMENT by {@link #markForBlockUpdate}, grouped by their vertical chunk section.
+		COMMENT <p>
+		COMMENT Entries for a section are null if the section has no positions marked for update.
 	METHOD <init> (Lnet/minecraft/class_1923;ILnet/minecraft/class_3568;Lnet/minecraft/class_3193$class_3896;Lnet/minecraft/class_3193$class_3897;)V
 		ARG 1 pos
 		ARG 2 level
@@ -51,6 +58,7 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 	METHOD method_14012 markForLightUpdate (Lnet/minecraft/class_1944;I)V
 		ARG 1 type
 		ARG 2 y
+			COMMENT chunk section y coordinate
 	METHOD method_15890 setLevel (I)V
 		ARG 1 level
 	METHOD method_16143 combineSavingFuture (Ljava/util/concurrent/CompletableFuture;)V
@@ -64,17 +72,18 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 	METHOD method_17208 getCompletedLevel ()I
 	METHOD method_20384 isAccessible ()Z
 	METHOD method_20385 updateAccessibleStatus ()V
-	METHOD method_20456 finalizeChunk (Lnet/minecraft/class_2821;)V
-		ARG 1 chunk
+	METHOD method_20456 setCompletedChunk (Lnet/minecraft/class_2821;)V
 	METHOD method_20725 getAccessibleFuture ()Ljava/util/concurrent/CompletableFuture;
 	METHOD method_21737 getValidFutureFor (Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 leastStatus
 	METHOD method_23270 getCurrentStatus ()Lnet/minecraft/class_2806;
 	METHOD method_23271 getLevelType ()Lnet/minecraft/class_3193$class_3194;
+	METHOD method_30311 tryUpdateBlockEntityAt (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 	CLASS class_3194 LevelType
 		METHOD method_14014 isAfter (Lnet/minecraft/class_3193$class_3194;)Z
 			ARG 1 levelType
 	CLASS class_3724 Unloaded
+		COMMENT Used to represent a chunk that has not been loaded yet.
 		FIELD field_16433 INSTANCE Lnet/minecraft/class_3193$class_3724;
 	CLASS class_3896 LevelUpdateListener
 		METHOD method_17209 updateLevel (Lnet/minecraft/class_1923;Ljava/util/function/IntSupplier;ILjava/util/function/IntConsumer;)V
