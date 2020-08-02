@@ -10,16 +10,23 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 	FIELD field_16425 futuresByStatus Ljava/util/concurrent/atomic/AtomicReferenceArray;
 	FIELD field_16426 UNLOADED_CHUNK Lcom/mojang/datafixers/util/Either;
 	FIELD field_16427 UNLOADED_WORLD_CHUNK Lcom/mojang/datafixers/util/Either;
-	FIELD field_16428 future Ljava/util/concurrent/CompletableFuture;
+	FIELD field_16428 savingFuture Ljava/util/concurrent/CompletableFuture;
 	FIELD field_16429 UNLOADED_WORLD_CHUNK_FUTURE Ljava/util/concurrent/CompletableFuture;
 	FIELD field_16430 UNLOADED_CHUNK_FUTURE Ljava/util/concurrent/CompletableFuture;
-	FIELD field_16431 borderFuture Ljava/util/concurrent/CompletableFuture;
+	FIELD field_16431 accessibleFuture Ljava/util/concurrent/CompletableFuture;
 	FIELD field_16432 lastTickLevel I
 	FIELD field_17208 completedLevel I
 	FIELD field_17209 levelUpdateListener Lnet/minecraft/class_3193$class_3896;
 	FIELD field_17210 playersWatchingChunkProvider Lnet/minecraft/class_3193$class_3897;
-	FIELD field_19238 ticking Z
+	FIELD field_19238 accessible Z
 	FIELD field_19333 tickingFuture Ljava/util/concurrent/CompletableFuture;
+	FIELD field_25803 pendingBlockUpdates Z
+		COMMENT Indicates that {@link #blockUpdatesBySection} contains at least one entry.
+	FIELD field_25804 blockUpdatesBySection [Lit/unimi/dsi/fastutil/shorts/ShortSet;
+		COMMENT Contains the packed chunk-local positions that have been marked for update
+		COMMENT by {@link #markForBlockUpdate}, grouped by their vertical chunk section.
+		COMMENT <p>
+		COMMENT Entries for a section are null if the section has no positions marked for update.
 	METHOD <init> (Lnet/minecraft/class_1923;ILnet/minecraft/class_3568;Lnet/minecraft/class_3193$class_3896;Lnet/minecraft/class_3193$class_3897;)V
 		ARG 1 pos
 		ARG 2 level
@@ -28,15 +35,16 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 		ARG 5 playersWatchingChunkProvider
 	METHOD method_13992 sendPacketToPlayersWatching (Lnet/minecraft/class_2596;Z)V
 		ARG 2 onlyOnWatchDistanceEdge
-	METHOD method_13993 createFuture (Lnet/minecraft/class_2806;Lnet/minecraft/class_3898;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_13993 getChunkAt (Lnet/minecraft/class_2806;Lnet/minecraft/class_3898;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 targetStatus
 		ARG 2 chunkStorage
 	METHOD method_13994 getPos ()Lnet/minecraft/class_1923;
-	METHOD method_14000 getFuture ()Ljava/util/concurrent/CompletableFuture;
+	METHOD method_14000 getSavingFuture ()Ljava/util/concurrent/CompletableFuture;
 	METHOD method_14002 markForBlockUpdate (Lnet/minecraft/class_2338;)V
 	METHOD method_14003 getEntityTickingFuture ()Ljava/util/concurrent/CompletableFuture;
 	METHOD method_14005 getLevel ()I
 	METHOD method_14006 flushUpdates (Lnet/minecraft/class_2818;)V
+		ARG 1 chunk
 	METHOD method_14007 tick (Lnet/minecraft/class_3898;)V
 		ARG 1 chunkStorage
 	METHOD method_14008 getLevelType (I)Lnet/minecraft/class_3193$class_3194;
@@ -44,33 +52,38 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 	METHOD method_14009 sendBlockEntityUpdatePacket (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)V
 		ARG 1 world
 		ARG 2 pos
-	METHOD method_14010 getCompletedChunk ()Lnet/minecraft/class_2791;
-	METHOD method_14011 getTargetGenerationStatus (I)Lnet/minecraft/class_2806;
+	METHOD method_14010 getCurrentChunk ()Lnet/minecraft/class_2791;
+	METHOD method_14011 getTargetStatusForLevel (I)Lnet/minecraft/class_2806;
 		ARG 0 level
 	METHOD method_14012 markForLightUpdate (Lnet/minecraft/class_1944;I)V
 		ARG 1 type
 		ARG 2 y
+			COMMENT chunk section y coordinate
 	METHOD method_15890 setLevel (I)V
 		ARG 1 level
-	METHOD method_16143 updateFuture (Ljava/util/concurrent/CompletableFuture;)V
-		ARG 1 newChunkFuture
+	METHOD method_16143 combineSavingFuture (Ljava/util/concurrent/CompletableFuture;)V
+		ARG 1 then
 	METHOD method_16144 getWorldChunk ()Lnet/minecraft/class_2818;
 	METHOD method_16145 getTickingFuture ()Ljava/util/concurrent/CompletableFuture;
-	METHOD method_16146 getFuture (Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_16146 getFutureFor (Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 leastStatus
 	METHOD method_17207 setCompletedLevel (I)V
 		ARG 1 level
 	METHOD method_17208 getCompletedLevel ()I
-	METHOD method_20384 isTicking ()Z
-	METHOD method_20385 updateTickingStatus ()V
-	METHOD method_20725 getBorderFuture ()Ljava/util/concurrent/CompletableFuture;
-	METHOD method_21737 getNowFuture (Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_20384 isAccessible ()Z
+	METHOD method_20385 updateAccessibleStatus ()V
+	METHOD method_20456 setCompletedChunk (Lnet/minecraft/class_2821;)V
+	METHOD method_20725 getAccessibleFuture ()Ljava/util/concurrent/CompletableFuture;
+	METHOD method_21737 getValidFutureFor (Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 leastStatus
+	METHOD method_23270 getCurrentStatus ()Lnet/minecraft/class_2806;
 	METHOD method_23271 getLevelType ()Lnet/minecraft/class_3193$class_3194;
+	METHOD method_30311 tryUpdateBlockEntityAt (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 	CLASS class_3194 LevelType
 		METHOD method_14014 isAfter (Lnet/minecraft/class_3193$class_3194;)Z
 			ARG 1 levelType
 	CLASS class_3724 Unloaded
+		COMMENT Used to represent a chunk that has not been loaded yet.
 		FIELD field_16433 INSTANCE Lnet/minecraft/class_3193$class_3724;
 	CLASS class_3896 LevelUpdateListener
 		METHOD method_17209 updateLevel (Lnet/minecraft/class_1923;Ljava/util/function/IntSupplier;ILjava/util/function/IntConsumer;)V

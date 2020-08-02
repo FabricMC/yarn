@@ -1,0 +1,58 @@
+CLASS net/minecraft/class_5483 net/minecraft/world/biome/SpawnSettings
+	FIELD field_26403 CODEC Lcom/mojang/serialization/MapCodec;
+	FIELD field_26404 creatureSpawnProbability F
+	FIELD field_26405 spawners Ljava/util/Map;
+	FIELD field_26406 spawnCosts Ljava/util/Map;
+	FIELD field_26645 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_26646 INSTANCE Lnet/minecraft/class_5483;
+	METHOD <init> (FLjava/util/Map;Ljava/util/Map;)V
+		ARG 1 creatureSpawnProbability
+		ARG 2 spawners
+		ARG 3 spawnCosts
+	METHOD method_31002 getCreatureSpawnProbability ()F
+	METHOD method_31003 getSpawnDensity (Lnet/minecraft/class_1299;)Lnet/minecraft/class_5483$class_5265;
+		ARG 1 entityType
+	METHOD method_31004 getSpawnEntry (Lnet/minecraft/class_1311;)Ljava/util/List;
+		ARG 1 spawnGroup
+	CLASS class_1964 SpawnEntry
+		FIELD field_24681 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_9387 maxGroupSize I
+		FIELD field_9388 minGroupSize I
+		FIELD field_9389 type Lnet/minecraft/class_1299;
+		METHOD <init> (Lnet/minecraft/class_1299;III)V
+			ARG 1 type
+			ARG 2 weight
+			ARG 3 minGroupSize
+			ARG 4 maxGroupSize
+	CLASS class_5265 SpawnDensity
+		COMMENT Embodies the density limit information of a type of entity in entity
+		COMMENT spawning logic. The density field is generated for all entities spawned
+		COMMENT than a specific type of entity.
+		FIELD field_24407 gravityLimit D
+		FIELD field_24408 mass D
+		FIELD field_25820 CODEC Lcom/mojang/serialization/Codec;
+		METHOD <init> (DD)V
+			ARG 1 gravityLimit
+			ARG 3 mass
+		METHOD method_27837 getGravityLimit ()D
+			COMMENT Represents the cap of gravity as in {@link
+			COMMENT net.minecraft.util.math.GravityField#calculate(BlockPos, double)} for
+			COMMENT entity spawning. If the cap is exceeded, the entity spawning attempt
+			COMMENT will skip.
+		METHOD method_27838 getMass ()D
+			COMMENT Represents the mass of each entity spawned. Will affect gravity
+			COMMENT calculation.
+	CLASS class_5496 Builder
+		FIELD field_26647 spawners Ljava/util/Map;
+		FIELD field_26648 spawnCosts Ljava/util/Map;
+		FIELD field_26649 creatureSpawnProbability F
+		METHOD method_31007 build ()Lnet/minecraft/class_5483;
+		METHOD method_31008 creatureSpawnProbability (F)Lnet/minecraft/class_5483$class_5496;
+			ARG 1 probability
+		METHOD method_31009 spawnCosts (Lnet/minecraft/class_1299;DD)Lnet/minecraft/class_5483$class_5496;
+			ARG 1 entityType
+			ARG 2 mass
+			ARG 4 gravityLimit
+		METHOD method_31011 spawners (Lnet/minecraft/class_1311;Lnet/minecraft/class_5483$class_1964;)Lnet/minecraft/class_5483$class_5496;
+			ARG 1 spawnGroup
+			ARG 2 spawnEntry
