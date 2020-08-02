@@ -29,7 +29,14 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	FIELD field_9253 rainGradientPrev F
 	FIELD field_9256 lcgBlockSeed I
 	METHOD <init> (Lnet/minecraft/class_5269;Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;Lnet/minecraft/class_2874;Ljava/util/function/Supplier;ZZJ)V
+		ARG 1 properties
+		ARG 2 registryKey
+		ARG 3 dimensionRegistryKey
+		ARG 4 dimension
 		ARG 5 profiler
+		ARG 6 isClient
+		ARG 7 debugWorld
+		ARG 8 seed
 	METHOD method_16107 getProfiler ()Lnet/minecraft/class_3695;
 	METHOD method_16109 scheduleBlockRerenderIfNeeded (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)V
 		ARG 1 pos
@@ -49,10 +56,20 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 mapState
 	METHOD method_17891 getMapState (Ljava/lang/String;)Lnet/minecraft/class_22;
 		ARG 1 id
-	METHOD method_18023 getEntities (Lnet/minecraft/class_1299;Lnet/minecraft/class_238;Ljava/util/function/Predicate;)Ljava/util/List;
+	METHOD method_18023 getEntitiesByType (Lnet/minecraft/class_1299;Lnet/minecraft/class_238;Ljava/util/function/Predicate;)Ljava/util/List;
+		COMMENT Computes a list of entities of the given type within some region that satisfy the given predicate.
+		COMMENT
+		COMMENT <strong>Warning:<strong> If {@code null} is passed as the entity type filter, care should be
+		COMMENT taken that the type argument {@code T} is set to {@link Entity}, otherwise heap pollution
+		COMMENT in the output list or {@link ClassCastException} can occur.
+		COMMENT
+		COMMENT @return a list of entities
 		ARG 1 type
+			COMMENT the entity type of the returned entities, or {@code null} to return entities of all types
 		ARG 2 box
+			COMMENT the box in which to search for entities
 		ARG 3 predicate
+			COMMENT a predicate which entities must satisfy in order to be considered
 	METHOD method_18471 tickBlockEntities ()V
 	METHOD method_18472 tickEntity (Ljava/util/function/Consumer;Lnet/minecraft/class_1297;)V
 		ARG 1 tickConsumer
@@ -67,13 +84,10 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 pos
 		ARG 2 entity
 		ARG 3 direction
-	METHOD method_26097 getCollisionHeightAt (Lnet/minecraft/class_2338;Ljava/util/function/Predicate;)D
-		ARG 1 pos
-	METHOD method_26372 getCollisionHeightAt (Lnet/minecraft/class_2338;)D
-		ARG 1 pos
 	METHOD method_27982 isDebugWorld ()Z
 	METHOD method_27983 getRegistryKey ()Lnet/minecraft/class_5321;
 	METHOD method_29287 getDimensionRegistryKey ()Lnet/minecraft/class_5321;
+	METHOD method_30349 getRegistryManager ()Lnet/minecraft/class_5455;
 	METHOD method_8413 updateListeners (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;I)V
 		ARG 1 pos
 		ARG 2 oldState
@@ -211,7 +225,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8509 setLightningTicksLeft (I)V
 		ARG 1 lightningTicksLeft
 	METHOD method_8510 getTime ()J
-	METHOD method_8514 getTagManager ()Lnet/minecraft/class_3505;
+	METHOD method_8514 getTagManager ()Lnet/minecraft/class_5415;
 	METHOD method_8515 isTopSolid (Lnet/minecraft/class_2338;Lnet/minecraft/class_1297;)Z
 		ARG 1 pos
 		ARG 2 entity

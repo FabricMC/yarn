@@ -5,51 +5,77 @@ CLASS net/minecraft/class_4076 net/minecraft/util/math/ChunkSectionPos
 		ARG 3 z
 	METHOD method_18674 getSectionX ()I
 	METHOD method_18675 getSectionCoord (I)I
+		COMMENT Converts a world coordinate to the corresponding chunk-section coordinate.
 		ARG 0 coord
 	METHOD method_18676 from (III)Lnet/minecraft/class_4076;
+		COMMENT Creates a chunk section position from its x-, y- and z-coordinates.
 		ARG 0 x
 		ARG 1 y
 		ARG 2 z
 	METHOD method_18677 from (J)Lnet/minecraft/class_4076;
+		COMMENT Creates a chunk section position from its packed representation.
+		COMMENT @see #asLong
 		ARG 0 packed
 	METHOD method_18678 offset (JIII)J
+		COMMENT Offsets a packed chunk section position by the given offsets.
+		COMMENT @see #asLong
 		ARG 0 packed
 		ARG 2 x
 		ARG 3 y
 		ARG 4 z
 	METHOD method_18679 offset (JLnet/minecraft/class_2350;)J
+		COMMENT Offsets a packed chunk section position in the given direction.
+		COMMENT @see #asLong
 		ARG 0 packed
 		ARG 2 direction
 	METHOD method_18680 from (Lnet/minecraft/class_1297;)Lnet/minecraft/class_4076;
 		ARG 0 entity
 	METHOD method_18681 from (Lnet/minecraft/class_1923;I)Lnet/minecraft/class_4076;
+		COMMENT Creates a chunk section position from a chunk position and the y-coordinate of the vertical section.
 		ARG 0 chunkPos
 		ARG 1 y
 	METHOD method_18682 from (Lnet/minecraft/class_2338;)Lnet/minecraft/class_4076;
 		ARG 0 pos
 	METHOD method_18683 getSectionY ()I
 	METHOD method_18684 getLocalCoord (I)I
+		COMMENT Converts a world coordinate to the local coordinate system (0-15) of its corresponding chunk section.
 		ARG 0 coord
 	METHOD method_18685 asLong (III)J
 		ARG 0 x
 		ARG 1 y
 		ARG 2 z
-	METHOD method_18686 getX (J)I
+	METHOD method_18686 unpackX (J)I
+		COMMENT Gets the chunk section x-coordinate from the given packed chunk section coordinate.
+		COMMENT @see #asLong
 		ARG 0 packed
 	METHOD method_18687 getSectionZ ()I
-	METHOD method_18688 getWorldCoord (I)I
-		ARG 0 chunkCoord
-	METHOD method_18689 getY (J)I
+	METHOD method_18688 getBlockCoord (I)I
+		COMMENT Converts the given chunk section coordinate to the world coordinate system.
+		COMMENT The returned coordinate will always be at the origin of the chunk section in world space.
+		ARG 0 sectionCoord
+	METHOD method_18689 unpackY (J)I
+		COMMENT Gets the chunk section y-coordinate from the given packed chunk section coordinate.
+		COMMENT @see #asLong
 		ARG 0 packed
-	METHOD method_18690 getZ (J)I
+	METHOD method_18690 unpackZ (J)I
+		COMMENT Gets the chunk section z-coordinate from the given packed chunk section coordinate.
+		COMMENT @see #asLong
 		ARG 0 packed
-	METHOD method_18691 fromGlobalPos (J)J
-		ARG 0 globalLong
+	METHOD method_18691 fromBlockPos (J)J
+		COMMENT Gets the packed chunk section coordinate for a given packed {@link BlockPos}.
+		COMMENT @see #asLong
+		COMMENT @see BlockPos#asLong
+		ARG 0 blockPos
 	METHOD method_18692 toChunkPos ()Lnet/minecraft/class_1923;
-	METHOD method_18693 withZeroZ (J)J
+	METHOD method_18693 withZeroY (J)J
+		COMMENT Gets the packed chunk section coordinate at y=0 for the same chunk as
+		COMMENT the given packed chunk section coordinate.
+		COMMENT @see #asLong
 		ARG 0 pos
 	METHOD method_18694 asLong ()J
-	METHOD method_19454 getPackedLocalPos (Lnet/minecraft/class_2338;)S
+	METHOD method_19454 packLocal (Lnet/minecraft/class_2338;)S
+		COMMENT Returns the local position of the given block position relative to
+		COMMENT its respective chunk section, packed into a short.
 		ARG 0 pos
 	METHOD method_19527 getMinX ()I
 	METHOD method_19528 getMinY ()I
@@ -73,6 +99,34 @@ CLASS net/minecraft/class_4076 net/minecraft/util/math/ChunkSectionPos
 	METHOD method_22446 stream (Lnet/minecraft/class_1923;I)Ljava/util/stream/Stream;
 		ARG 0 center
 		ARG 1 radius
+	METHOD method_30551 unpackLocalX (S)I
+		COMMENT Gets the local x-coordinate from the given packed local position.
+		COMMENT @see #packLocal
+		ARG 0 packedLocalPos
+	METHOD method_30552 unpackLocalY (S)I
+		COMMENT Gets the local y-coordinate from the given packed local position.
+		COMMENT @see #packLocal
+		ARG 0 packedLocalPos
+	METHOD method_30553 unpackLocalZ (S)I
+		COMMENT Gets the local z-coordinate from the given packed local position.
+		COMMENT @see #packLocal
+		ARG 0 packedLocalPos
+	METHOD method_30554 unpackBlockX (S)I
+		COMMENT Gets the world x-coordinate of the given local position within this chunk section.
+		COMMENT @see #packLocal
+		ARG 1 packedLocalPos
+	METHOD method_30555 unpackBlockY (S)I
+		COMMENT Gets the world y-coordinate of the given local position within this chunk section.
+		COMMENT @see #packLocal
+		ARG 1 packedLocalPos
+	METHOD method_30556 unpackBlockZ (S)I
+		COMMENT Gets the world z-coordinate of the given local position within this chunk section.
+		COMMENT @see #packLocal
+		ARG 1 packedLocalPos
+	METHOD method_30557 unpackBlockPos (S)Lnet/minecraft/class_2338;
+		COMMENT Gets the world position of the given local position within this chunk section.
+		COMMENT @see #packLocal
+		ARG 1 packedLocalPos
 	CLASS 1
 		FIELD field_19263 iterator Lnet/minecraft/class_3980;
 		METHOD tryAdvance (Ljava/util/function/Consumer;)Z

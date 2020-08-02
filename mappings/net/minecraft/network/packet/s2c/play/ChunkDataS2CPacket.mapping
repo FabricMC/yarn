@@ -6,10 +6,16 @@ CLASS net/minecraft/class_2672 net/minecraft/network/packet/s2c/play/ChunkDataS2
 	FIELD field_12237 data [B
 	FIELD field_12238 blockEntities Ljava/util/List;
 	FIELD field_16416 heightmaps Lnet/minecraft/class_2487;
-	FIELD field_20664 biomeArray Lnet/minecraft/class_4548;
+	FIELD field_20664 biomeArray [I
+	FIELD field_25720 retainLighting Z
 	METHOD <init> (Lnet/minecraft/class_2818;IZ)V
 		ARG 1 chunk
 		ARG 2 includedSectionsMask
+			COMMENT a bitmask of the vertical chunk sections that should be included in this packet.
+			COMMENT 65535 will send all sections.
+		ARG 3 retainLighting
+			COMMENT indicates that the client should not recalculate lighting for the vertical sections
+			COMMENT included in this packet.
 	METHOD method_11521 getReadBuffer ()Lnet/minecraft/class_2540;
 	METHOD method_11522 getDataSize (Lnet/minecraft/class_2818;I)I
 		ARG 1 chunk
@@ -24,4 +30,7 @@ CLASS net/minecraft/class_2672 net/minecraft/network/packet/s2c/play/ChunkDataS2
 		ARG 3 includedSectionsMask
 	METHOD method_11530 isFullChunk ()Z
 	METHOD method_16123 getHeightmaps ()Lnet/minecraft/class_2487;
-	METHOD method_22422 getBiomeArray ()Lnet/minecraft/class_4548;
+	METHOD method_22422 getBiomeArray ()[I
+	METHOD method_30144 shouldRetainLighting ()Z
+		COMMENT Indicates whether the client should skip updating the lighting information
+		COMMENT of the vertical sections included in this packet.

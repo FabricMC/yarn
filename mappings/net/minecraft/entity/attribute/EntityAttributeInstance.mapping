@@ -1,7 +1,8 @@
 CLASS net/minecraft/class_1324 net/minecraft/entity/attribute/EntityAttributeInstance
+	COMMENT A double-valued attribute.
 	FIELD field_23700 type Lnet/minecraft/class_1320;
 	FIELD field_23701 operationToModifiers Ljava/util/Map;
-	FIELD field_23702 byId Ljava/util/Map;
+	FIELD field_23702 idToModifiers Ljava/util/Map;
 	FIELD field_23703 persistentModifiers Ljava/util/Set;
 	FIELD field_23704 baseValue D
 	FIELD field_23705 dirty Z
@@ -11,17 +12,35 @@ CLASS net/minecraft/class_1324 net/minecraft/entity/attribute/EntityAttributeIns
 		ARG 1 type
 		ARG 2 updateCallback
 	METHOD method_26831 setFrom (Lnet/minecraft/class_1324;)V
+		COMMENT Copies the values of an attribute to this attribute.
+		COMMENT
+		COMMENT <p>Temporary modifiers are copied when using the operation.
 		ARG 1 other
+	METHOD method_26832 (Lnet/minecraft/class_1322$class_1323;Ljava/util/Set;)V
+		ARG 1 operation
+		ARG 2 modifiers
 	METHOD method_26833 fromTag (Lnet/minecraft/class_2487;)V
 		ARG 1 tag
 	METHOD method_26834 getModifiersByOperation (Lnet/minecraft/class_1322$class_1323;)Ljava/util/Collection;
+		ARG 1 operation
 	METHOD method_26835 addTemporaryModifier (Lnet/minecraft/class_1322;)V
+		COMMENT Adds a temporary attribute modifier.
+		COMMENT The modifier will not be serialized.
 		ARG 1 modifier
+	METHOD method_26836 (Lnet/minecraft/class_1322$class_1323;)Ljava/util/Set;
+		ARG 0 operation
 	METHOD method_26837 addPersistentModifier (Lnet/minecraft/class_1322;)V
 		ARG 1 modifier
 	METHOD method_26838 onUpdate ()V
 	METHOD method_26839 toTag ()Lnet/minecraft/class_2487;
 	METHOD method_26840 computeValue ()D
+		COMMENT Computes this attribute's value, taking modifiers into account.
+		COMMENT
+		COMMENT <p>Attribute modifiers are applied in order by operation:
+		COMMENT <ul><li>{@link net.minecraft.entity.attribute.EntityAttributeModifier.Operation#ADDITION ADDITION} // Adds the value of the modifier to the attribute's base value.</li>
+		COMMENT <li>{@link net.minecraft.entity.attribute.EntityAttributeModifier.Operation#MULTIPLY_BASE MULTIPLY_BASE} // Multiplies the value of the modifier to the attributes base value, and then adds it to the total value.</li>
+		COMMENT <li>{@link net.minecraft.entity.attribute.EntityAttributeModifier.Operation#MULTIPLY_TOTAL MULTIPLY_TOTAL} // Adds 1 to the value of the attribute modifier. Then multiplies the attribute's value by the total value of the attribute after addition and multiplication of the base value occur.</li>
+		COMMENT </ul>
 	METHOD method_27304 tryRemoveModifier (Ljava/util/UUID;)Z
 		ARG 1 uuid
 	METHOD method_6192 setBaseValue (D)V
@@ -40,6 +59,8 @@ CLASS net/minecraft/class_1324 net/minecraft/entity/attribute/EntityAttributeIns
 	METHOD method_6200 removeModifier (Ljava/util/UUID;)V
 		ARG 1 uuid
 	METHOD method_6201 getBaseValue ()D
+		COMMENT Gets the base value of this attribute instance.
+		COMMENT This is the value before any attribute modifiers are applied.
 	METHOD method_6202 removeModifier (Lnet/minecraft/class_1322;)V
 		ARG 1 modifier
 	METHOD method_6203 clearModifiers ()V

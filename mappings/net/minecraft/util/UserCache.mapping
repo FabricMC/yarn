@@ -1,12 +1,9 @@
 CLASS net/minecraft/class_3312 net/minecraft/util/UserCache
 	FIELD field_14310 byUuid Ljava/util/Map;
-	FIELD field_14311 byAccessTime Ljava/util/Deque;
 	FIELD field_14312 byName Ljava/util/Map;
 	FIELD field_14313 useRemote Z
 	FIELD field_14314 cacheFile Ljava/io/File;
 	FIELD field_14315 profileRepository Lcom/mojang/authlib/GameProfileRepository;
-	FIELD field_14316 ENTRY_LIST_TYPE Lcom/google/gson/reflect/TypeToken;
-	FIELD field_14317 EXPIRATION_DATE_FORMAT Ljava/text/SimpleDateFormat;
 	FIELD field_14318 gson Lcom/google/gson/Gson;
 	METHOD <init> (Lcom/mojang/authlib/GameProfileRepository;Ljava/io/File;)V
 		ARG 1 profileRepository
@@ -17,14 +14,11 @@ CLASS net/minecraft/class_3312 net/minecraft/util/UserCache
 		ARG 1 name
 	METHOD method_14510 setUseRemote (Z)V
 		ARG 0 value
-	METHOD method_14511 add (Lcom/mojang/authlib/GameProfile;Ljava/util/Date;)V
-		ARG 1 profile
 	METHOD method_14512 getByUuid (Ljava/util/UUID;)Lcom/mojang/authlib/GameProfile;
-	METHOD method_14513 getEntry (Ljava/util/UUID;)Lnet/minecraft/class_3312$class_3313;
 	METHOD method_14514 shouldUseRemote ()Z
 	METHOD method_14515 findByName (Ljava/lang/String;)Lcom/mojang/authlib/GameProfile;
-	METHOD method_14516 getLastAccessedEntries (I)Ljava/util/List;
-	METHOD method_14517 load ()V
+	METHOD method_14516 getLastAccessedEntries (I)Ljava/util/stream/Stream;
+	METHOD method_14517 load ()Ljava/util/List;
 	METHOD method_14518 save ()V
 	CLASS 1
 		METHOD onProfileLookupFailed (Lcom/mojang/authlib/GameProfile;Ljava/lang/Exception;)V
@@ -35,17 +29,5 @@ CLASS net/minecraft/class_3312 net/minecraft/util/UserCache
 	CLASS class_3313 Entry
 		FIELD field_14319 expirationDate Ljava/util/Date;
 		FIELD field_14321 profile Lcom/mojang/authlib/GameProfile;
-		METHOD <init> (Lnet/minecraft/class_3312;Lcom/mojang/authlib/GameProfile;Ljava/util/Date;)V
-			ARG 2 profile
-			ARG 3 expiryDate
 		METHOD method_14519 getProfile ()Lcom/mojang/authlib/GameProfile;
 		METHOD method_14520 getExpirationDate ()Ljava/util/Date;
-	CLASS class_3314 JsonConverter
-		METHOD deserialize (Lcom/google/gson/JsonElement;Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)Ljava/lang/Object;
-			ARG 1 functionJson
-			ARG 2 unused
-			ARG 3 context
-		METHOD serialize (Ljava/lang/Object;Ljava/lang/reflect/Type;Lcom/google/gson/JsonSerializationContext;)Lcom/google/gson/JsonElement;
-			ARG 1 entry
-			ARG 2 unused
-			ARG 3 context
