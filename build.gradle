@@ -502,22 +502,6 @@ clean.doFirst {
 
 tasks.build.dependsOn "compressTiny","tinyJar","v2UnmergedYarnJar", "v2MergedYarnJar"
 
-task mapYarnJar(dependsOn: [compressTiny, mapIntermediaryJar]) {
-	group = mapJarGroup
-	inputs.files downloadMcLibs.outputs.files.files
-	outputs.file(yarnJar)
-
-	//Force the task to always run
-	outputs.upToDateWhen { false }
-
-	doLast {
-		logger.lifecycle(":mapping minecraft to yarn")
-
-		File tinyInput = compressTiny.output
-		mapJar(yarnJar, intermediaryJar, tinyInput, libraries, "intermediary", "named")
-	}
-}
-
 task exportMappingsOfficial(dependsOn: downloadIntermediary) {
 	def composeInput = downloadIntermediary.dest
 
