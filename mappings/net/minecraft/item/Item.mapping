@@ -15,6 +15,7 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 1 settings
 	METHOD method_16698 isNetworkSynced ()Z
 	METHOD method_19263 isFood ()Z
+		COMMENT Checks if this item is food and therefore is edible.
 	METHOD method_19264 getFoodComponent ()Lnet/minecraft/class_4174;
 	METHOD method_21830 getEatSound ()Lnet/minecraft/class_3414;
 	METHOD method_21831 getDrinkSound ()Lnet/minecraft/class_3414;
@@ -22,10 +23,26 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 1 source
 	METHOD method_24358 isFireproof ()Z
 	METHOD method_7836 use (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1271;
+		COMMENT Called when an item is used by a player.
+		COMMENT This typically is bound to using the right mouse button.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution when using this method.
+		COMMENT The logical side can be checked using {@link net.minecraft.world.World#isClient() world.isClient()}.
+		COMMENT
+		COMMENT @return a typed action result that specifies if using the item was successful.
+		COMMENT The action result contains the new item stack that the player's hand will be set to.
 		ARG 1 world
+			COMMENT the world the item was used in
 		ARG 2 user
+			COMMENT the player which used the item
 		ARG 3 hand
+			COMMENT the hand used
 	METHOD method_7837 getEnchantability ()I
+		COMMENT Gets the enchantability of an item.
+		COMMENT This specifies the ability of an item to recieve enchantments when enchanted using an enchanting table.
+		COMMENT As the value increases, the amount and level of enchantments applied increases.
+		COMMENT
+		COMMENT <p>If the value of this method is 0, the item cannot be enchanted using an enchantment table.
 	METHOD method_7838 isUsedOnRelease (Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
 	METHOD method_7840 onStoppedUsing (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;I)V
@@ -68,7 +85,9 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	METHOD method_7856 isEffectiveOn (Lnet/minecraft/class_2680;)Z
 		ARG 1 state
 	METHOD method_7857 hasRecipeRemainder ()Z
+		COMMENT Checks if this item has a remainder item that should be left behind when crafting.
 	METHOD method_7858 getRecipeRemainder ()Lnet/minecraft/class_1792;
+		COMMENT Gets the remainder item that should be left behind when this item when crafting.
 	METHOD method_7859 getGroup ()Lnet/minecraft/class_1761;
 	METHOD method_7860 postProcessTag (Lnet/minecraft/class_2487;)Z
 		ARG 1 tag
@@ -84,6 +103,7 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 1 stack
 		ARG 2 state
 	METHOD method_7866 getTranslationKey (Lnet/minecraft/class_1799;)Ljava/lang/String;
+		COMMENT Gets the translation key of this item using the provided item stack for context.
 		ARG 1 stack
 	METHOD method_7867 fromBlock (Lnet/minecraft/class_2248;)Lnet/minecraft/class_1792;
 		ARG 0 block
@@ -101,7 +121,11 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	METHOD method_7875 byRawId (I)Lnet/minecraft/class_1792;
 		ARG 0 id
 	METHOD method_7876 getTranslationKey ()Ljava/lang/String;
+		COMMENT Gets the translation key of this item.
 	METHOD method_7877 isIn (Lnet/minecraft/class_1761;)Z
+		COMMENT Checks if this item is in a specified item group.
+		COMMENT
+		COMMENT @return true if the item is in the specified item group or the item group is {@link net.minecraft.item.ItemGroup#SEARCH}.
 		ARG 1 group
 	METHOD method_7878 canRepair (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
@@ -118,7 +142,14 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 1 stack
 	METHOD method_7882 getMaxCount ()I
 	METHOD method_7884 useOnBlock (Lnet/minecraft/class_1838;)Lnet/minecraft/class_1269;
+		COMMENT Called when an item is used on a block.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution when using this method.
+		COMMENT The logical side can be checked using {@link net.minecraft.world.World#isClient() context.getWorld().isClient()}.
+		COMMENT
+		COMMENT @return an action result that specifies if using the item on a block was successful.
 		ARG 1 context
+			COMMENT the usage context
 	METHOD method_7885 canMine (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)Z
 		ARG 1 state
 		ARG 2 world
@@ -127,6 +158,9 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	METHOD method_7886 hasGlint (Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
 	METHOD method_7887 shouldSyncTagToClient ()Z
+		COMMENT Checks if an item should have additional data synced to the client.
+		COMMENT
+		COMMENT <p>If an item is damageable, this method is ignored.
 	METHOD method_7888 inventoryTick (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;IZ)V
 		ARG 1 stack
 		ARG 2 world
