@@ -2,8 +2,10 @@ CLASS net/minecraft/class_5382 net/minecraft/util/dynamic/RegistryOps
 	FIELD field_25509 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_25511 registryManager Lnet/minecraft/class_5455$class_5457;
 	FIELD field_25512 valueHolders Ljava/util/Map;
+	FIELD field_26738 resourceAccess Lnet/minecraft/class_5382$class_5506;
 	METHOD <init> (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5382$class_5506;Lnet/minecraft/class_5455$class_5457;Ljava/util/IdentityHashMap;)V
 		ARG 1 delegate
+		ARG 2 resourceAccess
 	METHOD method_29753 of (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_3300;Lnet/minecraft/class_5455$class_5457;)Lnet/minecraft/class_5382;
 		ARG 0 delegate
 		ARG 1 resourceManager
@@ -23,6 +25,29 @@ CLASS net/minecraft/class_5382 net/minecraft/util/dynamic/RegistryOps
 		COMMENT Reads a supplier for a registry element.
 		COMMENT
 		COMMENT <p>This logic is used by both {@code decodeOrId} and {@code loadToRegistry}.</p>
+		ARG 1 key
+		ARG 2 registry
 		ARG 4 elementId
+	METHOD method_31150 of (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5382$class_5506;Lnet/minecraft/class_5455$class_5457;)Lnet/minecraft/class_5382;
+	METHOD method_31152 (Lnet/minecraft/class_5321;)Lcom/mojang/serialization/DataResult;
+		ARG 1 key
 	CLASS class_5383 ValueHolder
 		FIELD field_25513 values Ljava/util/Map;
+	CLASS class_5506
+		METHOD method_31154 resourceAccess (Lnet/minecraft/class_3300;)Lnet/minecraft/class_5382$class_5506;
+		METHOD method_31156 findJsons (Lnet/minecraft/class_5321;)Ljava/util/Collection;
+			ARG 1 registryKey
+		CLASS 1
+			METHOD method_31158 (Ljava/lang/String;)Z
+				ARG 0 resourceName
+		CLASS class_5507
+			FIELD field_26741 jsonsByKey Ljava/util/Map;
+			FIELD field_26742 rawIdsByKey Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+			FIELD field_26743 lifecyclesByKey Ljava/util/Map;
+			METHOD method_31159 add (Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_5321;Lcom/mojang/serialization/Encoder;ILjava/lang/Object;Lcom/mojang/serialization/Lifecycle;)V
+				ARG 4 rawId
+				ARG 5 entry
+			METHOD method_31161 (Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;)Lnet/minecraft/class_2960;
+				ARG 1 key
+			METHOD method_31162 (Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;)Z
+				ARG 1 key
