@@ -23,7 +23,10 @@ plugins {
 	id 'java' // for jd gen
 }
 
-def minecraft_version = "1.16.2"
+def minecraft_version = "1.16_combat-3"
+
+//Used as this is an experimental build.
+def version_manifest_url = "https://gist.githubusercontent.com/modmuss50/5ce466e1937b62cefcfe7af776fb6d05/raw/76625758c964c39613c2481555da058fc5948eca/1.16_combat_3.json";
 
 def ENV = System.getenv()
 // Fetch build number from Jenkins
@@ -112,18 +115,6 @@ boolean validateChecksum(File file, String checksum) {
 	return false
 }
 
-task downloadVersionsManifest {
-	group = setupGroup
-	//inputs.property "mc_ver", minecraft_version
-	inputs.property "currenttime", new Date()
-	def manifestFile = new File(cacheFilesMinecraft, "version_manifest.json")
-	outputs.file(manifestFile)
-	doLast {
-		logger.lifecycle(":downloading minecraft versions manifest")
-		FileUtils.copyURLToFile(new URL("https://launchermeta.mojang.com/mc/game/version_manifest.json"), manifestFile)
-	}
-}
-
 def getManifestVersion(File manifestFile, String minecraft_version) {
 	def manifest = manifestFile.exists() ? new JsonSlurper().parseText(FileUtils.readFileToString(manifestFile)) : null
 	return manifest != null ? manifest.versions.stream().filter({
@@ -131,29 +122,13 @@ def getManifestVersion(File manifestFile, String minecraft_version) {
 	}).findFirst() : java.util.Optional.empty()
 }
 
-task downloadWantedVersionManifest(dependsOn: downloadVersionsManifest) {
+task downloadWantedVersionManifest() {
 	group = setupGroup
-	def manifestFile = downloadVersionsManifest.outputs.files.singleFile
-	def manifestVersion = getManifestVersion(manifestFile, minecraft_version)
-
-	//have to grab the release time as there's a current timestamp on each element?!
-	inputs.property "releaseTime", manifestVersion.isPresent() ? manifestVersion.get().releaseTime : -1
-
 	outputs.file versionFile
 
 	doLast {
-		manifestVersion = getManifestVersion(manifestFile, minecraft_version)
-		//nb need to re-read here in case it didn't exist before
-		if (manifestVersion.isPresent() || versionFile.exists()) {
-
-			if (manifestVersion.isPresent()) {
-				FileUtils.copyURLToFile(new URL(manifestVersion.get().url), versionFile)
-			}
-		} else {
-			throw new RuntimeException("No version data for Minecraft version ${minecraft_version}")
-		}
+		FileUtils.copyURLToFile(new URL(version_manifest_url), versionFile)
 	}
-
 }
 
 task downloadMcJars(dependsOn: downloadWantedVersionManifest) {
