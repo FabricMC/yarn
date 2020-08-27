@@ -5,10 +5,32 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 	FIELD field_24862 STRUCTURE_TO_GENERATION_STEP Ljava/util/Map;
 	METHOD method_13149 getMonsterSpawns ()Ljava/util/List;
 	METHOD method_14015 locateStructure (Lnet/minecraft/class_4538;Lnet/minecraft/class_5138;Lnet/minecraft/class_2338;IZJLnet/minecraft/class_5314;)Lnet/minecraft/class_2338;
+		COMMENT Tries to find the closest structure of this type near a given block.
+		COMMENT <p>
+		COMMENT This method relies on the given world generation settings (seed and placement configuration)
+		COMMENT to match the time at which the structure was generated, otherwise it will not be found.
+		COMMENT <p>
+		COMMENT New chunks will only be generated up to the {@link net.minecraft.world.chunk.ChunkStatus#STRUCTURE_STARTS} phase by this method.
+		COMMENT
+		COMMENT @return {@code null} if no structure could be found within the given search radius
+		ARG 1 world
+		ARG 2 structureAccessor
+		ARG 3 searchStartPos
+		ARG 4 searchRadius
+			COMMENT The search radius in chunks around the chunk the given block position is in. A radius of 0 will only search in the given chunk.
 		ARG 5 skipExistingChunks
+		ARG 6 worldSeed
+		ARG 8 config
 	METHOD method_14016 getStructureStartFactory ()Lnet/minecraft/class_3195$class_3774;
 	METHOD method_14019 getName ()Ljava/lang/String;
 	METHOD method_14026 shouldStartAt (Lnet/minecraft/class_2794;Lnet/minecraft/class_1966;JLnet/minecraft/class_2919;IILnet/minecraft/class_1959;Lnet/minecraft/class_1923;Lnet/minecraft/class_3037;)Z
+		COMMENT Checks if this structure can <em>actually</em> be placed at a potential structure position determined via
+		COMMENT {@link #getStartChunk}. Specific structures override this method to reduce the spawn probability or
+		COMMENT restrict the spawn in some other way.
+		ARG 3 worldSeed
+		ARG 6 chunkX
+		ARG 7 chunkZ
+		ARG 9 chunkPos
 	METHOD method_16140 getCreatureSpawns ()Ljava/util/List;
 	METHOD method_28659 configure (Lnet/minecraft/class_3037;)Lnet/minecraft/class_5312;
 		ARG 1 config

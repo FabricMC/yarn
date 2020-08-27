@@ -106,6 +106,14 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 3 y
 		ARG 5 z
 	METHOD method_18276 isInSneakingPose ()Z
+		COMMENT Returns whether the entity is in a crouching pose.
+		COMMENT
+		COMMENT <p>Compared to {@link #isSneaking()}, it only makes the entity appear
+		COMMENT crouching and does not bring other effects of sneaking, such as no less
+		COMMENT obvious name label rendering, no dismounting while riding, etc.</p>
+		COMMENT
+		COMMENT <p>This is used by vanilla for non-player entities to crouch, such as
+		COMMENT for foxes and cats.</p>
 	METHOD method_18375 detach ()V
 		COMMENT Removes all the passengers and removes this entity from any vehicles it is riding.
 	METHOD method_18376 getPose ()Lnet/minecraft/class_4050;
@@ -428,7 +436,12 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 index
 		ARG 2 value
 	METHOD method_5730 setOnFireFromLava ()V
-	METHOD method_5731 changeDimension (Lnet/minecraft/class_3218;)Lnet/minecraft/class_1297;
+	METHOD method_5731 moveToWorld (Lnet/minecraft/class_3218;)Lnet/minecraft/class_1297;
+		COMMENT Moves this entity to another world.
+		COMMENT
+		COMMENT <p>Note all entities except server player entities are completely recreated at the destination.
+		COMMENT
+		COMMENT @return the entity in the other world
 		ARG 1 destination
 	METHOD method_5732 isAttackable ()Z
 	METHOD method_5733 shouldRenderName ()Z
@@ -446,7 +459,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5742 onStoppedTrackingBy (Lnet/minecraft/class_3222;)V
 		ARG 1 player
 	METHOD method_5743 getItemsEquipped ()Ljava/lang/Iterable;
-	METHOD method_5745 rayTrace (DFZ)Lnet/minecraft/class_239;
+	METHOD method_5745 raycast (DFZ)Lnet/minecraft/class_239;
 		ARG 1 maxDistance
 		ARG 3 tickDelta
 		ARG 4 includeFluids

@@ -81,7 +81,18 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 x
 		ARG 2 z
 		ARG 3 forced
-	METHOD method_18198 getEntities (Lnet/minecraft/class_1299;Ljava/util/function/Predicate;)Ljava/util/List;
+	METHOD method_18198 getEntitiesByType (Lnet/minecraft/class_1299;Ljava/util/function/Predicate;)Ljava/util/List;
+		COMMENT Computes a list of entities of the given type.
+		COMMENT
+		COMMENT <strong>Warning:<strong> If {@code null} is passed as the entity type filter, care should be
+		COMMENT taken that the type argument {@code T} is set to {@link Entity}, otherwise heap pollution
+		COMMENT in the returned list or {@link ClassCastException} can occur.
+		COMMENT
+		COMMENT @return a list of entities of the given type
+		ARG 1 type
+			COMMENT the entity type of the returned entities, or {@code null} for any type of entity
+		ARG 2 predicate
+			COMMENT a predicate which returned entities must satisfy
 	METHOD method_18203 tickChunk (Lnet/minecraft/class_2818;I)V
 		ARG 1 chunk
 		ARG 2 randomTickSpeed
@@ -108,7 +119,9 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 shouldKeepTicking
 	METHOD method_18766 getPlayers (Ljava/util/function/Predicate;)Ljava/util/List;
 		ARG 1 predicate
-	METHOD method_18767 checkChunk (Lnet/minecraft/class_1297;)V
+	METHOD method_18767 checkEntityChunkPos (Lnet/minecraft/class_1297;)V
+		COMMENT Validates if an entity's current position matches its chunk position. If the entity's chunk position and actual position don't match, then the entity will be moved to its new chunk.
+		ARG 1 entity
 	METHOD method_18768 tryLoadEntity (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_18769 onDimensionChanged (Lnet/minecraft/class_1297;)V

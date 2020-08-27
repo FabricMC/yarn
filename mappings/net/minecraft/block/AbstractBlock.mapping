@@ -63,6 +63,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 flags
+		ARG 5 maxUpdateDepth
 	METHOD method_9522 isSideInvisible (Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;Lnet/minecraft/class_2350;)Z
 		ARG 1 state
 		ARG 2 stateFrom
@@ -82,6 +83,15 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 3 pos
 		ARG 4 context
 	METHOD method_9534 onUse (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;Lnet/minecraft/class_3965;)Lnet/minecraft/class_1269;
+		COMMENT Called when this block is used by a player.
+		COMMENT This, by default, is bound to using the right mouse button.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution when overriding this method.
+		COMMENT The logical side can be checked using {@link net.minecraft.world.World#isClient() world.isClient()}.
+		COMMENT
+		COMMENT <p>If the action result is successful on a logical client, then the action will be sent to the logical server for processing.
+		COMMENT
+		COMMENT @return an action result that specifies if using the block was successful.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
@@ -144,7 +154,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
-	METHOD method_9584 getRayTraceShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
+	METHOD method_9584 getRaycastShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
@@ -165,6 +175,11 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 3 world
 		ARG 4 pos
 	METHOD method_9598 rotate (Lnet/minecraft/class_2680;Lnet/minecraft/class_2470;)Lnet/minecraft/class_2680;
+		COMMENT Applies a block rotation to a block state.
+		COMMENT
+		COMMENT <p>By default, this returns the provided block state.
+		COMMENT
+		COMMENT @return the rotated block state
 		ARG 1 state
 		ARG 2 rotation
 	METHOD method_9603 getStrongRedstonePower (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)I

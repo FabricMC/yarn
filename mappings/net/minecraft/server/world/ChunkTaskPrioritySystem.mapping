@@ -1,31 +1,41 @@
 CLASS net/minecraft/class_3900 net/minecraft/server/world/ChunkTaskPrioritySystem
 	FIELD field_17248 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_17249 queues Ljava/util/Map;
-	FIELD field_17250 actors Ljava/util/Set;
-	FIELD field_17251 sorter Lnet/minecraft/class_3846;
+	FIELD field_17250 idleActors Ljava/util/Set;
+	FIELD field_17251 controlActor Lnet/minecraft/class_3846;
 	METHOD <init> (Ljava/util/List;Ljava/util/concurrent/Executor;I)V
 		ARG 1 actors
 		ARG 2 executor
 		ARG 3 maxQueues
-	METHOD method_17282 execute (Lnet/minecraft/class_3906;Ljava/util/function/Function;JLjava/util/function/IntSupplier;Z)V
+	METHOD method_17282 enqueueChunk (Lnet/minecraft/class_3906;Ljava/util/function/Function;JLjava/util/function/IntSupplier;Z)V
 		ARG 1 actor
+		ARG 2 task
+		ARG 3 chunkPos
 		ARG 5 lastLevelUpdatedToProvider
-	METHOD method_17614 createSorterExecutor (Lnet/minecraft/class_3906;)Lnet/minecraft/class_3906;
+		ARG 6 addBlocker
+	METHOD method_17614 createUnblockingExecutor (Lnet/minecraft/class_3906;)Lnet/minecraft/class_3906;
 		ARG 1 executor
-	METHOD method_17615 sort (Lnet/minecraft/class_3906;JLjava/lang/Runnable;Z)V
+	METHOD method_17615 removeChunk (Lnet/minecraft/class_3906;JLjava/lang/Runnable;Z)V
+		ARG 1 actor
+		ARG 2 chunkPos
+		ARG 4 callback
+		ARG 5 clearTask
 	METHOD method_17622 createExecutor (Lnet/minecraft/class_3906;Z)Lnet/minecraft/class_3906;
 		ARG 1 executor
+		ARG 2 addBlocker
 	METHOD method_17626 createMessage (Ljava/lang/Runnable;JLjava/util/function/IntSupplier;)Lnet/minecraft/class_3900$class_3946;
-		ARG 0 runnable
+		ARG 0 task
 		ARG 1 pos
 		ARG 3 lastLevelUpdatedToProvider
-	METHOD method_17627 createSorterMessage (Ljava/lang/Runnable;JZ)Lnet/minecraft/class_3900$class_3947;
-		ARG 0 runnable
+	METHOD method_17627 createUnblockingMessage (Ljava/lang/Runnable;JZ)Lnet/minecraft/class_3900$class_3947;
+		ARG 0 task
 		ARG 1 pos
+		ARG 3 removeTask
 	METHOD method_17629 createMessage (Lnet/minecraft/class_3193;Ljava/lang/Runnable;)Lnet/minecraft/class_3900$class_3946;
 		ARG 0 holder
-		ARG 1 runnable
-	METHOD method_17630 (Lnet/minecraft/class_3899;Lnet/minecraft/class_3906;)V
+		ARG 1 task
+	METHOD method_17630 enqueueExecution (Lnet/minecraft/class_3899;Lnet/minecraft/class_3906;)V
+		ARG 1 queue
 		ARG 2 actor
 	METHOD method_17632 getQueue (Lnet/minecraft/class_3906;)Lnet/minecraft/class_3899;
 		ARG 1 actor
