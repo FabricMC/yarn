@@ -63,6 +63,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 flags
+		ARG 5 maxUpdateDepth
 	METHOD method_9522 isSideInvisible (Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;Lnet/minecraft/class_2350;)Z
 		ARG 1 state
 		ARG 2 stateFrom
@@ -82,6 +83,15 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 3 pos
 		ARG 4 context
 	METHOD method_9534 onUse (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;Lnet/minecraft/class_3965;)Lnet/minecraft/class_1269;
+		COMMENT Called when this block is used by a player.
+		COMMENT This, by default, is bound to using the right mouse button.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution when overriding this method.
+		COMMENT The logical side can be checked using {@link net.minecraft.world.World#isClient() world.isClient()}.
+		COMMENT
+		COMMENT <p>If the action result is successful on a logical client, then the action will be sent to the logical server for processing.
+		COMMENT
+		COMMENT @return an action result that specifies if using the block was successful.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
@@ -126,6 +136,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 2 builder
 	METHOD method_9565 onStacksDropped (Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1799;)V
 		ARG 1 state
+		ARG 2 world
 		ARG 3 pos
 		ARG 4 stack
 	METHOD method_9569 mirror (Lnet/minecraft/class_2680;Lnet/minecraft/class_2415;)Lnet/minecraft/class_2680;
@@ -143,7 +154,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
-	METHOD method_9584 getRayTraceShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
+	METHOD method_9584 getRaycastShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
@@ -164,6 +175,11 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 3 world
 		ARG 4 pos
 	METHOD method_9598 rotate (Lnet/minecraft/class_2680;Lnet/minecraft/class_2470;)Lnet/minecraft/class_2680;
+		COMMENT Applies a block rotation to a block state.
+		COMMENT
+		COMMENT <p>By default, this returns the provided block state.
+		COMMENT
+		COMMENT @return the rotated block state
 		ARG 1 state
 		ARG 2 rotation
 	METHOD method_9603 getStrongRedstonePower (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)I
@@ -225,15 +241,21 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 material
 			ARG 2 materialColorFactory
 		METHOD method_16228 dropsLike (Lnet/minecraft/class_2248;)Lnet/minecraft/class_4970$class_2251;
+			COMMENT Specifies that a block should drop the same items as a provided block.
 			ARG 1 source
+				COMMENT the block to copy item drops from
 		METHOD method_16229 dropsNothing ()Lnet/minecraft/class_4970$class_2251;
+			COMMENT Specifies that a block drops nothing when broken.
 		METHOD method_22488 nonOpaque ()Lnet/minecraft/class_4970$class_2251;
+			COMMENT Specifies that a block should be non-opaque and light should be allowed to pass through.
 		METHOD method_23351 velocityMultiplier (F)Lnet/minecraft/class_4970$class_2251;
 			ARG 1 velocityMultiplier
 		METHOD method_23352 jumpVelocityMultiplier (F)Lnet/minecraft/class_4970$class_2251;
 			ARG 1 jumpVelocityMultiplier
 		METHOD method_26235 allowsSpawning (Lnet/minecraft/class_4970$class_4972;)Lnet/minecraft/class_4970$class_2251;
+			COMMENT Specifies logic that calculates whether an entity can spawn on a block.
 			ARG 1 predicate
+				COMMENT the predicate used to calculate whether an entity can spawn on this block
 		METHOD method_26236 solidBlock (Lnet/minecraft/class_4970$class_4973;)Lnet/minecraft/class_4970$class_2251;
 			ARG 1 predicate
 		METHOD method_26237 (Lnet/minecraft/class_2680;)I
@@ -253,6 +275,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		METHOD method_26241 (Lnet/minecraft/class_3620;Lnet/minecraft/class_2680;)Lnet/minecraft/class_3620;
 			ARG 1 state
 		METHOD method_26243 suffocates (Lnet/minecraft/class_4970$class_4973;)Lnet/minecraft/class_4970$class_2251;
+			COMMENT Specifies logic that calculates whether an entity should suffocate if inside of a block.
 			ARG 1 predicate
 		METHOD method_26244 (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
 			ARG 0 state
@@ -278,7 +301,11 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 0 material
 			ARG 1 color
 		METHOD method_9618 breakInstantly ()Lnet/minecraft/class_4970$class_2251;
+			COMMENT Specifies that a block is broken instantly.
 		METHOD method_9624 dynamicBounds ()Lnet/minecraft/class_4970$class_2251;
+			COMMENT Specifies that a block's collision bounds can dynamically resize.
+			COMMENT By default, block collision bounds are cached for performance.
+			COMMENT By invoking this method, the game will not cache the block collision bounds and instead calculate the collision bounds when needed.
 		METHOD method_9626 sounds (Lnet/minecraft/class_2498;)Lnet/minecraft/class_4970$class_2251;
 			ARG 1 soundGroup
 		METHOD method_9628 slipperiness (F)Lnet/minecraft/class_4970$class_2251;
@@ -293,6 +320,9 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		METHOD method_9632 strength (F)Lnet/minecraft/class_4970$class_2251;
 			ARG 1 strength
 		METHOD method_9634 noCollision ()Lnet/minecraft/class_4970$class_2251;
+			COMMENT Specifies that a block should have no collision bounds.
+			COMMENT
+			COMMENT <p>This also marks a block as non-opaque.
 		METHOD method_9637 of (Lnet/minecraft/class_3614;)Lnet/minecraft/class_4970$class_2251;
 			ARG 0 material
 		METHOD method_9639 of (Lnet/minecraft/class_3614;Lnet/minecraft/class_3620;)Lnet/minecraft/class_4970$class_2251;
@@ -380,6 +410,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 2 pos
 			ARG 3 player
 		METHOD method_26180 onStacksDropped (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1799;)V
+			ARG 1 world
 			ARG 2 pos
 			ARG 3 stack
 		METHOD method_26181 neighborUpdate (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338;Z)V
@@ -397,6 +428,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 world
 			ARG 2 pos
 			ARG 3 flags
+			ARG 4 maxUpdateDepth
 		METHOD method_26184 canPlaceAt (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z
 			ARG 1 world
 			ARG 2 pos
@@ -445,6 +477,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 world
 			ARG 2 pos
 			ARG 3 flags
+			ARG 4 maxUpdateDepth
 		METHOD method_26199 randomTick (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Ljava/util/Random;)V
 			ARG 1 world
 			ARG 2 pos
@@ -501,7 +534,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 world
 			ARG 2 pos
 		METHOD method_26223 getPistonBehavior ()Lnet/minecraft/class_3619;
-		METHOD method_26224 getRayTraceShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
+		METHOD method_26224 getRaycastShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
 			ARG 1 world
 			ARG 2 pos
 		METHOD method_26225 isOpaque ()Z
@@ -527,6 +560,14 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		METHOD method_27852 isOf (Lnet/minecraft/class_2248;)Z
 			ARG 1 block
 		METHOD method_29291 isToolRequired ()Z
+		METHOD method_30101 updateNeighbors (Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;I)V
+			ARG 1 world
+			ARG 2 pos
+			ARG 3 flags
+		METHOD method_30102 prepare (Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;I)V
+			ARG 1 world
+			ARG 2 pos
+			ARG 3 flags
 		METHOD method_30368 isSideSolid (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;Lnet/minecraft/class_5431;)Z
 			ARG 1 world
 			ARG 2 pos

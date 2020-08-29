@@ -1,13 +1,36 @@
 CLASS net/minecraft/class_2370 net/minecraft/util/registry/SimpleRegistry
-	FIELD field_11107 entriesById Lcom/google/common/collect/BiMap;
+	FIELD field_11107 idToEntry Lcom/google/common/collect/BiMap;
 	FIELD field_11108 randomEntries [Ljava/lang/Object;
 	FIELD field_11109 nextId I
 	FIELD field_11111 LOGGER Lorg/apache/logging/log4j/Logger;
-	FIELD field_25067 entriesByKey Lcom/google/common/collect/BiMap;
-	FIELD field_26731 entryLifecycles Ljava/util/Map;
+	FIELD field_25067 keyToEntry Lcom/google/common/collect/BiMap;
+	FIELD field_26682 rawIdToEntry Lit/unimi/dsi/fastutil/objects/ObjectList;
+	FIELD field_26683 entryToRawId Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+	FIELD field_26731 entryToLifecycle Ljava/util/Map;
+	FIELD field_26732 lifecycle Lcom/mojang/serialization/Lifecycle;
 	METHOD method_10240 getRandom (Ljava/util/Random;)Ljava/lang/Object;
-	METHOD method_29721 createCodec (Lnet/minecraft/class_5321;Lcom/mojang/serialization/Lifecycle;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
+	METHOD method_29098 createRegistryManagerCodec (Lnet/minecraft/class_5321;Lcom/mojang/serialization/Lifecycle;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
+		ARG 2 entryCodec
+	METHOD method_29721 createRegistryCodec (Lnet/minecraft/class_5321;Lcom/mojang/serialization/Lifecycle;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
 		ARG 0 registryRef
 		ARG 1 lifecycle
+		ARG 2 entryCodec
 	METHOD method_31139 getEntryLifecycle (Ljava/lang/Object;)Lcom/mojang/serialization/Lifecycle;
 		COMMENT Gets the lifecycle of a registry entry.
+	METHOD method_30929 createRegistryManagerEntryCodec (Lnet/minecraft/class_5321;Lcom/mojang/serialization/MapCodec;)Lcom/mojang/serialization/MapCodec;
+		ARG 1 entryCodec
+	METHOD method_31051 set (ILnet/minecraft/class_5321;Ljava/lang/Object;Lcom/mojang/serialization/Lifecycle;Z)Ljava/lang/Object;
+		ARG 1 rawId
+		ARG 2 key
+		ARG 3 entry
+		ARG 5 checkDuplicateKeys
+	METHOD method_31059 createCodec (Lnet/minecraft/class_5321;Lcom/mojang/serialization/Lifecycle;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
+		ARG 2 entryCodec
+	CLASS class_5501 RegistryManagerEntry
+		FIELD field_26684 key Lnet/minecraft/class_5321;
+		FIELD field_26685 rawId I
+		FIELD field_26686 entry Ljava/lang/Object;
+		METHOD <init> (Lnet/minecraft/class_5321;ILjava/lang/Object;)V
+			ARG 1 key
+			ARG 2 rawId
+			ARG 3 entry
