@@ -116,7 +116,7 @@ Name screen coordinates `x` and `y`, rather than `left` and `top`.
 
 ## Javadocs
 
-Write full sentences for class, method and fields javadocs, starting with an uppercase and ending with a period. Use HTML tags such as `<p>` if the docs have several paragraphs.
+Write sentences for class, method and fields javadocs, starting with an uppercase and ending with a period. Start method docs with verbs, like `Gets` or `Called`. Use HTML tags such as `<p>` if the docs have several paragraphs.
 
 Write quick descriptions for parameter javadocs as well as `@return` tags, with no uppercase or period. Add parameter docs to the parameter itself instead of using the `@param` tag.
 
