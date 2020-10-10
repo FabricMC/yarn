@@ -43,6 +43,7 @@ time to type thanks to IDE autocompletion. Common abbreviations you should use a
  - "pos" for "position"
  - "nbt" for "named binary tag"
  - "init" for "initialize"
+ - "min"/"max" for "minimum"/"maximum"
  - Any abbreviations used by Java or libraries ("json", "html", etc.)
 
 Treat acronyms as single words rather than capitalising every letter. This improves readability (compare `JsonObject` and
@@ -112,6 +113,14 @@ Coordinates can be named `x`, `y`, and `z` when it's clear what they represent. 
 front of the coordinate (`velocityX`, not `xVelocity`).
 
 Name screen coordinates `x` and `y`, rather than `left` and `top`.
+
+## Javadocs
+
+Write full sentences for class, method and fields javadocs, starting with an uppercase and ending with a period. Use HTML tags such as `<p>` if the docs have several paragraphs.
+
+Write quick descriptions for parameter javadocs as well as `@return` tags, with no uppercase or period. Add parameter docs to the parameter itself instead of using the `@param` tag.
+
+Use `@link`, `@linkplain` and `@see` tags to refer to other parts of the code.
 
 ## Mojang names
 
