@@ -23,7 +23,7 @@ plugins {
 	id 'java' // for jd gen
 }
 
-def minecraft_version = "1.16.2-pre1"
+def minecraft_version = "1.16.4-pre1"
 
 def ENV = System.getenv()
 // Fetch build number from Jenkins
@@ -65,7 +65,6 @@ def cacheFilesMinecraft = file(".gradle/minecraft")
 def tempDir = file(".gradle/temp")
 def mergedFile = file("${minecraft_version}-merged.jar")
 def intermediaryJar = file("${minecraft_version}-intermediary.jar")
-def yarnJar = file("${minecraft_version}-yarn.jar")
 def namedJar = file("${minecraft_version}-named.jar")
 def versionFile = new File(cacheFilesMinecraft, "${minecraft_version}.json")
 def clientJar = new File(cacheFilesMinecraft, "${minecraft_version}-client.jar")
@@ -501,22 +500,6 @@ clean.doFirst {
 }
 
 tasks.build.dependsOn "compressTiny","tinyJar","v2UnmergedYarnJar", "v2MergedYarnJar"
-
-task mapYarnJar(dependsOn: [compressTiny, mapIntermediaryJar]) {
-	group = mapJarGroup
-	inputs.files downloadMcLibs.outputs.files.files
-	outputs.file(yarnJar)
-
-	//Force the task to always run
-	outputs.upToDateWhen { false }
-
-	doLast {
-		logger.lifecycle(":mapping minecraft to yarn")
-
-		File tinyInput = compressTiny.output
-		mapJar(yarnJar, intermediaryJar, tinyInput, libraries, "intermediary", "named")
-	}
-}
 
 task exportMappingsOfficial(dependsOn: downloadIntermediary) {
 	def composeInput = downloadIntermediary.dest

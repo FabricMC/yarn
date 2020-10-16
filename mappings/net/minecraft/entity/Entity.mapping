@@ -8,6 +8,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_22468 blockPos Lnet/minecraft/class_2338;
 	FIELD field_23807 inanimate Z
 	FIELD field_25154 chunkPosUpdateRequested Z
+	FIELD field_25750 trackedPosition Lnet/minecraft/class_243;
 	FIELD field_5951 ridingCooldown I
 	FIELD field_5952 onGround Z
 	FIELD field_5953 firstUpdate Z
@@ -229,12 +230,23 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_25936 getLandingBlockState ()Lnet/minecraft/class_2680;
 	METHOD method_27298 shouldSpawnSprintingParticles ()Z
 	METHOD method_29240 isChunkPosUpdateRequested ()Z
+	METHOD method_29495 refreshPositionAfterTeleport (Lnet/minecraft/class_243;)V
+	METHOD method_30227 getTrackedPosition ()Lnet/minecraft/class_243;
+	METHOD method_30228 updateTrackedPosition (Lnet/minecraft/class_243;)V
+		ARG 1 pos
+	METHOD method_30229 resetNetherPortalCooldown ()V
+	METHOD method_30230 hasNetherPortalCooldown ()Z
 	METHOD method_30329 getTeleportTarget (Lnet/minecraft/class_3218;)Lnet/minecraft/class_5454;
 		ARG 1 destination
-	METHOD method_30333 getTeleportationScale (Lnet/minecraft/class_2874;Lnet/minecraft/class_2874;)D
-		COMMENT Gets the teleportation scale between two dimensions.
-		ARG 0 origin
-		ARG 1 destination
+	METHOD method_30634 (DDD)V
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+	METHOD method_30948 isCollidable ()Z
+	METHOD method_30949 collidesWith (Lnet/minecraft/class_1297;)Z
+		ARG 1 other
+	METHOD method_31166 (F)Lnet/minecraft/class_243;
+		ARG 1 tickDelta
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		ARG 1 state
@@ -457,7 +469,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5742 onStoppedTrackingBy (Lnet/minecraft/class_3222;)V
 		ARG 1 player
 	METHOD method_5743 getItemsEquipped ()Ljava/lang/Iterable;
-	METHOD method_5745 rayTrace (DFZ)Lnet/minecraft/class_239;
+	METHOD method_5745 raycast (DFZ)Lnet/minecraft/class_239;
 		ARG 1 maxDistance
 		ARG 3 tickDelta
 		ARG 4 includeFluids
@@ -555,6 +567,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5799 isTouchingWater ()Z
 		COMMENT Returns whether this entity's hitbox is touching water fluid.
 	METHOD method_5800 onStruckByLightning (Lnet/minecraft/class_3218;Lnet/minecraft/class_1538;)V
+		ARG 1 world
+		ARG 2 lightning
 	METHOD method_5801 playFlySound (F)F
 		ARG 1 distance
 	METHOD method_5802 getRotationClient ()Lnet/minecraft/class_241;

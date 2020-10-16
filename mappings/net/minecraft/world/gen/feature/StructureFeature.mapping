@@ -2,8 +2,12 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 	FIELD field_13879 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_24842 STRUCTURES Lcom/google/common/collect/BiMap;
 	FIELD field_24851 SWAMP_HUT Lnet/minecraft/class_3197;
+	FIELD field_24861 JIGSAW_STRUCTURES Ljava/util/List;
 	FIELD field_24862 STRUCTURE_TO_GENERATION_STEP Ljava/util/Map;
 	FIELD field_24863 codec Lcom/mojang/serialization/Codec;
+	FIELD field_26362 JIGSAW_ID Lnet/minecraft/class_2960;
+	METHOD <init> (Lcom/mojang/serialization/Codec;)V
+		ARG 1 codec
 	METHOD method_13149 getMonsterSpawns ()Ljava/util/List;
 	METHOD method_14015 locateStructure (Lnet/minecraft/class_4538;Lnet/minecraft/class_5138;Lnet/minecraft/class_2338;IZJLnet/minecraft/class_5314;)Lnet/minecraft/class_2338;
 		COMMENT Tries to find the closest structure of this type near a given block.
@@ -14,6 +18,8 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 		COMMENT New chunks will only be generated up to the {@link net.minecraft.world.chunk.ChunkStatus#STRUCTURE_STARTS} phase by this method.
 		COMMENT
 		COMMENT @return {@code null} if no structure could be found within the given search radius
+		ARG 1 world
+		ARG 2 structureAccessor
 		ARG 3 searchStartPos
 		ARG 4 searchRadius
 			COMMENT The search radius in chunks around the chunk the given block position is in. A radius of 0 will only search in the given chunk.
@@ -26,10 +32,15 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 		COMMENT Checks if this structure can <em>actually</em> be placed at a potential structure position determined via
 		COMMENT {@link #getStartChunk}. Specific structures override this method to reduce the spawn probability or
 		COMMENT restrict the spawn in some other way.
+		ARG 1 chunkGenerator
+		ARG 2 biomeSource
 		ARG 3 worldSeed
+		ARG 5 random
 		ARG 6 chunkX
 		ARG 7 chunkZ
+		ARG 8 biome
 		ARG 9 chunkPos
+		ARG 10 config
 	METHOD method_16140 getCreatureSpawns ()Ljava/util/List;
 	METHOD method_27218 getStartChunk (Lnet/minecraft/class_5314;JLnet/minecraft/class_2919;II)Lnet/minecraft/class_1923;
 		COMMENT Determines the cell of the structure placement grid a chunk belongs to, and
@@ -45,7 +56,7 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 		ARG 5 chunkX
 		ARG 6 chunkY
 	METHOD method_27219 isUniformDistribution ()Z
-		COMMENT If true, this structure's start position will be uniformy distributed within
+		COMMENT If true, this structure's start position will be uniformly distributed within
 		COMMENT a placement grid cell. If false, the structure's starting point will be biased
 		COMMENT towards the center of the cell.
 	METHOD method_28656 createStart (IILnet/minecraft/class_3341;IJ)Lnet/minecraft/class_3449;
@@ -64,6 +75,7 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 	METHOD method_28659 configure (Lnet/minecraft/class_3037;)Lnet/minecraft/class_5312;
 		ARG 1 config
 	METHOD method_28660 readStructureStart (Lnet/minecraft/class_3485;Lnet/minecraft/class_2487;J)Lnet/minecraft/class_3449;
+		ARG 0 manager
 		ARG 1 tag
 		ARG 2 worldSeed
 	METHOD method_28661 register (Ljava/lang/String;Lnet/minecraft/class_3195;Lnet/minecraft/class_2893$class_2895;)Lnet/minecraft/class_3195;

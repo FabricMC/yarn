@@ -17,6 +17,7 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 	FIELD field_10981 BIT_SHIFT_X I
 	FIELD field_10983 BIT_SHIFT_Z I
 	FIELD field_18789 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_25064 CODEC Lcom/mojang/serialization/Codec;
 	METHOD <init> (Lnet/minecraft/class_2374;)V
 		ARG 1 pos
 	METHOD <init> (Lnet/minecraft/class_2382;)V
@@ -29,7 +30,7 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		ARG 0 value
 		ARG 2 direction
 	METHOD method_10061 unpackLongX (J)I
-		ARG 0 x
+		ARG 0 packedPos
 	METHOD method_10062 toImmutable ()Lnet/minecraft/class_2338;
 		COMMENT Returns an immutable block position with the same x, y, and z as this
 		COMMENT position.
@@ -49,7 +50,7 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 	METHOD method_10070 rotate (Lnet/minecraft/class_2470;)Lnet/minecraft/class_2338;
 		ARG 1 rotation
 	METHOD method_10071 unpackLongY (J)I
-		ARG 0 y
+		ARG 0 packedPos
 	METHOD method_10072 south ()Lnet/minecraft/class_2338;
 	METHOD method_10075 crossProduct (Lnet/minecraft/class_2382;)Lnet/minecraft/class_2338;
 		ARG 1 pos
@@ -65,7 +66,7 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 	METHOD method_10081 add (Lnet/minecraft/class_2382;)Lnet/minecraft/class_2338;
 		ARG 1 pos
 	METHOD method_10083 unpackLongZ (J)I
-		ARG 0 z
+		ARG 0 packedPos
 	METHOD method_10084 up ()Lnet/minecraft/class_2338;
 	METHOD method_10086 up (I)Lnet/minecraft/class_2338;
 		ARG 1 distance
@@ -76,7 +77,7 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 	METHOD method_10091 removeChunkSectionLocalY (J)J
 		ARG 0 y
 	METHOD method_10092 fromLong (J)Lnet/minecraft/class_2338;
-		ARG 0 value
+		ARG 0 packedPos
 	METHOD method_10093 offset (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338;
 		ARG 1 direction
 	METHOD method_10094 iterate (IIIIII)Ljava/lang/Iterable;
@@ -141,6 +142,41 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		ARG 1 maxX
 		ARG 2 maxY
 		ARG 3 maxZ
+	METHOD method_27156 iterateRandomly (Ljava/util/Random;IIIIIII)Ljava/lang/Iterable;
+		COMMENT Iterates through {@code count} random block positions in the given area.
+		COMMENT
+		COMMENT <p>The iterator yields positions in no specific order. The same position
+		COMMENT may be returned multiple times by the iterator.
+		ARG 0 random
+			COMMENT the {@link Random} object used to compute new positions
+		ARG 1 count
+			COMMENT the number of positions to iterate
+		ARG 2 minX
+			COMMENT the minimum x value for returned positions
+		ARG 3 minY
+			COMMENT the minimum y value for returned positions
+		ARG 4 minZ
+			COMMENT the minimum z value for returned positions
+		ARG 5 maxX
+			COMMENT the maximum x value for returned positions
+		ARG 6 maxY
+			COMMENT the maximum y value for returned positions
+		ARG 7 maxZ
+			COMMENT the maximum z value for returned positions
+	METHOD method_29093 (Lnet/minecraft/class_2338;)Ljava/util/stream/IntStream;
+		ARG 0 pos
+	METHOD method_29094 (Ljava/util/stream/IntStream;)Lcom/mojang/serialization/DataResult;
+		ARG 0 stream
+	METHOD method_29095 ([I)Lnet/minecraft/class_2338;
+		ARG 0 values
+	METHOD method_29715 stream (Lnet/minecraft/class_238;)Ljava/util/stream/Stream;
+		ARG 0 box
+	METHOD method_30513 offset (Lnet/minecraft/class_2350$class_2351;I)Lnet/minecraft/class_2338;
+		ARG 1 axis
+		ARG 2 distance
+	CLASS 1
+		FIELD field_23945 pos Lnet/minecraft/class_2338$class_2339;
+		FIELD field_23946 remaining I
 	CLASS 2
 		FIELD field_23094 maxDistance I
 		FIELD field_23095 xRange I
@@ -151,6 +187,7 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		FIELD field_23101 limitY I
 		FIELD field_23102 dx I
 		FIELD field_23103 dy I
+		FIELD field_23378 pos Lnet/minecraft/class_2338$class_2339;
 	CLASS 3
 		FIELD field_23105 size I
 		FIELD field_23106 sizeX I
@@ -159,6 +196,10 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		FIELD field_23109 startY I
 		FIELD field_23110 startZ I
 		FIELD field_23111 index I
+		FIELD field_23380 pos Lnet/minecraft/class_2338$class_2339;
+	CLASS 4
+		FIELD field_25903 directions [Lnet/minecraft/class_2350;
+		FIELD field_25904 pos Lnet/minecraft/class_2338$class_2339;
 	CLASS class_2339 Mutable
 		METHOD method_10098 move (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338$class_2339;
 			COMMENT Moves this mutable block position by 1 block in the given direction.
@@ -203,3 +244,10 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 			COMMENT pos by the given direction.
 			ARG 1 pos
 			ARG 2 direction
+		METHOD method_27158 clamp (Lnet/minecraft/class_2350$class_2351;II)Lnet/minecraft/class_2338$class_2339;
+			COMMENT Clamps the component corresponding to the given {@code axis} between {@code min} and {@code max}.
+			ARG 1 axis
+			ARG 2 min
+			ARG 3 max
+		METHOD method_30927 move (Lnet/minecraft/class_2382;)Lnet/minecraft/class_2338$class_2339;
+			ARG 1 vec
