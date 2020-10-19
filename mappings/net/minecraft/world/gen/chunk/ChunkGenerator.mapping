@@ -2,13 +2,23 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	COMMENT In charge of shaping, adding biome specific surface blocks, and carving chunks,
 	COMMENT as well as populating the generated chunks with {@linkplain net.minecraft.world.gen.feature.Feature features} and {@linkplain net.minecraft.entity.Entity entities}.
 	COMMENT Biome placement starts here, however all vanilla and most modded chunk generators delegate this to a {@linkplain net.minecraft.world.biome.source.BiomeSource biome source}.
-	FIELD field_12761 biomeSource Lnet/minecraft/class_1966;
+	FIELD field_12761 populationSource Lnet/minecraft/class_1966;
+		COMMENT Used to control the population step without replacing the actual biome that comes from the original {@link biomeSource}.
+		COMMENT
+		COMMENT <p>This is used by {@link FlatChunkGenerator} to overwrite biome properties like whether lakes generate, while preserving the original biome ID.
 	FIELD field_16567 structuresConfig Lnet/minecraft/class_5311;
 	FIELD field_24746 CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_24747 biomeSource Lnet/minecraft/class_1966;
 	FIELD field_24748 worldSeed J
 	FIELD field_24749 strongholds Ljava/util/List;
 	METHOD <init> (Lnet/minecraft/class_1966;Lnet/minecraft/class_1966;Lnet/minecraft/class_5311;J)V
+		ARG 1 populationSource
+		ARG 2 biomeSource
+		ARG 3 structuresConfig
 		ARG 4 worldSeed
+	METHOD <init> (Lnet/minecraft/class_1966;Lnet/minecraft/class_5311;)V
+		ARG 1 biomeSource
+		ARG 2 structuresConfig
 	METHOD method_12088 populateNoise (Lnet/minecraft/class_1936;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;)V
 		COMMENT Generates the base shape of the chunk out of the basic block states as decided by this chunk generator's config.
 		ARG 1 world
@@ -33,8 +43,10 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 			COMMENT This is ignored for strongholds.
 		ARG 5 skipExistingChunks
 			COMMENT whether only structures that are not referenced by generated chunks (chunks past the STRUCTURE_STARTS stage) are returned, excluding strongholds
-	METHOD method_12104 getMaxY ()I
+	METHOD method_12104 getWorldHeight ()I
 	METHOD method_12106 populateBiomes (Lnet/minecraft/class_2378;Lnet/minecraft/class_2791;)V
+		ARG 1 biomeRegistry
+		ARG 2 chunk
 	METHOD method_12107 populateEntities (Lnet/minecraft/class_3233;)V
 		ARG 1 region
 	METHOD method_12108 carve (JLnet/minecraft/class_4543;Lnet/minecraft/class_2791;Lnet/minecraft/class_2893$class_2894;)V
@@ -57,6 +69,7 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	METHOD method_16130 addStructureReferences (Lnet/minecraft/class_5281;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;)V
 		COMMENT Finds all structures that the given chunk intersects, and adds references to their starting chunks to it.
 		COMMENT A radius of 8 chunks around the given chunk will be searched for structure starts.
+		ARG 1 world
 		ARG 2 accessor
 		ARG 3 chunk
 	METHOD method_16397 getHeight (IILnet/minecraft/class_2902$class_2903;)I
