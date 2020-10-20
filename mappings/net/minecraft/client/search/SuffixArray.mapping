@@ -1,22 +1,52 @@
 CLASS net/minecraft/class_1128 net/minecraft/client/search/SuffixArray
+	COMMENT Provides an efficient way to search for a text in multiple texts.
 	FIELD field_5502 maxTextLength I
 	FIELD field_5503 objects Ljava/util/List;
 	FIELD field_5504 suffixIndexToObjectIndex Lit/unimi/dsi/fastutil/ints/IntList;
 	FIELD field_5505 characters Lit/unimi/dsi/fastutil/ints/IntList;
-	FIELD field_5506 suffixSplits Lit/unimi/dsi/fastutil/ints/IntList;
+	FIELD field_5506 offsetInText Lit/unimi/dsi/fastutil/ints/IntList;
 	FIELD field_5507 PRINT_ARRAY Z
 	FIELD field_5508 PRINT_COMPARISONS Z
-	FIELD field_5509 suffixStarts Lit/unimi/dsi/fastutil/ints/IntList;
+	FIELD field_5509 textStarts Lit/unimi/dsi/fastutil/ints/IntList;
 	FIELD field_5510 LOGGER Lorg/apache/logging/log4j/Logger;
+	METHOD method_4803 ([I[I[III)V
+		ARG 3 i
+		ARG 4 j
 	METHOD method_4804 findAll (Ljava/lang/String;)Ljava/util/List;
+		COMMENT Retrieves all objects of which corresponding texts contain {@code text}.
+		COMMENT
+		COMMENT <p>You have to call {@link #build()} method before calling this method.
+		COMMENT
+		COMMENT <p>Takes O({@code text.length()} * log N) time to find objects where N is the
+		COMMENT sum of all text length added. Takes O(X + Y * log Y) time to collect found
+		COMMENT objects into a list where X is the number of occurrences of {@code text} in all
+		COMMENT texts added, and Y is the number of found objects.
 		ARG 1 text
 	METHOD method_4805 compare (Ljava/lang/String;I)I
 		ARG 1 string
 		ARG 2 suffixIndex
 	METHOD method_4806 add (Ljava/lang/Object;Ljava/lang/String;)V
+		COMMENT Adds a text with the corresponding object.
+		COMMENT
+		COMMENT <p>You are not allowed to call this method after calling {@link #build()} method.
+		COMMENT
+		COMMENT <p>Takes O({@code text.length()}) time.
 		ARG 1 object
 		ARG 2 text
-	METHOD method_4807 sort ()V
+	METHOD method_4807 build ()V
+		COMMENT Builds a suffix array with added texts.
+		COMMENT
+		COMMENT <p>You are not allowed to call this method multiple times.
+		COMMENT
+		COMMENT <p>Takes O(N * log N * log M) time on average where N is the sum of all text
+		COMMENT length added, and M is the maximum text length added.
 	METHOD method_4808 getDebugString (I)Ljava/lang/String;
 		ARG 1 suffixIndex
 	METHOD method_4809 printArray ()V
+	CLASS 1
+		METHOD compare (II)I
+			ARG 1 i
+			ARG 2 j
+		METHOD compare (Ljava/lang/Object;Ljava/lang/Object;)I
+			ARG 1 i
+			ARG 2 j
