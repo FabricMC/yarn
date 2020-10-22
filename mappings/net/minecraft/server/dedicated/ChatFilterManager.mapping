@@ -1,0 +1,44 @@
+CLASS net/minecraft/class_5514 net/minecraft/server/dedicated/ChatFilterManager
+	FIELD field_26823 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_26824 THREAD_COUNT Ljava/util/concurrent/atomic/AtomicInteger;
+	FIELD field_26825 THREAD_FACTORY Ljava/util/concurrent/ThreadFactory;
+	FIELD field_26826 chatUrl Ljava/net/URL;
+	FIELD field_26827 joinUrl Ljava/net/URL;
+	FIELD field_26828 leaveUrl Ljava/net/URL;
+	FIELD field_26829 apiKey Ljava/lang/String;
+	FIELD field_26830 ruleId I
+	FIELD field_26831 serverId Ljava/lang/String;
+	FIELD field_26833 threadPool Ljava/util/concurrent/ExecutorService;
+	METHOD <init> (Ljava/net/URI;Ljava/lang/String;ILjava/lang/String;Lnet/minecraft/class_5514$class_5515;I)V
+		ARG 1 apiServer
+		ARG 2 apiKey
+		ARG 3 ruleId
+		ARG 4 serverId
+		ARG 6 maxConcurrentRequests
+	METHOD method_31298 sendChatPacket (Lcom/mojang/authlib/GameProfile;Ljava/lang/String;Lnet/minecraft/class_5514$class_5515;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_31299 sendJoinOrLeavePacket (Lcom/mojang/authlib/GameProfile;Ljava/net/URL;Ljava/util/concurrent/Executor;)V
+		ARG 1 gameProfile
+		ARG 2 url
+		ARG 3 executor
+	METHOD method_31301 (Ljava/lang/Runnable;)Ljava/lang/Thread;
+		ARG 0 runnable
+	METHOD method_31302 create (Ljava/lang/String;)Lnet/minecraft/class_5514;
+		ARG 0 config
+	METHOD method_31304 sendRequest (Lcom/google/gson/JsonObject;Ljava/net/URL;)V
+		ARG 1 body
+		ARG 2 url
+	METHOD method_31306 getUrlConnection (Lcom/google/gson/JsonObject;Ljava/net/URL;)Ljava/net/HttpURLConnection;
+		ARG 1 body
+		ARG 2 url
+	CLASS class_5515 ChatFilter
+		FIELD field_26834 NONE Lnet/minecraft/class_5514$class_5515;
+		FIELD field_26835 MATCH_LENGTH Lnet/minecraft/class_5514$class_5515;
+		METHOD method_31308 getMinimumLengthFilter (I)Lnet/minecraft/class_5514$class_5515;
+			ARG 0 minLength
+		METHOD method_31309 (ILjava/lang/String;I)Z
+			ARG 2 length
+	CLASS class_5516
+		FIELD field_26837 gameProfile Lcom/mojang/authlib/GameProfile;
+		FIELD field_26838 sendExecutor Ljava/util/concurrent/Executor;
+		METHOD <init> (Lnet/minecraft/class_5514;Lcom/mojang/authlib/GameProfile;)V
+			ARG 2 gameProfile
