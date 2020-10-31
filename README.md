@@ -40,6 +40,9 @@ Build a GZip'd archive containing a tiny mapping between official (obfuscated), 
 ### `mapNamedJar`
 Builds a deobfuscated jar with yarn mappings and automapped fields (enums, etc.). Unmapped names will be filled with [intermediary](https://github.com/FabricMC/Intermediary) names.
 
+### `decompileCFR`
+Decompile the mapped source code. **Note:** This is not designed to be recompiled.
+
 ### `download`
 Downloads the client and server Minecraft jars for the current Minecraft version to `.gradle/minecraft`
 
