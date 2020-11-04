@@ -1,14 +1,11 @@
 CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
-	FIELD field_12833 entitySections [Lnet/minecraft/class_3509;
 	FIELD field_12834 shouldSave Z
 	FIELD field_12836 postProcessingLists [Lit/unimi/dsi/fastutil/shorts/ShortList;
-	FIELD field_12837 unsaved Z
 	FIELD field_12838 structureStarts Ljava/util/Map;
 	FIELD field_12839 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_12840 sections [Lnet/minecraft/class_2826;
 	FIELD field_12841 blockTickScheduler Lnet/minecraft/class_1951;
 	FIELD field_12843 inhabitedTime J
-	FIELD field_12844 lastSaveTime J
 	FIELD field_12845 structureReferences Ljava/util/Map;
 	FIELD field_12846 pendingBlockEntityTags Ljava/util/Map;
 	FIELD field_12847 lightOn Z
@@ -37,49 +34,26 @@ CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
 		ARG 7 inhabitedTime
 		ARG 9 sections
 		ARG 10 loadToWorldConsumer
-	METHOD <init> (Lnet/minecraft/class_1937;Lnet/minecraft/class_2839;)V
-		ARG 1 world
+	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_2839;Ljava/util/function/Consumer;)V
 		ARG 2 protoChunk
 	METHOD method_12023 getLightingProvider ()Lnet/minecraft/class_3568;
 	METHOD method_12200 getWorld ()Lnet/minecraft/class_1937;
 	METHOD method_12201 getBlockEntity (Lnet/minecraft/class_2338;Lnet/minecraft/class_2818$class_2819;)Lnet/minecraft/class_2586;
 		ARG 1 pos
 		ARG 2 creationType
-	METHOD method_12203 remove (Lnet/minecraft/class_1297;)V
-		ARG 1 entity
 	METHOD method_12204 loadBlockEntity (Lnet/minecraft/class_2338;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2586;
 		ARG 1 pos
 		ARG 2 tag
-	METHOD method_12205 collectOtherEntities (Lnet/minecraft/class_1297;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
-		ARG 1 except
-		ARG 2 box
-		ARG 3 entityList
-		ARG 4 predicate
 	METHOD method_12206 loadToWorld ()V
 	METHOD method_12207 setLevelTypeProvider (Ljava/util/function/Supplier;)V
 		ARG 1 levelTypeProvider
 	METHOD method_12208 createBlockEntity (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2586;
 		ARG 1 pos
-	METHOD method_12210 collectEntitiesByClass (Ljava/lang/Class;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
-		COMMENT Collects a list of entities of some runtime type and appends them to the given list. The runtime
-		COMMENT class of each collected entity will be the same as or a subclass of the given class.
-		ARG 1 entityClass
-			COMMENT the class object representing the type collected entities must extend
-		ARG 2 box
-			COMMENT the box in which to collect entities
-		ARG 3 result
-			COMMENT a list in which to store the collected entities
-		ARG 4 predicate
-			COMMENT a predicate which entities must satisfy in order to be collected
 	METHOD method_12212 (Lnet/minecraft/class_3195;)Lit/unimi/dsi/fastutil/longs/LongSet;
 		ARG 0 structure
 	METHOD method_12214 getBlockEntities ()Ljava/util/Map;
-	METHOD method_12215 getEntitySectionArray ()[Lnet/minecraft/class_3509;
 	METHOD method_12216 addBlockEntity (Lnet/minecraft/class_2586;)V
 		ARG 1 blockEntity
-	METHOD method_12219 remove (Lnet/minecraft/class_1297;I)V
-		ARG 1 entity
-		ARG 2 section
 	METHOD method_12220 markDirty ()V
 	METHOD method_12221 runPostProcessing ()V
 	METHOD method_12222 (Lnet/minecraft/class_3195;)Lit/unimi/dsi/fastutil/longs/LongSet;
@@ -95,32 +69,10 @@ CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
 		ARG 1 loaded
 	METHOD method_12231 (Lnet/minecraft/class_2902$class_2903;)Lnet/minecraft/class_2902;
 		ARG 1 type
-	METHOD method_12232 setUnsaved (Z)V
-		ARG 1 unsaved
 	METHOD method_12234 getFluidState (III)Lnet/minecraft/class_3610;
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
-	METHOD method_18029 collectEntities (Lnet/minecraft/class_1299;Lnet/minecraft/class_238;Ljava/util/List;Ljava/util/function/Predicate;)V
-		COMMENT Collects a list of entities and appends them to the given list according to the specified criteria.
-		COMMENT
-		COMMENT <strong>Warning:<strong> If {@code null} is passed as the entity type filter, care should be
-		COMMENT taken that the type argument {@code T} is set to {@link Entity}, otherwise heap pollution in
-		COMMENT the output list or {@link ClassCastException} can occur.
-		ARG 1 type
-			COMMENT the entity type of the entities to collect, or {@code null} to collect entities of all types.
-		ARG 2 box
-			COMMENT the box within which collected entities must be
-		ARG 3 result
-			COMMENT a list in which to store the collected entities
-		ARG 4 predicate
-			COMMENT a predicate which entities must satisfy in order to be collected
-	METHOD method_18089 (Lnet/minecraft/class_1297;)Lnet/minecraft/class_1297;
-		ARG 1 entity
-	METHOD method_18319 (ILnet/minecraft/class_2338;)Z
-		ARG 1 pos
-	METHOD method_18320 (Lnet/minecraft/class_2338;)Z
-		ARG 0 pos
 	METHOD method_20471 enableTickSchedulers (Lnet/minecraft/class_3218;)V
 		ARG 1 world
 	METHOD method_20530 disableTickSchedulers ()V

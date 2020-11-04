@@ -1,7 +1,6 @@
 CLASS net/minecraft/class_1937 net/minecraft/world/World
 	FIELD field_16316 profiler Ljava/util/function/Supplier;
 	FIELD field_17086 thread Ljava/lang/Thread;
-	FIELD field_18139 unloadedBlockEntities Ljava/util/List;
 	FIELD field_20639 biomeAccess Lnet/minecraft/class_4543;
 	FIELD field_24496 debugWorld Z
 	FIELD field_25176 registryKey Lnet/minecraft/class_5321;
@@ -13,15 +12,12 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	FIELD field_9224 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_9226 ambientDarkness I
 	FIELD field_9229 random Ljava/util/Random;
-	FIELD field_9231 blockEntities Ljava/util/List;
 	FIELD field_9232 properties Lnet/minecraft/class_5269;
 	FIELD field_9233 DIRECTIONS [Lnet/minecraft/class_2350;
 	FIELD field_9234 thunderGradient F
 	FIELD field_9235 rainGradient F
 	FIELD field_9236 isClient Z
 	FIELD field_9238 unusedIncrement I
-	FIELD field_9241 pendingBlockEntities Ljava/util/List;
-	FIELD field_9246 tickingBlockEntities Ljava/util/List;
 	FIELD field_9247 dimension Lnet/minecraft/class_2874;
 	FIELD field_9249 iteratingTickingBlockEntities Z
 	FIELD field_9251 thunderGradientPrev F
@@ -54,20 +50,6 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 mapState
 	METHOD method_17891 getMapState (Ljava/lang/String;)Lnet/minecraft/class_22;
 		ARG 1 id
-	METHOD method_18023 getEntitiesByType (Lnet/minecraft/class_1299;Lnet/minecraft/class_238;Ljava/util/function/Predicate;)Ljava/util/List;
-		COMMENT Computes a list of entities of the given type within some region that satisfy the given predicate.
-		COMMENT
-		COMMENT <strong>Warning:<strong> If {@code null} is passed as the entity type filter, care should be
-		COMMENT taken that the type argument {@code T} is set to {@link Entity}, otherwise heap pollution
-		COMMENT in the output list or {@link ClassCastException} can occur.
-		COMMENT
-		COMMENT @return a list of entities
-		ARG 1 type
-			COMMENT the entity type of the returned entities, or {@code null} to return entities of all types
-		ARG 2 box
-			COMMENT the box in which to search for entities
-		ARG 3 predicate
-			COMMENT a predicate which entities must satisfy in order to be considered
 	METHOD method_18471 tickBlockEntities ()V
 	METHOD method_18472 tickEntity (Ljava/util/function/Consumer;Lnet/minecraft/class_1297;)V
 		ARG 1 tickConsumer
@@ -83,7 +65,6 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 2 entity
 		ARG 3 direction
 	METHOD method_24794 isInBuildLimit (Lnet/minecraft/class_2338;)Z
-		ARG 0 pos
 	METHOD method_25952 isInvalidVertically (I)Z
 		ARG 0 y
 	METHOD method_25953 isValid (Lnet/minecraft/class_2338;)Z
@@ -106,8 +87,6 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8424 setMobSpawnOptions (ZZ)V
 		ARG 1 spawnMonsters
 		ARG 2 spawnAnimals
-	METHOD method_8426 getPendingBlockEntity (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2586;
-		ARG 1 pos
 	METHOD method_8427 addSyncedBlockEvent (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;II)V
 		ARG 1 pos
 		ARG 2 block
@@ -124,12 +103,9 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 6 z
 		ARG 8 power
 		ARG 9 destructionType
-	METHOD method_8438 addBlockEntity (Lnet/minecraft/class_2586;)Z
-		ARG 1 blockEntity
+	METHOD method_8438 addBlockEntity (Lnet/minecraft/class_2586;)V
 	METHOD method_8442 getSkyAngleRadians (F)F
 		ARG 1 tickDelta
-	METHOD method_8447 addBlockEntities (Ljava/util/Collection;)V
-		ARG 1 blockEntities
 	METHOD method_8449 playSoundFromEntity (Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
 		ARG 1 player
 		ARG 2 entity
@@ -147,7 +123,6 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8455 updateComparators (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;)V
 		ARG 1 pos
 		ARG 2 block
-	METHOD method_8457 getDebugString ()Ljava/lang/String;
 	METHOD method_8458 isSavingDisabled ()Z
 	METHOD method_8459 isEmittingRedstonePower (Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Z
 		ARG 1 pos
@@ -176,10 +151,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 eventId
 		ARG 2 pos
 		ARG 3 data
-	METHOD method_8476 isOutOfBuildLimitVertically (I)Z
-		ARG 0 y
 	METHOD method_8477 canSetBlock (Lnet/minecraft/class_2338;)Z
-		ARG 1 pos
 	METHOD method_8478 getThunderGradient (F)F
 		ARG 1 delta
 	METHOD method_8479 isReceivingRedstonePower (Lnet/minecraft/class_2338;)Z
@@ -199,7 +171,6 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8488 getReceivedStrongRedstonePower (Lnet/minecraft/class_2338;)I
 		ARG 1 pos
 	METHOD method_8492 updateNeighbor (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338;)V
-		ARG 1 sourcePos
 		ARG 2 sourceBlock
 		ARG 3 neighborPos
 	METHOD method_8494 addImportantParticle (Lnet/minecraft/class_2394;DDDDDD)V
@@ -239,21 +210,15 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 entityId
 		ARG 2 pos
 		ARG 3 progress
-	METHOD method_8518 isOutOfBuildLimitVertically (Lnet/minecraft/class_2338;)Z
-		ARG 0 pos
 	METHOD method_8519 setRainGradient (F)V
 		ARG 1 rainGradient
 	METHOD method_8520 hasRain (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
 	METHOD method_8522 sendPacket (Lnet/minecraft/class_2596;)V
 		ARG 1 packet
-	METHOD method_8524 markDirty (Lnet/minecraft/class_2338;Lnet/minecraft/class_2586;)V
+	METHOD method_8524 markDirty (Lnet/minecraft/class_2338;)V
 		ARG 1 pos
-		ARG 2 blockEntity
 	METHOD method_8525 disconnect ()V
-	METHOD method_8526 setBlockEntity (Lnet/minecraft/class_2338;Lnet/minecraft/class_2586;)V
-		ARG 1 pos
-		ARG 2 blockEntity
 	METHOD method_8530 isDay ()Z
 	METHOD method_8532 getTimeOfDay ()J
 	METHOD method_8533 calculateAmbientDarkness ()V
