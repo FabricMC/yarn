@@ -8,6 +8,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_22468 blockPos Lnet/minecraft/class_2338;
 	FIELD field_23807 inanimate Z
 	FIELD field_25750 trackedPosition Lnet/minecraft/class_243;
+	FIELD field_26995 removalReason Lnet/minecraft/class_1297$class_5529;
 	FIELD field_5951 ridingCooldown I
 	FIELD field_5952 onGround Z
 	FIELD field_5953 firstUpdate Z
@@ -221,6 +222,12 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 onGround
 	METHOD method_25936 getLandingBlockState ()Lnet/minecraft/class_2680;
 	METHOD method_27298 shouldSpawnSprintingParticles ()Z
+	METHOD method_29239 dismountVehicle ()V
+		COMMENT Dismounts the vehicle if present.
+		COMMENT <p>
+		COMMENT For players, will not trigger any networking changes. Use {@link #stopRiding()} instead.
+		COMMENT
+		COMMENT @see #stopRiding()
 	METHOD method_29495 refreshPositionAfterTeleport (Lnet/minecraft/class_243;)V
 	METHOD method_30227 getTrackedPosition ()Lnet/minecraft/class_243;
 	METHOD method_30228 updateTrackedPosition (Lnet/minecraft/class_243;)V
@@ -238,6 +245,17 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 other
 	METHOD method_31166 (F)Lnet/minecraft/class_243;
 		ARG 1 tickDelta
+	METHOD method_31471 (Lnet/minecraft/class_2604;)V
+		ARG 1 packet
+	METHOD method_31472 discard ()V
+	METHOD method_31476 getChunkPos ()Lnet/minecraft/class_1923;
+	METHOD method_31477 getBlockX ()I
+	METHOD method_31478 getBlockY ()I
+	METHOD method_31479 getBlockZ ()I
+	METHOD method_31480 getPickBlockStack ()Lnet/minecraft/class_1799;
+	METHOD method_31481 isRemoved ()Z
+	METHOD method_31482 unsetRemoved ()V
+	METHOD method_31483 getFirstPassenger ()Lnet/minecraft/class_1297;
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		ARG 1 state
@@ -300,6 +318,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 3 y
 		ARG 5 z
 	METHOD method_5650 remove (Lnet/minecraft/class_1297$class_5529;)V
+		ARG 1 reason
 	METHOD method_5651 fromTag (Lnet/minecraft/class_2487;)V
 		ARG 1 tag
 	METHOD method_5652 writeCustomDataToTag (Lnet/minecraft/class_2487;)V
@@ -541,6 +560,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5791 getHeadYaw ()F
 	METHOD method_5792 moveToBoundingBoxCenter ()V
 	METHOD method_5793 removePassenger (Lnet/minecraft/class_1297;)V
+		ARG 1 passenger
 	METHOD method_5794 isConnectedThroughVehicle (Lnet/minecraft/class_1297;)Z
 		COMMENT Checks if this entity and another entity share the same root vehicle.
 		ARG 1 entity
@@ -684,3 +704,25 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 			ARG 2 x
 			ARG 4 y
 			ARG 6 z
+	CLASS class_5529 RemovalReason
+		FIELD field_26998 KILLED Lnet/minecraft/class_1297$class_5529;
+			COMMENT The entity is killed.
+		FIELD field_26999 DISCARDED Lnet/minecraft/class_1297$class_5529;
+		FIELD field_27000 UNLOADED_TO_CHUNK Lnet/minecraft/class_1297$class_5529;
+			COMMENT The entity is unloaded to chunk.
+			COMMENT <p>
+			COMMENT The entity should be saved.
+		FIELD field_27001 UNLOADED_WITH_PLAYER Lnet/minecraft/class_1297$class_5529;
+		FIELD field_27002 CHANGED_DIMENSION Lnet/minecraft/class_1297$class_5529;
+			COMMENT The entity changed dimension.
+		FIELD field_27003 destroy Z
+		FIELD field_27004 save Z
+		METHOD <init> (Ljava/lang/String;IZZ)V
+			ARG 3 destroy
+			ARG 4 save
+		METHOD method_31486 shouldDestroy ()Z
+			COMMENT Returns whether the entity should be destroyed or not.
+			COMMENT <p>
+			COMMENT If an entity should be destroyed, then the entity should not be re-used and any external data on the entity will be cleared.
+		METHOD method_31487 shouldSave ()Z
+			COMMENT Returns whether the entity should be saved or not.
