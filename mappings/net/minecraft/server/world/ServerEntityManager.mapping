@@ -2,31 +2,75 @@ CLASS net/minecraft/class_5579 net/minecraft/server/world/ServerEntityManager
 	FIELD field_27260 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_27261 entityUuids Ljava/util/Set;
 	FIELD field_27262 entityLoader Lnet/minecraft/class_5576;
+	FIELD field_27263 entityDataAccess Lnet/minecraft/class_5571;
 	FIELD field_27264 trackedEntities Lnet/minecraft/class_5570;
-	FIELD field_27266 entities Lnet/minecraft/class_5577;
+	FIELD field_27265 sectionedEntities Lnet/minecraft/class_5573;
+	FIELD field_27266 entityStore Lnet/minecraft/class_5577;
+	FIELD field_27267 statusByChunk Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
+	FIELD field_27268 loadingStagesByChunkPos Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
+	FIELD field_27269 tickingChunkSections Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_27270 loadingQueue Ljava/util/Queue;
 	METHOD <init> (Ljava/lang/Class;Lnet/minecraft/class_5576;Lnet/minecraft/class_5571;)V
+		ARG 1 entityBaseClass
 		ARG 2 entityLoader
+		ARG 3 entityDataAccess
+	METHOD method_31809 tick ()V
+	METHOD method_31810 ensureEntityChunkDataLoaded (J)V
+		ARG 1 chunkPos
+	METHOD method_31811 removeIfEmpty (JLnet/minecraft/class_5572;)V
+		ARG 1 packedChunkSection
+		ARG 3 entities
+	METHOD method_31812 tryWriteEntityChunkData (JLjava/util/function/Consumer;)Z
+		COMMENT Attempts to write the entity data for entities at the given {@link ChunkPos}, and runs the given
+		COMMENT action for each entity after saving.
+		COMMENT
+		COMMENT @return True if the entities were written, false if they were not.
+		ARG 1 packedChunkPos
+		ARG 3 postWriteCallback
+	METHOD method_31815 updateEntityCuunkStatus (Lnet/minecraft/class_1923;Lnet/minecraft/class_3193$class_3194;)V
+		ARG 1 pos
+		ARG 2 levelType
+	METHOD method_31816 updateEntityChunkStatus (Lnet/minecraft/class_1923;Lnet/minecraft/class_5584;)V
+		ARG 1 pos
+		ARG 2 status
 	METHOD method_31818 addEntity (Lnet/minecraft/class_5568;)Z
 		ARG 1 entity
 	METHOD method_31820 addEntity (Lnet/minecraft/class_5568;Z)Z
 		ARG 1 entity
+	METHOD method_31826 dumpEntityDataToCsv (Ljava/io/Writer;)V
+		ARG 1 writer
+	METHOD method_31827 containsEntity (Ljava/util/UUID;)Z
+		ARG 1 entityUuid
 	METHOD method_31828 addEntitiesWithFlagSet (Ljava/util/stream/Stream;)V
 		ARG 1 entities
+	METHOD method_31829 writeAll ()V
+	METHOD method_31830 loadEntityChunkData (J)V
+		ARG 1 packedChunkPos
 	METHOD method_31831 canAddEntity (Lnet/minecraft/class_5568;)Z
 		ARG 1 entity
+	METHOD method_31832 getPreferredChunkStatus (Lnet/minecraft/class_5568;Lnet/minecraft/class_5584;)Lnet/minecraft/class_5584;
+		ARG 0 entity
+		ARG 1 defaultStatus
 	METHOD method_31835 addEntitiesWithFlagCleared (Ljava/util/stream/Stream;)V
 		ARG 1 entities
-	METHOD method_31838 (Lnet/minecraft/class_5568;)V
+	METHOD method_31836 writeAllDefinitively ()V
+	METHOD method_31837 tryUnloadChunkData (J)Z
+		ARG 1 packedChunkPos
+	METHOD method_31838 startTicking (Lnet/minecraft/class_5568;)V
 		ARG 1 entity
-	METHOD method_31843 (Lnet/minecraft/class_5568;)V
+	METHOD method_31841 getStore ()Lnet/minecraft/class_5577;
+	METHOD method_31843 stopTicking (Lnet/minecraft/class_5568;)V
 		ARG 1 entity
-	METHOD method_31847 (Lnet/minecraft/class_5568;)V
+	METHOD method_31845 dump ()Ljava/lang/String;
+	METHOD method_31847 startTracking (Lnet/minecraft/class_5568;)V
 		ARG 1 entity
-	METHOD method_31850 (Lnet/minecraft/class_5568;)V
+	METHOD method_31850 stopTracking (Lnet/minecraft/class_5568;)V
 		ARG 1 entity
-	METHOD method_31852 (Lnet/minecraft/class_5568;)V
+	METHOD method_31851 resetTickingSections ()V
+	METHOD method_31852 unload (Lnet/minecraft/class_5568;)V
 		ARG 1 entity
+	METHOD method_31853 loadAll ()V
+	METHOD method_31855 chunksWithLoadedData ()Lit/unimi/dsi/fastutil/longs/LongSet;
 	METHOD method_31863 (Lnet/minecraft/class_5568;)V
 		ARG 1 entity
 	METHOD method_31864 (Lnet/minecraft/class_5568;)V
@@ -34,6 +78,12 @@ CLASS net/minecraft/class_5579 net/minecraft/server/world/ServerEntityManager
 	CLASS class_5580 ServerEntityChangeHandler
 		FIELD field_27272 entity Lnet/minecraft/class_5568;
 		FIELD field_27273 packedChunkSectionPos J
+		FIELD field_27274 entities Lnet/minecraft/class_5572;
 		METHOD <init> (Lnet/minecraft/class_5579;Lnet/minecraft/class_5568;JLnet/minecraft/class_5572;)V
 			ARG 2 entity
 			ARG 3 packedChunkSectionPos
+			ARG 5 entities
+		METHOD method_31865 updateChunkStatus (Lnet/minecraft/class_5584;Lnet/minecraft/class_5584;)V
+			ARG 1 oldStatus
+			ARG 2 newStatus
+	CLASS class_5581 EntityLoadingStage
