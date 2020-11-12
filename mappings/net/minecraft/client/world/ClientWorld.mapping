@@ -1,6 +1,5 @@
 CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 	FIELD field_17675 mapStates Ljava/util/Map;
-	FIELD field_17778 regularEntities Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 	FIELD field_17780 worldRenderer Lnet/minecraft/class_761;
 	FIELD field_18226 players Ljava/util/List;
 	FIELD field_21526 lightningTicksLeft I
@@ -8,22 +7,20 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 	FIELD field_24430 clientWorldProperties Lnet/minecraft/class_638$class_5271;
 	FIELD field_24605 chunkManager Lnet/minecraft/class_631;
 	FIELD field_24606 skyProperties Lnet/minecraft/class_5294;
+	FIELD field_27733 entityList Lnet/minecraft/class_5574;
 	FIELD field_3727 netHandler Lnet/minecraft/class_634;
 	FIELD field_3729 client Lnet/minecraft/class_310;
 	FIELD field_3733 scoreboard Lnet/minecraft/class_269;
 	METHOD <init> (Lnet/minecraft/class_634;Lnet/minecraft/class_638$class_5271;Lnet/minecraft/class_5321;Lnet/minecraft/class_2874;ILjava/util/function/Supplier;Lnet/minecraft/class_761;ZJ)V
-		ARG 8 debugWorld
-	METHOD <init> (Lnet/minecraft/class_634;Lnet/minecraft/class_638$class_5271;Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;Lnet/minecraft/class_2874;ILjava/util/function/Supplier;Lnet/minecraft/class_761;ZJ)V
 		ARG 1 networkHandler
 		ARG 2 properties
-		ARG 3 worldRef
-		ARG 4 dimensionRef
-		ARG 5 dimensionType
-		ARG 6 loadDistance
-		ARG 7 profiler
-		ARG 8 worldRenderer
-		ARG 9 debugWorld
-		ARG 10 seed
+		ARG 3 registryRef
+		ARG 4 dimensionType
+		ARG 5 loadDistance
+		ARG 6 profiler
+		ARG 7 worldRenderer
+		ARG 8 debugWorld
+		ARG 9 seed
 	METHOD method_18107 addPlayer (ILnet/minecraft/class_742;)V
 		ARG 1 id
 		ARG 2 player
@@ -37,26 +34,19 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 	METHOD method_18114 addEntityPrivate (ILnet/minecraft/class_1297;)V
 		ARG 1 id
 		ARG 2 entity
-	METHOD method_18115 addEntitiesToChunk (Lnet/minecraft/class_2818;)V
-		ARG 1 chunk
 	METHOD method_18116 tickEntities ()V
-	METHOD method_18117 finishRemovingEntity (Lnet/minecraft/class_1297;)V
-		ARG 1 entity
 	METHOD method_18120 getRegularEntityCount ()I
 	METHOD method_18646 tickEntity (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
 	METHOD method_18647 tickPassenger (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;)V
 		ARG 1 entity
 		ARG 2 passenger
-	METHOD method_18648 checkEntityChunkPos (Lnet/minecraft/class_1297;)V
-		COMMENT Validates if an entity's current position matches its chunk position. If the entity's chunk position and actual position don't match, then the entity will be moved to its new chunk.
-		ARG 1 entity
 	METHOD method_23778 (Lit/unimi/dsi/fastutil/objects/Object2ObjectArrayMap;)V
 		ARG 0 cache
 	METHOD method_23780 calculateColor (Lnet/minecraft/class_2338;Lnet/minecraft/world/level/ColorResolver;)I
 		ARG 1 pos
 		ARG 2 colorResolver
-	METHOD method_23782 resetChunkColor (II)V
+	METHOD method_23782 resetChunkColor (Lnet/minecraft/class_1923;)V
 	METHOD method_23784 reloadColor ()V
 	METHOD method_23785 getCloudsColor (F)Lnet/minecraft/class_243;
 		ARG 1 tickDelta
@@ -66,6 +56,8 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 		ARG 2 angle
 	METHOD method_27874 getSpawnPos ()Lnet/minecraft/class_2338;
 	METHOD method_28103 getSkyProperties ()Lnet/minecraft/class_5294;
+	METHOD method_29089 setTime (J)V
+		ARG 1 time
 	METHOD method_29090 tickTime ()V
 	METHOD method_2932 addParticle (DDDDDLnet/minecraft/class_2394;)V
 		ARG 1 minX
@@ -74,7 +66,6 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 		ARG 7 maxZ
 		ARG 9 y
 		ARG 11 parameters
-	METHOD method_2936 finishRemovingEntities ()V
 	METHOD method_2937 setBlockStateWithoutNeighborUpdates (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 1 pos
 		ARG 2 state
@@ -99,7 +90,7 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 		ARG 7 pos
 	METHOD method_2944 setScoreboard (Lnet/minecraft/class_269;)V
 		ARG 1 scoreboard
-	METHOD method_2945 removeEntity (I)V
+	METHOD method_2945 removeEntity (ILnet/minecraft/class_1297$class_5529;)V
 		ARG 1 entityId
 	METHOD method_2947 playSound (Lnet/minecraft/class_2338;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFZ)V
 		ARG 1 pos
@@ -113,7 +104,12 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 		ARG 2 parameters
 		ARG 3 shape
 		ARG 4 y
+	METHOD method_30671 getSpawnAngle ()F
+	METHOD method_32120 asString ()Ljava/lang/String;
+	METHOD method_32124 (Lnet/minecraft/class_1297;)V
+		ARG 1 entity
 	METHOD method_8435 setTimeOfDay (J)V
+		ARG 1 timeOfDay
 	METHOD method_8441 tick (Ljava/util/function/BooleanSupplier;)V
 		ARG 1 shouldKeepTicking
 	CLASS class_5271 Properties
@@ -143,3 +139,4 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 			ARG 1 difficultyLocked
 		METHOD method_28105 getSkyDarknessHeight ()D
 		METHOD method_28106 getHorizonShadingRatio ()D
+	CLASS class_5612 EntityLoader

@@ -2,6 +2,8 @@ CLASS net/minecraft/class_5382 net/minecraft/util/dynamic/RegistryOps
 	FIELD field_25509 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_25511 registryManager Lnet/minecraft/class_5455$class_5457;
 	FIELD field_25512 valueHolders Ljava/util/Map;
+	FIELD field_26738 entryLoader Lnet/minecraft/class_5382$class_5506;
+	FIELD field_26739 entryOps Lnet/minecraft/class_5382;
 	METHOD <init> (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5382$class_5506;Lnet/minecraft/class_5455$class_5457;Ljava/util/IdentityHashMap;)V
 		ARG 1 delegate
 	METHOD method_29753 of (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_3300;Lnet/minecraft/class_5455$class_5457;)Lnet/minecraft/class_5382;
@@ -17,6 +19,7 @@ CLASS net/minecraft/class_5382 net/minecraft/util/dynamic/RegistryOps
 		COMMENT reading ops.</p>
 		COMMENT
 		COMMENT @see RegistryReadingOps#encodeOrId(Object, Object, RegistryKey, MapCodec)
+		ARG 4 allowInlineDefinitions
 	METHOD method_29761 getValueHolder (Lnet/minecraft/class_5321;)Lnet/minecraft/class_5382$class_5383;
 		ARG 1 registryRef
 	METHOD method_29763 readSupplier (Lnet/minecraft/class_5321;Lnet/minecraft/class_2385;Lcom/mojang/serialization/Codec;Lnet/minecraft/class_2960;)Lcom/mojang/serialization/DataResult;
@@ -24,5 +27,20 @@ CLASS net/minecraft/class_5382 net/minecraft/util/dynamic/RegistryOps
 		COMMENT
 		COMMENT <p>This logic is used by both {@code decodeOrId} and {@code loadToRegistry}.</p>
 		ARG 4 elementId
+	METHOD method_31150 of (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5382$class_5506;Lnet/minecraft/class_5455$class_5457;)Lnet/minecraft/class_5382;
 	CLASS class_5383 ValueHolder
 		FIELD field_25513 values Ljava/util/Map;
+	CLASS class_5506 EntryLoader
+		METHOD method_31154 resourceBacked (Lnet/minecraft/class_3300;)Lnet/minecraft/class_5382$class_5506;
+		METHOD method_31155 load (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;Lcom/mojang/serialization/Decoder;)Lcom/mojang/serialization/DataResult;
+			ARG 2 registryId
+			ARG 3 entryId
+		METHOD method_31156 getKnownEntryPaths (Lnet/minecraft/class_5321;)Ljava/util/Collection;
+			COMMENT @return A collection of file Identifiers of all known entries of the given registry.
+			COMMENT Note that these are file Identifiers for use in a resource manager, not the logical names of the entries.
+		CLASS class_5507 Impl
+			FIELD field_26741 values Ljava/util/Map;
+			FIELD field_26742 entryToRawId Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+			FIELD field_26743 entryToLifecycle Ljava/util/Map;
+			METHOD method_31159 add (Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_5321;Lcom/mojang/serialization/Encoder;ILjava/lang/Object;Lcom/mojang/serialization/Lifecycle;)V
+				ARG 4 rawId

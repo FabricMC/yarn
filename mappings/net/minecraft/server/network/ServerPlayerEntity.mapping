@@ -22,7 +22,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_13985 inTeleportationState Z
 	FIELD field_13986 screenHandlerSyncId I
 	FIELD field_13987 networkHandler Lnet/minecraft/class_3244;
-	FIELD field_13988 removedEntities Ljava/util/List;
+	FIELD field_13988 removedEntities Lit/unimi/dsi/fastutil/ints/IntList;
 	FIELD field_13989 notInAnyWorld Z
 	FIELD field_13990 cameraPosition Lnet/minecraft/class_4076;
 	FIELD field_13991 skipPacketSlotUpdates Z
@@ -37,6 +37,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_23192 spawnPointPosition Lnet/minecraft/class_2338;
 	FIELD field_23193 spawnPointSet Z
 	FIELD field_26353 spawnAngle F
+	FIELD field_26821 textStream Lnet/minecraft/class_5513;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_3218;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_3225;)V
 		ARG 1 server
 		ARG 2 world
@@ -45,7 +46,8 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14203 copyFrom (Lnet/minecraft/class_3222;Z)V
 		ARG 1 oldPlayer
 		ARG 2 alive
-	METHOD method_14204 openHandledScreen (Lnet/minecraft/class_1703;)V
+	METHOD method_14204 refreshScreenHandler (Lnet/minecraft/class_1703;)V
+		COMMENT Sends packets to the client that refresh the current screen handler's items.
 		ARG 1 handler
 	METHOD method_14205 sendInitialChunkPackets (Lnet/minecraft/class_1923;Lnet/minecraft/class_2596;Lnet/minecraft/class_2596;)V
 	METHOD method_14206 getPlayerListName ()Lnet/minecraft/class_2561;
@@ -90,7 +92,9 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14245 moveToSpawn (Lnet/minecraft/class_3218;)V
 		ARG 1 world
 	METHOD method_14246 sendUnloadChunkPacket (Lnet/minecraft/class_1923;)V
-	METHOD method_14247 closeCurrentScreen ()V
+	METHOD method_14247 closeScreenHandler ()V
+		COMMENT Runs closing tasks for the current screen handler and
+		COMMENT sets it to the {@code playerScreenHandler}.
 	METHOD method_14248 getStatHandler ()Lnet/minecraft/class_3442;
 	METHOD method_14249 onStoppedTracking (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
@@ -108,9 +112,10 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 1 message
 		ARG 2 type
 		ARG 3 senderUuid
-	METHOD method_14255 sendResourcePackUrl (Ljava/lang/String;Ljava/lang/String;)V
+	METHOD method_14255 sendResourcePackUrl (Ljava/lang/String;Ljava/lang/String;Z)V
 		ARG 1 url
 		ARG 2 hash
+		ARG 3 required
 	METHOD method_17668 setCameraPosition (Lnet/minecraft/class_4076;)V
 		ARG 1 cameraPosition
 	METHOD method_18783 worldChanged (Lnet/minecraft/class_3218;)V
@@ -136,3 +141,4 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 1 world
 		ARG 2 centerPos
 	METHOD method_30631 getSpawnAngle ()F
+	METHOD method_31273 getTextStream ()Lnet/minecraft/class_5513;
