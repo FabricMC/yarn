@@ -23,10 +23,10 @@ plugins {
 	id 'java' // for jd gen
 }
 
-def minecraft_version = "20w45a"
+def minecraft_version = "20w46a"
 
 def ENV = System.getenv()
-// Fetch build number from Jenkins
+// Fetch build number from Github Actions
 def build_number = ENV.BUILD_NUMBER ?: "local"
 
 def yarnVersion = "${minecraft_version}+build.$build_number"
@@ -751,12 +751,12 @@ publishing {
 
 	}
 	repositories {
-		maven {
-			url "http://mavenupload.modmuss50.me/"
-			if (project.hasProperty('mavenPass')) {
+		if (ENV.MAVEN_URL) {
+			maven {
+				url ENV.MAVEN_URL
 				credentials {
-					username 'buildslave'
-					password project.getProperty('mavenPass')
+					username ENV.MAVEN_USERNAME
+					password ENV.MAVEN_PASSWORD
 				}
 			}
 		}
