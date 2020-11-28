@@ -16,6 +16,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		COMMENT List of chunk positions that are not currently loaded.
 	FIELD field_17222 loadedChunksDirty Z
 	FIELD field_17223 prioritizationQueue Lnet/minecraft/class_3900;
+	FIELD field_17224 worldGenExecutor Lnet/minecraft/class_3906;
 	FIELD field_17226 mainExecutor Lnet/minecraft/class_3906;
 	FIELD field_17228 ticketManager Lnet/minecraft/class_3898$class_3216;
 	FIELD field_17230 totalCompletedChunks Ljava/util/concurrent/atomic/AtomicInteger;
@@ -52,6 +53,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		COMMENT <li>-1 - loaded/proto chunk</li>
 		COMMENT <li>1 - loaded/level chunk</li>
 		COMMENT </ul>
+	FIELD field_26931 chunkStatusListener Lnet/minecraft/class_5567;
 	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_3949;Lnet/minecraft/class_5567;Ljava/util/function/Supplier;IZ)V
 		ARG 1 world
 		ARG 2 session
@@ -63,6 +65,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 8 chunkGenerator
 		ARG 9 worldGenerationProgressListener
 		ARG 10 stateManagerListener
+		ARG 12 viewDistance
+		ARG 13 syncChunkWrites
 	METHOD method_17212 getLightProvider ()Lnet/minecraft/class_3227;
 	METHOD method_17214 setViewDistance (I)V
 		ARG 1 watchDistance
@@ -152,8 +156,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 1 pos
 	METHOD method_20576 enableTickSchedulers (Lnet/minecraft/class_2818;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 chunk
-	METHOD method_20580 createBorderFuture (Lnet/minecraft/class_3193;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 holder
 	METHOD method_20605 unloadChunks (Ljava/util/function/BooleanSupplier;)V
 		ARG 1 shouldKeepTicking
 	METHOD method_20617 upgradeChunk (Lnet/minecraft/class_3193;Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
@@ -172,7 +174,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 2 type
 	METHOD method_27054 setChunkToProto (Lnet/minecraft/class_1923;)V
 		ARG 1 pos
-	METHOD method_27055 (Lnet/minecraft/class_1923;)Z
 	CLASS class_3208 EntityTracker
 		FIELD field_18246 entry Lnet/minecraft/class_3231;
 		FIELD field_18247 entity Lnet/minecraft/class_1297;
@@ -180,8 +181,10 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		FIELD field_18249 lastCameraPosition Lnet/minecraft/class_4076;
 		FIELD field_18250 playersTracking Ljava/util/Set;
 		METHOD <init> (Lnet/minecraft/class_3898;Lnet/minecraft/class_1297;IIZ)V
-			ARG 2 maxDistance
-			ARG 3 tickInterval
+			ARG 2 entity
+			ARG 3 maxDistance
+			ARG 4 tickInterval
+			ARG 5 alwaysUpdateVelocity
 		METHOD equals (Ljava/lang/Object;)Z
 			ARG 1 o
 		METHOD method_18728 stopTracking ()V
@@ -202,3 +205,4 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		METHOD <init> (Lnet/minecraft/class_3898;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)V
 			ARG 1 workerExecutor
 			ARG 2 mainThreadExecutor
+			ARG 3 backgroundThreadExecutor
