@@ -50,4 +50,4 @@ Downloads the client and server Minecraft jars for the current Minecraft version
 Merges the client and server jars into one merged jar, located at `VERSION-merged.jar` in the mappings directory where `VERSION` is the current Minecraft version.
 
 ### `setupYarn`
-[`download`](#download) and [`mergeJars`](#mergeJars)
+[`download`](#download) and [`mergeJars`](#mergeJars) 
