@@ -21,12 +21,22 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	METHOD method_24357 damage (Lnet/minecraft/class_1282;)Z
 		ARG 1 source
 	METHOD method_24358 isFireproof ()Z
-	METHOD method_31565 onStackClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_5536;Lnet/minecraft/class_1661;)Z
-	METHOD method_31566 onClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_5536;Lnet/minecraft/class_1661;)Z
+	METHOD method_31565 onStackClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1661;)Z
+		ARG 1 stack
+		ARG 3 clickType
+		ARG 4 playerInventory
+	METHOD method_31566 onClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1661;)Z
+		ARG 1 stack
+		ARG 2 otherStack
 	METHOD method_31567 isItemBarVisible (Lnet/minecraft/class_1799;)Z
+		ARG 1 stack
 	METHOD method_31568 hasStoredInventory ()Z
 	METHOD method_31569 getItemBarStep (Lnet/minecraft/class_1799;)I
+		ARG 1 stack
 	METHOD method_31571 getItemBarColor (Lnet/minecraft/class_1799;)I
+		ARG 1 stack
+	METHOD method_32346 getTooltipData (Lnet/minecraft/class_1799;)Ljava/util/Optional;
+		ARG 1 stack
 	METHOD method_7836 use (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1271;
 		COMMENT Called when an item is used by a player.
 		COMMENT The use action, by default, is bound to the right mouse button.
@@ -96,9 +106,6 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	METHOD method_7860 postProcessTag (Lnet/minecraft/class_2487;)Z
 		ARG 1 tag
 	METHOD method_7861 finishUsing (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)Lnet/minecraft/class_1799;
-		ARG 1 stack
-		ARG 2 world
-		ARG 3 user
 	METHOD method_7862 getRarity (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1814;
 		ARG 1 stack
 	METHOD method_7864 getName (Lnet/minecraft/class_1799;)Lnet/minecraft/class_2561;
@@ -110,6 +117,7 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT Gets the translation key of this item using the provided item stack for context.
 		ARG 1 stack
 	METHOD method_7867 fromBlock (Lnet/minecraft/class_2248;)Lnet/minecraft/class_1792;
+		COMMENT @deprecated Please use {@link Block#asItem}
 		ARG 0 block
 	METHOD method_7869 getOrCreateTranslationKey ()Ljava/lang/String;
 	METHOD method_7870 isEnchantable (Lnet/minecraft/class_1799;)Z
@@ -166,7 +174,7 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT <p>By default, returns true if the item has enchantments.
 		ARG 1 stack
 	METHOD method_7887 shouldSyncTagToClient ()Z
-		COMMENT Checks if an item should have its NBT data stored in {@link #tag} sent to the client.
+		COMMENT Checks if an item should have its NBT data stored in {@link ItemStack#tag} sent to the client.
 		COMMENT
 		COMMENT <p>If an item is damageable, this method is ignored and data is always synced to client.
 	METHOD method_7888 inventoryTick (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;IZ)V

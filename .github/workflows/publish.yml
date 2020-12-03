@@ -1,0 +1,25 @@
+name: Publish
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    container:
+      image: openjdk:15-jdk
+      options: --user root
+    steps:
+      - uses: actions/checkout@v1
+      - uses: gradle/wrapper-validation-action@v1
+
+      # Generate the build number based on tags to allow per branch build numbers, not something github provides by default.
+      - name: Generate build number
+        id: buildnumber
+        uses: einaregilsson/build-number@v3
+        with:
+          token: ${{ secrets.github_token }}
+          prefix: ${{ github.ref }}
+
+      - run: ./gradlew build javadocJar publish --stacktrace
+        env:
+          MAVEN_URL: ${{ secrets.MAVEN_URL }}
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}

@@ -22,7 +22,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_13985 inTeleportationState Z
 	FIELD field_13986 screenHandlerSyncId I
 	FIELD field_13987 networkHandler Lnet/minecraft/class_3244;
-	FIELD field_13988 removedEntities Ljava/util/List;
+	FIELD field_13988 removedEntities Lit/unimi/dsi/fastutil/ints/IntList;
 	FIELD field_13989 notInAnyWorld Z
 	FIELD field_13990 cameraPosition Lnet/minecraft/class_4076;
 	FIELD field_13991 skipPacketSlotUpdates Z
@@ -38,11 +38,10 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_23193 spawnPointSet Z
 	FIELD field_26353 spawnAngle F
 	FIELD field_26821 textStream Lnet/minecraft/class_5513;
-	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_3218;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_3225;)V
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_3218;Lcom/mojang/authlib/GameProfile;)V
 		ARG 1 server
 		ARG 2 world
 		ARG 3 profile
-		ARG 4 interactionManager
 	METHOD method_14203 copyFrom (Lnet/minecraft/class_3222;Z)V
 		ARG 1 oldPlayer
 		ARG 2 alive
@@ -142,3 +141,20 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 2 centerPos
 	METHOD method_30631 getSpawnAngle ()F
 	METHOD method_31273 getTextStream ()Lnet/minecraft/class_5513;
+	METHOD method_32745 gameModeFromTag (Lnet/minecraft/class_2487;Ljava/lang/String;)Lnet/minecraft/class_1934;
+		ARG 0 tag
+		ARG 1 key
+	METHOD method_32746 getServerGameMode (Lnet/minecraft/class_1934;)Lnet/minecraft/class_1934;
+		COMMENT Returns the server game mode the player should be set to, namely the forced game mode.
+		COMMENT
+		COMMENT <p>If the forced game mode is not set, returns the {@code backupGameMode} if not {@code null},
+		COMMENT or the server's default game mode otherwise.
+		COMMENT
+		COMMENT @see MinecraftServer#getForcedGameMode
+		ARG 1 backupGameMode
+	METHOD method_32748 setGameMode (Lnet/minecraft/class_2487;)V
+		ARG 1 tag
+	METHOD method_32749 gameModeToTag (Lnet/minecraft/class_2487;)V
+		ARG 1 tag
+	METHOD method_7336 changeGameMode (Lnet/minecraft/class_1934;)Z
+		ARG 1 gameMode

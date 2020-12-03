@@ -17,7 +17,6 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_25318 serverResourceManager Lnet/minecraft/class_5350;
 	FIELD field_4543 onlineMode Z
 	FIELD field_4544 running Z
-	FIELD field_4545 forceGameMode Z
 	FIELD field_4546 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_4547 loading Z
 	FIELD field_4548 bossBarManager Lnet/minecraft/class_3004;
@@ -41,7 +40,6 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4573 lastTickLengths [J
 	FIELD field_4577 iconFilePresent Z
 	FIELD field_4578 userName Ljava/lang/String;
-	FIELD field_4579 worldHeight I
 	FIELD field_4582 snooper Lnet/minecraft/class_1276;
 	FIELD field_4584 resourcePackHash Ljava/lang/String;
 	FIELD field_4585 serverIp Ljava/lang/String;
@@ -126,6 +124,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_31371 createFilterer (Lnet/minecraft/class_3222;)Lnet/minecraft/class_5513;
 		ARG 1 player
 	METHOD method_32303 requireResourcePack ()Z
+	METHOD method_32699 getItemModifierManager ()Lnet/minecraft/class_5640;
 	METHOD method_3716 getKeyPair ()Ljava/security/KeyPair;
 	METHOD method_3718 isFlightEnabled ()Z
 	METHOD method_3719 getGameProfileRepo ()Lcom/mojang/authlib/GameProfileRepository;
@@ -169,8 +168,8 @@ CLASS net/minecraft/server/MinecraftServer
 			COMMENT relative path from the run directory
 	METHOD method_3759 isUsingNativeTransport ()Z
 	METHOD method_3760 getPlayerManager ()Lnet/minecraft/class_3324;
-	METHOD method_3761 shouldForceGameMode ()Z
-		COMMENT Checks whether a player's current game mode should be set to the server's current game mode when a player has connected.
+	METHOD method_3761 getForcedGameMode ()Lnet/minecraft/class_1934;
+		COMMENT Returns the game mode a player should be set to when connecting to the server, or {@code null} if none is set.
 	METHOD method_3763 openToLan (Lnet/minecraft/class_1934;ZI)Z
 		COMMENT Opens a server for LAN connections.
 		COMMENT This is only supported on an integrated server, a dedicated server will always fail to open to LAN.
@@ -211,9 +210,6 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3791 setFavicon (Lnet/minecraft/class_2926;)V
 		ARG 1 metadata
 	METHOD method_3793 getUserCache ()Lnet/minecraft/class_3312;
-	METHOD method_3794 setForceGameMode (Z)V
-		COMMENT Sets whether a player's current game mode should be set to the server's current game mode when a player has connected.
-		ARG 1 forceGameMode
 	METHOD method_3795 getSnooper ()Lnet/minecraft/class_1276;
 	METHOD method_3796 shouldSpawnAnimals ()Z
 	METHOD method_3798 getOpPermissionLevel ()I
@@ -245,7 +241,6 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3830 getTickTime ()F
 	METHOD method_3831 getRunDirectory ()Ljava/io/File;
 	METHOD method_3832 enableProfiler ()V
-	METHOD method_3833 getWorldHeight ()I
 	METHOD method_3834 setMotd (Ljava/lang/String;)V
 		ARG 1 motd
 	METHOD method_3835 getPermissionLevel (Lcom/mojang/authlib/GameProfile;)I
@@ -269,8 +264,6 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 key
 	METHOD method_3849 setServerName (Ljava/lang/String;)V
 		ARG 1 serverName
-	METHOD method_3850 setWorldHeight (I)V
-		ARG 1 worldHeight
 	METHOD method_3851 getAdvancementLoader ()Lnet/minecraft/class_2989;
 	METHOD method_3852 isPvpEnabled ()Z
 	METHOD method_3855 getDataFixer ()Lcom/mojang/datafixers/DataFixer;
