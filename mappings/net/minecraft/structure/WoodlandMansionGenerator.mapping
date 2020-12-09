@@ -25,8 +25,16 @@ CLASS net/minecraft/class_3471 net/minecraft/structure/WoodlandMansionGenerator
 			ARG 1 random
 	CLASS class_3474 MansionParameters
 		FIELD field_15438 random Ljava/util/Random;
+		FIELD field_15442 floorHeight I
+		FIELD field_15443 matrixCache [Lnet/minecraft/class_3471$class_3478;
+		METHOD <init> (Ljava/util/Random;)V
+			ARG 1 random
+		METHOD method_15047 (Lnet/minecraft/class_3471$class_3478;II)Z
+			ARG 0 matrix
 	CLASS class_3475 LayoutGenerator
 		FIELD field_15444 manager Lnet/minecraft/class_3485;
+		FIELD field_15445 upperRoofOffset I
+		FIELD field_15446 roofOffset I
 		FIELD field_15447 random Ljava/util/Random;
 		METHOD <init> (Lnet/minecraft/class_3485;Ljava/util/Random;)V
 			ARG 1 manager
@@ -35,26 +43,37 @@ CLASS net/minecraft/class_3471 net/minecraft/structure/WoodlandMansionGenerator
 			ARG 1 pos
 			ARG 2 rotation
 			ARG 3 pieces
+			ARG 4 params
 		METHOD method_15051 addRoof (Ljava/util/List;Lnet/minecraft/class_3471$class_3476;Lnet/minecraft/class_3471$class_3478;Lnet/minecraft/class_2350;IIII)V
+			ARG 1 pieces
+			ARG 2 template
+		METHOD method_15052 addWall (Ljava/util/List;Lnet/minecraft/class_3471$class_3476;)V
 		METHOD method_15053 addBigSecretRoom (Ljava/util/List;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Lnet/minecraft/class_3471$class_3473;)V
 		METHOD method_15054 addEntrance (Ljava/util/List;Lnet/minecraft/class_3471$class_3476;)V
+		METHOD method_15055 addThirdFloor (Ljava/util/List;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Lnet/minecraft/class_3471$class_3478;Lnet/minecraft/class_3471$class_3478;)V
+			ARG 1 pieces
+			ARG 4 roofMatrix
+			ARG 5 wallMatrix
 		METHOD method_15056 addBigRoom (Ljava/util/List;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Lnet/minecraft/class_2350;Lnet/minecraft/class_2350;Lnet/minecraft/class_3471$class_3473;)V
+			ARG 6 pool
 		METHOD method_15057 addSmallRoom (Ljava/util/List;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Lnet/minecraft/class_2350;Lnet/minecraft/class_3471$class_3473;)V
+		METHOD method_15058 addWallCorner (Ljava/util/List;Lnet/minecraft/class_3471$class_3476;)V
 		METHOD method_15059 addMediumRoom (Ljava/util/List;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Lnet/minecraft/class_2350;Lnet/minecraft/class_2350;Lnet/minecraft/class_3471$class_3473;Z)V
 			ARG 7 staircase
-	CLASS class_3476 GenerationPiece
-		FIELD field_15448 template Ljava/lang/String;
+		METHOD method_15060 rotateTemplate (Ljava/util/List;Lnet/minecraft/class_3471$class_3476;)V
+	CLASS class_3476 GenerationTemplate
+		FIELD field_15448 name Ljava/lang/String;
 		FIELD field_15449 position Lnet/minecraft/class_2338;
 		FIELD field_15450 rotation Lnet/minecraft/class_2470;
 	CLASS class_3477 SecondFloorRoomPool
 	CLASS class_3478 FlagMatrix
-		FIELD field_15451 array [[I
+		FIELD field_15451 cache [[I
 		FIELD field_15452 fallback I
-		FIELD field_15453 m I
-		FIELD field_15454 n I
+		FIELD field_15453 columns I
+		FIELD field_15454 rows I
 		METHOD <init> (III)V
-			ARG 1 n
-			ARG 2 m
+			ARG 1 rows
+			ARG 2 columns
 			ARG 3 fallback
 		METHOD method_15061 update (IIII)V
 			ARG 1 i
@@ -83,4 +102,13 @@ CLASS net/minecraft/class_3471 net/minecraft/structure/WoodlandMansionGenerator
 		FIELD field_15455 template Ljava/lang/String;
 		FIELD field_15456 mirror Lnet/minecraft/class_2415;
 		FIELD field_15457 rotation Lnet/minecraft/class_2470;
+		METHOD <init> (Lnet/minecraft/class_3485;Ljava/lang/String;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Lnet/minecraft/class_2415;)V
+			ARG 1 manager
+			ARG 2 template
+			ARG 3 pos
+			ARG 4 rotation
+			ARG 5 mirror
+		METHOD <init> (Lnet/minecraft/class_3485;Lnet/minecraft/class_2487;)V
+			ARG 2 compound
 		METHOD method_15068 setupPlacement (Lnet/minecraft/class_3485;)V
+			ARG 1 manager
