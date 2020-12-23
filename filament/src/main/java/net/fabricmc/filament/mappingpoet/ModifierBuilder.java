@@ -16,9 +16,10 @@
 
 package net.fabricmc.mappingpoet;
 
-import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.lang.model.element.Modifier;
 
 public class ModifierBuilder {
 
@@ -35,7 +36,7 @@ public class ModifierBuilder {
 			if (java.lang.reflect.Modifier.isFinal(access)) {
 				modifiers.add(Modifier.FINAL);
 			}
-			return modifiers.toArray(new Modifier[]{});
+			return modifiers.toArray(new Modifier[] {});
 		}
 
 		if (java.lang.reflect.Modifier.isPublic(access)) {
@@ -48,7 +49,7 @@ public class ModifierBuilder {
 
 		if (java.lang.reflect.Modifier.isAbstract(access) && type != Type.ENUM) {
 			modifiers.add(Modifier.ABSTRACT);
-		} 
+		}
 		if (java.lang.reflect.Modifier.isStatic(access)) {
 			modifiers.add(Modifier.STATIC);
 		}
@@ -75,7 +76,7 @@ public class ModifierBuilder {
 			modifiers.add(Modifier.STRICTFP);
 		}
 
-		return modifiers.toArray(new Modifier[]{});
+		return modifiers.toArray(new Modifier[] {});
 	}
 
 	public enum Type {

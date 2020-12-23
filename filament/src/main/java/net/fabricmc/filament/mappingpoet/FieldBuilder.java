@@ -17,6 +17,8 @@
 package net.fabricmc.mappingpoet;
 
 import java.util.AbstractMap;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,32 +32,44 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.TypePath;
+import org.objectweb.asm.TypeReference;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 
-import net.fabricmc.mappings.EntryTriple;
+import net.fabricmc.mapping.util.EntryTriple;
+import net.fabricmc.mappingpoet.signature.AnnotationAwareDescriptors;
+import net.fabricmc.mappingpoet.signature.AnnotationAwareSignatures;
+import net.fabricmc.mappingpoet.signature.ClassStaticContext;
+import net.fabricmc.mappingpoet.signature.TypeAnnotationBank;
+import net.fabricmc.mappingpoet.signature.TypeAnnotationMapping;
+import net.fabricmc.mappingpoet.signature.TypeAnnotationStorage;
 
 public class FieldBuilder {
 	private final MappingsStore mappings;
 	private final ClassNode classNode;
 	private final FieldNode fieldNode;
 	private final FieldSpec.Builder builder;
+	private final TypeAnnotationMapping annotations;
+	private final ClassStaticContext context;
 
-	public FieldBuilder(MappingsStore mappings, ClassNode classNode, FieldNode fieldNode) {
+	public FieldBuilder(MappingsStore mappings, ClassNode classNode, FieldNode fieldNode, ClassStaticContext context) {
 		this.mappings = mappings;
 		this.classNode = classNode;
 		this.fieldNode = fieldNode;
+		this.context = context;
+		this.annotations = TypeAnnotationStorage.builder()
+				.add(fieldNode.invisibleTypeAnnotations)
+				.add(fieldNode.visibleTypeAnnotations)
+				.build();
 		this.builder = createBuilder();
 		addDirectAnnotations();
 		addJavaDoc();
 	}
 
 	static void addFieldJavaDoc(TypeSpec.Builder enumBuilder, MappingsStore mappings, ClassNode classNode, FieldNode fieldNode) {
-		String javaDoc = mappings.getFieldDoc(new EntryTriple(classNode.name, fieldNode.name, fieldNode.desc));
-		if (javaDoc != null) {
-			enumBuilder.addJavadoc(javaDoc);
-		}
+		mappings.addFieldDoc(enumBuilder::addJavadoc, new EntryTriple(classNode.name, fieldNode.name, fieldNode.desc));
 	}
 
 	public static AnnotationSpec parseAnnotation(AnnotationNode annotation) {
@@ -75,7 +89,7 @@ public class FieldBuilder {
 		return builder.build();
 	}
 
-	private static CodeBlock codeFromAnnoValue(Object value) {
+	public static CodeBlock codeFromAnnoValue(Object value) {
 		// BCDFIJSZ; String; String[] (for enum); asm type; anno node; list of any prev stuff (cannot nest)
 		if (value instanceof List) {
 			return ((List<?>) value).stream().map(FieldBuilder::codeFromAnnoValue).collect(CodeBlock.joining(",", "{", "}"));
@@ -208,6 +222,125 @@ public class FieldBuilder {
 		return new AbstractMap.SimpleImmutableEntry<>(index, current);
 	}
 
+	public static Map.Entry<Integer, TypeName> parseAnnotatedType(final String desc, final int start, TypeAnnotationBank annotations, ClassStaticContext context) {
+		int index = start;
+		Deque<List<AnnotationSpec>> arrayAnnos = new ArrayDeque<>();
+		while (desc.charAt(index) == '[') {
+			arrayAnnos.push(annotations.getCurrentAnnotations());
+			annotations = annotations.advance(TypePath.ARRAY_ELEMENT, 0);
+			index++;
+		}
+
+		TypeName current;
+		switch (desc.charAt(index)) {
+		case 'B': {
+			current = TypeName.BYTE;
+			index++;
+			break;
+		}
+		case 'C': {
+			current = TypeName.CHAR;
+			index++;
+			break;
+		}
+		case 'D': {
+			current = TypeName.DOUBLE;
+			index++;
+			break;
+		}
+		case 'F': {
+			current = TypeName.FLOAT;
+			index++;
+			break;
+		}
+		case 'I': {
+			current = TypeName.INT;
+			index++;
+			break;
+		}
+		case 'J': {
+			current = TypeName.LONG;
+			index++;
+			break;
+		}
+		case 'S': {
+			current = TypeName.SHORT;
+			index++;
+			break;
+		}
+		case 'Z': {
+			current = TypeName.BOOLEAN;
+			index++;
+			break;
+		}
+		case 'V': {
+			current = TypeName.VOID;
+			index++;
+			break;
+		}
+		case 'L': {
+			int classNameSeparator = index;
+			index++;
+			int nameStart = index;
+			ClassName currentClassName = null;
+			boolean instanceInner = false;
+
+			char ch;
+			do {
+				ch = desc.charAt(index);
+
+				if (ch == '$' || ch == ';') {
+					// collect class name
+					if (currentClassName == null) {
+						String packageName = nameStart < classNameSeparator ? desc.substring(nameStart, classNameSeparator).replace('/', '.') : "";
+						String simpleName = desc.substring(classNameSeparator + 1, index);
+						currentClassName = ClassName.get(packageName, simpleName);
+					} else {
+						String simpleName = desc.substring(classNameSeparator + 1, index);
+
+						if (!instanceInner && context.isInstanceInner(desc.substring(nameStart, index))) {
+							instanceInner = true;
+						}
+
+						currentClassName = currentClassName.nestedClass(simpleName);
+
+						if (instanceInner) {
+							currentClassName = AnnotationAwareDescriptors.annotate(currentClassName, annotations);
+							annotations = annotations.advance(TypePath.INNER_TYPE, 0);
+						}
+					}
+				}
+
+				if (ch == '/' || ch == '$') {
+					// Start of simple name
+					classNameSeparator = index;
+				}
+
+				index++;
+			} while (ch != ';');
+
+			if (currentClassName == null) {
+				throw invalidDesc(desc, index);
+			}
+
+			current = currentClassName;
+			break;
+		}
+		default:
+			throw invalidDesc(desc, index);
+		}
+
+		while (!arrayAnnos.isEmpty()) {
+			current = ArrayTypeName.of(current);
+			List<AnnotationSpec> currentAnnos = arrayAnnos.pop();
+			if (!currentAnnos.isEmpty()) {
+				current = current.annotated(currentAnnos);
+			}
+		}
+
+		return new AbstractMap.SimpleImmutableEntry<>(index, current);
+	}
+
 	private static IllegalArgumentException invalidDesc(String desc, int index) {
 		return new IllegalArgumentException(String.format("Invalid descriptor at index %d for \"%s\"", index, desc));
 	}
@@ -285,10 +418,7 @@ public class FieldBuilder {
 	}
 
 	private void addJavaDoc() {
-		String javaDoc = mappings.getFieldDoc(new EntryTriple(classNode.name, fieldNode.name, fieldNode.desc));
-		if (javaDoc != null) {
-			builder.addJavadoc(javaDoc);
-		}
+		mappings.addFieldDoc(builder::addJavadoc, new EntryTriple(classNode.name, fieldNode.name, fieldNode.desc));
 	}
 
 	private void addDirectAnnotations() {
@@ -307,9 +437,9 @@ public class FieldBuilder {
 
 	private TypeName calculateType() {
 		if (fieldNode.signature != null) {
-			return Signatures.parseFieldSignature(fieldNode.signature);
+			return AnnotationAwareSignatures.parseFieldSignature(fieldNode.signature, annotations, context);
 		}
-		return typeFromDesc(fieldNode.desc);
+		return parseAnnotatedType(fieldNode.desc, 0, annotations.getBank(TypeReference.newTypeReference(TypeReference.FIELD)), context).getValue();
 	}
 
 	public FieldSpec build() {

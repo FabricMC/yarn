@@ -17,6 +17,7 @@
 package net.fabricmc.mappingpoet;
 
 import java.util.AbstractMap;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,13 +31,16 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
 import com.squareup.javapoet.WildcardTypeName;
 
+import net.fabricmc.mappingpoet.signature.ClassSignature;
+import net.fabricmc.mappingpoet.signature.MethodSignature;
+
 public final class Signatures {
 
 	public static ClassSignature parseClassSignature(final String signature) {
 		// <A:Labc.Def:Ljava.util.Iterable<Ljava/lang.Object;>;B:Ljava/lang/Object>Ljava/lang/Object; etc etc
 		int index = 0;
 		char ch;
-		List<TypeVariableName> generics = null;
+		List<TypeVariableName> generics = Collections.emptyList();
 		if (signature.charAt(0) == '<') {
 			// parse generic decl
 			index++; // consume '<'
@@ -86,23 +90,10 @@ public final class Signatures {
 		return new ClassSignature(generics, supers.removeFirst(), supers);
 	}
 
-	public static final class ClassSignature {
-		// Nullable
-		public final List<TypeVariableName> generics;
-		public final TypeName superclass;
-		public final List<TypeName> superinterfaces;
-
-		ClassSignature(List<TypeVariableName> generics, TypeName superclass, List<TypeName> superinterfaces) {
-			this.generics = generics;
-			this.superclass = superclass;
-			this.superinterfaces = superinterfaces;
-		}
-	}
-
 	public static MethodSignature parseMethodSignature(String signature) {
 		int index = 0;
 		char ch;
-		List<TypeVariableName> generics = null;
+		List<TypeVariableName> generics = Collections.emptyList();
 		if (signature.charAt(0) == '<') {
 			// parse generic decl
 			index++; // consume '<'
@@ -175,21 +166,6 @@ public final class Signatures {
 		}
 
 		return new MethodSignature(generics, params, returnType, thrown);
-	}
-
-	public static final class MethodSignature {
-		// Nullable
-		public final List<TypeVariableName> generics;
-		public final List<TypeName> parameters;
-		public final TypeName result;
-		public final List<TypeName> thrown;
-
-		MethodSignature(List<TypeVariableName> generics, List<TypeName> parameters, TypeName result, List<TypeName> thrown) {
-			this.generics = generics;
-			this.parameters = parameters;
-			this.result = result;
-			this.thrown = thrown;
-		}
 	}
 
 	public static TypeName parseFieldSignature(String signature) {

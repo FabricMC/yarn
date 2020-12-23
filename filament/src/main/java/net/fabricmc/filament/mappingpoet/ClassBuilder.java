@@ -16,20 +16,32 @@
 
 package net.fabricmc.mappingpoet;
 
+import static net.fabricmc.mappingpoet.FieldBuilder.parseAnnotation;
+
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.TypeVariableName;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.TypeReference;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.InnerClassNode;
 import org.objectweb.asm.tree.MethodNode;
+
+import net.fabricmc.mappingpoet.signature.AnnotationAwareDescriptors;
+import net.fabricmc.mappingpoet.signature.AnnotationAwareSignatures;
+import net.fabricmc.mappingpoet.signature.ClassSignature;
+import net.fabricmc.mappingpoet.signature.ClassStaticContext;
+import net.fabricmc.mappingpoet.signature.TypeAnnotationMapping;
+import net.fabricmc.mappingpoet.signature.TypeAnnotationStorage;
 
 public class ClassBuilder {
 
@@ -39,24 +51,29 @@ public class ClassBuilder {
 	private final TypeSpec.Builder builder;
 	private final List<ClassBuilder> innerClasses = new ArrayList<>();
 	private final Function<String, Collection<String>> superGetter;
+	private final ClassStaticContext context;
 
-	private Signatures.ClassSignature signature;
+	private final ClassSignature signature; // not really signature
+	private final TypeAnnotationMapping typeAnnotations;
+	private boolean annotationClass;
 	private boolean enumClass;
 	private boolean instanceInner = false;
+	// only nonnull if any class in the inner class chain creates a generic <T> decl
+	// omits L and ;
+	private String receiverSignature;
 
-	public ClassBuilder(MappingsStore mappings, ClassNode classNode, Function<String, Collection<String>> superGetter) {
+	public ClassBuilder(MappingsStore mappings, ClassNode classNode, Function<String, Collection<String>> superGetter, ClassStaticContext context) {
 		this.mappings = mappings;
 		this.classNode = classNode;
 		this.superGetter = superGetter;
+		this.context = context;
+		this.typeAnnotations = setupAnnotations();
+		this.signature = setupSignature();
 		this.builder = setupBuilder();
-		addInterfaces();
-		addDirectAnnotations();
-		addJavaDoc();
-	}
 
-	public void addMembers() {
-		addMethods();
-		addFields();
+		addInterfaces();
+		addAnnotations();
+		addJavaDoc();
 	}
 
 	public static ClassName parseInternalName(String internalName) {
@@ -96,23 +113,52 @@ public class ClassBuilder {
 		return currentClassName;
 	}
 
+	private TypeAnnotationMapping setupAnnotations() {
+		return TypeAnnotationStorage.builder()
+				.add(classNode.invisibleTypeAnnotations)
+				.add(classNode.visibleTypeAnnotations)
+				.build();
+	}
+
+	public void addMembers() {
+		addMethods();
+		addFields();
+	}
+
+	private ClassSignature setupSignature() {
+		return classNode.signature == null ?
+				AnnotationAwareDescriptors.parse(classNode.superName, classNode.interfaces, typeAnnotations, context) :
+				AnnotationAwareSignatures.parseClassSignature(classNode.signature, typeAnnotations, context);
+	}
+
 	private TypeSpec.Builder setupBuilder() {
-		if (classNode.signature != null) {
-			signature = Signatures.parseClassSignature(classNode.signature);
-		}
 		TypeSpec.Builder builder;
+		ClassName name = parseInternalName(classNode.name); // no type anno here
 		if (Modifier.isInterface(classNode.access)) {
-			builder = TypeSpec.interfaceBuilder(parseInternalName(classNode.name));
+			if (classNode.interfaces.size() == 1 && classNode.interfaces.get(0).equals("java/lang/annotation/Annotation")) {
+				builder = TypeSpec.annotationBuilder(name);
+				this.annotationClass = true;
+			} else {
+				builder = TypeSpec.interfaceBuilder(name);
+			}
 		} else if (classNode.superName.equals("java/lang/Enum")) {
 			enumClass = true;
-			builder = TypeSpec.enumBuilder(parseInternalName(classNode.name));
+			builder = TypeSpec.enumBuilder(name);
 		} else {
-			builder = TypeSpec.classBuilder(parseInternalName(classNode.name))
-					.superclass(signature == null ? parseInternalName(classNode.superName) : signature.superclass);
+			builder = TypeSpec.classBuilder(name)
+					.superclass(signature.superclass);
 		}
 
-		if (signature != null && signature.generics != null) {
+		if (!signature.generics.isEmpty()) {
 			builder.addTypeVariables(signature.generics);
+			StringBuilder sb = new StringBuilder();
+			sb.append(classNode.name);
+			sb.append("<");
+			for (TypeVariableName each : signature.generics) {
+				sb.append("T").append(each.name).append(";");
+			}
+			sb.append(">");
+			receiverSignature = sb.toString();
 		}
 
 		return builder
@@ -120,18 +166,22 @@ public class ClassBuilder {
 	}
 
 	private void addInterfaces() {
+		if (annotationClass) {
+			return;
+		}
 		if (signature != null) {
 			builder.addSuperinterfaces(signature.superinterfaces);
 			return;
 		}
-		if (classNode.interfaces == null) return;
+		if (classNode.interfaces.isEmpty()) return;
 
 		for (String iFace : classNode.interfaces) {
 			builder.addSuperinterface(parseInternalName(iFace));
 		}
 	}
 
-	private void addDirectAnnotations() {
+	private void addAnnotations() {
+		// type anno already done through class sig
 		addDirectAnnotations(classNode.invisibleAnnotations);
 		addDirectAnnotations(classNode.visibleAnnotations);
 	}
@@ -141,7 +191,7 @@ public class ClassBuilder {
 			return;
 		}
 		for (AnnotationNode annotation : regularAnnotations) {
-			builder.addAnnotation(FieldBuilder.parseAnnotation(annotation));
+			builder.addAnnotation(parseAnnotation(annotation));
 		}
 	}
 
@@ -172,7 +222,7 @@ public class ClassBuilder {
 					formalParamStartIndex = 1; // 0 this$0
 				}
 			}
-			builder.addMethod(new MethodBuilder(mappings, classNode, method, superGetter, formalParamStartIndex).build());
+			builder.addMethod(new MethodBuilder(mappings, classNode, method, superGetter, context, receiverSignature, formalParamStartIndex).build());
 		}
 	}
 
@@ -183,20 +233,40 @@ public class ClassBuilder {
 				continue; // hide synthetic stuff
 			}
 			if ((field.access & Opcodes.ACC_ENUM) == 0) {
-				builder.addField(new FieldBuilder(mappings, classNode, field).build());
+				builder.addField(new FieldBuilder(mappings, classNode, field, context).build());
 			} else {
 				TypeSpec.Builder enumBuilder = TypeSpec.anonymousClassBuilder("");
+				// jd
 				FieldBuilder.addFieldJavaDoc(enumBuilder, mappings, classNode, field);
+
+				// annotations
+				addDirectAnnotations(enumBuilder, field.invisibleAnnotations);
+				addDirectAnnotations(enumBuilder, field.visibleAnnotations);
+				List<AnnotationSpec> annotations = TypeAnnotationStorage.builder()
+						.add(field.invisibleTypeAnnotations)
+						.add(field.visibleTypeAnnotations)
+						.build().getBank(TypeReference.newTypeReference(TypeReference.FIELD))
+						.getCurrentAnnotations();
+				if (!annotations.isEmpty()) {
+					enumBuilder.addAnnotations(annotations); // no custom paths for annotations rip
+				}
+
 				builder.addEnumConstant(field.name, enumBuilder.build());
 			}
 		}
 	}
 
-	private void addJavaDoc() {
-		String javadoc = mappings.getClassDoc(classNode.name);
-		if (javadoc != null) {
-			builder.addJavadoc(javadoc);
+	private void addDirectAnnotations(TypeSpec.Builder builder, List<AnnotationNode> regularAnnotations) {
+		if (regularAnnotations == null) {
+			return;
 		}
+		for (AnnotationNode annotation : regularAnnotations) {
+			builder.addAnnotation(parseAnnotation(annotation));
+		}
+	}
+
+	private void addJavaDoc() {
+		mappings.addClassDoc(builder::addJavadoc, classNode.name);
 	}
 
 	public void addInnerClass(ClassBuilder classBuilder) {
@@ -215,7 +285,26 @@ public class ClassBuilder {
 			classBuilder.builder.addModifiers(javax.lang.model.element.Modifier.STATIC);
 		} else {
 			classBuilder.builder.addModifiers(new ModifierBuilder(innerClassNode.access).getModifiers(classBuilder.enumClass ? ModifierBuilder.Type.ENUM : ModifierBuilder.Type.CLASS));
-			if (!Modifier.isStatic(innerClassNode.access)) classBuilder.instanceInner = true;
+			if (!Modifier.isStatic(innerClassNode.access)) {
+				classBuilder.instanceInner = true;
+			}
+			// consider emit warning if this.instanceInner is true when classBuilder.instanceInner is false
+
+			if (this.receiverSignature != null && classBuilder.instanceInner) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(this.receiverSignature).append("."); // like O<TT;>. for O<T>
+				sb.append(innerClassNode.innerName); // append simple name
+
+				List<TypeVariableName> innerClassGenerics = classBuilder.signature.generics;
+				if (!innerClassGenerics.isEmpty()) {
+					sb.append("<");
+					for (TypeVariableName each : innerClassGenerics) {
+						sb.append("T").append(each.name).append(";");
+					}
+					sb.append(">");
+				}
+				classBuilder.receiverSignature = sb.toString();
+			}
 		}
 		innerClasses.add(classBuilder);
 	}
