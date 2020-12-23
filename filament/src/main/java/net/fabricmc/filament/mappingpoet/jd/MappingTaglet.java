@@ -70,7 +70,7 @@ public final class MappingTaglet implements Taglet {
 		builder.append("<th align=\"center\">Namespace</th>\n");
 		builder.append("<th align=\"center\">Name</th>\n");
 		if (!typeDecl) {
-			builder.append("<th align=\"center\">Mixin form</th>\n");
+			builder.append("<th align=\"center\">Mixin selector</th>\n");
 		}
 		builder.append("</thead>\n");
 		builder.append("<tbody>\n");
