@@ -63,14 +63,13 @@ public final class MappingTaglet implements Taglet {
 	public String toString(List<? extends DocTree> tags, Element element) {
 		boolean typeDecl = element instanceof TypeElement; // means it's a class, itf, enum, etc.
 		StringBuilder builder = new StringBuilder();
-		builder.append("<p class=\"title\" align=\"center\"><b>Mapping data</b></p>\n");
-		builder.append("<table class=\"table\" summary=\"Mapping data\" border=\"1\" align=\"center\">\n");
-		builder.append("<colgroup><col><col><col></colgroup>\n");
+		builder.append("<h3 class=\"title\">Mapping data</h3>\n");
+		builder.append("<table class=\"memberSummary\" summary=\"Mapping data\">\n");
 		builder.append("<thead>\n");
-		builder.append("<th align=\"center\">Namespace</th>\n");
-		builder.append("<th align=\"center\">Name</th>\n");
+		builder.append("<th class=\"colFirst\">Namespace</th>\n");
+		builder.append("<th class=\"" + (typeDecl ? "colSecond" : "colLast") + "\">Name</th>\n");
 		if (!typeDecl) {
-			builder.append("<th align=\"center\">Mixin selector</th>\n");
+			builder.append("<th class=\"colLast\">Mixin selector</th>\n");
 		}
 		builder.append("</thead>\n");
 		builder.append("<tbody>\n");
@@ -79,10 +78,10 @@ public final class MappingTaglet implements Taglet {
 			String body = ((UnknownBlockTagTree) each).getContent().stream().map(t -> ((LiteralTree) t).getBody().getBody()).collect(Collectors.joining());
 			String[] ans = body.split(":", 3);
 			builder.append("<tr>\n");
-			builder.append(String.format("<td align=\"center\">%s</td>\n", escaped(ans[0])));
+			builder.append(String.format("<td class=\"colFirst\">%s</td>\n", escaped(ans[0])));
 			final int bound = typeDecl ? 2 : 3;
 			for (int i = 1; i < bound; i++) {
-				builder.append(String.format("<td align=\"center\"><span name=\"copyable\"><code class=\"literal\">%s</code></span></td>\n", escaped(ans[i])));
+				builder.append(String.format("<td class=\"colSecond\"><span name=\"copyable\"><code>%s</code></span></td>\n", escaped(ans[i])));
 			}
 			builder.append("</tr>\n");
 		}
