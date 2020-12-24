@@ -81,7 +81,7 @@ public final class MappingTaglet implements Taglet {
 			builder.append(String.format("<td class=\"colFirst\">%s</td>\n", escaped(ans[0])));
 			final int bound = typeDecl ? 2 : 3;
 			for (int i = 1; i < bound; i++) {
-				builder.append(String.format("<td class=\"colSecond\"><span name=\"copyable\"><code>%s</code></span></td>\n", escaped(ans[i])));
+				builder.append(String.format("<td class=\"colSecond\"><span class=\"copyable\"><code>%s</code></span></td>\n", escaped(ans[i])));
 			}
 			builder.append("</tr>\n");
 		}
@@ -89,7 +89,7 @@ public final class MappingTaglet implements Taglet {
 		builder.append("</tbody>\n");
 		builder.append("</table>\n");
 		builder.append("<script>\n");
-		builder.append(JS_CONTENT); // todo this doesn't work. Need to make it copy on click
+		builder.append(JS_CONTENT);
 		builder.append("</script>\n");
 		return builder.toString();
 	}
