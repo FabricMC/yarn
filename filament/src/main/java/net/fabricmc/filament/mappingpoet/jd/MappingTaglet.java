@@ -63,34 +63,39 @@ public final class MappingTaglet implements Taglet {
 	public String toString(List<? extends DocTree> tags, Element element) {
 		boolean typeDecl = element instanceof TypeElement; // means it's a class, itf, enum, etc.
 		StringBuilder builder = new StringBuilder();
-		builder.append("<h3 class=\"title\">Mapping data</h3>\n");
-		builder.append("<table class=\"memberSummary\" summary=\"Mapping data\">\n");
+		builder.append("<dt>Mappings:</dt>\n");
+		// Java 15 required for style consistency
+		builder.append("<dd><div class=\"member-summary\"><table class=\"summary-table\" summary=\"Mapping data\">\n");
 		builder.append("<thead>\n");
-		builder.append("<th class=\"colFirst\">Namespace</th>\n");
-		builder.append("<th class=\"" + (typeDecl ? "colSecond" : "colLast") + "\">Name</th>\n");
+		builder.append("<th class=\"col-first\">Namespace</th>\n");
+		builder.append("<th class=\"").append(typeDecl ? "col-second" : "col-last").append("\">Name</th>\n");
 		if (!typeDecl) {
-			builder.append("<th class=\"colLast\">Mixin selector</th>\n");
+			builder.append("<th class=\"col-last\" scope=\"col\">Mixin selector</th>\n");
 		}
 		builder.append("</thead>\n");
 		builder.append("<tbody>\n");
 
+		boolean altColor = true;
 		for (DocTree each : tags) {
 			String body = ((UnknownBlockTagTree) each).getContent().stream().map(t -> ((LiteralTree) t).getBody().getBody()).collect(Collectors.joining());
 			String[] ans = body.split(":", 3);
-			builder.append("<tr>\n");
-			builder.append(String.format("<td class=\"colFirst\">%s</td>\n", escaped(ans[0])));
-			final int bound = typeDecl ? 2 : 3;
-			for (int i = 1; i < bound; i++) {
-				builder.append(String.format("<td class=\"colSecond\"><span class=\"copyable\"><code>%s</code></span></td>\n", escaped(ans[i])));
+			builder.append("<tr class=\"").append(altColor ? "alt-color" : "row-color").append("\">\n");
+			builder.append(String.format("<td class=\"col-first\">%s</td>\n", escaped(ans[0])));
+			builder.append(String.format("<td class=\"col-second\"><span class=\"copyable\"><code>%s</code></span></td>\n", escaped(ans[1])));
+			if (!typeDecl) {
+				builder.append(String.format("<td class=\"col-last\" scope=\"row\"><span class=\"copyable\"><code>%s</code></span></td>\n", escaped(ans[2])));
 			}
 			builder.append("</tr>\n");
+			altColor = !altColor;
 		}
 
 		builder.append("</tbody>\n");
-		builder.append("</table>\n");
-		builder.append("<script>\n");
-		builder.append(JS_CONTENT);
-		builder.append("</script>\n");
+		builder.append("</table></div></dd>\n");
+		if (typeDecl) {
+			builder.append("<script>\n");
+			builder.append(JS_CONTENT);
+			builder.append("</script>\n");
+		}
 		return builder.toString();
 	}
 
