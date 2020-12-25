@@ -1,6 +1,10 @@
 CLASS net/minecraft/class_473 net/minecraft/client/gui/screen/ingame/BookEditScreen
 	FIELD field_17116 pages Ljava/util/List;
 	FIELD field_24268 pageContent Lnet/minecraft/class_473$class_5233;
+	FIELD field_24269 pageContentSelection Lnet/minecraft/class_3728;
+	FIELD field_24270 bookTitle Lnet/minecraft/class_3728;
+	FIELD field_25891 pageIndicator Lnet/minecraft/class_2561;
+	FIELD field_25892 author Lnet/minecraft/class_2561;
 	FIELD field_25893 EDIT_TITLE_TEXT Lnet/minecraft/class_2561;
 	FIELD field_25894 FINALIZE_WARNING_TEXT Lnet/minecraft/class_2561;
 	FIELD field_25895 BLACK_CURSOR_TEXT Lnet/minecraft/class_5481;
@@ -22,6 +26,7 @@ CLASS net/minecraft/class_473 net/minecraft/client/gui/screen/ingame/BookEditScr
 	FIELD field_2848 doneButton Lnet/minecraft/class_4185;
 	FIELD field_2849 cancelButton Lnet/minecraft/class_4185;
 	METHOD <init> (Lnet/minecraft/class_1657;Lnet/minecraft/class_1799;Lnet/minecraft/class_1268;)V
+		ARG 1 player
 		ARG 2 itemStack
 		ARG 3 hand
 	METHOD method_17046 countPages ()I
@@ -29,8 +34,8 @@ CLASS net/minecraft/class_473 net/minecraft/client/gui/screen/ingame/BookEditScr
 	METHOD method_2407 finalizeBook (Z)V
 		ARG 1 signBook
 	METHOD method_2413 updateButtons ()V
-	METHOD method_2414 moveCursorToBottom ()V
-	METHOD method_2421 moveCursorToTop ()V
+	METHOD method_2414 moveCursorEnd ()V
+	METHOD method_2421 moveCursorHome ()V
 	METHOD method_2427 getCurrentPageContent ()Ljava/lang/String;
 	METHOD method_2436 appendNewPage ()V
 	METHOD method_2437 openPreviousPage ()V
@@ -44,6 +49,54 @@ CLASS net/minecraft/class_473 net/minecraft/client/gui/screen/ingame/BookEditScr
 	METHOD method_27576 getPageContent ()Lnet/minecraft/class_473$class_5233;
 	METHOD method_27577 invalidatePageContent ()V
 	METHOD method_27578 createPageContent ()Lnet/minecraft/class_473$class_5233;
+	METHOD method_27580 moveCursorLine (I)V
+		ARG 1 offset
+	METHOD method_27581 drawCursor (Lnet/minecraft/class_4587;Lnet/minecraft/class_473$class_5234;Z)V
+		ARG 1 matrices
+		ARG 2 position
+		ARG 3 haveSelection
+	METHOD method_27582 screenToBook (Lnet/minecraft/class_473$class_5234;)Lnet/minecraft/class_473$class_5234;
+		COMMENT Convert a position as a screen coordinate to a position relative to the book UI
+		ARG 1 position
+	METHOD method_27583 createSelectionBoundingBox (Lnet/minecraft/class_473$class_5234;Lnet/minecraft/class_473$class_5234;)Lnet/minecraft/class_768;
+		ARG 1 topLeft
+		ARG 2 bottomRight
+	METHOD method_27584 setClipboard (Ljava/lang/String;)V
+		ARG 1 text
+	METHOD method_27585 createSelectionBoundingBox (Ljava/lang/String;Lnet/minecraft/class_5225;IIII)Lnet/minecraft/class_768;
+		ARG 1 text
+		ARG 2 textHandler
+		ARG 3 fromOffset
+		ARG 4 toOffset
+		ARG 5 lineY
+		ARG 6 lineStart
+	METHOD method_27586 syntheticSplitLine (Lorg/apache/commons/lang3/mutable/MutableInt;Ljava/lang/String;Lorg/apache/commons/lang3/mutable/MutableBoolean;Lit/unimi/dsi/fastutil/ints/IntList;Ljava/util/List;Lnet/minecraft/class_2583;II)V
+		ARG 1 numLines
+		ARG 2 text
+		ARG 3 isEndOfLine
+		ARG 4 lineOffsets
+		ARG 5 lineTexts
+		ARG 6 style
+		ARG 7 start
+		ARG 8 end
+	METHOD method_27588 drawSelection ([Lnet/minecraft/class_768;)V
+		ARG 1 selectionBounds
+	METHOD method_27589 selectWord (I)V
+		ARG 1 cursorOffset
+	METHOD method_27590 bookToScreen (Lnet/minecraft/class_473$class_5234;)Lnet/minecraft/class_473$class_5234;
+		COMMENT Convert a position relative to the book UI to a position as a screen coordinate
+		ARG 1 position
+	METHOD method_27591 findLine ([II)I
+		ARG 0 lineOffsets
+		ARG 1 cursorOffset
+	METHOD method_27592 keyPressedEditMode (III)Z
+		ARG 1 keyCode
+		ARG 2 scanCode
+		ARG 3 modifiers
+	METHOD method_27595 getClipboard ()Ljava/lang/String;
+	METHOD method_27597 moveCursorUp ()V
+	METHOD method_27598 moveCursorDown ()V
+	METHOD method_27872 pageChanged ()V
 	CLASS class_475 Line
 		FIELD field_24278 style Lnet/minecraft/class_2583;
 		FIELD field_24279 content Ljava/lang/String;
@@ -51,17 +104,49 @@ CLASS net/minecraft/class_473 net/minecraft/client/gui/screen/ingame/BookEditScr
 		FIELD field_2853 y I
 		FIELD field_2854 x I
 		METHOD <init> (Lnet/minecraft/class_2583;Ljava/lang/String;II)V
+			ARG 1 style
 			ARG 2 content
 			ARG 3 x
 			ARG 4 y
+		METHOD method_17550 syntheticGetY (Lnet/minecraft/class_473$class_475;)I
+		METHOD method_17552 syntheticGetX (Lnet/minecraft/class_473$class_475;)I
+		METHOD method_27608 syntheticGetText (Lnet/minecraft/class_473$class_475;)Lnet/minecraft/class_2561;
+		METHOD method_27609 syntheticGetContent (Lnet/minecraft/class_473$class_475;)Ljava/lang/String;
+		METHOD method_27610 syntheticGetStyle (Lnet/minecraft/class_473$class_475;)Lnet/minecraft/class_2583;
 	CLASS class_5233 PageContent
 		FIELD field_24271 EMPTY Lnet/minecraft/class_473$class_5233;
 		FIELD field_24272 pageContent Ljava/lang/String;
 		FIELD field_24273 position Lnet/minecraft/class_473$class_5234;
-		FIELD field_24276 lines [Lnet/minecraft/class_473$class_475;
+		FIELD field_24274 haveSelection Z
+		FIELD field_24275 lineOffsets [I
+		FIELD field_24276 lineTexts [Lnet/minecraft/class_473$class_475;
+		FIELD field_24277 selectionBounds [Lnet/minecraft/class_768;
 		METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_473$class_5234;Z[I[Lnet/minecraft/class_473$class_475;[Lnet/minecraft/class_768;)V
 			ARG 1 pageContent
-			ARG 5 lines
+			ARG 2 position
+			ARG 3 haveSelection
+			ARG 4 lineOffsets
+			ARG 5 lineTexts
+			ARG 6 lineBounds
+		METHOD method_27599 syntheticGetEmptyPage ()Lnet/minecraft/class_473$class_5233;
+		METHOD method_27600 findLineStart (I)I
+			ARG 1 cursorOffset
+		METHOD method_27601 moveCursorLine (II)I
+			ARG 1 cursorOffset
+			ARG 2 offset
+		METHOD method_27602 setCursorFromMousePosition (Lnet/minecraft/class_327;Lnet/minecraft/class_473$class_5234;)I
+			ARG 1 textRenderer
+			ARG 2 position
+		METHOD method_27603 syntheticGetLineTexts (Lnet/minecraft/class_473$class_5233;)[Lnet/minecraft/class_473$class_475;
+			ARG 0 content
+		METHOD method_27604 findLineEnd (I)I
+			ARG 1 cursorOffset
+		METHOD method_27605 syntheticGetSelectionBounds (Lnet/minecraft/class_473$class_5233;)[Lnet/minecraft/class_768;
+			ARG 0 content
+		METHOD method_27606 syntheticGetMousePosition (Lnet/minecraft/class_473$class_5233;)Lnet/minecraft/class_473$class_5234;
+			ARG 0 content
+		METHOD method_27607 syntheticHaveSelection (Lnet/minecraft/class_473$class_5233;)Z
+			ARG 0 content
 	CLASS class_5234 Position
 		FIELD field_24281 x I
 		FIELD field_24282 y I

@@ -3,20 +3,32 @@ CLASS net/minecraft/class_3728 net/minecraft/client/util/SelectionManager
 	FIELD field_16453 selectionStart I
 	FIELD field_16456 clipboardGetter Ljava/util/function/Supplier;
 	FIELD field_16458 clipboardSetter Ljava/util/function/Consumer;
-	FIELD field_24257 stringGetter Ljava/util/function/Supplier;
-	FIELD field_24258 stringSetter Ljava/util/function/Consumer;
-	FIELD field_24259 stringFilter Ljava/util/function/Predicate;
+	FIELD field_24257 textGetter Ljava/util/function/Supplier;
+	FIELD field_24258 textSetter Ljava/util/function/Consumer;
+	FIELD field_24259 textFilter Ljava/util/function/Predicate;
+	METHOD <init> (Ljava/util/function/Supplier;Ljava/util/function/Consumer;Ljava/util/function/Supplier;Ljava/util/function/Consumer;Ljava/util/function/Predicate;)V
+		ARG 1 textGetter
+		ARG 2 textSetter
+		ARG 3 clipboardGetter
+		ARG 4 clipboardSetter
+		ARG 5 textFilter
 	METHOD method_16197 insert (Ljava/lang/String;)V
+		ARG 1 text
 	METHOD method_16198 deleteSelectedText (Ljava/lang/String;)Ljava/lang/String;
+		ARG 1 text
 	METHOD method_16199 insert (C)Z
 		ARG 1 c
 	METHOD method_16200 getSelectedText (Ljava/lang/String;)Ljava/lang/String;
+		ARG 1 text
 	METHOD method_16201 getSelectionStart ()I
 	METHOD method_16202 handleSpecialKey (I)Z
 		ARG 1 keyCode
 	METHOD method_16203 getSelectionEnd ()I
-	METHOD method_16204 moveCaretToEnd ()V
+	METHOD method_16204 moveCursorEnd ()V
 	METHOD method_27547 cut ()V
+	METHOD method_27548 setSelection (II)V
+		ARG 1 start
+		ARG 2 end
 	METHOD method_27549 moveCursor (IZ)V
 		ARG 1 offset
 		ARG 2 shiftDown
@@ -24,16 +36,24 @@ CLASS net/minecraft/class_3728 net/minecraft/client/util/SelectionManager
 		ARG 0 client
 	METHOD method_27551 setClipboard (Lnet/minecraft/class_310;Ljava/lang/String;)V
 		ARG 0 client
+		ARG 1 text
 	METHOD method_27552 insert (Ljava/lang/String;Ljava/lang/String;)V
-		ARG 1 string
+		ARG 1 text
 		ARG 2 insertion
+	METHOD method_27553 moveCursorHome (Z)V
+		ARG 1 shiftDown
 	METHOD method_27554 paste ()V
 	METHOD method_27555 moveCursorPastWord (IZ)V
 		ARG 1 offset
 		ARG 2 shiftDown
 	METHOD method_27556 getClipboard (Lnet/minecraft/class_310;)Ljava/lang/String;
 		ARG 0 client
+	METHOD method_27558 moveCursorEnd (Z)V
+		ARG 1 shiftDown
 	METHOD method_27559 copy ()V
+	METHOD method_27560 setCursor (IZ)V
+		ARG 1 cursorOffset
+		ARG 2 shiftDown
 	METHOD method_27561 makeClipboardSetter (Lnet/minecraft/class_310;)Ljava/util/function/Consumer;
 		ARG 0 client
 	METHOD method_27562 updateSelectionRange (Z)V
@@ -41,3 +61,6 @@ CLASS net/minecraft/class_3728 net/minecraft/client/util/SelectionManager
 	METHOD method_27563 selectAll ()V
 	METHOD method_27564 delete (I)V
 		ARG 1 cursorOffset
+	METHOD method_27567 clampCursorOffset (I)I
+		ARG 1 cursorOffset
+	METHOD method_27568 hasSelection ()Z
