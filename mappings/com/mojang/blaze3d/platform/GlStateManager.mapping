@@ -21,6 +21,7 @@ CLASS net/minecraft/class_4493 com/mojang/blaze3d/platform/GlStateManager
 	FIELD field_20488 fboMode Lnet/minecraft/class_4493$class_1010;
 	FIELD field_20771 colorBuffer Ljava/nio/FloatBuffer;
 	FIELD field_25251 fboBlitMode Lnet/minecraft/class_4493$class_5343;
+	FIELD field_26839 SCISSOR_TEST Lnet/minecraft/class_4493$class_5518;
 	METHOD method_21906 enableColorLogicOp ()V
 	METHOD method_21907 matrixMode (I)V
 		ARG 0 mode
@@ -327,13 +328,14 @@ CLASS net/minecraft/class_4493 com/mojang/blaze3d/platform/GlStateManager
 	METHOD method_22034 disableLighting ()V
 	METHOD method_22035 createShader (I)I
 		ARG 0 type
-	METHOD method_22036 bindBuffers (II)V
+	METHOD method_22036 bindBuffer (II)V
 		ARG 0 target
 		ARG 1 buffer
-	METHOD method_22037 drawArrays (IIIJ)V
+	METHOD method_22037 drawElements (IIIJ)V
 		ARG 0 mode
 		ARG 1 first
-		ARG 2 count
+		ARG 2 type
+		ARG 3 indices
 	METHOD method_22038 vertexPointer (IIIJ)V
 		ARG 0 size
 		ARG 1 type
@@ -459,9 +461,44 @@ CLASS net/minecraft/class_4493 com/mojang/blaze3d/platform/GlStateManager
 	METHOD method_24222 setupGui3dDiffuseLighting (Lnet/minecraft/class_1160;Lnet/minecraft/class_1160;)V
 	METHOD method_29330 supportsGl30 ()Z
 	METHOD method_29331 copyTexSubImage2d (IIIIIIII)V
+		ARG 0 target
+		ARG 1 level
+		ARG 2 xOffset
+		ARG 3 yOffset
+		ARG 4 x
+		ARG 5 y
+		ARG 6 width
+		ARG 7 height
 	METHOD method_29332 blitFramebuffer (IIIIIIIIII)V
+		ARG 0 srcX0
+		ARG 1 srcY0
+		ARG 2 srcX1
+		ARG 3 srcY1
+		ARG 4 dstX0
+		ARG 5 dstY0
+		ARG 6 dstX1
+		ARG 7 dstY1
+		ARG 8 mask
+		ARG 9 filter
 	METHOD method_29333 getFramebufferDepthAttachment ()I
 	METHOD method_29334 getActiveBoundTexture ()I
+	METHOD method_30498 genTextures ([I)V
+	METHOD method_30499 deleteTextures ([I)V
+	METHOD method_31317 scissor (IIII)V
+		ARG 0 x
+		ARG 1 y
+		ARG 2 width
+		ARG 3 height
+	METHOD method_31319 enableScissorTest ()V
+	METHOD method_31945 bufferData (IJI)V
+		ARG 0 target
+		ARG 1 size
+		ARG 3 usage
+	METHOD method_31946 mapBuffer (II)Ljava/nio/ByteBuffer;
+		ARG 0 target
+		ARG 1 access
+	METHOD method_31947 unmapBuffer (I)V
+		ARG 0 target
 	CLASS class_1010 FBOMode
 	CLASS class_1016 AlphaTestState
 		FIELD field_5042 capState Lnet/minecraft/class_4493$class_1018;
@@ -560,3 +597,5 @@ CLASS net/minecraft/class_4493 com/mojang/blaze3d/platform/GlStateManager
 	CLASS class_4534 DstFactor
 	CLASS class_4535 SrcFactor
 	CLASS class_5343 FBOBlitMode
+	CLASS class_5518 ScissorTestState
+		FIELD field_26840 capState Lnet/minecraft/class_4493$class_1018;
