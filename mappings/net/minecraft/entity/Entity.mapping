@@ -7,7 +7,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_22467 pos Lnet/minecraft/class_243;
 	FIELD field_22468 blockPos Lnet/minecraft/class_2338;
 	FIELD field_23807 inanimate Z
+	FIELD field_25599 submergedFluidTag Lnet/minecraft/class_3494;
 	FIELD field_25750 trackedPosition Lnet/minecraft/class_243;
+	FIELD field_26994 prevAge I
 	FIELD field_26995 removalReason Lnet/minecraft/class_1297$class_5529;
 	FIELD field_27857 inPowderSnow Z
 	FIELD field_27858 FROZEN_TICKS Lnet/minecraft/class_2940;
@@ -204,6 +206,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 5 z
 	METHOD method_24201 updatePassengerPosition (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297$class_4738;)V
 		ARG 1 passenger
+		ARG 2 positionUpdater
 	METHOD method_24203 refreshPositionAfterTeleport (DDD)V
 		ARG 1 x
 		ARG 3 y
@@ -230,6 +233,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @see #stopRiding()
 	METHOD method_29495 refreshPositionAfterTeleport (Lnet/minecraft/class_243;)V
+		ARG 1 pos
+	METHOD method_30076 removeFromDimension ()V
 	METHOD method_30227 getTrackedPosition ()Lnet/minecraft/class_243;
 	METHOD method_30228 updateTrackedPosition (Lnet/minecraft/class_243;)V
 		ARG 1 pos
@@ -237,18 +242,24 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_30230 hasNetherPortalCooldown ()Z
 	METHOD method_30329 getTeleportTarget (Lnet/minecraft/class_3218;)Lnet/minecraft/class_5454;
 		ARG 1 destination
-	METHOD method_30634 (DDD)V
+	METHOD method_30632 collidesWithStateAtPos (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Z
+		ARG 1 pos
+		ARG 2 state
+	METHOD method_30634 updatePosition (DDD)V
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
 	METHOD method_30948 isCollidable ()Z
 	METHOD method_30949 collidesWith (Lnet/minecraft/class_1297;)Z
 		ARG 1 other
-	METHOD method_31166 (F)Lnet/minecraft/class_243;
+	METHOD method_30950 getLerpedPos (F)Lnet/minecraft/class_243;
+		ARG 1 delta
+	METHOD method_31166 getClientCameraPosVec (F)Lnet/minecraft/class_243;
 		ARG 1 tickDelta
 	METHOD method_31471 onSpawnPacket (Lnet/minecraft/class_2604;)V
 		ARG 1 packet
 	METHOD method_31472 discard ()V
+	METHOD method_31473 destroyInVoid ()V
 	METHOD method_31476 getChunkPos ()Lnet/minecraft/class_1923;
 	METHOD method_31477 getBlockX ()I
 	METHOD method_31478 getBlockY ()I
@@ -257,6 +268,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_31481 isRemoved ()Z
 	METHOD method_31482 unsetRemoved ()V
 	METHOD method_31483 getFirstPassenger ()Lnet/minecraft/class_1297;
+	METHOD method_31484 getPassengersStream ()Ljava/util/stream/Stream;
 	METHOD method_32312 getFrozenTicks ()I
 	METHOD method_32313 getFreezingScale ()F
 	METHOD method_32314 isFreezing ()Z
@@ -266,7 +278,12 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 frozenTicks
 	METHOD method_32319 setInPowderSnow (Z)V
 		ARG 1 inPowderSnow
+	METHOD method_32875 emitGameEvent (Lnet/minecraft/class_1297;Lnet/minecraft/class_5712;)V
+		ARG 1 entity
+		ARG 2 event
 	METHOD method_32876 emitGameEvent (Lnet/minecraft/class_5712;)V
+		ARG 1 event
+	METHOD method_33189 occludeVibrationSignals ()Z
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		ARG 1 state
@@ -545,6 +562,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 stack
 	METHOD method_5776 hasWings ()Z
 	METHOD method_5777 isSubmergedIn (Lnet/minecraft/class_3494;)Z
+		ARG 1 fluidTag
 	METHOD method_5778 isBeingRainedOn ()Z
 	METHOD method_5779 isPartOf (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
@@ -601,7 +619,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 8 pitch
 	METHOD method_5809 isOnFire ()Z
 	METHOD method_5810 isPushable ()Z
-	METHOD method_5814 updatePosition (DDD)V
+	METHOD method_5814 setPosition (DDD)V
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
@@ -693,6 +711,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 entity
 		ARG 2 force
 	METHOD method_5874 onKilledOther (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)V
+		ARG 1 world
+		ARG 2 other
 	METHOD method_5875 setNoGravity (Z)V
 		ARG 1 noGravity
 	METHOD method_5876 updateWaterState ()Z
