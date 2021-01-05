@@ -13,6 +13,8 @@ buildscript {
 		classpath 'de.undercouch:gradle-download-task:4.0.4'
 		classpath 'net.fabricmc:tiny-remapper:0.3.1.72'
 		classpath 'net.fabricmc:mappingpoet:0.1.0+build.2'
+		classpath 'io.github.weavemc:unpick:2.0.0+build.1'
+		classpath 'io.github.weavemc:unpick-format-utils:2.0.0+build.1'
 	}
 }
 
@@ -30,6 +32,7 @@ def ENV = System.getenv()
 def build_number = ENV.BUILD_NUMBER ?: "local"
 
 def yarnVersion = "${minecraft_version}+build.$build_number"
+version = yarnVersion
 
 repositories {
 	mavenCentral()
@@ -71,6 +74,7 @@ def cacheFilesMinecraft = file(".gradle/minecraft")
 def tempDir = file(".gradle/temp")
 def mergedFile = file("${minecraft_version}-merged.jar")
 def intermediaryJar = file("${minecraft_version}-intermediary.jar")
+def unpickedJar = file("${minecraft_version}-unpicked.jar")
 def namedJar = file("${minecraft_version}-named.jar")
 def versionFile = new File(cacheFilesMinecraft, "${minecraft_version}.json")
 def clientJar = new File(cacheFilesMinecraft, "${minecraft_version}-client.jar")
@@ -80,7 +84,6 @@ def libs = new File("build/libs/")
 
 
 import com.google.common.hash.Hashing
-import com.google.common.collect.Iterables
 import cuchaz.enigma.command.CheckMappingsCommand
 import cuchaz.enigma.command.ComposeMappingsCommand
 import cuchaz.enigma.command.ConvertMappingsCommand
@@ -101,9 +104,6 @@ import net.fabricmc.tinyremapper.TinyUtils
 import org.apache.commons.io.FileUtils
 
 import java.nio.charset.StandardCharsets
-import java.nio.file.FileSystems
-import java.nio.file.Files
-import java.nio.file.Path
 import java.util.zip.GZIPOutputStream
 
 boolean validateChecksum(File file, String checksum) {
@@ -582,6 +582,154 @@ task mapNamedJar(dependsOn: ["mergeV2", mapIntermediaryJar]) {
 	}
 }
 
+import daomephsta.unpick.api.ConstantUninliner
+import daomephsta.unpick.api.constantmappers.ConstantMappers
+import daomephsta.unpick.api.constantresolvers.ConstantResolvers
+import daomephsta.unpick.api.IClassResolver
+import org.objectweb.asm.ClassReader
+import java.util.jar.JarEntry
+import java.util.jar.JarFile
+import java.util.jar.JarOutputStream
+import org.objectweb.asm.tree.ClassNode
+import org.objectweb.asm.ClassWriter
+
+class JarClassResolver implements IClassResolver, Closeable {
+	private final URLClassLoader classLoader;
+
+	JarClassResolver(Set<File> jars) {
+		this.classLoader = new URLClassLoader(
+			jars.stream().map{file -> file.toURI().toURL()}.toArray{new URL[it]}
+		)
+	}
+
+	JarClassResolver(File jar) {
+		this(Collections.singleton(jar))
+	}
+
+	@Override
+	ClassReader resolveClass(String internalName) throws IOException {
+		def resource = classLoader.getResourceAsStream(internalName + ".class")
+
+		if (resource != null) {
+			return new ClassReader(resource)
+		}
+
+		throw new RuntimeException("Failed to find ${internalName}.class")
+	}
+
+	@Override
+	void close() throws IOException {
+		classLoader.close()
+	}
+}
+
+// Merge all of the unpick definitions into a single file to be shipped
+task combineUnpickDefinitions(type : FileOutput) {
+	output = new File(tempDir, "definitions.unpick")
+	outputs.upToDateWhen { false }
+	group "unpick"
+
+	doFirst {
+		output.delete()
+	}
+
+	doLast {
+		def combinedDefinitions = "v2\n"
+
+		file("unpick-definitions").eachFile {
+			def definition = it.text
+			if (!definition.startsWith("v2")) {
+				throw new UnsupportedOperationException(it.name + " has an invalid unpick header")
+			}
+
+			// Remove the first, and append to the combined definition
+			combinedDefinitions += definition.split("\n").drop(1).join("\n")
+		}
+
+		output.text = combinedDefinitions
+	}
+}
+
+task unpickNamedJar(dependsOn: [mapNamedJar, jar, combineUnpickDefinitions]) {
+	outputs.upToDateWhen { false }
+	group "unpick"
+
+	doFirst {
+		unpickedJar.delete()
+	}
+
+	doLast {
+		def unpickDefinition = combineUnpickDefinitions.output.newInputStream()
+
+		def minecraftClassResolver = new JarClassResolver(configurations.decompileClasspath.files + [namedJar])
+		def constantClassesResolver = new JarClassResolver(jar.archiveFile.get().asFile)
+
+		def constantUninliner = new ConstantUninliner(
+				ConstantMappers.dataDriven(minecraftClassResolver, [unpickDefinition].toArray(new InputStream[0])),
+				ConstantResolvers.bytecodeAnalysis(constantClassesResolver)
+		)
+
+		try {
+			new JarFile(namedJar).withCloseable {jar ->
+				new JarOutputStream(new FileOutputStream(unpickedJar), jar.getManifest()).withCloseable { out ->
+					Enumeration<JarEntry> entries = jar.entries()
+
+					while(entries.hasMoreElements()) {
+						JarEntry entry = entries.nextElement()
+						if (!entry.getName().endsWith(".class")) {
+							continue
+						}
+
+						InputStream inputStream = jar.getInputStream(entry)
+						ClassReader classReader = new ClassReader(inputStream)
+						ClassNode classNode = new ClassNode()
+						classReader.accept(classNode, 0)
+
+						constantUninliner.transform(classNode)
+
+						ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS)
+						classNode.accept(classWriter)
+
+						JarEntry remappedEntry = new JarEntry(entry.getName())
+						remappedEntry.setTime(System.currentTimeMillis())
+
+						byte[] remappedBytes = classWriter.toByteArray()
+						remappedEntry.setSize(remappedBytes.length)
+						out.putNextEntry(remappedEntry)
+						out.write(remappedBytes)
+
+						out.closeEntry()
+					}
+				}
+			}
+		} finally {
+			minecraftClassResolver.close()
+			constantClassesResolver.close()
+			unpickDefinition.close()
+		}
+	}
+}
+
+// Setup the build for the unpicked constants
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = "UTF-8"
+	if (JavaVersion.current().isJava9Compatible()) {
+		it.options.release = 8
+	}
+}
+
+jar {
+	archiveClassifier = "constants"
+}
+
+java {
+	withSourcesJar()
+}
+
 task insertAutoGeneratedEnumMappings(dependsOn : [buildYarnTiny,mapIntermediaryJar], type : FileOutput){
 	group = buildMappingGroup
 	def noEnumV2 = buildYarnTiny.v2Output
@@ -633,7 +781,7 @@ task mergeV2(dependsOn: ["v2UnmergedYarnJar", "invertIntermediaryv2"], type: Fil
 	}
 }
 
-task v2UnmergedYarnJar(dependsOn: insertAutoGeneratedEnumMappings, type: Jar) {
+task v2UnmergedYarnJar(dependsOn: [insertAutoGeneratedEnumMappings, combineUnpickDefinitions], type: Jar) {
 	def mappings = insertAutoGeneratedEnumMappings.output
 	group = "mapping build"
 	outputs.upToDateWhen { false }
@@ -641,6 +789,9 @@ task v2UnmergedYarnJar(dependsOn: insertAutoGeneratedEnumMappings, type: Jar) {
 
 	from(file(mappings)) {
 		rename mappings.name, "mappings/mappings.tiny"
+	}
+	from(combineUnpickDefinitions.output) {
+		rename combineUnpickDefinitions.output.name, "extras/definitions.unpick"
 	}
 	destinationDirectory.set(file("build/libs"))
 }
@@ -653,6 +804,9 @@ task v2MergedYarnJar(dependsOn: ["mergeV2"], type: Jar) {
 
 	from(file(mappings)) {
 		rename mappings.name, "mappings/mappings.tiny"
+	}
+	from(combineUnpickDefinitions.output) {
+		rename combineUnpickDefinitions.output.name, "extras/definitions.unpick"
 	}
 	destinationDirectory.set(file("build/libs"))
 }
@@ -675,11 +829,11 @@ task genFakeSource(dependsOn: ["buildYarnTiny", "mapNamedJar"]) {
 	}
 }
 
-task decompileCFR(type: JavaExec, dependsOn: "mapNamedJar") {
+task decompileCFR(type: JavaExec, dependsOn: [unpickNamedJar]) {
 	classpath = configurations.decompileClasspath
 	main = "org.benf.cfr.reader.Main"
 
-	args namedJar.getAbsolutePath(), "--outputdir", file("namedSrc").absolutePath
+	args unpickedJar.getAbsolutePath(), "--outputdir", file("namedSrc").absolutePath
 
 	doFirst {
 		file("namedSrc").deleteDir()
@@ -746,6 +900,10 @@ publishing {
 			artifact(v2MergedYarnJar) {
 				classifier "mergedv2"
 			}
+			artifact(jar) {
+				classifier "constants"
+			}
+			artifact sourcesJar
 			artifact javadocJar
 		}
 
