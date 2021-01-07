@@ -12,7 +12,7 @@ public final class SetBlockStateFlags {
 	public static final int NOTIFY_LISTENERS = 2;
 
 	/**
-	 * Used in conjunction with NOTIFY_LISTENERS to suppress the render pass on clients.
+	 * Used in conjunction with {@link NOTIFY_LISTENERS} to suppress the render pass on clients.
 	 */
 	public static final int NO_REDRAW = 4;
 
