@@ -586,6 +586,8 @@ import daomephsta.unpick.api.ConstantUninliner
 import daomephsta.unpick.api.constantmappers.ConstantMappers
 import daomephsta.unpick.api.constantresolvers.ConstantResolvers
 import daomephsta.unpick.api.IClassResolver
+import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Reader
+import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Writer
 import org.objectweb.asm.ClassReader
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
@@ -634,19 +636,15 @@ task combineUnpickDefinitions(type : FileOutput) {
 	}
 
 	doLast {
-		def combinedDefinitions = "v2\n"
+		def writer = new UnpickV2Writer()
 
 		file("unpick-definitions").eachFile {
-			def definition = it.text
-			if (!definition.startsWith("v2")) {
-				throw new UnsupportedOperationException(it.name + " has an invalid unpick header")
+			new UnpickV2Reader(it.newInputStream()).withCloseable {
+				it.accept(writer)
 			}
-
-			// Remove the first, and append to the combined definition
-			combinedDefinitions += definition.split("\n").drop(1).join("\n")
 		}
 
-		output.text = combinedDefinitions
+		output.text = writer.output
 	}
 }
 
