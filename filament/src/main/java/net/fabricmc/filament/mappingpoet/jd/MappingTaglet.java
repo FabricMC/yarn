@@ -16,14 +16,8 @@
 
 package net.fabricmc.mappingpoet.jd;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,8 +31,6 @@ import jdk.javadoc.doclet.Taglet;
 
 @SuppressWarnings("unused")
 public final class MappingTaglet implements Taglet {
-
-	private static final String JS_CONTENT;
 
 	public MappingTaglet() {
 		// Required by javadoc
@@ -91,11 +83,6 @@ public final class MappingTaglet implements Taglet {
 
 		builder.append("</tbody>\n");
 		builder.append("</table></div></dd>\n");
-		if (typeDecl) {
-			builder.append("<script>\n");
-			builder.append(JS_CONTENT);
-			builder.append("</script>\n");
-		}
 		return builder.toString();
 	}
 
@@ -112,18 +99,5 @@ public final class MappingTaglet implements Taglet {
 			}
 		}
 		return builder.toString();
-	}
-
-	static {
-		StringBuilder sb = new StringBuilder();
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(MappingTaglet.class.getResourceAsStream("/copy_on_click.js"), "copy_on_click.js stream"), StandardCharsets.UTF_8))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				sb.append(line).append("\n");
-			}
-		} catch (IOException ex) {
-			throw new UncheckedIOException(ex);
-		}
-		JS_CONTENT = sb.toString();
 	}
 }
