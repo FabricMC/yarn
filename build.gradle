@@ -74,7 +74,7 @@ def cacheFilesMinecraft = file(".gradle/minecraft")
 def tempDir = file(".gradle/temp")
 def mergedFile = file("${minecraft_version}-merged.jar")
 def intermediaryJar = file("${minecraft_version}-intermediary.jar")
-def unpickedJar = file("${minecraft_version}-unpicked.jar")
+def unpickedJar = file("${minecraft_version}-intermediary-unpicked.jar")
 def namedJar = file("${minecraft_version}-named.jar")
 def versionFile = new File(cacheFilesMinecraft, "${minecraft_version}.json")
 def clientJar = new File(cacheFilesMinecraft, "${minecraft_version}-client.jar")
@@ -358,7 +358,7 @@ task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJ
 	}
 }
 
-task setupYarn(dependsOn: mapIntermediaryJar) {
+task setupYarn(dependsOn: "unpickIntermediaryJar") {
 	group = yarnGroup
 }
 
@@ -374,7 +374,7 @@ task yarn(dependsOn: setupYarn) {
 		) {
 			jvmarg(value: "-Xmx2048m")
 			arg(value: '-jar')
-			arg(value: intermediaryJar.getAbsolutePath())
+			arg(value: unpickedJar.getAbsolutePath())
 			arg(value: '-mappings')
 			arg(value: mappingsDir.getAbsolutePath())
 			arg(value: '-profile')
@@ -567,7 +567,7 @@ task buildTinyWithEnum(dependsOn: "mergeTiny", type: FileOutput) {
 	}
 }
 
-task mapNamedJar(dependsOn: ["mergeV2", mapIntermediaryJar]) {
+task mapNamedJar(dependsOn: ["mergeV2", "unpickIntermediaryJar"]) {
 	group = mapJarGroup
 	inputs.files downloadMcLibs.outputs.files.files
 	outputs.file(namedJar)
@@ -578,7 +578,7 @@ task mapNamedJar(dependsOn: ["mergeV2", mapIntermediaryJar]) {
 	doLast {
 		logger.lifecycle(":mapping minecraft to named")
 
-		mapJar(namedJar, intermediaryJar, mergeV2.output, libraries, "intermediary", "named")
+		mapJar(namedJar, unpickedJar, mergeV2.output, libraries, "intermediary", "named")
 	}
 }
 
@@ -588,12 +588,15 @@ import daomephsta.unpick.api.constantresolvers.ConstantResolvers
 import daomephsta.unpick.api.IClassResolver
 import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Reader
 import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Writer
+import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Remapper
+import daomephsta.unpick.constantmappers.datadriven.parser.MethodKey
 import org.objectweb.asm.ClassReader
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import java.util.jar.JarOutputStream
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.ClassWriter
+import net.fabricmc.mapping.tree.TinyMappingFactory
 
 class JarClassResolver implements IClassResolver, Closeable {
 	private final URLClassLoader classLoader;
@@ -639,8 +642,10 @@ task combineUnpickDefinitions(type : FileOutput) {
 		def writer = new UnpickV2Writer()
 
 		file("unpick-definitions").eachFile {
-			new UnpickV2Reader(it.newInputStream()).withCloseable {
-				it.accept(writer)
+			it.withInputStream {
+				new UnpickV2Reader(it).withCloseable {
+					it.accept(writer)
+				}
 			}
 		}
 
@@ -648,7 +653,55 @@ task combineUnpickDefinitions(type : FileOutput) {
 	}
 }
 
-task unpickNamedJar(dependsOn: [mapNamedJar, jar, combineUnpickDefinitions]) {
+task remapUnpickDefinitionsIntermediary(type : FileOutputInput, dependsOn: [combineUnpickDefinitions, buildYarnTiny]) {
+	output = new File(tempDir, "intermediary-definitions.unpick")
+	input = combineUnpickDefinitions.output
+	File mappingsInput = buildYarnTiny.v2Output
+
+	outputs.upToDateWhen { false }
+	group "unpick"
+
+	doFirst {
+		output.delete()
+	}
+
+	doLast {
+		def classMappings = [:]
+		def methodMappings = [:]
+
+		mappingsInput.withReader {reader ->
+			def tinyTree = TinyMappingFactory.loadWithDetection(reader)
+
+			tinyTree.classes.each { classDef ->
+				classMappings.put(
+					classDef.getName("named"),
+					classDef.getName("intermediary")
+				)
+
+				classDef.methods.each { methodDef ->
+					methodMappings.put(
+						new MethodKey(
+							classDef.getName("named"),
+							methodDef.getName("named"),
+							methodDef.getDescriptor("named")
+						),
+						methodDef.getName("intermediary")
+					)
+				}
+			}
+		}
+
+		input.withInputStream {
+			new UnpickV2Reader(it).withCloseable {reader ->
+				def writer = new UnpickV2Writer()
+				reader.accept(new UnpickV2Remapper(classMappings, methodMappings, writer))
+				output.text = writer.output
+			}
+		}
+	}
+}
+
+task unpickIntermediaryJar(dependsOn: [mapIntermediaryJar, jar, remapUnpickDefinitionsIntermediary]) {
 	outputs.upToDateWhen { false }
 	group "unpick"
 
@@ -657,9 +710,9 @@ task unpickNamedJar(dependsOn: [mapNamedJar, jar, combineUnpickDefinitions]) {
 	}
 
 	doLast {
-		def unpickDefinition = combineUnpickDefinitions.output.newInputStream()
+		def unpickDefinition = remapUnpickDefinitionsIntermediary.output.newInputStream()
 
-		def minecraftClassResolver = new JarClassResolver(configurations.decompileClasspath.files + [namedJar])
+		def minecraftClassResolver = new JarClassResolver(configurations.decompileClasspath.files + [intermediaryJar])
 		def constantClassesResolver = new JarClassResolver(jar.archiveFile.get().asFile)
 
 		def constantUninliner = new ConstantUninliner(
@@ -668,7 +721,7 @@ task unpickNamedJar(dependsOn: [mapNamedJar, jar, combineUnpickDefinitions]) {
 		)
 
 		try {
-			new JarFile(namedJar).withCloseable {jar ->
+			new JarFile(intermediaryJar).withCloseable {jar ->
 				new JarOutputStream(new FileOutputStream(unpickedJar), jar.getManifest()).withCloseable { out ->
 					Enumeration<JarEntry> entries = jar.entries()
 
@@ -827,11 +880,11 @@ task genFakeSource(dependsOn: ["buildYarnTiny", "mapNamedJar"]) {
 	}
 }
 
-task decompileCFR(type: JavaExec, dependsOn: [unpickNamedJar]) {
+task decompileCFR(type: JavaExec, dependsOn: [mapNamedJar]) {
 	classpath = configurations.decompileClasspath
 	main = "org.benf.cfr.reader.Main"
 
-	args unpickedJar.getAbsolutePath(), "--outputdir", file("namedSrc").absolutePath
+	args namedJar.getAbsolutePath(), "--outputdir", file("namedSrc").absolutePath
 
 	doFirst {
 		file("namedSrc").deleteDir()
@@ -949,6 +1002,14 @@ void mapJar(File output, File input, File mappings, File libraries, String from,
 }
 
 class FileOutput extends DefaultTask {
+	@OutputFile
+	File output
+}
+
+class FileOutputInput extends DefaultTask {
+	@InputFile
+	File input
+
 	@OutputFile
 	File output
 }
