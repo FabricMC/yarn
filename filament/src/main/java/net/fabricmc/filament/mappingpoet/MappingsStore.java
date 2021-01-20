@@ -154,8 +154,13 @@ public class MappingsStore {
 		}
 
 		MethodDef methodDef = found.getValue();
-		addDoc(methodDef, addJavadoc);
 		ClassDef owner = classes.get(found.getKey());
+		if (!owner.getName(namespace).equals(methodEntry.getOwner())) {
+			addJavadoc.accept("{@inheritDoc}", new Object[0]); // todo try this bypass?
+		} else {
+			addDoc(methodDef, addJavadoc);
+		}
+
 		addJavadoc.accept("\n", new Object[0]);
 		for (String namespace : namespaces) {
 			String transformedName = methodDef.getName(namespace);
