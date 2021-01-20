@@ -56,29 +56,26 @@ public final class MappingTaglet implements Taglet {
 		boolean typeDecl = element instanceof TypeElement; // means it's a class, itf, enum, etc.
 		StringBuilder builder = new StringBuilder();
 		builder.append("<dt>Mappings:</dt>\n");
-		// Java 15 required for style consistency
-		builder.append("<dd><div class=\"member-summary\"><table class=\"summary-table\" summary=\"Mapping data\">\n");
+		builder.append("<dd><div class=\"fabric\"><table class=\"mapping\" summary=\"Mapping data\">\n");
 		builder.append("<thead>\n");
-		builder.append("<th class=\"col-first\">Namespace</th>\n");
-		builder.append("<th class=\"").append(typeDecl ? "col-second" : "col-last").append("\">Name</th>\n");
+		builder.append("<th>Namespace</th>\n");
+		builder.append("<th>Name</th>\n");
 		if (!typeDecl) {
-			builder.append("<th class=\"col-last\" scope=\"col\">Mixin selector</th>\n");
+			builder.append("<th>Mixin selector</th>\n");
 		}
 		builder.append("</thead>\n");
 		builder.append("<tbody>\n");
 
-		boolean altColor = true;
 		for (DocTree each : tags) {
 			String body = ((UnknownBlockTagTree) each).getContent().stream().map(t -> ((LiteralTree) t).getBody().getBody()).collect(Collectors.joining());
 			String[] ans = body.split(":", 3);
-			builder.append("<tr class=\"").append(altColor ? "alt-color" : "row-color").append("\">\n");
-			builder.append(String.format("<td class=\"col-first\">%s</td>\n", escaped(ans[0])));
-			builder.append(String.format("<td class=\"col-second\"><span class=\"copyable\"><code>%s</code></span></td>\n", escaped(ans[1])));
+			builder.append("<tr>\n");
+			builder.append(String.format("<td>%s</td>\n", escaped(ans[0])));
+			builder.append(String.format("<td><span class=\"copyable\"><code>%s</code></span></td>\n", escaped(ans[1])));
 			if (!typeDecl) {
-				builder.append(String.format("<td class=\"col-last\" scope=\"row\"><span class=\"copyable\"><code>%s</code></span></td>\n", escaped(ans[2])));
+				builder.append(String.format("<td><span class=\"copyable\"><code>%s</code></span></td>\n", escaped(ans[2])));
 			}
 			builder.append("</tr>\n");
-			altColor = !altColor;
 		}
 
 		builder.append("</tbody>\n");
