@@ -22,33 +22,6 @@ plugins {
 	id 'java' // for jd gen
 }
 
-def lowestLanguageVersion = JavaLanguageVersion.of(15) // Javadoc taglet requires it for css behavior
-def toolchainLanguageVersion = JavaLanguageVersion.of(JavaVersion.current().getMajorVersion())
-
-if (!toolchainLanguageVersion.canCompileOrRun(lowestLanguageVersion)) {
-	logger.warn ":The current Java Version ${toolchainLanguageVersion} is too old."
-	logger.warn ":Gradle may download newer Java online and the build may be slower."
-
-	toolchainLanguageVersion = lowestLanguageVersion
-}
-
-java.toolchain { // defined in JavaPluginExtension
-	languageVersion = toolchainLanguageVersion
-}
-
-// currently gradle does not yet propagate that version above, so
-tasks.withType(JavaExec) {
-	javaLauncher = javaToolchains.launcherFor {
-		languageVersion = toolchainLanguageVersion
-	}
-}
-
-tasks.withType(Javadoc) {
-	javadocTool = javaToolchains.javadocToolFor {
-		languageVersion = toolchainLanguageVersion
-	}
-}
-
 def minecraft_version = "20w51a"
 
 def ENV = System.getenv()
@@ -58,7 +31,6 @@ def build_number = ENV.BUILD_NUMBER ?: "local"
 def yarnVersion = "${minecraft_version}+build.$build_number"
 
 repositories {
-	mavenLocal()
 	mavenCentral()
 	maven {
 		name "Fabric Repository"
@@ -94,7 +66,7 @@ dependencies {
 	javadocClasspath "net.fabricmc:fabric-loader:0.8.2+build.194"
 	javadocClasspath "com.google.code.findbugs:jsr305:3.0.2"
 	decompileClasspath "org.benf:cfr:0.150"
-	mappingPoetJar 'net.fabricmc:mappingpoet:0.2.5+local'
+	mappingPoetJar 'net.fabricmc:mappingpoet:0.2.6'
 }
 
 def setupGroup = "jar setup"
@@ -693,6 +665,12 @@ task genFakeSource(type: JavaExec, dependsOn: ["mergeV2", "mapNamedJar"]) {
 	group = "javadoc generation"
 	outputs.upToDateWhen { false }
 
+	if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
+		javaLauncher = javaToolchains.launcherFor {
+			languageVersion = JavaLanguageVersion.of(11)
+		}
+	}
+
 	main "net.fabricmc.mappingpoet.Main"
 	classpath configurations.mappingPoet
 	// use merged v2 so we have all namespaces in jd
@@ -723,10 +701,16 @@ javadoc {
 	def mappingPoetJar = project.provider { zipTree configurations.mappingPoetJar.singleFile }
 
 	failOnError = false
+
+	if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
+		javadocTool = javaToolchains.javadocToolFor {
+			languageVersion = JavaLanguageVersion.of(11)
+		}
+	}
 	// verbose = true // enable to debug
 	options {
 		// verbose() // enable to debug
-		source = toolchainLanguageVersion.toString()
+		source = "11"
 		encoding = 'UTF-8'
 		charSet = 'UTF-8'
 		memberLevel = JavadocMemberLevel.PRIVATE
@@ -753,12 +737,14 @@ javadoc {
 				'https://commons.apache.org/proper/commons-io/javadocs/api-2.5',
 				'https://commons.apache.org/proper/commons-codec/archives/1.10/apidocs',
 				'https://commons.apache.org/proper/commons-compress/javadocs/api-1.8.1/',
-				"https://docs.oracle.com/en/java/javase/${toolchainLanguageVersion.asInt()}/docs/api/"
+				"https://docs.oracle.com/en/java/javase/11/docs/api/"
 				// Need to add loader jd publication for env annotations!
 		)
 		// https://docs.oracle.com/en/java/javase/15/docs/specs/man/javadoc.html#additional-options-provided-by-the-standard-doclet
 		addBooleanOption 'Xdoclint:html', true
 		addBooleanOption 'Xdoclint:syntax', true
+		addBooleanOption 'Xdoclint:reference', true
+		addBooleanOption 'Xdoclint:accessibility', true
 	}
 	source fakeSourceDir
 	classpath = configurations.javadocClasspath.plus downloadMcLibs.outputs.files.asFileTree
