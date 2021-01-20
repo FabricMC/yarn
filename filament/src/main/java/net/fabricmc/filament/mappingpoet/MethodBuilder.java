@@ -288,7 +288,7 @@ public class MethodBuilder {
 	}
 
 	private void addExceptions() {
-		if (signature != null) {
+		if (signature != null && !signature.thrown.isEmpty()) {
 			for (TypeName each : signature.thrown) {
 				builder.addException(each);
 			}
