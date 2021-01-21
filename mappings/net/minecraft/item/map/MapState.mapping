@@ -3,7 +3,13 @@ CLASS net/minecraft/class_22 net/minecraft/item/map/MapState
 	FIELD field_113 unlimitedTracking Z
 	FIELD field_114 showIcons Z
 	FIELD field_115 zCenter I
+		COMMENT The scaled center coordinate of the map state on the Z axis.
+		COMMENT <p>
+		COMMENT Always {@code 0} for the client.
 	FIELD field_116 xCenter I
+		COMMENT The scaled center coordinate of the map state on the X axis.
+		COMMENT <p>
+		COMMENT Always {@code 0} for the client.
 	FIELD field_117 icons Ljava/util/Map;
 	FIELD field_118 dimension Lnet/minecraft/class_5321;
 	FIELD field_119 scale B
@@ -11,6 +17,9 @@ CLASS net/minecraft/class_22 net/minecraft/item/map/MapState
 	FIELD field_121 frames Ljava/util/Map;
 	FIELD field_122 colors [B
 	FIELD field_123 banners Ljava/util/Map;
+		COMMENT The banner markers to track in world.
+		COMMENT <p>
+		COMMENT Empty for the client.
 	FIELD field_17403 locked Z
 	METHOD <init> (IIBZZZLnet/minecraft/class_5321;)V
 		ARG 1 xCenter
@@ -21,6 +30,8 @@ CLASS net/minecraft/class_22 net/minecraft/item/map/MapState
 		ARG 6 locked
 		ARG 7 dimension
 	METHOD method_100 getPlayerMarkerPacket (ILnet/minecraft/class_1657;)Lnet/minecraft/class_2596;
+		ARG 1 id
+		ARG 2 player
 	METHOD method_101 getPlayerSyncData (Lnet/minecraft/class_1657;)Lnet/minecraft/class_22$class_23;
 		ARG 1 player
 	METHOD method_102 update (Lnet/minecraft/class_1657;Lnet/minecraft/class_1799;)V
@@ -52,6 +63,52 @@ CLASS net/minecraft/class_22 net/minecraft/item/map/MapState
 		ARG 1 pos
 		ARG 2 id
 		ARG 3 type
+	METHOD method_32361 copy ()Lnet/minecraft/class_22;
+	METHOD method_32362 of (BZLnet/minecraft/class_5321;)Lnet/minecraft/class_22;
+		COMMENT Creates a new map state instance for the client.
+		COMMENT <p>
+		COMMENT The client is not aware of the coordinates of the map state so its center coordinates will always be {@code (0, 0)}.
+		ARG 0 scale
+		ARG 1 showIcons
+		ARG 2 dimension
+	METHOD method_32363 of (DDBZZLnet/minecraft/class_5321;)Lnet/minecraft/class_22;
+		COMMENT Creates a new map state instance.
+		ARG 0 xCenter
+			COMMENT the absolute center X-coordinate
+		ARG 2 zCenter
+			COMMENT the absolute center Z-coordinate
+		ARG 4 scale
+		ARG 5 showIcons
+		ARG 6 unlimitedTracking
+		ARG 7 dimension
+	METHOD method_32364 zoomOut (I)Lnet/minecraft/class_22;
+		COMMENT Creates a new map state which is a zoomed out version of the current one.
+		COMMENT <p>
+		COMMENT The scale of the new map state is {@code currentScale + zoomOutScale} and clamped between {@code 0} and {@code 4}.
+		COMMENT <p>
+		COMMENT The colors are not copied, neither are the icons.
+		ARG 1 zoomOutScale
+			COMMENT the amount to add to the scale of the map
+	METHOD method_32365 putColor (IIB)Z
+		COMMENT Sets the color at the specified coordinates if the current color is different.
+		COMMENT
+		COMMENT @return {@code true} if the color has been updated, else {@code false}
+		ARG 1 x
+		ARG 2 z
+		ARG 3 color
+	METHOD method_32368 removeIcon (Ljava/lang/String;)V
+		ARG 1 id
+	METHOD method_32369 replaceIcons ([Lnet/minecraft/class_20;)V
+		ARG 1 icons
+	METHOD method_32370 setColor (IIB)V
+		ARG 1 x
+		ARG 2 z
+		ARG 3 color
+	METHOD method_32371 fromTag (Lnet/minecraft/class_2487;)Lnet/minecraft/class_22;
+		ARG 0 tag
+	METHOD method_32372 hasMonumentIcon ()Z
+	METHOD method_32373 getIcons ()Ljava/lang/Iterable;
+	METHOD method_32374 markIconsDirty ()V
 	CLASS class_23 PlayerUpdateTracker
 		FIELD field_124 emptyPacketsRequested I
 		FIELD field_125 player Lnet/minecraft/class_1657;
@@ -60,9 +117,27 @@ CLASS net/minecraft/class_22 net/minecraft/item/map/MapState
 		FIELD field_128 startZ I
 		FIELD field_129 startX I
 		FIELD field_130 dirty Z
+		FIELD field_27891 iconsDirty Z
 		METHOD <init> (Lnet/minecraft/class_22;Lnet/minecraft/class_1657;)V
 			ARG 1 player
 		METHOD method_111 markDirty (II)V
-			ARG 1 x
-			ARG 2 z
+			ARG 1 startX
+			ARG 2 startZ
 		METHOD method_112 getPacket (I)Lnet/minecraft/class_2596;
+			ARG 1 mapId
+		METHOD method_32375 getMapUpdateData ()Lnet/minecraft/class_22$class_5637;
+		METHOD method_32379 markIconsDirty ()V
+	CLASS class_5637 MapStateUpdateData
+		FIELD field_27892 startX I
+		FIELD field_27893 startZ I
+		FIELD field_27894 width I
+		FIELD field_27895 height I
+		FIELD field_27896 colors [B
+		METHOD <init> (IIII[B)V
+			ARG 1 startX
+			ARG 2 startZ
+			ARG 3 width
+			ARG 4 height
+			ARG 5 colors
+		METHOD method_32380 setColorsTo (Lnet/minecraft/class_22;)V
+			ARG 1 mapState
