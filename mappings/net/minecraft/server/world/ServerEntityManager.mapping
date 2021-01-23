@@ -2,18 +2,18 @@ CLASS net/minecraft/class_5579 net/minecraft/server/world/ServerEntityManager
 	COMMENT An entity manager for a server environment.
 	FIELD field_27260 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_27261 entityUuids Ljava/util/Set;
-	FIELD field_27262 entityLoader Lnet/minecraft/class_5576;
+	FIELD field_27262 handler Lnet/minecraft/class_5576;
 	FIELD field_27263 dataAccess Lnet/minecraft/class_5571;
-	FIELD field_27264 trackedEntities Lnet/minecraft/class_5570;
-	FIELD field_27265 sectionedEntities Lnet/minecraft/class_5573;
-	FIELD field_27266 idMap Lnet/minecraft/class_5577;
-	FIELD field_27267 chunkStatuses Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
+	FIELD field_27264 index Lnet/minecraft/class_5570;
+	FIELD field_27265 cache Lnet/minecraft/class_5573;
+	FIELD field_27266 lookup Lnet/minecraft/class_5577;
+	FIELD field_27267 trackingStatuses Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 	FIELD field_27268 managedStatuses Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 	FIELD field_27269 pendingUnloads Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_27270 loadingQueue Ljava/util/Queue;
 	METHOD <init> (Ljava/lang/Class;Lnet/minecraft/class_5576;Lnet/minecraft/class_5571;)V
 		ARG 1 entityClass
-		ARG 2 entityLoader
+		ARG 2 handler
 		ARG 3 dataAccess
 	METHOD method_31809 tick ()V
 	METHOD method_31810 readIfFresh (J)V
@@ -36,21 +36,22 @@ CLASS net/minecraft/class_5579 net/minecraft/server/world/ServerEntityManager
 		ARG 2 chunkPos
 	METHOD method_31814 (Lnet/minecraft/class_4456;Lnet/minecraft/class_5579$class_5581;J)V
 		ARG 3 sectionPos
-	METHOD method_31815 updateLoadStatus (Lnet/minecraft/class_1923;Lnet/minecraft/class_3193$class_3194;)V
-		COMMENT Updates the load status of a chunk at {@code chunkPos} given the
-		COMMENT {@code levelType}.
+	METHOD method_31815 updateTrackingStatus (Lnet/minecraft/class_1923;Lnet/minecraft/class_3193$class_3194;)V
+		COMMENT Updates the tracking status of tracking sections in a chunk at {@code
+		COMMENT chunkPos} given the {@code levelType}.
 		COMMENT
-		COMMENT @see updateLoadStatus(ChunkPos, EntityLoadStatus)
+		COMMENT @see updateTrackingStatus(ChunkPos, EntityTrackingStatus)
 		ARG 1 chunkPos
 			COMMENT the chunk to update
 		ARG 2 levelType
 			COMMENT the updated level type of the chunk
-	METHOD method_31816 updateLoadStatus (Lnet/minecraft/class_1923;Lnet/minecraft/class_5584;)V
-		COMMENT Updates the {@code loadStatus} of a chunk at {@code chunkPos}.
+	METHOD method_31816 updateTrackingStatus (Lnet/minecraft/class_1923;Lnet/minecraft/class_5584;)V
+		COMMENT Updates the {@code trackingStatus} of tracking sections in a chunk
+		COMMENT at {@code chunkPos}.
 		ARG 1 chunkPos
 			COMMENT the chunk to update
-		ARG 2 loadStatus
-			COMMENT the updated entity load status
+		ARG 2 trackingStatus
+			COMMENT the updated section tracking status
 	METHOD method_31818 addEntity (Lnet/minecraft/class_5568;)Z
 		COMMENT Adds a newly created entity to this manager.
 		COMMENT
@@ -90,7 +91,7 @@ CLASS net/minecraft/class_5579 net/minecraft/server/world/ServerEntityManager
 		ARG 1 chunkPos
 	METHOD method_31838 startTicking (Lnet/minecraft/class_5568;)V
 		ARG 1 entity
-	METHOD method_31841 getIdMap ()Lnet/minecraft/class_5577;
+	METHOD method_31841 getLookup ()Lnet/minecraft/class_5577;
 	METHOD method_31842 (J)Z
 		ARG 1 pos
 	METHOD method_31843 stopTicking (Lnet/minecraft/class_5568;)V
@@ -116,6 +117,7 @@ CLASS net/minecraft/class_5579 net/minecraft/server/world/ServerEntityManager
 	METHOD method_31864 (Lnet/minecraft/class_5568;)V
 		ARG 1 entity
 	CLASS class_5580 Listener
+		FIELD field_27271 this$0 Lnet/minecraft/class_5579;
 		FIELD field_27272 entity Lnet/minecraft/class_5568;
 		FIELD field_27273 sectionPos J
 		FIELD field_27274 section Lnet/minecraft/class_5572;
