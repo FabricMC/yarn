@@ -12,7 +12,6 @@ buildscript {
 		classpath "commons-io:commons-io:2.6"
 		classpath 'de.undercouch:gradle-download-task:4.0.4'
 		classpath 'net.fabricmc:tiny-remapper:0.3.1.72'
-		classpath 'net.fabricmc:mappingpoet:0.1.0+build.2'
 	}
 }
 
@@ -23,7 +22,7 @@ plugins {
 	id 'java' // for jd gen
 }
 
-def minecraft_version = "20w51a"
+def minecraft_version = "21w03a"
 
 def ENV = System.getenv()
 // Fetch build number from Github Actions
@@ -52,6 +51,13 @@ configurations {
 	}
 	javadocClasspath
 	decompileClasspath
+	mappingPoetJar {
+		transitive = false
+	}
+	mappingPoet {
+		extendsFrom mappingPoetJar
+		transitive = true
+	}
 }
 
 dependencies {
@@ -60,6 +66,7 @@ dependencies {
 	javadocClasspath "net.fabricmc:fabric-loader:0.8.2+build.194"
 	javadocClasspath "com.google.code.findbugs:jsr305:3.0.2"
 	decompileClasspath "org.benf:cfr:0.150"
+	mappingPoetJar 'net.fabricmc:mappingpoet:0.2.6'
 }
 
 def setupGroup = "jar setup"
@@ -80,7 +87,6 @@ def libs = new File("build/libs/")
 
 
 import com.google.common.hash.Hashing
-import com.google.common.collect.Iterables
 import cuchaz.enigma.command.CheckMappingsCommand
 import cuchaz.enigma.command.ComposeMappingsCommand
 import cuchaz.enigma.command.ConvertMappingsCommand
@@ -91,8 +97,8 @@ import net.fabricmc.stitch.commands.CommandMergeTiny
 import net.fabricmc.stitch.commands.CommandProposeFieldNames
 import net.fabricmc.stitch.commands.CommandReorderTiny
 import net.fabricmc.stitch.commands.CommandRewriteIntermediary
-import net.fabricmc.stitch.commands.tinyv2.CommandProposeV2FieldNames
 import net.fabricmc.stitch.commands.tinyv2.CommandMergeTinyV2
+import net.fabricmc.stitch.commands.tinyv2.CommandProposeV2FieldNames
 import net.fabricmc.stitch.commands.tinyv2.CommandReorderTinyV2
 import net.fabricmc.stitch.merge.JarMerger
 import net.fabricmc.tinyremapper.OutputConsumerPath
@@ -101,9 +107,6 @@ import net.fabricmc.tinyremapper.TinyUtils
 import org.apache.commons.io.FileUtils
 
 import java.nio.charset.StandardCharsets
-import java.nio.file.FileSystems
-import java.nio.file.Files
-import java.nio.file.Path
 import java.util.zip.GZIPOutputStream
 
 boolean validateChecksum(File file, String checksum) {
@@ -658,19 +661,22 @@ task v2MergedYarnJar(dependsOn: ["mergeV2"], type: Jar) {
 }
 
 def fakeSourceDir = file(".gradle/temp/fakeSource")
-task genFakeSource(dependsOn: ["buildYarnTiny", "mapNamedJar"]) {
+task genFakeSource(type: JavaExec, dependsOn: ["mergeV2", "mapNamedJar"]) {
 	group = "javadoc generation"
 	outputs.upToDateWhen { false }
 
+	if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
+		javaLauncher = javaToolchains.launcherFor {
+			languageVersion = JavaLanguageVersion.of(11)
+		}
+	}
+
+	main "net.fabricmc.mappingpoet.Main"
+	classpath configurations.mappingPoet
+	// use merged v2 so we have all namespaces in jd
+	args mergeV2.output.getAbsolutePath(), namedJar.getAbsolutePath(), fakeSourceDir.getAbsolutePath(), libraries.getAbsolutePath()
+
 	doLast {
-		String[] args = [
-			buildYarnTiny.v2Output.getAbsolutePath(),
-			namedJar.getAbsolutePath(),
-			fakeSourceDir.getAbsolutePath()
-		]
-
-		net.fabricmc.mappingpoet.Main.main(args)
-
 		logger.lifecycle ":Fake source generated"
 	}
 }
@@ -691,11 +697,33 @@ javadoc {
 	dependsOn downloadMcLibs
 	group = "javadoc generation"
 	outputs.upToDateWhen { false }
+
+	def mappingPoetJar = project.provider { zipTree configurations.mappingPoetJar.singleFile }
+
+	failOnError = false
+
+	if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
+		javadocTool = javaToolchains.javadocToolFor {
+			languageVersion = JavaLanguageVersion.of(11)
+		}
+	}
+	// verbose = true // enable to debug
 	options {
-		source = "8"
+		// verbose() // enable to debug
+		source = "11"
 		encoding = 'UTF-8'
 		charSet = 'UTF-8'
 		memberLevel = JavadocMemberLevel.PRIVATE
+		splitIndex true
+		tags(
+				'apiNote:a:API Note:',
+				'implSpec:a:Implementation Requirements:',
+				'implNote:a:Implementation Note:'
+		)
+		taglets "net.fabricmc.mappingpoet.jd.MappingTaglet"
+		// taglet path, header, extra stylesheet settings deferred
+
+		addBooleanOption "-allow-script-in-comments", true
 		links(
 				'https://guava.dev/releases/21.0/api/docs/',
 				'https://www.javadoc.io/doc/com.google.code.gson/gson/2.8.0/',
@@ -709,14 +737,34 @@ javadoc {
 				'https://commons.apache.org/proper/commons-io/javadocs/api-2.5',
 				'https://commons.apache.org/proper/commons-codec/archives/1.10/apidocs',
 				'https://commons.apache.org/proper/commons-compress/javadocs/api-1.8.1/',
-				'https://docs.oracle.com/javase/8/docs/api/'
+				"https://docs.oracle.com/en/java/javase/11/docs/api/"
 				// Need to add loader jd publication for env annotations!
 		)
-		// Disable the crazy super-strict doclint tool in Java 8
-		addStringOption('Xdoclint:none', '-quiet')
+		// https://docs.oracle.com/en/java/javase/15/docs/specs/man/javadoc.html#additional-options-provided-by-the-standard-doclet
+		addBooleanOption 'Xdoclint:html', true
+		addBooleanOption 'Xdoclint:syntax', true
+		addBooleanOption 'Xdoclint:reference', true
+		addBooleanOption 'Xdoclint:accessibility', true
 	}
 	source fakeSourceDir
-	classpath = configurations.javadocClasspath.plus downloadMcLibs.outputs.files.asFileTree 
+	classpath = configurations.javadocClasspath.plus downloadMcLibs.outputs.files.asFileTree
+
+	finalizedBy {
+		task copyCopyOnClickScript(type: Copy) {
+			from mappingPoetJar
+			include "copy_on_click.js"
+			into javadoc.outputDirectory
+		}
+	}
+
+	doFirst {
+		// lazy setting
+		options {
+			tagletPath configurations.mappingPoet.files.toList()
+			header mappingPoetJar.get().filter { it.name == 'javadoc_header.txt' }.singleFile.readLines()[0] // cannot include line breaks
+			addFileOption "-add-stylesheet", mappingPoetJar.get().filter { it.name == 'forms.css' }.singleFile
+		}
+	}
 }
 
 task javadocJar(type: Jar, dependsOn: ["javadoc"]) {
@@ -725,7 +773,7 @@ task javadocJar(type: Jar, dependsOn: ["javadoc"]) {
 	from javadoc.destinationDir
 
 	archiveVersion.set yarnVersion
-	classifier = 'javadoc'
+	archiveClassifier = 'javadoc'
 }
 
 publishing {

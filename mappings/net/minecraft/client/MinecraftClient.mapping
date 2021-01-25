@@ -6,7 +6,8 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	COMMENT
 	COMMENT <p>Rendering on a Minecraft client is split into several facilities.
 	COMMENT The primary entrypoint for rendering is {@link net.minecraft.client.render.GameRenderer#render(float, long, boolean)}.
-	COMMENT <table border=1>
+	COMMENT <div class="fabric"><table border=1>
+	COMMENT <caption>Rendering facilities</caption>
 	COMMENT <tr>
 	COMMENT  <th><b>Thing to render</b></th> <th><b>Rendering facility</b></th>
 	COMMENT </tr>
@@ -34,7 +35,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	COMMENT <tr>
 	COMMENT  <td>Game hud (health bar, hunger bar)</td> <td>{@link net.minecraft.client.gui.hud.InGameHud}</td>
 	COMMENT </tr>
-	COMMENT </table>
+	COMMENT </table></div>
 	COMMENT
 	COMMENT @see net.minecraft.server.integrated.IntegratedServer
 	COMMENT @see net.minecraft.client.render.GameRenderer
@@ -152,6 +153,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_25033 multiplayerEnabled Z
 	FIELD field_25034 onlineChatEnabled Z
 	FIELD field_25671 videoWarningManager Lnet/minecraft/class_5407;
+	FIELD field_26841 SOCIAL_INTERACTIONS_NOT_AVAILABLE Lnet/minecraft/class_2561;
 	FIELD field_26842 socialInteractionsManager Lnet/minecraft/class_5520;
 	FIELD field_26902 socialInteractionsService Lcom/mojang/authlib/minecraft/SocialInteractionsService;
 	FIELD field_27387 entityModelLoader Lnet/minecraft/class_5599;
@@ -255,6 +257,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_1582 getSkinProvider ()Lnet/minecraft/class_1071;
 	METHOD method_1583 doItemUse ()V
 	METHOD method_1584 setCurrentServerEntry (Lnet/minecraft/class_642;)V
+		ARG 1 serverEntry
 	METHOD method_1586 getLevelStorage ()Lnet/minecraft/class_32;
 	METHOD method_1587 addDetailsToCrashReport (Lnet/minecraft/class_128;)Lnet/minecraft/class_128;
 		ARG 1 report
@@ -302,6 +305,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_24043 createV4ResourcePackFactory (Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
 		ARG 0 packFactory
 	METHOD method_24226 handleResourceReloadException (Ljava/lang/Throwable;)V
+		ARG 1 exception
 	METHOD method_24287 getWindowTitle ()Ljava/lang/String;
 	METHOD method_24288 updateWindowTitle ()V
 	METHOD method_24289 isModded ()Z
@@ -330,10 +334,21 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 1 sender
 	METHOD method_29043 isMultiplayerEnabled ()Z
 	METHOD method_29044 isOnlineChatEnabled ()Z
+	METHOD method_29598 loadDataPackSettings (Lnet/minecraft/class_32$class_5143;)Lnet/minecraft/class_5359;
+		ARG 0 storageSession
 	METHOD method_29599 createSaveProperties (Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_3300;Lnet/minecraft/class_5359;)Lnet/minecraft/class_5219;
 		ARG 0 session
 		ARG 1 registryTracker
 		ARG 2 resourceManager
+		ARG 3 dataPackSettings
+	METHOD method_29600 (Ljava/lang/String;Ljava/lang/Runnable;ZZ)V
+		ARG 3 shouldBackup
+		ARG 4 eraseCache
+	METHOD method_29601 showExperimentalWarning (Lnet/minecraft/class_310$class_5366;Ljava/lang/String;ZLjava/lang/Runnable;)V
+		ARG 1 worldLoadAction
+		ARG 2 levelName
+		ARG 3 legacyCustomized
+		ARG 4 onConfirm
 	METHOD method_29603 (Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_310$class_5367;Lnet/minecraft/class_5219;Lcom/mojang/authlib/minecraft/MinecraftSessionService;Lcom/mojang/authlib/GameProfileRepository;Lnet/minecraft/class_3312;Ljava/lang/Thread;)Lnet/minecraft/class_1132;
 		ARG 1 registryTracker
 		ARG 2 session
@@ -342,6 +357,12 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 6 profileRepository
 		ARG 7 userCache
 		ARG 8 serverThread
+	METHOD method_29604 createIntegratedResourceManager (Lnet/minecraft/class_5455$class_5457;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Function4;ZLnet/minecraft/class_32$class_5143;)Lnet/minecraft/class_310$class_5367;
+		ARG 1 registryManager
+		ARG 2 dataPackSettingsGetter
+		ARG 3 savePropertiesGetter
+		ARG 4 safeMode
+		ARG 5 storageSession
 	METHOD method_29606 startIntegratedServer (Ljava/lang/String;)V
 		ARG 1 worldName
 	METHOD method_29607 (Ljava/lang/String;Lnet/minecraft/class_1940;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_5285;)V
@@ -352,12 +373,23 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_29610 startIntegratedServer (Ljava/lang/String;Lnet/minecraft/class_5455$class_5457;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Function4;ZLnet/minecraft/class_310$class_5366;)V
 		ARG 1 worldName
 		ARG 2 registryTracker
+		ARG 3 dataPackSettingsGetter
+		ARG 4 savePropertiesGetter
 		ARG 5 safeMode
+		ARG 6 worldLoadAction
 	METHOD method_29611 isFabulousGraphicsOrBetter ()Z
+	METHOD method_29970 (Lnet/minecraft/class_437;)V
+		ARG 1 screen
 	METHOD method_30049 getVideoWarningManager ()Lnet/minecraft/class_5407;
+	METHOD method_31186 onResourceReloadFailure (Ljava/lang/Throwable;Lnet/minecraft/class_2561;)V
+		ARG 1 exception
+		ARG 2 resourceName
 	METHOD method_31320 getSocialInteractionsManager ()Lnet/minecraft/class_5520;
 	METHOD method_31321 isConnectedToServer ()Z
+	METHOD method_31382 createSocialInteractionsService (Lcom/mojang/authlib/yggdrasil/YggdrasilAuthenticationService;Lnet/minecraft/class_542;)Lcom/mojang/authlib/minecraft/SocialInteractionsService;
+		ARG 2 runArgs
 	METHOD method_31974 getEntityModelLoader ()Lnet/minecraft/class_5599;
+	METHOD method_31975 getBlockEntityRenderDispatcher ()Lnet/minecraft/class_824;
 	CLASS class_5366 WorldLoadAction
 	CLASS class_5367 IntegratedResourceManager
 		FIELD field_25439 resourcePackManager Lnet/minecraft/class_3283;
