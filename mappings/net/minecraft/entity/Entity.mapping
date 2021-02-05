@@ -13,6 +13,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_26995 removalReason Lnet/minecraft/class_1297$class_5529;
 	FIELD field_27857 inPowderSnow Z
 	FIELD field_27858 FROZEN_TICKS Lnet/minecraft/class_2940;
+	FIELD field_28628 wasInPowderSnow Z
 	FIELD field_5951 ridingCooldown I
 	FIELD field_5952 onGround Z
 	FIELD field_5953 firstUpdate Z
@@ -64,7 +65,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_6017 fallDistance F
 	FIELD field_6018 netherPortalCooldown I
 	FIELD field_6021 uuid Ljava/util/UUID;
-	FIELD field_6022 nextFlySoundDistance F
 	FIELD field_6025 NULL_BOX Lnet/minecraft/class_238;
 	FIELD field_6027 CUSTOM_NAME Lnet/minecraft/class_2940;
 	FIELD field_6029 scoreboardTags Ljava/util/Set;
@@ -276,12 +276,11 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 frozenTicks
 	METHOD method_32319 setInPowderSnow (Z)V
 		ARG 1 inPowderSnow
-	METHOD method_32875 emitGameEvent (Lnet/minecraft/class_1297;Lnet/minecraft/class_5712;)V
-		ARG 1 entity
-		ARG 2 event
+	METHOD method_32875 emitGameEvent (Lnet/minecraft/class_5712;Lnet/minecraft/class_1297;)V
 	METHOD method_32876 emitGameEvent (Lnet/minecraft/class_5712;)V
-		ARG 1 event
 	METHOD method_33189 occludeVibrationSignals ()Z
+	METHOD method_33572 setOnFire (Z)V
+		ARG 1 onFire
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		ARG 1 state
@@ -356,7 +355,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 5 offsetZ
 	METHOD method_5655 isInvulnerable ()Z
 	METHOD method_5657 getPistonBehavior ()Lnet/minecraft/class_3619;
-	METHOD method_5658 canClimb ()Z
 	METHOD method_5659 isImmuneToExplosion ()Z
 	METHOD method_5660 setSneaking (Z)V
 		ARG 1 sneaking
@@ -574,7 +572,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 2 volume
 		ARG 3 pitch
 	METHOD method_5784 move (Lnet/minecraft/class_1313;Lnet/minecraft/class_243;)V
-		ARG 1 type
 		ARG 2 movement
 	METHOD method_5785 scheduleVelocityUpdate ()V
 	METHOD method_5786 saveSelfToTag (Lnet/minecraft/class_2487;)Z
@@ -599,8 +596,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5800 onStruckByLightning (Lnet/minecraft/class_3218;Lnet/minecraft/class_1538;)V
 		ARG 1 world
 		ARG 2 lightning
-	METHOD method_5801 playFlySound (F)F
-		ARG 1 distance
+	METHOD method_5801 playFlySound ()V
 	METHOD method_5802 getRotationClient ()Lnet/minecraft/class_241;
 	METHOD method_5803 setSilent (Z)V
 		ARG 1 silent
@@ -631,7 +627,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5821 hasPassengerDeep (Lnet/minecraft/class_1297;)Z
 		ARG 1 passenger
 	METHOD method_5822 canUsePortals ()Z
-	METHOD method_5823 afterSpawn ()V
 	METHOD method_5824 getRenderDistanceMultiplier ()D
 	METHOD method_5825 tickInVoid ()V
 		COMMENT Called when the entity is 64 blocks below the world's {@linkplain net.minecraft.world.HeightLimitView#getBottomSectionLimit() minimum Y position}.
@@ -753,3 +748,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 			COMMENT If an entity should be destroyed, then the entity should not be re-used and any external data on the entity will be cleared.
 		METHOD method_31487 shouldSave ()Z
 			COMMENT Returns whether the entity should be saved or not.
+	CLASS class_5799
+		FIELD field_28634 sounds Z
+		FIELD field_28635 events Z
+		METHOD <init> (Ljava/lang/String;IZZ)V
+			ARG 3 sounds
+			ARG 4 events
