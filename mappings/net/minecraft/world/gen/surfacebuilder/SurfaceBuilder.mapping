@@ -1,4 +1,5 @@
 CLASS net/minecraft/class_3523 net/minecraft/world/gen/surfacebuilder/SurfaceBuilder
+	COMMENT Places the top blocks of a biome during chunk generation.
 	FIELD field_15667 END_STONE Lnet/minecraft/class_2680;
 	FIELD field_15668 COARSE_DIRT Lnet/minecraft/class_2680;
 	FIELD field_15669 PODZOL Lnet/minecraft/class_2680;
@@ -39,19 +40,33 @@ CLASS net/minecraft/class_3523 net/minecraft/world/gen/surfacebuilder/SurfaceBui
 	METHOD <init> (Lcom/mojang/serialization/Codec;)V
 		ARG 1 codec
 	METHOD method_15305 generate (Ljava/util/Random;Lnet/minecraft/class_2791;Lnet/minecraft/class_1959;IIIDLnet/minecraft/class_2680;Lnet/minecraft/class_2680;IJLnet/minecraft/class_3531;)V
+		COMMENT Places the surface blocks for the given column.
 		ARG 1 random
+			COMMENT The Random instance, seeded with a hash of the x and z coordinates
 		ARG 2 chunk
+			COMMENT The current chunk being surface built
 		ARG 3 biome
+			COMMENT The biome in the column that is being surface built
 		ARG 4 x
+			COMMENT X coordinate of the column
 		ARG 5 z
+			COMMENT Z coordinate of the column
 		ARG 6 height
+			COMMENT Height of the column retrieved using {@link net.minecraft.world.Heightmap.Type.WORLD_SURFACE_WG}, and will never be lower than the sea level
 		ARG 7 noise
+			COMMENT Noise value at this column. Has a range of (-8, 8) but follows a normal distribution so most values will be around (-2, 2)
 		ARG 9 defaultBlock
+			COMMENT Default block of the chunk generator, used to know which block to replace with the surface blocks
 		ARG 10 defaultFluid
+			COMMENT Default fluid of the chunk generator
 		ARG 11 seaLevel
+			COMMENT The sea level of the chunk generator
 		ARG 12 seed
+			COMMENT The world seed
 		ARG 14 surfaceBlocks
+			COMMENT The config passed to the chunk generator, stores the states used by the surface builder
 	METHOD method_15306 initSeed (J)V
+		COMMENT Runs before {@link generate} and allows for custom noise to be initialized.
 		ARG 1 seed
 	METHOD method_15307 register (Ljava/lang/String;Lnet/minecraft/class_3523;)Lnet/minecraft/class_3523;
 		ARG 0 id
