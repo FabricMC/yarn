@@ -11,6 +11,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_25750 trackedPosition Lnet/minecraft/class_243;
 	FIELD field_26994 prevAge I
 	FIELD field_26995 removalReason Lnet/minecraft/class_1297$class_5529;
+	FIELD field_26996 entityChangeListener Lnet/minecraft/class_5569;
 	FIELD field_27857 inPowderSnow Z
 	FIELD field_27858 FROZEN_TICKS Lnet/minecraft/class_2940;
 	FIELD field_28628 wasInPowderSnow Z
@@ -208,7 +209,17 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
-	METHOD method_24204 streamPassengersRecursively ()Ljava/util/stream/Stream;
+	METHOD method_24204 streamSelfAndPassengers ()Ljava/util/stream/Stream;
+		COMMENT Returns a stream consisting of this entity and its passengers recursively.
+		COMMENT Each entity will appear before any of its passengers.
+		COMMENT
+		COMMENT <p>This may be less costly than {@link #streamPassengersAndSelf()} if the
+		COMMENT stream's iteration would terminates fast, such as finding an arbitrary
+		COMMENT match of entity in the passengers tree.
+		COMMENT
+		COMMENT @implNote The default implementation is not very efficient.
+		COMMENT
+		COMMENT @see #streamPassengersAndSelf()
 	METHOD method_24516 isInRange (Lnet/minecraft/class_1297;D)Z
 		ARG 1 other
 		ARG 2 radius
@@ -266,7 +277,18 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_31481 isRemoved ()Z
 	METHOD method_31482 unsetRemoved ()V
 	METHOD method_31483 getFirstPassenger ()Lnet/minecraft/class_1297;
-	METHOD method_31484 getPassengersStream ()Ljava/util/stream/Stream;
+	METHOD method_31484 streamIntoPassengers ()Ljava/util/stream/Stream;
+	METHOD method_31748 streamPassengersAndSelf ()Ljava/util/stream/Stream;
+		COMMENT Returns a stream consisting of this entity and its passengers recursively
+		COMMENT in which any entity appears only after all its passengers have appeared.
+		COMMENT
+		COMMENT <p>This is useful for actions that must be applied on passengers before
+		COMMENT applying on an entity, such as writing each entity to NBT data.
+		COMMENT
+		COMMENT @implNote The default implementation is very costly. I bet Mojangsta
+		COMMENT haven't used Java's FileTreeVisitor or any objectweb asm visitors!
+		COMMENT
+		COMMENT @see net.minecraft.entity.Entity#streamSelfAndPassengers()
 	METHOD method_32312 getFrozenTicks ()I
 	METHOD method_32313 getFreezingScale ()F
 	METHOD method_32314 isFreezing ()Z

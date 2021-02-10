@@ -1,4 +1,12 @@
 CLASS net/minecraft/class_3509 net/minecraft/util/collection/TypeFilterableList
+	COMMENT A collection allowing getting all elements of a specific type. Backed
+	COMMENT by {@link java.util.ArrayList}s.
+	COMMENT
+	COMMENT <p>This implementation is not efficient for frequent modifications. You
+	COMMENT shouldn't use this if you don't call {@link #getAllOfType(Class)}.
+	COMMENT
+	COMMENT @see #getAllOfType(Class)
+	COMMENT @param <T> the {@link #elementType common element type}
 	FIELD field_15635 allElements Ljava/util/List;
 	FIELD field_15636 elementsByType Ljava/util/Map;
 	FIELD field_15637 elementType Ljava/lang/Class;
@@ -7,8 +15,22 @@ CLASS net/minecraft/class_3509 net/minecraft/util/collection/TypeFilterableList
 	METHOD add (Ljava/lang/Object;)Z
 		ARG 1 e
 	METHOD contains (Ljava/lang/Object;)Z
+		COMMENT {@inheritDoc}
+		COMMENT
+		COMMENT @throws IllegalArgumentException if {@code o} is not an instance of
+		COMMENT {@link #elementType}
 		ARG 1 o
 	METHOD method_15216 getAllOfType (Ljava/lang/Class;)Ljava/util/Collection;
+		COMMENT Returns all elements in this collection that are instances of {@code type}.
+		COMMENT The result is unmodifiable.
+		COMMENT
+		COMMENT <p>The {@code type}, or {@code S}, must extend the class' type parameter {@code T}.
+		COMMENT
+		COMMENT @param <S> the specialized type, effectively {@code S extends T}
+		COMMENT @throws IllegalArgumentException when {@code type} does not extend
+		COMMENT {@link #elementType}
+		COMMENT @return this collection's elements that are instances of {@code type}
 		ARG 1 type
+			COMMENT the specialized type, must extend {@link #elementType}
 	METHOD remove (Ljava/lang/Object;)Z
 		ARG 1 o
