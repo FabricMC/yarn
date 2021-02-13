@@ -27,6 +27,7 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 		COMMENT by {@link #markForBlockUpdate}, grouped by their vertical chunk section.
 		COMMENT <p>
 		COMMENT Entries for a section are null if the section has no positions marked for update.
+	FIELD field_28806 actionStack Lnet/minecraft/class_5831;
 	METHOD <init> (Lnet/minecraft/class_1923;ILnet/minecraft/class_5539;Lnet/minecraft/class_3568;Lnet/minecraft/class_3193$class_3896;Lnet/minecraft/class_3193$class_3897;)V
 		ARG 1 pos
 		ARG 2 level
@@ -58,6 +59,7 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 		ARG 1 level
 	METHOD method_16143 combineSavingFuture (Ljava/util/concurrent/CompletableFuture;Ljava/lang/String;)V
 		ARG 1 then
+		ARG 2 thenDesc
 	METHOD method_16144 getWorldChunk ()Lnet/minecraft/class_2818;
 	METHOD method_16145 getTickingFuture ()Ljava/util/concurrent/CompletableFuture;
 	METHOD method_16146 getFutureFor (Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
@@ -90,3 +92,11 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 		METHOD method_17210 getPlayersWatchingChunk (Lnet/minecraft/class_1923;Z)Ljava/util/stream/Stream;
 			ARG 1 chunkPos
 			ARG 2 onlyOnWatchDistanceEdge
+	CLASS class_5830 MultithreadAction
+		FIELD field_28807 thread Ljava/lang/Thread;
+		FIELD field_28808 action Ljava/util/concurrent/CompletableFuture;
+		FIELD field_28809 actionDesc Ljava/lang/String;
+		METHOD <init> (Ljava/lang/Thread;Ljava/util/concurrent/CompletableFuture;Ljava/lang/String;)V
+			ARG 1 thread
+			ARG 2 action
+			ARG 3 actionDesc
