@@ -393,11 +393,15 @@ task checkMappings {
 		logger.lifecycle(":checking mappings")
 
 		String[] args = [
-				mergedFile.getAbsolutePath(),
+				intermediaryJar.getAbsolutePath(),
 				mappingsDir.getAbsolutePath()
 		]
 
-		new CheckMappingsCommand().run(args)
+		try {
+			new CheckMappingsCommand().run(args)
+		} catch (IllegalStateException ignored) {
+			// just print, don't fail the task
+		}
 	}
 }
 
