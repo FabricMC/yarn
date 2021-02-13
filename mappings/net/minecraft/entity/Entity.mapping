@@ -326,6 +326,10 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @implNote The vanilla implementation always returns {@code null}.
 	METHOD method_33189 occludeVibrationSignals ()Z
+	METHOD method_33567 requestTeleportAndDismount (DDD)V
+		ARG 1 destX
+		ARG 3 destY
+		ARG 5 destZ
 	METHOD method_33568 emitGameEvent (Lnet/minecraft/class_5712;Lnet/minecraft/class_1297;Lnet/minecraft/class_2338;)V
 		ARG 1 event
 		ARG 2 entity
@@ -333,6 +337,13 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_33569 emitGameEvent (Lnet/minecraft/class_5712;Lnet/minecraft/class_2338;)V
 		ARG 1 event
 		ARG 2 pos
+	METHOD method_33570 getMoveEffect ()Lnet/minecraft/class_1297$class_5799;
+		COMMENT Returns the possible effect(s) of an entity moving.
+		COMMENT
+		COMMENT @implNote If an entity does not emit game events or play move sounds, this
+		COMMENT method should be overridden as returning a value other than
+		COMMENT {@linkplain Entity.MoveEffect#ALL ALL} allows skipping some movement logic
+		COMMENT and boost ticking performance.
 	METHOD method_33571 getEyePos ()Lnet/minecraft/class_243;
 	METHOD method_33572 setOnFire (Z)V
 		ARG 1 onFire
@@ -803,9 +814,20 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 			COMMENT If an entity should be destroyed, then the entity should not be re-used and any external data on the entity will be cleared.
 		METHOD method_31487 shouldSave ()Z
 			COMMENT Returns whether the entity should be saved or not.
-	CLASS class_5799
+	CLASS class_5799 MoveEffect
+		COMMENT The move effect represents possible effects of an entity moving, such as
+		COMMENT playing sounds, emitting game events, none, or both.
+		COMMENT
+		COMMENT @see Entity#getMoveEffect()
 		FIELD field_28634 sounds Z
 		FIELD field_28635 events Z
 		METHOD <init> (Ljava/lang/String;IZZ)V
 			ARG 3 sounds
 			ARG 4 events
+		METHOD method_33576 hasAny ()Z
+			COMMENT Returns whether this means an entity may emit game events or play sounds
+			COMMENT as it moves.
+		METHOD method_33577 emitsGameEvents ()Z
+			COMMENT Returns whether this means an entity may emit game events as it moves.
+		METHOD method_33578 playsSounds ()Z
+			COMMENT Returns whether this means an entity may play sounds as it moves.
