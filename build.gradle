@@ -387,6 +387,7 @@ task yarn(dependsOn: setupYarn) {
 }
 
 task checkMappings {
+	enabled = false
 	group = buildMappingGroup
 	inputs.dir mappingsDir
 	doLast {
@@ -397,6 +398,8 @@ task checkMappings {
 				mappingsDir.getAbsolutePath()
 		]
 
+		// todo: this checks package visibility which is already handled by tiny remapper
+		// need to add like check if two files map the same class, such as from multiple prs
 		try {
 			new CheckMappingsCommand().run(args)
 		} catch (IllegalStateException ignored) {
@@ -827,6 +830,7 @@ void mapJar(File output, File input, File mappings, File libraries, String from,
 			.withMappings(TinyUtils.createTinyMappingProvider(mappings.toPath(), from, to))
 			.renameInvalidLocals(true)
 			.rebuildSourceFilenames(true)
+			.fixPackageAccess(true)
 			.build()
 
 	try {
