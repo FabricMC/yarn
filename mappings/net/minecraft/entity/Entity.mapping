@@ -347,6 +347,12 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_33571 getEyePos ()Lnet/minecraft/class_243;
 	METHOD method_33572 setOnFire (Z)V
 		ARG 1 onFire
+	METHOD method_33573 addAirTravelEffects ()V
+		COMMENT Adds the effects of this entity when it travels in air, usually to the
+		COMMENT world the entity is in.
+		COMMENT
+		COMMENT <p>This is only called when the entity {@linkplain #getMoveEffect() has
+		COMMENT any move effect}, from {@link #move(MovementType, Vec3d)}
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		ARG 1 state
@@ -638,6 +644,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 2 volume
 		ARG 3 pitch
 	METHOD method_5784 move (Lnet/minecraft/class_1313;Lnet/minecraft/class_243;)V
+		ARG 1 movementType
 		ARG 2 movement
 	METHOD method_5785 scheduleVelocityUpdate ()V
 	METHOD method_5786 saveSelfToTag (Lnet/minecraft/class_2487;)Z
@@ -662,7 +669,15 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5800 onStruckByLightning (Lnet/minecraft/class_3218;Lnet/minecraft/class_1538;)V
 		ARG 1 world
 		ARG 2 lightning
-	METHOD method_5801 playFlySound ()V
+	METHOD method_5801 addFlapEffects ()V
+		COMMENT Adds the effects of this entity flapping, usually to the world the entity
+		COMMENT is in.
+		COMMENT
+		COMMENT <p>The actual flapping logic should be done in {@link #tick()} instead.
+		COMMENT
+		COMMENT <p>This is only called when the entity {@linkplain #hasWings() has wings}
+		COMMENT and the entity {@linkplain #getMoveEffect() has any move effect}, from
+		COMMENT {@link #addAirTravelEffects()}.
 	METHOD method_5802 getRotationClient ()Lnet/minecraft/class_241;
 	METHOD method_5803 setSilent (Z)V
 		ARG 1 silent
