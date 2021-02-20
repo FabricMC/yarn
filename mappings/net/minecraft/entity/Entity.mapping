@@ -298,17 +298,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_31482 unsetRemoved ()V
 	METHOD method_31483 getFirstPassenger ()Lnet/minecraft/class_1297;
 	METHOD method_31484 streamIntoPassengers ()Ljava/util/stream/Stream;
-	METHOD method_31748 streamPassengersAndSelf ()Ljava/util/stream/Stream;
-		COMMENT Returns a stream consisting of this entity and its passengers recursively
-		COMMENT in which any entity appears only after all its passengers have appeared.
-		COMMENT
-		COMMENT <p>This is useful for actions that must be applied on passengers before
-		COMMENT applying on an entity, such as writing each entity to NBT data.
-		COMMENT
-		COMMENT @implNote The default implementation is very costly. I bet Mojangsta
-		COMMENT haven't used Java's FileTreeVisitor or any objectweb asm visitors!
-		COMMENT
-		COMMENT @see net.minecraft.entity.Entity#streamSelfAndPassengers()
 	METHOD method_32312 getFrozenTicks ()I
 	METHOD method_32313 getFreezingScale ()F
 	METHOD method_32314 isFreezing ()Z
@@ -339,6 +328,10 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @implNote The vanilla implementation always returns {@code null}.
 	METHOD method_33189 occludeVibrationSignals ()Z
+	METHOD method_33567 requestTeleportAndDismount (DDD)V
+		ARG 1 destX
+		ARG 3 destY
+		ARG 5 destZ
 	METHOD method_33568 emitGameEvent (Lnet/minecraft/class_5712;Lnet/minecraft/class_1297;Lnet/minecraft/class_2338;)V
 		ARG 1 event
 		ARG 2 entity
@@ -346,9 +339,22 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_33569 emitGameEvent (Lnet/minecraft/class_5712;Lnet/minecraft/class_2338;)V
 		ARG 1 event
 		ARG 2 pos
+	METHOD method_33570 getMoveEffect ()Lnet/minecraft/class_1297$class_5799;
+		COMMENT Returns the possible effect(s) of an entity moving.
+		COMMENT
+		COMMENT @implNote If an entity does not emit game events or play move sounds, this
+		COMMENT method should be overridden as returning a value other than
+		COMMENT {@linkplain Entity.MoveEffect#ALL ALL} allows skipping some movement logic
+		COMMENT and boost ticking performance.
 	METHOD method_33571 getEyePos ()Lnet/minecraft/class_243;
 	METHOD method_33572 setOnFire (Z)V
 		ARG 1 onFire
+	METHOD method_33573 addAirTravelEffects ()V
+		COMMENT Adds the effects of this entity when it travels in air, usually to the
+		COMMENT world the entity is in.
+		COMMENT
+		COMMENT <p>This is only called when the entity {@linkplain #getMoveEffect() has
+		COMMENT any move effect}, from {@link #move(MovementType, Vec3d)}
 	METHOD method_33575 getCameraBlockPos ()Lnet/minecraft/class_2338;
 	METHOD method_33724 isRegionUnloaded ()Z
 		COMMENT Returns whether any part of this entity's bounding box is in an unloaded
@@ -410,7 +416,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5645 isTeamPlayer (Lnet/minecraft/class_270;)Z
 		ARG 1 team
 	METHOD method_5646 extinguish ()V
-	METHOD method_5647 toTag (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
+	METHOD method_5647 writeNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
 		ARG 1 tag
 	METHOD method_5648 setInvisible (Z)V
 		ARG 1 invisible
@@ -420,9 +426,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 5 z
 	METHOD method_5650 remove (Lnet/minecraft/class_1297$class_5529;)V
 		ARG 1 reason
-	METHOD method_5651 fromTag (Lnet/minecraft/class_2487;)V
+	METHOD method_5651 readNbt (Lnet/minecraft/class_2487;)V
 		ARG 1 tag
-	METHOD method_5652 writeCustomDataToTag (Lnet/minecraft/class_2487;)V
+	METHOD method_5652 writeCustomDataToNbt (Lnet/minecraft/class_2487;)V
 		ARG 1 tag
 	METHOD method_5653 getSavedEntityId ()Ljava/lang/String;
 	METHOD method_5654 doesNotCollide (DDD)Z
@@ -586,7 +592,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 2 damageMultiplier
 		ARG 3 damageSource
 	METHOD method_5748 getMaxAir ()I
-	METHOD method_5749 readCustomDataFromTag (Lnet/minecraft/class_2487;)V
+	METHOD method_5749 readCustomDataFromNbt (Lnet/minecraft/class_2487;)V
 		ARG 1 tag
 	METHOD method_5750 setVelocityClient (DDD)V
 		ARG 1 x
@@ -673,7 +679,15 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5800 onStruckByLightning (Lnet/minecraft/class_3218;Lnet/minecraft/class_1538;)V
 		ARG 1 world
 		ARG 2 lightning
-	METHOD method_5801 playFlySound ()V
+	METHOD method_5801 addFlapEffects ()V
+		COMMENT Adds the effects of this entity flapping, usually to the world the entity
+		COMMENT is in.
+		COMMENT
+		COMMENT <p>The actual flapping logic should be done in {@link #tick()} instead.
+		COMMENT
+		COMMENT <p>This is only called when the entity {@linkplain #hasWings() has wings}
+		COMMENT and the entity {@linkplain #getMoveEffect() has any move effect}, from
+		COMMENT {@link #addAirTravelEffects()}.
 	METHOD method_5802 getRotationClient ()Lnet/minecraft/class_241;
 	METHOD method_5803 setSilent (Z)V
 		ARG 1 silent
@@ -825,9 +839,20 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 			COMMENT If an entity should be destroyed, then the entity should not be re-used and any external data on the entity will be cleared.
 		METHOD method_31487 shouldSave ()Z
 			COMMENT Returns whether the entity should be saved or not.
-	CLASS class_5799
+	CLASS class_5799 MoveEffect
+		COMMENT The move effect represents possible effects of an entity moving, such as
+		COMMENT playing sounds, emitting game events, none, or both.
+		COMMENT
+		COMMENT @see Entity#getMoveEffect()
 		FIELD field_28634 sounds Z
 		FIELD field_28635 events Z
 		METHOD <init> (Ljava/lang/String;IZZ)V
 			ARG 3 sounds
 			ARG 4 events
+		METHOD method_33576 hasAny ()Z
+			COMMENT Returns whether this means an entity may emit game events or play sounds
+			COMMENT as it moves.
+		METHOD method_33577 emitsGameEvents ()Z
+			COMMENT Returns whether this means an entity may emit game events as it moves.
+		METHOD method_33578 playsSounds ()Z
+			COMMENT Returns whether this means an entity may play sounds as it moves.
