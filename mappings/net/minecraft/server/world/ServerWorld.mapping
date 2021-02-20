@@ -17,11 +17,10 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	FIELD field_25142 enderDragonFight Lnet/minecraft/class_2881;
 	FIELD field_25143 shouldTickTime Z
 	FIELD field_25144 END_SPAWN_POS Lnet/minecraft/class_2338;
-	FIELD field_26932 mobSet Ljava/util/Set;
+	FIELD field_26932 loadedMobs Ljava/util/Set;
 	FIELD field_26933 dragonParts Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 	FIELD field_26934 entityList Lnet/minecraft/class_5574;
 	FIELD field_26935 entityManager Lnet/minecraft/class_5579;
-	FIELD field_28286 playersSleepingPercentage F
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5268;Lnet/minecraft/class_5321;Lnet/minecraft/class_2874;Lnet/minecraft/class_3949;Lnet/minecraft/class_2794;ZJLjava/util/List;Z)V
 		ARG 1 server
 		ARG 2 workerExecutor
@@ -193,20 +192,29 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_30736 shouldCreateNewEntityWithPassenger (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_31268 getDebugString ()Ljava/lang/String;
+	METHOD method_31270 getTopFive (Ljava/lang/Iterable;Ljava/util/function/Function;)Ljava/lang/String;
+		COMMENT Categories {@code items} with the {@code classifier} and reports a message
+		COMMENT indicating the top five biggest categories.
+		ARG 0 items
+			COMMENT the items to classify
+		ARG 1 classifier
+			COMMENT the classifier that determines the category of any item
 	METHOD method_31419 getChunkSourceDebugString ()Ljava/lang/String;
 	METHOD method_31420 (Lnet/minecraft/class_3695;Lnet/minecraft/class_1297;)V
 		ARG 2 entity
 	METHOD method_31424 getDragonPart (I)Lnet/minecraft/class_1297;
 		ARG 1 id
+	METHOD method_31423 loadEntities (Ljava/util/stream/Stream;)V
+		ARG 1 entities
+	METHOD method_31426 addEntities (Ljava/util/stream/Stream;)V
+		ARG 1 entities
 	METHOD method_31430 shouldCancelSpawn (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_32817 sendVibrationPacket (Lnet/minecraft/class_5720;)V
 		ARG 1 vibration
 	METHOD method_32818 (Lnet/minecraft/class_2338;Lnet/minecraft/class_5747;Lnet/minecraft/class_3222;)V
 		ARG 3 player
-	METHOD method_32819 getHeightLimit ()I
-	METHOD method_33142 getPlayersSleepingPercentage (Z)F
-		ARG 1 longEnough
+	METHOD method_32819 getLogicalHeight ()I
 	METHOD method_33143 handleSleeping ()V
 	METHOD method_33144 isSleepingEnabled ()Z
 	METHOD method_8448 updateSleepingPlayers ()V
@@ -218,4 +226,4 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_8554 setSpawnPos (Lnet/minecraft/class_2338;F)V
 		ARG 1 pos
 		ARG 2 angle
-	CLASS class_5526 EntityLoader
+	CLASS class_5526 ServerEntityHandler
