@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import net.fabricmc.mapping.tree.ClassDef;
@@ -78,23 +77,23 @@ public class MappingsStore {
 		return classDef != null ? classDef.getComment() : null;
 	}
 
-	private void addDoc(Mapped element, BiConsumer<String, Object[]> addJavadoc) {
+	private void addDoc(Mapped element, DocAdder adder) {
 		String doc = element.getComment();
 		if (doc != null) {
-			addJavadoc.accept(doc, new Object[0]);
+			adder.addJavadoc("$L", doc);
 		}
 	}
 
-	public void addClassDoc(BiConsumer<String, Object[]> addJavadoc, String className) {
+	public void addClassDoc(DocAdder adder, String className) {
 		ClassDef classDef = classes.get(className);
 		if (classDef == null) {
 			return;
 		}
-		addDoc(classDef, addJavadoc);
-		addJavadoc.accept("\n", new Object[0]);
+		addDoc(classDef, adder);
+		adder.addJavadoc("\n");
 		for (String namespace : namespaces) {
 			String transformedName = classDef.getName(namespace);
-			addJavadoc.accept("@mapping {@literal $L:$L}\n", new Object[] {namespace, transformedName});
+			adder.addJavadoc("@mapping {@literal $L:$L}\n", namespace, transformedName);
 		}
 	}
 
@@ -104,7 +103,7 @@ public class MappingsStore {
 		return fieldDef != null ? fieldDef.getComment() : null;
 	}
 
-	public void addFieldDoc(BiConsumer<String, Object[]> addJavadoc, EntryTriple fieldEntry) {
+	public void addFieldDoc(DocAdder addJavadoc, EntryTriple fieldEntry) {
 		FieldDef fieldDef = fields.get(fieldEntry);
 		if (fieldDef == null) {
 			return;
@@ -112,11 +111,11 @@ public class MappingsStore {
 
 		addDoc(fieldDef, addJavadoc);
 		ClassDef owner = classes.get(fieldEntry.getOwner());
-		addJavadoc.accept("\n", new Object[0]);
+		addJavadoc.addJavadoc("\n");
 		for (String namespace : namespaces) {
 			String transformedName = fieldDef.getName(namespace);
 			String mixinForm = "L" + owner.getName(namespace) + ";" + transformedName + ":" + fieldDef.getDescriptor(namespace);
-			addJavadoc.accept("@mapping {@literal $L:$L:$L}\n", new Object[] {namespace, transformedName, mixinForm});
+			addJavadoc.addJavadoc("@mapping {@literal $L:$L:$L}\n", namespace, transformedName, mixinForm);
 		}
 	}
 
@@ -147,7 +146,7 @@ public class MappingsStore {
 		return null;
 	}
 
-	public void addMethodDoc(BiConsumer<String, Object[]> addJavadoc, Function<String, Collection<String>> superGetters, EntryTriple methodEntry) {
+	public void addMethodDoc(DocAdder adder, Function<String, Collection<String>> superGetters, EntryTriple methodEntry) {
 		Map.Entry<String, MethodDef> found = searchMethod(superGetters, methodEntry);
 		if (found == null) {
 			return;
@@ -156,16 +155,16 @@ public class MappingsStore {
 		MethodDef methodDef = found.getValue();
 		ClassDef owner = classes.get(found.getKey());
 		if (!owner.getName(namespace).equals(methodEntry.getOwner())) {
-			addJavadoc.accept("{@inheritDoc}", new Object[0]); // todo try this bypass?
+			adder.addJavadoc("{@inheritDoc}");
 		} else {
-			addDoc(methodDef, addJavadoc);
+			addDoc(methodDef, adder);
 		}
 
-		addJavadoc.accept("\n", new Object[0]);
+		adder.addJavadoc("\n");
 		for (String namespace : namespaces) {
 			String transformedName = methodDef.getName(namespace);
 			String mixinForm = "L" + owner.getName(namespace) + ";" + transformedName + methodDef.getDescriptor(namespace);
-			addJavadoc.accept("@mapping {@literal $L:$L:$L}\n", new Object[] {namespace, transformedName, mixinForm});
+			adder.addJavadoc("@mapping {@literal $L:$L:$L}\n", namespace, transformedName, mixinForm);
 		}
 	}
 
@@ -190,5 +189,9 @@ public class MappingsStore {
 
 		methods.put(methodEntry, null);
 		return null;
+	}
+
+	public interface DocAdder {
+		void addJavadoc(String format, Object... args);
 	}
 }
