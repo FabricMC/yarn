@@ -64,7 +64,7 @@ dependencies {
 	enigmaRuntime "cuchaz:enigma-swing:${project.enigma_version}"
 	enigmaRuntime "net.fabricmc:stitch:${project.stitch_version}"
 	javadocClasspath "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
-	javadocClasspath "com.google.code.findbugs:jsr305:3.0.2"
+	javadocClasspath "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
 	decompileClasspath "org.benf:cfr:0.150"
 	mappingPoetJar 'net.fabricmc:mappingpoet:0.2.6'
 }
@@ -582,10 +582,22 @@ task mapNamedJar(dependsOn: ["mergeV2", mapIntermediaryJar]) {
 	//Force the task to always run
 	outputs.upToDateWhen { false }
 
+	def jsrToJetbrains = [
+		"javax/annotation/Nullable": "org/jetbrains/annotations/Nullable",
+		"javax/annotation/Nonnull": "org/jetbrains/annotations/NotNull",
+		"javax/annotation/concurrent/Immutable": "org/jetbrains/annotations/Unmodifiable"
+	]
+
 	doLast {
 		logger.lifecycle(":mapping minecraft to named")
 
-		mapJar(namedJar, intermediaryJar, mergeV2.output, libraries, "intermediary", "named")
+		mapJar(namedJar, intermediaryJar, mergeV2.output, libraries, "intermediary", "named") {
+			it.withMappings { out ->
+				jsrToJetbrains.each { e ->
+					out.acceptClass e.key, e.value
+				}
+			}
+		}
 	}
 }
 
@@ -732,8 +744,7 @@ javadoc {
 				'https://guava.dev/releases/21.0/api/docs/',
 				'https://www.javadoc.io/doc/com.google.code.gson/gson/2.8.0/',
 				'https://logging.apache.org/log4j/2.x/log4j-api/apidocs/',
-				// jsr305 need to come before jdk or the anno links are broken
-				'https://www.javadoc.io/doc/com.google.code.findbugs/jsr305/3.0.2/',
+				"https://javadoc.io/doc/org.jetbrains/annotations/${project.jetbrains_annotations_version}/",
 				'https://javadoc.lwjgl.org/',
 				'http://fastutil.di.unimi.it/docs/',
 				'https://netty.io/4.1/api/',
@@ -817,16 +828,21 @@ publishing {
 	}
 }
 
-
 void mapJar(File output, File input, File mappings, File libraries, String from, String to) {
+	mapJar(output, input, mappings, libraries, from, to, { })
+}
+
+void mapJar(File output, File input, File mappings, File libraries, String from, String to, Action<TinyRemapper.Builder> action) {
 	if (output.exists()) {
 		output.delete()
 	}
 
-	def remapper = TinyRemapper.newRemapper()
+	def remapperBuilder = TinyRemapper.newRemapper()
 			.withMappings(TinyUtils.createTinyMappingProvider(mappings.toPath(), from, to))
 			.renameInvalidLocals(true)
 			.rebuildSourceFilenames(true)
+	action.execute(remapperBuilder)
+	def remapper = remapperBuilder
 			.build()
 
 	try {
