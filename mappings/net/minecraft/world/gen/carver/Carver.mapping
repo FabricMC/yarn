@@ -1,5 +1,6 @@
 CLASS net/minecraft/class_2939 net/minecraft/world/gen/carver/Carver
 	FIELD field_13294 CAVE_AIR Lnet/minecraft/class_2680;
+	FIELD field_13295 RAVINE Lnet/minecraft/class_2939;
 	FIELD field_13296 LAVA Lnet/minecraft/class_3610;
 	FIELD field_13298 carvableFluids Ljava/util/Set;
 	FIELD field_13301 AIR Lnet/minecraft/class_2680;
@@ -9,7 +10,14 @@ CLASS net/minecraft/class_2939 net/minecraft/world/gen/carver/Carver
 	METHOD <init> (Lcom/mojang/serialization/Codec;)V
 		ARG 1 configCodec
 	METHOD method_12702 carve (Lnet/minecraft/class_5873;Lnet/minecraft/class_5871;Lnet/minecraft/class_2791;Ljava/util/function/Function;Ljava/util/Random;ILnet/minecraft/class_1923;Ljava/util/BitSet;)Z
-		ARG 6 chunkZ
+		ARG 1 context
+		ARG 2 config
+		ARG 3 chunk
+		ARG 4 posToBiome
+		ARG 5 random
+		ARG 6 seaLevel
+		ARG 7 pos
+		ARG 8 carvingMask
 	METHOD method_12703 canCarveBlock (Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)Z
 		ARG 1 state
 		ARG 2 stateAbove
@@ -17,12 +25,46 @@ CLASS net/minecraft/class_2939 net/minecraft/world/gen/carver/Carver
 		ARG 0 name
 		ARG 1 carver
 	METHOD method_12705 shouldCarve (Lnet/minecraft/class_5871;Ljava/util/Random;)Z
+		ARG 1 config
+		ARG 2 random
 	METHOD method_12706 isOnBoundary (IIIIII)Z
 	METHOD method_12709 canAlwaysCarveBlock (Lnet/minecraft/class_2680;)Z
 		ARG 1 state
 	METHOD method_12710 getBranchFactor ()I
 	METHOD method_16581 carveAtPoint (Lnet/minecraft/class_5873;Lnet/minecraft/class_5871;Lnet/minecraft/class_2791;Ljava/util/function/Function;Ljava/util/BitSet;Ljava/util/Random;Lnet/minecraft/class_2338$class_2339;Lnet/minecraft/class_2338$class_2339;ILorg/apache/commons/lang3/mutable/MutableBoolean;)Z
+		ARG 1 context
+		ARG 2 config
+		ARG 3 chunk
+		ARG 4 posToBiome
+		ARG 5 carvingMask
+		ARG 6 random
+		ARG 7 pos
+		ARG 8 downPos
 		ARG 9 mainChunkX
+		ARG 10 foundSurface
 	METHOD method_28614 configure (Lnet/minecraft/class_5871;)Lnet/minecraft/class_2922;
 		ARG 1 config
 	METHOD method_28616 getCodec ()Lcom/mojang/serialization/Codec;
+	METHOD method_33976 (Lnet/minecraft/class_1923;DDIIF)Z
+		ARG 0 pos
+	METHOD method_33977 isRegionUncarvable (Lnet/minecraft/class_2791;IIIIII)Z
+		ARG 1 chunk
+	METHOD method_33978 carveRegion (Lnet/minecraft/class_5873;Lnet/minecraft/class_5871;Lnet/minecraft/class_2791;Ljava/util/function/Function;JIDDDDDLjava/util/BitSet;Lnet/minecraft/class_2939$class_5874;)Z
+		ARG 1 context
+		ARG 2 config
+		ARG 3 chunk
+		ARG 4 posToBiome
+		ARG 5 seed
+		ARG 18 carvingMask
+		ARG 19 skipFunction
+	METHOD method_33979 getState (Lnet/minecraft/class_5871;)Lnet/minecraft/class_2680;
+		ARG 0 config
+	METHOD method_33980 isDebug (Lnet/minecraft/class_5871;)Z
+		ARG 0 config
+	CLASS class_5874 SkipFunction
+		METHOD shouldSkip (Lnet/minecraft/class_5873;DDDI)Z
+			ARG 1 context
+			ARG 2 scaledRelativeX
+			ARG 4 scaledRelativeY
+			ARG 6 scaledRelativeZ
+			ARG 8 y
