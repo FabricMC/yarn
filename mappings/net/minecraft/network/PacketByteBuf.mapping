@@ -1,43 +1,192 @@
 CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
+	COMMENT A packet byte buf is a specialized byte buf with utility methods adapted
+	COMMENT to Minecraft's protocol. It has serialization and deserialization of
+	COMMENT custom objects, such as item stacks, lists, maps, compound tags, enums,
+	COMMENT and codec support.
 	FIELD field_11695 parent Lio/netty/buffer/ByteBuf;
+	METHOD <init> (Lio/netty/buffer/ByteBuf;)V
+		COMMENT Creates a packet byte buf that delegates its operations to the {@code
+		COMMENT parent} buf.
+		ARG 1 parent
+			COMMENT the parent, or delegate, buf
 	METHOD method_10787 readIntArray ()[I
 	METHOD method_10788 writeString (Ljava/lang/String;I)Lnet/minecraft/class_2540;
 	METHOD method_10789 writeLongArray ([J)Lnet/minecraft/class_2540;
+		ARG 1 array
 	METHOD method_10790 readUuid ()Ljava/util/UUID;
 	METHOD method_10791 writeVarLong (J)Lnet/minecraft/class_2540;
 	METHOD method_10792 readVarLong ()J
 	METHOD method_10793 writeItemStack (Lnet/minecraft/class_1799;)Lnet/minecraft/class_2540;
+		ARG 1 stack
 	METHOD method_10794 writeCompoundTag (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540;
 	METHOD method_10795 readByteArray ()[B
 	METHOD method_10796 writeDate (Ljava/util/Date;)Lnet/minecraft/class_2540;
 	METHOD method_10797 writeUuid (Ljava/util/UUID;)Lnet/minecraft/class_2540;
 	METHOD method_10798 readCompoundTag ()Lnet/minecraft/class_2487;
 	METHOD method_10799 readIntArray (I)[I
+		ARG 1 maxSize
 	METHOD method_10800 readString (I)Ljava/lang/String;
 	METHOD method_10801 readLongArray ([J)[J
+		ARG 1 toArray
 	METHOD method_10802 readDate ()Ljava/util/Date;
 	METHOD method_10803 readByteArray (I)[B
+		ARG 1 maxSize
 	METHOD method_10804 writeVarInt (I)Lnet/minecraft/class_2540;
 	METHOD method_10805 writeText (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2540;
 		ARG 1 text
 	METHOD method_10806 writeIntArray ([I)Lnet/minecraft/class_2540;
+		ARG 1 size
 	METHOD method_10807 writeBlockPos (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2540;
+		ARG 1 pos
 	METHOD method_10808 readText ()Lnet/minecraft/class_2561;
 	METHOD method_10809 readLongArray ([JI)[J
 		ARG 1 toArray
+		ARG 2 maxSize
 	METHOD method_10810 readIdentifier ()Lnet/minecraft/class_2960;
 	METHOD method_10811 readBlockPos ()Lnet/minecraft/class_2338;
 	METHOD method_10812 writeIdentifier (Lnet/minecraft/class_2960;)Lnet/minecraft/class_2540;
 	METHOD method_10813 writeByteArray ([B)Lnet/minecraft/class_2540;
+		ARG 1 array
 	METHOD method_10814 writeString (Ljava/lang/String;)Lnet/minecraft/class_2540;
 	METHOD method_10815 getVarIntSizeBytes (I)I
+		COMMENT Returns the number of bytes needed to encode {@code value} as a
+		COMMENT {@linkplain #writeVarInt(int) var int}. Guaranteed to be between {@code
+		COMMENT 1} and {@code 5}.
+		ARG 0 value
+			COMMENT the value to encode
 	METHOD method_10816 readVarInt ()I
 	METHOD method_10817 writeEnumConstant (Ljava/lang/Enum;)Lnet/minecraft/class_2540;
+		ARG 1 instance
 	METHOD method_10818 readEnumConstant (Ljava/lang/Class;)Ljava/lang/Enum;
+		ARG 1 enumClass
 	METHOD method_10819 readItemStack ()Lnet/minecraft/class_1799;
 	METHOD method_17813 writeBlockHitResult (Lnet/minecraft/class_3965;)V
 	METHOD method_17814 readBlockHitResult ()Lnet/minecraft/class_3965;
 	METHOD method_19456 readChunkSectionPos ()Lnet/minecraft/class_4076;
 	METHOD method_19772 readString ()Ljava/lang/String;
 	METHOD method_29171 decode (Lcom/mojang/serialization/Codec;)Ljava/lang/Object;
+		COMMENT Reads an object from this buf as a compound NBT with the given codec.
+		COMMENT
+		COMMENT @param <T> the decoded object's type
+		COMMENT @return the read object
+		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
+		COMMENT to decode the compound tag
+		COMMENT @see #encode(Codec, Object)
+		ARG 1 codec
+			COMMENT the codec to decode the object
 	METHOD method_29172 encode (Lcom/mojang/serialization/Codec;Ljava/lang/Object;)V
+		COMMENT Writes an object to this buf as a compound NBT with the given codec.
+		COMMENT
+		COMMENT @param <T> the encoded object's type
+		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
+		COMMENT to encode the compound tag
+		COMMENT @see #decode(Codec)
+		ARG 1 codec
+			COMMENT the codec to encode the object
+		ARG 2 object
+			COMMENT the object to write to this buf
+	METHOD method_30616 readCompoundTag (Lnet/minecraft/class_2505;)Lnet/minecraft/class_2487;
+		ARG 1 sizeTracker
+	METHOD method_30617 readUnlimitedCompoundTag ()Lnet/minecraft/class_2487;
+	METHOD method_33134 readLongArray ()[J
+	METHOD method_33557 writeBitSet (Ljava/util/BitSet;)V
+	METHOD method_33558 readBitSet ()Ljava/util/BitSet;
+	METHOD method_34059 readIntList ()Lit/unimi/dsi/fastutil/ints/IntList;
+		COMMENT Reads a list of primitive ints from this buf. The ints are stored as var
+		COMMENT ints, with an extra var int in the beginning indicating the size.
+		COMMENT
+		COMMENT @return the read list
+		COMMENT @see #writeIntList(IntList)
+	METHOD method_34060 writeIntList (Lit/unimi/dsi/fastutil/ints/IntList;)V
+		COMMENT Writes a list of primitive ints from this buf. The ints are stored as var
+		COMMENT ints, with an extra var int in the beginning indicating the size.
+		COMMENT
+		COMMENT @see #readIntList()
+		ARG 1 list
+			COMMENT the list to write
+	METHOD method_34062 writeCollection (Ljava/util/Collection;Ljava/util/function/BiConsumer;)V
+		COMMENT Writes a collection to this buf. The collection is stored as a leading
+		COMMENT {@linkplain #readVarInt() var int} size followed by the entries
+		COMMENT sequentially.
+		COMMENT
+		COMMENT @param <T> the list's entry type
+		COMMENT @see #readCollection(IntFunction, Function)
+		ARG 1 collection
+			COMMENT the collection to write
+		ARG 2 entrySerializer
+			COMMENT a serializer that writes each entry to this buf
+	METHOD method_34063 writeMap (Ljava/util/Map;Ljava/util/function/BiConsumer;Ljava/util/function/BiConsumer;)V
+		COMMENT Writes a map to this buf. The map is stored as a leading
+		COMMENT {@linkplain #readVarInt() var int} size followed by each key and value
+		COMMENT pair.
+		COMMENT
+		COMMENT @param <K> the key type
+		COMMENT @param <V> the value type
+		COMMENT @see #readMap(IntFunction, BiConsumer, BiConsumer)
+		ARG 1 map
+			COMMENT the map to write
+		ARG 2 keySerializer
+			COMMENT a serializer that writes each key in the map to this buf
+		ARG 3 valueSerializer
+			COMMENT a serializer that writes each value in the map to this buf
+	METHOD method_34064 (Ljava/util/function/BiConsumer;Ljava/util/function/BiConsumer;Ljava/lang/Object;Ljava/lang/Object;)V
+		ARG 3 key
+		ARG 4 value
+	METHOD method_34065 forEachInCollection (Ljava/util/function/Consumer;)V
+		COMMENT Iterates a collection from this buf. The collection is stored as a leading
+		COMMENT {@linkplain #readVarInt() var int} size followed by the entries
+		COMMENT sequentially. The {@code consumer} will be called {@code size} times.
+		COMMENT
+		COMMENT @see #readCollection(IntFunction, Function)
+		ARG 1 consumer
+			COMMENT the consumer to read entries
+	METHOD method_34066 readList (Ljava/util/function/Function;)Ljava/util/List;
+		COMMENT Reads a collection from this buf as an array list.
+		COMMENT
+		COMMENT @param <T> the list's entry type
+		COMMENT @return the read list
+		COMMENT @see #readCollection(IntFunction, Function)
+		ARG 1 entryParser
+			COMMENT a parser that parses each entry for the collection given this buf
+	METHOD method_34067 readMap (Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/Map;
+		COMMENT Reads a map from this buf as a hash map.
+		COMMENT
+		COMMENT @param <K> the key type
+		COMMENT @param <V> the value type
+		COMMENT @return the read map
+		COMMENT @see #readMap(IntFunction, BiConsumer, BiConsumer)
+		ARG 1 keyParser
+			COMMENT a parser that parses each key for the map given this buf
+		ARG 2 valueParser
+			COMMENT a parser that parses each value for the map given this buf
+	METHOD method_34068 readCollection (Ljava/util/function/IntFunction;Ljava/util/function/Function;)Ljava/util/Collection;
+		COMMENT Reads a collection from this buf. The collection is stored as a leading
+		COMMENT {@linkplain #readVarInt() var int} size followed by the entries
+		COMMENT sequentially.
+		COMMENT
+		COMMENT @param <T> the collection's entry type
+		COMMENT @param <C> the collection's type
+		COMMENT @return the read collection
+		COMMENT @see #writeCollection(Collection, BiConsumer)
+		COMMENT @see #readList(Function)
+		ARG 1 collectionFactory
+			COMMENT a factory that creates a collection with a given size
+		ARG 2 entryParser
+			COMMENT a parser that parses each entry for the collection given this buf
+	METHOD method_34069 readMap (Ljava/util/function/IntFunction;Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/Map;
+		COMMENT Reads a map from this buf. The map is stored as a leading
+		COMMENT {@linkplain #readVarInt() var int} size followed by each key and value
+		COMMENT pair.
+		COMMENT
+		COMMENT @param <K> the key type
+		COMMENT @param <V> the value type
+		COMMENT @param <M> the map type
+		COMMENT @return the read map
+		COMMENT @see #writeMap(Map, BiConsumer, BiConsumer)
+		COMMENT @see #readMap(BiConsumer, BiConsumer)
+		ARG 1 mapFactory
+			COMMENT a factory that creates a map with a given size
+		ARG 2 keyParser
+			COMMENT a parser that parses each key for the map given this buf
+		ARG 3 valueParser
+			COMMENT a parser that parses each value for the map given this buf
