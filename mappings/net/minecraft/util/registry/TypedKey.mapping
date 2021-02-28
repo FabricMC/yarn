@@ -1,0 +1,120 @@
+CLASS net/minecraft/class_5321 net/minecraft/util/registry/TypedKey
+	COMMENT A key with a specific type. It holds two {@linkplain Identifier
+	COMMENT identifiers}: one for the {@link #type type} and one for the
+	COMMENT {@link #value value}.
+	COMMENT
+	COMMENT <p>When the type {@code T} has the form {@code Registry<E>}, this key
+	COMMENT identifies a type, and can derive typed keys with type {@code E}.
+	COMMENT
+	COMMENT <p>Instances of this class are compared by identity. All typed keys
+	COMMENT are permanently cached. The same typed key will be returned by all
+	COMMENT public factory methods for {@linkplain Identifier#equals(Object)
+	COMMENT equal} input identifiers and typed keys.
+	COMMENT
+	COMMENT <p>To create a typed key representing a type, call {@link
+	COMMENT #ofType(Identifier)}:
+	COMMENT <pre>
+	COMMENT TypedKey&lt;Registry&lt;Type&gt;&gt; typeKey = TypedKey.ofType(new Identifier("mod_id", "type"));
+	COMMENT </pre>
+	COMMENT With the key for the type, to create a typed key representing any
+	COMMENT object, call {@link #of(TypedKey, Identifier)}:
+	COMMENT <pre>
+	COMMENT TypedKey&lt;Type&gt; typeKey = TypedKey.of(typeKey, new Identifier("mod_id", "vallue"));
+	COMMENT </pre>
+	COMMENT
+	COMMENT @apiNote Initially this serves registries exclusively. However, over
+	COMMENT time, they have been used elsewhere, such as keys for worlds map in
+	COMMENT {@link net.minecraft.server.MinecraftServer}.
+	COMMENT
+	COMMENT @param <T> the {@linkplain #type type}, useful for compiler checks
+	COMMENT @see Identifier
+	COMMENT @see Registry
+	FIELD field_25136 INSTANCES Ljava/util/Map;
+		COMMENT A cache of all typed keys ever created.
+		COMMENT
+		COMMENT @implNote The keys in the map takes the form of {@code
+		COMMENT type_namespace:type_name:value_namespace:value_name} and are interned.
+	FIELD field_25137 type Lnet/minecraft/class_2960;
+		COMMENT The identifier for the type. Compared to the generic type, this
+		COMMENT identifier is retained after erasure and allows distinguishing typed
+		COMMENT keys of different types.
+		COMMENT
+		COMMENT <p>This type is not intended to be accessed; the type information would
+		COMMENT be conveyed by the {@code T}'s type argument at compile time instead,
+		COMMENT such as the {@code World} in {@code TypedKey<World>}; see {@link
+		COMMENT #ofType(Identifier)} for the details.
+		COMMENT
+		COMMENT <p>Most of the time, this identifier is the corresponding registry's
+		COMMENT {@linkplain Registry#getKey() key}. For example, if the type {@code T}
+		COMMENT is {@code Registry<?>}, then this field has value {@linkplain
+		COMMENT Registry#ROOT_KEY}, namely {@code minecraft:root}.
+		COMMENT
+		COMMENT @see #ofType(Identifier)
+		COMMENT @see #isOf(TypedKey)
+	FIELD field_25138 value Lnet/minecraft/class_2960;
+		COMMENT The value of this key.
+		COMMENT
+		COMMENT @see #getValue()
+	METHOD <init> (Lnet/minecraft/class_2960;Lnet/minecraft/class_2960;)V
+		ARG 1 type
+		ARG 2 value
+	METHOD method_29177 getValue ()Lnet/minecraft/class_2960;
+		COMMENT Returns the actual identifier value of the key.
+		COMMENT
+		COMMENT @return an identifier
+	METHOD method_29178 createKeyFactory (Lnet/minecraft/class_5321;)Ljava/util/function/Function;
+		COMMENT Creates a function that converts each identifier to a typed key with the
+		COMMENT given {@code type}.
+		COMMENT
+		COMMENT @return a function from each identifier to a key
+		ARG 0 type
+			COMMENT a type key indicating the type of the generated key
+	METHOD method_29179 of (Lnet/minecraft/class_5321;Lnet/minecraft/class_2960;)Lnet/minecraft/class_5321;
+		COMMENT Derives a typed key for {@code type} with the {@code value}.
+		COMMENT
+		COMMENT <p>You can call it like
+		COMMENT <pre>
+		COMMENT {@code TypedKey.of(Registry.ITEM_KEY, new Identifier("iron_ingot"))}
+		COMMENT </pre>
+		COMMENT to create a typed key for the iron ingot item.
+		COMMENT
+		COMMENT @param <T> the type of the created key
+		COMMENT @return a typed key
+		ARG 0 type
+			COMMENT a key representing the type
+		ARG 1 value
+			COMMENT the value identifier
+	METHOD method_29180 ofType (Lnet/minecraft/class_2960;)Lnet/minecraft/class_5321;
+		COMMENT Obtains a typed key representing a type.
+		COMMENT
+		COMMENT @apiNote <b>Please choose the {@code T} type argument with caution.</b>
+		COMMENT Notice that the type {@code T} can be inferred by the compiler as
+		COMMENT anything.
+		COMMENT
+		COMMENT <p><details>
+		COMMENT <summary>An obviously wrong example:</summary>
+		COMMENT <pre>
+		COMMENT TypedKey&lt;Registry&lt;Item&gt;&gt; itemTypeKey = TypedKey.ofType(new Identifier("block"))
+		COMMENT </pre>
+		COMMENT Though this code obtains the same key as {@link Registry#BLOCK_KEY}, it
+		COMMENT would not trigger any compile error or warning and relies solely on the
+		COMMENT programmer's discretion to ensure its validity.
+		COMMENT </details>
+		COMMENT
+		COMMENT @param <T> the type represented by the key
+		ARG 0 value
+			COMMENT the identifier of the type
+	METHOD method_29181 of (Lnet/minecraft/class_2960;Lnet/minecraft/class_2960;)Lnet/minecraft/class_5321;
+		ARG 0 type
+		ARG 1 value
+	METHOD method_29182 (Lnet/minecraft/class_2960;Lnet/minecraft/class_2960;Ljava/lang/String;)Lnet/minecraft/class_5321;
+		ARG 2 k
+	METHOD method_29183 (Lnet/minecraft/class_5321;Lnet/minecraft/class_2960;)Lnet/minecraft/class_5321;
+		ARG 1 id
+	METHOD method_31163 isOf (Lnet/minecraft/class_5321;)Z
+		COMMENT Returns whether this typed key belongs to the given type.
+		COMMENT
+		COMMENT @return {@code true} if the typed key has the same type as {@code type},
+		COMMENT {@code false} otherwise
+		ARG 1 type
+			COMMENT the type to check
