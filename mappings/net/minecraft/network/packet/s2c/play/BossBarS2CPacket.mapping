@@ -1,15 +1,81 @@
 CLASS net/minecraft/class_2629 net/minecraft/network/packet/s2c/play/BossBarS2CPacket
 	FIELD field_12074 uuid Ljava/util/UUID;
-	FIELD field_12075 type Lnet/minecraft/class_2629$class_5882;
+	FIELD field_12075 action Lnet/minecraft/class_2629$class_5882;
+	FIELD field_29099 REMOVE_ACTION Lnet/minecraft/class_2629$class_5882;
+	METHOD <init> (Ljava/util/UUID;Lnet/minecraft/class_2629$class_5882;)V
+		ARG 1 uuid
+		ARG 2 action
 	METHOD <init> (Lnet/minecraft/class_2540;)V
 		ARG 1 buf
-	CLASS class_5880
+	METHOD method_34089 add (Lnet/minecraft/class_1259;)Lnet/minecraft/class_2629;
+		ARG 0 bar
+	METHOD method_34090 remove (Ljava/util/UUID;)Lnet/minecraft/class_2629;
+		ARG 0 uuid
+	METHOD method_34091 accept (Lnet/minecraft/class_2629$class_5881;)V
+		ARG 1 visitor
+	METHOD method_34093 getRemoveAction ()Lnet/minecraft/class_2629$class_5882;
+	METHOD method_34094 updateProgress (Lnet/minecraft/class_1259;)Lnet/minecraft/class_2629;
+		ARG 0 bar
+	METHOD method_34095 maskProperties (ZZZ)I
+		ARG 0 darkenSky
+		ARG 1 dragonMusic
+		ARG 2 thickenFog
+	METHOD method_34096 updateName (Lnet/minecraft/class_1259;)Lnet/minecraft/class_2629;
+		ARG 0 bar
+	METHOD method_34097 updateStyle (Lnet/minecraft/class_1259;)Lnet/minecraft/class_2629;
+		ARG 0 bar
+	METHOD method_34098 updateProperties (Lnet/minecraft/class_1259;)Lnet/minecraft/class_2629;
+		ARG 0 bar
+	CLASS class_5880 AddAction
+		FIELD field_29100 name Lnet/minecraft/class_2561;
+		FIELD field_29101 percent F
+		FIELD field_29102 color Lnet/minecraft/class_1259$class_1260;
+		FIELD field_29103 overlay Lnet/minecraft/class_1259$class_1261;
+		FIELD field_29104 darkenSky Z
+		FIELD field_29105 dragonMusic Z
+		FIELD field_29106 thickenFog Z
+		METHOD <init> (Lnet/minecraft/class_1259;)V
+			ARG 1 bar
 		METHOD <init> (Lnet/minecraft/class_2540;)V
 			ARG 1 buf
-	CLASS class_5882
-		METHOD method_34107 (Lnet/minecraft/class_2540;)V
+	CLASS class_5881 Consumer
+		METHOD method_34099 remove (Ljava/util/UUID;)V
+			ARG 1 uuid
+		METHOD method_34100 updateProgress (Ljava/util/UUID;F)V
+			ARG 1 uuid
+			ARG 2 percent
+		METHOD method_34101 updateStyle (Ljava/util/UUID;Lnet/minecraft/class_1259$class_1260;Lnet/minecraft/class_1259$class_1261;)V
+			ARG 1 id
+			ARG 2 color
+			ARG 3 overlay
+		METHOD method_34102 updateName (Ljava/util/UUID;Lnet/minecraft/class_2561;)V
+			ARG 1 uuid
+			ARG 2 name
+		METHOD method_34103 add (Ljava/util/UUID;Lnet/minecraft/class_2561;FLnet/minecraft/class_1259$class_1260;Lnet/minecraft/class_1259$class_1261;ZZZ)V
+			ARG 1 uuid
+			ARG 2 name
+			ARG 3 percent
+			ARG 4 color
+			ARG 5 overlay
+			ARG 6 darkenSky
+			ARG 7 dragonMusic
+			ARG 8 thickenFog
+		METHOD method_34104 updateProperties (Ljava/util/UUID;ZZZ)V
+			ARG 1 uuid
+			ARG 2 darkenSky
+			ARG 3 dragonMusic
+			ARG 4 thickenFog
+	CLASS class_5882 Action
+		METHOD method_34105 getType ()Lnet/minecraft/class_2629$class_5883;
+		METHOD method_34106 accept (Ljava/util/UUID;Lnet/minecraft/class_2629$class_5881;)V
+			ARG 1 uuid
+			ARG 2 consumer
+		METHOD method_34107 toPacket (Lnet/minecraft/class_2540;)V
 			ARG 1 buf
-	CLASS class_5883
+	CLASS class_5883 Type
+		FIELD field_29113 parser Ljava/util/function/Function;
+		METHOD <init> (Ljava/lang/String;ILjava/util/function/Function;)V
+			ARG 3 parser
 		METHOD method_34108 (Lnet/minecraft/class_2540;)Lnet/minecraft/class_2629$class_5882;
 			ARG 0 buf
 		METHOD method_34110 (Lnet/minecraft/class_2540;)Lnet/minecraft/class_2629$class_5882;
@@ -22,15 +88,30 @@ CLASS net/minecraft/class_2629 net/minecraft/network/packet/s2c/play/BossBarS2CP
 			ARG 0 buf
 		METHOD method_34114 (Lnet/minecraft/class_2540;)Lnet/minecraft/class_2629$class_5882;
 			ARG 0 buf
-	CLASS class_5884
+	CLASS class_5884 UpdateNameAction
+		FIELD field_29115 name Lnet/minecraft/class_2561;
 		METHOD <init> (Lnet/minecraft/class_2540;)V
 			ARG 1 buf
-	CLASS class_5885
+		METHOD <init> (Lnet/minecraft/class_2561;)V
+			ARG 1 name
+	CLASS class_5885 UpdateProgressAction
+		FIELD field_29116 percent F
+		METHOD <init> (F)V
+			ARG 1 percent
 		METHOD <init> (Lnet/minecraft/class_2540;)V
 			ARG 1 buf
-	CLASS class_5886
+	CLASS class_5886 UpdatePropertiesAction
+		FIELD field_29117 darkenSky Z
+		FIELD field_29118 dragonMusic Z
+		FIELD field_29119 thickenFog Z
 		METHOD <init> (Lnet/minecraft/class_2540;)V
 			ARG 1 buf
-	CLASS class_5887
+		METHOD <init> (ZZZ)V
+			ARG 1 darkenSky
+			ARG 2 dragonMusic
+			ARG 3 thickenFog
+	CLASS class_5887 UpdateStyleAction
+		FIELD field_29120 color Lnet/minecraft/class_1259$class_1260;
+		FIELD field_29121 overlay Lnet/minecraft/class_1259$class_1261;
 		METHOD <init> (Lnet/minecraft/class_2540;)V
 			ARG 1 buf
