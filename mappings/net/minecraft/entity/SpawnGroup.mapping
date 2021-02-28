@@ -1,8 +1,17 @@
 CLASS net/minecraft/class_1311 net/minecraft/entity/SpawnGroup
+	COMMENT A spawn group represents the category of an entity's natural spawning.
+	COMMENT
+	COMMENT <p>Entities that don't support natural spawning belong to the
+	COMMENT {@link #MISC} group.
+	COMMENT
+	COMMENT @see EntityType#getSpawnGroup()
+	COMMENT @see net.minecraft.world.SpawnHelper
 	FIELD field_24461 despawnStartRange I
 	FIELD field_24462 immediateDespawnRange I
 	FIELD field_24655 CODEC Lcom/mojang/serialization/Codec;
-	FIELD field_6295 animal Z
+		COMMENT A codec that encodes and decodes a spawn group from and to its
+		COMMENT {@linkplain #getName() name} string.
+	FIELD field_6295 rare Z
 	FIELD field_6296 BY_NAME Ljava/util/Map;
 	FIELD field_6297 capacity I
 	FIELD field_6298 peaceful Z
@@ -11,15 +20,52 @@ CLASS net/minecraft/class_1311 net/minecraft/entity/SpawnGroup
 		ARG 3 name
 		ARG 4 spawnCap
 		ARG 5 peaceful
-		ARG 6 animal
+		ARG 6 rare
 		ARG 7 immediateDespawnRange
 	METHOD method_27919 getImmediateDespawnRange ()I
+		COMMENT Returns the distance, of a mob of this group from a player, at which
+		COMMENT that mob will despawn immediately.
+		COMMENT
+		COMMENT <p>This is ignored if a mob {@linkplain
+		COMMENT net.minecraft.entity.mob.MobEntity#canImmediatelyDespawn(double) cannot
+		COMMENT immediately despawn}.
+		COMMENT
+		COMMENT @see net.minecraft.entity.mob.MobEntity#checkDespawn()
 	METHOD method_27920 getDespawnStartRange ()I
+		COMMENT Returns the distance, of a mob of this group from a player, at which
+		COMMENT that mob can despawn at chance.
+		COMMENT
+		COMMENT <p>This is ignored if a mob {@linkplain
+		COMMENT net.minecraft.entity.mob.MobEntity#canImmediatelyDespawn(double) cannot
+		COMMENT immediately despawn}.
+		COMMENT
+		COMMENT @see net.minecraft.entity.mob.MobEntity#checkDespawn()
 	METHOD method_28307 byName (Ljava/lang/String;)Lnet/minecraft/class_1311;
+		COMMENT Finds the spawn group with the given {@code name}, or {@code null} if no
+		COMMENT group has the given {@code name}.
+		COMMENT
+		COMMENT @see #getName()
+		COMMENT @return the found group, or {@code null}
 		ARG 0 name
+			COMMENT the name of the group
 	METHOD method_6133 getName ()Ljava/lang/String;
+		COMMENT Returns the name of this spawn group.
+		COMMENT
+		COMMENT <p>The names are unique and are in {@code lower_snake_case}.
 	METHOD method_6134 getCapacity ()I
-	METHOD method_6135 isAnimal ()Z
+		COMMENT Returns the maximum number of mobs in this group that can be spawned per
+		COMMENT chunk.
+	METHOD method_6135 isRare ()Z
+		COMMENT Returns if this spawn group is spawned only rarely.
+		COMMENT
+		COMMENT <p>A rare spawn only happens when the {@linkplain
+		COMMENT net.minecraft.world.WorldProperties#getTime() world time} is a multiple
+		COMMENT of {@code 400} in {@link
+		COMMENT net.minecraft.server.world.ServerChunkManager#tickChunks()}.
 	METHOD method_6136 isPeaceful ()Z
+		COMMENT Returns {@code true} if this group is spawned as animals, or {@code false}
+		COMMENT if this group is spawned as monsters.
+		COMMENT
+		COMMENT @see net.minecraft.world.World#setMobSpawnOptions(boolean, boolean)
 	METHOD method_6137 (Lnet/minecraft/class_1311;)Lnet/minecraft/class_1311;
 		ARG 0 spawnGroup
