@@ -59,6 +59,19 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4604 pvpEnabled Z
 	FIELD field_4607 resourcePackUrl Ljava/lang/String;
 	FIELD field_4608 gameProfileRepo Lcom/mojang/authlib/GameProfileRepository;
+	METHOD <init> (Ljava/lang/Thread;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5219;Lnet/minecraft/class_3283;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_5350;Lcom/mojang/authlib/minecraft/MinecraftSessionService;Lcom/mojang/authlib/GameProfileRepository;Lnet/minecraft/class_3312;Lnet/minecraft/class_3950;)V
+		ARG 1 serverThread
+		ARG 2 registryManager
+		ARG 3 session
+		ARG 4 saveProperties
+		ARG 5 dataPackManager
+		ARG 6 proxy
+		ARG 7 dataFixer
+		ARG 8 serverResourceManager
+		ARG 9 sessionService
+		ARG 10 gameProfileRepo
+		ARG 11 userCache
+		ARG 12 worldGenerationProgressListenerFactory
 	METHOD method_15876 getMetricsData ()Lnet/minecraft/class_3517;
 	METHOD method_16043 isStopping ()Z
 	METHOD method_16044 getProfiler ()Lnet/minecraft/class_3695;
@@ -92,13 +105,17 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_24490 endMonitor (Lnet/minecraft/class_4758;)V
 		ARG 1 monitor
 	METHOD method_27050 getSavePath (Lnet/minecraft/class_5218;)Ljava/nio/file/Path;
+		ARG 1 worldSavePath
 	METHOD method_27051 syncChunkWrites ()Z
 	METHOD method_27725 convertLevel (Lnet/minecraft/class_32$class_5143;)V
+		ARG 0 session
 	METHOD method_27727 getStructureManager ()Lnet/minecraft/class_3485;
 	METHOD method_27728 getSaveProperties ()Lnet/minecraft/class_5219;
 	METHOD method_27729 updateMobSpawnOptions ()V
+	METHOD method_27731 updateDifficulty ()V
 	METHOD method_27901 setupSpawn (Lnet/minecraft/class_3218;Lnet/minecraft/class_5268;ZZ)V
 		ARG 0 world
+		ARG 1 worldProperties
 		ARG 2 bonusChest
 		ARG 3 debugWorld
 	METHOD method_27902 acceptsStatusQuery ()Z
@@ -113,8 +130,13 @@ CLASS net/minecraft/server/MinecraftServer
 		COMMENT @see CompletableFuture
 		ARG 1 datapacks
 			COMMENT a collection of datapacks to reload with
+	METHOD method_29440 (Ljava/util/Collection;Lnet/minecraft/class_5350;)V
+		ARG 2 serverResourceManager
+	METHOD method_29735 createDataPackSettings (Lnet/minecraft/class_3283;)Lnet/minecraft/class_5359;
+		ARG 0 dataPackManager
 	METHOD method_29736 loadDataPacks (Lnet/minecraft/class_3283;Lnet/minecraft/class_5359;Z)Lnet/minecraft/class_5359;
 		ARG 0 resourcePackManager
+		ARG 1 dataPackSettings
 		ARG 2 safeMode
 	METHOD method_29740 startServer (Ljava/util/function/Function;)Lnet/minecraft/server/MinecraftServer;
 		ARG 0 serverFactory
@@ -202,6 +224,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3772 getRecipeManager ()Lnet/minecraft/class_1863;
 	METHOD method_3773 getNetworkCompressionThreshold ()I
 	METHOD method_3774 prepareStartRegion (Lnet/minecraft/class_3949;)V
+		ARG 1 worldGenerationProgressListener
 	METHOD method_3775 shouldPreventProxyConnections ()Z
 	METHOD method_3776 setDifficulty (Lnet/minecraft/class_1267;Z)V
 		ARG 1 difficulty
@@ -218,6 +241,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 2 pos
 		ARG 3 player
 	METHOD method_3786 createWorlds (Lnet/minecraft/class_3949;)V
+		ARG 1 worldGenerationProgressListener
 	METHOD method_3787 getNetworkIo ()Lnet/minecraft/class_3242;
 	METHOD method_3788 getCurrentPlayerCount ()I
 	METHOD method_3790 getDefaultGameMode ()Lnet/minecraft/class_1934;
