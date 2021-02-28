@@ -1,0 +1,27 @@
+name: Update Base Branch
+
+on:
+  pull_request:
+    types: [ labeled ]
+
+jobs:
+  update:
+    if: ${{ github.event.label.name == 'update-base' }}
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/github-script@v3
+        id: default-branch
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          result-encoding: string
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const pull_number = issue_number = ${{github.event.number}};
+
+            const response = await github.repos.get({owner, repo})
+            const base = response.data.default_branch
+
+            await github.pulls.update({ owner, repo, pull_number, base});
+            await github.issues.createComment({ owner, repo, issue_number, body: '🚀 Target branch has been updated to ' + base});
+            await github.issues.removeLabel({owner, repo, issue_number, name: 'update-base'});
