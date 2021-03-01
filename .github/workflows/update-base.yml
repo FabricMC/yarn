@@ -1,27 +1,53 @@
 name: Update Base Branch
 
+# Run every 20 mins or manually
 on:
-  pull_request:
-    types: [ labeled ]
+  schedule:
+    - cron: '*/20 * * * *'
+  workflow_dispatch:
 
 jobs:
   update:
-    if: ${{ github.event.label.name == 'update-base' }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/github-script@v3
-        id: default-branch
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          result-encoding: string
           script: |
+            const updateLabel = 'update-base';
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            const pull_number = issue_number = ${{github.event.number}};
 
-            const response = await github.repos.get({owner, repo})
+            const response = await github.repos.get({ owner, repo })
             const base = response.data.default_branch
 
-            await github.pulls.update({ owner, repo, pull_number, base});
-            await github.issues.createComment({ owner, repo, issue_number, body: '🚀 Target branch has been updated to ' + base});
-            await github.issues.removeLabel({owner, repo, issue_number, name: 'update-base'});
+            async function updateBase(pull) {
+                const pull_number = issue_number = pull.number;
+
+                if (pull.base.ref == base) {
+                    await github.issues.createComment({ owner, repo, issue_number, body: '🚨 Target branch is already set to ' + base });
+                    await github.issues.removeLabel({ owner, repo, issue_number, name: updateLabel });
+                    return;
+                }
+
+                // Update target PR branch
+                await github.pulls.update({ owner, repo, pull_number, base });
+                await github.issues.createComment({ owner, repo, issue_number, body: '🚀 Target branch has been updated to ' + base });
+                await github.issues.removeLabel({ owner, repo, issue_number, name: updateLabel });
+            }
+
+            // Query all of the open pull requests
+            const pulls = await github.pulls.list({
+                owner,
+                repo,
+                state: 'open'
+            });
+
+            // Loop all of the pull requests, finding any with the target label.
+            for (const pull of pulls.data) {
+                const requiresUpdate = pull.labels.some((label) => label.name === updateLabel);
+
+                if (requiresUpdate) {
+                    await updateBase(pull);
+                }
+            }
