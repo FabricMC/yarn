@@ -8,18 +8,41 @@ CLASS net/minecraft/class_5414 net/minecraft/tag/TagGroup
 		ARG 1 object
 	METHOD method_30207 create (Ljava/util/Map;)Lnet/minecraft/class_5414;
 		ARG 0 tags
-	METHOD method_30208 toPacket (Lnet/minecraft/class_2378;)Lnet/minecraft/class_5414$class_5748;
+	METHOD method_30208 serialize (Lnet/minecraft/class_2378;)Lnet/minecraft/class_5414$class_5748;
+		COMMENT Serializes this tag group.
+		ARG 1 registry
 	METHOD method_30210 getTag (Lnet/minecraft/class_2960;)Lnet/minecraft/class_3494;
 		ARG 1 id
 	METHOD method_30211 getTagIds ()Ljava/util/Collection;
 	METHOD method_30213 getTagOrEmpty (Lnet/minecraft/class_2960;)Lnet/minecraft/class_3494;
 		ARG 1 id
 	METHOD method_30214 createEmpty ()Lnet/minecraft/class_5414;
+	METHOD method_33155 deserialize (Lnet/minecraft/class_5414$class_5748;Lnet/minecraft/class_2378;)Lnet/minecraft/class_5414;
+		COMMENT Deserializes a serialized tag group.
+		ARG 0 serialized
+		ARG 1 registry
+	METHOD method_33156 (Lnet/minecraft/class_2378;Ljava/util/Map;Lnet/minecraft/class_2960;Lnet/minecraft/class_3494;)V
+		ARG 2 id
+		ARG 3 tag
+	METHOD method_33157 (Lnet/minecraft/class_2378;Ljava/util/Map;Lnet/minecraft/class_2960;Lit/unimi/dsi/fastutil/ints/IntList;)V
+		ARG 2 id
+		ARG 3 entries
 	CLASS 1
 		FIELD field_25742 tags Lcom/google/common/collect/BiMap;
 		FIELD field_25743 emptyTag Lnet/minecraft/class_3494;
-	CLASS class_5748
-		METHOD method_33159 (Lnet/minecraft/class_2540;)V
+	CLASS class_5748 Serialized
+		COMMENT A serialization-friendly POJO representation of a {@linkplain
+		COMMENT TagGroup tag group}. This allows easy transport of tag groups
+		COMMENT over Minecraft network protocol.
+		COMMENT
+		COMMENT <p>This stores tag entries with raw integer IDs and requires a registry
+		COMMENT for raw ID access to {@linkplain TagGroup#serialize(Registry) serialize}
+		COMMENT or {@linkplain TagGroup#deserialize(TagGroup.Serialized, Registry)
+		COMMENT deserialize} tag groups.
+		FIELD field_28304 contents Ljava/util/Map;
+		METHOD <init> (Ljava/util/Map;)V
+			ARG 1 contents
+		METHOD method_33159 writeBuf (Lnet/minecraft/class_2540;)V
 			ARG 1 buf
-		METHOD method_33160 (Lnet/minecraft/class_2540;)Lnet/minecraft/class_5414$class_5748;
+		METHOD method_33160 fromBuf (Lnet/minecraft/class_2540;)Lnet/minecraft/class_5414$class_5748;
 			ARG 0 buf
