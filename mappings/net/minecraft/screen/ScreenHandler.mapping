@@ -2,9 +2,7 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	FIELD field_17285 properties Ljava/util/List;
 	FIELD field_17493 type Lnet/minecraft/class_3917;
 	FIELD field_7757 quickCraftSlots Ljava/util/Set;
-	FIELD field_7758 actionId S
 	FIELD field_7759 quickCraftStage I
-	FIELD field_7760 restrictedPlayers Ljava/util/Set;
 	FIELD field_7761 slots Lnet/minecraft/class_2371;
 	FIELD field_7762 quickCraftButton I
 	FIELD field_7763 syncId I
@@ -22,6 +20,7 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		ARG 0 inventory
 		ARG 1 expectedSize
 	METHOD method_17360 addProperties (Lnet/minecraft/class_3913;)V
+		ARG 1 propertyDelegate
 	METHOD method_17361 checkDataCount (Lnet/minecraft/class_3913;I)V
 		COMMENT Checks that the size of the {@code data} is at least as large as the {@code expectedCount}.
 		COMMENT
@@ -37,7 +36,7 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	METHOD method_17696 (Lnet/minecraft/class_2248;Lnet/minecraft/class_1657;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)Ljava/lang/Boolean;
 		ARG 2 world
 		ARG 3 pos
-	METHOD method_30010 internalOnSlotClick (IILnet/minecraft/class_1713;Lnet/minecraft/class_1657;)Lnet/minecraft/class_1799;
+	METHOD method_30010 internalOnSlotClick (IILnet/minecraft/class_1713;Lnet/minecraft/class_1657;)V
 		COMMENT The actual logic that handles a slot click. Called by {@link #onSlotClick
 		COMMENT (int, int, SlotActionType, PlayerEntity)} in a try-catch block that wraps
 		COMMENT exceptions from this method into a crash report.
@@ -45,9 +44,6 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		ARG 2 clickData
 		ARG 3 actionType
 		ARG 4 player
-	METHOD method_7590 setPlayerRestriction (Lnet/minecraft/class_1657;Z)V
-		ARG 1 player
-		ARG 2 unrestricted
 	METHOD method_7591 packQuickCraftData (II)I
 		ARG 0 quickCraftStage
 		ARG 1 buttonId
@@ -55,9 +51,8 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		ARG 0 slot
 		ARG 1 stack
 		ARG 2 allowOverflow
-	METHOD method_7593 onSlotClick (IILnet/minecraft/class_1713;Lnet/minecraft/class_1657;)Lnet/minecraft/class_1799;
+	METHOD method_7593 onSlotClick (IILnet/minecraft/class_1713;Lnet/minecraft/class_1657;)V
 		COMMENT Performs a slot click. This can behave in many different ways depending mainly on the action type.
-		COMMENT @return The stack that was clicked on before anything changed, used mostly for verifying that the client and server are in sync
 		ARG 1 slotIndex
 		ARG 2 clickData
 		ARG 3 actionType
@@ -101,8 +96,6 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	METHOD method_7613 canInsertIntoSlot (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;)Z
 		ARG 1 stack
 		ARG 2 slot
-	METHOD method_7614 getNextActionId (Lnet/minecraft/class_1661;)S
-		ARG 1 playerInventory
 	METHOD method_7615 canInsertIntoSlot (Lnet/minecraft/class_1735;)Z
 		ARG 1 slot
 	METHOD method_7616 insertItem (Lnet/minecraft/class_1799;IIZ)Z
@@ -124,7 +117,5 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		ARG 0 quickCraftData
 	METHOD method_7621 addSlot (Lnet/minecraft/class_1735;)Lnet/minecraft/class_1735;
 		ARG 1 slot
-	METHOD method_7622 isNotRestricted (Lnet/minecraft/class_1657;)Z
-		ARG 1 player
 	METHOD method_7623 sendContentUpdates ()V
 		COMMENT Sends updates to listeners if any properties or slot stacks have changed.

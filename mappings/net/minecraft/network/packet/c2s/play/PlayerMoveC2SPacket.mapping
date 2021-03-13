@@ -6,9 +6,16 @@ CLASS net/minecraft/class_2828 net/minecraft/network/packet/c2s/play/PlayerMoveC
 	FIELD field_12888 changeLook Z
 	FIELD field_12889 x D
 	FIELD field_12890 changePosition Z
-	FIELD field_12891 onGround Z
-	METHOD <init> (Z)V
-		ARG 1 onGround
+	FIELD field_29179 onGround Z
+	METHOD <init> (DDDFFZZZ)V
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+		ARG 7 yaw
+		ARG 8 pitch
+		ARG 9 onGround
+		ARG 10 changePosition
+		ARG 11 changeLook
 	METHOD method_12268 getY (D)D
 		ARG 1 currentY
 	METHOD method_12269 getX (D)D
@@ -21,13 +28,15 @@ CLASS net/minecraft/class_2828 net/minecraft/network/packet/c2s/play/PlayerMoveC
 	METHOD method_12273 isOnGround ()Z
 	METHOD method_12274 getZ (D)D
 		ARG 1 currentZ
-	CLASS class_2829 PositionOnly
+	CLASS class_2829 PositionAndOnGround
 		METHOD <init> (DDDZ)V
 			ARG 1 x
 			ARG 3 y
 			ARG 5 z
 			ARG 7 onGround
-	CLASS class_2830 Both
+		METHOD method_34221 read (Lnet/minecraft/class_2540;)Lnet/minecraft/class_2828$class_2829;
+			ARG 0 buf
+	CLASS class_2830 Full
 		METHOD <init> (DDDFFZ)V
 			ARG 1 x
 			ARG 3 y
@@ -35,8 +44,17 @@ CLASS net/minecraft/class_2828 net/minecraft/network/packet/c2s/play/PlayerMoveC
 			ARG 7 yaw
 			ARG 8 pitch
 			ARG 9 onGround
-	CLASS class_2831 LookOnly
+		METHOD method_34222 read (Lnet/minecraft/class_2540;)Lnet/minecraft/class_2828$class_2830;
+			ARG 0 buf
+	CLASS class_2831 LookAndOnGround
 		METHOD <init> (FFZ)V
 			ARG 1 yaw
 			ARG 2 pitch
 			ARG 3 onGround
+		METHOD method_34223 read (Lnet/minecraft/class_2540;)Lnet/minecraft/class_2828$class_2831;
+			ARG 0 buf
+	CLASS class_5911 OnGroundOnly
+		METHOD <init> (Z)V
+			ARG 1 onGround
+		METHOD method_34224 read (Lnet/minecraft/class_2540;)Lnet/minecraft/class_2828$class_5911;
+			ARG 0 buf

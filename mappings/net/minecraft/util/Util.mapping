@@ -7,7 +7,11 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	FIELD field_24622 BOOTSTRAP_EXECUTOR Ljava/util/concurrent/ExecutorService;
 	FIELD field_25140 NIL_UUID Ljava/util/UUID;
 	METHOD method_17815 stream (Ljava/util/Optional;)Ljava/util/stream/Stream;
+		ARG 0 optional
 	METHOD method_17974 ifPresentOrElse (Ljava/util/Optional;Ljava/util/function/Consumer;Ljava/lang/Runnable;)Ljava/util/Optional;
+		ARG 0 optional
+		ARG 1 presentAction
+		ARG 2 elseAction
 	METHOD method_18347 uncaughtExceptionHandler (Ljava/lang/Thread;Ljava/lang/Throwable;)V
 		ARG 0 thread
 		ARG 1 t
@@ -93,6 +97,35 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_33141 toArray (Ljava/util/stream/DoubleStream;I)Lcom/mojang/serialization/DataResult;
 		ARG 0 stream
 		ARG 1 length
+	METHOD method_33559 error (Ljava/lang/String;)V
+		ARG 0 message
+	METHOD method_33560 pause ()V
+	METHOD method_33786 (Ljava/lang/Object;Ljava/util/List;)Ljava/util/List;
+		ARG 0 eachResult
+		ARG 1 collectedResults
+	METHOD method_33787 debugRunnable (Ljava/lang/String;Ljava/lang/Runnable;)Ljava/lang/Runnable;
+		ARG 0 activeThreadName
+		ARG 1 task
+	METHOD method_33788 (Ljava/util/List;Ljava/util/List;)Ljava/util/List;
+		ARG 0 firstResults
+		ARG 1 secondResults
+	METHOD method_33789 (Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 firstCollected
+		ARG 1 secondCollected
+	METHOD method_33791 combineSafe (Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT Combines a list of {@code futures} into one future that holds a list
+		COMMENT of their results.
+		COMMENT
+		COMMENT <p>This version expects all futures to complete successfully and is not
+		COMMENT optimized in case any of the input futures throws.
+		COMMENT
+		COMMENT @return the combined future
+		COMMENT @see #combine(List)
+		ARG 0 futures
+			COMMENT the completable futures to combine
+	METHOD method_33792 (Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 collected
+		ARG 1 each
 	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
 	METHOD method_646 createTranslationKey (Ljava/lang/String;Lnet/minecraft/class_2960;)Ljava/lang/String;
 		ARG 0 type
@@ -101,7 +134,17 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_650 getValueAsString (Lnet/minecraft/class_2769;Ljava/lang/Object;)Ljava/lang/String;
 	METHOD method_651 getJVMFlags ()Ljava/util/stream/Stream;
 	METHOD method_652 combine (Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT Combines a list of {@code futures} into one future that holds a list
+		COMMENT of their results.
+		COMMENT
+		COMMENT <p>The returned future is fail-fast; if any of the input futures fails,
+		COMMENT this returned future will be immediately completed exceptionally than
+		COMMENT waiting for other input futures.
+		COMMENT
+		COMMENT @return the combined future
+		COMMENT @see #combineSafe(List)
 		ARG 0 futures
+			COMMENT the completable futures to combine
 	METHOD method_654 make (Ljava/lang/Object;Ljava/util/function/Consumer;)Ljava/lang/Object;
 		ARG 0 object
 		ARG 1 initializer
