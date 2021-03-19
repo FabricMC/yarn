@@ -1,4 +1,20 @@
-CLASS net/minecraft/server/MinecraftServer
+CLASS net/minecraft/server/MinecraftServer net/minecraft/server/MinecraftServer
+	COMMENT Represents a logical Minecraft server.
+	COMMENT
+	COMMENT <p>Since Minecraft uses a Client-Server architecture for the game, the server processes all logical game functions.
+	COMMENT A few of the actions a Minecraft server will handle includes processing player actions, handling damage to entities, advancing the world time and executing commands.
+	COMMENT
+	COMMENT <p>There are two primary implementations for a Minecraft server: a dedicated and an integrated server.
+	COMMENT
+	COMMENT <p>A dedicated server is a Minecraft server not attached to a Minecraft game client and may be run remotely from any connected players.
+	COMMENT A dedicated server has a few exclusive features such as a whitelist/blacklist, remote rcon connections, and a terminal to input commands.
+	COMMENT
+	COMMENT <p>An integrated server is functionally equivilant to a dedicated server except that is a hosted by a Minecraft game client and is typically used in a Singleplayer world.
+	COMMENT An integrated server differs from a dedicated server by allowing connections within the local area network (LAN) and the host client.
+	COMMENT Generally you will always want to treat connection to a integrated server like you would to a dedicated server since the concept of an integrated server is an implementation detail in Minecraft.
+	COMMENT
+	COMMENT @see net.minecraft.server.dedicated.MinecraftDedicatedServer
+	COMMENT @see net.minecraft.server.integrated.IntegratedServer
 	FIELD field_16205 metricsData Lnet/minecraft/class_3517;
 	FIELD field_16257 serverThread Ljava/lang/Thread;
 	FIELD field_16258 profiler Lnet/minecraft/class_3695;
@@ -266,14 +282,23 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3815 setPvpEnabled (Z)V
 		ARG 1 pvpEnabled
 	METHOD method_3816 isDedicated ()Z
+		COMMENT Checks whether this server is a dedicated server.
+		COMMENT
+		COMMENT <p>A dedicated server refers to a Minecraft server implementation which is detached from a parent Minecraft client process.
+		COMMENT A dedicated Minecraft server only accepts remote connections.
 	METHOD method_3818 getServerMotd ()Ljava/lang/String;
 	METHOD method_3819 getServerIp ()Ljava/lang/String;
 	METHOD method_3820 isLoading ()Z
 	METHOD method_3821 exit ()V
 	METHOD method_3823 setupServer ()Z
+		COMMENT Setups a Minecraft server to be ready for players to connect.
+		COMMENT This method does several things including loading server properties and loading worlds.
+		COMMENT
+		COMMENT @return true if the Minecraft server was successfully setup, false if the server failed to be setup.
 	METHOD method_3826 getServerStartTime ()J
 	METHOD method_3827 getVersion ()Ljava/lang/String;
 	METHOD method_3828 isOnlineMode ()Z
+		COMMENT Checks whether this Minecraft server should require all connected players are using a licensed Minecraft account when connecting to this server.
 	METHOD method_3829 getSpawnRadius (Lnet/minecraft/class_3218;)I
 		ARG 1 world
 	METHOD method_3830 getTickTime ()F
