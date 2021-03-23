@@ -1,0 +1,46 @@
+CLASS net/minecraft/class_5459 net/minecraft/world/PortalUtil
+	METHOD method_30574 getLargestRectangle (Lnet/minecraft/class_2338;Lnet/minecraft/class_2350$class_2351;ILnet/minecraft/class_2350$class_2351;ILjava/util/function/Predicate;)Lnet/minecraft/class_5459$class_5460;
+		COMMENT Gets the largest rectangle of blocks along two axes for which all blocks meet a predicate.
+		COMMENT Used for getting rectangles of Nether portal blocks.
+		ARG 0 center
+		ARG 1 primaryAxis
+		ARG 2 primaryMaxBlocks
+		ARG 3 secondaryAxis
+		ARG 4 secondaryMaxBlocks
+	METHOD method_30575 moveWhile (Ljava/util/function/Predicate;Lnet/minecraft/class_2338$class_2339;Lnet/minecraft/class_2350;I)I
+		ARG 3 max
+	METHOD method_30576 findLargestRectangle ([I)Lcom/mojang/datafixers/util/Pair;
+		COMMENT Finds the largest rectangle within a histogram, where the vertical bars each have
+		COMMENT width 1 and height specified in {@code heights}.
+		COMMENT
+		COMMENT @implNote This implementation solves the problem using a stack. The
+		COMMENT stack maintains a collection of height limits of rectangles that may grow as the
+		COMMENT array iteration continues. When a new height is encountered, each position {@code p}
+		COMMENT in the stack would be popped if the rectangle with height limit at position {@code
+		COMMENT p} can no longer extend right. The popped rectangle becomes the return value if it
+		COMMENT has a larger area than the current candidate.
+		COMMENT
+		COMMENT <p>When the rectangle area is calculated, the range is between {@code p0 + 1}, where
+		COMMENT {@code p0} is the current top of stack after popping rectangles that can no longer
+		COMMENT extend, and the current iterated position {@code i}.
+		COMMENT
+		COMMENT @return the base of the rectangle as an inclusive range and the height of the
+		COMMENT rectangle packed in a pair
+		COMMENT @see <a href="https://leetcode.com/problems/largest-rectangle-in-histogram">Largest
+		COMMENT Rectangle in Histogram - LeetCode</a>
+		ARG 0 heights
+			COMMENT the heights of bars in the histogram
+	CLASS class_5460 Rectangle
+		FIELD field_25936 lowerLeft Lnet/minecraft/class_2338;
+		FIELD field_25937 width I
+		FIELD field_25938 height I
+		METHOD <init> (Lnet/minecraft/class_2338;II)V
+			ARG 1 lowerLeft
+			ARG 2 width
+			ARG 3 height
+	CLASS class_5461 IntBounds
+		FIELD field_25939 min I
+		FIELD field_25940 max I
+		METHOD <init> (II)V
+			ARG 1 min
+			ARG 2 max
