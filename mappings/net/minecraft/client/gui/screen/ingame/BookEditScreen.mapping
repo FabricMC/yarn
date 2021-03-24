@@ -1,6 +1,10 @@
 CLASS net/minecraft/class_473 net/minecraft/client/gui/screen/ingame/BookEditScreen
 	FIELD field_17116 pages Ljava/util/List;
 	FIELD field_24268 pageContent Lnet/minecraft/class_473$class_5233;
+	FIELD field_24269 currentPageSelectionManager Lnet/minecraft/class_3728;
+	FIELD field_24270 bookTitleSelectionManager Lnet/minecraft/class_3728;
+	FIELD field_25891 pageIndicatorText Lnet/minecraft/class_2561;
+	FIELD field_25892 signedByText Lnet/minecraft/class_2561;
 	FIELD field_25893 EDIT_TITLE_TEXT Lnet/minecraft/class_2561;
 	FIELD field_25894 FINALIZE_WARNING_TEXT Lnet/minecraft/class_2561;
 	FIELD field_25895 BLACK_CURSOR_TEXT Lnet/minecraft/class_5481;
@@ -22,6 +26,7 @@ CLASS net/minecraft/class_473 net/minecraft/client/gui/screen/ingame/BookEditScr
 	FIELD field_2848 doneButton Lnet/minecraft/class_4185;
 	FIELD field_2849 cancelButton Lnet/minecraft/class_4185;
 	METHOD <init> (Lnet/minecraft/class_1657;Lnet/minecraft/class_1799;Lnet/minecraft/class_1268;)V
+		ARG 1 player
 		ARG 2 itemStack
 		ARG 3 hand
 	METHOD method_17046 countPages ()I
@@ -29,8 +34,8 @@ CLASS net/minecraft/class_473 net/minecraft/client/gui/screen/ingame/BookEditScr
 	METHOD method_2407 finalizeBook (Z)V
 		ARG 1 signBook
 	METHOD method_2413 updateButtons ()V
-	METHOD method_2414 moveCursorToBottom ()V
-	METHOD method_2421 moveCursorToTop ()V
+	METHOD method_2414 moveToLineEnd ()V
+	METHOD method_2421 moveToLineStart ()V
 	METHOD method_2427 getCurrentPageContent ()Ljava/lang/String;
 	METHOD method_2436 appendNewPage ()V
 	METHOD method_2437 openPreviousPage ()V
@@ -44,6 +49,43 @@ CLASS net/minecraft/class_473 net/minecraft/client/gui/screen/ingame/BookEditScr
 	METHOD method_27576 getPageContent ()Lnet/minecraft/class_473$class_5233;
 	METHOD method_27577 invalidatePageContent ()V
 	METHOD method_27578 createPageContent ()Lnet/minecraft/class_473$class_5233;
+	METHOD method_27580 moveVertically (I)V
+		ARG 1 lines
+	METHOD method_27581 drawCursor (Lnet/minecraft/class_4587;Lnet/minecraft/class_473$class_5234;Z)V
+		ARG 1 matrices
+		ARG 2 position
+		ARG 3 atEnd
+	METHOD method_27582 screenPositionToAbsolutePosition (Lnet/minecraft/class_473$class_5234;)Lnet/minecraft/class_473$class_5234;
+		ARG 1 position
+	METHOD method_27583 getRectFromCorners (Lnet/minecraft/class_473$class_5234;Lnet/minecraft/class_473$class_5234;)Lnet/minecraft/class_768;
+		ARG 1 start
+		ARG 2 end
+	METHOD method_27584 setClipboard (Ljava/lang/String;)V
+		ARG 1 clipboard
+	METHOD method_27585 getLineSelectionRectangle (Ljava/lang/String;Lnet/minecraft/class_5225;IIII)Lnet/minecraft/class_768;
+		ARG 1 string
+		ARG 2 handler
+		ARG 3 selectionStart
+		ARG 4 selectionEnd
+		ARG 5 lineY
+		ARG 6 lineStart
+	METHOD method_27588 drawSelection ([Lnet/minecraft/class_768;)V
+		ARG 1 selectionRectangles
+	METHOD method_27589 selectCurrentWord (I)V
+		ARG 1 cursor
+	METHOD method_27590 absolutePositionToScreenPosition (Lnet/minecraft/class_473$class_5234;)Lnet/minecraft/class_473$class_5234;
+		ARG 1 position
+	METHOD method_27591 getLineFromOffset ([II)I
+		ARG 0 lineStarts
+		ARG 1 position
+	METHOD method_27592 keyPressedEditMode (III)Z
+		ARG 1 keyCode
+		ARG 2 scanCode
+		ARG 3 modifiers
+	METHOD method_27595 getClipboard ()Ljava/lang/String;
+	METHOD method_27597 moveUpLine ()V
+	METHOD method_27598 moveDownLine ()V
+	METHOD method_27872 changePage ()V
 	CLASS class_475 Line
 		FIELD field_24278 style Lnet/minecraft/class_2583;
 		FIELD field_24279 content Ljava/lang/String;
@@ -51,6 +93,7 @@ CLASS net/minecraft/class_473 net/minecraft/client/gui/screen/ingame/BookEditScr
 		FIELD field_2853 y I
 		FIELD field_2854 x I
 		METHOD <init> (Lnet/minecraft/class_2583;Ljava/lang/String;II)V
+			ARG 1 style
 			ARG 2 content
 			ARG 3 x
 			ARG 4 y
@@ -58,10 +101,27 @@ CLASS net/minecraft/class_473 net/minecraft/client/gui/screen/ingame/BookEditScr
 		FIELD field_24271 EMPTY Lnet/minecraft/class_473$class_5233;
 		FIELD field_24272 pageContent Ljava/lang/String;
 		FIELD field_24273 position Lnet/minecraft/class_473$class_5234;
+		FIELD field_24274 atEnd Z
+		FIELD field_24275 lineStarts [I
 		FIELD field_24276 lines [Lnet/minecraft/class_473$class_475;
+		FIELD field_24277 selectionRectangles [Lnet/minecraft/class_768;
 		METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_473$class_5234;Z[I[Lnet/minecraft/class_473$class_475;[Lnet/minecraft/class_768;)V
 			ARG 1 pageContent
+			ARG 2 position
+			ARG 3 atEnd
+			ARG 4 lineStarts
 			ARG 5 lines
+			ARG 6 selectionRectangles
+		METHOD method_27600 getLineStart (I)I
+			ARG 1 position
+		METHOD method_27601 getVerticalOffset (II)I
+			ARG 1 position
+			ARG 2 lines
+		METHOD method_27602 getCursorPosition (Lnet/minecraft/class_327;Lnet/minecraft/class_473$class_5234;)I
+			ARG 1 renderer
+			ARG 2 position
+		METHOD method_27604 getLineEnd (I)I
+			ARG 1 position
 	CLASS class_5234 Position
 		FIELD field_24281 x I
 		FIELD field_24282 y I

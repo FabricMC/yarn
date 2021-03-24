@@ -163,6 +163,11 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 adversary
 			COMMENT the main adversary responsible for this entity's death
 	METHOD method_23883 dropXp ()V
+		COMMENT Drops experience when this entity is killed.
+		COMMENT
+		COMMENT <p>To control the details of experience dropping, consider overriding
+		COMMENT {@link #shouldAlwaysDropXp()}, {@link #shouldDropXp()}, and
+		COMMENT {@link #getXpToDrop(PlayerEntity)}.
 	METHOD method_24518 isHolding (Lnet/minecraft/class_1792;)Z
 		COMMENT Checks if this entity is holding a certain item.
 		COMMENT
@@ -197,8 +202,8 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT Called to trigger advancement criteria when an entity picks up an item
 		COMMENT thrown by a player.
 		ARG 1 item
-	METHOD method_29500 (Lnet/minecraft/class_2680;)Z
-		ARG 1 state
+	METHOD method_29500 shouldRemoveSoulSpeedBoost (Lnet/minecraft/class_2680;)Z
+		ARG 1 landingState
 	METHOD method_29501 removeSoulSpeedBoost ()V
 	METHOD method_29502 addSoulSpeedBoostIfNeeded ()V
 	METHOD method_29503 hurtByWater ()Z
@@ -224,6 +229,8 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_32326 getPreferredEquipmentSlot (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1304;
 		ARG 0 stack
 	METHOD method_33190 canTakeDamage ()Z
+	METHOD method_33579 readFromPacket (Lnet/minecraft/class_2610;)V
+		ARG 1 packet
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
 	METHOD method_5989 getLootTable ()Lnet/minecraft/class_2960;
@@ -276,6 +283,11 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6024 getLeaningPitch (F)F
 		ARG 1 tickDelta
 	METHOD method_6025 heal (F)V
+		COMMENT Heals this entity by the given {@code amount} of half-hearts.
+		COMMENT
+		COMMENT <p>A dead entity cannot be healed.
+		COMMENT
+		COMMENT @see #isDead()
 		ARG 1 amount
 	METHOD method_6026 getStatusEffects ()Ljava/util/Collection;
 	METHOD method_6027 updatePotionVisibility ()V
@@ -317,7 +329,17 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6051 getRandom ()Ljava/util/Random;
 	METHOD method_6052 getAttacking ()Lnet/minecraft/class_1309;
 	METHOD method_6053 initAi ()V
-	METHOD method_6054 canDropLootAndXp ()Z
+	METHOD method_6054 shouldDropXp ()Z
+		COMMENT Returns if this entity should drop experience on death when the {@linkplain
+		COMMENT net.minecraft.world.GameRules#DO_MOB_LOOT doMobLoot} game rule is
+		COMMENT enabled and has been attacked by a player.
+		COMMENT
+		COMMENT <p>If {@link #shouldAlwaysDropXp() shouldAlwaysDropXp()} returns {@code
+		COMMENT true}, this check is disregarded.
+		COMMENT
+		COMMENT @see #dropXp()
+		COMMENT @see #shouldAlwaysDropXp()
+		COMMENT @see #getXpToDrop(PlayerEntity)
 	METHOD method_6055 getHandSwingProgress (F)F
 		ARG 1 tickDelta
 	METHOD method_6056 damageShield (F)V
@@ -342,6 +364,11 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6069 clearPotionSwirls ()V
 	METHOD method_6070 tickCramming ()V
 	METHOD method_6071 shouldAlwaysDropXp ()Z
+		COMMENT Returns if this entity may always drop experience, skipping any
+		COMMENT other checks.
+		COMMENT
+		COMMENT @see #dropXp()
+		COMMENT @see #getXpToDrop(PlayerEntity)
 	METHOD method_6072 updateLeaningPitch ()V
 	METHOD method_6073 setAbsorptionAmount (F)V
 		ARG 1 amount
@@ -410,8 +437,18 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6107 getSoundVolume ()F
 	METHOD method_6108 updatePostDeath ()V
 	METHOD method_6109 isBaby ()Z
-	METHOD method_6110 getCurrentExperience (Lnet/minecraft/class_1657;)I
+	METHOD method_6110 getXpToDrop (Lnet/minecraft/class_1657;)I
+		COMMENT Called when this entity is killed and returns the amount of experience
+		COMMENT to drop.
+		COMMENT
+		COMMENT <p>{@code player} may be {@code null} if {@linkplain #shouldAlwaysDropXp
+		COMMENT shouldAlwaysDropXp()} returns {@code true}.
+		COMMENT
+		COMMENT @see #dropXp()
+		COMMENT @see #shouldAlwaysDropXp()
+		COMMENT @see #shouldDropXp()
 		ARG 1 player
+			COMMENT the attacking player
 	METHOD method_6111 removeStatusEffectInternal (Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;
 		COMMENT Removes a status effect from this entity without calling any listener.
 		COMMENT

@@ -20,12 +20,16 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 		ARG 4 summonable
 		ARG 5 fireImmune
 		ARG 6 spawnableFarFromPlayer
+		ARG 7 canSpawnInside
+		ARG 8 dimensions
+		ARG 9 maxTrackDistance
+		ARG 10 trackTickInterval
 	METHOD method_16351 getLootTableId ()Lnet/minecraft/class_2960;
 	METHOD method_17683 createSimpleBoundingBox (DDD)Lnet/minecraft/class_238;
 		ARG 1 feetX
 		ARG 3 feetY
 		ARG 5 feetZ
-	METHOD method_17684 fromTag (Lnet/minecraft/class_2487;)Ljava/util/Optional;
+	METHOD method_17684 fromNbt (Lnet/minecraft/class_2487;)Ljava/util/Optional;
 		ARG 0 compoundTag
 	METHOD method_17685 getWidth ()F
 	METHOD method_17686 getHeight ()F
@@ -33,7 +37,7 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 		ARG 0 compoundTag
 		ARG 1 world
 		ARG 2 entityProcessor
-	METHOD method_17848 loadEntityFromTag (Lnet/minecraft/class_2487;Lnet/minecraft/class_1937;)Ljava/util/Optional;
+	METHOD method_17848 loadEntityFromNbt (Lnet/minecraft/class_2487;Lnet/minecraft/class_1937;)Ljava/util/Optional;
 		ARG 0 compoundTag
 		ARG 1 world
 	METHOD method_18386 getDimensions ()Lnet/minecraft/class_4048;
@@ -55,7 +59,10 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 		COMMENT
 		COMMENT <p>This can be overwritten via {@link EntityType.Builder#allowSpawningInside(Block[])}
 		ARG 1 state
-	METHOD method_5881 loadFromEntityTag (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_2487;)V
+	METHOD method_31489 streamFromNbt (Ljava/util/List;Lnet/minecraft/class_1937;)Ljava/util/stream/Stream;
+		ARG 0 entityNbtList
+		ARG 1 world
+	METHOD method_5881 loadFromEntityNbt (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_2487;)V
 		ARG 0 world
 		ARG 1 player
 		ARG 2 entity
@@ -72,6 +79,7 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 		ARG 0 world
 		ARG 1 type
 	METHOD method_5888 create (Lnet/minecraft/class_3218;Lnet/minecraft/class_2487;Lnet/minecraft/class_2561;Lnet/minecraft/class_1657;Lnet/minecraft/class_2338;Lnet/minecraft/class_3730;ZZ)Lnet/minecraft/class_1297;
+		ARG 1 world
 		ARG 2 itemTag
 		ARG 3 name
 		ARG 4 player
@@ -85,11 +93,12 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 	METHOD method_5890 getId (Lnet/minecraft/class_1299;)Lnet/minecraft/class_2960;
 		ARG 0 type
 	METHOD method_5891 getSpawnGroup ()Lnet/minecraft/class_1311;
-	METHOD method_5892 getEntityFromTag (Lnet/minecraft/class_2487;Lnet/minecraft/class_1937;)Ljava/util/Optional;
+	METHOD method_5892 getEntityFromNbt (Lnet/minecraft/class_2487;Lnet/minecraft/class_1937;)Ljava/util/Optional;
 		ARG 0 tag
 		ARG 1 world
 	METHOD method_5893 isSaveable ()Z
 	METHOD method_5894 spawnFromItemStack (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1657;Lnet/minecraft/class_2338;Lnet/minecraft/class_3730;ZZ)Lnet/minecraft/class_1297;
+		ARG 1 world
 		ARG 2 stack
 		ARG 3 player
 		ARG 4 pos
@@ -104,6 +113,7 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 	METHOD method_5898 get (Ljava/lang/String;)Ljava/util/Optional;
 		ARG 0 id
 	METHOD method_5899 spawn (Lnet/minecraft/class_3218;Lnet/minecraft/class_2487;Lnet/minecraft/class_2561;Lnet/minecraft/class_1657;Lnet/minecraft/class_2338;Lnet/minecraft/class_3730;ZZ)Lnet/minecraft/class_1297;
+		ARG 1 world
 		ARG 2 itemTag
 		ARG 3 name
 		ARG 4 player

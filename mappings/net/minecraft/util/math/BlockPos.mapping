@@ -43,10 +43,6 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		ARG 1 y
 		ARG 2 z
 	METHOD method_10067 west ()Lnet/minecraft/class_2338;
-	METHOD method_10069 add (III)Lnet/minecraft/class_2338;
-		ARG 1 x
-		ARG 2 y
-		ARG 3 z
 	METHOD method_10070 rotate (Lnet/minecraft/class_2470;)Lnet/minecraft/class_2338;
 		ARG 1 rotation
 	METHOD method_10071 unpackLongY (J)I
@@ -171,11 +167,43 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		ARG 0 values
 	METHOD method_29715 stream (Lnet/minecraft/class_238;)Ljava/util/stream/Stream;
 		ARG 0 box
+	METHOD method_30512 iterateInSquare (Lnet/minecraft/class_2338;ILnet/minecraft/class_2350;Lnet/minecraft/class_2350;)Ljava/lang/Iterable;
+		COMMENT Iterates block positions around the {@code center} in a square of
+		COMMENT ({@code 2 * radius + 1}) by ({@code 2 * radius + 1}). The blocks
+		COMMENT are iterated in a (square) spiral around the center.
+		COMMENT
+		COMMENT <p>The first block returned is the center, then the iterator moves
+		COMMENT a block towards the first direction, followed by moving along
+		COMMENT the second direction.
+		COMMENT
+		COMMENT @param center the center of iteration
+		COMMENT @param radius the maximum chebychev distance
+		COMMENT @param firstDirection the direction the iterator moves first
+		COMMENT @param secondDirection the direction the iterator moves after the first
+		COMMENT
+		COMMENT @throws IllegalStateException when the 2 directions lie on the same axis
+		ARG 0 center
+		ARG 1 radius
+		ARG 2 firstDirection
+		ARG 3 secondDirection
 	METHOD method_30513 offset (Lnet/minecraft/class_2350$class_2351;I)Lnet/minecraft/class_2338;
 		ARG 1 axis
 		ARG 2 distance
 	METHOD method_33096 withY (I)Lnet/minecraft/class_2338;
 		ARG 1 y
+	METHOD method_34848 iterateRandomly (Ljava/util/Random;ILnet/minecraft/class_2338;I)Ljava/lang/Iterable;
+		COMMENT Iterates through {@code count} random block positions in a given range around the given position.
+		COMMENT
+		COMMENT <p>The iterator yields positions in no specific order. The same position
+		COMMENT may be returned multiple times by the iterator.
+		ARG 0 random
+			COMMENT the {@link Random} object used to compute new positions
+		ARG 1 count
+			COMMENT the number of positions to iterate
+		ARG 2 around
+			COMMENT the {@link BlockPos} to iterate around
+		ARG 3 range
+			COMMENT the maximum distance from the given pos in any axis
 	CLASS 1
 		FIELD field_23945 pos Lnet/minecraft/class_2338$class_2339;
 		FIELD field_23946 remaining I
@@ -190,6 +218,7 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		FIELD field_23102 dx I
 		FIELD field_23103 dy I
 		FIELD field_23378 pos Lnet/minecraft/class_2338$class_2339;
+		FIELD field_23379 swapZ Z
 	CLASS 3
 		FIELD field_23105 size I
 		FIELD field_23106 sizeX I
@@ -202,6 +231,13 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 	CLASS 4
 		FIELD field_25903 directions [Lnet/minecraft/class_2350;
 		FIELD field_25904 pos Lnet/minecraft/class_2338$class_2339;
+		FIELD field_25905 maxDirectionChanges I
+		FIELD field_25906 directionChangeCount I
+		FIELD field_25907 maxSteps I
+		FIELD field_25908 steps I
+		FIELD field_25909 currentX I
+		FIELD field_25910 currentY I
+		FIELD field_25911 currentZ I
 	CLASS class_2339 Mutable
 		METHOD method_10098 move (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338$class_2339;
 			COMMENT Moves this mutable block position by 1 block in the given direction.

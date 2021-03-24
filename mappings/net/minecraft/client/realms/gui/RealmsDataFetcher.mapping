@@ -2,11 +2,11 @@ CLASS net/minecraft/class_4360 net/minecraft/client/realms/gui/RealmsDataFetcher
 	FIELD field_19639 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_19640 scheduler Ljava/util/concurrent/ScheduledExecutorService;
 	FIELD field_19641 stopped Z
-	FIELD field_19642 serverListUpdateTask Ljava/lang/Runnable;
-	FIELD field_19643 pendingInviteUpdateTask Ljava/lang/Runnable;
-	FIELD field_19644 trialAvailabilityTask Ljava/lang/Runnable;
-	FIELD field_19645 liveStatsTask Ljava/lang/Runnable;
-	FIELD field_19646 unreadNewsTask Ljava/lang/Runnable;
+	FIELD field_19642 serverListUpdateTask Lnet/minecraft/class_5784;
+	FIELD field_19643 pendingInviteUpdateTask Lnet/minecraft/class_5784;
+	FIELD field_19644 trialAvailabilityTask Lnet/minecraft/class_5784;
+	FIELD field_19645 liveStatsTask Lnet/minecraft/class_5784;
+	FIELD field_19646 unreadNewsTask Lnet/minecraft/class_5784;
 	FIELD field_19647 removedServers Ljava/util/Set;
 	FIELD field_19648 servers Ljava/util/List;
 	FIELD field_19649 livestats Lnet/minecraft/class_4882;
@@ -20,6 +20,12 @@ CLASS net/minecraft/class_4360 net/minecraft/client/realms/gui/RealmsDataFetcher
 	FIELD field_19657 liveStatsScheduledFuture Ljava/util/concurrent/ScheduledFuture;
 	FIELD field_19658 unreadNewsScheduledFuture Ljava/util/concurrent/ScheduledFuture;
 	FIELD field_19659 fetchStatus Ljava/util/Map;
+	FIELD field_28446 client Lnet/minecraft/class_310;
+	FIELD field_28447 realms Lnet/minecraft/class_4341;
+	FIELD field_28448 persistence Lnet/minecraft/class_4432;
+	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_4341;)V
+		ARG 1 client
+		ARG 2 realms
 	METHOD method_21073 isStopped ()Z
 	METHOD method_21074 removeItem (Lnet/minecraft/class_4877;)V
 		ARG 1 server
@@ -41,12 +47,11 @@ CLASS net/minecraft/class_4360 net/minecraft/client/realms/gui/RealmsDataFetcher
 	METHOD method_21099 scheduleTasks ()V
 	METHOD method_21100 cancelTasks ()V
 	METHOD method_21101 isActive ()Z
-	CLASS class_4361 LiveStatsTask
-		METHOD method_21102 getLiveStats ()V
-	CLASS class_4362 PendingInviteUpdateTask
-		METHOD method_21103 updatePendingInvites ()V
-	CLASS class_4363 ServerListUpdateTask
-		METHOD method_21104 updateServersList ()V
+	METHOD method_33412 updateServerList ()V
+	METHOD method_33413 updatePendingInvites ()V
+	METHOD method_33414 updateTrialAvailability ()V
+	METHOD method_33415 updateLiveStats ()V
+	METHOD method_33416 updateNews ()V
 	CLASS class_4364 Task
 		FIELD field_19664 SERVER_LIST Lnet/minecraft/class_4360$class_4364;
 		FIELD field_19665 PENDING_INVITE Lnet/minecraft/class_4360$class_4364;
@@ -55,7 +60,3 @@ CLASS net/minecraft/class_4360 net/minecraft/client/realms/gui/RealmsDataFetcher
 		FIELD field_19668 UNREAD_NEWS Lnet/minecraft/class_4360$class_4364;
 		METHOD valueOf (Ljava/lang/String;)Lnet/minecraft/class_4360$class_4364;
 			ARG 0 name
-	CLASS class_4365 TrialAvailabilityTask
-		METHOD method_21105 getTrialAvailable ()V
-	CLASS class_4366 UnreadNewsTask
-		METHOD method_21106 getUnreadNews ()V

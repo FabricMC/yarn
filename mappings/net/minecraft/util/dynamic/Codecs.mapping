@@ -1,0 +1,77 @@
+CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
+	COMMENT A few extensions for {@link Codec} or {@link DynamicOps}.
+	COMMENT
+	COMMENT <p>Expect its removal once Mojang updates DataFixerUpper.
+	FIELD field_28095 DOUBLE_STREAM Lcom/mojang/serialization/Codec;
+		COMMENT A codec for double streams.
+		COMMENT
+		COMMENT @see Codec#INT_STREAM
+	METHOD method_32848 getDoubleStream (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+		COMMENT Decodes a double stream from {@code input}.
+		COMMENT
+		COMMENT @param <T> the input data type
+		COMMENT @see DynamicOps#getIntStream(Object)
+		ARG 0 ops
+		ARG 1 input
+	METHOD method_32849 (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Ljava/util/stream/Stream;)Lcom/mojang/serialization/DataResult;
+		ARG 2 stream
+	METHOD method_32850 createDoubleList (Lcom/mojang/serialization/DynamicOps;Ljava/util/stream/DoubleStream;)Ljava/lang/Object;
+		COMMENT Encodes a double stream to data of type {@code T}.
+		COMMENT
+		COMMENT @param <T> the output data type
+		COMMENT @see DynamicOps#createIntList(java.util.stream.IntStream)
+		ARG 0 ops
+		ARG 1 input
+	METHOD method_32851 (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)D
+		ARG 1 element
+	METHOD method_32852 (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Z
+		ARG 1 element
+	METHOD method_33817 xor (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
+		COMMENT Returns an exclusive-or codec for {@link Either} instances.
+		COMMENT
+		COMMENT <p>This returned codec fails if both the {@code first} and {@code second} codecs can
+		COMMENT decode the input, while DFU's {@link com.mojang.serialization.codecs.EitherCodec}
+		COMMENT will always take the first decoded result when it is available.
+		COMMENT
+		COMMENT <p>Otherwise, this behaves the same as the either codec.
+		COMMENT
+		COMMENT @param <F> the first type
+		COMMENT @param <S> the second type
+		COMMENT @return the xor codec for the two codecs
+		COMMENT @see Codec#either(Codec, Codec)
+		COMMENT @see com.mojang.serialization.codecs.EitherCodec
+		ARG 0 first
+			COMMENT the first codec
+		ARG 1 second
+			COMMENT the second codec
+	CLASS 1
+		METHOD read (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD write (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Ljava/lang/Object;
+			ARG 1 ops
+			ARG 2 value
+	CLASS class_5839 Xor
+		COMMENT @see com.mojang.serialization.codecs.EitherCodec
+		FIELD field_28868 first Lcom/mojang/serialization/Codec;
+		FIELD field_28869 second Lcom/mojang/serialization/Codec;
+		METHOD <init> (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)V
+			ARG 1 first
+			ARG 2 second
+		METHOD decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 input
+			ARG 2 ops
+			ARG 3 prefix
+		METHOD equals (Ljava/lang/Object;)Z
+			ARG 1 o
+		METHOD method_33821 (Lcom/mojang/datafixers/util/Pair;)Lcom/mojang/datafixers/util/Pair;
+			ARG 0 pair
+		METHOD method_33822 (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 3 right
+		METHOD method_33823 (Lcom/mojang/datafixers/util/Pair;)Lcom/mojang/datafixers/util/Pair;
+			ARG 0 pair
+		METHOD method_33824 (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 3 left

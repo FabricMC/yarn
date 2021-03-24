@@ -2,7 +2,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	FIELD field_23154 dynamicBounds Z
 	FIELD field_23155 settings Lnet/minecraft/class_4970$class_2251;
 	FIELD field_23156 lootTableId Lnet/minecraft/class_2960;
-	FIELD field_23157 FACINGS [Lnet/minecraft/class_2350;
+	FIELD field_23157 DIRECTIONS [Lnet/minecraft/class_2350;
 	FIELD field_23158 material Lnet/minecraft/class_3614;
 	FIELD field_23159 collidable Z
 	FIELD field_23160 resistance F
@@ -30,7 +30,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
-	METHOD method_26159 getVisualShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
+	METHOD method_26159 getCameraCollisionShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
@@ -125,12 +125,21 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 2 world
 		ARG 3 pos
 	METHOD method_9559 getStateForNeighborUpdate (Lnet/minecraft/class_2680;Lnet/minecraft/class_2350;Lnet/minecraft/class_2680;Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;
+		COMMENT Gets the possibly updated block state of this block when a neighboring block is updated.
+		COMMENT
+		COMMENT @return the new state of this block
 		ARG 1 state
+			COMMENT the state of this block
 		ARG 2 direction
-		ARG 3 newState
+			COMMENT the direction from this block to the neighbor
+		ARG 3 neighborState
+			COMMENT the state of the updated neighbor block
 		ARG 4 world
+			COMMENT the world
 		ARG 5 pos
-		ARG 6 posFrom
+			COMMENT the position of this block
+		ARG 6 neighborPos
+			COMMENT the position of the neighbor block
 	METHOD method_9560 getDroppedStacks (Lnet/minecraft/class_2680;Lnet/minecraft/class_47$class_48;)Ljava/util/List;
 		ARG 1 state
 		ARG 2 builder
@@ -353,6 +362,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		METHOD <init> (Lnet/minecraft/class_2248;Lcom/google/common/collect/ImmutableMap;Lcom/mojang/serialization/MapCodec;)V
 			ARG 1 block
 			ARG 2 propertyMap
+			ARG 3 codec
 		METHOD method_26164 isIn (Lnet/minecraft/class_3494;)Z
 			ARG 1 tag
 		METHOD method_26165 calcBlockBreakingDelta (Lnet/minecraft/class_1657;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)F
@@ -452,14 +462,23 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		METHOD method_26190 getRenderingSeed (Lnet/minecraft/class_2338;)J
 			ARG 1 pos
 		METHOD method_26191 getStateForNeighborUpdate (Lnet/minecraft/class_2350;Lnet/minecraft/class_2680;Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;
+			COMMENT Gets the possibly updated block state of this block when a neighboring block is updated.
+			COMMENT
+			COMMENT @return the new state of this block
 			ARG 1 direction
-			ARG 2 state
+				COMMENT the direction from this block to the neighbor
+			ARG 2 neighborState
+				COMMENT the state of the updated neighbor block
 			ARG 3 world
+				COMMENT the world
 			ARG 4 pos
-			ARG 5 fromPos
+				COMMENT the position of this block
+			ARG 5 neighborPos
+				COMMENT the position of the neighbor block
 		METHOD method_26192 scheduledTick (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Ljava/util/Random;)V
 			ARG 1 world
 			ARG 2 pos
+			ARG 3 random
 		METHOD method_26193 getOpacity (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)I
 			ARG 1 world
 			ARG 2 pos
@@ -487,11 +506,12 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		METHOD method_26199 randomTick (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Ljava/util/Random;)V
 			ARG 1 world
 			ARG 2 pos
+			ARG 3 random
 		METHOD method_26200 initShapeCache ()V
 		METHOD method_26201 getCullingShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
 			ARG 1 world
 			ARG 2 pos
-		METHOD method_26202 getVisualShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
+		METHOD method_26202 getCameraCollisionShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
 			ARG 1 world
 			ARG 2 pos
 			ARG 3 context
@@ -600,6 +620,8 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			FIELD field_25830 SHAPE_TYPE_LENGTH I
 			METHOD <init> (Lnet/minecraft/class_2680;)V
 				ARG 1 state
+			METHOD method_17901 (Lnet/minecraft/class_2350$class_2351;)Z
+				ARG 1 axis
 			METHOD method_30369 isSideSolid (Lnet/minecraft/class_2350;Lnet/minecraft/class_5431;)Z
 				ARG 1 direction
 				ARG 2 shapeType

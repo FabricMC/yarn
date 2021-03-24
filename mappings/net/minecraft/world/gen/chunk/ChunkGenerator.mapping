@@ -19,13 +19,13 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	METHOD <init> (Lnet/minecraft/class_1966;Lnet/minecraft/class_5311;)V
 		ARG 1 biomeSource
 		ARG 2 structuresConfig
-	METHOD method_12088 populateNoise (Lnet/minecraft/class_1936;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;)V
+	METHOD method_12088 populateNoise (Ljava/util/concurrent/Executor;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		COMMENT Generates the base shape of the chunk out of the basic block states as decided by this chunk generator's config.
-		ARG 1 world
+		ARG 1 executor
 		ARG 2 accessor
 		ARG 3 chunk
 	METHOD method_12098 getBiomeSource ()Lnet/minecraft/class_1966;
-	METHOD method_12100 getSpawnHeight ()I
+	METHOD method_12100 getSpawnHeight (Lnet/minecraft/class_5539;)I
 	METHOD method_12102 generateFeatures (Lnet/minecraft/class_3233;Lnet/minecraft/class_5138;)V
 		ARG 1 region
 		ARG 2 accessor
@@ -50,12 +50,14 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	METHOD method_12107 populateEntities (Lnet/minecraft/class_3233;)V
 		ARG 1 region
 	METHOD method_12108 carve (JLnet/minecraft/class_4543;Lnet/minecraft/class_2791;Lnet/minecraft/class_2893$class_2894;)V
+		COMMENT Generates caves for the given chunk.
 		ARG 1 seed
 		ARG 3 access
 		ARG 4 chunk
 		ARG 5 carver
 	METHOD method_12109 getStructuresConfig ()Lnet/minecraft/class_5311;
 	METHOD method_12110 buildSurface (Lnet/minecraft/class_3233;Lnet/minecraft/class_2791;)V
+		COMMENT Places the surface blocks of the biomes after the noise has been generated.
 		ARG 1 region
 		ARG 2 chunk
 	METHOD method_12113 getEntitySpawnList (Lnet/minecraft/class_1959;Lnet/minecraft/class_5138;Lnet/minecraft/class_1311;Lnet/minecraft/class_2338;)Ljava/util/List;
@@ -72,26 +74,35 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		ARG 1 world
 		ARG 2 accessor
 		ARG 3 chunk
-	METHOD method_16397 getHeight (IILnet/minecraft/class_2902$class_2903;)I
+	METHOD method_16397 getHeight (IILnet/minecraft/class_2902$class_2903;Lnet/minecraft/class_5539;)I
+		COMMENT Returns the raw noise height of a column for use in structure generation.
 		ARG 1 x
 		ARG 2 z
-		ARG 3 heightmapType
+		ARG 3 heightmap
+		ARG 4 world
 	METHOD method_16398 getSeaLevel ()I
-	METHOD method_18028 getHeightInGround (IILnet/minecraft/class_2902$class_2903;)I
+	METHOD method_18028 getHeightInGround (IILnet/minecraft/class_2902$class_2903;Lnet/minecraft/class_5539;)I
 		ARG 1 x
 		ARG 2 z
-		ARG 3 heightmapType
-	METHOD method_20402 getHeightOnGround (IILnet/minecraft/class_2902$class_2903;)I
+		ARG 3 heightmap
+		ARG 4 world
+	METHOD method_20402 getHeightOnGround (IILnet/minecraft/class_2902$class_2903;Lnet/minecraft/class_5539;)I
 		ARG 1 x
 		ARG 2 z
-		ARG 3 heightmapType
-	METHOD method_26261 getColumnSample (II)Lnet/minecraft/class_4966;
+		ARG 3 heightmap
+		ARG 4 world
+	METHOD method_26261 getColumnSample (IILnet/minecraft/class_5539;)Lnet/minecraft/class_4966;
+		COMMENT Returns a sample of all the block states in a column for use in structure generation.
 		ARG 1 x
 		ARG 2 z
+		ARG 3 world
 	METHOD method_27997 withSeed (J)Lnet/minecraft/class_2794;
 		ARG 1 seed
 	METHOD method_28506 getCodec ()Lcom/mojang/serialization/Codec;
 	METHOD method_28507 isStrongholdStartingChunk (Lnet/minecraft/class_1923;)Z
-	METHOD method_28508 setStructureStart (Lnet/minecraft/class_5312;Lnet/minecraft/class_5455;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;Lnet/minecraft/class_3485;JLnet/minecraft/class_1923;Lnet/minecraft/class_1959;)V
+		ARG 1 pos
+	METHOD method_28508 setStructureStart (Lnet/minecraft/class_5312;Lnet/minecraft/class_5455;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;Lnet/minecraft/class_3485;JLnet/minecraft/class_1959;)V
+		ARG 4 chunk
 		ARG 6 worldSeed
 	METHOD method_28509 generateStrongholdPositions ()V
+	METHOD method_33730 getMinimumY ()I
