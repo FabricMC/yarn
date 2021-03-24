@@ -5,7 +5,10 @@ CLASS net/minecraft/class_1542 net/minecraft/entity/ItemEntity
 	FIELD field_7202 pickupDelay I
 	FIELD field_7203 uniqueOffset F
 	FIELD field_7204 itemAge I
-		COMMENT The number of ticks since the item has been created. It is a short value with key {@code Age} in the NBT structure.
+		COMMENT The number of ticks since this item entity has been created.
+		COMMENT It is a short value with key {@code Age} in the NBT structure.
+		COMMENT
+		COMMENT <p>It differs from {@code Entity#age}.
 	FIELD field_7205 owner Ljava/util/UUID;
 	METHOD <init> (Lnet/minecraft/class_1542;)V
 		ARG 1 entity
@@ -79,13 +82,16 @@ CLASS net/minecraft/class_1542 net/minecraft/entity/ItemEntity
 		COMMENT <p>Increases every tick. When it equals to 6000 ticks (5 minutes),
 		COMMENT this item entity disappears.
 		COMMENT
-		COMMENT <p>Unlike {@linkplain Entity#age}, it is not synchronized between
-		COMMENT the client and the server.
+		COMMENT <p>Unlike {@linkplain Entity#age}, it is persistent and not synchronized
+		COMMENT between the client and the server.
 		COMMENT
 		COMMENT @see #tick()
 	METHOD method_6986 getOwner ()Ljava/util/UUID;
-		COMMENT Returns the UUID of the entity which owns this item entity,
+		COMMENT Returns the UUID of the entity to which belongs this item entity,
 		COMMENT or {@code null} if there is not.
+		COMMENT
+		COMMENT <p>If there is one, the owner is the only entity which can pick
+		COMMENT up this item entity.
 	METHOD method_6987 setDespawnImmediately ()V
 	METHOD method_6988 setToDefaultPickupDelay ()V
 		COMMENT Sets the number of ticks before this item entity can be picked up
