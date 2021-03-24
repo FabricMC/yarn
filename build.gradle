@@ -5,6 +5,7 @@ buildscript {
 			url 'https://maven.fabricmc.net'
 		}
 		mavenCentral()
+		mavenLocal()
 	}
 	dependencies {
 		classpath "cuchaz:enigma-cli:${project.enigma_version}"
@@ -13,8 +14,8 @@ buildscript {
 		classpath 'de.undercouch:gradle-download-task:4.0.4'
 		classpath 'net.fabricmc:tiny-remapper:0.3.1.72'
 		classpath 'net.fabricmc:mappingpoet:0.1.0+build.2'
-		classpath 'io.github.weavemc:unpick:2.0.0+build.1'
-		classpath 'io.github.weavemc:unpick-format-utils:2.0.0+build.1'
+		classpath 'net.fabricmc.unpick:unpick:2.0.1+local'
+		classpath 'net.fabricmc.unpick:unpick-format-utils:2.0.1+local'
 	}
 }
 
@@ -44,6 +45,7 @@ repositories {
 		name "Mojang"
 		url 'https://libraries.minecraft.net/'
 	}
+	mavenLocal()
 }
 
 configurations {
@@ -62,7 +64,11 @@ configurations {
 		extendsFrom mappingPoetJar
 		transitive = true
 	}
+	unpick
 }
+
+def unpickMetaFile = file("unpick-definitions/unpick.json")
+def unpickMeta = new groovy.json.JsonSlurper().parseText(unpickMetaFile.text)
 
 dependencies {
 	enigmaRuntime "cuchaz:enigma-swing:${project.enigma_version}"
@@ -71,6 +77,7 @@ dependencies {
 	javadocClasspath "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
 	decompileClasspath "org.benf:cfr:0.150"
 	mappingPoetJar 'net.fabricmc:mappingpoet:0.2.6'
+	unpick "${unpickMeta.unpickGroup}:unpick-cli:${unpickMeta.unpickVersion}"
 }
 
 def setupGroup = "jar setup"
@@ -366,11 +373,7 @@ task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJ
 	}
 }
 
-task setupYarn(dependsOn: "unpickIntermediaryJar") {
-	group = yarnGroup
-}
-
-task yarn(dependsOn: setupYarn) {
+task yarnUnpicked(dependsOn: "unpickIntermediaryJar") {
 	group = yarnGroup
 	doLast {
 		ant.setLifecycleLogLevel "WARN"
@@ -383,6 +386,27 @@ task yarn(dependsOn: setupYarn) {
 			jvmarg(value: "-Xmx2048m")
 			arg(value: '-jar')
 			arg(value: unpickedJar.getAbsolutePath())
+			arg(value: '-mappings')
+			arg(value: mappingsDir.getAbsolutePath())
+			arg(value: '-profile')
+			arg(value: 'enigma_profile.json')
+		}
+	}
+}
+
+task yarn(dependsOn: mapIntermediaryJar) {
+	group = yarnGroup
+	doLast {
+		ant.setLifecycleLogLevel "WARN"
+		ant.java(
+				classname: 'cuchaz.enigma.gui.Main',
+				classpath: configurations.enigmaRuntime.asPath,
+				fork: true,
+				spawn: true
+		) {
+			jvmarg(value: "-Xmx2048m")
+			arg(value: '-jar')
+			arg(value: intermediaryJar.getAbsolutePath())
 			arg(value: '-mappings')
 			arg(value: mappingsDir.getAbsolutePath())
 			arg(value: '-profile')
@@ -606,51 +630,11 @@ task mapNamedJar(dependsOn: ["mergeV2", "unpickIntermediaryJar"]) {
 	}
 }
 
-import daomephsta.unpick.api.ConstantUninliner
-import daomephsta.unpick.api.constantmappers.ConstantMappers
-import daomephsta.unpick.api.constantresolvers.ConstantResolvers
-import daomephsta.unpick.api.IClassResolver
 import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Reader
 import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Writer
 import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Remapper
 import daomephsta.unpick.constantmappers.datadriven.parser.MethodKey
-import org.objectweb.asm.ClassReader
-import java.util.jar.JarEntry
-import java.util.jar.JarFile
-import java.util.jar.JarOutputStream
-import org.objectweb.asm.tree.ClassNode
-import org.objectweb.asm.ClassWriter
 import net.fabricmc.mapping.tree.TinyMappingFactory
-
-class JarClassResolver implements IClassResolver, Closeable {
-	private final URLClassLoader classLoader;
-
-	JarClassResolver(Set<File> jars) {
-		this.classLoader = new URLClassLoader(
-			jars.stream().map{file -> file.toURI().toURL()}.toArray{new URL[it]}
-		)
-	}
-
-	JarClassResolver(File jar) {
-		this(Collections.singleton(jar))
-	}
-
-	@Override
-	ClassReader resolveClass(String internalName) throws IOException {
-		def resource = classLoader.getResourceAsStream(internalName + ".class")
-
-		if (resource != null) {
-			return new ClassReader(resource)
-		}
-
-		throw new IOException("Failed to find ${internalName}.class")
-	}
-
-	@Override
-	void close() throws IOException {
-		classLoader.close()
-	}
-}
 
 // Merge all of the unpick definitions into a single file to be shipped
 task combineUnpickDefinitions(type : FileOutput) {
@@ -666,6 +650,10 @@ task combineUnpickDefinitions(type : FileOutput) {
 		def writer = new UnpickV2Writer()
 
 		file("unpick-definitions").eachFile {
+			if (!it.name.endsWith(".unpick")) {
+				return
+			}
+
 			it.withInputStream {
 				new UnpickV2Reader(it).withCloseable {
 					it.accept(writer)
@@ -725,62 +713,18 @@ task remapUnpickDefinitionsIntermediary(type : FileOutputInput, dependsOn: [comb
 	}
 }
 
-task unpickIntermediaryJar(dependsOn: [mapIntermediaryJar, jar, remapUnpickDefinitionsIntermediary]) {
+task unpickIntermediaryJar(type: JavaExec, dependsOn: [mapIntermediaryJar, jar, remapUnpickDefinitionsIntermediary]) {
 	outputs.upToDateWhen { false }
 	group "unpick"
 
+	main "daomephsta.unpick.cli.Main"
+	classpath configurations.unpick
+
 	doFirst {
-		unpickedJar.delete()
-	}
+		args intermediaryJar.absolutePath, unpickedJar.absolutePath, remapUnpickDefinitionsIntermediary.output.absolutePath, jar.archiveFile.get().asFile.absolutePath, intermediaryJar.absolutePath
 
-	doLast {
-		def unpickDefinition = remapUnpickDefinitionsIntermediary.output.newInputStream()
-
-		def minecraftClassResolver = new JarClassResolver(configurations.decompileClasspath.files + [intermediaryJar])
-		def constantClassesResolver = new JarClassResolver(jar.archiveFile.get().asFile)
-
-		def constantUninliner = new ConstantUninliner(
-				ConstantMappers.dataDriven(minecraftClassResolver, [unpickDefinition].toArray(new InputStream[0])),
-				ConstantResolvers.bytecodeAnalysis(constantClassesResolver)
-		)
-
-		try {
-			new JarFile(intermediaryJar).withCloseable {jar ->
-				new JarOutputStream(new FileOutputStream(unpickedJar), jar.getManifest()).withCloseable { out ->
-					Enumeration<JarEntry> entries = jar.entries()
-
-					while(entries.hasMoreElements()) {
-						JarEntry entry = entries.nextElement()
-						if (!entry.getName().endsWith(".class")) {
-							continue
-						}
-
-						InputStream inputStream = jar.getInputStream(entry)
-						ClassReader classReader = new ClassReader(inputStream)
-						ClassNode classNode = new ClassNode()
-						classReader.accept(classNode, 0)
-
-						constantUninliner.transform(classNode)
-
-						ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS)
-						classNode.accept(classWriter)
-
-						JarEntry remappedEntry = new JarEntry(entry.getName())
-						remappedEntry.setTime(System.currentTimeMillis())
-
-						byte[] remappedBytes = classWriter.toByteArray()
-						remappedEntry.setSize(remappedBytes.length)
-						out.putNextEntry(remappedEntry)
-						out.write(remappedBytes)
-
-						out.closeEntry()
-					}
-				}
-			}
-		} finally {
-			minecraftClassResolver.close()
-			constantClassesResolver.close()
-			unpickDefinition.close()
+		configurations.decompileClasspath.files.each {
+			args it.absolutePath
 		}
 	}
 }
@@ -868,6 +812,9 @@ task v2UnmergedYarnJar(dependsOn: [insertAutoGeneratedEnumMappings, combineUnpic
 	from(combineUnpickDefinitions.output) {
 		rename combineUnpickDefinitions.output.name, "extras/definitions.unpick"
 	}
+	from (file(unpickMetaFile)) {
+		rename unpickMetaFile.name, "extras/unpick.json"
+	}
 	destinationDirectory.set(file("build/libs"))
 }
 
@@ -882,6 +829,9 @@ task v2MergedYarnJar(dependsOn: ["mergeV2"], type: Jar) {
 	}
 	from(combineUnpickDefinitions.output) {
 		rename combineUnpickDefinitions.output.name, "extras/definitions.unpick"
+	}
+	from (file(unpickMetaFile)) {
+		rename unpickMetaFile.name, "extras/unpick.json"
 	}
 	destinationDirectory.set(file("build/libs"))
 }
