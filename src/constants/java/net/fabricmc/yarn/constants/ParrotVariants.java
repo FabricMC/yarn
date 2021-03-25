@@ -1,6 +1,6 @@
 package net.fabricmc.yarn.constants;
 
-public final class ParrotTypes {
+public final class ParrotVariants {
 	public static final int RED_AND_BLUE = 0;
 	public static final int BLUE = 1;
 	public static final int GREEN = 2;
