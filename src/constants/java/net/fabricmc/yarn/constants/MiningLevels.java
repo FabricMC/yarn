@@ -31,4 +31,7 @@ public final class MiningLevels {
 	 * Requires a netherite tool or better to harvest.
 	 */
 	public static final int NETHERITE = 4;
+
+	private MiningLevels() {
+	}
 }
