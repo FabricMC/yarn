@@ -431,4 +431,7 @@ public final class WorldEvents {
 	 * Spawns scraping particles.
 	 */
 	public static final int BLOCK_SCRAPED = 3005;
+
+	private WorldEvents() {
+	}
 }
