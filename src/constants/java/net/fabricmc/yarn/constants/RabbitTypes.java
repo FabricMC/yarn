@@ -8,4 +8,7 @@ public final class RabbitTypes {
 	public static final int GOLDEN = 4;
 	public static final int SALT_AND_PEPPER = 5;
 	public static final int KILLER_BUNNY = 99;
+
+	private RabbitTypes() {
+	}
 }

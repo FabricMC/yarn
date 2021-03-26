@@ -12,4 +12,7 @@ public final class CatTypes {
 	public static final int WHITE = 8;
 	public static final int JELLIE = 9;
 	public static final int ALL_BLACK = 10;
+
+	private CatTypes() {
+	}
 }
