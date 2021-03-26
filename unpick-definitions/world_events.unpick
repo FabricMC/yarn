@@ -23,10 +23,12 @@ constant world_events net/fabricmc/yarn/constants/WorldEvents ZOMBIE_ATTACKS_WOO
 constant world_events net/fabricmc/yarn/constants/WorldEvents ZOMBIE_ATTACKS_IRON_DOOR
 constant world_events net/fabricmc/yarn/constants/WorldEvents ZOMBIE_BREAKS_WOODEN_DOOR
 constant world_events net/fabricmc/yarn/constants/WorldEvents WITHER_BREAKS_BLOCK
+constant world_events net/fabricmc/yarn/constants/WorldEvents WITHER_SPAWNS
 constant world_events net/fabricmc/yarn/constants/WorldEvents WITHER_SHOOTS
 constant world_events net/fabricmc/yarn/constants/WorldEvents BAT_TAKES_OFF
 constant world_events net/fabricmc/yarn/constants/WorldEvents ZOMBIE_INFECTS_VILLAGER
 constant world_events net/fabricmc/yarn/constants/WorldEvents ZOMBIE_VILLAGER_CURED
+constant world_events net/fabricmc/yarn/constants/WorldEvents ENDER_DRAGON_DIES
 constant world_events net/fabricmc/yarn/constants/WorldEvents ANVIL_DESTROYED
 constant world_events net/fabricmc/yarn/constants/WorldEvents ANVIL_USED
 constant world_events net/fabricmc/yarn/constants/WorldEvents ANVIL_LANDS
@@ -36,6 +38,7 @@ constant world_events net/fabricmc/yarn/constants/WorldEvents CHORUS_FLOWER_DIES
 constant world_events net/fabricmc/yarn/constants/WorldEvents BREWING_STAND_BREWS
 constant world_events net/fabricmc/yarn/constants/WorldEvents IRON_TRAPDOOR_CLOSES
 constant world_events net/fabricmc/yarn/constants/WorldEvents IRON_TRAPDOOR_OPENS
+constant world_events net/fabricmc/yarn/constants/WorldEvents END_PORTAL_OPENED
 constant world_events net/fabricmc/yarn/constants/WorldEvents PHANTOM_BITES
 constant world_events net/fabricmc/yarn/constants/WorldEvents ZOMBIE_CONVERTS_TO_DROWNED
 constant world_events net/fabricmc/yarn/constants/WorldEvents HUSK_CONVERTS_TO_ZOMBIE
@@ -56,7 +59,7 @@ constant world_events net/fabricmc/yarn/constants/WorldEvents BLOCK_BROKEN
 constant world_events net/fabricmc/yarn/constants/WorldEvents SPLASH_POTION_SPLASHED
 constant world_events net/fabricmc/yarn/constants/WorldEvents EYE_OF_ENDER_BREAKS
 constant world_events net/fabricmc/yarn/constants/WorldEvents SPAWNER_FLAMES
-constant world_events net/fabricmc/yarn/constants/WorldEvents CROPS_FERTILIZED
+constant world_events net/fabricmc/yarn/constants/WorldEvents PLANT_FERTILIZED
 constant world_events net/fabricmc/yarn/constants/WorldEvents DRAGON_BREATH_CLOUD_SPAWNS
 constant world_events net/fabricmc/yarn/constants/WorldEvents INSTANT_SPLASH_POTION_SPLASHED
 constant world_events net/fabricmc/yarn/constants/WorldEvents ENDER_DRAGON_BREAKS_BLOCK
@@ -74,3 +77,11 @@ target_method net/minecraft/world/WorldAccess syncWorldEvent (ILnet/minecraft/ut
 	param 0 world_events
 target_method net/minecraft/client/render/WorldRenderer processWorldEvent (Lnet/minecraft/entity/player/PlayerEntity;ILnet/minecraft/util/math/BlockPos;I)V
 	param 1 world_events
+target_method net/minecraft/world/World syncGlobalEvent (ILnet/minecraft/util/math/BlockPos;I)V
+	param 0 world_events
+target_method net/minecraft/client/render/WorldRenderer processGlobalEvent (ILnet/minecraft/util/math/BlockPos;I)V
+	param 0 world_events
+target_method net/minecraft/network/packet/s2c/play/WorldEventS2CPacket <init> (ILnet/minecraft/util/math/BlockPos;IZ)V
+	param 0 world_events
+target_method net/minecraft/network/packet/s2c/play/WorldEventS2CPacket getEventId() I
+	return world_events
