@@ -135,9 +135,9 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 2 requiredStatus
 	METHOD method_20619 loadChunk (Lnet/minecraft/class_1923;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 pos
-	METHOD method_20726 fetchWatchingSection (Lnet/minecraft/class_3222;)Lnet/minecraft/class_4076;
-		COMMENT Fetches and sets the updated watched chunk section position for the {@code
-		COMMENT player}, and sends a render distance update packet to the client.
+	METHOD method_20726 updateWatchedSection (Lnet/minecraft/class_3222;)Lnet/minecraft/class_4076;
+		COMMENT Updates the watched chunk section position for the {@code player}, and sends a
+		COMMENT render distance update packet to the client.
 		ARG 1 player
 	METHOD method_21619 dump (Ljava/io/Writer;)V
 	METHOD method_21676 getFutureStatus (Ljava/util/concurrent/CompletableFuture;)Ljava/lang/String;
@@ -151,9 +151,9 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		FIELD field_18246 entry Lnet/minecraft/class_3231;
 		FIELD field_18247 entity Lnet/minecraft/class_1297;
 		FIELD field_18248 maxDistance I
-		FIELD field_18249 lastTrackedPosition Lnet/minecraft/class_4076;
-			COMMENT The last chunk section position of the tracked entity when it was last tracked.
-			COMMENT This is used by {@link ThreadedAnvilChunkStorage#tickEntityMovement()
+		FIELD field_18249 trackedSection Lnet/minecraft/class_4076;
+			COMMENT The chunk section position of the tracked entity, may be outdated as an entity
+			COMMENT ticks. This is used by {@link ThreadedAnvilChunkStorage#tickEntityMovement()
 			COMMENT tickEntityMovement()} to bypass unnecessary status updates before calling
 			COMMENT {@link #updateTrackedStatus(ServerPlayerEntity) updateTrackedStatus()}.
 		FIELD field_18250 listeners Ljava/util/Set;
