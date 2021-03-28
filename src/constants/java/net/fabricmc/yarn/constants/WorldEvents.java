@@ -3,11 +3,9 @@ package net.fabricmc.yarn.constants;
 /**
  * Constants of World Event IDs.<br>
  * World Events are used to trigger things on the client from the server side.
- * Most commonly, playing sound events or spawning particles.
- * <br>
+ * Most commonly, playing sound events or spawning particles.<br>
  * Some events have an extra data integer sent alongside them.<br>
- * Some events are global, meaning they will be sent to every player regardless of their position.
- * <br>
+ * Some events are global, meaning they will be sent to every player regardless of their position.<br>
  * Events are sent from the server to the client using {@link net.minecraft.network.packet.s2c.play.WorldEventS2CPacket WorldEventS2CPacket},
  * received on the client by {@link net.minecraft.client.network.ClientPlayNetworkHandler#onWorldEvent(net.minecraft.network.packet.s2c.play.WorldEventS2CPacket) ClientPlayNetworkHandler#onWorldEvent},
  * synced by {@link net.minecraft.client.world.ClientWorld#syncWorldEvent(net.minecraft.entity.player.PlayerEntity, int, net.minecraft.util.math.BlockPos, int) ClientWorld#syncWorldEvent} and
