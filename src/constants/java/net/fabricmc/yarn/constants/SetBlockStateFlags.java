@@ -1,5 +1,19 @@
+/*
+ * This file is free for everyone to use under the Creative Commons Zero license.
+ */
+
 package net.fabricmc.yarn.constants;
 
+/**
+ * A few flag bits for the {@code flag} argument of {@code world.setBlockState(pos, state, flag)}
+ * and other related block state setting methods.
+ *
+ * <p>The accepted values of the {@code flag} argument is usually a bitset combination of the
+ * fields in this class.
+ *
+ * @see net.minecraft.world.ModifiableWorld#setBlockState(net.minecraft.util.math.BlockPos,
+ * net.minecraft.block.BlockState, int)
+ */
 public final class SetBlockStateFlags {
 	/**
 	 * Propagates a change event to surrounding blocks.
@@ -17,7 +31,7 @@ public final class SetBlockStateFlags {
 	public static final int DEFAULT = PROPAGATE_CHANGE | NOTIFY_LISTENERS;
 
 	/**
-	 * Used in conjunction with {@link NOTIFY_LISTENERS} to suppress the render pass on clients.
+	 * Used in conjunction with {@link #NOTIFY_LISTENERS} to suppress the render pass on clients.
 	 */
 	public static final int NO_REDRAW = 4;
 
