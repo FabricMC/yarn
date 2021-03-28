@@ -24,6 +24,7 @@ plugins {
 	id 'base'
 	id 'maven-publish'
 	id 'java' // for jd gen
+	id 'org.cadixdev.licenser' version '0.5.1'
 }
 
 def minecraft_version = "21w11a"
@@ -745,6 +746,12 @@ sourceSets {
 	constants
 }
 
+license {
+	header file("HEADER")
+	sourceSets = [sourceSets.constants]
+	include '**/*.java'
+}
+
 task constantsJar(type: Jar) {
 	from sourceSets.constants.output
 	archiveClassifier = "constants"
@@ -933,7 +940,7 @@ javadoc {
 		addBooleanOption 'Xdoclint:reference', true
 		addBooleanOption 'Xdoclint:accessibility', true
 	}
-	source fakeSourceDir
+	source fileTree(fakeSourceDir) + sourceSets.constants.allJava
 	classpath = configurations.javadocClasspath.plus downloadMcLibs.outputs.files.asFileTree
 
 	finalizedBy {
