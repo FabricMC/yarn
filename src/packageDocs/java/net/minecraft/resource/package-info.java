@@ -19,7 +19,8 @@
  * </tr>
  * <tr>
  *     <td>{@link ResourceFactory}</td>
- *     <td>Provides resource given an {@link net.minecraft.util.Identifier}.</td>
+ *     <td>Provides a resource given an {@link net.minecraft.util.Identifier}.</td>
+
  * </tr>
  * <tr>
  *     <td>{@link ResourceManager}</td>

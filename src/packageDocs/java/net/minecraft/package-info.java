@@ -6,7 +6,7 @@
  * The base package for all Minecraft classes. All Minecraft classes belong to this package
  * in their intermediary names.
  *
- * <p>Unmapped classes goes into this package by default. This package additionally contains
+ * <p>Unmapped classes go into this package by default. This package additionally contains
  * {@link Bootstrap}, {@link SharedConstants}, and {@link MinecraftVersion} classes.
  *
  * <p>While it's known that some obfuscated Minecraft classes are under other packages like
