@@ -415,7 +415,7 @@ task yarn(dependsOn: mapIntermediaryJar) {
 	}
 }
 
-task checkMappings {
+task checkMappings(dependsOn: mapIntermediaryJar) {
 	group = buildMappingGroup
 	inputs.dir mappingsDir
 	doLast {
@@ -744,11 +744,12 @@ tasks.withType(JavaCompile).configureEach {
 
 sourceSets {
 	constants
+	packageDocs // package info files
 }
 
 license {
 	header file("HEADER")
-	sourceSets = [sourceSets.constants]
+	sourceSets = [sourceSets.constants, sourceSets.packageDocs]
 	include '**/*.java'
 }
 
@@ -761,6 +762,20 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	archiveClassifier = "sources"
 	from sourceSets.constants.allSource
 }
+
+compilePackageDocsJava {
+	it.options.encoding = "UTF-8"
+	// use java 11 as the package info files aren't consumed by downstream java 8 mods etc.
+	if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
+		javaCompiler = javaToolchains.compilerFor {
+			languageVersion = JavaLanguageVersion.of(11)
+		}
+	}
+	it.options.release = 11
+}
+
+// Only build jars for package infos if we need to actually expose stuff like annotation in the future.
+// Also need to downgrade java in that case!
 
 build.dependsOn constantsJar
 
@@ -940,7 +955,7 @@ javadoc {
 		addBooleanOption 'Xdoclint:reference', true
 		addBooleanOption 'Xdoclint:accessibility', true
 	}
-	source fileTree(fakeSourceDir) + sourceSets.constants.allJava
+	source fileTree(fakeSourceDir) + sourceSets.constants.allJava + sourceSets.packageDocs.allJava
 	classpath = configurations.javadocClasspath.plus downloadMcLibs.outputs.files.asFileTree
 
 	finalizedBy {
