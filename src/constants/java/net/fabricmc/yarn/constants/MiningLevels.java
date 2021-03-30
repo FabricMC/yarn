@@ -10,6 +10,7 @@ package net.fabricmc.yarn.constants;
  * <br>All tool materials have an assigned mining level. If a tool's mining level is equal to or greater than the block's,
  * the tool will apply its efficiency bonus and the block will drop its loot table.
  * <p>Blocks without mining levels, or items that aren't tools, use {@link MiningLevels#HAND}.
+ * @see net.minecraft.item.ToolMaterial#getMiningLevel() ToolMaterial#getMiningLevel
  */
 public final class MiningLevels {
 	/**
