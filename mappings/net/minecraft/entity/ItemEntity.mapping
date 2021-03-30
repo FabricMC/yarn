@@ -3,8 +3,12 @@ CLASS net/minecraft/class_1542 net/minecraft/entity/ItemEntity
 	FIELD field_7200 thrower Ljava/util/UUID;
 	FIELD field_7201 health I
 	FIELD field_7202 pickupDelay I
-	FIELD field_7203 hoverHeight F
-	FIELD field_7204 age I
+	FIELD field_7203 uniqueOffset F
+	FIELD field_7204 itemAge I
+		COMMENT The number of ticks since this item entity has been created.
+		COMMENT It is a short value with key {@code Age} in the NBT structure.
+		COMMENT
+		COMMENT <p>It differs from {@link Entity#age}.
 	FIELD field_7205 owner Ljava/util/UUID;
 	METHOD <init> (Lnet/minecraft/class_1542;)V
 		ARG 1 entity
@@ -37,26 +41,61 @@ CLASS net/minecraft/class_1542 net/minecraft/entity/ItemEntity
 		ARG 1 stack2
 		ARG 2 maxCount
 	METHOD method_24348 applyLavaBuoyancy ()V
+	METHOD method_27314 getRotation (F)F
+		ARG 1 tickDelta
 	METHOD method_29271 copy ()Lnet/minecraft/class_1542;
 	METHOD method_6972 tryMerge (Lnet/minecraft/class_1542;)V
 		ARG 1 other
 	METHOD method_6973 tryMerge ()V
 	METHOD method_6974 applyWaterBuoyancy ()V
 	METHOD method_6975 resetPickupDelay ()V
+		COMMENT Sets the number of ticks before this item entity can be picked up
+		COMMENT to 0.
 	METHOD method_6976 setCovetedItem ()V
 	METHOD method_6977 cannotPickup ()Z
+		COMMENT Returns whether the pickup delay of this item entity is greater
+		COMMENT than 0.
 	METHOD method_6978 getThrower ()Ljava/util/UUID;
+		COMMENT Returns the UUID of the entity which created this item entity
+		COMMENT by throwing an item, or {@code null} if it was created otherwise.
 	METHOD method_6979 setStack (Lnet/minecraft/class_1799;)V
+		COMMENT Sets the item stack contained in this item entity to {@code stack}.
 		ARG 1 stack
 	METHOD method_6981 setThrower (Ljava/util/UUID;)V
+		COMMENT Sets the thrower of this item entity to {@code uuid}.
 		ARG 1 uuid
 	METHOD method_6982 setPickupDelay (I)V
+		COMMENT Sets the number of ticks before this item entity can be picked up
+		COMMENT to {@code pickupDelay}.
 		ARG 1 pickupDelay
 	METHOD method_6983 getStack ()Lnet/minecraft/class_1799;
+		COMMENT Returns the item stack contained in this item entity.
 	METHOD method_6984 setOwner (Ljava/util/UUID;)V
+		COMMENT Sets the owner of this item entity to {@code uuid}.
+		COMMENT
+		COMMENT <p>Used when an item is given to an entity, but this entity
+		COMMENT does not have enough space in its inventory.
 		ARG 1 uuid
-	METHOD method_6985 getAge ()I
+	METHOD method_6985 getItemAge ()I
+		COMMENT Returns the number of ticks since this item entity has been created.
+		COMMENT
+		COMMENT <p>Increases every tick. When it equals to 6000 ticks (5 minutes),
+		COMMENT this item entity disappears.
+		COMMENT
+		COMMENT <p>Unlike {@linkplain Entity#age}, it is persistent and not synchronized
+		COMMENT between the client and the server.
+		COMMENT
+		COMMENT @see #tick()
 	METHOD method_6986 getOwner ()Ljava/util/UUID;
+		COMMENT Returns the UUID of the entity to which belongs this item entity,
+		COMMENT or {@code null} if there is not.
+		COMMENT
+		COMMENT <p>If there is one, the owner is the only entity which can pick
+		COMMENT up this item entity.
 	METHOD method_6987 setDespawnImmediately ()V
 	METHOD method_6988 setToDefaultPickupDelay ()V
+		COMMENT Sets the number of ticks before this item entity can be picked up
+		COMMENT to the default value of 10.
 	METHOD method_6989 setPickupDelayInfinite ()V
+		COMMENT Makes this item entity impossible to be picked up by setting its
+		COMMENT pickup delay to 32767.
