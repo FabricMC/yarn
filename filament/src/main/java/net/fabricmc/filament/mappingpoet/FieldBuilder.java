@@ -397,7 +397,9 @@ public class FieldBuilder {
 			// fake initializer falls through
 		case 'C':
 			if (fieldNode.value instanceof Integer) {
-				return CodeBlock.builder().add("(char) $L", fieldNode.value).build();
+				int value = (int) fieldNode.value;
+				char c = (char) value;
+				return printChar(CodeBlock.builder(), c, value).build();
 			}
 			// fake initializer falls through
 		case 'D':
@@ -435,6 +437,34 @@ public class FieldBuilder {
 			return CodeBlock.builder().add("$S", fieldNode.value).build();
 		}
 		return CodeBlock.builder().add(desc.equals("Ljava/lang/String;") ? "java.lang.String.valueOf(\"dummy\")" : "null").build();
+	}
+
+
+	private static CodeBlock.Builder printChar(CodeBlock.Builder builder, char c, int value) {
+		if (!Character.isValidCodePoint(value) || !Character.isDefined(value)) {
+			return builder.add("(char) $L", value);
+		}
+
+		// See https://docs.oracle.com/javase/specs/jls/se16/html/jls-3.html#jls-EscapeSequence
+		// ignore space or ", just use direct in those cases
+		switch (c) {
+		case '\b':
+			return builder.add("'\\b'");
+		case '\t':
+			return builder.add("'\\t'");
+		case '\n':
+			return builder.add("'\\n'");
+		case '\f':
+			return builder.add("'\\f'");
+		case '\r':
+			return builder.add("'\\r'");
+		case '\'':
+			return builder.add("'\\''");
+		case '\\':
+			return builder.add("'\\\\'");
+		}
+
+		return builder.add("'$L'", c);
 	}
 
 	private void addJavaDoc() {
