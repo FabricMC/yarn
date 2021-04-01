@@ -33,7 +33,10 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@link BlockPos}</td><td>{@link #readBlockPos()}</td><td>{@link #writeBlockPos(BlockPos)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>{@link ChunkSectionPos}</td><td>{@link #readChunkSectionPos()}</td><td>(removed by proguard)</td>
+	COMMENT  <td>{@link ChunkPos}</td><td>{@link #readChunkPos()}</td><td>{@link #writeChunkPos(ChunkPos)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link ChunkSectionPos}</td><td>{@link #readChunkSectionPos()}</td><td>{@link #writeChunkSectionPos(ChunkSectionPos)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link Text}</td><td>{@link #readText()}</td><td>{@link #writeText(Text)}</td>
@@ -77,6 +80,24 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT IndexOutOfBoundsException} if there is not enough bytes to be read or
 	COMMENT not enough space to write.
 	FIELD field_11695 parent Lio/netty/buffer/ByteBuf;
+	FIELD field_33284 MAX_TEXT_LENGTH I
+		COMMENT The maximum size, in terms of JSON string length, allowed of the text read by
+		COMMENT {@link #readText()} or written by {@link #writeText(Text)}.
+	FIELD field_33285 MAX_VAR_INT_LENGTH I
+		COMMENT The max number of bytes an encoded var int value may use.
+		COMMENT
+		COMMENT <p>Its value is {@value}. A regular int value always use 4 bytes in contrast.
+		COMMENT
+		COMMENT @see #getVarIntLength(int)
+	FIELD field_33286 MAX_VAR_LONG_LENGTH I
+		COMMENT The max number of bytes an encoded var long value may use.
+		COMMENT
+		COMMENT <p>Its value is {@value}. A regular long value always use 8 bytes in contrast.
+		COMMENT
+		COMMENT @see #getVarLongLength(long)
+	FIELD field_33287 MAX_READ_NBT_SIZE I
+		COMMENT The maximum size, in number of bytes, allowed of the NBT compound read by
+		COMMENT {@link #readNbt()}.
 	METHOD <init> (Lio/netty/buffer/ByteBuf;)V
 		COMMENT Creates a packet byte buf that delegates its operations to the {@code
 		COMMENT parent} buf.
@@ -131,6 +152,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @see #readVarLong()
+		COMMENT @see #getVarLongLength(long)
 		ARG 1 value
 			COMMENT the value to write
 	METHOD method_10792 readVarLong ()J
@@ -187,9 +209,9 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 			COMMENT the UUID to write
 	METHOD method_10798 readNbt ()Lnet/minecraft/class_2487;
 		COMMENT Reads an NBT compound from this buf. The binary representation of NBT is
-		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an Nbt null is encountered,
+		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an NBT null is encountered,
 		COMMENT this method returns {@code null}. The compound can have a maximum size of
-		COMMENT {@code 2097152} bytes.
+		COMMENT {@value #MAX_READ_NBT_SIZE} bytes.
 		COMMENT
 		COMMENT @return the read compound, may be {@code null}
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
@@ -197,6 +219,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #writeNbt(NbtCompound)
 		COMMENT @see #readUnlimitedNbt()
 		COMMENT @see #readNbt(NbtTagSizeTracker)
+		COMMENT @see #MAX_READ_NBT_SIZE
 	METHOD method_10799 readIntArray (I)[I
 		COMMENT Reads an array of primitive ints from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the var int entries. The array
@@ -266,16 +289,18 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @see #readVarInt()
+		COMMENT @see #getVarIntLength(int)
 		ARG 1 value
 			COMMENT the value to write
 	METHOD method_10805 writeText (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2540;
 		COMMENT Writes a text to this buf. A text is represented by a JSON string with
-		COMMENT max length {@code 262144}.
+		COMMENT max length {@value #MAX_TEXT_LENGTH}.
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @throws io.netty.handler.codec.EncoderException if the JSON string
-		COMMENT written exceeds {@code 262144} in length
+		COMMENT written exceeds {@value #MAX_TEXT_LENGTH} in length
 		COMMENT @see #readText()
+		COMMENT @see #MAX_TEXT_LENGTH
 		ARG 1 text
 			COMMENT the text to write
 	METHOD method_10806 writeIntArray ([I)Lnet/minecraft/class_2540;
@@ -300,12 +325,13 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 			COMMENT the pos to write
 	METHOD method_10808 readText ()Lnet/minecraft/class_2561;
 		COMMENT Reads a text from this buf. A text is represented by a JSON string with
-		COMMENT max length {@code 262144}.
+		COMMENT max length {@value #MAX_TEXT_LENGTH}.
 		COMMENT
 		COMMENT @return the read text
 		COMMENT @throws io.netty.handler.codec.DecoderException if the JSON string read
-		COMMENT exceeds {@code 262144} in length
+		COMMENT exceeds {@value #MAX_TEXT_LENGTH} in length
 		COMMENT @see #writeText(Text)
+		COMMENT @see #MAX_TEXT_LENGTH
 	METHOD method_10809 readLongArray ([JI)[J
 		COMMENT Reads an array of primitive longs from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the regular long (not var
@@ -373,10 +399,10 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #writeString(String, int)
 		ARG 1 string
 			COMMENT the string to write
-	METHOD method_10815 getVarIntSizeBytes (I)I
+	METHOD method_10815 getVarIntLength (I)I
 		COMMENT Returns the number of bytes needed to encode {@code value} as a
 		COMMENT {@linkplain #writeVarInt(int) var int}. Guaranteed to be between {@code
-		COMMENT 1} and {@code 5}.
+		COMMENT 1} and {@value #MAX_VAR_INT_LENGTH}.
 		COMMENT
 		COMMENT @return the number of bytes a var int {@code value} uses
 		ARG 0 value
@@ -429,11 +455,8 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT Reads a chunk section position from this buf. A chunk section position is
 		COMMENT represented by a regular long.
 		COMMENT
-		COMMENT @apiNote The writing equivalent has been removed by proguard as chunk
-		COMMENT section writing is only used by debug rendering. The writing equivalent
-		COMMENT would be {@code buf.writeLong(chunkSectionPos.toLong())}.
-		COMMENT
 		COMMENT @return the read chunk section pos
+		COMMENT @see #writeChunkSectionPos(ChunkSectionPos)
 	METHOD method_19772 readString ()Ljava/lang/String;
 		COMMENT Reads a string from this buf. A string is represented by a byte array of
 		COMMENT its UTF-8 data. The string can have a maximum length of {@code 32767}.
@@ -619,3 +642,36 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 			COMMENT a parser that parses each key for the map given this buf
 		ARG 3 valueParser
 			COMMENT a parser that parses each value for the map given this buf
+	METHOD method_36129 getVarLongLength (J)I
+		COMMENT Returns the number of bytes needed to encode {@code value} as a
+		COMMENT {@linkplain #writeVarLong(int) var long}. Guaranteed to be between {@code
+		COMMENT 1} and {@value #MAX_VAR_INT_LENGTH}.
+		COMMENT
+		COMMENT @return the number of bytes a var long {@code value} uses
+		ARG 0 value
+			COMMENT the value to encode
+	METHOD method_36130 writeChunkPos (Lnet/minecraft/class_1923;)Lnet/minecraft/class_2540;
+		COMMENT Writes a chunk position to this buf. A chunk position is represented by
+		COMMENT a regular long.
+		COMMENT
+		COMMENT @return this buf, for chaining
+		COMMENT @see #readChunkPos()
+		ARG 1 pos
+			COMMENT the chunk position to write
+	METHOD method_36131 writeChunkSectionPos (Lnet/minecraft/class_4076;)Lnet/minecraft/class_2540;
+		COMMENT Reads a chunk section position from this buf. A chunk section position is
+		COMMENT represented by a regular long.
+		COMMENT
+		COMMENT @return this buf, for chaining
+		COMMENT @see #readChunkSectionPos()
+		ARG 1 pos
+			COMMENT the section position to write
+	METHOD method_36132 getWrittenBytes ()[B
+		COMMENT Returns an array of bytes of contents in this buf between index {@code 0} and
+		COMMENT the {@link #writeIndex()}.
+	METHOD method_36133 readChunkPos ()Lnet/minecraft/class_1923;
+		COMMENT Reads a chunk position from this buf. A chunk position is represented by
+		COMMENT a regular long.
+		COMMENT
+		COMMENT @return the read chunk position
+		COMMENT @see #writeChunkPos()

@@ -25,6 +25,13 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	FIELD field_11657 EPOLL_CLIENT_IO_GROUP Lnet/minecraft/class_3528;
 	FIELD field_11658 packetsReceivedCounter I
 	FIELD field_11660 disconnectReason Lnet/minecraft/class_2561;
+	FIELD field_33280 CURRENT_PACKET_COUNTER_WEIGHT F
+		COMMENT Represents when the average packet counter is updated, what percent of the
+		COMMENT value of the average counter is set from the current counter.
+		COMMENT
+		COMMENT <p>The formula is {@link #averagePacketsSent averagePacketsSent} = {@value}
+		COMMENT &times; {@link #packetsSentCounter packetsSentCounter} + (1 - {@value}) &times;
+		COMMENT {@code averagePacketsSent}.
 	METHOD <init> (Lnet/minecraft/class_2598;)V
 		ARG 1 side
 	METHOD channelActive (Lio/netty/channel/ChannelHandlerContext;)V
@@ -84,6 +91,12 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	METHOD method_30615 updateStats ()V
 	METHOD method_32306 getState ()Lnet/minecraft/class_2539;
 		COMMENT Returns the current network state of this connection.
+	METHOD method_36121 getSide ()Lnet/minecraft/class_2598;
+		COMMENT Returns the side of this connection, or the direction of the packets received
+		COMMENT by this connection.
+	METHOD method_36122 getOppositeSide ()Lnet/minecraft/class_2598;
+		COMMENT Returns the opposite side of this connection, or the direction of the packets
+		COMMENT sent by this connection.
 	CLASS class_2536 QueuedPacket
 		FIELD field_11661 packet Lnet/minecraft/class_2596;
 		FIELD field_11662 callback Lio/netty/util/concurrent/GenericFutureListener;
