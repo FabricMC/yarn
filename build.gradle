@@ -23,6 +23,7 @@ plugins {
 	id 'maven-publish'
 	id 'java' // for jd gen
 	id 'org.cadixdev.licenser' version '0.5.1'
+	id 'build-logic'
 }
 
 def minecraft_version = "21w13a"
@@ -983,6 +984,13 @@ task javadocJar(type: Jar, dependsOn: ["javadoc"]) {
 
 	archiveVersion.set yarnVersion
 	archiveClassifier = 'javadoc'
+}
+
+generatePackageInfoMappings {
+	dependsOn mapIntermediaryJar
+	inputJar = intermediaryJar
+	packageName = "net/minecraft/util/packageinfo/"
+	outputDir = file("mappings/net/minecraft/util/packageinfo")
 }
 
 publishing {
