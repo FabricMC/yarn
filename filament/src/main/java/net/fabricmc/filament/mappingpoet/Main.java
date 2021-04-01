@@ -95,7 +95,8 @@ public class Main {
 		classes.values().stream()
 				.filter(classBuilder -> !classBuilder.getClassName().contains("$"))
 				.forEach(classBuilder -> {
-					JavaFile javaFile = JavaFile.builder(classBuilder.getClassName().replaceAll("/", ".").substring(0, classBuilder.getClassName().lastIndexOf("/")), classBuilder.build())
+					int packageEnd = classBuilder.getClassName().lastIndexOf("/");
+					JavaFile javaFile = JavaFile.builder(packageEnd == -1 ? "" : classBuilder.getClassName().substring(0, packageEnd).replaceAll("/", "."), classBuilder.build())
 							.build();
 					try {
 						javaFile.writeTo(outputDirectory);

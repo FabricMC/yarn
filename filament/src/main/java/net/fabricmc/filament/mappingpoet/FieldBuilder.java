@@ -391,27 +391,47 @@ public class FieldBuilder {
 		// fake initializers exclude fields from constant values
 		switch (desc.charAt(0)) {
 		case 'B':
+			if (fieldNode.value instanceof Integer) {
+				return CodeBlock.builder().add("(byte) $L", fieldNode.value).build();
+			}
+			// fake initializer falls through
 		case 'C':
+			if (fieldNode.value instanceof Integer) {
+				return CodeBlock.builder().add("(char) $L", fieldNode.value).build();
+			}
+			// fake initializer falls through
 		case 'D':
+			if (fieldNode.value instanceof Double) {
+				return CodeBlock.builder().add("$LD", fieldNode.value).build();
+			}
+			// fake initializer falls through
 		case 'I':
+			if (fieldNode.value instanceof Integer) {
+				return CodeBlock.builder().add("$L", fieldNode.value).build();
+			}
+			// fake initializer falls through
 		case 'J':
+			if (fieldNode.value instanceof Long) {
+				return CodeBlock.builder().add("$LL", fieldNode.value).build();
+			}
+			// fake initializer falls through
 		case 'S':
-			if (fieldNode.value != null) {
-				return CodeBlock.builder().add(String.valueOf(fieldNode.value)).build();
+			if (fieldNode.value instanceof Integer) {
+				return CodeBlock.builder().add("(short) $L", fieldNode.value).build();
 			}
 			return CodeBlock.builder().add("java.lang.Byte.parseByte(\"dummy\")").build();
 		case 'F':
-			if (fieldNode.value != null) {
-				return CodeBlock.builder().add(fieldNode.value + "f").build();
+			if (fieldNode.value instanceof Float) {
+				return CodeBlock.builder().add("$LF", fieldNode.value).build();
 			}
 			return CodeBlock.builder().add("java.lang.Float.parseFloat(\"dummy\")").build();
 		case 'Z':
-			if (fieldNode.value instanceof Number) {
-				return CodeBlock.builder().add(Boolean.toString(((Number) fieldNode.value).intValue() != 0)).build();
+			if (fieldNode.value instanceof Integer) {
+				return CodeBlock.builder().add("$L", ((int) fieldNode.value) != 0).build();
 			}
 			return CodeBlock.builder().add("java.lang.Boolean.parseBoolean(\"dummy\")").build();
 		}
-		if (fieldNode.value != null) {
+		if (desc.equals("Ljava/lang/String;") && fieldNode.value instanceof String) {
 			return CodeBlock.builder().add("$S", fieldNode.value).build();
 		}
 		return CodeBlock.builder().add(desc.equals("Ljava/lang/String;") ? "java.lang.String.valueOf(\"dummy\")" : "null").build();
