@@ -66,14 +66,15 @@ class GeneratePackageInfoMappingsTask extends DefaultTask {
     }
 
     private void generateMapping(String name) {
-        String className = name.substring(name.lastIndexOf("/") + 1)
+        String inputName = name.substring(name.lastIndexOf("/") + 1)
+        String className = "PackageInfo" + name.substring(name.lastIndexOf("_") + 1)
         String fullName = packageName.get() + className;
         File mappingsFile = new File(outputDir.get().asFile, "${className}.mapping")
 
         mappingsFile.parentFile.mkdirs()
 
         mappingsFile.text = """\
-                            CLASS net/minecraft/$className $fullName 
+                            CLASS net/minecraft/$inputName $fullName 
                             """.stripIndent()
     }
 }
