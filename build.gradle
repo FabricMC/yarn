@@ -5,7 +5,6 @@ buildscript {
 			url 'https://maven.fabricmc.net'
 		}
 		mavenCentral()
-		mavenLocal()
 	}
 	dependencies {
 		classpath "cuchaz:enigma-cli:${project.enigma_version}"
@@ -13,7 +12,6 @@ buildscript {
 		classpath "commons-io:commons-io:2.6"
 		classpath 'de.undercouch:gradle-download-task:4.0.4'
 		classpath 'net.fabricmc:tiny-remapper:0.3.1.72'
-		classpath 'net.fabricmc:mappingpoet:0.1.0+build.2'
 		classpath "net.fabricmc.unpick:unpick:${project.unpick_version}"
 		classpath "net.fabricmc.unpick:unpick-format-utils:${project.unpick_version}"
 	}
@@ -25,6 +23,7 @@ plugins {
 	id 'maven-publish'
 	id 'java' // for jd gen
 	id 'org.cadixdev.licenser' version '0.5.1'
+	id 'build-logic'
 }
 
 def minecraft_version = "21w13a"
@@ -75,8 +74,9 @@ dependencies {
 	enigmaRuntime "net.fabricmc:stitch:${project.stitch_version}"
 	javadocClasspath "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 	javadocClasspath "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
+	javadocClasspath "com.google.code.findbugs:jsr305:3.0.2" // for some other jsr annotations
 	decompileClasspath "org.benf:cfr:0.150"
-	mappingPoetJar 'net.fabricmc:mappingpoet:0.2.6'
+	mappingPoetJar 'net.fabricmc:mappingpoet:0.2.7'
 	unpick "net.fabricmc.unpick:unpick-cli:${project.unpick_version}"
 }
 
@@ -942,6 +942,7 @@ javadoc {
 		)
 		taglets "net.fabricmc.mappingpoet.jd.MappingTaglet"
 		// taglet path, header, extra stylesheet settings deferred
+		it.use()
 
 		addBooleanOption "-allow-script-in-comments", true
 		links(
@@ -949,6 +950,7 @@ javadoc {
 				'https://www.javadoc.io/doc/com.google.code.gson/gson/2.8.0/',
 				'https://logging.apache.org/log4j/2.x/log4j-api/apidocs/',
 				"https://javadoc.io/doc/org.jetbrains/annotations/${project.jetbrains_annotations_version}/",
+				'https://www.javadoc.io/doc/com.google.code.findbugs/jsr305/3.0.2/',
 				'https://javadoc.lwjgl.org/',
 				'https://fastutil.di.unimi.it/docs/',
 				'https://netty.io/4.1/api/',
@@ -995,6 +997,13 @@ task javadocJar(type: Jar, dependsOn: ["javadoc"]) {
 
 	archiveVersion.set yarnVersion
 	archiveClassifier = 'javadoc'
+}
+
+generatePackageInfoMappings {
+	dependsOn mapIntermediaryJar
+	inputJar = intermediaryJar
+	packageName = "net/minecraft/unused/packageinfo/"
+	outputDir = file("mappings/net/minecraft/unused/packageinfo")
 }
 
 publishing {
