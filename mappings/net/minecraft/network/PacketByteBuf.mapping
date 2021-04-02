@@ -51,7 +51,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@link UUID}</td><td>{@link #readUuid()}</td><td>{@link #writeUuid(UUID)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>{@link NbtCompound}</td><td>{@link #readCompound()}</td><td>{@link #writeCompound(NbtCompound)}</td>
+	COMMENT  <td>{@link NbtCompound}</td><td>{@link #readNbt()}</td><td>{@link #writeNbt(NbtCompound)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link ItemStack}</td><td>{@link #readItemStack()}</td><td>{@link #writeItemStack(ItemStack)}</td>
@@ -148,17 +148,17 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readItemStack()
 		ARG 1 stack
 			COMMENT the stack to write
-	METHOD method_10794 writeCompound (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540;
+	METHOD method_10794 writeNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540;
 		COMMENT Writes an NBT compound to this buf. The binary representation of NBT is
 		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If {@code compound} is {@code
-		COMMENT null}, it is treated as an END tag.
+		COMMENT null}, it is treated as an NBT null.
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be
 		COMMENT written
-		COMMENT @see #readCompound()
-		COMMENT @see #readUnlimitedCompound()
-		COMMENT @see #readCompound(NbtTagSizeTracker)
+		COMMENT @see #readNbt()
+		COMMENT @see #readUnlimitedNbt()
+		COMMENT @see #readNbt(NbtTagSizeTracker)
 		ARG 1 compound
 			COMMENT the compound to write
 	METHOD method_10795 readByteArray ()[B
@@ -185,18 +185,18 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readUuid()
 		ARG 1 uuid
 			COMMENT the UUID to write
-	METHOD method_10798 readCompound ()Lnet/minecraft/class_2487;
+	METHOD method_10798 readNbt ()Lnet/minecraft/class_2487;
 		COMMENT Reads an NBT compound from this buf. The binary representation of NBT is
-		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an END tag is encountered,
+		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an Nbt null is encountered,
 		COMMENT this method returns {@code null}. The compound can have a maximum size of
 		COMMENT {@code 2097152} bytes.
 		COMMENT
 		COMMENT @return the read compound, may be {@code null}
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
 		COMMENT @throws RuntimeException if the compound exceeds the allowed maximum size
-		COMMENT @see #writeCompound(NbtCompound)
-		COMMENT @see #readUnlimitedCompound()
-		COMMENT @see #readCompound(NbtTagSizeTracker)
+		COMMENT @see #writeNbt(NbtCompound)
+		COMMENT @see #readUnlimitedNbt()
+		COMMENT @see #readNbt(NbtTagSizeTracker)
 	METHOD method_10799 readIntArray (I)[I
 		COMMENT Reads an array of primitive ints from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the var int entries. The array
@@ -450,7 +450,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @param <T> the decoded object's type
 		COMMENT @return the read object
 		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
-		COMMENT to decode the compound tag
+		COMMENT to decode the compound NBT
 		COMMENT @see #encode(Codec, Object)
 		ARG 1 codec
 			COMMENT the codec to decode the object
@@ -459,28 +459,28 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @param <T> the encoded object's type
 		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
-		COMMENT to encode the compound tag
+		COMMENT to encode the compound NBT
 		COMMENT @see #decode(Codec)
 		ARG 1 codec
 			COMMENT the codec to encode the object
 		ARG 2 object
 			COMMENT the object to write to this buf
-	METHOD method_30616 readCompound (Lnet/minecraft/class_2505;)Lnet/minecraft/class_2487;
+	METHOD method_30616 readNbt (Lnet/minecraft/class_2505;)Lnet/minecraft/class_2487;
 		COMMENT Reads an NBT compound from this buf. The binary representation of NBT is
-		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an END tag is encountered,
+		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an NBT null is encountered,
 		COMMENT this method returns {@code null}. The compound can have a maximum size
 		COMMENT controlled by the {@code sizeTracker}.
 		COMMENT
 		COMMENT @return the read compound, may be {@code null}
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
 		COMMENT @throws RuntimeException if the compound exceeds the allowed maximum size
-		COMMENT @see #writeCompound(NbtCompound)
-		COMMENT @see #readCompound()
-		COMMENT @see #readUnlimitedCompound()
+		COMMENT @see #writeNbt(NbtCompound)
+		COMMENT @see #readNbt()
+		COMMENT @see #readUnlimitedNbt()
 		ARG 1 sizeTracker
-	METHOD method_30617 readUnlimitedCompound ()Lnet/minecraft/class_2487;
+	METHOD method_30617 readUnlimitedNbt ()Lnet/minecraft/class_2487;
 		COMMENT Reads an NBT compound from this buf. The binary representation of NBT is
-		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an END tag is encountered,
+		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an NBT null is encountered,
 		COMMENT this method returns {@code null}. The compound does not have a size limit.
 		COMMENT
 		COMMENT @apiNote Since this version does not have a size limit, it may be
@@ -488,9 +488,9 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return the read compound, may be {@code null}
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
-		COMMENT @see #writeCompound(NbtCompound)
-		COMMENT @see #readCompound()
-		COMMENT @see #readCompound(NbtTagSizeTracker)
+		COMMENT @see #writeNbt(NbtCompound)
+		COMMENT @see #readNbt()
+		COMMENT @see #readNbt(NbtTagSizeTracker)
 	METHOD method_33134 readLongArray ()[J
 		COMMENT Reads an array of primitive longs from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the regular long (not var
