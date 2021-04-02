@@ -1,8 +1,9 @@
 v2
 
-constant max_string_length net/minecraft/network/PacketByteBuf DEFAULT_MAX_STRING_LENGTH
+# value and desc specified because unpick is too dumb to handle auto conversions (short -> int, int -> long)
+constant max_string_length net/minecraft/network/PacketByteBuf DEFAULT_MAX_STRING_LENGTH 32767 I
 constant max_string_length net/minecraft/network/PacketByteBuf MAX_TEXT_LENGTH
-constant max_nbt_size net/minecraft/network/PacketByteBuf MAX_READ_NBT_SIZE
+#constant max_nbt_size net/minecraft/network/PacketByteBuf MAX_READ_NBT_SIZE 2097152 J
 constant max_var_int_length net/minecraft/network/PacketByteBuf MAX_VAR_INT_LENGTH
 constant max_var_long_length net/minecraft/network/PacketByteBuf MAX_VAR_LONG_LENGTH
 
@@ -10,9 +11,12 @@ target_method net/minecraft/network/PacketByteBuf readString (I)Ljava/lang/Strin
 	param 0 max_string_length
 target_method net/minecraft/network/PacketByteBuf writeString (Ljava/lang/String;I)Lnet/minecraft/network/PacketByteBuf;
 	param 1 max_string_length
-target_method net/minecraft/nbt/NbtTagSizeTracker <init> (J)V
-	param 0 max_nbt_size
-target_method net/minecraft/network/PacketByteBuf getVarIntLength (J)I
+# somehow does not work
+#target_method net/minecraft/nbt/NbtTagSizeTracker <init> (J)V
+#	param 0 max_nbt_size
+target_method net/minecraft/network/PacketByteBuf getVarIntLength (I)I
 	return max_var_int_length
 target_method net/minecraft/network/PacketByteBuf getVarLongLength (J)I
 	return max_var_long_length
+# var int/long length also used in readVarXx method body, but unpick cannot replace them
+
