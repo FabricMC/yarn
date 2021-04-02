@@ -633,6 +633,7 @@ task mapNamedJar(dependsOn: ["mergeV2", "unpickIntermediaryJar"]) {
 import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Reader
 import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Writer
 import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Remapper
+import daomephsta.unpick.constantmappers.datadriven.parser.FieldKey
 import daomephsta.unpick.constantmappers.datadriven.parser.MethodKey
 import net.fabricmc.mapping.tree.TinyMappingFactory
 
@@ -680,6 +681,7 @@ task remapUnpickDefinitionsIntermediary(type : FileOutputInput, dependsOn: [comb
 	doLast {
 		def classMappings = [:]
 		def methodMappings = [:]
+		def fieldMappings = [:]
 
 		mappingsInput.withReader {reader ->
 			def tinyTree = TinyMappingFactory.loadWithDetection(reader)
@@ -700,13 +702,23 @@ task remapUnpickDefinitionsIntermediary(type : FileOutputInput, dependsOn: [comb
 						methodDef.getName("intermediary")
 					)
 				}
+
+				classDef.fields.forEach { fieldDef ->
+					fieldMappings.put(
+						new FieldKey(
+							classDef.getName("named"),
+							fieldDef.getName("named")
+						),
+						fieldDef.getName("intermediary")
+					)
+				}
 			}
 		}
 
 		input.withInputStream {
 			new UnpickV2Reader(it).withCloseable {reader ->
 				def writer = new UnpickV2Writer()
-				reader.accept(new UnpickV2Remapper(classMappings, methodMappings, writer))
+				reader.accept(new UnpickV2Remapper(classMappings, methodMappings, fieldMappings, writer))
 				output.text = writer.output
 			}
 		}
@@ -930,6 +942,7 @@ javadoc {
 		)
 		taglets "net.fabricmc.mappingpoet.jd.MappingTaglet"
 		// taglet path, header, extra stylesheet settings deferred
+		it.use()
 
 		addBooleanOption "-allow-script-in-comments", true
 		links(
