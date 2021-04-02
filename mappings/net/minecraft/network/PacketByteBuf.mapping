@@ -80,6 +80,11 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT IndexOutOfBoundsException} if there is not enough bytes to be read or
 	COMMENT not enough space to write.
 	FIELD field_11695 parent Lio/netty/buffer/ByteBuf;
+	FIELD field_33283 DEFAULT_MAX_STRING_LENGTH S
+		COMMENT The default max length of strings {@linkplain #readString() read} or {@linkplain
+		COMMENT #writeString(String) written}. This is also the max length of identifiers
+		COMMENT {@linkplain #readIdentifier() read} or {@linkplain #writeIdentifier(Identifier)
+		COMMENT written} in their string form.
 	FIELD field_33284 MAX_TEXT_LENGTH I
 		COMMENT The maximum size, in terms of JSON string length, allowed of the text read by
 		COMMENT {@link #readText()} or written by {@link #writeText(Text)}.
@@ -355,11 +360,11 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	METHOD method_10810 readIdentifier ()Lnet/minecraft/class_2960;
 		COMMENT Reads an identifier from this buf. An identifier is represented by its
 		COMMENT string form. The read identifier's string form can have a max length of
-		COMMENT {@code 32767}.
+		COMMENT {@value #DEFAULT_MAX_STRING_LENGTH}.
 		COMMENT
 		COMMENT @return the read identifier
 		COMMENT @throws io.netty.handler.codec.DecoderException if the identifier's
-		COMMENT string form is longer than {@code 32767}
+		COMMENT string form is longer than {@value #DEFAULT_MAX_STRING_LENGTH}
 		COMMENT @see #writeIdentifier(Identifier)
 	METHOD method_10811 readBlockPos ()Lnet/minecraft/class_2338;
 		COMMENT Reads a block position from this buf. A block position is represented by
@@ -370,11 +375,11 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	METHOD method_10812 writeIdentifier (Lnet/minecraft/class_2960;)Lnet/minecraft/class_2540;
 		COMMENT Writes an identifier to this buf. An identifier is represented by its
 		COMMENT string form. The written identifier's byte array can have a max length of
-		COMMENT {@code 32767}.
+		COMMENT {@value #DEFAULT_MAX_STRING_LENGTH}.
 		COMMENT
 		COMMENT @return the read identifier
 		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code id}'s
-		COMMENT byte array is longer than {@code 32767}
+		COMMENT byte array is longer than {@value #DEFAULT_MAX_STRING_LENGTH}
 		COMMENT @see #readIdentifier()
 		ARG 1 id
 			COMMENT the identifier to write
@@ -389,11 +394,11 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	METHOD method_10814 writeString (Ljava/lang/String;)Lnet/minecraft/class_2540;
 		COMMENT Writes a string to this buf. A string is represented by a byte array of
 		COMMENT its UTF-8 data. That byte array can have a maximum length of
-		COMMENT {@code 32767}.
+		COMMENT {@value #DEFAULT_MAX_STRING_LENGTH}.
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @throws io.netty.handler.codec.EncoderException if the byte array of the
-		COMMENT string to write is longer than {@code 32767}
+		COMMENT string to write is longer than {@value #DEFAULT_MAX_STRING_LENGTH}
 		COMMENT @see #readString()
 		COMMENT @see #readString(int)
 		COMMENT @see #writeString(String, int)
@@ -459,7 +464,8 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #writeChunkSectionPos(ChunkSectionPos)
 	METHOD method_19772 readString ()Ljava/lang/String;
 		COMMENT Reads a string from this buf. A string is represented by a byte array of
-		COMMENT its UTF-8 data. The string can have a maximum length of {@code 32767}.
+		COMMENT its UTF-8 data. The string can have a maximum length of {@value
+		COMMENT #DEFAULT_MAX_STRING_LENGTH}.
 		COMMENT
 		COMMENT @return the string read
 		COMMENT @throws io.netty.handler.codec.DecoderException if the string read
