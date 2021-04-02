@@ -902,7 +902,9 @@ task genFakeSource(type: JavaExec, dependsOn: ["mergeV2", "mapNamedJar"]) {
 }
 
 task decompileCFR(type: JavaExec, dependsOn: [mapNamedJar]) {
-	classpath = configurations.decompileClasspath
+	doFirst {
+		classpath = configurations.decompileClasspath
+	}
 	main = "org.benf.cfr.reader.Main"
 
 	args namedJar.getAbsolutePath(), "--outputdir", file("namedSrc").absolutePath
