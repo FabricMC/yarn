@@ -666,66 +666,7 @@ task combineUnpickDefinitions(type : FileOutput) {
 	}
 }
 
-task remapUnpickDefinitionsIntermediary(type : FileOutputInput, dependsOn: [combineUnpickDefinitions, buildYarnTiny]) {
-	output = new File(tempDir, "intermediary-definitions.unpick")
-	input = combineUnpickDefinitions.output
-	File mappingsInput = buildYarnTiny.v2Output
-
-	outputs.upToDateWhen { false }
-	group "unpick"
-
-	doFirst {
-		output.delete()
-	}
-
-	doLast {
-		def classMappings = [:]
-		def methodMappings = [:]
-		def fieldMappings = [:]
-
-		mappingsInput.withReader {reader ->
-			def tinyTree = TinyMappingFactory.loadWithDetection(reader)
-
-			tinyTree.classes.each { classDef ->
-				classMappings.put(
-					classDef.getName("named"),
-					classDef.getName("intermediary")
-				)
-
-				classDef.methods.each { methodDef ->
-					methodMappings.put(
-						new MethodKey(
-							classDef.getName("named"),
-							methodDef.getName("named"),
-							methodDef.getDescriptor("named")
-						),
-						methodDef.getName("intermediary")
-					)
-				}
-
-				classDef.fields.forEach { fieldDef ->
-					fieldMappings.put(
-						new FieldKey(
-							classDef.getName("named"),
-							fieldDef.getName("named")
-						),
-						fieldDef.getName("intermediary")
-					)
-				}
-			}
-		}
-
-		input.withInputStream {
-			new UnpickV2Reader(it).withCloseable {reader ->
-				def writer = new UnpickV2Writer()
-				reader.accept(new UnpickV2Remapper(classMappings, methodMappings, fieldMappings, writer))
-				output.text = writer.output
-			}
-		}
-	}
-}
-
-task unpickIntermediaryJar(type: JavaExec, dependsOn: [mapIntermediaryJar, "constantsJar", remapUnpickDefinitionsIntermediary]) {
+task unpickIntermediaryJar(type: JavaExec, dependsOn: [mapIntermediaryJar, "constantsJar", combineUnpickDefinitions]) {
 	outputs.upToDateWhen { false }
 	group "unpick"
 
@@ -734,7 +675,7 @@ task unpickIntermediaryJar(type: JavaExec, dependsOn: [mapIntermediaryJar, "cons
 	classpath configurations.unpick
 
 	doFirst {
-		args intermediaryJar.absolutePath, unpickedJar.absolutePath, remapUnpickDefinitionsIntermediary.output.absolutePath, constantsJar.archiveFile.get().asFile.absolutePath
+		args intermediaryJar.absolutePath, unpickedJar.absolutePath, combineUnpickDefinitions.output.absolutePath, constantsJar.archiveFile.get().asFile.absolutePath
 
 		configurations.decompileClasspath.files.each {
 			args it.absolutePath
