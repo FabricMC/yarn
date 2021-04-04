@@ -208,18 +208,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
-	METHOD method_24204 streamSelfAndPassengers ()Ljava/util/stream/Stream;
-		COMMENT Returns a stream consisting of this entity and its passengers recursively.
-		COMMENT Each entity will appear before any of its passengers.
-		COMMENT
-		COMMENT <p>This may be less costly than {@link #streamPassengersAndSelf()} if the
-		COMMENT stream's iteration would terminates fast, such as finding an arbitrary
-		COMMENT match of entity in the passengers tree.
-		COMMENT
-		COMMENT @implNote The default implementation is not very efficient.
-		COMMENT
-		COMMENT @see #streamPassengersAndSelf()
 	METHOD method_24516 isInRange (Lnet/minecraft/class_1297;D)Z
+		COMMENT Checks if the distance between this entity and the {@code other} entity is less
+		COMMENT than {@code radius}.
 		ARG 1 other
 		ARG 2 radius
 	METHOD method_24826 getPassengerDismountOffset (DDF)Lnet/minecraft/class_243;
@@ -416,7 +407,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 team
 	METHOD method_5646 extinguish ()V
 	METHOD method_5647 writeNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
-		ARG 1 tag
+		ARG 1 nbt
 	METHOD method_5648 setInvisible (Z)V
 		ARG 1 invisible
 	METHOD method_5649 squaredDistanceTo (DDD)D
@@ -426,9 +417,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5650 remove (Lnet/minecraft/class_1297$class_5529;)V
 		ARG 1 reason
 	METHOD method_5651 readNbt (Lnet/minecraft/class_2487;)V
-		ARG 1 tag
+		ARG 1 nbt
 	METHOD method_5652 writeCustomDataToNbt (Lnet/minecraft/class_2487;)V
-		ARG 1 tag
+		ARG 1 nbt
 	METHOD method_5653 getSavedEntityId ()Ljava/lang/String;
 	METHOD method_5654 doesNotCollide (DDD)Z
 		ARG 1 offsetX
@@ -440,8 +431,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5660 setSneaking (Z)V
 		ARG 1 sneaking
 	METHOD method_5661 getArmorItems ()Ljava/lang/Iterable;
-	METHOD method_5662 saveToTag (Lnet/minecraft/class_2487;)Z
-		ARG 1 tag
+	METHOD method_5662 saveNbt (Lnet/minecraft/class_2487;)Z
+		ARG 1 nbt
 	METHOD method_5663 getRotationVecClient ()Lnet/minecraft/class_243;
 	METHOD method_5664 interactAt (Lnet/minecraft/class_1657;Lnet/minecraft/class_243;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
 		ARG 1 player
@@ -454,13 +445,14 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5669 getAir ()I
 	METHOD method_5670 baseTick ()V
 	METHOD method_5671 getCommandSource ()Lnet/minecraft/class_2168;
+		COMMENT Creates a command source which represents this entity.
 	METHOD method_5672 getHighSpeedSplashSound ()Lnet/minecraft/class_3414;
 	METHOD method_5673 equipStack (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
 		ARG 1 slot
 		ARG 2 stack
 	METHOD method_5674 onTrackedDataSet (Lnet/minecraft/class_2940;)V
 		ARG 1 data
-	METHOD method_5675 canFly ()Z
+	METHOD method_5675 isPushedByFluids ()Z
 	METHOD method_5676 getBurningDuration ()I
 	METHOD method_5678 getHeightOffset ()D
 	METHOD method_5679 isInvulnerableTo (Lnet/minecraft/class_1282;)Z
@@ -546,7 +538,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 pos
 		ARG 2 yaw
 		ARG 3 pitch
-	METHOD method_5726 toListTag ([F)Lnet/minecraft/class_2499;
+	METHOD method_5726 toNbtList ([F)Lnet/minecraft/class_2499;
 		ARG 1 values
 	METHOD method_5727 shouldRender (DDD)Z
 		ARG 1 cameraX
@@ -592,7 +584,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 3 damageSource
 	METHOD method_5748 getMaxAir ()I
 	METHOD method_5749 readCustomDataFromNbt (Lnet/minecraft/class_2487;)V
-		ARG 1 tag
+		ARG 1 nbt
 	METHOD method_5750 setVelocityClient (DDD)V
 		ARG 1 x
 		ARG 3 y
@@ -656,8 +648,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 movementType
 		ARG 2 movement
 	METHOD method_5785 scheduleVelocityUpdate ()V
-	METHOD method_5786 saveSelfToTag (Lnet/minecraft/class_2487;)Z
-		ARG 1 tag
+	METHOD method_5786 saveSelfNbt (Lnet/minecraft/class_2487;)Z
+		ARG 1 nbt
 	METHOD method_5787 isLogicalSideForUpdatingMovement ()Z
 	METHOD method_5788 canBeRiddenInWater ()Z
 	METHOD method_5790 updateSwimming ()V
@@ -747,7 +739,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 state
 		ARG 2 multiplier
 	METHOD method_5845 getUuidAsString ()Ljava/lang/String;
-	METHOD method_5846 toListTag ([D)Lnet/minecraft/class_2499;
+	METHOD method_5846 toNbtList ([D)Lnet/minecraft/class_2499;
 		ARG 1 values
 	METHOD method_5847 setHeadYaw (F)V
 		ARG 1 headYaw

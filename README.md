@@ -30,9 +30,13 @@ Please have a look at the [naming conventions](/CONVENTIONS.md) before submittin
 Yarn uses Gradle to provide a number of utility tasks for working with the mappings.
 
 ### `yarn`
-[`setupYarn`](#setupYarn) and download and launch the latest version of [Enigma](https://github.com/FabricMC/Enigma) automatically configured to use the merged jar and the mappings.
+Setup and download and launch the latest version of [Enigma](https://github.com/FabricMC/Enigma) automatically configured to use the merged jar and the mappings.
 
 Compared to launching Enigma externally, the gradle task adds a name guesser plugin that automatically map enums and a few constant field names.
+
+### `yarnUnpicked`
+Same as above, but unpicks the constants and launches engima with them. Can be a little bit slower to get going.
+
 
 ### `build`
 Build a GZip'd archive containing a tiny mapping between official (obfuscated), [intermediary](https://github.com/FabricMC/intermediary), and yarn names ("named") and packages enigma mappings into a zip archive..
@@ -48,6 +52,3 @@ Downloads the client and server Minecraft jars for the current Minecraft version
 
 ### `mergeJars`
 Merges the client and server jars into one merged jar, located at `VERSION-merged.jar` in the mappings directory where `VERSION` is the current Minecraft version.
-
-### `setupYarn`
-[`download`](#download) and [`mergeJars`](#mergeJars)

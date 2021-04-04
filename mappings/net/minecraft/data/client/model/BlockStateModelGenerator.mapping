@@ -2,8 +2,16 @@ CLASS net/minecraft/class_4910 net/minecraft/data/client/model/BlockStateModelGe
 	FIELD field_22830 blockStateCollector Ljava/util/function/Consumer;
 	FIELD field_22831 modelCollector Ljava/util/function/BiConsumer;
 	FIELD field_22832 simpleItemModelExemptionCollector Ljava/util/function/Consumer;
+	FIELD field_28548 CONNECTION_VARIANT_FUNCTIONS Ljava/util/Map;
+		COMMENT A map from a boolean property about connection on one direction to a
+		COMMENT function that creates a block state variant for connection on that
+		COMMENT direction with a given connection model.
+	FIELD field_28549 nonOrientableTrapdoors Ljava/util/List;
+	FIELD field_28551 sandstoneModels Ljava/util/Map;
 	FIELD field_28552 VARIANT_POOL_FUNCTIONS Ljava/util/Map;
+	FIELD field_29504 stoneStateFactories Ljava/util/Map;
 	METHOD <init> (Ljava/util/function/Consumer;Ljava/util/function/BiConsumer;Ljava/util/function/Consumer;)V
+		ARG 1 blockStateCollector
 		ARG 2 modelCollector
 		ARG 3 simpleItemModelExemptionCollector
 	METHOD method_25508 registerChorusPlant ()V
@@ -353,10 +361,44 @@ CLASS net/minecraft/class_4910 net/minecraft/data/client/model/BlockStateModelGe
 	METHOD method_26434 registerJigsaw ()V
 	METHOD method_27166 registerCampfire ([Lnet/minecraft/class_2248;)V
 		ARG 1 blocks
+	METHOD method_31063 registerAxisRotated (Lnet/minecraft/class_2248;Lnet/minecraft/class_2960;)V
+		ARG 1 block
+		ARG 2 modelId
 	METHOD method_31064 registerRod (Lnet/minecraft/class_2248;)V
 		ARG 1 block
+	METHOD method_32227 registerAmethysts ()V
+	METHOD method_32228 registerCandle (Lnet/minecraft/class_2248;Lnet/minecraft/class_2248;)V
+		ARG 1 candle
+		ARG 2 cake
+	METHOD method_32229 registerAmethyst (Lnet/minecraft/class_2248;)V
+		ARG 1 block
 	METHOD method_32802 registerPointedDripstone ()V
+	METHOD method_32803 getDripstoneVariant (Lnet/minecraft/class_2350;Lnet/minecraft/class_5691;)Lnet/minecraft/class_4935;
+		ARG 1 direction
+		ARG 2 thickness
 	METHOD method_33128 registerSculkSensor ()V
+	METHOD method_33504 registerPetrifiedOakSlab ()V
+	METHOD method_33520 registerWallPlant (Lnet/minecraft/class_2248;)V
+		ARG 1 block
+	METHOD method_33710 registerCaveVines ()V
+	METHOD method_33711 registerBigDripleaf ()V
+	METHOD method_33712 registerSmallDripleaf ()V
+	METHOD method_33713 registerAzalea (Lnet/minecraft/class_2248;)V
+		ARG 1 block
+	METHOD method_34605 (Lnet/minecraft/class_2248;Lnet/minecraft/class_4922;Lnet/minecraft/class_2960;Lnet/minecraft/class_2746;Ljava/util/function/Function;)V
+		ARG 3 property
+		ARG 4 variantFactory
+	METHOD method_34608 createStoneState (Lnet/minecraft/class_2248;Lnet/minecraft/class_2960;Lnet/minecraft/class_4944;Ljava/util/function/BiConsumer;)Lnet/minecraft/class_4917;
+		ARG 0 block
+		ARG 1 modelId
+		ARG 2 texture
+		ARG 3 modelCollector
+	METHOD method_34631 createDeepslateState (Lnet/minecraft/class_2248;Lnet/minecraft/class_2960;Lnet/minecraft/class_4944;Ljava/util/function/BiConsumer;)Lnet/minecraft/class_4917;
+		ARG 0 block
+		ARG 1 modelId
+		ARG 2 texture
+		ARG 3 modelCollector
+	METHOD method_35869 registerLightModel ()V
 	CLASS class_4911 BuiltinModelPool
 		FIELD field_22835 modelId Lnet/minecraft/class_2960;
 		METHOD <init> (Lnet/minecraft/class_4910;Lnet/minecraft/class_2960;Lnet/minecraft/class_2248;)V
@@ -372,7 +414,10 @@ CLASS net/minecraft/class_4910 net/minecraft/data/client/model/BlockStateModelGe
 	CLASS class_4912 BlockTexturePool
 		FIELD field_22837 texture Lnet/minecraft/class_4944;
 		FIELD field_22838 baseModelId Lnet/minecraft/class_2960;
+		FIELD field_28553 knownModels Ljava/util/Map;
 		FIELD field_28554 family Lnet/minecraft/class_5794;
+		METHOD <init> (Lnet/minecraft/class_4910;Lnet/minecraft/class_4944;)V
+			ARG 2 texture
 		METHOD method_25716 button (Lnet/minecraft/class_2248;)Lnet/minecraft/class_4910$class_4912;
 			ARG 1 buttonBlock
 		METHOD method_25717 sign (Lnet/minecraft/class_2248;)Lnet/minecraft/class_4910$class_4912;
@@ -389,9 +434,24 @@ CLASS net/minecraft/class_4910 net/minecraft/data/client/model/BlockStateModelGe
 		METHOD method_25723 pressurePlate (Lnet/minecraft/class_2248;)Lnet/minecraft/class_4910$class_4912;
 			ARG 1 pressurePlateBlock
 		METHOD method_25724 slab (Lnet/minecraft/class_2248;)Lnet/minecraft/class_4910$class_4912;
+			ARG 1 block
 		METHOD method_25725 stairs (Lnet/minecraft/class_2248;)Lnet/minecraft/class_4910$class_4912;
+			ARG 1 block
+		METHOD method_32230 same ([Lnet/minecraft/class_2248;)Lnet/minecraft/class_4910$class_4912;
+			ARG 1 blocks
 		METHOD method_33522 family (Lnet/minecraft/class_5794;)Lnet/minecraft/class_4910$class_4912;
 			ARG 1 family
+		METHOD method_33524 ensureModel (Lnet/minecraft/class_4942;Lnet/minecraft/class_2248;)Lnet/minecraft/class_2960;
+			ARG 1 model
+			ARG 2 block
+		METHOD method_33525 (Lnet/minecraft/class_2248;Lnet/minecraft/class_4942;)Lnet/minecraft/class_2960;
+			ARG 2 newModel
+		METHOD method_33527 door (Lnet/minecraft/class_2248;)Lnet/minecraft/class_4910$class_4912;
+			ARG 1 block
+		METHOD method_33528 registerTrapdoor (Lnet/minecraft/class_2248;)V
+			ARG 1 block
+		METHOD method_34661 sandstone (Lnet/minecraft/class_2248;)Lnet/minecraft/class_4910$class_4912;
+			ARG 1 block
 	CLASS class_4913 TintType
 		METHOD method_25726 getCrossModel ()Lnet/minecraft/class_4942;
 		METHOD method_25727 getFlowerPotCrossModel ()Lnet/minecraft/class_4942;
@@ -405,3 +465,9 @@ CLASS net/minecraft/class_4910 net/minecraft/data/client/model/BlockStateModelGe
 			ARG 1 stemBlock
 		METHOD method_25730 log (Lnet/minecraft/class_2248;)Lnet/minecraft/class_4910$class_4914;
 			ARG 1 logBlock
+	CLASS class_5879 StateFactory
+		METHOD create (Lnet/minecraft/class_2248;Lnet/minecraft/class_2960;Lnet/minecraft/class_4944;Ljava/util/function/BiConsumer;)Lnet/minecraft/class_4917;
+			ARG 1 block
+			ARG 2 modelId
+			ARG 3 texture
+			ARG 4 modelCollector

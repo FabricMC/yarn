@@ -1,13 +1,46 @@
 CLASS net/minecraft/class_3296 net/minecraft/resource/ReloadableResourceManager
-	METHOD method_14477 registerListener (Lnet/minecraft/class_3302;)V
-		ARG 1 listener
-	METHOD method_14478 beginReload (Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/List;Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletableFuture;
+	COMMENT A resource manager that has a reload mechanism. Reloading allows
+	COMMENT reloaders to update when resources change. Accessing resources in
+	COMMENT reloads can reduce impact on game performance as well.
+	COMMENT
+	COMMENT <p>In each reload, all reloaders in this resource manager will have
+	COMMENT their {@linkplain ResourceReloader#reload reload} called.
+	COMMENT
+	COMMENT @see ResourceReloader
+	METHOD method_14477 registerReloader (Lnet/minecraft/class_3302;)V
+		COMMENT Registers a resource reloader to this manager.
+		ARG 1 reloader
+			COMMENT the reloader
+	METHOD method_14478 reload (Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/List;Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT Performs a reload. This returns a future that is completed when the
+		COMMENT reload is completed.
+		COMMENT
+		COMMENT @return the future of the reload
+		COMMENT @see #reload(Executor, Executor, CompletableFuture, List)
 		ARG 1 prepareExecutor
+			COMMENT an executor for the prepare stage
 		ARG 2 applyExecutor
+			COMMENT an executor for the apply stage
 		ARG 3 packs
+			COMMENT a list of resource packs providing resources
 		ARG 4 initialStage
-	METHOD method_18232 beginMonitoredReload (Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;Ljava/util/List;)Lnet/minecraft/class_4011;
+			COMMENT a completable future to be completed before this reload
+	METHOD method_18232 reload (Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;Ljava/util/List;)Lnet/minecraft/class_4011;
+		COMMENT Performs a reload. Returns an object that yields some insights to the
+		COMMENT reload.
+		COMMENT
+		COMMENT <p>{@code prepareExecutor} may be asynchronous. {@code applyExecutor} must
+		COMMENT synchronize with the game engine so changes are properly made to it.
+		COMMENT The reload will only begin after {@code initialStage} has completed.
+		COMMENT Earlier elements in {@code packs} have lower priorities.
+		COMMENT
+		COMMENT @return the reload
+		COMMENT @see ResourceReloader#reload
 		ARG 1 prepareExecutor
+			COMMENT an executor for the prepare stage
 		ARG 2 applyExecutor
+			COMMENT an executor for the apply stage
 		ARG 3 initialStage
+			COMMENT a completable future to be completed before this reload
 		ARG 4 packs
+			COMMENT a list of resource packs providing resources

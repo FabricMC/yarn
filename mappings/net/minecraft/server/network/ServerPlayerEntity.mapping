@@ -24,7 +24,13 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_13987 networkHandler Lnet/minecraft/class_3244;
 	FIELD field_13988 removedEntities Lit/unimi/dsi/fastutil/ints/IntList;
 	FIELD field_13989 notInAnyWorld Z
-	FIELD field_13990 cameraPosition Lnet/minecraft/class_4076;
+	FIELD field_13990 watchedSection Lnet/minecraft/class_4076;
+		COMMENT A chunk section position indicating where the player's client is currently
+		COMMENT watching chunks from. Used referentially for the game to update the chunks
+		COMMENT watched by this player.
+		COMMENT
+		COMMENT @see #getWatchedSection()
+		COMMENT @see #setWatchedSection(ChunkSectionPos)
 	FIELD field_13992 levitationStartPos Lnet/minecraft/class_243;
 	FIELD field_13993 clientChatVisibility Lnet/minecraft/class_1659;
 	FIELD field_13994 enteredNetherPos Lnet/minecraft/class_243;
@@ -86,7 +92,15 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14228 setExperiencePoints (I)V
 	METHOD method_14230 isPvpEnabled ()Z
 	METHOD method_14231 onDisconnect ()V
-	METHOD method_14232 getCameraPosition ()Lnet/minecraft/class_4076;
+	METHOD method_14232 getWatchedSection ()Lnet/minecraft/class_4076;
+		COMMENT Returns the chunk section position the player's client is currently watching
+		COMMENT from. This may differ from the chunk section the player is currently in.
+		COMMENT
+		COMMENT <p>This is only for chunk loading (watching) purpose. This is updated together
+		COMMENT with entity tracking, but they are separate mechanisms.
+		COMMENT
+		COMMENT @see #watchedSection
+		COMMENT @see #setWatchedSection(ChunkSectionPos)
 	METHOD method_14234 updateLastActionTime ()V
 	METHOD method_14235 onSpawn (Lnet/minecraft/class_1703;)V
 	METHOD method_14236 getAdvancementTracker ()Lnet/minecraft/class_2985;
@@ -125,8 +139,14 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 1 url
 		ARG 2 hash
 		ARG 3 required
-	METHOD method_17668 setCameraPosition (Lnet/minecraft/class_4076;)V
-		ARG 1 cameraPosition
+	METHOD method_17668 setWatchedSection (Lnet/minecraft/class_4076;)V
+		COMMENT Sets the chunk section position the player's client is currently watching
+		COMMENT from. This is usually called when the player moves to a new chunk section.
+		COMMENT
+		COMMENT @see #watchedSection
+		COMMENT @see #getWatchedSection()
+		ARG 1 section
+			COMMENT the updated section position
 	METHOD method_18783 worldChanged (Lnet/minecraft/class_3218;)V
 		ARG 1 origin
 	METHOD method_26280 getSpawnPointPosition ()Lnet/minecraft/class_2338;
@@ -152,7 +172,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_30631 getSpawnAngle ()F
 	METHOD method_31273 getTextStream ()Lnet/minecraft/class_5513;
 	METHOD method_32745 gameModeFromNbt (Lnet/minecraft/class_2487;Ljava/lang/String;)Lnet/minecraft/class_1934;
-		ARG 0 tag
+		ARG 0 nbt
 		ARG 1 key
 	METHOD method_32746 getServerGameMode (Lnet/minecraft/class_1934;)Lnet/minecraft/class_1934;
 		COMMENT Returns the server game mode the player should be set to, namely the forced game mode.
@@ -165,9 +185,9 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_32747 setWorld (Lnet/minecraft/class_3218;)V
 		ARG 1 world
 	METHOD method_32748 setGameMode (Lnet/minecraft/class_2487;)V
-		ARG 1 tag
-	METHOD method_32749 writeGameModeToNbt (Lnet/minecraft/class_2487;)V
-		ARG 1 tag
+		ARG 1 nbt
+	METHOD method_32749 writeGameModeNbt (Lnet/minecraft/class_2487;)V
+		ARG 1 nbt
 	METHOD method_33793 shouldFilterText ()Z
 	METHOD method_33794 acceptsMessage (Lnet/minecraft/class_2556;)Z
 		ARG 1 type

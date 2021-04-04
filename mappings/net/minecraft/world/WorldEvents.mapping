@@ -1,0 +1,344 @@
+CLASS net/minecraft/class_6088 net/minecraft/world/WorldEvents
+	COMMENT Constants of World Event IDs.
+	COMMENT <p>World Events are used to trigger things on the client from the server side.
+	COMMENT Most commonly, playing sound events or spawning particles.
+	COMMENT <p>Some events have an extra data integer sent alongside them.
+	COMMENT <br>Some events are global, meaning they will be sent to every player regardless of their position.
+	COMMENT <p>Events are sent from the server to the client using {@link net.minecraft.network.packet.s2c.play.WorldEventS2CPacket WorldEventS2CPacket},
+	COMMENT received on the client by {@link net.minecraft.client.network.ClientPlayNetworkHandler#onWorldEvent(net.minecraft.network.packet.s2c.play.WorldEventS2CPacket) ClientPlayNetworkHandler#onWorldEvent},
+	COMMENT synced by {@link net.minecraft.client.world.ClientWorld#syncWorldEvent(net.minecraft.entity.player.PlayerEntity, int, net.minecraft.util.math.BlockPos, int) ClientWorld#syncWorldEvent} and
+	COMMENT {@link net.minecraft.client.world.ClientWorld#syncGlobalEvent(int, net.minecraft.util.math.BlockPos, int) ClientWorld#syncGlobalEvent} (for regular and global events respectively), and
+	COMMENT finally processed by {@link net.minecraft.client.render.WorldRenderer#processWorldEvent(net.minecraft.entity.player.PlayerEntity, int, net.minecraft.util.math.BlockPos, int) WorldRenderer#processWorldEvent} and
+	COMMENT {@link net.minecraft.client.render.WorldRenderer#processGlobalEvent(int, net.minecraft.util.math.BlockPos, int) WorldRenderer#processGlobalEvent} (for regular and global events respectively).
+	FIELD field_31114 ZOMBIE_INFECTS_VILLAGER I
+		COMMENT A Zombie infects a Villager.
+		COMMENT <br>Plays the zombie infect villager sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.mob.ZombieEntity#onKilledOther(net.minecraft.server.world.ServerWorld, net.minecraft.entity.LivingEntity) ZombieEntity#onKilledOther}
+	FIELD field_31115 ZOMBIE_VILLAGER_CURED I
+		COMMENT A Zombie Villager is cured.
+		COMMENT <br>Plays the zombie villager cured sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.mob.ZombieVillagerEntity#finishConversion(net.minecraft.server.world.ServerWorld) ZombieVillagerEntity#finishConversion}
+	FIELD field_31116 ENDER_DRAGON_DIES I
+		COMMENT An Ender Dragon dies.
+		COMMENT <br>Plays the ender dragon death sound event.
+		COMMENT <br>This is a global event.
+		COMMENT <p>Called by {@link net.minecraft.entity.boss.dragon.EnderDragonEntity#updatePostDeath() EnderDragonEntity#updatePostDeath}
+	FIELD field_31117 ANVIL_DESTROYED I
+		COMMENT An Anvil is destroyed from damage.
+		COMMENT <br>Plays the anvil destroyed sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.AnvilBlock#onDestroyedOnLanding(net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.entity.FallingBlockEntity) AnvilBlock#onDestroyedOnLanding},
+		COMMENT and {@link net.minecraft.screen.AnvilScreenHandler#onTakeOutput(net.minecraft.entity.player.PlayerEntity, net.minecraft.item.ItemStack) AnvilScreenHandler#onTakeOutput}
+	FIELD field_31118 ANVIL_USED I
+		COMMENT An Anvil is used.
+		COMMENT <br>Plays the anvil used sound event.
+		COMMENT <p>Called by {@link net.minecraft.screen.AnvilScreenHandler#onTakeOutput(net.minecraft.entity.player.PlayerEntity, net.minecraft.item.ItemStack) AnvilScreenHandler#onTakeOutput}
+	FIELD field_31119 ANVIL_LANDS I
+		COMMENT An Anvil lands after falling.
+		COMMENT <br>Plays the anvil landing sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.AnvilBlock#onLanding(net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState, net.minecraft.block.BlockState, net.minecraft.entity.FallingBlockEntity) AnvilBlock#onLanding}
+	FIELD field_31120 TRAVEL_THROUGH_PORTAL I
+		COMMENT A Portal is travelled through.
+		COMMENT <br>Plays the portal travel sound event directly through the client's sound manager.
+		COMMENT <p>Called by {@link net.minecraft.server.network.ServerPlayerEntity#moveToWorld(net.minecraft.server.world.ServerWorld) ServerPlayerEntity#moveToWorld}
+	FIELD field_31121 CHORUS_FLOWER_GROWS I
+		COMMENT A Chorus Flower grows.
+		COMMENT <br>Plays the chorus flower growing sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.ChorusFlowerBlock#grow(net.minecraft.world.World, net.minecraft.util.math.BlockPos, int) ChorusFlowerBlock#grow}
+	FIELD field_31122 CHORUS_FLOWER_DIES I
+		COMMENT A Chorus Flower dies.
+		COMMENT <br>Plays the chorus flower death sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.ChorusFlowerBlock#die(net.minecraft.world.World, net.minecraft.util.math.BlockPos) ChorusFlowerBlock#die}
+	FIELD field_31123 BREWING_STAND_BREWS I
+		COMMENT A Brewing Stand brews.
+		COMMENT <br>Plays the brewing stand brewing sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.entity.BrewingStandBlockEntity#craft(net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.util.collection.DefaultedList) BrewingStandBlockEntity#craft}
+	FIELD field_31124 IRON_TRAPDOOR_CLOSES I
+		COMMENT An Iron Trapdoor closes.
+		COMMENT <br>Plays the iron trapdoor closing sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.TrapdoorBlock#playToggleSound(net.minecraft.entity.player.PlayerEntity, net.minecraft.world.World, net.minecraft.util.math.BlockPos, boolean) TrapdoorBlock#playToggleSound}
+	FIELD field_31125 IRON_TRAPDOOR_OPENS I
+		COMMENT An Iron Trapdoor opens.
+		COMMENT <br>Plays the iron trapdoor opening sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.TrapdoorBlock#playToggleSound(net.minecraft.entity.player.PlayerEntity, net.minecraft.world.World, net.minecraft.util.math.BlockPos, boolean) TrapdoorBlock#playToggleSound}
+	FIELD field_31126 END_PORTAL_OPENED I
+		COMMENT An End Portal is opened.
+		COMMENT <br>Plays the end portal spawn sound event.
+		COMMENT <br>This is a global event.
+		COMMENT <p>Called by {@link net.minecraft.item.EnderEyeItem#useOnBlock(net.minecraft.item.ItemUsageContext) EnderEyeItem#useOnBlock}
+	FIELD field_31127 PHANTOM_BITES I
+		COMMENT A Phantom bites its victim.
+		COMMENT <br>Plays the phantom bite sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.mob.PhantomEntity.SwoopMovementGoal#tick() PhantomEntity.SwoopMovementGoal#tick}
+	FIELD field_31128 ZOMBIE_CONVERTS_TO_DROWNED I
+		COMMENT A Zombie converts into a Drowned.
+		COMMENT <br>Plays the zombie convert to drowned sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.mob.ZombieEntity#convertInWater() ZombieEntity#convertInWater}
+	FIELD field_31129 HUSK_CONVERTS_TO_ZOMBIE I
+		COMMENT A Husk converts into a Zombie.
+		COMMENT <br>Plays the husk convert to zombie sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.mob.HuskEntity#convertInWater() HuskEntity#convertInWater}
+	FIELD field_31130 GRINDSTONE_USED I
+		COMMENT A Grindstone is used.
+		COMMENT <br>Plays the grindstone used sound event.
+		COMMENT <p>Called by {@link net.minecraft.screen.GrindstoneScreenHandler GrindstoneScreenHandler}
+	FIELD field_31131 LECTERN_BOOK_PAGE_TURNED I
+		COMMENT A page is turned in a Book on a Lectern.
+		COMMENT <br>Plays the page turn sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.LecternBlock#setPowered(net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState) LecternBlock#setPowered}
+	FIELD field_31132 SMITHING_TABLE_USED I
+		COMMENT A Smithing Table is used.
+		COMMENT <br>Plays the smithing table used sound event.
+		COMMENT <p>Called by {@link net.minecraft.screen.SmithingScreenHandler#onTakeOutput(net.minecraft.entity.player.PlayerEntity, net.minecraft.item.ItemStack) SmithingScreenHandler#onTakeOutput}
+	FIELD field_31133 POINTED_DRIPSTONE_LANDS I
+		COMMENT Pointed Dripstone lands after falling.
+		COMMENT <br>Plays the pointed dripstone landing sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.PointedDripstoneBlock#onDestroyedOnLanding(net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.entity.FallingBlockEntity) PointedDripstoneBlock#onDestroyedOnLanding}
+	FIELD field_31134 POINTED_DRIPSTONE_DRIPS_LAVA_INTO_CAULDRON I
+		COMMENT Pointed Dripstone drips Lava into a Cauldron.
+		COMMENT <br>Plays the pointed dripstone dripping lava into cauldron sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.CauldronBlock#fillFromDripstone(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.fluid.Fluid) CauldronBlock#fillFromDripstone}
+	FIELD field_31135 POINTED_DRIPSTONE_DRIPS_WATER_INTO_CAULDRON I
+		COMMENT Pointed Dripstone drips Water into a Cauldron.
+		COMMENT <br>Plays the pointed dripstone dripping water into cauldron sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.CauldronBlock#fillFromDripstone(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.fluid.Fluid) CauldronBlock#fillFromDripstone},
+		COMMENT and {@link net.minecraft.block.LeveledCauldronBlock#fillFromDripstone(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.fluid.Fluid) LeveledCauldronBlock#fillFromDripstone}
+	FIELD field_31136 SKELETON_CONVERTS_TO_STRAY I
+		COMMENT A Skeleton converts into a Stray.
+		COMMENT <br>Plays the skeleton convert to stray sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.mob.SkeletonEntity#convertToStray() SkeletonEntity#convertToStray}
+	FIELD field_31137 COMPOSTER_USED I
+		COMMENT An item is composted in a Composter.
+		COMMENT <br>Plays the appropriate composting sound event and spawns composter particles.
+		COMMENT <p>A {@code 1} should be passed as extra data if the use of the composter added to the level of compost inside.
+		COMMENT <p>Called by {@link net.minecraft.block.ComposterBlock#onUse(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.entity.player.PlayerEntity, net.minecraft.util.Hand, net.minecraft.util.hit.BlockHitResult) ComposterBlock#onUse},
+		COMMENT {@link net.minecraft.block.ComposterBlock.ComposterInventory#markDirty() ComposterBlock.ComposterInventory#markDirty},
+		COMMENT and {@link net.minecraft.entity.ai.brain.task.FarmerWorkTask#syncComposterEvent(net.minecraft.server.world.ServerWorld, net.minecraft.block.BlockState, net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState) FarmerWorkTask#syncComposterEvent}
+	FIELD field_31138 LAVA_EXTINGUISHED I
+		COMMENT Lava is extinguished.
+		COMMENT <br>Plays the lava extinguish sound event and spawns large smoke particles.
+		COMMENT <p>Called by {@link net.minecraft.block.FluidBlock#playExtinguishSound(net.minecraft.world.WorldAccess, net.minecraft.util.math.BlockPos) FluidBlock#playExtinguishSound},
+		COMMENT and {@link net.minecraft.fluid.LavaFluid#playExtinguishEvent(net.minecraft.world.WorldAccess, net.minecraft.util.math.BlockPos) LavaFluid#playExtinguishEvent}
+	FIELD field_31139 REDSTONE_TORCH_BURNS_OUT I
+		COMMENT A Redstone Torch burns out.
+		COMMENT <br>Plays the redstone torch burn out sound event and spawns smoke particles.
+		COMMENT <p>Called by {@link net.minecraft.block.RedstoneTorchBlock#scheduledTick(net.minecraft.block.BlockState, net.minecraft.server.world.ServerWorld, net.minecraft.util.math.BlockPos, java.util.Random) RedstoneTorchBlock#scheduledTick}
+	FIELD field_31140 DISPENSER_DISPENSES I
+		COMMENT A Dispenser dispenses an item.
+		COMMENT <br>Plays the dispensing sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.dispenser.BoatDispenserBehavior#playSound(net.minecraft.util.math.BlockPointer) BoatDispenserBehavior#playSound},
+		COMMENT {@link net.minecraft.block.dispenser.FallibleItemDispenserBehavior#playSound(net.minecraft.util.math.BlockPointer) FallibleItemDispenserBehavior#playSound},
+		COMMENT {@link net.minecraft.block.dispenser.ItemDispenserBehavior#playSound(net.minecraft.util.math.BlockPointer) ItemDispenserBehavior#playSound},
+		COMMENT and {@link net.minecraft.item.MinecartItem#DISPENSER_BEHAVIOR MinecartItem#DISPENSER_BEHAVIOR}
+	FIELD field_31141 END_PORTAL_FRAME_FILLED I
+		COMMENT An End Portal Frame is filled with an Eye of Ender.
+		COMMENT <br>Plays the end portal frame filled sound event and spawns smoke particles.
+		COMMENT <p>Called by {@link net.minecraft.item.EnderEyeItem#useOnBlock(net.minecraft.item.ItemUsageContext) EnderEyeItem#useOnBlock}
+	FIELD field_31142 POINTED_DRIPSTONE_DRIPS I
+		COMMENT Pointed Dripstone drips fluid particles.
+		COMMENT <br>Spawns dripping fluid particles.
+		COMMENT <p>Called by {@link net.minecraft.block.PointedDripstoneBlock#dripTick(net.minecraft.block.BlockState, net.minecraft.server.world.ServerWorld, net.minecraft.util.math.BlockPos, float) PointedDripstoneBlock#dripTick}
+	FIELD field_31143 DISPENSER_ACTIVATED I
+		COMMENT A Dispenser is activated.
+		COMMENT <br>Spawns smoke particles.
+		COMMENT <br>The ordinal direction the dispenser is facing must be supplied as extra data.
+		COMMENT <p>Called by {@link net.minecraft.block.dispenser.ItemDispenserBehavior#spawnParticles(net.minecraft.util.math.BlockPointer, net.minecraft.util.math.Direction) ItemDispenserBehavior#spawnParticles}
+	FIELD field_31144 BLOCK_BROKEN I
+		COMMENT A block is broken.
+		COMMENT <br>Plays the appropriate block breaking sound event and spawns block breaking particles.
+		COMMENT <p>The raw ID of the block must be supplied as extra data.
+		COMMENT <p>Called by {@link net.minecraft.block.Block#spawnBreakParticles(net.minecraft.world.World, net.minecraft.entity.player.PlayerEntity, net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState) Block#spawnBreakParticles},
+		COMMENT {@link net.minecraft.block.TallPlantBlock#onBreakInCreative(net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState, net.minecraft.entity.player.PlayerEntity) TallPlantBlock#onBreakInCreative},
+		COMMENT {@link net.minecraft.entity.ai.goal.BreakDoorGoal#tick() BreakDoorGoal#tick},
+		COMMENT {@link net.minecraft.block.CarvedPumpkinBlock#trySpawnEntity(net.minecraft.world.World, net.minecraft.util.math.BlockPos) CarvedPumpkinBlock#trySpawnEntity},
+		COMMENT {@link net.minecraft.entity.ai.goal.EatGrassGoal#tick() EatGrassGoal#tick},
+		COMMENT {@link net.minecraft.entity.passive.FoxEntity#tick() FoxEntity#tick},
+		COMMENT {@link net.minecraft.block.PowderSnowBlock#tryDrainFluid(net.minecraft.world.WorldAccess, net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState) PowderSnowBlock#tryDrainFluid},
+		COMMENT {@link net.minecraft.entity.passive.RabbitEntity.EatCarrotCropGoal#tick() RabbitEntity.EatCarrotCropGoal#tick},
+		COMMENT {@link net.minecraft.block.SpongeBlock#update(net.minecraft.world.World, net.minecraft.util.math.BlockPos) SpongeBlock#update},
+		COMMENT {@link net.minecraft.block.TurtleEggBlock#breakEgg(net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState) TurtleEggBlock#breakEgg},
+		COMMENT {@link net.minecraft.block.TurtleEggBlock#randomTick(net.minecraft.block.BlockState, net.minecraft.server.world.ServerWorld, net.minecraft.util.math.BlockPos, java.util.Random) TurtleEggBlock#randomTick},
+		COMMENT {@link net.minecraft.entity.passive.TurtleEntity#tickMovement() TurtleEntity#tickMovement},
+		COMMENT {@link net.minecraft.block.WitherSkullBlock#onPlaced(net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.block.entity.SkullBlockEntity) WitherSkullBlock#onPlaced},
+		COMMENT and {@link net.minecraft.world.World#breakBlock(net.minecraft.util.math.BlockPos, boolean, net.minecraft.entity.Entity, int) World#breakBlock}
+	FIELD field_31145 SPLASH_POTION_SPLASHED I
+		COMMENT A non-instant Splash Potion is splashed.
+		COMMENT <br>Plays the splash potion breaking sound event and spawns splash potion particles.
+		COMMENT <p>The hex color of the potion must be supplied as extra data.
+		COMMENT <p>For instant effects such as Instant Health and Instant Damage, use {@link #INSTANT_SPLASH_POTION_SPLASHED}.
+		COMMENT <p>Called by {@link net.minecraft.entity.projectile.thrown.ExperienceBottleEntity#onCollision(net.minecraft.util.hit.HitResult) ExperienceBottleEntity#onCollision},
+		COMMENT and {@link net.minecraft.entity.projectile.thrown.PotionEntity#onCollision(net.minecraft.util.hit.HitResult) PotionEntity#onCollision}
+	FIELD field_31146 EYE_OF_ENDER_BREAKS I
+		COMMENT A thrown Eye of Ender breaks.
+		COMMENT <br>Spawns several particles.
+		COMMENT <p>Called by {@link net.minecraft.entity.EyeOfEnderEntity#tick() EyeOfEnderEntity#tick}
+	FIELD field_31147 SPAWNER_SPAWNS_MOB I
+		COMMENT A Spawner spawns a mob.
+		COMMENT <br>Spawns smoke and flame particles.
+		COMMENT <p>Called by {@link net.minecraft.world.MobSpawnerLogic#serverTick(net.minecraft.server.world.ServerWorld, net.minecraft.util.math.BlockPos) MobSpawnerLogic#serverTick}
+	FIELD field_31148 PLANT_FERTILIZED I
+		COMMENT A plant is fertilized with Bone Meal or by a Bee, or a Turtle Egg is placed
+		COMMENT <br>Spawns happy villager particles.
+		COMMENT <p>Called by {@link net.minecraft.entity.passive.BeeEntity.GrowCropsGoal#tick() BeeEntity.GrowCropsGoal#tick},
+		COMMENT {@link net.minecraft.item.BoneMealItem#useOnBlock(net.minecraft.item.ItemUsageContext) BoneMealItem#useOnBlock},
+		COMMENT {@link net.minecraft.entity.ai.brain.task.BoneMealTask#keepRunning(net.minecraft.server.world.ServerWorld, net.minecraft.entity.passive.VillagerEntity, long) BoneMealTask#keepRunning},
+		COMMENT {@link net.minecraft.block.dispenser.DispenserBehavior DispenserBehavior},
+		COMMENT and {@link net.minecraft.block.TurtleEggBlock#onBlockAdded(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState, boolean) TurtleEggBlock#onBlockAdded}
+	FIELD field_31149 DRAGON_BREATH_CLOUD_SPAWNS I
+		COMMENT A Dragon Breath Cloud spawns.
+		COMMENT <br>Plays the dragon fireball explode sound event and spawns dragon breath particles.
+		COMMENT <p>Called by {@link net.minecraft.entity.projectile.DragonFireballEntity#onCollision(net.minecraft.util.hit.HitResult) DragonFireballEntity#onCollision}
+	FIELD field_31150 INSTANT_SPLASH_POTION_SPLASHED I
+		COMMENT An instant Splash Potion is splashed.
+		COMMENT <br>Plays the splash potion breaking sound event and spawns instant splash potion particles.
+		COMMENT <p>The hex color of the potion must be supplied as extra data.
+		COMMENT <p>For non-instant effects, use {@link #SPLASH_POTION_SPLASHED}.
+		COMMENT <p>Called by {@link net.minecraft.entity.projectile.thrown.PotionEntity#onCollision(net.minecraft.util.hit.HitResult) PotionEntity#onCollision}
+	FIELD field_31151 ENDER_DRAGON_BREAKS_BLOCK I
+		COMMENT An Ender Dragon breaks a block.
+		COMMENT <br>Spawns an explosion particle.
+		COMMENT <p>Called by {@link net.minecraft.entity.boss.dragon.EnderDragonEntity#destroyBlocks(net.minecraft.util.math.Box) EnderDragonEntity#destroyBlocks}
+	FIELD field_31152 WET_SPONGE_DRIES_OUT I
+		COMMENT A Wet Sponge dries out in a hot dimension.
+		COMMENT <br>Spawns cloud particles.
+		COMMENT <p>Called by {@link net.minecraft.block.WetSpongeBlock#onBlockAdded(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState, boolean) WetSpongeBlock#onBlockAdded}
+		COMMENT lic static final int WET_SPONGE_DRIES_OUT = 2009;
+	FIELD field_31153 END_GATEWAY_SPAWNS I
+		COMMENT An End Gateway spawns.
+		COMMENT <br>Plays the end gateway spawn sound event and spawns an explosion emitter particle.
+		COMMENT <p>Called by {@link net.minecraft.entity.boss.dragon.EnderDragonFight#generateEndGateway(net.minecraft.util.math.BlockPos) EnderDragonFight#generateEndGateway}
+	FIELD field_31154 ENDER_DRAGON_RESURRECTED I
+		COMMENT The Ender Dragon is being resurrected.
+		COMMENT <br>Plays the ender dragon growl sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.boss.dragon.EnderDragonSpawnState#run(net.minecraft.server.world.ServerWorld, net.minecraft.entity.boss.dragon.EnderDragonFight, java.util.List, int, net.minecraft.util.math.BlockPos) EnderDragonSpawnState#run}
+	FIELD field_31155 ELECTRICITY_SPARKS I
+		COMMENT Electricity sparks after Lightning hits a Lightning Rod or Oxidizable blocks.
+		COMMENT <br>Spawns electric spark particles.
+		COMMENT <p>The ordinal direction the lightning rod is facing must be supplied as extra data.
+		COMMENT <br>A {@code -1} should be passed if the event is called by a lightning entity itself.
+		COMMENT <p>Called by {@link net.minecraft.block.LightningRodBlock#setPowered(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos) LightningRodBlock#setPowered},
+		COMMENT and {@link net.minecraft.entity.LightningEntity#cleanOxidizationAround(net.minecraft.world.World, net.minecraft.util.math.BlockPos) LightningEntity#cleanOxidizationAround}
+	FIELD field_31156 BLOCK_WAXED I
+		COMMENT A block is waxed.
+		COMMENT <br>Plays the block waxing sound event and spawns waxing particles.
+		COMMENT <p>Called by {@link net.minecraft.item.HoneycombItem#useOnBlock(net.minecraft.item.ItemUsageContext) HoneycombItem#useOnBlock}
+	FIELD field_31157 WAX_REMOVED I
+		COMMENT Wax is removed from a block.
+		COMMENT <br>Spawns wax removal particles.
+		COMMENT <p>Called by {@link net.minecraft.item.AxeItem#useOnBlock(net.minecraft.item.ItemUsageContext) AxeItem#useOnBlock}
+	FIELD field_31158 BLOCK_SCRAPED I
+		COMMENT A block is scraped.
+		COMMENT <br>Spawns scraping particles.
+		COMMENT <p>Called by {@link net.minecraft.item.AxeItem#useOnBlock(net.minecraft.item.ItemUsageContext) AxeItem#useOnBlock}
+	FIELD field_31159 DISPENSER_FAILS I
+		COMMENT A Dispenser fails to dispense an item.
+		COMMENT <br>Plays the dispenser fail sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.DispenserBlock#dispense(net.minecraft.server.world.ServerWorld, net.minecraft.util.math.BlockPos) DispenserBlock#dispense},
+		COMMENT {@link net.minecraft.block.DropperBlock#dispense(net.minecraft.server.world.ServerWorld, net.minecraft.util.math.BlockPos) DropperBlock#dispense},
+		COMMENT and {@link net.minecraft.block.dispenser.FallibleItemDispenserBehavior#playSound(net.minecraft.util.math.BlockPointer) FallibleItemDispenserBehavior#playSound}
+	FIELD field_31160 DISPENSER_LAUNCHES_PROJECTILE I
+		COMMENT A Dispenser launches a projectile.
+		COMMENT <br>Plays the dispenser launch sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.dispenser.ProjectileDispenserBehavior#playSound(net.minecraft.util.math.BlockPointer) ProjectileDispenserBehavior#playSound}
+	FIELD field_31161 EYE_OF_ENDER_LAUNCHES I
+		COMMENT An Eye of Ender is launched.
+		COMMENT <br>Plays the eye of ender launching sound event.
+		COMMENT <p>Called by {@link net.minecraft.item.EnderEyeItem#use(net.minecraft.world.World, net.minecraft.entity.player.PlayerEntity, net.minecraft.util.Hand) EnderEyeItem#use}
+	FIELD field_31162 FIREWORK_ROCKET_SHOOTS I
+		COMMENT A Firework Rocket is shot.
+		COMMENT <br>Plays the firework shoot sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.dispenser.DispenserBehavior DispenserBehavior}
+	FIELD field_31163 IRON_DOOR_OPENS I
+		COMMENT An Iron Door is opened.
+		COMMENT <br>Plays the iron door opening sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.DoorBlock#playOpenCloseSound(net.minecraft.world.World, net.minecraft.util.math.BlockPos, boolean) DoorBlock#playOpenCloseSound}
+	FIELD field_31164 WOODEN_DOOR_OPENS I
+		COMMENT A Wooden Door is opened.
+		COMMENT <br>Plays the wooden door opening sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.DoorBlock#onUse(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.entity.player.PlayerEntity, net.minecraft.util.Hand, net.minecraft.util.hit.BlockHitResult) DoorBlock#onUse},
+		COMMENT and {@link net.minecraft.block.DoorBlock#playOpenCloseSound(net.minecraft.world.World, net.minecraft.util.math.BlockPos, boolean) DoorBlock#playOpenCloseSound}
+	FIELD field_31165 WOODEN_TRAPDOOR_OPENS I
+		COMMENT A Wooden Trapdoor is opened.
+		COMMENT <br>Plays the wooden trapdoor opening sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.TrapdoorBlock#playToggleSound(net.minecraft.entity.player.PlayerEntity, net.minecraft.world.World, net.minecraft.util.math.BlockPos, boolean) TrapdoorBlock#playToggleSound}
+	FIELD field_31166 FENCE_GATE_OPENS I
+		COMMENT A Fence Gate is opened.
+		COMMENT <br>Plays the fence gate opening sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.FenceGateBlock#onUse(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.entity.player.PlayerEntity, net.minecraft.util.Hand, net.minecraft.util.hit.BlockHitResult) FenceGateBlock#onUse},
+		COMMENT and {@link net.minecraft.block.FenceGateBlock#neighborUpdate(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.block.Block, net.minecraft.util.math.BlockPos, boolean) FenceGateBlock#neighborUpdate}
+	FIELD field_31167 FIRE_EXTINGUISHED I
+		COMMENT A fire block or campfire is extinguished.
+		COMMENT <br>Plays the fire extinguish sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.AbstractFireBlock#onBreak(net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.block.BlockState, net.minecraft.entity.player.PlayerEntity) AbstractFireBlock#onBreak},
+		COMMENT {@link net.minecraft.entity.projectile.thrown.PotionEntity#extinguishFire(net.minecraft.util.math.BlockPos, net.minecraft.util.math.Direction) PotionEntity#extinguishFire},
+		COMMENT and {@link net.minecraft.item.ShovelItem#useOnBlock(net.minecraft.item.ItemUsageContext) ShovelItem#useOnBlock}
+	FIELD field_31168 MUSIC_DISC_PLAYED I
+		COMMENT A Music Disc is played.
+		COMMENT <br>Plays the appropriate music.
+		COMMENT <br>The Raw ID of the Music Disc item must be supplied as extra data.
+		COMMENT <br>A {@code 0} should be passed to stop music.
+		COMMENT <p>Called by {@link net.minecraft.item.MusicDiscItem#useOnBlock(net.minecraft.item.ItemUsageContext) MusicDiscItem#useOnBlock},
+		COMMENT and {@link net.minecraft.block.JukeboxBlock#removeRecord(net.minecraft.world.World, net.minecraft.util.math.BlockPos) JukeboxBlock#removeRecord}
+	FIELD field_31169 IRON_DOOR_CLOSES I
+		COMMENT An Iron Door is closed.
+		COMMENT <br>Plays the iron door closing sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.DoorBlock#playOpenCloseSound(net.minecraft.world.World, net.minecraft.util.math.BlockPos, boolean) DoorBlock#playOpenCloseSound}
+	FIELD field_31170 WOODEN_DOOR_CLOSES I
+		COMMENT A Wooden Door is closed.
+		COMMENT <br>Plays the wooden door closing sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.DoorBlock#onUse(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.entity.player.PlayerEntity, net.minecraft.util.Hand, net.minecraft.util.hit.BlockHitResult) DoorBlock#onUse},
+		COMMENT and {@link net.minecraft.block.DoorBlock#playOpenCloseSound(net.minecraft.world.World, net.minecraft.util.math.BlockPos, boolean) DoorBlock#playOpenCloseSound}
+	FIELD field_31171 WOODEN_TRAPDOOR_CLOSES I
+		COMMENT A Wooden Trapdoor is closed.
+		COMMENT <br>Plays the wooden trapdoor closing sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.TrapdoorBlock#playToggleSound(net.minecraft.entity.player.PlayerEntity, net.minecraft.world.World, net.minecraft.util.math.BlockPos, boolean) TrapdoorBlock#playToggleSound}
+	FIELD field_31172 FENCE_GATE_CLOSES I
+		COMMENT A Fence Gate is closed.
+		COMMENT <br>Plays the fence gate closing sound event.
+		COMMENT <p>Called by {@link net.minecraft.block.FenceGateBlock#onUse(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.entity.player.PlayerEntity, net.minecraft.util.Hand, net.minecraft.util.hit.BlockHitResult) FenceGateBlock#onUse},
+		COMMENT and {@link net.minecraft.block.FenceGateBlock#neighborUpdate(net.minecraft.block.BlockState, net.minecraft.world.World, net.minecraft.util.math.BlockPos, net.minecraft.block.Block, net.minecraft.util.math.BlockPos, boolean) FenceGateBlock#neighborUpdate}
+	FIELD field_31173 GHAST_WARNS I
+		COMMENT A Ghast warns its victim.
+		COMMENT <br>Plays the ghast warn sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.mob.GhastEntity.ShootFireballGoal#tick() GhastEntity.ShootFireballGoal#tick}
+	FIELD field_31174 GHAST_SHOOTS I
+		COMMENT A Ghast shoots a fireball.
+		COMMENT <br>Plays the ghast shoot sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.mob.GhastEntity.ShootFireballGoal#tick() GhastEntity.ShootFireballGoal#tick}
+	FIELD field_31175 ENDER_DRAGON_SHOOTS I
+		COMMENT An Ender Dragon shoots a fireball.
+		COMMENT <br>Plays the ender dragon shoot sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.boss.dragon.phase.StrafePlayerPhase#serverTick() StrafePlayerPhase#serverTick}
+	FIELD field_31176 BLAZE_SHOOTS I
+		COMMENT A Blaze shoots a fireball or a Fire Charge is shot by a dispenser.
+		COMMENT <br>Plays the blaze shoot sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.mob.BlazeEntity.ShootFireballGoal#tick() BlazeEntity.ShootFireballGoal#tick},
+		COMMENT and {@link net.minecraft.block.dispenser.DispenserBehavior DispenserBehavior}
+	FIELD field_31177 ZOMBIE_ATTACKS_WOODEN_DOOR I
+		COMMENT A Zombie attacks a Wooden Door.
+		COMMENT <br>Plays the zombie attacking wooden door sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.ai.goal.BreakDoorGoal#tick() BreakDoorGoal#tick}
+	FIELD field_31178 ZOMBIE_ATTACKS_IRON_DOOR I
+		COMMENT A Zombie attacks an Iron Door.
+		COMMENT <br>Plays the zombie attacking iron door sound event.
+		COMMENT <br>Goes unused.
+	FIELD field_31179 ZOMBIE_BREAKS_WOODEN_DOOR I
+		COMMENT A Zombie breaks a Wooden Door.
+		COMMENT <br>Plays the zombie breaking wooden door sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.ai.goal.BreakDoorGoal#tick() BreakDoorGoal#tick}
+	FIELD field_31180 WITHER_BREAKS_BLOCK I
+		COMMENT A Wither breaks a block.
+		COMMENT <br>Plays the wither breaking block sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.boss.WitherEntity#mobTick() WitherEntity#mobTick}
+	FIELD field_31181 WITHER_SPAWNS I
+		COMMENT A Wither is spawned.
+		COMMENT <br>Plays the wither spawn sound event.
+		COMMENT <br>This is a global event.
+		COMMENT <p>Called by {@link net.minecraft.entity.boss.WitherEntity#mobTick() WitherEntity#mobTick}
+	FIELD field_31182 WITHER_SHOOTS I
+		COMMENT A Wither shoots a wither skull.
+		COMMENT <br>Plays the wither shoot sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.boss.WitherEntity#shootSkullAt(int, double, double, double, boolean) WitherEntity#shootSkullAt}
+	FIELD field_31183 BAT_TAKES_OFF I
+		COMMENT A Bat takes off.
+		COMMENT <br>Plays the bat take off sound event.
+		COMMENT <p>Called by {@link net.minecraft.entity.passive.BatEntity#mobTick() BatEntity#mobTick}

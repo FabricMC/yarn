@@ -12,4 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: gradle/wrapper-validation-action@v1
-      - run: ./gradlew build javadocJar checkMappings mapNamedJar --stacktrace
+      - run: ./gradlew build javadocJar checkMappings --stacktrace
+      - name: Build artifacts
+        if: ${{ matrix.java == '15-jdk' }}
+        continue-on-error: true
+        uses: actions/upload-artifact@v2
+        with:
+          name: Artifacts
+          path: build/libs/

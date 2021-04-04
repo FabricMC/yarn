@@ -24,8 +24,6 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		ARG 1 pos
 	METHOD <init> (Lnet/minecraft/class_243;)V
 		ARG 1 pos
-	METHOD method_10059 subtract (Lnet/minecraft/class_2382;)Lnet/minecraft/class_2338;
-		ARG 1 pos
 	METHOD method_10060 offset (JLnet/minecraft/class_2350;)J
 		ARG 0 value
 		ARG 2 direction
@@ -55,12 +53,6 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 	METHOD method_10077 south (I)Lnet/minecraft/class_2338;
 		ARG 1 distance
 	METHOD method_10078 east ()Lnet/minecraft/class_2338;
-	METHOD method_10080 add (DDD)Lnet/minecraft/class_2338;
-		ARG 1 x
-		ARG 3 y
-		ARG 5 z
-	METHOD method_10081 add (Lnet/minecraft/class_2382;)Lnet/minecraft/class_2338;
-		ARG 1 pos
 	METHOD method_10083 unpackLongZ (J)I
 		ARG 0 packedPos
 	METHOD method_10084 up ()Lnet/minecraft/class_2338;
@@ -74,8 +66,6 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		ARG 0 y
 	METHOD method_10092 fromLong (J)Lnet/minecraft/class_2338;
 		ARG 0 packedPos
-	METHOD method_10093 offset (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2338;
-		ARG 1 direction
 	METHOD method_10094 iterate (IIIIII)Ljava/lang/Iterable;
 		ARG 0 startX
 		ARG 1 startY
@@ -186,11 +176,21 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 		ARG 1 radius
 		ARG 2 firstDirection
 		ARG 3 secondDirection
-	METHOD method_30513 offset (Lnet/minecraft/class_2350$class_2351;I)Lnet/minecraft/class_2338;
-		ARG 1 axis
-		ARG 2 distance
 	METHOD method_33096 withY (I)Lnet/minecraft/class_2338;
 		ARG 1 y
+	METHOD method_34848 iterateRandomly (Ljava/util/Random;ILnet/minecraft/class_2338;I)Ljava/lang/Iterable;
+		COMMENT Iterates through {@code count} random block positions in a given range around the given position.
+		COMMENT
+		COMMENT <p>The iterator yields positions in no specific order. The same position
+		COMMENT may be returned multiple times by the iterator.
+		ARG 0 random
+			COMMENT the {@link Random} object used to compute new positions
+		ARG 1 count
+			COMMENT the number of positions to iterate
+		ARG 2 around
+			COMMENT the {@link BlockPos} to iterate around
+		ARG 3 range
+			COMMENT the maximum distance from the given pos in any axis
 	CLASS 1
 		FIELD field_23945 pos Lnet/minecraft/class_2338$class_2339;
 		FIELD field_23946 remaining I
@@ -276,3 +276,7 @@ CLASS net/minecraft/class_2338 net/minecraft/util/math/BlockPos
 			ARG 3 max
 		METHOD method_30927 move (Lnet/minecraft/class_2382;)Lnet/minecraft/class_2338$class_2339;
 			ARG 1 vec
+		METHOD method_35831 set (Lnet/minecraft/class_2382;Lnet/minecraft/class_2382;)Lnet/minecraft/class_2338$class_2339;
+			COMMENT Sets this mutable block position to the sum of the given vectors.
+			ARG 1 vec1
+			ARG 2 vec2

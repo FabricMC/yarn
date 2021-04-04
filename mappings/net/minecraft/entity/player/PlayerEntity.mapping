@@ -109,7 +109,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7266 resetStat (Lnet/minecraft/class_3445;)V
 		ARG 1 stat
 	METHOD method_7267 updateShoulderEntity (Lnet/minecraft/class_2487;)V
-		ARG 1 tag
+		ARG 1 entityNbt
 	METHOD method_7268 setReducedDebugInfo (Z)V
 		ARG 1 reducedDebugInfo
 	METHOD method_7269 trySleep (Lnet/minecraft/class_2338;)Lcom/mojang/datafixers/util/Either;
@@ -120,7 +120,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 0 profile
 	METHOD method_7272 getScore ()I
 	METHOD method_7273 setShoulderEntityLeft (Lnet/minecraft/class_2487;)V
-		ARG 1 entityTag
+		ARG 1 entityNbt
 	METHOD method_7274 getEnderChestInventory ()Lnet/minecraft/class_1730;
 	METHOD method_7276 isSleepingLongEnough ()Z
 		COMMENT Returns whether this player has been sleeping long enough to count towards
@@ -160,7 +160,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 1 entityNbt
 	METHOD method_7297 getSleepTimer ()I
 	METHOD method_7298 addShoulderEntity (Lnet/minecraft/class_2487;)Z
-		ARG 1 tag
+		ARG 1 entityNbt
 	METHOD method_7299 addTellClickEvent (Lnet/minecraft/class_5250;)Lnet/minecraft/class_5250;
 		ARG 1 component
 	METHOD method_7302 hasReducedDebugInfo ()Z
@@ -182,13 +182,28 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7311 openEditSignScreen (Lnet/minecraft/class_2625;)V
 		ARG 1 sign
 	METHOD method_7313 updateCapeAngles ()V
-	METHOD method_7315 openEditBookScreen (Lnet/minecraft/class_1799;Lnet/minecraft/class_1268;)V
+	METHOD method_7315 useBook (Lnet/minecraft/class_1799;Lnet/minecraft/class_1268;)V
+		COMMENT Called when the player uses (defaults to right click) a writable or written
+		COMMENT book item.
+		COMMENT
+		COMMENT <p>This can be called either on the client or the server player. Check {@code
+		COMMENT book} for whether this is a written or a writable book.
+		COMMENT
+		COMMENT @implNote The writing of a writable book in vanilla is totally controlled by
+		COMMENT the client; the server cannot make the client open a book edit screen by
+		COMMENT making a server player use a writable book. Only when the client finishes
+		COMMENT writing a book it will send a {@linkplain net.minecraft.network.packet.c2s.play.BookUpdateC2SPacket book update C2S packet}.
+		COMMENT
+		COMMENT <p>Meanwhile, the reading of a written book is totally controlled and initiated
+		COMMENT by the server.
 		ARG 1 book
+			COMMENT the book
 		ARG 2 hand
+			COMMENT the hand holding the book
 	METHOD method_7316 addExperienceLevels (I)V
 		ARG 1 levels
 	METHOD method_7317 canFoodHeal ()Z
-	METHOD method_7318 updateSize ()V
+	METHOD method_7318 updatePose ()V
 	METHOD method_7320 setScore (I)V
 		ARG 1 score
 	METHOD method_7322 addExhaustion (F)V
@@ -235,7 +250,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 3 stack
 	METHOD method_7344 getHungerManager ()Lnet/minecraft/class_1702;
 	METHOD method_7345 setShoulderEntityRight (Lnet/minecraft/class_2487;)V
-		ARG 1 entityTag
+		ARG 1 entityNbt
 	METHOD method_7346 closeHandledScreen ()V
 	METHOD method_7348 isPartVisible (Lnet/minecraft/class_1664;)Z
 		ARG 1 modelPart
