@@ -1,6 +1,16 @@
 CLASS net/minecraft/class_5568 net/minecraft/world/entity/EntityLike
 	COMMENT A prototype of entity that's suitable for entity manager to handle.
 	METHOD method_24204 streamSelfAndPassengers ()Ljava/util/stream/Stream;
+		COMMENT Returns a stream consisting of this entity and its passengers recursively.
+		COMMENT Each entity will appear before any of its passengers.
+		COMMENT
+		COMMENT <p>This may be less costly than {@link #streamPassengersAndSelf()} if the
+		COMMENT stream's iteration would terminates fast, such as finding an arbitrary
+		COMMENT match of entity in the passengers tree.
+		COMMENT
+		COMMENT @implNote The default implementation is not very efficient.
+		COMMENT
+		COMMENT @see #streamPassengersAndSelf()
 	METHOD method_24515 getBlockPos ()Lnet/minecraft/class_2338;
 	METHOD method_31744 setListener (Lnet/minecraft/class_5569;)V
 		ARG 1 listener
@@ -19,7 +29,7 @@ CLASS net/minecraft/class_5568 net/minecraft/world/entity/EntityLike
 		COMMENT
 		COMMENT @implNote The default implementation is very costly.
 		COMMENT
-		COMMENT @see net.minecraft.entity.Entity#streamSelfAndPassengers()
+		COMMENT @see #streamSelfAndPassengers()
 	METHOD method_5628 getId ()I
 		COMMENT Returns the network ID of this entity.
 	METHOD method_5667 getUuid ()Ljava/util/UUID;
