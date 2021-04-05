@@ -8,7 +8,7 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 	FIELD field_26362 JIGSAW_ID Lnet/minecraft/class_2960;
 	METHOD <init> (Lcom/mojang/serialization/Codec;)V
 		ARG 1 codec
-	METHOD method_13149 getMonsterSpawns ()Ljava/util/List;
+	METHOD method_13149 getMonsterSpawns ()Lnet/minecraft/class_6012;
 	METHOD method_14015 locateStructure (Lnet/minecraft/class_4538;Lnet/minecraft/class_5138;Lnet/minecraft/class_2338;IZJLnet/minecraft/class_5314;)Lnet/minecraft/class_2338;
 		COMMENT Tries to find the closest structure of this type near a given block.
 		COMMENT <p>
@@ -28,7 +28,7 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 		ARG 8 config
 	METHOD method_14016 getStructureStartFactory ()Lnet/minecraft/class_3195$class_3774;
 	METHOD method_14019 getName ()Ljava/lang/String;
-	METHOD method_14026 shouldStartAt (Lnet/minecraft/class_2794;Lnet/minecraft/class_1966;JLnet/minecraft/class_2919;IILnet/minecraft/class_1959;Lnet/minecraft/class_1923;Lnet/minecraft/class_3037;)Z
+	METHOD method_14026 shouldStartAt (Lnet/minecraft/class_2794;Lnet/minecraft/class_1966;JLnet/minecraft/class_2919;Lnet/minecraft/class_1923;Lnet/minecraft/class_1959;Lnet/minecraft/class_1923;Lnet/minecraft/class_3037;Lnet/minecraft/class_5539;)Z
 		COMMENT Checks if this structure can <em>actually</em> be placed at a potential structure position determined via
 		COMMENT {@link #getStartChunk}. Specific structures override this method to reduce the spawn probability or
 		COMMENT restrict the spawn in some other way.
@@ -36,20 +36,20 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 		ARG 2 biomeSource
 		ARG 3 worldSeed
 		ARG 5 random
-		ARG 6 chunkX
-		ARG 7 chunkZ
-		ARG 8 biome
-		ARG 9 chunkPos
-		ARG 10 config
-	METHOD method_16140 getCreatureSpawns ()Ljava/util/List;
+		ARG 6 pos
+		ARG 9 config
+		ARG 10 world
+	METHOD method_16140 getCreatureSpawns ()Lnet/minecraft/class_6012;
 	METHOD method_27218 getStartChunk (Lnet/minecraft/class_5314;JLnet/minecraft/class_2919;II)Lnet/minecraft/class_1923;
 		COMMENT Determines the cell of the structure placement grid a chunk belongs to, and
 		COMMENT returns the chunk within that cell, that this structure will actually be placed at.
 		COMMENT <p>
 		COMMENT If the {@link StructureConfig} uses a separation setting greater than 0, the
 		COMMENT placement will be constrained to [0, spacing - separation] within the grid cell.
-		COMMENT If a non-uniform distribution is used for placement {@see #isUniformDistribution()},
-		COMMENT then this also moves the center towards the origin.
+		COMMENT If a non-uniform distribution is used for placement, then this also moves
+		COMMENT the center towards the origin.
+		COMMENT
+		COMMENT @see #isUniformDistribution()
 		ARG 1 config
 		ARG 2 worldSeed
 		ARG 4 placementRandom
@@ -59,24 +59,29 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 		COMMENT If true, this structure's start position will be uniformly distributed within
 		COMMENT a placement grid cell. If false, the structure's starting point will be biased
 		COMMENT towards the center of the cell.
-	METHOD method_28656 createStart (IILnet/minecraft/class_3341;IJ)Lnet/minecraft/class_3449;
-		ARG 1 chunkX
-		ARG 2 chunkZ
-		ARG 3 boundingBox
-		ARG 4 referenceCount
-		ARG 5 worldSeed
-	METHOD method_28657 tryPlaceStart (Lnet/minecraft/class_5455;Lnet/minecraft/class_2794;Lnet/minecraft/class_1966;Lnet/minecraft/class_3485;JLnet/minecraft/class_1923;Lnet/minecraft/class_1959;ILnet/minecraft/class_2919;Lnet/minecraft/class_5314;Lnet/minecraft/class_3037;)Lnet/minecraft/class_3449;
+	METHOD method_28656 createStart (Lnet/minecraft/class_1923;IJ)Lnet/minecraft/class_3449;
+		ARG 1 pos
+	METHOD method_28657 tryPlaceStart (Lnet/minecraft/class_5455;Lnet/minecraft/class_2794;Lnet/minecraft/class_1966;Lnet/minecraft/class_3485;JLnet/minecraft/class_1923;Lnet/minecraft/class_1959;ILnet/minecraft/class_2919;Lnet/minecraft/class_5314;Lnet/minecraft/class_3037;Lnet/minecraft/class_5539;)Lnet/minecraft/class_3449;
 		COMMENT Tries to place a starting point for this type of structure in the given chunk.
 		COMMENT <p>
-		COMMENT If this structure doesn't have a starting point in the chunk, {@link StructureStart.DEFAULT}
+		COMMENT If this structure doesn't have a starting point in the chunk, {@link StructureStart#DEFAULT}
 		COMMENT will be returned.
+		ARG 2 generator
+		ARG 3 biomeSource
+		ARG 4 manager
 		ARG 5 worldSeed
+		ARG 7 pos
+		ARG 8 biome
 		ARG 9 referenceCount
+		ARG 10 random
+		ARG 11 structureConfig
+		ARG 12 config
+		ARG 13 world
 	METHOD method_28659 configure (Lnet/minecraft/class_3037;)Lnet/minecraft/class_5312;
 		ARG 1 config
-	METHOD method_28660 readStructureStart (Lnet/minecraft/class_3485;Lnet/minecraft/class_2487;J)Lnet/minecraft/class_3449;
-		ARG 0 manager
-		ARG 1 tag
+	METHOD method_28660 readStructureStart (Lnet/minecraft/class_3218;Lnet/minecraft/class_2487;J)Lnet/minecraft/class_3449;
+		ARG 0 world
+		ARG 1 nbt
 		ARG 2 worldSeed
 	METHOD method_28661 register (Ljava/lang/String;Lnet/minecraft/class_3195;Lnet/minecraft/class_2893$class_2895;)Lnet/minecraft/class_3195;
 		ARG 0 name
@@ -85,12 +90,9 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 	METHOD method_28663 getGenerationStep ()Lnet/minecraft/class_2893$class_2895;
 		COMMENT Gets the step during which this structure will participate in world generation.
 		COMMENT Structures will generate before other features in the same generation step.
+	METHOD method_28664 init ()V
 	METHOD method_28665 getCodec ()Lcom/mojang/serialization/Codec;
 	CLASS class_3774 StructureStartFactory
-		METHOD create (Lnet/minecraft/class_3195;IILnet/minecraft/class_3341;IJ)Lnet/minecraft/class_3449;
+		METHOD create (Lnet/minecraft/class_3195;Lnet/minecraft/class_1923;IJ)Lnet/minecraft/class_3449;
 			ARG 1 feature
-			ARG 2 chunkX
-			ARG 3 chunkZ
-			ARG 4 box
-			ARG 5 referenceCount
-			ARG 6 worldSeed
+			ARG 2 pos

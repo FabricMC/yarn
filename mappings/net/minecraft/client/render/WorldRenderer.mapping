@@ -1,5 +1,4 @@
 CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
-	FIELD field_20791 vertexFormat Lnet/minecraft/class_293;
 	FIELD field_20792 frame I
 	FIELD field_20797 RAIN Lnet/minecraft/class_2960;
 	FIELD field_20798 SNOW Lnet/minecraft/class_2960;
@@ -19,7 +18,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_4059 entityOutlineShader Lnet/minecraft/class_279;
 	FIELD field_4060 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_4061 END_SKY Lnet/minecraft/class_2960;
-	FIELD field_4062 renderDistance I
+	FIELD field_4062 viewDistance I
 	FIELD field_4064 lastCameraYaw D
 	FIELD field_4065 capturedFrustumOrientation [Lnet/minecraft/class_1162;
 	FIELD field_4069 lastCameraX D
@@ -35,7 +34,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_4083 lastTranslucentSortX D
 	FIELD field_4084 cameraChunkX I
 	FIELD field_4085 world Lnet/minecraft/class_638;
-	FIELD field_4086 visibleChunks Lit/unimi/dsi/fastutil/objects/ObjectList;
+	FIELD field_4086 visibleChunks Lit/unimi/dsi/fastutil/objects/ObjectArrayList;
 	FIELD field_4087 lightSkyBuffer Lnet/minecraft/class_291;
 	FIELD field_4088 client Lnet/minecraft/class_310;
 	FIELD field_4089 regularEntityCount I
@@ -46,7 +45,6 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_4096 lastCameraZ D
 	FIELD field_4097 lastCloudsBlockY I
 	FIELD field_4098 MOON_PHASES Lnet/minecraft/class_2960;
-	FIELD field_4100 skyVertexFormat Lnet/minecraft/class_293;
 	FIELD field_4101 entityOutlinesFramebuffer Lnet/minecraft/class_276;
 	FIELD field_4102 darkSkyBuffer Lnet/minecraft/class_291;
 	FIELD field_4103 lastTranslucentSortY D
@@ -68,7 +66,6 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_4121 cameraChunkZ I
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_4599;)V
 		ARG 1 client
-		ARG 2 bufferBuilders
 	METHOD method_16037 scheduleSectionRender (Lnet/minecraft/class_2338;Z)V
 		ARG 1 pos
 		ARG 2 important
@@ -95,6 +92,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 6 camera
 		ARG 7 gameRenderer
 	METHOD method_22712 drawBlockOutline (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Lnet/minecraft/class_1297;DDDLnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
+		ARG 1 matrices
 	METHOD method_22713 tickRainSplashing (Lnet/minecraft/class_4184;)V
 		ARG 1 camera
 	METHOD method_22714 renderWeather (Lnet/minecraft/class_765;FDDD)V
@@ -188,6 +186,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	METHOD method_3243 renderWorldBorder (Lnet/minecraft/class_4184;)V
 		ARG 1 camera
 	METHOD method_3244 setWorld (Lnet/minecraft/class_638;)V
+		ARG 1 world
 	METHOD method_3245 updateNoCullingBlockEntities (Ljava/util/Collection;Ljava/util/Collection;)V
 		ARG 1 removed
 		ARG 2 added
@@ -198,14 +197,15 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 3 playing
 	METHOD method_3250 renderEndSky (Lnet/minecraft/class_4587;)V
 		ARG 1 matrices
-	METHOD method_3251 renderLayer (Lnet/minecraft/class_1921;Lnet/minecraft/class_4587;DDD)V
+	METHOD method_3251 renderLayer (Lnet/minecraft/class_1921;Lnet/minecraft/class_4587;DDDLnet/minecraft/class_1159;)V
+		ARG 1 renderLayer
+		ARG 2 matrices
 	METHOD method_3252 tick ()V
 	METHOD method_3254 drawEntityOutlinesFramebuffer ()V
 	METHOD method_3255 renderStars (Lnet/minecraft/class_287;)V
 		ARG 1 buffer
-	METHOD method_3257 renderSky (Lnet/minecraft/class_4587;F)V
+	METHOD method_3257 renderSky (Lnet/minecraft/class_4587;Lnet/minecraft/class_1159;F)V
 		ARG 1 matrices
-		ARG 2 tickDelta
 	METHOD method_3258 drawBox (Lnet/minecraft/class_287;DDDDDDFFFF)V
 		ARG 0 buffer
 		ARG 1 x1
@@ -218,12 +218,8 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 14 green
 		ARG 15 blue
 		ARG 16 alpha
-	METHOD method_3259 renderClouds (Lnet/minecraft/class_4587;FDDD)V
+	METHOD method_3259 renderClouds (Lnet/minecraft/class_4587;Lnet/minecraft/class_1159;FDDD)V
 		ARG 1 matrices
-		ARG 2 tickDelta
-		ARG 3 cameraX
-		ARG 5 cameraY
-		ARG 7 cameraZ
 	METHOD method_3265 renderDarkSky ()V
 	METHOD method_3268 getRandomParticleSpawnChance (Z)Lnet/minecraft/class_4066;
 		ARG 1 canSpawnOnMinimal
@@ -264,10 +260,6 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 9 velocityX
 		ARG 11 velocityY
 		ARG 13 velocityZ
-	METHOD method_3283 renderSkyHalf (Lnet/minecraft/class_287;FZ)V
-		ARG 1 buffer
-		ARG 2 y
-		ARG 3 bottom
 	METHOD method_3288 spawnParticle (Lnet/minecraft/class_2394;ZZDDDDDD)Lnet/minecraft/class_703;
 		ARG 1 parameters
 		ARG 2 alwaysSpawn
@@ -280,6 +272,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 14 velocityZ
 	METHOD method_3289 getChunksDebugString ()Ljava/lang/String;
 	METHOD method_3291 drawShapeOutline (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Lnet/minecraft/class_265;DDDFFFF)V
+		ARG 0 matrices
 	METHOD method_3292 scheduleTerrainUpdate ()V
 	METHOD method_3293 renderStars ()V
 	METHOD method_3295 scheduleChunkRender (IIIZ)V
@@ -288,6 +281,9 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 3 z
 		ARG 4 important
 	METHOD method_3296 loadEntityOutlineShader ()V
+	METHOD method_34810 getChunkBuilder ()Lnet/minecraft/class_846;
+	METHOD method_34811 getChunkCount ()D
+	METHOD method_34812 getViewDistance ()D
 	METHOD method_8562 playSong (Lnet/minecraft/class_3414;Lnet/minecraft/class_2338;)V
 		ARG 1 song
 		ARG 2 songPosition
@@ -335,13 +331,8 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	CLASS class_762 ChunkInfo
 		FIELD field_4122 propagationLevel I
 		FIELD field_4124 chunk Lnet/minecraft/class_846$class_851;
-		FIELD field_4125 direction Lnet/minecraft/class_2350;
+		FIELD field_4125 direction B
 		FIELD field_4126 cullingState B
-		METHOD <init> (Lnet/minecraft/class_761;Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_2350;I)V
-			ARG 1 renderer
-			ARG 2 chunk
-			ARG 3 direction
-			ARG 4 propagationLevel
 		METHOD method_3298 canCull (Lnet/minecraft/class_2350;)Z
 			ARG 1 from
 		METHOD method_3299 updateCullingState (BLnet/minecraft/class_2350;)V

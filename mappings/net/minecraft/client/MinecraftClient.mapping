@@ -1,4 +1,44 @@
 CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
+	COMMENT Represents a logical Minecraft client.
+	COMMENT The logical Minecraft client is responsible for rendering, sound playback and control input.
+	COMMENT The Minecraft client also manages connections to a logical server which may be the client's {@link net.minecraft.server.integrated.IntegratedServer} or a remote server.
+	COMMENT The Minecraft client instance may be obtained using {@link MinecraftClient#getInstance()}.
+	COMMENT
+	COMMENT <p>Rendering on a Minecraft client is split into several facilities.
+	COMMENT The primary entrypoint for rendering is {@link net.minecraft.client.render.GameRenderer#render(float, long, boolean)}.
+	COMMENT <div class="fabric"><table border=1>
+	COMMENT <caption>Rendering facilities</caption>
+	COMMENT <tr>
+	COMMENT  <th><b>Thing to render</b></th> <th><b>Rendering facility</b></th>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>World</td> <td>{@link net.minecraft.client.render.WorldRenderer}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>Blocks and Fluids</td> <td>{@link net.minecraft.client.render.block.BlockRenderManager}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>Entities</td> <td>{@link net.minecraft.client.render.entity.EntityRenderDispatcher}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>Block entities</td> <td>{@link net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>Items</td> <td>{@link net.minecraft.client.render.item.ItemRenderer}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>Items held in hand</td> <td>{@link net.minecraft.client.render.item.HeldItemRenderer}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>Text</td> <td>{@link net.minecraft.client.font.TextRenderer}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>Game hud (health bar, hunger bar)</td> <td>{@link net.minecraft.client.gui.hud.InGameHud}</td>
+	COMMENT </tr>
+	COMMENT </table></div>
+	COMMENT
+	COMMENT @see net.minecraft.server.integrated.IntegratedServer
+	COMMENT @see net.minecraft.client.render.GameRenderer
 	FIELD field_16240 profiler Lnet/minecraft/class_3695;
 	FIELD field_16762 game Lnet/minecraft/class_3799;
 	FIELD field_1686 windowProvider Lnet/minecraft/class_3682;
@@ -14,6 +54,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_1695 windowFocused Z
 	FIELD field_1696 thread Ljava/lang/Thread;
 	FIELD field_1697 runDirectory Ljava/io/File;
+		COMMENT The directory that stores options, worlds, resource packs, logs, etc.
 	FIELD field_1698 running Z
 	FIELD field_1699 currentServerEntry Lnet/minecraft/class_642;
 	FIELD field_1700 instance Lnet/minecraft/class_310;
@@ -61,14 +102,24 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_1743 skipGameRender Z
 	FIELD field_1744 connectedToRealms Z
 	FIELD field_1745 resourceManager Lnet/minecraft/class_3296;
-	FIELD field_1746 connection Lnet/minecraft/class_2535;
+	FIELD field_1746 integratedServerConnection Lnet/minecraft/class_2535;
+		COMMENT The client connection to the integrated server.
+		COMMENT This is only used when connecting to the integrated server.
+		COMMENT
+		COMMENT @see net.minecraft.client.gui.screen.ConnectScreen
 	FIELD field_1747 crashReport Lnet/minecraft/class_128;
 	FIELD field_1748 levelStorage Lnet/minecraft/class_32;
 	FIELD field_1749 ALT_TEXT_RENDERER_ID Lnet/minecraft/class_2960;
 	FIELD field_1750 lastMetricsSampleTime J
 	FIELD field_1751 blockColors Lnet/minecraft/class_324;
 	FIELD field_1752 itemUseCooldown I
+		COMMENT The cooldown for using items when {@linkplain net.minecraft.client.option.GameOptions#keyUse the item use button} is held down.
 	FIELD field_1755 currentScreen Lnet/minecraft/class_437;
+		COMMENT The Minecraft client's currently open screen.
+		COMMENT This field should only be used to get the current screen.
+		COMMENT For changing the screen use {@link MinecraftClient#openScreen(Screen)}
+		COMMENT
+		COMMENT @see MinecraftClient#openScreen(Screen)
 	FIELD field_1756 blockRenderManager Lnet/minecraft/class_776;
 	FIELD field_1757 resourcePackDir Ljava/io/File;
 	FIELD field_1758 tutorialManager Lnet/minecraft/class_1156;
@@ -104,6 +155,13 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_25033 multiplayerEnabled Z
 	FIELD field_25034 onlineChatEnabled Z
 	FIELD field_25671 videoWarningManager Lnet/minecraft/class_5407;
+	FIELD field_26841 SOCIAL_INTERACTIONS_NOT_AVAILABLE Lnet/minecraft/class_2561;
+	FIELD field_26842 socialInteractionsManager Lnet/minecraft/class_5520;
+	FIELD field_26843 socialInteractionsToast Lnet/minecraft/class_372;
+	FIELD field_26902 socialInteractionsService Lcom/mojang/authlib/minecraft/SocialInteractionsService;
+	FIELD field_27387 entityModelLoader Lnet/minecraft/class_5599;
+	FIELD field_27388 blockEntityRenderDispatcher Lnet/minecraft/class_824;
+	FIELD field_29569 debugRecorder Lnet/minecraft/class_5962;
 	METHOD <init> (Lnet/minecraft/class_542;)V
 		ARG 1 args
 	METHOD method_1476 checkIs64Bit ()Z
@@ -138,13 +196,18 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 1 error
 		ARG 2 description
 	METHOD method_1507 openScreen (Lnet/minecraft/class_437;)V
+		COMMENT Opens a new screen, changing the current screen if needed.
+		COMMENT
+		COMMENT <p>If the screen being opened is {@code null} and the client is not in game, the title screen will be opened.
+		COMMENT If the currently opened screen is {@code null} and player is dead then the death screen will be opened.
+		COMMENT Otherwise the currently open screen will be closed.
 		ARG 1 screen
 	METHOD method_1508 handleInputEvents ()V
 	METHOD method_1511 doItemPick ()V
 	METHOD method_1513 reloadResourcesConcurrently ()Ljava/util/concurrent/CompletableFuture;
 	METHOD method_1514 run ()V
 	METHOD method_1515 getGameVersion ()Ljava/lang/String;
-	METHOD method_1516 getResourcePackDownloader ()Lnet/minecraft/class_1066;
+	METHOD method_1516 getResourcePackProvider ()Lnet/minecraft/class_1066;
 	METHOD method_1517 isFancyGraphicsOrBetter ()Z
 	METHOD method_1519 cleanUpAfterCrash ()V
 	METHOD method_1520 getResourcePackManager ()Lnet/minecraft/class_3283;
@@ -198,6 +261,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_1582 getSkinProvider ()Lnet/minecraft/class_1071;
 	METHOD method_1583 doItemUse ()V
 	METHOD method_1584 setCurrentServerEntry (Lnet/minecraft/class_642;)V
+		ARG 1 serverEntry
 	METHOD method_1586 getLevelStorage ()Lnet/minecraft/class_32;
 	METHOD method_1587 addDetailsToCrashReport (Lnet/minecraft/class_128;)Lnet/minecraft/class_128;
 		ARG 1 report
@@ -233,30 +297,29 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 3 report
 	METHOD method_22683 getWindow ()Lnet/minecraft/class_1041;
 	METHOD method_22940 getBufferBuilders ()Lnet/minecraft/class_4599;
-	METHOD method_24038 createResourcePackProfile (Ljava/lang/String;ZLjava/util/function/Supplier;Lnet/minecraft/class_3262;Lnet/minecraft/class_3272;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)Lnet/minecraft/class_3288;
+	METHOD method_24038 createResourcePackProfile (Ljava/lang/String;Lnet/minecraft/class_2561;ZLjava/util/function/Supplier;Lnet/minecraft/class_3272;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)Lnet/minecraft/class_3288;
 		ARG 0 name
-		ARG 1 alwaysEnabled
-		ARG 2 packFactory
-		ARG 3 pack
+		ARG 1 displayName
+		ARG 2 alwaysEnabled
 		ARG 4 metadata
 		ARG 5 insertionPosition
 		ARG 6 source
-	METHOD method_24041 resetMipmapLevels (I)V
+	METHOD method_24041 setMipmapLevels (I)V
 		ARG 1 mipmapLevels
 	METHOD method_24042 createV3ResourcePackFactory (Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
 		ARG 0 packFactory
 	METHOD method_24043 createV4ResourcePackFactory (Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
 		ARG 0 packFactory
 	METHOD method_24226 handleResourceReloadException (Ljava/lang/Throwable;)V
+		ARG 1 exception
 	METHOD method_24287 getWindowTitle ()Ljava/lang/String;
 	METHOD method_24288 updateWindowTitle ()V
 	METHOD method_24289 isModded ()Z
 		COMMENT Checks if this client is modded.
 		COMMENT
 		COMMENT <p>This checks the client's brand and if the MinecraftClient's class is still signed.
-	METHOD method_24458 startMonitor (ZLnet/minecraft/class_4758;)V
+	METHOD method_24458 startMonitor (ZLnet/minecraft/class_4758;)Lnet/minecraft/class_3695;
 		ARG 1 active
-		ARG 2 monitor
 	METHOD method_24459 shouldMonitorTickDuration ()Z
 	METHOD method_24460 endMonitor (ZLnet/minecraft/class_4758;)V
 		ARG 1 active
@@ -275,11 +338,21 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		COMMENT them.
 		ARG 1 sender
 	METHOD method_29043 isMultiplayerEnabled ()Z
-	METHOD method_29044 isOnlineChatEnabled ()Z
+	METHOD method_29598 loadDataPackSettings (Lnet/minecraft/class_32$class_5143;)Lnet/minecraft/class_5359;
+		ARG 0 storageSession
 	METHOD method_29599 createSaveProperties (Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_3300;Lnet/minecraft/class_5359;)Lnet/minecraft/class_5219;
 		ARG 0 session
 		ARG 1 registryTracker
 		ARG 2 resourceManager
+		ARG 3 dataPackSettings
+	METHOD method_29600 (Ljava/lang/String;Ljava/lang/Runnable;ZZ)V
+		ARG 3 shouldBackup
+		ARG 4 eraseCache
+	METHOD method_29601 showExperimentalWarning (Lnet/minecraft/class_310$class_5366;Ljava/lang/String;ZLjava/lang/Runnable;)V
+		ARG 1 worldLoadAction
+		ARG 2 levelName
+		ARG 3 legacyCustomized
+		ARG 4 onConfirm
 	METHOD method_29603 (Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_310$class_5367;Lnet/minecraft/class_5219;Lcom/mojang/authlib/minecraft/MinecraftSessionService;Lcom/mojang/authlib/GameProfileRepository;Lnet/minecraft/class_3312;Ljava/lang/Thread;)Lnet/minecraft/class_1132;
 		ARG 1 registryTracker
 		ARG 2 session
@@ -288,6 +361,12 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 6 profileRepository
 		ARG 7 userCache
 		ARG 8 serverThread
+	METHOD method_29604 createIntegratedResourceManager (Lnet/minecraft/class_5455$class_5457;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Function4;ZLnet/minecraft/class_32$class_5143;)Lnet/minecraft/class_310$class_5367;
+		ARG 1 registryManager
+		ARG 2 dataPackSettingsGetter
+		ARG 3 savePropertiesGetter
+		ARG 4 safeMode
+		ARG 5 storageSession
 	METHOD method_29606 startIntegratedServer (Ljava/lang/String;)V
 		ARG 1 worldName
 	METHOD method_29607 (Ljava/lang/String;Lnet/minecraft/class_1940;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_5285;)V
@@ -298,9 +377,28 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_29610 startIntegratedServer (Ljava/lang/String;Lnet/minecraft/class_5455$class_5457;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Function4;ZLnet/minecraft/class_310$class_5366;)V
 		ARG 1 worldName
 		ARG 2 registryTracker
+		ARG 3 dataPackSettingsGetter
+		ARG 4 savePropertiesGetter
 		ARG 5 safeMode
+		ARG 6 worldLoadAction
 	METHOD method_29611 isFabulousGraphicsOrBetter ()Z
+	METHOD method_29970 (Lnet/minecraft/class_437;)V
+		ARG 1 screen
 	METHOD method_30049 getVideoWarningManager ()Lnet/minecraft/class_5407;
+	METHOD method_31186 onResourceReloadFailure (Ljava/lang/Throwable;Lnet/minecraft/class_2561;)V
+		ARG 1 exception
+		ARG 2 resourceName
+	METHOD method_31320 getSocialInteractionsManager ()Lnet/minecraft/class_5520;
+	METHOD method_31321 isConnectedToServer ()Z
+	METHOD method_31382 createSocialInteractionsService (Lcom/mojang/authlib/yggdrasil/YggdrasilAuthenticationService;Lnet/minecraft/class_542;)Lcom/mojang/authlib/minecraft/SocialInteractionsService;
+		ARG 2 runArgs
+	METHOD method_31974 getEntityModelLoader ()Lnet/minecraft/class_5599;
+	METHOD method_31975 getBlockEntityRenderDispatcher ()Lnet/minecraft/class_824;
+	METHOD method_33883 shouldFilterText ()Z
+	METHOD method_33884 getChatRestriction ()Lnet/minecraft/class_310$class_5859;
+	METHOD method_34745 toggleDebugProfiler (Ljava/lang/Runnable;Ljava/util/function/Consumer;)V
+		ARG 1 startAction
+		ARG 2 completeAction
 	CLASS class_5366 WorldLoadAction
 	CLASS class_5367 IntegratedResourceManager
 		FIELD field_25439 resourcePackManager Lnet/minecraft/class_3283;
@@ -313,3 +411,13 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		METHOD method_29612 getResourcePackManager ()Lnet/minecraft/class_3283;
 		METHOD method_29613 getServerResourceManager ()Lnet/minecraft/class_5350;
 		METHOD method_29614 getSaveProperties ()Lnet/minecraft/class_5219;
+	CLASS class_5859 ChatRestriction
+		COMMENT Represents the restrictions on chat on a Minecraft client.
+		COMMENT
+		COMMENT @see MinecraftClient#getChatRestriction()
+		FIELD field_28944 description Lnet/minecraft/class_2561;
+		METHOD <init> (Ljava/lang/String;ILnet/minecraft/class_2561;)V
+			ARG 3 description
+		METHOD method_33885 getDescription ()Lnet/minecraft/class_2561;
+		METHOD method_33886 allowsChat (Z)Z
+			ARG 1 singlePlayer

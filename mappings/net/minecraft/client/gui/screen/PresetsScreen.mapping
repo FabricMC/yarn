@@ -1,4 +1,6 @@
 CLASS net/minecraft/class_430 net/minecraft/client/gui/screen/PresetsScreen
+	FIELD field_25043 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_25044 config Lnet/minecraft/class_3232;
 	FIELD field_2518 PRESETS Ljava/util/List;
 	FIELD field_2519 parent Lnet/minecraft/class_413;
 	FIELD field_2520 shareText Lnet/minecraft/class_2561;
@@ -6,19 +8,53 @@ CLASS net/minecraft/class_430 net/minecraft/client/gui/screen/PresetsScreen
 	FIELD field_2523 customPresetField Lnet/minecraft/class_342;
 	FIELD field_2524 listText Lnet/minecraft/class_2561;
 	FIELD field_2525 selectPresetButton Lnet/minecraft/class_4185;
+	FIELD field_27985 BIOME_KEY Lnet/minecraft/class_5321;
 	METHOD <init> (Lnet/minecraft/class_413;)V
 		ARG 1 parent
 	METHOD method_20102 updateSelectButton (Z)V
 		ARG 1 hasSelected
 	METHOD method_2195 addPreset (Lnet/minecraft/class_2561;Lnet/minecraft/class_1935;Lnet/minecraft/class_5321;Ljava/util/List;ZZZ[Lnet/minecraft/class_3229;)V
+		ARG 0 presetName
 		ARG 1 icon
+		ARG 2 presetBiome
 		ARG 3 structures
+		ARG 4 generateStronghold
+		ARG 5 generateFeatures
+		ARG 6 generateLakes
+		ARG 7 layers
+	METHOD method_29058 parsePresetLayersString (Ljava/lang/String;)Ljava/util/List;
+		COMMENT Parse a string like {@code "minecraft:bedrock,3*minecraft:dirt,minecraft:grass_block"}
+		COMMENT to a list of {@link FlatChunkGeneratorLayer}.
+		ARG 0 layers
+	METHOD method_29059 parseLayerString (Ljava/lang/String;I)Lnet/minecraft/class_3229;
+		COMMENT Parse a string like {@code "60*minecraft:stone"} to a {@link FlatChunkGeneratorLayer}.
+		ARG 0 layer
+		ARG 1 layerStartHeight
+	METHOD method_29060 parsePresetString (Lnet/minecraft/class_2378;Ljava/lang/String;Lnet/minecraft/class_3232;)Lnet/minecraft/class_3232;
+		ARG 0 biomeRegistry
+		ARG 1 preset
+		ARG 2 generatorConfig
+	METHOD method_29062 getGeneratorConfigString (Lnet/minecraft/class_2378;Lnet/minecraft/class_3232;)Ljava/lang/String;
+		ARG 0 biomeRegistry
+		ARG 1 generatorConfig
 	CLASS class_431 SuperflatPreset
+		FIELD field_25045 generatorConfigProvider Ljava/util/function/Function;
 		FIELD field_2527 icon Lnet/minecraft/class_1792;
 		FIELD field_2528 name Lnet/minecraft/class_2561;
 		METHOD <init> (Lnet/minecraft/class_1792;Lnet/minecraft/class_2561;Ljava/util/function/Function;)V
 			ARG 1 icon
+			ARG 2 name
+			ARG 3 generatorConfigProvider
 		METHOD method_27571 getName ()Lnet/minecraft/class_2561;
 	CLASS class_4196 SuperflatPresetsListWidget
 		CLASS class_432 SuperflatPresetEntry
 			METHOD method_19389 setPreset ()V
+			METHOD method_2198 drawIconBackground (Lnet/minecraft/class_4587;II)V
+				ARG 1 matrices
+				ARG 2 x
+				ARG 3 y
+			METHOD method_2200 renderIcon (Lnet/minecraft/class_4587;IILnet/minecraft/class_1792;)V
+				ARG 1 matrices
+				ARG 2 x
+				ARG 3 y
+				ARG 4 iconItem

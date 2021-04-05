@@ -1,8 +1,15 @@
 CLASS net/minecraft/class_4153 net/minecraft/world/poi/PointOfInterestStorage
 	FIELD field_18484 pointOfInterestDistanceTracker Lnet/minecraft/class_4153$class_4154;
 	FIELD field_20688 preloadedChunks Lit/unimi/dsi/fastutil/longs/LongSet;
+	METHOD <init> (Ljava/io/File;Lcom/mojang/datafixers/DataFixer;ZLnet/minecraft/class_5539;)V
+		ARG 1 directory
+		ARG 2 dataFixer
+		ARG 3 dsync
+		ARG 4 world
 	METHOD method_19112 remove (Lnet/minecraft/class_2338;)V
 		ARG 1 pos
+	METHOD method_19113 (Lnet/minecraft/class_2338;ILnet/minecraft/class_4156;)Z
+		ARG 2 poi
 	METHOD method_19115 add (Lnet/minecraft/class_2338;Lnet/minecraft/class_4158;)V
 		ARG 1 pos
 		ARG 2 type
@@ -11,7 +18,10 @@ CLASS net/minecraft/class_4153 net/minecraft/world/poi/PointOfInterestStorage
 		ARG 2 predicate
 	METHOD method_19118 getDistanceFromNearestOccupied (Lnet/minecraft/class_4076;)I
 		ARG 1 pos
+	METHOD method_19121 (Ljava/util/function/Predicate;Lnet/minecraft/class_4153$class_4155;Lnet/minecraft/class_1923;)Ljava/util/stream/Stream;
+		ARG 3 chunkPos
 	METHOD method_19123 getInChunk (Ljava/util/function/Predicate;Lnet/minecraft/class_1923;Lnet/minecraft/class_4153$class_4155;)Ljava/util/stream/Stream;
+		ARG 2 chunkPos
 		ARG 3 occupationStatus
 	METHOD method_19125 getInCircle (Ljava/util/function/Predicate;Lnet/minecraft/class_2338;ILnet/minecraft/class_4153$class_4155;)Ljava/util/stream/Stream;
 		ARG 1 typePredicate
@@ -29,8 +39,12 @@ CLASS net/minecraft/class_4153 net/minecraft/world/poi/PointOfInterestStorage
 		ARG 3 pos
 		ARG 4 radius
 		ARG 5 occupationStatus
+	METHOD method_19128 (Lnet/minecraft/class_4156;)Lnet/minecraft/class_2338;
+		ARG 0 poi
 	METHOD method_19129 releaseTicket (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
+	METHOD method_19130 (Ljava/util/function/Predicate;Lnet/minecraft/class_4156;)Z
+		ARG 1 poi
 	METHOD method_19132 getType (Lnet/minecraft/class_2338;)Ljava/util/Optional;
 		ARG 1 pos
 	METHOD method_19133 isOccupied (J)Z
@@ -45,6 +59,9 @@ CLASS net/minecraft/class_4153 net/minecraft/world/poi/PointOfInterestStorage
 		ARG 6 random
 	METHOD method_20006 getNearestPosition (Ljava/util/function/Predicate;Lnet/minecraft/class_2338;ILnet/minecraft/class_4153$class_4155;)Ljava/util/Optional;
 		ARG 1 typePredicate
+		ARG 2 pos
+		ARG 3 radius
+		ARG 4 occupationStatus
 	METHOD method_20252 count (Ljava/util/function/Predicate;Lnet/minecraft/class_2338;ILnet/minecraft/class_4153$class_4155;)J
 		ARG 1 typePredicate
 		ARG 2 pos
@@ -62,6 +79,7 @@ CLASS net/minecraft/class_4153 net/minecraft/world/poi/PointOfInterestStorage
 		ARG 1 typePredicate
 		ARG 2 pos
 		ARG 3 radius
+		ARG 4 occupationStatus
 	METHOD method_22439 preloadChunks (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;I)V
 		COMMENT Preloads chunks in a square area with the given radius. Loads the chunks with {@code ChunkStatus.EMPTY}.
 		ARG 1 world
@@ -71,9 +89,21 @@ CLASS net/minecraft/class_4153 net/minecraft/world/poi/PointOfInterestStorage
 	METHOD method_26339 hasTypeAt (Lnet/minecraft/class_4158;Lnet/minecraft/class_2338;)Z
 		ARG 1 type
 		ARG 2 pos
+	METHOD method_30335 (Lnet/minecraft/class_2338;ILnet/minecraft/class_4156;)Z
+		ARG 2 poi
+	METHOD method_30957 getSortedPositions (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Lnet/minecraft/class_2338;ILnet/minecraft/class_4153$class_4155;)Ljava/util/stream/Stream;
+		ARG 1 typePredicate
+		ARG 2 posPredicate
+		ARG 3 pos
+		ARG 4 radius
+		ARG 5 occupationStatus
+	METHOD method_33582 (Lnet/minecraft/class_2338;Lnet/minecraft/class_4157;)V
+		ARG 1 poiSet
 	CLASS class_4154 PointOfInterestDistanceTracker
 		FIELD field_18486 distances Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
 		METHOD method_19134 update ()V
 	CLASS class_4155 OccupationStatus
 		FIELD field_18490 predicate Ljava/util/function/Predicate;
+		METHOD <init> (Ljava/lang/String;ILjava/util/function/Predicate;)V
+			ARG 3 predicate
 		METHOD method_19135 getPredicate ()Ljava/util/function/Predicate;

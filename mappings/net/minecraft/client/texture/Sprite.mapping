@@ -1,21 +1,17 @@
 CLASS net/minecraft/class_1058 net/minecraft/client/texture/Sprite
 	FIELD field_21750 atlas Lnet/minecraft/class_1059;
-	FIELD field_21751 info Lnet/minecraft/class_1058$class_4727;
-	FIELD field_21752 interpolation Lnet/minecraft/class_1058$class_4728;
+	FIELD field_28464 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_28465 id Lnet/minecraft/class_2960;
+	FIELD field_28466 width I
+	FIELD field_28467 height I
+	FIELD field_28468 animation Lnet/minecraft/class_1058$class_5790;
 	FIELD field_5256 y I
 	FIELD field_5258 x I
 	FIELD field_5262 images [Lnet/minecraft/class_1011;
-	FIELD field_5264 frameYs [I
-	FIELD field_5265 frameXs [I
 	FIELD field_5267 vMax F
 	FIELD field_5268 vMin F
 	FIELD field_5269 uMax F
 	FIELD field_5270 uMin F
-	FIELD field_5271 animationMetadata Lnet/minecraft/class_1079;
-	FIELD field_5272 frameTicks I
-		COMMENT The tick position within the current frame.
-		COMMENT Resets to 0 on every frame advance.
-	FIELD field_5273 frameIndex I
 	METHOD <init> (Lnet/minecraft/class_1059;Lnet/minecraft/class_1058$class_4727;IIIIILnet/minecraft/class_1011;)V
 		ARG 3 maxLevel
 		ARG 4 atlasWidth
@@ -26,9 +22,14 @@ CLASS net/minecraft/class_1058 net/minecraft/client/texture/Sprite
 	METHOD method_23842 getAnimationFrameDelta ()F
 	METHOD method_24108 getTextureSpecificVertexConsumer (Lnet/minecraft/class_4588;)Lnet/minecraft/class_4588;
 	METHOD method_24119 getAtlas ()Lnet/minecraft/class_1059;
+	METHOD method_33437 (Lnet/minecraft/class_1058$class_4727;III)Lnet/minecraft/class_1058$class_5790;
+		ARG 2 nativeImageWidth
+		ARG 3 nativeImageHeight
+		ARG 4 maxLevel
+	METHOD method_33440 (Ljava/util/List;II)V
+		ARG 1 index
+		ARG 2 time
 	METHOD method_4570 getFrameV (D)F
-		ARG 1 frame
-	METHOD method_4573 upload (I)V
 		ARG 1 frame
 	METHOD method_4575 getMaxV ()F
 	METHOD method_4577 getMaxU ()F
@@ -48,9 +49,7 @@ CLASS net/minecraft/class_1058 net/minecraft/client/texture/Sprite
 	METHOD method_4593 getMinV ()F
 	METHOD method_4594 getMinU ()F
 	METHOD method_4595 getHeight ()I
-	METHOD method_4597 tickAnimation ()V
 	METHOD method_4598 getId ()Lnet/minecraft/class_2960;
-	METHOD method_4599 isAnimated ()Z
 	CLASS class_4727 Info
 		FIELD field_21753 id Lnet/minecraft/class_2960;
 		FIELD field_21754 width I
@@ -68,7 +67,7 @@ CLASS net/minecraft/class_1058 net/minecraft/client/texture/Sprite
 		FIELD field_21758 images [Lnet/minecraft/class_1011;
 		METHOD <init> (Lnet/minecraft/class_1058;Lnet/minecraft/class_1058$class_4727;I)V
 			ARG 3 mipmap
-		METHOD method_24128 apply ()V
+		METHOD method_24128 apply (Lnet/minecraft/class_1058$class_5790;)V
 			COMMENT Linearly interpolate between the current and next frame on all mip levels
 			COMMENT based on the tick position within the current frame,
 			COMMENT and upload the results to the currently bound texture to the frame slot at position (0,0).
@@ -78,9 +77,28 @@ CLASS net/minecraft/class_1058 net/minecraft/client/texture/Sprite
 			ARG 1 delta
 			ARG 3 to
 			ARG 4 from
-		METHOD method_24130 getPixelColor (IIII)I
+		METHOD method_24130 getPixelColor (Lnet/minecraft/class_1058$class_5790;IIII)I
 			COMMENT Returns the pixel color at frame {@code frameIndex} within mipmap {@code layer} at sprite relative coordinates.
+			ARG 2 frameIndex
+	CLASS class_5790 Animation
+		FIELD field_28470 frameIndex I
+		FIELD field_28471 frameTicks I
+		FIELD field_28472 frames Ljava/util/List;
+		FIELD field_28473 frameCount I
+		FIELD field_28474 interpolation Lnet/minecraft/class_1058$class_4728;
+		METHOD <init> (Lnet/minecraft/class_1058;Ljava/util/List;ILnet/minecraft/class_1058$class_4728;)V
+			ARG 2 frames
+			ARG 3 frameCount
+		METHOD method_33445 upload ()V
+		METHOD method_33446 getFrameX (I)I
+			ARG 1 frame
+		METHOD method_33451 getFrameY (I)I
+			ARG 1 frame
+		METHOD method_33455 upload (I)V
 			ARG 1 frameIndex
-			ARG 2 layer
-			ARG 3 x
-			ARG 4 y
+	CLASS class_5791 AnimationFrame
+		FIELD field_28475 index I
+		FIELD field_28476 time I
+		METHOD <init> (II)V
+			ARG 1 index
+			ARG 2 time

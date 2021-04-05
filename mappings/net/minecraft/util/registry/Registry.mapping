@@ -74,7 +74,8 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 	FIELD field_25096 BIOME_SOURCE Lnet/minecraft/class_2378;
 	FIELD field_25097 CHUNK_GENERATOR Lnet/minecraft/class_2378;
 	FIELD field_25098 registryKey Lnet/minecraft/class_5321;
-		COMMENT The {@linkplain RegistryKey} representing the ID of the actual registry.
+		COMMENT The key representing the type of elements held by this registry. It is also the
+		COMMENT key of this registry within the root registry.
 	FIELD field_25099 lifecycle Lcom/mojang/serialization/Lifecycle;
 	FIELD field_25100 ROOT_KEY Lnet/minecraft/class_2960;
 	FIELD field_25101 ROOT Lnet/minecraft/class_2385;
@@ -100,8 +101,45 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 	FIELD field_25295 LOOT_POOL_ENTRY_TYPE_KEY Lnet/minecraft/class_5321;
 	FIELD field_25296 LOOT_FUNCTION_TYPE_KEY Lnet/minecraft/class_5321;
 	FIELD field_25297 LOOT_CONDITION_TYPE_KEY Lnet/minecraft/class_5321;
+	FIELD field_25298 WORLD_KEY Lnet/minecraft/class_5321;
+		COMMENT A registry key representing the {@link World} type. Can be used to obtain
+		COMMENT registry keys with the {@link World} type, such as that for the overworld.
+		COMMENT
+		COMMENT <p>Notice that {@code this == Registry.DIMENSION_KEY}.
+		COMMENT
+		COMMENT @see #DIMENSION_KEY
+		COMMENT @see World#OVERWORLD
+		COMMENT @see net.minecraft.server.MinecraftServer#worlds
 	FIELD field_25299 LOOT_CONDITION_TYPE Lnet/minecraft/class_2378;
-	FIELD field_25490 DIMENSION_OPTIONS Lnet/minecraft/class_5321;
+	FIELD field_25490 DIMENSION_KEY Lnet/minecraft/class_5321;
+		COMMENT A registry key representing the {@link DimensionOptions} type.
+		COMMENT
+		COMMENT <p>Notice that {@code this == Registry.WORLD_KEY}.
+		COMMENT
+		COMMENT @see #WORLD_KEY
+	FIELD field_25912 CONFIGURED_SURFACE_BUILDER_KEY Lnet/minecraft/class_5321;
+	FIELD field_25913 CONFIGURED_CARVER_KEY Lnet/minecraft/class_5321;
+	FIELD field_25914 CONFIGURED_FEATURE_KEY Lnet/minecraft/class_5321;
+	FIELD field_25915 CONFIGURED_STRUCTURE_FEATURE_KEY Lnet/minecraft/class_5321;
+	FIELD field_25916 STRUCTURE_PROCESSOR_LIST_KEY Lnet/minecraft/class_5321;
+	FIELD field_25917 STRUCTURE_POOL_KEY Lnet/minecraft/class_5321;
+	FIELD field_26374 CHUNK_GENERATOR_SETTINGS_KEY Lnet/minecraft/class_5321;
+	FIELD field_28005 LOOT_NUMBER_PROVIDER_TYPE_KEY Lnet/minecraft/class_5321;
+	FIELD field_28006 LOOT_NBT_PROVIDER_TYPE_KEY Lnet/minecraft/class_5321;
+	FIELD field_28007 LOOT_SCORE_PROVIDER_TYPE_KEY Lnet/minecraft/class_5321;
+	FIELD field_28008 LOOT_NUMBER_PROVIDER_TYPE Lnet/minecraft/class_2378;
+	FIELD field_28009 LOOT_NBT_PROVIDER_TYPE Lnet/minecraft/class_2378;
+	FIELD field_28010 LOOT_SCORE_PROVIDER_TYPE Lnet/minecraft/class_2378;
+	FIELD field_28263 POSITION_SOURCE_TYPE_KEY Lnet/minecraft/class_5321;
+	FIELD field_28264 GAME_EVENT Lnet/minecraft/class_2348;
+	FIELD field_28265 POSITION_SOURCE_TYPE Lnet/minecraft/class_2378;
+	FIELD field_28266 GAME_EVENT_KEY Lnet/minecraft/class_5321;
+	FIELD field_29075 FLOAT_PROVIDER_TYPE_KEY Lnet/minecraft/class_5321;
+	FIELD field_29076 FLOAT_PROVIDER_TYPE Lnet/minecraft/class_2378;
+	FIELD field_33092 INT_PROVIDER_TYPE_KEY Lnet/minecraft/class_5321;
+	FIELD field_33093 INT_PROVIDER_TYPE Lnet/minecraft/class_2378;
+	FIELD field_33094 HEIGHT_PROVIDER_TYPE_KEY Lnet/minecraft/class_5321;
+	FIELD field_33095 HEIGHT_PROVIDER_TYPE Lnet/minecraft/class_2378;
 	METHOD <init> (Lnet/minecraft/class_5321;Lcom/mojang/serialization/Lifecycle;)V
 		ARG 1 key
 		ARG 2 lifecycle
@@ -111,6 +149,7 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 	METHOD method_10223 get (Lnet/minecraft/class_2960;)Ljava/lang/Object;
 		ARG 1 id
 	METHOD method_10224 create (Lnet/minecraft/class_5321;Ljava/lang/String;Ljava/util/function/Supplier;)Lnet/minecraft/class_2348;
+		ARG 0 key
 		ARG 1 defaultId
 		ARG 2 defaultEntry
 	METHOD method_10226 register (Lnet/minecraft/class_2378;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;
@@ -118,8 +157,10 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 		ARG 1 id
 		ARG 2 entry
 	METHOD method_10227 create (Lnet/minecraft/class_5321;Lnet/minecraft/class_2385;Ljava/util/function/Supplier;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/class_2385;
+		ARG 0 key
 		ARG 1 registry
 		ARG 2 defaultEntry
+		ARG 3 lifecycle
 	METHOD method_10230 register (Lnet/minecraft/class_2378;Lnet/minecraft/class_2960;Ljava/lang/Object;)Ljava/lang/Object;
 		ARG 0 registry
 		ARG 1 id
@@ -130,7 +171,10 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 		ARG 2 id
 		ARG 3 entry
 	METHOD method_10235 getIds ()Ljava/util/Set;
+	METHOD method_10240 getRandom (Ljava/util/Random;)Ljava/lang/Object;
+		ARG 1 random
 	METHOD method_10247 create (Lnet/minecraft/class_5321;Ljava/util/function/Supplier;)Lnet/minecraft/class_2378;
+		ARG 0 key
 		ARG 1 defaultEntry
 	METHOD method_10250 containsId (Lnet/minecraft/class_2960;)Z
 		ARG 1 id
@@ -143,9 +187,13 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 	METHOD method_29107 get (Lnet/minecraft/class_5321;)Ljava/lang/Object;
 		ARG 1 key
 	METHOD method_29108 create (Lnet/minecraft/class_5321;Lcom/mojang/serialization/Lifecycle;Ljava/util/function/Supplier;)Lnet/minecraft/class_2378;
+		ARG 0 key
+		ARG 1 lifecycle
 		ARG 2 defaultEntry
 	METHOD method_29109 create (Lnet/minecraft/class_5321;Ljava/lang/String;Lcom/mojang/serialization/Lifecycle;Ljava/util/function/Supplier;)Lnet/minecraft/class_2348;
+		ARG 0 key
 		ARG 1 defaultId
+		ARG 2 lifecycle
 		ARG 3 defaultEntry
 	METHOD method_29113 getKey (Ljava/lang/Object;)Ljava/util/Optional;
 		ARG 1 entry
@@ -154,10 +202,13 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 	METHOD method_31138 getLifecycle ()Lcom/mojang/serialization/Lifecycle;
 	METHOD method_31139 getEntryLifecycle (Ljava/lang/Object;)Lcom/mojang/serialization/Lifecycle;
 		COMMENT Gets the lifecycle of a registry entry.
+		ARG 1 entry
 	METHOD method_31140 getOrThrow (Lnet/minecraft/class_5321;)Ljava/lang/Object;
 		COMMENT Gets an entry from the registry.
 		COMMENT
 		COMMENT @throws IllegalStateException if the entry was not present in the registry
 		ARG 1 key
 	METHOD method_31189 getOrEmpty (Lnet/minecraft/class_5321;)Ljava/util/Optional;
+		ARG 1 key
+	METHOD method_35842 contains (Lnet/minecraft/class_5321;)Z
 		ARG 1 key

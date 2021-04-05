@@ -13,6 +13,7 @@ CLASS net/minecraft/class_2874 net/minecraft/world/dimension/DimensionType
 	FIELD field_24762 natural Z
 	FIELD field_24764 hasEnderDragonFight Z
 	FIELD field_24766 ambientLight F
+	FIELD field_24767 brightnessByLightLevel [F
 	FIELD field_25407 OVERWORLD Lnet/minecraft/class_2874;
 	FIELD field_25408 THE_NETHER Lnet/minecraft/class_2874;
 	FIELD field_25409 THE_END Lnet/minecraft/class_2874;
@@ -22,14 +23,20 @@ CLASS net/minecraft/class_2874 net/minecraft/world/dimension/DimensionType
 	FIELD field_25613 bedWorks Z
 	FIELD field_25614 respawnAnchorWorks Z
 	FIELD field_25615 hasRaids Z
-	FIELD field_25616 logicalHeight I
+	FIELD field_25616 minimumY I
 	FIELD field_25617 infiniburn Lnet/minecraft/class_2960;
 	FIELD field_26706 coordinateScale D
 	FIELD field_26751 skyProperties Lnet/minecraft/class_2960;
 	FIELD field_26752 OVERWORLD_ID Lnet/minecraft/class_2960;
 	FIELD field_26753 THE_NETHER_ID Lnet/minecraft/class_2960;
 	FIELD field_26754 THE_END_ID Lnet/minecraft/class_2960;
-	METHOD <init> (Ljava/util/OptionalLong;ZZZZDZZZZILnet/minecraft/class_2960;Lnet/minecraft/class_2960;F)V
+	FIELD field_28131 height I
+	FIELD field_28132 logicalHeight I
+	FIELD field_28133 SIZE_BITS_Y I
+	FIELD field_28134 MAX_HEIGHT I
+	FIELD field_28135 MAX_COLUMN_HEIGHT I
+	FIELD field_28136 MIN_HEIGHT I
+	METHOD <init> (Ljava/util/OptionalLong;ZZZZDZZZZIIILnet/minecraft/class_2960;Lnet/minecraft/class_2960;F)V
 		ARG 1 fixedTime
 		ARG 2 hasSkylight
 		ARG 3 hasCeiling
@@ -40,11 +47,13 @@ CLASS net/minecraft/class_2874 net/minecraft/world/dimension/DimensionType
 		ARG 9 bedWorks
 		ARG 10 respawnAnchorWorks
 		ARG 11 hasRaids
-		ARG 12 logicalHeight
-		ARG 13 infiniburn
-		ARG 14 skyProperties
-		ARG 15 ambientLight
-	METHOD <init> (Ljava/util/OptionalLong;ZZZZDZZZZZILnet/minecraft/class_4545;Lnet/minecraft/class_2960;Lnet/minecraft/class_2960;F)V
+		ARG 12 minimumY
+		ARG 13 height
+		ARG 14 logicalHeight
+		ARG 15 infiniburn
+		ARG 16 skyProperties
+		ARG 17 ambientLight
+	METHOD <init> (Ljava/util/OptionalLong;ZZZZDZZZZZIIILnet/minecraft/class_4545;Lnet/minecraft/class_2960;Lnet/minecraft/class_2960;F)V
 		ARG 1 fixedTime
 		ARG 2 hasSkylight
 		ARG 3 hasCeiling
@@ -56,11 +65,13 @@ CLASS net/minecraft/class_2874 net/minecraft/world/dimension/DimensionType
 		ARG 10 bedWorks
 		ARG 11 respawnAnchorWorks
 		ARG 12 hasRaids
-		ARG 13 logicalHeight
-		ARG 14 biomeAccessType
-		ARG 15 infiniburn
-		ARG 16 skyProperties
-		ARG 17 ambientLight
+		ARG 13 minimumY
+		ARG 14 height
+		ARG 15 logicalHeight
+		ARG 16 biomeAccessType
+		ARG 17 infiniburn
+		ARG 18 skyProperties
+		ARG 19 ambientLight
 	METHOD method_12488 getSaveDirectory (Lnet/minecraft/class_5321;Ljava/io/File;)Ljava/io/File;
 		ARG 0 worldRef
 		ARG 1 root
@@ -69,11 +80,17 @@ CLASS net/minecraft/class_2874 net/minecraft/world/dimension/DimensionType
 	METHOD method_22415 getBiomeAccessType ()Lnet/minecraft/class_4545;
 	METHOD method_27998 hasCeiling ()Z
 	METHOD method_27999 isUltrawarm ()Z
+	METHOD method_28515 computeBrightnessByLightLevel (F)[F
+		ARG 0 ambientLight
+	METHOD method_28516 getBrightness (I)F
+		ARG 1 lightLevel
 	METHOD method_28517 createDefaultDimensionOptions (Lnet/minecraft/class_2378;Lnet/minecraft/class_2378;Lnet/minecraft/class_2378;J)Lnet/minecraft/class_2370;
 		ARG 0 dimensionRegistry
 		ARG 1 biomeRegistry
 		ARG 2 chunkGeneratorSettingsRegistry
 		ARG 3 seed
+	METHOD method_28521 worldFromDimensionNbt (Lcom/mojang/serialization/Dynamic;)Lcom/mojang/serialization/DataResult;
+		ARG 0 nbt
 	METHOD method_28523 addRegistryDefaults (Lnet/minecraft/class_5455$class_5457;)Lnet/minecraft/class_5455$class_5457;
 		ARG 0 registryManager
 	METHOD method_28528 getSkyAngle (J)F
@@ -98,10 +115,36 @@ CLASS net/minecraft/class_2874 net/minecraft/world/dimension/DimensionType
 	METHOD method_29956 isBedWorking ()Z
 	METHOD method_29957 isRespawnAnchorWorking ()Z
 	METHOD method_29958 hasRaids ()Z
-	METHOD method_29959 getLogicalHeight ()I
+	METHOD method_29959 getMinimumY ()I
 	METHOD method_29960 hasFixedTime ()Z
 	METHOD method_29961 getInfiniburnBlocks ()Lnet/minecraft/class_3494;
 	METHOD method_31108 equals (Lnet/minecraft/class_2874;)Z
 		ARG 1 dimensionType
+	METHOD method_31109 getCoordinateScaleFactor (Lnet/minecraft/class_2874;Lnet/minecraft/class_2874;)D
+		ARG 0 fromDimension
+		ARG 1 toDimension
 	METHOD method_31110 getCoordinateScale ()D
 	METHOD method_31181 getSkyProperties ()Lnet/minecraft/class_2960;
+	METHOD method_32922 create (Ljava/util/OptionalLong;ZZZZDZZZZZIIILnet/minecraft/class_4545;Lnet/minecraft/class_2960;Lnet/minecraft/class_2960;F)Lnet/minecraft/class_2874;
+		ARG 0 fixedTime
+		ARG 1 hasSkylight
+		ARG 2 hasCeiling
+		ARG 3 ultrawarm
+		ARG 4 natural
+		ARG 5 coordinateScale
+		ARG 7 hasEnderDragonFight
+		ARG 8 piglinSafe
+		ARG 9 bedWorks
+		ARG 10 respawnAnchorWorks
+		ARG 11 hasRaids
+		ARG 12 minimumY
+		ARG 13 height
+		ARG 14 logicalHeight
+		ARG 15 biomeAccessType
+		ARG 16 infiniburn
+		ARG 17 skyProperties
+		ARG 18 ambientLight
+	METHOD method_32923 checkHeight (Lnet/minecraft/class_2874;)Lcom/mojang/serialization/DataResult;
+		ARG 0 type
+	METHOD method_32924 getHeight ()I
+	METHOD method_32925 getLogicalHeight ()I

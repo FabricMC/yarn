@@ -15,8 +15,19 @@ CLASS net/minecraft/class_4466 net/minecraft/entity/passive/BeeEntity
 	FIELD field_21644 ticksUntilCanPollinate I
 	FIELD field_21645 moveToHiveGoal Lnet/minecraft/class_4466$class_4472;
 	FIELD field_21646 moveToFlowerGoal Lnet/minecraft/class_4466$class_4473;
-	FIELD field_25363 ANGER_TIME_RANGE Lnet/minecraft/class_4801;
+	FIELD field_25363 ANGER_TIME_RANGE Lnet/minecraft/class_6019;
 	FIELD field_25364 targetUuid Ljava/util/UUID;
+	FIELD field_30272 CROPS_GROWN_SINCE_POLLINATION_KEY Ljava/lang/String;
+	FIELD field_30273 CANNOT_ENTER_HIVE_TICKS_KEY Ljava/lang/String;
+	FIELD field_30276 TICKS_SINCE_POLLINATION_KEY Ljava/lang/String;
+	FIELD field_30277 HAS_STUNG_KEY Ljava/lang/String;
+	FIELD field_30278 HAS_NECTAR_KEY Ljava/lang/String;
+	FIELD field_30279 FLOWER_POS_KEY Ljava/lang/String;
+	FIELD field_30280 HIVE_POS_KEY Ljava/lang/String;
+	FIELD field_30285 FLOWER_NAVIGATION_START_TICKS I
+		COMMENT A bee will start moving to a flower once this time in ticks has passed from a pollination.
+	FIELD field_30286 POLLINATION_FAIL_TICKS I
+		COMMENT The duration in ticks when a bee's pollination is considered failed.
 	METHOD method_21769 addParticle (Lnet/minecraft/class_1937;DDDDDLnet/minecraft/class_2394;)V
 		ARG 1 world
 		ARG 2 lastX
@@ -71,6 +82,8 @@ CLASS net/minecraft/class_4466 net/minecraft/entity/passive/BeeEntity
 	METHOD method_23992 isFlowers (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
 	METHOD method_26880 createBeeAttributes ()Lnet/minecraft/class_5132$class_5133;
+	METHOD method_35161 getMoveGoalTicks ()I
+	METHOD method_35162 getPossibleHives ()Ljava/util/List;
 	CLASS class_4467 NotAngryGoal
 		METHOD method_21814 canBeeStart ()Z
 		METHOD method_21815 canBeeContinue ()Z
@@ -102,6 +115,7 @@ CLASS net/minecraft/class_4466 net/minecraft/entity/passive/BeeEntity
 		METHOD method_24012 makeChosenHivePossibleHive ()V
 	CLASS class_4473 MoveToFlowerGoal
 		FIELD field_21650 ticks I
+		FIELD field_30298 MAX_FLOWER_NAVIGATION_TICKS I
 		METHOD method_24013 shouldMoveToFlower ()Z
 	CLASS class_4474 GrowCropsGoal
 	CLASS class_4475 BeeRevengeGoal
@@ -119,6 +133,8 @@ CLASS net/minecraft/class_4466 net/minecraft/entity/passive/BeeEntity
 		FIELD field_21080 running Z
 		FIELD field_21511 nextTarget Lnet/minecraft/class_243;
 		FIELD field_21651 ticks I
+		METHOD method_21819 (Lnet/minecraft/class_2680;)Z
+			ARG 0 state
 		METHOD method_21820 completedPollination ()Z
 		METHOD method_21821 getFlower ()Ljava/util/Optional;
 		METHOD method_22326 findFlower (Ljava/util/function/Predicate;D)Ljava/util/Optional;

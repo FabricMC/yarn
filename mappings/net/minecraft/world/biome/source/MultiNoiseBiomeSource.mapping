@@ -5,8 +5,9 @@ CLASS net/minecraft/class_4766 net/minecraft/world/biome/source/MultiNoiseBiomeS
 	FIELD field_22081 weirdnessNoise Lnet/minecraft/class_5216;
 	FIELD field_24115 biomePoints Ljava/util/List;
 	FIELD field_24116 threeDimensionalSampling Z
-	FIELD field_24718 CODEC Lcom/mojang/serialization/MapCodec;
-	FIELD field_24719 INSTANCE_CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_24718 CUSTOM_CODEC Lcom/mojang/serialization/MapCodec;
+		COMMENT Used to parse a custom biome source, when a preset hasn't been provided.
+	FIELD field_24719 CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_24720 seed J
 	FIELD field_24721 instance Ljava/util/Optional;
 	FIELD field_26433 DEFAULT_NOISE_PARAMETERS Lnet/minecraft/class_4766$class_5487;
@@ -33,6 +34,8 @@ CLASS net/minecraft/class_4766 net/minecraft/world/biome/source/MultiNoiseBiomeS
 		ARG 6 altitudeNoiseParameters
 		ARG 7 weirdnessNoiseParameters
 		ARG 8 instance
+	METHOD method_28462 matchesInstance (J)Z
+		ARG 1 seed
 	METHOD method_31085 getInstance ()Ljava/util/Optional;
 	CLASS class_5305 Preset
 		FIELD field_24723 NETHER Lnet/minecraft/class_4766$class_5305;
@@ -43,6 +46,10 @@ CLASS net/minecraft/class_4766 net/minecraft/world/biome/source/MultiNoiseBiomeS
 			ARG 1 id
 			ARG 2 biomeSourceFunction
 		METHOD method_28469 getBiomeSource (Lnet/minecraft/class_2378;J)Lnet/minecraft/class_4766;
+			ARG 1 biomeRegistry
+			ARG 2 seed
+		METHOD method_31088 (Lnet/minecraft/class_4766$class_5305;Lnet/minecraft/class_2378;Ljava/lang/Long;)Lnet/minecraft/class_4766;
+			ARG 0 preset
 			ARG 1 biomeRegistry
 			ARG 2 seed
 	CLASS class_5487 NoiseParameters
@@ -64,6 +71,10 @@ CLASS net/minecraft/class_4766 net/minecraft/world/biome/source/MultiNoiseBiomeS
 			ARG 2 biomeRegistry
 			ARG 3 seed
 		METHOD method_31094 getPreset ()Lnet/minecraft/class_4766$class_5305;
+		METHOD method_31095 (Lnet/minecraft/class_4766$class_5305;)Lcom/mojang/serialization/DataResult;
+			ARG 0 preset
+		METHOD method_31097 (Lnet/minecraft/class_2960;)Lcom/mojang/serialization/DataResult;
+			ARG 0 id
 		METHOD method_31098 getBiomeRegistry ()Lnet/minecraft/class_2378;
 		METHOD method_31100 getSeed ()J
 		METHOD method_31101 getBiomeSource ()Lnet/minecraft/class_4766;

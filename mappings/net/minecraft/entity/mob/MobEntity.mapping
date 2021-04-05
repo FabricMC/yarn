@@ -2,6 +2,7 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	FIELD field_18074 positionTarget Lnet/minecraft/class_2338;
 	FIELD field_18075 positionTargetRange F
 	FIELD field_18279 holdingEntityId I
+	FIELD field_30086 LEASH_KEY Ljava/lang/String;
 	FIELD field_6184 lootTableSeed J
 	FIELD field_6185 targetSelector Lnet/minecraft/class_1355;
 	FIELD field_6186 armorDropChances [F
@@ -10,7 +11,7 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	FIELD field_6189 navigation Lnet/minecraft/class_1408;
 	FIELD field_6190 visibilityCache Lnet/minecraft/class_1413;
 	FIELD field_6191 ambientSoundChance I
-	FIELD field_6192 leashTag Lnet/minecraft/class_2487;
+	FIELD field_6192 leashNbt Lnet/minecraft/class_2487;
 	FIELD field_6193 MOB_FLAGS Lnet/minecraft/class_2940;
 	FIELD field_6194 experiencePoints I
 	FIELD field_6195 handItems Lnet/minecraft/class_2371;
@@ -73,6 +74,23 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	METHOD method_26323 movesIndependently ()Z
 		COMMENT When true, causes this entity to take over pathfinding for its controlling passenger.
 	METHOD method_26828 createMobAttributes ()Lnet/minecraft/class_5132$class_5133;
+	METHOD method_29243 convertTo (Lnet/minecraft/class_1299;Z)Lnet/minecraft/class_1308;
+		COMMENT Converts this entity to the provided {@code entityType}.
+		COMMENT <p>The new entity will keep many of the properties set for this entity,
+		COMMENT including its vehicle, its name and whether it is persistent or not.
+		COMMENT <p>If {@code keepEquipment} is {@code true}, it will also keep its equipment.
+		ARG 1 entityType
+			COMMENT the entity type to convert to
+		ARG 2 keepEquipment
+			COMMENT whether the equipment of this entity should be kept
+	METHOD method_29506 interactWithItem (Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
+		ARG 1 player
+		ARG 2 hand
+	METHOD method_30758 enchantEquipment (FLnet/minecraft/class_1304;)V
+		ARG 1 power
+		ARG 2 slot
+	METHOD method_30759 enchantMainHandItem (F)V
+		ARG 1 power
 	METHOD method_5929 getDropChance (Lnet/minecraft/class_1304;)F
 		ARG 1 slot
 	METHOD method_5930 setForwardSpeed (F)V
@@ -84,9 +102,6 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 2 dropItem
 	METHOD method_5933 getHoldingEntity ()Lnet/minecraft/class_1297;
 	METHOD method_5934 isLeashed ()Z
-	METHOD method_5935 canEquipmentSlotContain (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)Z
-		ARG 0 slot
-		ARG 1 item
 	METHOD method_5936 canPickUpLoot ()Z
 	METHOD method_5937 setLeftHanded (Z)V
 		ARG 1 leftHanded
@@ -94,7 +109,7 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 1 sidewaysMovement
 	METHOD method_5939 canPickupItem (Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
-	METHOD method_5940 deserializeLeashTag ()V
+	METHOD method_5940 readLeashNbt ()V
 	METHOD method_5941 setPathfindingPenalty (Lnet/minecraft/class_7;F)V
 		ARG 1 nodeType
 		ARG 2 penalty
@@ -104,7 +119,7 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 2 difficulty
 		ARG 3 spawnReason
 		ARG 4 entityData
-		ARG 5 entityTag
+		ARG 5 entityNbt
 	METHOD method_5944 getPathfindingPenalty (Lnet/minecraft/class_7;)F
 		ARG 1 nodeType
 	METHOD method_5945 getLimitPerChunk ()I
@@ -123,8 +138,6 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 3 maxPitchChange
 	METHOD method_5952 setCanPickUpLoot (Z)V
 		ARG 1 pickUpLoot
-	METHOD method_5953 getPreferredEquipmentSlot (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1304;
-		ARG 0 stack
 	METHOD method_5954 attachLeash (Lnet/minecraft/class_1297;Z)V
 		ARG 1 entity
 		ARG 2 sendPacket

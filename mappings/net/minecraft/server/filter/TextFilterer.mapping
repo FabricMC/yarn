@@ -1,0 +1,60 @@
+CLASS net/minecraft/class_5514 net/minecraft/server/filter/TextFilterer
+	FIELD field_26823 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_26824 NEXT_WORKER_ID Ljava/util/concurrent/atomic/AtomicInteger;
+	FIELD field_26825 THREAD_FACTORY Ljava/util/concurrent/ThreadFactory;
+	FIELD field_26826 chatEndpoint Ljava/net/URL;
+	FIELD field_26827 joinEndpoint Ljava/net/URL;
+	FIELD field_26828 leaveEndpoint Ljava/net/URL;
+	FIELD field_26829 apiKey Ljava/lang/String;
+	FIELD field_26830 ruleId I
+	FIELD field_26831 serverId Ljava/lang/String;
+	FIELD field_26832 ignorer Lnet/minecraft/class_5514$class_5515;
+	FIELD field_26833 executor Ljava/util/concurrent/ExecutorService;
+	METHOD <init> (Ljava/net/URI;Ljava/lang/String;ILjava/lang/String;Lnet/minecraft/class_5514$class_5515;I)V
+		ARG 1 apiUrl
+		ARG 2 apiKey
+		ARG 3 ruleId
+		ARG 4 serverId
+		ARG 5 ignorer
+	METHOD method_31295 sendJsonRequest (Lcom/google/gson/JsonObject;Ljava/net/URL;)Lcom/google/gson/JsonObject;
+		ARG 1 payload
+		ARG 2 endpoint
+	METHOD method_31297 createFilterer (Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/class_5513;
+		ARG 1 gameProfile
+	METHOD method_31298 filterMessage (Lcom/mojang/authlib/GameProfile;Ljava/lang/String;Lnet/minecraft/class_5514$class_5515;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 gameProfile
+		ARG 2 message
+		ARG 3 ignorer
+		ARG 4 executor
+	METHOD method_31299 sendJoinOrLeaveRequest (Lcom/mojang/authlib/GameProfile;Ljava/net/URL;Ljava/util/concurrent/Executor;)V
+		ARG 1 gameProfile
+		ARG 2 endpoint
+		ARG 3 executor
+	METHOD method_31300 consumeFully (Ljava/io/InputStream;)V
+		ARG 1 inputStream
+	METHOD method_31304 sendRequest (Lcom/google/gson/JsonObject;Ljava/net/URL;)V
+		ARG 1 payload
+		ARG 2 endpoint
+	METHOD method_31306 createConnection (Lcom/google/gson/JsonObject;Ljava/net/URL;)Ljava/net/HttpURLConnection;
+		ARG 1 payload
+		ARG 2 endpoint
+	METHOD method_33805 load (Ljava/lang/String;)Lnet/minecraft/class_5514;
+		ARG 0 config
+	CLASS class_5515 HashIgnorer
+		FIELD field_26834 NEVER_IGNORE Lnet/minecraft/class_5514$class_5515;
+		FIELD field_26835 IGNORE_IF_MATCHES_ALL Lnet/minecraft/class_5514$class_5515;
+		METHOD method_33806 internalDropHashes (I)Lnet/minecraft/class_5514$class_5515;
+			ARG 0 hashesToDrop
+		METHOD method_33808 dropHashes (I)Lnet/minecraft/class_5514$class_5515;
+			ARG 0 hashesToDrop
+		METHOD shouldIgnore (Ljava/lang/String;I)Z
+			ARG 1 hashes
+			ARG 2 hashesSize
+	CLASS class_5516 Impl
+		FIELD field_26837 gameProfile Lcom/mojang/authlib/GameProfile;
+		FIELD field_26838 executor Ljava/util/concurrent/Executor;
+		METHOD <init> (Lnet/minecraft/class_5514;Lcom/mojang/authlib/GameProfile;)V
+			ARG 2 gameProfile
+	CLASS class_5517 FailedHttpRequestException
+		METHOD <init> (Ljava/lang/String;)V
+			ARG 1 message

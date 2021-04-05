@@ -1,0 +1,132 @@
+CLASS net/minecraft/class_5579 net/minecraft/server/world/ServerEntityManager
+	COMMENT An entity manager for a server environment.
+	FIELD field_27260 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_27261 entityUuids Ljava/util/Set;
+	FIELD field_27262 handler Lnet/minecraft/class_5576;
+	FIELD field_27263 dataAccess Lnet/minecraft/class_5571;
+	FIELD field_27264 index Lnet/minecraft/class_5570;
+	FIELD field_27265 cache Lnet/minecraft/class_5573;
+	FIELD field_27266 lookup Lnet/minecraft/class_5577;
+	FIELD field_27267 trackingStatuses Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
+	FIELD field_27268 managedStatuses Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
+	FIELD field_27269 pendingUnloads Lit/unimi/dsi/fastutil/longs/LongSet;
+	FIELD field_27270 loadingQueue Ljava/util/Queue;
+	METHOD <init> (Ljava/lang/Class;Lnet/minecraft/class_5576;Lnet/minecraft/class_5571;)V
+		ARG 1 entityClass
+		ARG 2 handler
+		ARG 3 dataAccess
+	METHOD method_31809 tick ()V
+	METHOD method_31810 readIfFresh (J)V
+		ARG 1 chunkPos
+	METHOD method_31811 entityLeftSection (JLnet/minecraft/class_5572;)V
+		ARG 1 sectionPos
+		ARG 3 section
+	METHOD method_31812 trySave (JLjava/util/function/Consumer;)Z
+		COMMENT Tries to save entities in a chunk and performs an {@code action} on each
+		COMMENT saved entity if successful.
+		COMMENT
+		COMMENT <p>If a chunk is {@link Status#FRESH} or {@link Status#PENDING}, it
+		COMMENT cannot be saved.
+		COMMENT
+		COMMENT @return whether the saving is successful
+		ARG 1 chunkPos
+		ARG 3 action
+			COMMENT action performed on each saved entity if saving is successful
+	METHOD method_31813 (Lnet/minecraft/class_4456;J)V
+		ARG 2 chunkPos
+	METHOD method_31814 (Lnet/minecraft/class_4456;Lnet/minecraft/class_5579$class_5581;J)V
+		ARG 3 sectionPos
+	METHOD method_31815 updateTrackingStatus (Lnet/minecraft/class_1923;Lnet/minecraft/class_3193$class_3194;)V
+		COMMENT Updates the tracking status of tracking sections in a chunk at {@code
+		COMMENT chunkPos} given the {@code levelType}.
+		COMMENT
+		COMMENT @see updateTrackingStatus(ChunkPos, EntityTrackingStatus)
+		ARG 1 chunkPos
+			COMMENT the chunk to update
+		ARG 2 levelType
+			COMMENT the updated level type of the chunk
+	METHOD method_31816 updateTrackingStatus (Lnet/minecraft/class_1923;Lnet/minecraft/class_5584;)V
+		COMMENT Updates the {@code trackingStatus} of tracking sections in a chunk
+		COMMENT at {@code chunkPos}.
+		ARG 1 chunkPos
+			COMMENT the chunk to update
+		ARG 2 trackingStatus
+			COMMENT the updated section tracking status
+	METHOD method_31818 addEntity (Lnet/minecraft/class_5568;)Z
+		COMMENT Adds a newly created entity to this manager.
+		COMMENT
+		COMMENT @return if the entity was added
+		ARG 1 entity
+			COMMENT the newly created entity
+	METHOD method_31820 addEntity (Lnet/minecraft/class_5568;Z)Z
+		COMMENT Loads or adds an entity to this manager.
+		COMMENT
+		COMMENT @return if the entity was loaded or added
+		ARG 1 entity
+			COMMENT the entity
+		ARG 2 existing
+			COMMENT whether this entity is loaded from the map than created anew
+	METHOD method_31825 (Lnet/minecraft/class_5584;Lnet/minecraft/class_5572;)V
+		ARG 2 group
+	METHOD method_31826 dump (Ljava/io/Writer;)V
+		ARG 1 writer
+	METHOD method_31827 has (Ljava/util/UUID;)Z
+		ARG 1 uuid
+	METHOD method_31828 loadEntities (Ljava/util/stream/Stream;)V
+		COMMENT Loads a few entities from disk to this manager.
+		ARG 1 entities
+	METHOD method_31829 save ()V
+	METHOD method_31830 scheduleRead (J)V
+		ARG 1 chunkPos
+	METHOD method_31831 addEntityUuid (Lnet/minecraft/class_5568;)Z
+		ARG 1 entity
+	METHOD method_31832 getNeededLoadStatus (Lnet/minecraft/class_5568;Lnet/minecraft/class_5584;)Lnet/minecraft/class_5584;
+		ARG 0 entity
+		ARG 1 current
+	METHOD method_31835 addEntities (Ljava/util/stream/Stream;)V
+		COMMENT Adds a few newly created entities to this manager.
+		ARG 1 entities
+	METHOD method_31836 flush ()V
+	METHOD method_31837 unload (J)Z
+		ARG 1 chunkPos
+	METHOD method_31838 startTicking (Lnet/minecraft/class_5568;)V
+		ARG 1 entity
+	METHOD method_31841 getLookup ()Lnet/minecraft/class_5577;
+	METHOD method_31842 (J)Z
+		ARG 1 pos
+	METHOD method_31843 stopTicking (Lnet/minecraft/class_5568;)V
+		ARG 1 entity
+	METHOD method_31845 getDebugString ()Ljava/lang/String;
+	METHOD method_31846 (J)V
+		ARG 1 pos
+	METHOD method_31847 startTracking (Lnet/minecraft/class_5568;)V
+		ARG 1 entity
+	METHOD method_31849 (J)Z
+		ARG 1 pos
+	METHOD method_31850 stopTracking (Lnet/minecraft/class_5568;)V
+		ARG 1 entity
+	METHOD method_31851 unloadChunks ()V
+	METHOD method_31852 unload (Lnet/minecraft/class_5568;)V
+		ARG 1 entity
+	METHOD method_31853 loadChunks ()V
+	METHOD method_31855 getLoadedChunks ()Lit/unimi/dsi/fastutil/longs/LongSet;
+	METHOD method_31857 (Lnet/minecraft/class_5568;)V
+		ARG 1 entity
+	METHOD method_31863 (Lnet/minecraft/class_5568;)V
+		ARG 1 entity
+	METHOD method_31864 (Lnet/minecraft/class_5568;)V
+		ARG 1 entity
+	CLASS class_5580 Listener
+		FIELD field_27271 manager Lnet/minecraft/class_5579;
+		FIELD field_27272 entity Lnet/minecraft/class_5568;
+		FIELD field_27273 sectionPos J
+		FIELD field_27274 section Lnet/minecraft/class_5572;
+		METHOD <init> (Lnet/minecraft/class_5579;Lnet/minecraft/class_5568;JLnet/minecraft/class_5572;)V
+			ARG 2 entity
+			ARG 3 sectionPos
+			ARG 5 section
+		METHOD method_31865 updateLoadStatus (Lnet/minecraft/class_5584;Lnet/minecraft/class_5584;)V
+			ARG 1 oldStatus
+			ARG 2 newStatus
+	CLASS class_5581 Status
+		COMMENT The status of chunks within a server entity manager.

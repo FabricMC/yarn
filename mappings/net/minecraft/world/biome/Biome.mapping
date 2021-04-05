@@ -3,8 +3,10 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	FIELD field_22039 effects Lnet/minecraft/class_4763;
 	FIELD field_24677 REGISTRY_CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_25819 CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_26392 FROZEN_OCEAN_NOISE Lnet/minecraft/class_3543;
 	FIELD field_26393 weather Lnet/minecraft/class_1959$class_5482;
 	FIELD field_26395 spawnSettings Lnet/minecraft/class_5483;
+	FIELD field_26634 structures Ljava/util/Map;
 	FIELD field_26635 generationSettings Lnet/minecraft/class_5485;
 	FIELD field_9324 FOLIAGE_NOISE Lnet/minecraft/class_3543;
 	FIELD field_9329 category Lnet/minecraft/class_1959$class_1961;
@@ -33,6 +35,8 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	METHOD method_30774 getDefaultFoliageColor ()I
 	METHOD method_30966 getSpawnSettings ()Lnet/minecraft/class_5483;
 	METHOD method_30970 getGenerationSettings ()Lnet/minecraft/class_5485;
+	METHOD method_33599 isCold (Lnet/minecraft/class_2338;)Z
+		ARG 1 pos
 	METHOD method_8685 canSetIce (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;Z)Z
 		ARG 1 world
 		ARG 2 pos
@@ -53,7 +57,7 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 		ARG 3 region
 		ARG 4 populationSeed
 		ARG 6 random
-		ARG 7 pos
+		ARG 7 origin
 	METHOD method_8703 buildSurface (Ljava/util/Random;Lnet/minecraft/class_2791;IIIDLnet/minecraft/class_2680;Lnet/minecraft/class_2680;IJ)V
 		ARG 1 random
 		ARG 2 chunk
@@ -162,8 +166,8 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 			COMMENT from a mathematical point of view, with a special parameter that
 			COMMENT reduces the calculated distance.
 			COMMENT
-			COMMENT <p>For most fields except rarity potential, smaller difference between
-			COMMENT two points' fields will lead to smaller distance. For rarity potential,
+			COMMENT <p>For most fields except weight, smaller difference between
+			COMMENT two points' fields will lead to smaller distance. For weight,
 			COMMENT larger differences lead to smaller distance.
 			COMMENT
 			COMMENT <p>This distance is used by the mixed-noise biome layer source. The

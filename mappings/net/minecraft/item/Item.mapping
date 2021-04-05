@@ -1,10 +1,11 @@
 CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	FIELD field_18672 foodComponent Lnet/minecraft/class_4174;
 	FIELD field_21979 fireproof Z
+	FIELD field_27017 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_30887 DEFAULT_MAX_COUNT I
 	FIELD field_8001 ATTACK_SPEED_MODIFIER_ID Ljava/util/UUID;
 	FIELD field_8003 BLOCK_ITEMS Ljava/util/Map;
 	FIELD field_8004 group Lnet/minecraft/class_1761;
-	FIELD field_8005 RANDOM Ljava/util/Random;
 	FIELD field_8006 ATTACK_DAMAGE_MODIFIER_ID Ljava/util/UUID;
 	FIELD field_8008 recipeRemainder Lnet/minecraft/class_1792;
 	FIELD field_8009 rarity Lnet/minecraft/class_1814;
@@ -24,7 +25,32 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT @return whether this Item can be damaged by the given {@link DamageSource}.
 		ARG 1 source
 	METHOD method_24358 isFireproof ()Z
-		COMMENT @return whether this Item is immune to fire and lava damage.
+			COMMENT @return whether this Item is immune to fire and lava damage.
+	METHOD method_31565 onStackClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;)Z
+		ARG 1 stack
+		ARG 2 slot
+		ARG 3 clickType
+		ARG 4 player
+	METHOD method_31566 onClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;Lnet/minecraft/class_5630;)Z
+		ARG 1 stack
+		ARG 2 otherStack
+		ARG 3 slot
+		ARG 4 clickType
+		ARG 5 player
+		ARG 6 cursorSlot
+	METHOD method_31567 isItemBarVisible (Lnet/minecraft/class_1799;)Z
+		ARG 1 stack
+	METHOD method_31568 canBeNested ()Z
+		COMMENT @return true if the item can be placed inside of shulker boxes or bundles.
+	METHOD method_31569 getItemBarStep (Lnet/minecraft/class_1799;)I
+		ARG 1 stack
+	METHOD method_31570 getEquipSound ()Lnet/minecraft/class_3414;
+	METHOD method_31571 getItemBarColor (Lnet/minecraft/class_1799;)I
+		ARG 1 stack
+	METHOD method_32346 getTooltipData (Lnet/minecraft/class_1799;)Ljava/util/Optional;
+		ARG 1 stack
+	METHOD method_33261 onItemEntityDestroyed (Lnet/minecraft/class_1542;)V
+		ARG 1 entity
 	METHOD method_7836 use (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1271;
 		COMMENT Called when an item is used by a player.
 		COMMENT The use action, by default, is bound to the right mouse button.
@@ -86,17 +112,23 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	METHOD method_7853 getUseAction (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1839;
 		ARG 1 stack
 	METHOD method_7854 getDefaultStack ()Lnet/minecraft/class_1799;
-	METHOD method_7855 isIn (Lnet/minecraft/class_3494;)Z
-		ARG 1 tag
-	METHOD method_7856 isEffectiveOn (Lnet/minecraft/class_2680;)Z
+	METHOD method_7856 isSuitableFor (Lnet/minecraft/class_2680;)Z
+		COMMENT Determines whether this item can be used as a suitable tool for mining the specified block.
+		COMMENT Depending on block implementation, when combined together, the correct item and block may achieve a better mining speed and yield
+		COMMENT drops that would not be obtained when mining otherwise.
+		COMMENT <p>
+		COMMENT Note that this is not the <b>only</b> way to achieve "effectiveness" when mining.
+		COMMENT Other items, such as shears on string, may use their own logic
+		COMMENT and calls to this method might not return a value consistent to this rule for those items.
+		COMMENT </p>
 		ARG 1 state
 	METHOD method_7857 hasRecipeRemainder ()Z
 		COMMENT Checks if this item has a remainder item that is left behind when used as a crafting ingredient.
 	METHOD method_7858 getRecipeRemainder ()Lnet/minecraft/class_1792;
 		COMMENT Gets the remainder item that should be left behind when this item is used as a crafting ingredient.
 	METHOD method_7859 getGroup ()Lnet/minecraft/class_1761;
-	METHOD method_7860 postProcessTag (Lnet/minecraft/class_2487;)Z
-		ARG 1 tag
+	METHOD method_7860 postProcessNbt (Lnet/minecraft/class_2487;)Z
+		ARG 1 nbt
 	METHOD method_7861 finishUsing (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)Lnet/minecraft/class_1799;
 		ARG 1 stack
 		ARG 2 world
@@ -118,6 +150,7 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT Gets the translation key of this item using the provided item stack for context.
 		ARG 1 stack
 	METHOD method_7867 fromBlock (Lnet/minecraft/class_2248;)Lnet/minecraft/class_1792;
+		COMMENT @deprecated Please use {@link Block#asItem}
 		ARG 0 block
 	METHOD method_7869 getOrCreateTranslationKey ()Ljava/lang/String;
 	METHOD method_7870 isEnchantable (Lnet/minecraft/class_1799;)Z
@@ -180,7 +213,7 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT <p>By default, returns true if the item has enchantments.
 		ARG 1 stack
 	METHOD method_7887 shouldSyncTagToClient ()Z
-		COMMENT Checks if an item should have its NBT data stored in {@link #tag} sent to the client.
+		COMMENT Checks if an item should have its NBT data stored in {@link ItemStack#tag} sent to the client.
 		COMMENT
 		COMMENT <p>If an item is damageable, this method is ignored and data is always synced to client.
 	METHOD method_7888 inventoryTick (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;IZ)V

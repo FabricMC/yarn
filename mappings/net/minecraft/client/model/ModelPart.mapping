@@ -3,28 +3,16 @@ CLASS net/minecraft/class_630 net/minecraft/client/model/ModelPart
 	FIELD field_3655 pivotZ F
 	FIELD field_3656 pivotY F
 	FIELD field_3657 pivotX F
-	FIELD field_3658 textureHeight F
-	FIELD field_3659 textureWidth F
-	FIELD field_3661 children Lit/unimi/dsi/fastutil/objects/ObjectList;
-	FIELD field_3663 cuboids Lit/unimi/dsi/fastutil/objects/ObjectList;
+	FIELD field_3661 children Ljava/util/Map;
+	FIELD field_3663 cuboids Ljava/util/List;
 	FIELD field_3665 visible Z
-	FIELD field_3666 mirror Z
-	FIELD field_3670 textureOffsetV I
-	FIELD field_3672 textureOffsetU I
 	FIELD field_3674 roll F
 	FIELD field_3675 yaw F
-	METHOD <init> (IIII)V
-		ARG 1 textureWidth
-		ARG 2 textureHeight
-		ARG 3 textureOffsetU
-		ARG 4 textureOffsetV
-	METHOD <init> (Lnet/minecraft/class_3879;)V
-		ARG 1 model
-	METHOD <init> (Lnet/minecraft/class_3879;II)V
-		ARG 1 model
-		ARG 2 textureOffsetU
-		ARG 3 textureOffsetV
-	METHOD method_17138 copyPositionAndRotation (Lnet/minecraft/class_630;)V
+	METHOD <init> (Ljava/util/List;Ljava/util/Map;)V
+		ARG 1 cuboids
+		ARG 2 children
+	METHOD method_17138 copyTransform (Lnet/minecraft/class_630;)V
+		ARG 1 part
 	METHOD method_22698 render (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;II)V
 		ARG 1 matrices
 		ARG 2 vertices
@@ -42,7 +30,7 @@ CLASS net/minecraft/class_630 net/minecraft/client/model/ModelPart
 	METHOD method_22700 getRandomCuboid (Ljava/util/Random;)Lnet/minecraft/class_630$class_628;
 		ARG 1 random
 	METHOD method_22702 renderCuboids (Lnet/minecraft/class_4587$class_4665;Lnet/minecraft/class_4588;IIFFFF)V
-		ARG 1 matrices
+		ARG 1 entry
 		ARG 2 vertexConsumer
 		ARG 3 light
 		ARG 4 overlay
@@ -52,84 +40,21 @@ CLASS net/minecraft/class_630 net/minecraft/client/model/ModelPart
 		ARG 8 alpha
 	METHOD method_22703 rotate (Lnet/minecraft/class_4587;)V
 		ARG 1 matrix
-	METHOD method_22971 addCuboid (FFFFFFFFF)V
-		ARG 1 x
-		ARG 2 y
-		ARG 3 z
-		ARG 4 sizeX
-		ARG 5 sizeY
-		ARG 6 sizeZ
-		ARG 7 extraX
-		ARG 8 extraY
-		ARG 9 extraZ
-	METHOD method_22972 addCuboid (IIFFFFFFFFFZZ)V
-		ARG 1 u
-		ARG 2 v
-		ARG 3 x
-		ARG 4 y
-		ARG 5 z
-		ARG 6 sizeX
-		ARG 7 sizeY
-		ARG 8 sizeZ
-		ARG 9 extraX
-		ARG 10 extraY
-		ARG 11 extraZ
-		ARG 12 mirror
-	METHOD method_2844 addCuboid (FFFFFF)Lnet/minecraft/class_630;
-		ARG 1 x
-		ARG 2 y
-		ARG 3 z
-		ARG 4 sizeX
-		ARG 5 sizeY
-		ARG 6 sizeZ
-	METHOD method_2845 addChild (Lnet/minecraft/class_630;)V
-		ARG 1 part
-	METHOD method_2848 addCuboid (Ljava/lang/String;FFFIIIFII)Lnet/minecraft/class_630;
-		ARG 1 name
-		ARG 2 x
-		ARG 3 y
-		ARG 4 z
-		ARG 5 sizeX
-		ARG 6 sizeY
-		ARG 7 sizeZ
-		ARG 8 extra
-		ARG 9 textureOffsetU
-		ARG 10 textureOffsetV
-	METHOD method_2849 addCuboid (FFFFFFFZ)V
-		ARG 1 x
-		ARG 2 y
-		ARG 3 z
-		ARG 4 sizeX
-		ARG 5 sizeY
-		ARG 6 sizeZ
-		ARG 7 extra
-		ARG 8 mirror
-	METHOD method_2850 setTextureOffset (II)Lnet/minecraft/class_630;
-		ARG 1 textureOffsetU
-		ARG 2 textureOffsetV
 	METHOD method_2851 setPivot (FFF)V
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
-	METHOD method_2853 setTextureSize (II)Lnet/minecraft/class_630;
-		ARG 1 width
-		ARG 2 height
-	METHOD method_2854 addCuboid (FFFFFFZ)Lnet/minecraft/class_630;
-		ARG 1 x
-		ARG 2 y
-		ARG 3 z
-		ARG 4 sizeX
-		ARG 5 sizeY
-		ARG 6 sizeZ
-		ARG 7 mirror
-	METHOD method_2856 addCuboid (FFFFFFF)V
-		ARG 1 x
-		ARG 2 y
-		ARG 3 z
-		ARG 4 sizeX
-		ARG 5 sizeY
-		ARG 6 sizeZ
-		ARG 7 extra
+	METHOD method_32084 getTransform ()Lnet/minecraft/class_5603;
+	METHOD method_32085 setTransform (Lnet/minecraft/class_5603;)V
+		ARG 1 rotationData
+	METHOD method_32086 getChild (Ljava/lang/String;)Lnet/minecraft/class_630;
+		ARG 1 name
+	METHOD method_32087 isEmpty ()Z
+	METHOD method_32088 traverse ()Ljava/util/stream/Stream;
+	METHOD method_33425 setAngles (FFF)V
+		ARG 1 pitch
+		ARG 2 yaw
+		ARG 3 roll
 	CLASS class_593 Quad
 		FIELD field_21618 direction Lnet/minecraft/class_1160;
 		FIELD field_3502 vertices [Lnet/minecraft/class_630$class_618;
@@ -183,3 +108,12 @@ CLASS net/minecraft/class_630 net/minecraft/client/model/ModelPart
 			ARG 12 mirror
 			ARG 13 textureWidth
 			ARG 14 textureHeight
+		METHOD method_32089 renderCuboid (Lnet/minecraft/class_4587$class_4665;Lnet/minecraft/class_4588;IIFFFF)V
+			ARG 1 entry
+			ARG 2 vertexConsumer
+			ARG 3 light
+			ARG 4 overlay
+			ARG 5 red
+			ARG 6 green
+			ARG 7 blue
+			ARG 8 alpha

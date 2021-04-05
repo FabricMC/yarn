@@ -2,6 +2,19 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	FIELD field_24092 LORE_STYLE Lnet/minecraft/class_2583;
 	FIELD field_24093 holder Lnet/minecraft/class_1297;
 	FIELD field_24671 CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_30890 ENCHANTMENTS_KEY Ljava/lang/String;
+	FIELD field_30891 ID_KEY Ljava/lang/String;
+	FIELD field_30892 LVL_KEY Ljava/lang/String;
+	FIELD field_30893 DISPLAY_KEY Ljava/lang/String;
+	FIELD field_30894 NAME_KEY Ljava/lang/String;
+	FIELD field_30895 LORE_KEY Ljava/lang/String;
+	FIELD field_30896 DAMAGE_KEY Ljava/lang/String;
+	FIELD field_30897 COLOR_KEY Ljava/lang/String;
+	FIELD field_30898 UNBREAKABLE_KEY Ljava/lang/String;
+	FIELD field_30899 REPAIR_COST_KEY Ljava/lang/String;
+	FIELD field_30900 CAN_DESTROY_KEY Ljava/lang/String;
+	FIELD field_30901 CAN_PLACE_ON_KEY Ljava/lang/String;
+	FIELD field_30902 HIDE_FLAGS_KEY Ljava/lang/String;
 	FIELD field_8029 MODIFIER_FORMAT Ljava/text/DecimalFormat;
 	FIELD field_8030 cooldown I
 	FIELD field_8031 count I
@@ -20,7 +33,9 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 1 item
 		ARG 2 count
 	METHOD <init> (Lnet/minecraft/class_1935;ILjava/util/Optional;)V
+		ARG 1 item
 		ARG 2 count
+		ARG 3 tag
 	METHOD <init> (Lnet/minecraft/class_2487;)V
 		ARG 1 tag
 	METHOD method_17869 (Ljava/util/List;Lnet/minecraft/class_2487;Lnet/minecraft/class_1887;)V
@@ -31,13 +46,48 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_19267 isFood ()Z
 	METHOD method_21832 getDrinkSound ()Lnet/minecraft/class_3414;
 	METHOD method_21833 getEatSound ()Lnet/minecraft/class_3414;
+	METHOD method_26963 (Ljava/text/DecimalFormat;)V
+		ARG 0 decimalFormat
 	METHOD method_27319 getHolder ()Lnet/minecraft/class_1297;
 	METHOD method_27320 setHolder (Lnet/minecraft/class_1297;)V
 		ARG 1 holder
+	METHOD method_28377 (Lnet/minecraft/class_1799;)Ljava/util/Optional;
+		ARG 0 stack
+	METHOD method_28378 (Lnet/minecraft/class_1799;)Ljava/lang/Integer;
+		ARG 0 stack
+	METHOD method_28379 (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1792;
+		ARG 0 stack
 	METHOD method_30266 getHideFlags ()I
-	METHOD method_30267 isSectionHidden (ILnet/minecraft/class_1799$class_5422;)Z
+	METHOD method_30267 isSectionVisible (ILnet/minecraft/class_1799$class_5422;)Z
+		COMMENT Determines whether the given tooltip section will be visible according to the given flags.
 		ARG 0 flags
+		ARG 1 tooltipSection
 	METHOD method_30268 addHideFlag (Lnet/minecraft/class_1799$class_5422;)V
+		ARG 1 tooltipSection
+	METHOD method_31572 getEquipSound ()Lnet/minecraft/class_3414;
+	METHOD method_31573 isIn (Lnet/minecraft/class_3494;)Z
+		ARG 1 tag
+	METHOD method_31574 isOf (Lnet/minecraft/class_1792;)Z
+		ARG 1 item
+	METHOD method_31575 onStackClicked (Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;)Z
+		ARG 1 slot
+		ARG 2 clickType
+		ARG 3 player
+	METHOD method_31576 onClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;Lnet/minecraft/class_5630;)Z
+		ARG 1 stack
+		ARG 2 slot
+		ARG 3 clickType
+		ARG 4 player
+		ARG 5 cursorSlot
+	METHOD method_31577 canCombine (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+		ARG 0 stack
+		ARG 1 otherStack
+	METHOD method_31578 isItemBarVisible ()Z
+	METHOD method_31579 getItemBarStep ()I
+	METHOD method_31580 getItemBarColor ()I
+	METHOD method_32347 getTooltipData ()Ljava/util/Optional;
+	METHOD method_33262 onItemEntityDestroyed (Lnet/minecraft/class_1542;)V
+		ARG 1 entity
 	METHOD method_7909 getItem ()Lnet/minecraft/class_1792;
 	METHOD method_7910 finishUsing (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)Lnet/minecraft/class_1799;
 		ARG 1 world
@@ -51,9 +101,10 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 2 user
 		ARG 3 hand
 	METHOD method_7914 getMaxCount ()I
-	METHOD method_7915 fromTag (Lnet/minecraft/class_2487;)Lnet/minecraft/class_1799;
-		ARG 0 tag
+	METHOD method_7915 fromNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_1799;
+		ARG 0 nbt
 	METHOD method_7916 addAttributeModifier (Lnet/minecraft/class_1320;Lnet/minecraft/class_1322;Lnet/minecraft/class_1304;)V
+		ARG 1 attribute
 		ARG 2 modifier
 		ARG 3 slot
 	METHOD method_7917 inventoryTick (Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;IZ)V
@@ -76,6 +127,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 1 state
 	METHOD method_7925 removeCustomName ()V
 	METHOD method_7926 getAttributeModifiers (Lnet/minecraft/class_1304;)Lcom/google/common/collect/Multimap;
+		ARG 1 slot
 	METHOD method_7927 setRepairCost (I)V
 		ARG 1 repairCost
 	METHOD method_7928 getRepairCost ()I
@@ -98,11 +150,13 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7939 setCount (I)V
 		ARG 1 count
 	METHOD method_7940 canDestroy (Lnet/minecraft/class_5415;Lnet/minecraft/class_2694;)Z
+		ARG 1 tagManager
 		ARG 2 pos
 	METHOD method_7941 getSubTag (Ljava/lang/String;)Lnet/minecraft/class_2487;
 		ARG 1 key
 	METHOD method_7942 hasEnchantments ()Z
 	METHOD method_7944 canPlaceOn (Lnet/minecraft/class_5415;Lnet/minecraft/class_2694;)Z
+		ARG 1 tagManager
 		ARG 2 pos
 	METHOD method_7945 getFrame ()Lnet/minecraft/class_1533;
 	METHOD method_7946 isStackable ()Z
@@ -115,15 +169,22 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7950 getTooltip (Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;)Ljava/util/List;
 		ARG 1 player
 		ARG 2 context
-	METHOD method_7951 isEffectiveOn (Lnet/minecraft/class_2680;)Z
+	METHOD method_7951 isSuitableFor (Lnet/minecraft/class_2680;)Z
+		COMMENT Determines whether this item can be used as a suitable tool for mining the specified block.
+		COMMENT <p>
+		COMMENT Depending on block implementation, when combined together, the correct item and block may achieve a better mining speed and yield
+		COMMENT drops that would not be obtained when mining otherwise.
+		COMMENT </p>
+		COMMENT @return values consistent with calls to {@link Item#isSuitableFor}
+		COMMENT @see Item#isSuitableFor(BlockState)
 		ARG 1 state
 	METHOD method_7952 postMine (Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)V
 		ARG 1 world
 		ARG 2 state
 		ARG 3 pos
 		ARG 4 miner
-	METHOD method_7953 toTag (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
-		ARG 1 tag
+	METHOD method_7953 writeNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
+		ARG 1 nbt
 	METHOD method_7954 toHoverableText ()Lnet/minecraft/class_2561;
 	METHOD method_7955 (Lnet/minecraft/class_5250;)Lnet/minecraft/class_5250;
 		ARG 0 text

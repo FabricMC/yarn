@@ -1,0 +1,41 @@
+CLASS net/minecraft/class_5838 net/minecraft/server/world/SleepManager
+	COMMENT A sleep manager allows easy tracking of whether nights should be skipped
+	COMMENT on a {@linkplain ServerWorld server world}.
+	FIELD field_28866 total I
+		COMMENT The total number of players in a server world.
+	FIELD field_28867 sleeping I
+		COMMENT The number of players sleeping in a server world.
+	METHOD method_33811 clearSleeping ()V
+		COMMENT Resets the number of sleeping players to 0.
+	METHOD method_33812 canSkipNight (I)Z
+		COMMENT Returns if the number of sleeping players has reached a {@code percentage}
+		COMMENT out of all players.
+		COMMENT
+		COMMENT <p>This allows initiating the night sleeping process,
+		COMMENT but still needs players to have slept long enough (checked in {@linkplain
+		COMMENT #canResetTime(int, List) canResetTime}) to actually skip the night.
+		ARG 1 percentage
+			COMMENT the percentage of players required, as obtained from the game rule
+	METHOD method_33813 canResetTime (ILjava/util/List;)Z
+		COMMENT Returns if the night can actually be skipped at the tick this is called.
+		COMMENT
+		COMMENT <p>This is usually tested after {@linkplain #canSkipNight(int) canSkipNight},
+		COMMENT which is less performance intensive to check.
+		ARG 1 percentage
+			COMMENT the percentage of players required, as obtained from the game rule
+		ARG 2 players
+			COMMENT the list of all players in a world where the night would be skipped
+	METHOD method_33814 update (Ljava/util/List;)Z
+		COMMENT Updates the sleeping player and total player counts.
+		COMMENT
+		COMMENT @return {@code true} if the sleeping players or total players have
+		COMMENT changed
+		ARG 1 players
+			COMMENT the list of all players in a server world
+	METHOD method_33815 getSleeping ()I
+		COMMENT Returns the number of sleeping players.
+	METHOD method_33816 getNightSkippingRequirement (I)I
+		COMMENT Returns {@linkplain #sleeping the number of sleepers} needed to skip
+		COMMENT a night with the given {@code percentage}.
+		ARG 1 percentage
+			COMMENT the percentage of players required, as obtained from the game rule

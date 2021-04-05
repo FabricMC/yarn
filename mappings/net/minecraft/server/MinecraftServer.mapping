@@ -1,4 +1,20 @@
 CLASS net/minecraft/server/MinecraftServer
+	COMMENT Represents a logical Minecraft server.
+	COMMENT
+	COMMENT <p>Since Minecraft uses a Client-Server architecture for the game, the server processes all logical game functions.
+	COMMENT A few of the actions a Minecraft server will handle includes processing player actions, handling damage to entities, advancing the world time and executing commands.
+	COMMENT
+	COMMENT <p>There are two primary implementations for a Minecraft server: a dedicated and an integrated server.
+	COMMENT
+	COMMENT <p>A dedicated server is a Minecraft server not attached to a Minecraft game client and may be run remotely from any connected players.
+	COMMENT A dedicated server has a few exclusive features such as a whitelist/blacklist, remote rcon connections, and a terminal to input commands.
+	COMMENT
+	COMMENT <p>An integrated server is functionally equivalent to a dedicated server except that is hosted by a Minecraft game client and is typically used in a single player world.
+	COMMENT An integrated server differs from a dedicated server by allowing connections within the local area network (LAN) and the host client.
+	COMMENT Generally, you will always want to treat connection to an integrated server like you would to a dedicated server since the concept of an integrated server is an implementation detail in Minecraft.
+	COMMENT
+	COMMENT @see net.minecraft.server.dedicated.MinecraftDedicatedServer
+	COMMENT @see net.minecraft.server.integrated.IntegratedServer
 	FIELD field_16205 metricsData Lnet/minecraft/class_3517;
 	FIELD field_16257 serverThread Ljava/lang/Thread;
 	FIELD field_16258 profiler Lnet/minecraft/class_3695;
@@ -6,6 +22,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_17439 worldGenerationProgressListenerFactory Lnet/minecraft/class_3950;
 	FIELD field_17601 serverId Ljava/lang/String;
 	FIELD field_17704 DEMO_LEVEL_INFO Lnet/minecraft/class_1940;
+	FIELD field_19248 nextTickTimestamp J
 	FIELD field_19249 waitingForNextTick Z
 	FIELD field_20850 dataCommandStorage Lnet/minecraft/class_4565;
 	FIELD field_22250 tickTimeTracker Lnet/minecraft/class_4757;
@@ -17,7 +34,6 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_25318 serverResourceManager Lnet/minecraft/class_5350;
 	FIELD field_4543 onlineMode Z
 	FIELD field_4544 running Z
-	FIELD field_4545 forceGameMode Z
 	FIELD field_4546 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_4547 loading Z
 	FIELD field_4548 bossBarManager Lnet/minecraft/class_3004;
@@ -41,7 +57,6 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4573 lastTickLengths [J
 	FIELD field_4577 iconFilePresent Z
 	FIELD field_4578 userName Ljava/lang/String;
-	FIELD field_4579 worldHeight I
 	FIELD field_4582 snooper Lnet/minecraft/class_1276;
 	FIELD field_4584 resourcePackHash Ljava/lang/String;
 	FIELD field_4585 serverIp Ljava/lang/String;
@@ -60,6 +75,19 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4604 pvpEnabled Z
 	FIELD field_4607 resourcePackUrl Ljava/lang/String;
 	FIELD field_4608 gameProfileRepo Lcom/mojang/authlib/GameProfileRepository;
+	METHOD <init> (Ljava/lang/Thread;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5219;Lnet/minecraft/class_3283;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_5350;Lcom/mojang/authlib/minecraft/MinecraftSessionService;Lcom/mojang/authlib/GameProfileRepository;Lnet/minecraft/class_3312;Lnet/minecraft/class_3950;)V
+		ARG 1 serverThread
+		ARG 2 registryManager
+		ARG 3 session
+		ARG 4 saveProperties
+		ARG 5 dataPackManager
+		ARG 6 proxy
+		ARG 7 dataFixer
+		ARG 8 serverResourceManager
+		ARG 9 sessionService
+		ARG 10 gameProfileRepo
+		ARG 11 userCache
+		ARG 12 worldGenerationProgressListenerFactory
 	METHOD method_15876 getMetricsData ()Lnet/minecraft/class_3517;
 	METHOD method_16043 isStopping ()Z
 	METHOD method_16044 getProfiler ()Lnet/minecraft/class_3695;
@@ -93,13 +121,17 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_24490 endMonitor (Lnet/minecraft/class_4758;)V
 		ARG 1 monitor
 	METHOD method_27050 getSavePath (Lnet/minecraft/class_5218;)Ljava/nio/file/Path;
+		ARG 1 worldSavePath
 	METHOD method_27051 syncChunkWrites ()Z
 	METHOD method_27725 convertLevel (Lnet/minecraft/class_32$class_5143;)V
+		ARG 0 session
 	METHOD method_27727 getStructureManager ()Lnet/minecraft/class_3485;
 	METHOD method_27728 getSaveProperties ()Lnet/minecraft/class_5219;
 	METHOD method_27729 updateMobSpawnOptions ()V
-	METHOD method_27901 setupSpawn (Lnet/minecraft/class_3218;Lnet/minecraft/class_5268;ZZZ)V
+	METHOD method_27731 updateDifficulty ()V
+	METHOD method_27901 setupSpawn (Lnet/minecraft/class_3218;Lnet/minecraft/class_5268;ZZ)V
 		ARG 0 world
+		ARG 1 worldProperties
 		ARG 2 bonusChest
 		ARG 3 debugWorld
 	METHOD method_27902 acceptsStatusQuery ()Z
@@ -107,8 +139,20 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 initialDistance
 	METHOD method_29435 getWorldRegistryKeys ()Ljava/util/Set;
 	METHOD method_29439 reloadResources (Ljava/util/Collection;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT Reloads this server's datapacks.
+		COMMENT
+		COMMENT @return a completable future which specifies whether the reload was successful
+		COMMENT A reload has failed when the future is exceptionally completed.
+		COMMENT @see CompletableFuture
+		ARG 1 datapacks
+			COMMENT a collection of datapacks to reload with
+	METHOD method_29440 (Ljava/util/Collection;Lnet/minecraft/class_5350;)V
+		ARG 2 serverResourceManager
+	METHOD method_29735 createDataPackSettings (Lnet/minecraft/class_3283;)Lnet/minecraft/class_5359;
+		ARG 0 dataPackManager
 	METHOD method_29736 loadDataPacks (Lnet/minecraft/class_3283;Lnet/minecraft/class_5359;Z)Lnet/minecraft/class_5359;
 		ARG 0 resourcePackManager
+		ARG 1 dataPackSettings
 		ARG 2 safeMode
 	METHOD method_29740 startServer (Ljava/util/function/Function;)Lnet/minecraft/server/MinecraftServer;
 		ARG 0 serverFactory
@@ -116,11 +160,27 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_30002 getOverworld ()Lnet/minecraft/class_3218;
 	METHOD method_30611 getRegistryManager ()Lnet/minecraft/class_5455;
 	METHOD method_30612 getRateLimit ()I
+	METHOD method_31371 createFilterer (Lnet/minecraft/class_3222;)Lnet/minecraft/class_5513;
+		ARG 1 player
+	METHOD method_31400 generateKeyPair ()V
+	METHOD method_32303 requireResourcePack ()Z
+	METHOD method_32699 getItemModifierManager ()Lnet/minecraft/class_5640;
+	METHOD method_32816 getPlayerInteractionManager (Lnet/minecraft/class_3222;)Lnet/minecraft/class_3225;
+		ARG 1 player
 	METHOD method_3716 getKeyPair ()Ljava/security/KeyPair;
 	METHOD method_3718 isFlightEnabled ()Z
 	METHOD method_3719 getGameProfileRepo ()Lcom/mojang/authlib/GameProfileRepository;
 	METHOD method_3723 save (ZZZ)Z
+		COMMENT Saves the server to the data storage device.
+		COMMENT
+		COMMENT To store the player data in addition to server data, call {@link PlayerManager#saveAllPlayerData()}.
+		COMMENT
+		COMMENT @return whether saving was successful
 		ARG 1 suppressLogs
+		ARG 2 flush
+			COMMENT if it should immediately write all data to storage device
+		ARG 3 force
+			COMMENT when set to true, all the {@link ServerWorld}s will be saved even if {@link ServerWorld#savingDisabled} is set to true
 	METHOD method_3724 isSinglePlayer ()Z
 	METHOD method_3725 getIconFile ()Ljava/io/File;
 	METHOD method_3727 hasGui ()Z
@@ -133,10 +193,13 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 whitelistEnabled
 	METHOD method_3732 shouldBroadcastRconToOps ()Z
 	METHOD method_3734 getCommandManager ()Lnet/minecraft/class_2170;
+		COMMENT Gets the server's command manager.
+		COMMENT The command manager is responsible for parsing and dispatching commands.
 	METHOD method_3735 loadWorld ()V
 	METHOD method_3736 shouldSpawnNpcs ()Z
 	METHOD method_3738 getWorlds ()Ljava/lang/Iterable;
 	METHOD method_3739 getCommandSource ()Lnet/minecraft/class_2168;
+		COMMENT Creates a command source which represents this Minecraft server instance.
 	METHOD method_3740 getCommandFunctionManager ()Lnet/minecraft/class_2991;
 	METHOD method_3742 addServerGuiTickable (Ljava/lang/Runnable;)V
 		ARG 1 tickable
@@ -156,11 +219,19 @@ CLASS net/minecraft/server/MinecraftServer
 			COMMENT relative path from the run directory
 	METHOD method_3759 isUsingNativeTransport ()Z
 	METHOD method_3760 getPlayerManager ()Lnet/minecraft/class_3324;
-	METHOD method_3761 shouldForceGameMode ()Z
+	METHOD method_3761 getForcedGameMode ()Lnet/minecraft/class_1934;
+		COMMENT Returns the game mode a player should be set to when connecting to the server, or {@code null} if none is set.
 	METHOD method_3763 openToLan (Lnet/minecraft/class_1934;ZI)Z
+		COMMENT Opens a server for LAN connections.
+		COMMENT This is only supported on an integrated server, a dedicated server will always fail to open to LAN.
+		COMMENT
+		COMMENT @return whether the server was successfully opened to LAN
 		ARG 1 gameMode
+			COMMENT the game mode connecting players will have set by default
 		ARG 2 cheatsAllowed
+			COMMENT whether players on the server have operator permissions
 		ARG 3 port
+			COMMENT the port to open up to LAN connections
 	METHOD method_3764 setPreventProxyConnections (Z)V
 		ARG 1 preventProxyConnections
 	METHOD method_3765 getServerMetadata ()Lnet/minecraft/class_2926;
@@ -169,12 +240,15 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3772 getRecipeManager ()Lnet/minecraft/class_1863;
 	METHOD method_3773 getNetworkCompressionThreshold ()I
 	METHOD method_3774 prepareStartRegion (Lnet/minecraft/class_3949;)V
+		ARG 1 worldGenerationProgressListener
 	METHOD method_3775 shouldPreventProxyConnections ()Z
 	METHOD method_3776 setDifficulty (Lnet/minecraft/class_1267;Z)V
+		ARG 1 difficulty
 		ARG 2 forceUpdate
 	METHOD method_3779 setServerPort (I)V
 		ARG 1 serverPort
 	METHOD method_3780 getTicks ()I
+		COMMENT Gets the amount of ticks the server has been running for.
 	METHOD method_3782 shutdown ()V
 	METHOD method_3783 isMonsterSpawningEnabled ()Z
 	METHOD method_3784 getResourcePackUrl ()Ljava/lang/String;
@@ -183,14 +257,13 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 2 pos
 		ARG 3 player
 	METHOD method_3786 createWorlds (Lnet/minecraft/class_3949;)V
+		ARG 1 worldGenerationProgressListener
 	METHOD method_3787 getNetworkIo ()Lnet/minecraft/class_3242;
 	METHOD method_3788 getCurrentPlayerCount ()I
 	METHOD method_3790 getDefaultGameMode ()Lnet/minecraft/class_1934;
 	METHOD method_3791 setFavicon (Lnet/minecraft/class_2926;)V
 		ARG 1 metadata
 	METHOD method_3793 getUserCache ()Lnet/minecraft/class_3312;
-	METHOD method_3794 setForceGameMode (Z)V
-		ARG 1 forceGameMode
 	METHOD method_3795 getSnooper ()Lnet/minecraft/class_1276;
 	METHOD method_3796 shouldSpawnAnimals ()Z
 	METHOD method_3798 getOpPermissionLevel ()I
@@ -203,25 +276,34 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3806 isRunning ()Z
 	METHOD method_3811 getUserName ()Ljava/lang/String;
 	METHOD method_3812 areCommandBlocksEnabled ()Z
+		COMMENT Specifies whether command blocks can execute commands on the server.
 	METHOD method_3813 tickWorlds (Ljava/util/function/BooleanSupplier;)V
 		ARG 1 shouldKeepTicking
 	METHOD method_3815 setPvpEnabled (Z)V
 		ARG 1 pvpEnabled
 	METHOD method_3816 isDedicated ()Z
+		COMMENT Checks whether this server is a dedicated server.
+		COMMENT
+		COMMENT <p>A dedicated server refers to a Minecraft server implementation which is detached from a parent Minecraft client process.
+		COMMENT A dedicated Minecraft server only accepts remote connections.
 	METHOD method_3818 getServerMotd ()Ljava/lang/String;
 	METHOD method_3819 getServerIp ()Ljava/lang/String;
 	METHOD method_3820 isLoading ()Z
 	METHOD method_3821 exit ()V
 	METHOD method_3823 setupServer ()Z
+		COMMENT Setups a Minecraft server to be ready for players to connect.
+		COMMENT This method does several things including loading server properties and loading worlds.
+		COMMENT
+		COMMENT @return true if the Minecraft server was successfully setup, false if the server failed to be setup.
 	METHOD method_3826 getServerStartTime ()J
 	METHOD method_3827 getVersion ()Ljava/lang/String;
 	METHOD method_3828 isOnlineMode ()Z
+		COMMENT Checks whether this Minecraft server should require all connected players are using a licensed Minecraft account when connecting to this server.
 	METHOD method_3829 getSpawnRadius (Lnet/minecraft/class_3218;)I
 		ARG 1 world
 	METHOD method_3830 getTickTime ()F
 	METHOD method_3831 getRunDirectory ()Ljava/io/File;
 	METHOD method_3832 enableProfiler ()V
-	METHOD method_3833 getWorldHeight ()I
 	METHOD method_3834 setMotd (Ljava/lang/String;)V
 		ARG 1 motd
 	METHOD method_3835 getPermissionLevel (Lcom/mojang/authlib/GameProfile;)I
@@ -245,12 +327,8 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 key
 	METHOD method_3849 setServerName (Ljava/lang/String;)V
 		ARG 1 serverName
-	METHOD method_3850 setWorldHeight (I)V
-		ARG 1 worldHeight
 	METHOD method_3851 getAdvancementLoader ()Lnet/minecraft/class_2989;
 	METHOD method_3852 isPvpEnabled ()Z
-	METHOD method_3853 setKeyPair (Ljava/security/KeyPair;)V
-		ARG 1 keyPair
 	METHOD method_3855 getDataFixer ()Lcom/mojang/datafixers/DataFixer;
 	METHOD method_3856 forcePlayerSampleUpdate ()V
 	METHOD method_3857 getLootManager ()Lnet/minecraft/class_60;

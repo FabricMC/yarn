@@ -1,32 +1,54 @@
 CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
-	FIELD field_11639 MARKER_NETWORK_PACKETS Lorg/apache/logging/log4j/Marker;
+	COMMENT A connection backed by a netty channel. It can be one to a client on the
+	COMMENT server or one to a server on a client.
+	FIELD field_11639 NETWORK_PACKETS_MARKER Lorg/apache/logging/log4j/Marker;
 	FIELD field_11640 errored Z
-	FIELD field_11641 MARKER_NETWORK Lorg/apache/logging/log4j/Marker;
+	FIELD field_11641 NETWORK_MARKER Lorg/apache/logging/log4j/Marker;
 	FIELD field_11642 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_11643 side Lnet/minecraft/class_2598;
+		COMMENT The side this connection is to.
 	FIELD field_11644 packetQueue Ljava/util/Queue;
 	FIELD field_11645 address Ljava/net/SocketAddress;
 	FIELD field_11646 disconnected Z
 	FIELD field_11647 encrypted Z
-	FIELD field_11648 ATTR_KEY_PROTOCOL Lio/netty/util/AttributeKey;
-	FIELD field_11649 CLIENT_IO_GROUP_LOCAL Lnet/minecraft/class_3528;
+	FIELD field_11648 PROTOCOL_ATTRIBUTE_KEY Lio/netty/util/AttributeKey;
+		COMMENT The attribute key for the current network state of the backing netty
+		COMMENT channel.
+	FIELD field_11649 LOCAL_CLIENT_IO_GROUP Lnet/minecraft/class_3528;
 	FIELD field_11650 CLIENT_IO_GROUP Lnet/minecraft/class_3528;
 	FIELD field_11651 channel Lio/netty/channel/Channel;
 	FIELD field_11652 packetListener Lnet/minecraft/class_2547;
-	FIELD field_11653 avgPacketsSent F
-	FIELD field_11654 avgPacketsReceived F
+	FIELD field_11653 averagePacketsSent F
+	FIELD field_11654 averagePacketsReceived F
 	FIELD field_11655 ticks I
 	FIELD field_11656 packetsSentCounter I
-	FIELD field_11657 CLIENT_IO_GROUP_EPOLL Lnet/minecraft/class_3528;
+	FIELD field_11657 EPOLL_CLIENT_IO_GROUP Lnet/minecraft/class_3528;
 	FIELD field_11658 packetsReceivedCounter I
 	FIELD field_11660 disconnectReason Lnet/minecraft/class_2561;
+	FIELD field_33280 CURRENT_PACKET_COUNTER_WEIGHT F
+		COMMENT Represents when the average packet counter is updated, what percent of the
+		COMMENT value of the average counter is set from the current counter.
+		COMMENT
+		COMMENT <p>The formula is {@link #averagePacketsSent averagePacketsSent} = {@value}
+		COMMENT &times; {@link #packetsSentCounter packetsSentCounter} + (1 - {@value}) &times;
+		COMMENT {@code averagePacketsSent}.
 	METHOD <init> (Lnet/minecraft/class_2598;)V
 		ARG 1 side
+	METHOD channelActive (Lio/netty/channel/ChannelHandlerContext;)V
+		ARG 1 context
+	METHOD channelInactive (Lio/netty/channel/ChannelHandlerContext;)V
+		ARG 1 context
+	METHOD channelRead0 (Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Object;)V
+		ARG 1 context
+		ARG 2 packet
+	METHOD exceptionCaught (Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Throwable;)V
+		ARG 1 context
+		ARG 2 ex
 	METHOD method_10743 send (Lnet/minecraft/class_2596;)V
 		ARG 1 packet
 	METHOD method_10744 getPacketListener ()Lnet/minecraft/class_2547;
 	METHOD method_10745 getAveragePacketsSent ()F
-	METHOD method_10746 setupEncryption (Ljavax/crypto/SecretKey;)V
+	METHOD method_10746 setupEncryption (Ljavax/crypto/Cipher;Ljavax/crypto/Cipher;)V
 	METHOD method_10747 disconnect (Lnet/minecraft/class_2561;)V
 		ARG 1 disconnectReason
 	METHOD method_10748 getDisconnectReason ()Lnet/minecraft/class_2561;
@@ -52,6 +74,11 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		ARG 1 compressionThreshold
 	METHOD method_10762 getAveragePacketsReceived ()F
 	METHOD method_10763 setPacketListener (Lnet/minecraft/class_2547;)V
+		COMMENT Sets the packet listener that will handle oncoming packets, including
+		COMMENT ones that are not yet handled by the current packet listener.
+		COMMENT
+		COMMENT @apiNote This may be called from the {@linkplain #packetListener} stored
+		COMMENT in this connection.
 		ARG 1 listener
 	METHOD method_10764 sendImmediately (Lnet/minecraft/class_2596;Lio/netty/util/concurrent/GenericFutureListener;)V
 		ARG 1 packet
@@ -62,6 +89,14 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	METHOD method_10771 isEncrypted ()Z
 	METHOD method_10772 hasChannel ()Z
 	METHOD method_30615 updateStats ()V
+	METHOD method_32306 getState ()Lnet/minecraft/class_2539;
+		COMMENT Returns the current network state of this connection.
+	METHOD method_36121 getSide ()Lnet/minecraft/class_2598;
+		COMMENT Returns the side of this connection, or the direction of the packets received
+		COMMENT by this connection.
+	METHOD method_36122 getOppositeSide ()Lnet/minecraft/class_2598;
+		COMMENT Returns the opposite side of this connection, or the direction of the packets
+		COMMENT sent by this connection.
 	CLASS class_2536 QueuedPacket
 		FIELD field_11661 packet Lnet/minecraft/class_2596;
 		FIELD field_11662 callback Lio/netty/util/concurrent/GenericFutureListener;

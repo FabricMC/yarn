@@ -73,6 +73,20 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 0 world
 		ARG 1 pos
 	METHOD method_26956 createPlayerAttributes ()Lnet/minecraft/class_5132$class_5133;
+	METHOD method_31548 getInventory ()Lnet/minecraft/class_1661;
+	METHOD method_31549 getAbilities ()Lnet/minecraft/class_1656;
+	METHOD method_31550 isUsingSpyglass ()Z
+	METHOD method_33592 onPickupSlotClick (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_5536;)V
+		COMMENT Called when a player performs a {@link net.minecraft.screen.slot.SlotActionType#PICKUP
+		COMMENT pickup slot action} in a screen handler.
+		COMMENT
+		COMMENT @implNote This is used by the client player to trigger bundle tutorials.
+		ARG 1 cursorStack
+			COMMENT the item stack on the player's cursor
+		ARG 2 slotStack
+			COMMENT the item stack in the clicked slot
+		ARG 3 clickType
+			COMMENT the click type (mouse button used)
 	METHOD method_7254 unlockRecipes (Ljava/util/Collection;)I
 		ARG 1 recipes
 	METHOD method_7255 addExperience (I)V
@@ -95,6 +109,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7266 resetStat (Lnet/minecraft/class_3445;)V
 		ARG 1 stat
 	METHOD method_7267 updateShoulderEntity (Lnet/minecraft/class_2487;)V
+		ARG 1 entityNbt
 	METHOD method_7268 setReducedDebugInfo (Z)V
 		ARG 1 reducedDebugInfo
 	METHOD method_7269 trySleep (Lnet/minecraft/class_2338;)Lcom/mojang/datafixers/util/Either;
@@ -105,9 +120,11 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 0 profile
 	METHOD method_7272 getScore ()I
 	METHOD method_7273 setShoulderEntityLeft (Lnet/minecraft/class_2487;)V
-		ARG 1 entityTag
+		ARG 1 entityNbt
 	METHOD method_7274 getEnderChestInventory ()Lnet/minecraft/class_1730;
 	METHOD method_7276 isSleepingLongEnough ()Z
+		COMMENT Returns whether this player has been sleeping long enough to count towards
+		COMMENT resetting the time of day and weather of the server.
 	METHOD method_7277 addCritParticles (Lnet/minecraft/class_1297;)V
 		ARG 1 target
 	METHOD method_7278 getEnchantmentTableSeed ()I
@@ -143,29 +160,50 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 1 entityNbt
 	METHOD method_7297 getSleepTimer ()I
 	METHOD method_7298 addShoulderEntity (Lnet/minecraft/class_2487;)Z
-		ARG 1 tag
+		ARG 1 entityNbt
 	METHOD method_7299 addTellClickEvent (Lnet/minecraft/class_5250;)Lnet/minecraft/class_5250;
 		ARG 1 component
-	METHOD method_7302 getReducedDebugInfo ()Z
+	METHOD method_7302 hasReducedDebugInfo ()Z
 	METHOD method_7303 openStructureBlockScreen (Lnet/minecraft/class_2633;)V
 		ARG 1 structureBlock
 	METHOD method_7304 addEnchantedHitParticles (Lnet/minecraft/class_1297;)V
 		ARG 1 target
-	METHOD method_7305 isUsingEffectiveTool (Lnet/minecraft/class_2680;)Z
-		ARG 1 block
+	METHOD method_7305 canHarvest (Lnet/minecraft/class_2680;)Z
+		COMMENT Determines whether the player is able to harvest drops from the specified block state.
+		COMMENT If a block requires a special tool, it will check
+		COMMENT whether the held item is effective for that block, otherwise
+		COMMENT it returns {@code true}.
+		COMMENT
+		COMMENT @see net.minecraft.item.Item#isSuitableFor(BlockState)
+		ARG 1 state
 	METHOD method_7308 getShoulderEntityRight ()Lnet/minecraft/class_2487;
 	METHOD method_7310 getOfflinePlayerUuid (Ljava/lang/String;)Ljava/util/UUID;
 		ARG 0 nickname
 	METHOD method_7311 openEditSignScreen (Lnet/minecraft/class_2625;)V
 		ARG 1 sign
 	METHOD method_7313 updateCapeAngles ()V
-	METHOD method_7315 openEditBookScreen (Lnet/minecraft/class_1799;Lnet/minecraft/class_1268;)V
+	METHOD method_7315 useBook (Lnet/minecraft/class_1799;Lnet/minecraft/class_1268;)V
+		COMMENT Called when the player uses (defaults to right click) a writable or written
+		COMMENT book item.
+		COMMENT
+		COMMENT <p>This can be called either on the client or the server player. Check {@code
+		COMMENT book} for whether this is a written or a writable book.
+		COMMENT
+		COMMENT @implNote The writing of a writable book in vanilla is totally controlled by
+		COMMENT the client; the server cannot make the client open a book edit screen by
+		COMMENT making a server player use a writable book. Only when the client finishes
+		COMMENT writing a book it will send a {@linkplain net.minecraft.network.packet.c2s.play.BookUpdateC2SPacket book update C2S packet}.
+		COMMENT
+		COMMENT <p>Meanwhile, the reading of a written book is totally controlled and initiated
+		COMMENT by the server.
 		ARG 1 book
+			COMMENT the book
 		ARG 2 hand
+			COMMENT the hand holding the book
 	METHOD method_7316 addExperienceLevels (I)V
 		ARG 1 levels
 	METHOD method_7317 canFoodHeal ()Z
-	METHOD method_7318 updateSize ()V
+	METHOD method_7318 updatePose ()V
 	METHOD method_7320 setScore (I)V
 		ARG 1 score
 	METHOD method_7322 addExhaustion (F)V
@@ -194,9 +232,8 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7334 getGameProfile ()Lcom/mojang/authlib/GameProfile;
 	METHOD method_7335 unlockRecipes ([Lnet/minecraft/class_2960;)V
 		ARG 1 ids
-	METHOD method_7336 setGameMode (Lnet/minecraft/class_1934;)V
-		ARG 1 gameMode
 	METHOD method_7337 isCreative ()Z
+		COMMENT Returns whether this player is in creative mode.
 	METHOD method_7338 isCreativeLevelTwoOp ()Z
 	METHOD method_7339 increaseStat (Lnet/minecraft/class_2960;I)V
 		ARG 1 stat
@@ -213,7 +250,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 3 stack
 	METHOD method_7344 getHungerManager ()Lnet/minecraft/class_1702;
 	METHOD method_7345 setShoulderEntityRight (Lnet/minecraft/class_2487;)V
-		ARG 1 entityTag
+		ARG 1 entityNbt
 	METHOD method_7346 closeHandledScreen ()V
 	METHOD method_7348 isPartVisible (Lnet/minecraft/class_1664;)Z
 		ARG 1 modelPart

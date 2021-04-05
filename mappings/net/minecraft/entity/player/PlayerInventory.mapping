@@ -1,4 +1,6 @@
 CLASS net/minecraft/class_1661 net/minecraft/entity/player/PlayerInventory
+	FIELD field_30638 MAIN_SIZE I
+	FIELD field_30641 HOTBAR_SIZE I
 	FIELD field_7542 changeCount I
 	FIELD field_7543 combinedInventory Ljava/util/List;
 	FIELD field_7544 offHand Lnet/minecraft/class_2371;
@@ -6,7 +8,6 @@ CLASS net/minecraft/class_1661 net/minecraft/entity/player/PlayerInventory
 	FIELD field_7546 player Lnet/minecraft/class_1657;
 	FIELD field_7547 main Lnet/minecraft/class_2371;
 	FIELD field_7548 armor Lnet/minecraft/class_2371;
-	FIELD field_7549 cursorStack Lnet/minecraft/class_1799;
 	METHOD <init> (Lnet/minecraft/class_1657;)V
 		ARG 1 player
 	METHOD method_29280 remove (Ljava/util/function/Predicate;ILnet/minecraft/class_1263;)I
@@ -15,7 +16,7 @@ CLASS net/minecraft/class_1661 net/minecraft/entity/player/PlayerInventory
 		ARG 3 craftingInventory
 	METHOD method_7364 getChangeCount ()I
 	METHOD method_7365 swapSlotWithHotbar (I)V
-		ARG 1 hotbarSlot
+		ARG 1 slot
 	METHOD method_7366 addStack (Lnet/minecraft/class_1799;)I
 		ARG 1 stack
 	METHOD method_7367 insertStack (ILnet/minecraft/class_1799;)Z
@@ -24,6 +25,8 @@ CLASS net/minecraft/class_1661 net/minecraft/entity/player/PlayerInventory
 	METHOD method_7368 getHotbarSize ()I
 	METHOD method_7370 getBlockBreakingSpeed (Lnet/minecraft/class_2680;)F
 		ARG 1 block
+	METHOD method_7371 indexOf (Lnet/minecraft/class_1799;)I
+		ARG 1 stack
 	METHOD method_7372 getArmorStack (I)Lnet/minecraft/class_1799;
 		ARG 1 slot
 	METHOD method_7373 scrollInHotbar (D)V
@@ -44,8 +47,8 @@ CLASS net/minecraft/class_1661 net/minecraft/entity/player/PlayerInventory
 	METHOD method_7381 updateItems ()V
 	METHOD method_7382 contains (Lnet/minecraft/class_3494;)Z
 		ARG 1 tag
-	METHOD method_7384 serialize (Lnet/minecraft/class_2499;)Lnet/minecraft/class_2499;
-		ARG 1 tag
+	METHOD method_7384 writeNbt (Lnet/minecraft/class_2499;)Lnet/minecraft/class_2499;
+		ARG 1 nbtList
 	METHOD method_7385 addStack (ILnet/minecraft/class_1799;)I
 		ARG 1 slot
 		ARG 2 stack
@@ -56,9 +59,6 @@ CLASS net/minecraft/class_1661 net/minecraft/entity/player/PlayerInventory
 	METHOD method_7390 getOccupiedSlotWithRoomForStack (Lnet/minecraft/class_1799;)I
 		ARG 1 stack
 	METHOD method_7391 getMainHandStack ()Lnet/minecraft/class_1799;
-	METHOD method_7392 areItemsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
-		ARG 1 stack1
-		ARG 2 stack2
 	METHOD method_7393 canStackAddMore (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 1 existingStack
 		ARG 2 stack
@@ -66,11 +66,7 @@ CLASS net/minecraft/class_1661 net/minecraft/entity/player/PlayerInventory
 		ARG 1 stack
 	METHOD method_7395 getSlotWithStack (Lnet/minecraft/class_1799;)I
 		ARG 1 stack
-	METHOD method_7396 setCursorStack (Lnet/minecraft/class_1799;)V
+	METHOD method_7397 readNbt (Lnet/minecraft/class_2499;)V
+		ARG 1 nbtList
+	METHOD method_7398 offerOrDrop (Lnet/minecraft/class_1799;)V
 		ARG 1 stack
-	METHOD method_7397 deserialize (Lnet/minecraft/class_2499;)V
-		ARG 1 tag
-	METHOD method_7398 offerOrDrop (Lnet/minecraft/class_1937;Lnet/minecraft/class_1799;)V
-		ARG 1 world
-		ARG 2 stack
-	METHOD method_7399 getCursorStack ()Lnet/minecraft/class_1799;

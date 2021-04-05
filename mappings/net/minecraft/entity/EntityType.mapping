@@ -6,6 +6,7 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 	FIELD field_24085 maxTrackDistance I
 	FIELD field_24086 trackTickInterval I
 	FIELD field_25355 canSpawnInside Lcom/google/common/collect/ImmutableSet;
+	FIELD field_30053 ENTITY_TAG_KEY Ljava/lang/String;
 	FIELD field_6056 saveable Z
 	FIELD field_6072 summonable Z
 	FIELD field_6088 LOGGER Lorg/apache/logging/log4j/Logger;
@@ -20,21 +21,25 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 		ARG 4 summonable
 		ARG 5 fireImmune
 		ARG 6 spawnableFarFromPlayer
+		ARG 7 canSpawnInside
+		ARG 8 dimensions
+		ARG 9 maxTrackDistance
+		ARG 10 trackTickInterval
 	METHOD method_16351 getLootTableId ()Lnet/minecraft/class_2960;
 	METHOD method_17683 createSimpleBoundingBox (DDD)Lnet/minecraft/class_238;
 		ARG 1 feetX
 		ARG 3 feetY
 		ARG 5 feetZ
-	METHOD method_17684 fromTag (Lnet/minecraft/class_2487;)Ljava/util/Optional;
-		ARG 0 compoundTag
+	METHOD method_17684 fromNbt (Lnet/minecraft/class_2487;)Ljava/util/Optional;
+		ARG 0 nbt
 	METHOD method_17685 getWidth ()F
 	METHOD method_17686 getHeight ()F
 	METHOD method_17842 loadEntityWithPassengers (Lnet/minecraft/class_2487;Lnet/minecraft/class_1937;Ljava/util/function/Function;)Lnet/minecraft/class_1297;
-		ARG 0 compoundTag
+		ARG 0 nbt
 		ARG 1 world
 		ARG 2 entityProcessor
-	METHOD method_17848 loadEntityFromTag (Lnet/minecraft/class_2487;Lnet/minecraft/class_1937;)Ljava/util/Optional;
-		ARG 0 compoundTag
+	METHOD method_17848 loadEntityFromNbt (Lnet/minecraft/class_2487;Lnet/minecraft/class_1937;)Ljava/util/Optional;
+		ARG 0 nbt
 		ARG 1 world
 	METHOD method_18386 getDimensions ()Lnet/minecraft/class_4048;
 	METHOD method_18387 getMaxTrackDistance ()I
@@ -54,11 +59,15 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 		COMMENT Any mob can't spawn in wither roses, sweet berry bush, or cacti.
 		COMMENT
 		COMMENT <p>This can be overwritten via {@link EntityType.Builder#allowSpawningInside(Block[])}
-	METHOD method_5881 loadFromEntityTag (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_2487;)V
+		ARG 1 state
+	METHOD method_31489 streamFromNbt (Ljava/util/List;Lnet/minecraft/class_1937;)Ljava/util/stream/Stream;
+		ARG 0 entityNbtList
+		ARG 1 world
+	METHOD method_5881 loadFromEntityNbt (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_2487;)V
 		ARG 0 world
 		ARG 1 player
 		ARG 2 entity
-		ARG 3 itemTag
+		ARG 3 itemNbt
 	METHOD method_5882 getTranslationKey ()Ljava/lang/String;
 	METHOD method_5883 create (Lnet/minecraft/class_1937;)Lnet/minecraft/class_1297;
 		ARG 1 world
@@ -71,7 +80,8 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 		ARG 0 world
 		ARG 1 type
 	METHOD method_5888 create (Lnet/minecraft/class_3218;Lnet/minecraft/class_2487;Lnet/minecraft/class_2561;Lnet/minecraft/class_1657;Lnet/minecraft/class_2338;Lnet/minecraft/class_3730;ZZ)Lnet/minecraft/class_1297;
-		ARG 2 itemTag
+		ARG 1 world
+		ARG 2 itemNbt
 		ARG 3 name
 		ARG 4 player
 		ARG 5 pos
@@ -84,11 +94,12 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 	METHOD method_5890 getId (Lnet/minecraft/class_1299;)Lnet/minecraft/class_2960;
 		ARG 0 type
 	METHOD method_5891 getSpawnGroup ()Lnet/minecraft/class_1311;
-	METHOD method_5892 getEntityFromTag (Lnet/minecraft/class_2487;Lnet/minecraft/class_1937;)Ljava/util/Optional;
-		ARG 0 tag
+	METHOD method_5892 getEntityFromNbt (Lnet/minecraft/class_2487;Lnet/minecraft/class_1937;)Ljava/util/Optional;
+		ARG 0 nbt
 		ARG 1 world
 	METHOD method_5893 isSaveable ()Z
 	METHOD method_5894 spawnFromItemStack (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1657;Lnet/minecraft/class_2338;Lnet/minecraft/class_3730;ZZ)Lnet/minecraft/class_1297;
+		ARG 1 world
 		ARG 2 stack
 		ARG 3 player
 		ARG 4 pos
@@ -103,7 +114,8 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 	METHOD method_5898 get (Ljava/lang/String;)Ljava/util/Optional;
 		ARG 0 id
 	METHOD method_5899 spawn (Lnet/minecraft/class_3218;Lnet/minecraft/class_2487;Lnet/minecraft/class_2561;Lnet/minecraft/class_1657;Lnet/minecraft/class_2338;Lnet/minecraft/class_3730;ZZ)Lnet/minecraft/class_1297;
-		ARG 2 itemTag
+		ARG 1 world
+		ARG 2 itemNbt
 		ARG 3 name
 		ARG 4 player
 		ARG 5 pos
@@ -142,6 +154,7 @@ CLASS net/minecraft/class_1299 net/minecraft/entity/EntityType
 			COMMENT With this setting, fire resistant mobs can spawn on/in fire damage dealing blocks,
 			COMMENT and wither skeletons can spawn in wither roses. If a block added is not in the default
 			COMMENT blacklist, the addition has no effect.
+			ARG 1 blocks
 		METHOD method_5901 disableSummon ()Lnet/minecraft/class_1299$class_1300;
 		METHOD method_5902 create (Lnet/minecraft/class_1311;)Lnet/minecraft/class_1299$class_1300;
 			ARG 0 spawnGroup

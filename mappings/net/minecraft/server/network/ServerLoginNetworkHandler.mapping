@@ -1,10 +1,26 @@
 CLASS net/minecraft/class_3248 net/minecraft/server/network/ServerLoginNetworkHandler
+	COMMENT The server login network handler.
+	COMMENT
+	COMMENT <p>It listens to packets on the netty event loop and is ticked on the
+	COMMENT server thread simultaneously.
+	COMMENT
+	COMMENT @implSpec The vanilla implementation is created by a handshake network
+	COMMENT handler. It first receives a hello packet from the client. If it's in
+	COMMENT online mode, it goes through an additional authentication process. Then
+	COMMENT it optionally sends a network compression packet next. Finally, when it
+	COMMENT can accept the player (no player UUID conflicts), it will accept the
+	COMMENT player by sending a login success packet and then transitions the
+	COMMENT connection's packet listener to a server play network handler.
 	FIELD field_14156 loginTicks I
-	FIELD field_14157 authenticatorThreadId Ljava/util/concurrent/atomic/AtomicInteger;
+	FIELD field_14157 NEXT_AUTHENTICATOR_THREAD_ID Ljava/util/concurrent/atomic/AtomicInteger;
 	FIELD field_14158 connection Lnet/minecraft/class_2535;
-	FIELD field_14159 secretKey Ljavax/crypto/SecretKey;
 	FIELD field_14160 profile Lcom/mojang/authlib/GameProfile;
-	FIELD field_14161 player Lnet/minecraft/class_3222;
+	FIELD field_14161 delayedPlayer Lnet/minecraft/class_3222;
+		COMMENT The delayed player, waiting to join the server once the existing player
+		COMMENT with the same UUID is gone.
+		COMMENT
+		COMMENT <p>This will only be non-{@code null} if the state is delay-accept, and is reset
+		COMMENT to {@code null} once the player is accepted.
 	FIELD field_14162 server Lnet/minecraft/server/MinecraftServer;
 	FIELD field_14163 state Lnet/minecraft/class_3248$class_3249;
 	FIELD field_14164 RANDOM Ljava/util/Random;
@@ -20,7 +36,22 @@ CLASS net/minecraft/class_3248 net/minecraft/server/network/ServerLoginNetworkHa
 		ARG 1 reason
 	METHOD method_14383 getConnectionInfo ()Ljava/lang/String;
 	METHOD method_14384 acceptPlayer ()V
+		COMMENT Creates the player to be added to the server and adds it to the server.
+		COMMENT
+		COMMENT <p>If a player with the same UUID is in the world, it will create the
+		COMMENT player and transition to the delay accept state.
+		COMMENT
+		COMMENT @apiNote This method should only be called on the server thread.
 	METHOD method_18785 tick ()V
+		COMMENT Ticks this login network handler.
+		COMMENT
+		COMMENT <p>This accepts the player to the server if ready. If the state is delay
+		COMMENT accept, it checks if the old player with the same UUID is gone and
+		COMMENT admits the player.
+		COMMENT
+		COMMENT @apiNote This should only be called on the server thread.
+	METHOD method_33800 addToServer (Lnet/minecraft/class_3222;)V
+		ARG 1 player
 	CLASS 1
 		METHOD method_14386 getClientAddress ()Ljava/net/InetAddress;
 	CLASS class_3249 State

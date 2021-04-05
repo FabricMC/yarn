@@ -1,0 +1,30 @@
+CLASS net/minecraft/class_5574 net/minecraft/world/EntityList
+	COMMENT A storage of entities that supports modification during iteration.
+	COMMENT
+	COMMENT <p>The entities are stored by their network IDs.
+	COMMENT
+	COMMENT @see EntityList#forEach(Consumer)
+	FIELD field_27254 entities Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+	FIELD field_27255 temp Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+	FIELD field_27256 iterating Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+	METHOD method_31789 ensureSafe ()V
+		COMMENT Ensures that the modified {@code entities} map is not currently iterated.
+		COMMENT If {@code entities} is iterated, this moves its value to {@code temp} so
+		COMMENT modification to {@code entities} is safe.
+	METHOD method_31790 add (Lnet/minecraft/class_1297;)V
+		ARG 1 entity
+	METHOD method_31791 forEach (Ljava/util/function/Consumer;)V
+		COMMENT Runs an {@code action} on every entity in this storage.
+		COMMENT
+		COMMENT <p>If this storage is updated during the iteration, the iteration will
+		COMMENT not be updated to reflect updated contents. For example, if an entity
+		COMMENT is added by the {@code action}, the {@code action} won't run on that
+		COMMENT entity later.
+		COMMENT
+		COMMENT @throws UnsupportedOperationException if this is called before an iteration
+		COMMENT has finished, such as within the {@code action} or from another thread
+		ARG 1 action
+	METHOD method_31792 remove (Lnet/minecraft/class_1297;)V
+		ARG 1 entity
+	METHOD method_31793 has (Lnet/minecraft/class_1297;)Z
+		ARG 1 entity

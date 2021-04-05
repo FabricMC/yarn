@@ -1,15 +1,32 @@
 CLASS net/minecraft/class_3288 net/minecraft/resource/ResourcePackProfile
+	COMMENT Represents a resource pack in a {@link ResourcePackManager}.
+	COMMENT
+	COMMENT <p>Compared to a single-use {@link ResourcePack}, a profile is persistent
+	COMMENT and serves as {@linkplain #createResourcePack a factory} for the single-use
+	COMMENT packs. It also contains user-friendly information about resource packs.
+	COMMENT
+	COMMENT <p>The profiles are registered by {@link ResourcePackProvider}s.
+	COMMENT
+	COMMENT <p>Closing the profile doesn't have any effect.
 	FIELD field_14270 pinned Z
 	FIELD field_14271 alwaysEnabled Z
 	FIELD field_14272 name Ljava/lang/String;
-	FIELD field_14273 packGetter Ljava/util/function/Supplier;
+	FIELD field_14273 packFactory Ljava/util/function/Supplier;
 	FIELD field_14274 displayName Lnet/minecraft/class_2561;
 	FIELD field_14275 description Lnet/minecraft/class_2561;
-	FIELD field_14276 BROKEN_PACK_META Lnet/minecraft/class_3272;
 	FIELD field_14277 position Lnet/minecraft/class_3288$class_3289;
 	FIELD field_14278 compatibility Lnet/minecraft/class_3281;
 	FIELD field_14279 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_25346 source Lnet/minecraft/class_5352;
+	METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_2561;ZLjava/util/function/Supplier;Lnet/minecraft/class_3272;Lnet/minecraft/class_3264;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)V
+		ARG 1 name
+		ARG 2 displayName
+		ARG 3 alwaysEnabled
+		ARG 4 packFactory
+		ARG 5 metadata
+		ARG 6 type
+		ARG 7 direction
+		ARG 8 source
 	METHOD <init> (Ljava/lang/String;ZLjava/util/function/Supplier;Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;Lnet/minecraft/class_3281;Lnet/minecraft/class_3288$class_3289;ZLnet/minecraft/class_5352;)V
 		ARG 1 name
 		ARG 2 alwaysEnabled
@@ -20,22 +37,23 @@ CLASS net/minecraft/class_3288 net/minecraft/resource/ResourcePackProfile
 		ARG 7 direction
 		ARG 8 pinned
 		ARG 9 source
-	METHOD <init> (Ljava/lang/String;ZLjava/util/function/Supplier;Lnet/minecraft/class_3262;Lnet/minecraft/class_3272;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)V
-		ARG 1 name
-		ARG 2 alwaysEnabled
-		ARG 3 packFactory
-		ARG 4 pack
-		ARG 5 metadata
-		ARG 6 direction
-		ARG 7 source
 	METHOD equals (Ljava/lang/Object;)Z
 		ARG 1 o
 	METHOD method_14456 of (Ljava/lang/String;ZLjava/util/function/Supplier;Lnet/minecraft/class_3288$class_5351;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)Lnet/minecraft/class_3288;
+		COMMENT Creates a resource pack profile from the given parameters.
+		COMMENT
+		COMMENT <p>Compared to calling the factory directly, this utility method obtains the
+		COMMENT pack's metadata information from the pack created by the {@code packFactory}.
+		COMMENT If the created pack doesn't have metadata information, this method returns
+		COMMENT {@code null}.
+		COMMENT
+		COMMENT @return the created profile, or {@code null} if missing metadata
 		ARG 0 name
 		ARG 1 alwaysEnabled
 		ARG 2 packFactory
-		ARG 3 containerFactory
+		ARG 3 profileFactory
 		ARG 4 insertionPosition
+		ARG 5 packSource
 	METHOD method_14457 getDisplayName ()Lnet/minecraft/class_2561;
 	METHOD method_14458 createResourcePack ()Lnet/minecraft/class_3262;
 	METHOD method_14459 getDescription ()Lnet/minecraft/class_2561;
@@ -55,11 +73,18 @@ CLASS net/minecraft/class_3288 net/minecraft/resource/ResourcePackProfile
 			ARG 3 profileGetter
 			ARG 4 listInverted
 	CLASS class_5351 Factory
-		METHOD create (Ljava/lang/String;ZLjava/util/function/Supplier;Lnet/minecraft/class_3262;Lnet/minecraft/class_3272;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)Lnet/minecraft/class_3288;
+		COMMENT A factory for resource pack profiles, somewhat resembling the constructor
+		COMMENT of {@link ResourcePackProfile} but allowing more customization.
+		METHOD create (Ljava/lang/String;Lnet/minecraft/class_2561;ZLjava/util/function/Supplier;Lnet/minecraft/class_3272;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)Lnet/minecraft/class_3288;
+			COMMENT Creates a proper resource pack profile from the given parameters.
+			COMMENT
+			COMMENT @apiNote Instead of calling this method, users usually call {@link
+			COMMENT ResourcePackProfile#of}, which fills some of the parameters for a call to this
+			COMMENT method.
 			ARG 1 name
-			ARG 2 alwaysEnabled
-			ARG 3 packFactory
-			ARG 4 pack
+			ARG 2 displayName
+			ARG 3 alwaysEnabled
+			ARG 4 packFactory
 			ARG 5 metadata
 			ARG 6 initialPosition
 			ARG 7 source

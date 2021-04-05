@@ -27,9 +27,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	FIELD field_18808 pointOfInterestStorage Lnet/minecraft/class_4153;
 	FIELD field_19343 unloadTaskQueue Ljava/util/Queue;
 	FIELD field_23786 chunkToType Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
-	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_3949;Ljava/util/function/Supplier;IZ)V
+	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_3949;Lnet/minecraft/class_5567;Ljava/util/function/Supplier;IZ)V
 		ARG 3 dataFixer
-		ARG 5 workerExecutor
 		ARG 6 mainThreadExecutor
 		ARG 7 chunkProvider
 		ARG 8 chunkGenerator
@@ -75,11 +74,11 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_17255 getCurrentChunkHolder (J)Lnet/minecraft/class_3193;
 		ARG 1 pos
 	METHOD method_17260 getLoadedChunkCount ()I
-	METHOD method_17263 getTicketManager ()Lnet/minecraft/class_3898$class_3216;
+	METHOD method_17263 getTicketManager ()Lnet/minecraft/class_3204;
 	METHOD method_17264 entryIterator ()Ljava/lang/Iterable;
 	METHOD method_17604 getCompletedLevelSupplier (J)Ljava/util/function/IntSupplier;
 		ARG 1 pos
-	METHOD method_17979 getUpdatedChunkTag (Lnet/minecraft/class_1923;)Lnet/minecraft/class_2487;
+	METHOD method_17979 getUpdatedChunkNbt (Lnet/minecraft/class_1923;)Lnet/minecraft/class_2487;
 		ARG 1 pos
 	METHOD method_18701 loadEntity (Lnet/minecraft/class_1297;)V
 	METHOD method_18702 sendToOtherNearbyPlayers (Lnet/minecraft/class_1297;Lnet/minecraft/class_2596;)V
@@ -92,7 +91,11 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_18704 getSquaredDistance (Lnet/minecraft/class_1923;Lnet/minecraft/class_1297;)D
 		ARG 0 pos
 		ARG 1 entity
-	METHOD method_18713 updateCameraPosition (Lnet/minecraft/class_3222;)V
+	METHOD method_18713 updatePosition (Lnet/minecraft/class_3222;)V
+		COMMENT Updates the chunk section position of the {@code player}. This updates the player
+		COMMENT position for both entity tracking and chunk loading (watching) logic.
+		COMMENT
+		COMMENT @see ServerChunkManager#updatePosition(ServerPlayerEntity)
 		ARG 1 player
 	METHOD method_18714 handlePlayerAddedOrRemoved (Lnet/minecraft/class_3222;Z)V
 		ARG 1 player
@@ -108,19 +111,23 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_18719 getChebyshevDistance (Lnet/minecraft/class_1923;Lnet/minecraft/class_3222;Z)I
 		ARG 0 pos
 		ARG 1 player
-		ARG 2 useCameraPosition
+		ARG 2 useWatchedPosition
 	METHOD method_18722 doesNotGenerateChunks (Lnet/minecraft/class_3222;)Z
 		ARG 1 player
 	METHOD method_18724 isTooFarFromPlayersToSpawnMobs (Lnet/minecraft/class_1923;)Z
-	METHOD method_18727 tickPlayerMovement ()V
+	METHOD method_18727 tickEntityMovement ()V
+		COMMENT Ticks and updates the tracked status of each tracker.
+		COMMENT
+		COMMENT <p>This first checks if entities have changed chunk sections, and updates
+		COMMENT tracking status of those entities to all players. It then checks if any player
+		COMMENT has changed chunk sections, and updates all entities tracking status to those
+		COMMENT players. This ensures all possible updates are accounted for.
 	METHOD method_19488 getPointOfInterestStorage ()Lnet/minecraft/class_4153;
 	METHOD method_20441 releaseLightTicket (Lnet/minecraft/class_1923;)V
 		ARG 1 pos
 	METHOD method_20458 tryUnloadChunk (JLnet/minecraft/class_3193;)V
 		ARG 1 pos
 	METHOD method_20576 enableTickSchedulers (Lnet/minecraft/class_2818;)Ljava/util/concurrent/CompletableFuture;
-	METHOD method_20580 makeChunkAccessible (Lnet/minecraft/class_3193;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 holder
 	METHOD method_20605 unloadChunks (Ljava/util/function/BooleanSupplier;)V
 		ARG 1 shouldKeepTicking
 	METHOD method_20617 upgradeChunk (Lnet/minecraft/class_3193;Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
@@ -128,29 +135,54 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 2 requiredStatus
 	METHOD method_20619 loadChunk (Lnet/minecraft/class_1923;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 pos
+	METHOD method_20726 updateWatchedSection (Lnet/minecraft/class_3222;)Lnet/minecraft/class_4076;
+		COMMENT Updates the watched chunk section position for the {@code player}, and sends a
+		COMMENT render distance update packet to the client.
+		ARG 1 player
 	METHOD method_21619 dump (Ljava/io/Writer;)V
 	METHOD method_21676 getFutureStatus (Ljava/util/concurrent/CompletableFuture;)Ljava/lang/String;
 	METHOD method_23272 getChunkLoadingDebugInfo (Lnet/minecraft/class_1923;)Ljava/lang/String;
 	CLASS class_3208 EntityTracker
+		COMMENT An entity tracker governs which players' clients can see an entity. Each
+		COMMENT tracker corresponds to one entity in a server world and is mapped from the
+		COMMENT entity's network ID.
+		COMMENT
+		COMMENT @see ThreadedAnvilChunkStorage#entityTrackers
 		FIELD field_18246 entry Lnet/minecraft/class_3231;
 		FIELD field_18247 entity Lnet/minecraft/class_1297;
 		FIELD field_18248 maxDistance I
-		FIELD field_18249 lastCameraPosition Lnet/minecraft/class_4076;
-		FIELD field_18250 playersTracking Ljava/util/Set;
+		FIELD field_18249 trackedSection Lnet/minecraft/class_4076;
+			COMMENT The chunk section position of the tracked entity, may be outdated as an entity
+			COMMENT ticks. This is used by {@link ThreadedAnvilChunkStorage#tickEntityMovement()
+			COMMENT tickEntityMovement()} to bypass unnecessary status updates before calling
+			COMMENT {@link #updateTrackedStatus(ServerPlayerEntity) updateTrackedStatus()}.
+		FIELD field_18250 listeners Ljava/util/Set;
 		METHOD <init> (Lnet/minecraft/class_3898;Lnet/minecraft/class_1297;IIZ)V
-			ARG 2 maxDistance
-			ARG 3 tickInterval
+			ARG 2 entity
+			ARG 3 maxDistance
+			ARG 4 tickInterval
+			ARG 5 alwaysUpdateVelocity
 		METHOD equals (Ljava/lang/Object;)Z
 			ARG 1 o
 		METHOD method_18728 stopTracking ()V
-		METHOD method_18729 updateCameraPosition (Ljava/util/List;)V
+		METHOD method_18729 updateTrackedStatus (Ljava/util/List;)V
+			COMMENT Updates the tracked status of this tracker's entity for the given players.
+			COMMENT
+			COMMENT @see updateTrackedStatus(ServerPlayerEntity)
 			ARG 1 players
 		METHOD method_18730 sendToOtherNearbyPlayers (Lnet/minecraft/class_2596;)V
 			ARG 1 packet
 		METHOD method_18733 stopTracking (Lnet/minecraft/class_3222;)V
+			ARG 1 player
 		METHOD method_18734 sendToNearbyPlayers (Lnet/minecraft/class_2596;)V
 			ARG 1 packet
-		METHOD method_18736 updateCameraPosition (Lnet/minecraft/class_3222;)V
+		METHOD method_18736 updateTrackedStatus (Lnet/minecraft/class_3222;)V
+			COMMENT Updates the tracked status of this tracker's entity for the {@code player}.
+			COMMENT
+			COMMENT <p>If this tracker should be listened by the player, the player's tracking
+			COMMENT listener is added if it is not in the listeners; if this tracker should not be
+			COMMENT listened by the player, the player's tracking listener is removed if it is in
+			COMMENT the listeners.
 			ARG 1 player
 		METHOD method_22844 getMaxTrackDistance ()I
 		METHOD method_27906 adjustTrackingDistance (I)I
