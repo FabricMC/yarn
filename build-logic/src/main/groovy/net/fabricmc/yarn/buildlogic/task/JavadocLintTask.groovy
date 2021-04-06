@@ -57,7 +57,7 @@ class JavadocLintTask extends DefaultTask {
                     if (javadoc.contains(PARAMETER_TAG_START)) {
                         int paramIndex = javadoc.indexOf(PARAMETER_TAG_START) + PARAMETER_TAG_START.length()
 
-                        if (javadoc.length() > paramIndex || javadoc.charAt(paramIndex) != '<' as char) {
+                        if (javadoc.length() <= paramIndex || javadoc.charAt(paramIndex) != '<' as char) {
                             localErrors.add("method contains parameter docs, which should be on the parameter itself")
                         }
                     }
