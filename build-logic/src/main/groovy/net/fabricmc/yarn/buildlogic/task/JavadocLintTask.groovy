@@ -13,14 +13,14 @@ import groovy.transform.CompileStatic
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.TaskAction
 
 @CompileStatic
 class JavadocLintTask extends DefaultTask {
     private static final String PARAMETER_TAG_START = "@param "
 
-    @InputFiles
+    @InputDirectory
     DirectoryProperty mappingDirectory = project.objects.directoryProperty()
 
     @TaskAction
