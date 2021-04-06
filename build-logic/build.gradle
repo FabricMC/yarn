@@ -3,6 +3,8 @@ plugins {
 }
 
 repositories {
+	mavenCentral()
+
 	maven {
 		name "Fabric Repository"
 		url 'https://maven.fabricmc.net'
@@ -12,4 +14,8 @@ repositories {
 dependencies {
 	api "org.ow2.asm:asm:9.1"
 	api "org.ow2.asm:asm-tree:9.1"
+
+	def gradleProperties = new Properties()
+	new File(projectDir.parentFile, "gradle.properties").withReader { gradleProperties.load(it) }
+	api "cuchaz:enigma:$gradleProperties.enigma_version"
 }
