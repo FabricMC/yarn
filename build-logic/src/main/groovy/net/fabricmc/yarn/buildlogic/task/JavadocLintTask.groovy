@@ -8,6 +8,7 @@ import cuchaz.enigma.translation.mapping.serde.enigma.EnigmaMappingsReader
 import cuchaz.enigma.translation.mapping.tree.EntryTree
 import cuchaz.enigma.translation.representation.entry.Entry
 import cuchaz.enigma.translation.representation.entry.LocalVariableEntry
+import cuchaz.enigma.translation.representation.entry.MethodEntry
 import groovy.transform.CompileStatic
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -17,6 +18,8 @@ import org.gradle.api.tasks.TaskAction
 
 @CompileStatic
 class JavadocLintTask extends DefaultTask {
+    private static final String PARAMETER_TAG_START = "@param "
+
     @InputFiles
     DirectoryProperty mappingDirectory = project.objects.directoryProperty()
 
@@ -40,7 +43,23 @@ class JavadocLintTask extends DefaultTask {
                     }
 
                     if (javadoc.charAt(0).isUpperCase()) {
-                        localErrors.add("parameter javadoc starts with uppercase word '${getFirstWord(javadoc)}'")
+                        String word = getFirstWord(javadoc)
+
+                        // ignore single-letter "words" (like X or Z)
+                        if (word.length() > 1) {
+                            localErrors.add("parameter javadoc starts with uppercase word '${word}'")
+                        }
+                    }
+                }
+
+                if (entry instanceof MethodEntry) {
+                    // check for non-type parameters declared as @param
+                    if (javadoc.contains(PARAMETER_TAG_START)) {
+                        int paramIndex = javadoc.indexOf(PARAMETER_TAG_START) + PARAMETER_TAG_START.length()
+
+                        if (javadoc.length() > paramIndex || javadoc.charAt(paramIndex) != '<' as char) {
+                            localErrors.add("method contains parameter docs, which should be on the parameter itself")
+                        }
                     }
                 }
 
