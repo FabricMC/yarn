@@ -23,6 +23,11 @@ class JavadocLintTask extends DefaultTask {
     @InputDirectory
     DirectoryProperty mappingDirectory = project.objects.directoryProperty()
 
+    JavadocLintTask() {
+        // Only run when inputs have changed
+        outputs.upToDateWhen { true }
+    }
+
     @TaskAction
     def run() {
         def saveParameters = new MappingSaveParameters(MappingFileNameFormat.BY_DEOBF)
