@@ -35,7 +35,7 @@ Setup and download and launch the latest version of [Enigma](https://github.com/
 Compared to launching Enigma externally, the gradle task adds a name guesser plugin that automatically map enums and a few constant field names.
 
 ### `yarnUnpicked`
-Same as above, but unpicks the constants and launches engima with them. Can be a little bit slower to get going.
+Same as above, but unpicks the constants and launches Enigma with them. Can be a little bit slower to get going.
 
 
 ### `build`
