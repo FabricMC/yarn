@@ -117,6 +117,10 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 pos
 	METHOD method_18403 sleep (Lnet/minecraft/class_2338;)V
 		ARG 1 pos
+	METHOD method_18404 (Lnet/minecraft/class_2338;)V
+		ARG 1 pos
+	METHOD method_18405 (Lnet/minecraft/class_2338;)Ljava/lang/Boolean;
+		ARG 1 pos
 	METHOD method_18406 isSleepingInBed ()Z
 	METHOD method_18801 applyClimbingSpeed (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
 		ARG 1 motion
@@ -144,6 +148,10 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 hand
 	METHOD method_20237 getEquipmentBreakStatus (Lnet/minecraft/class_1304;)B
 		ARG 0 slot
+	METHOD method_20238 (Lnet/minecraft/class_1309;)V
+		ARG 0 player
+	METHOD method_20239 (Lnet/minecraft/class_1309;)V
+		ARG 0 player
 	METHOD method_21753 getStingerCount ()I
 	METHOD method_21754 isHoldingOntoLadder ()Z
 		COMMENT @return {@code true} if this entity should not lose height while in a climbing state
@@ -157,6 +165,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 2 damageMultiplier
 	METHOD method_23667 swingHand (Lnet/minecraft/class_1268;Z)V
 		ARG 1 hand
+		ARG 2 fromServerPlayer
 	METHOD method_23733 onKilledBy (Lnet/minecraft/class_1309;)V
 		COMMENT Performs secondary effects after this mob has been killed.
 		COMMENT
@@ -174,10 +183,13 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT
 		COMMENT <p>This checks both the entity's main and off hand.
 		ARG 1 item
+	METHOD method_24519 (Lnet/minecraft/class_1792;Lnet/minecraft/class_1799;)Z
+		ARG 1 stack
 	METHOD method_24520 isHolding (Ljava/util/function/Predicate;)Z
 		COMMENT Checks if this entity is holding a certain item.
 		COMMENT
 		COMMENT <p>This checks both the entity's main and off hand.
+		ARG 1 predicate
 	METHOD method_24831 getPoses ()Lcom/google/common/collect/ImmutableList;
 	METHOD method_24832 getClimbingPos ()Ljava/util/Optional;
 	METHOD method_24833 getBoundingBox (Lnet/minecraft/class_4050;)Lnet/minecraft/class_238;
@@ -185,6 +197,8 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_25937 displaySoulSpeedEffects ()V
 	METHOD method_26082 applyStatusEffect (Lnet/minecraft/class_1293;)V
 		ARG 1 effect
+	METHOD method_26084 (Lnet/minecraft/class_1309;)V
+		ARG 0 player
 	METHOD method_26319 canWalkOnFluid (Lnet/minecraft/class_3611;)Z
 		ARG 1 fluid
 	METHOD method_26825 getAttributeValue (Lnet/minecraft/class_1320;)D
@@ -212,9 +226,16 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_29505 setAttacking (Lnet/minecraft/class_1657;)V
 		ARG 1 attacking
 	METHOD method_29920 shouldSwimInFluids ()Z
+	METHOD method_30120 (Ljava/util/List;Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
+		ARG 2 slot
+		ARG 3 stack
+	METHOD method_30121 swapHandStacks (Ljava/util/Map;)V
+		ARG 1 equipment
 	METHOD method_30122 setArmorInSlot (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
 		ARG 1 slot
 		ARG 2 armor
+	METHOD method_30123 setEquipment (Ljava/util/Map;)V
+		ARG 1 equipment
 	METHOD method_30124 setStackInHandSlot (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
 		ARG 1 slot
 		ARG 2 stack
@@ -223,8 +244,15 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_30126 getStackInHandSlot (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
 		ARG 1 slot
 	METHOD method_30127 swapHandStacks ()V
+	METHOD method_31079 positionInPortal (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 0 pos
+	METHOD method_32321 getCommandItemSlot (Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)Lnet/minecraft/class_5630;
+		ARG 0 entity
+		ARG 1 slot
 	METHOD method_32322 getEquipmentSlot (I)Lnet/minecraft/class_1304;
 		ARG 0 slotId
+	METHOD method_32323 (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)Z
+		ARG 1 stack
 	METHOD method_32324 removePowderSnowSlow ()V
 	METHOD method_32325 addPowderSnowSlowIfNeeded ()V
 	METHOD method_32326 getPreferredEquipmentSlot (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1304;
@@ -274,6 +302,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 type
 	METHOD method_6017 getSoundPitch ()F
 	METHOD method_6018 setRiptideTicks (I)V
+		ARG 1 riptideTicks
 	METHOD method_6019 setCurrentHand (Lnet/minecraft/class_1268;)V
 		ARG 1 hand
 	METHOD method_6020 onStatusEffectApplied (Lnet/minecraft/class_1293;)V

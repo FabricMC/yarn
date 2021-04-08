@@ -15,6 +15,10 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_27857 inPowderSnow Z
 	FIELD field_27858 FROZEN_TICKS Lnet/minecraft/class_2940;
 	FIELD field_28628 wasInPowderSnow Z
+	FIELD field_28629 wasOnFire Z
+	FIELD field_29985 ID_KEY Ljava/lang/String;
+	FIELD field_29986 PASSENGERS_KEY Ljava/lang/String;
+	FIELD field_29994 UUID_KEY Ljava/lang/String;
 	FIELD field_5951 ridingCooldown I
 	FIELD field_5952 onGround Z
 	FIELD field_5953 firstUpdate Z
@@ -243,8 +247,13 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @implNote The swim height of 0 allows short entities like baby animals
 		COMMENT to start swimming to avoid suffocation.
+	METHOD method_29494 (Lnet/minecraft/class_2680;)Z
+		ARG 0 state
 	METHOD method_29495 refreshPositionAfterTeleport (Lnet/minecraft/class_243;)V
 		ARG 1 pos
+	METHOD method_30022 (Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;)Z
+		ARG 1 state
+		ARG 2 pos
 	METHOD method_30076 removeFromDimension ()V
 	METHOD method_30227 getTrackedPosition ()Lnet/minecraft/class_243;
 	METHOD method_30228 updateTrackedPosition (Lnet/minecraft/class_243;)V
@@ -257,6 +266,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 destWorld
 		ARG 2 destPos
 		ARG 3 destIsNether
+	METHOD method_30331 (Lnet/minecraft/class_3218;Lnet/minecraft/class_5459$class_5460;)Lnet/minecraft/class_5454;
+		ARG 2 rect
 	METHOD method_30632 collidesWithStateAtPos (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Z
 		ARG 1 pos
 		ARG 2 state
@@ -274,11 +285,17 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 delta
 	METHOD method_31166 getClientCameraPosVec (F)Lnet/minecraft/class_243;
 		ARG 1 tickDelta
+	METHOD method_31469 (Lnet/minecraft/class_1297;)Z
+		ARG 0 entity
+	METHOD method_31470 (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;)Z
+		ARG 1 entity
 	METHOD method_31471 onSpawnPacket (Lnet/minecraft/class_2604;)V
 		ARG 1 packet
 	METHOD method_31472 discard ()V
 	METHOD method_31473 attemptTickInVoid ()V
 		COMMENT Calls {@link #tickInVoid()} when the entity is 64 blocks below the world's {@linkplain net.minecraft.world.HeightLimitView#getBottomY() minimum Y position}.
+	METHOD method_31474 (Lnet/minecraft/class_1297;)V
+		ARG 0 entity
 	METHOD method_31476 getChunkPos ()Lnet/minecraft/class_1923;
 	METHOD method_31477 getBlockX ()I
 	METHOD method_31478 getBlockY ()I
@@ -318,6 +335,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @implNote The vanilla implementation always returns {@code null}.
 	METHOD method_33189 occludeVibrationSignals ()Z
+	METHOD method_33332 calculateBoundingBox ()Lnet/minecraft/class_238;
 	METHOD method_33567 requestTeleportAndDismount (DDD)V
 		ARG 1 destX
 		ARG 3 destY
@@ -345,6 +363,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT <p>This is only called when the entity {@linkplain #getMoveEffect() has
 		COMMENT any move effect}, from {@link #move(MovementType, Vec3d)}
+	METHOD method_33574 setPosition (Lnet/minecraft/class_243;)V
+		ARG 1 pos
 	METHOD method_33575 getCameraBlockPos ()Lnet/minecraft/class_2338;
 	METHOD method_33724 isRegionUnloaded ()Z
 		COMMENT Returns whether any part of this entity's bounding box is in an unloaded
@@ -353,6 +373,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @implSpec This implementation expands this entity's bounding box by 1 in
 		COMMENT each axis and checks whether the expanded box's smallest enclosing
 		COMMENT axis-aligned integer box is fully loaded in the world.
+	METHOD method_35049 getRemovalReason ()Lnet/minecraft/class_1297$class_5529;
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		ARG 1 state
@@ -695,6 +716,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 8 pitch
 	METHOD method_5809 isOnFire ()Z
 	METHOD method_5810 isPushable ()Z
+	METHOD method_5813 (Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
+		ARG 1 style
 	METHOD method_5814 setPosition (DDD)V
 		ARG 1 x
 		ARG 3 y
