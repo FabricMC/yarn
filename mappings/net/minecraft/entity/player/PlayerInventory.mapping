@@ -1,6 +1,20 @@
 CLASS net/minecraft/class_1661 net/minecraft/entity/player/PlayerInventory
+	FIELD field_30637 ITEM_USAGE_COOLDOWN I
+		COMMENT The maximum cooldown ({@value} ticks) applied to timed use items such as the Eye of Ender.
 	FIELD field_30638 MAIN_SIZE I
+		COMMENT The number of slots ({@value}) in the main (non-hotbar) section of the inventory.
+	FIELD field_30639 OFF_HAND_SLOT I
+		COMMENT Zero-based index of the offhand slot.
+		COMMENT
+		COMMENT <p>This value is the result of the sum {@code MAIN_SIZE (36) + ARMOR_SIZE (4)}.</p>
+	FIELD field_30640 NOT_FOUND I
+		COMMENT The slot index ({@value}) used to indicate no result
+		COMMENT (item not present / no available space) when querying the inventory's contents
+		COMMENT or to indicate no preference when inserting an item into the inventory.
 	FIELD field_30641 HOTBAR_SIZE I
+		COMMENT The number of columns ({@value}) in the inventory.
+		COMMENT
+		COMMENT <p>The same value dictates the size of the player's hotbar, excluding the offhand slot.</p>
 	FIELD field_7542 changeCount I
 	FIELD field_7543 combinedInventory Ljava/util/List;
 	FIELD field_7544 offHand Lnet/minecraft/class_2371;
@@ -14,6 +28,9 @@ CLASS net/minecraft/class_1661 net/minecraft/entity/player/PlayerInventory
 		ARG 1 shouldRemove
 		ARG 2 maxCount
 		ARG 3 craftingInventory
+	METHOD method_32338 offer (Lnet/minecraft/class_1799;Z)V
+		ARG 1 stack
+		ARG 2 notifiesClient
 	METHOD method_7364 getChangeCount ()I
 	METHOD method_7365 swapSlotWithHotbar (I)V
 		ARG 1 slot
@@ -35,6 +52,7 @@ CLASS net/minecraft/class_1661 net/minecraft/entity/player/PlayerInventory
 		ARG 1 stack
 	METHOD method_7375 damageArmor (Lnet/minecraft/class_1282;F)V
 		ARG 1 damageSource
+		ARG 2 amount
 	METHOD method_7376 getEmptySlot ()I
 	METHOD method_7377 clone (Lnet/minecraft/class_1661;)V
 		ARG 1 other
