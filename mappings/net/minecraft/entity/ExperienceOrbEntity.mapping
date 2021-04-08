@@ -1,5 +1,6 @@
 CLASS net/minecraft/class_1303 net/minecraft/entity/ExperienceOrbEntity
 	FIELD field_27009 pickingCount I
+	FIELD field_30055 DESPAWN_AGE I
 	FIELD field_6159 amount I
 	FIELD field_6161 health I
 	FIELD field_6162 target Lnet/minecraft/class_1657;
@@ -26,7 +27,18 @@ CLASS net/minecraft/class_1303 net/minecraft/entity/ExperienceOrbEntity
 		ARG 2 amount
 	METHOD method_31497 merge (Lnet/minecraft/class_1303;)V
 		ARG 1 other
-	METHOD method_31498 mergeNearby ()V
+	METHOD method_31498 onEverySecond ()V
+		COMMENT Called every second (every 20 ticks).
+		COMMENT
+		COMMENT @implSpec This method first checks if the orb still has a nearby {@link #target},
+		COMMENT and assigns a new target if there is none. It then tries to merge nearby experience orbs.
+	METHOD method_35051 repairPlayerGears (Lnet/minecraft/class_1657;I)I
+		COMMENT Repairs a player's gears using the experience recursively, until the experience is
+		COMMENT all used or all gears are repaired.
+		COMMENT
+		COMMENT @return the amount of leftover experience
+		ARG 1 player
+		ARG 2 amount
 	METHOD method_5917 getMendingRepairAmount (I)I
 		ARG 1 experienceAmount
 	METHOD method_5918 roundToOrbSize (I)I
