@@ -12,8 +12,16 @@ CLASS net/minecraft/class_4581 net/minecraft/util/math/Matrix3f
 	FIELD field_21639 a20 F
 	FIELD field_21640 a21 F
 	FIELD field_21641 a22 F
+	FIELD field_31077 ORDER I
+		COMMENT The number of rows and columns ({@value}) this matrix has.
+	METHOD <init> (Lnet/minecraft/class_1158;)V
+		ARG 1 quaternion
+	METHOD <init> (Lnet/minecraft/class_1159;)V
+		ARG 1 matrix
 	METHOD <init> (Lnet/minecraft/class_4581;)V
 		ARG 1 source
+	METHOD equals (Ljava/lang/Object;)Z
+		ARG 1 object
 	METHOD method_22847 transpose ()V
 	METHOD method_22849 getSinAndCosOfRotation (FFF)Lcom/mojang/datafixers/util/Pair;
 		ARG 0 upperLeft
@@ -25,6 +33,8 @@ CLASS net/minecraft/class_4581 net/minecraft/util/math/Matrix3f
 	METHOD method_22855 multiply (Lnet/minecraft/class_4581;)V
 		ARG 1 other
 	METHOD method_22856 loadIdentity ()V
+	METHOD method_22857 (Lnet/minecraft/class_4581;)Lnet/minecraft/class_1158;
+		ARG 0 matrix
 	METHOD method_23274 multiply (Lnet/minecraft/class_1158;)V
 		ARG 1 quaternion
 	METHOD method_23296 copy ()Lnet/minecraft/class_4581;
@@ -40,3 +50,58 @@ CLASS net/minecraft/class_4581 net/minecraft/util/math/Matrix3f
 		ARG 1 x
 		ARG 2 y
 		ARG 3 value
+	METHOD method_35259 pack (II)I
+		ARG 0 x
+		ARG 1 y
+	METHOD method_35260 (Lnet/minecraft/class_4581;Lnet/minecraft/class_1158;)V
+		ARG 0 matrix
+		ARG 1 quaternion
+	METHOD method_35261 readRowFirst (Ljava/nio/FloatBuffer;)V
+		COMMENT Reads a matrix from the buffer in row-major order.
+		COMMENT
+		COMMENT @see #readColumnFirst(FloatBuffer)
+		COMMENT @see #read(FloatBuffer, boolean)
+		ARG 1 buf
+	METHOD method_35262 read (Ljava/nio/FloatBuffer;Z)V
+		COMMENT Reads a matrix from the buffer.
+		COMMENT
+		COMMENT @see #readRowFirst(FloatBuffer)
+		COMMENT @see #readColumnFirst(FloatBuffer)
+		ARG 1 buf
+		ARG 2 columnFirst
+			COMMENT {@code true} to read in column-major order; {@code false} to read in
+			COMMENT row-major order
+	METHOD method_35263 readColumnFirst (Ljava/nio/FloatBuffer;)V
+		COMMENT Reads a matrix from the buffer in column-major order.
+		COMMENT
+		COMMENT @see #readRowFirst(FloatBuffer)
+		COMMENT @see #read(FloatBuffer, boolean)
+		ARG 1 buf
+	METHOD method_35264 write (Ljava/nio/FloatBuffer;Z)V
+		COMMENT Writes this matrix to the buffer.
+		COMMENT
+		COMMENT @see #writeRowFirst(FloatBuffer)
+		COMMENT @see #writeColumnFirst(FloatBuffer)
+		ARG 1 buf
+		ARG 2 columnFirst
+			COMMENT {@code true} to write in column-major order; {@code false} to write in
+			COMMENT row-major order
+	METHOD method_35265 add (Lnet/minecraft/class_4581;)V
+		ARG 1 matrix
+	METHOD method_35266 writeRowFirst (Ljava/nio/FloatBuffer;)V
+		COMMENT Writes this matrix to the buffer in row-major order.
+		COMMENT
+		COMMENT @see #writeColumnFirst(FloatBuffer)
+		COMMENT @see #write(FloatBuffer, boolean)
+		ARG 1 buf
+	METHOD method_35267 subtract (Lnet/minecraft/class_4581;)V
+		ARG 1 matrix
+	METHOD method_35268 writeColumnFirst (Ljava/nio/FloatBuffer;)V
+		COMMENT Writes this matrix to the buffer in column-major order.
+		COMMENT
+		COMMENT @see #writeRowFirst(FloatBuffer)
+		COMMENT @see #write(FloatBuffer, boolean)
+		ARG 1 buf
+	METHOD method_35269 determinant ()F
+	METHOD method_35270 trace ()F
+		COMMENT Returns the sum of the elements on the main diagonal.
