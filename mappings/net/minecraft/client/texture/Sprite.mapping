@@ -13,6 +13,7 @@ CLASS net/minecraft/class_1058 net/minecraft/client/texture/Sprite
 	FIELD field_5269 uMax F
 	FIELD field_5270 uMin F
 	METHOD <init> (Lnet/minecraft/class_1059;Lnet/minecraft/class_1058$class_4727;IIIIILnet/minecraft/class_1011;)V
+		ARG 1 atlas
 		ARG 3 maxLevel
 		ARG 4 atlasWidth
 		ARG 5 atlasHeight
@@ -22,13 +23,17 @@ CLASS net/minecraft/class_1058 net/minecraft/client/texture/Sprite
 	METHOD method_23842 getAnimationFrameDelta ()F
 	METHOD method_24108 getTextureSpecificVertexConsumer (Lnet/minecraft/class_4588;)Lnet/minecraft/class_4588;
 	METHOD method_24119 getAtlas ()Lnet/minecraft/class_1059;
-	METHOD method_33437 (Lnet/minecraft/class_1058$class_4727;III)Lnet/minecraft/class_1058$class_5790;
+	METHOD method_33437 createAnimation (Lnet/minecraft/class_1058$class_4727;III)Lnet/minecraft/class_1058$class_5790;
 		ARG 2 nativeImageWidth
 		ARG 3 nativeImageHeight
 		ARG 4 maxLevel
 	METHOD method_33440 (Ljava/util/List;II)V
 		ARG 1 index
 		ARG 2 time
+	METHOD method_33442 getDistinctFrameCount ()Ljava/util/stream/IntStream;
+	METHOD method_33443 getAnimation ()Lnet/minecraft/class_1061;
+	METHOD method_35806 getX ()I
+	METHOD method_35807 getY ()I
 	METHOD method_4570 getFrameV (D)F
 		ARG 1 frame
 	METHOD method_4575 getMaxV ()F
@@ -71,6 +76,7 @@ CLASS net/minecraft/class_1058 net/minecraft/client/texture/Sprite
 			COMMENT Linearly interpolate between the current and next frame on all mip levels
 			COMMENT based on the tick position within the current frame,
 			COMMENT and upload the results to the currently bound texture to the frame slot at position (0,0).
+			ARG 1 animation
 		METHOD method_24129 lerp (DII)I
 			COMMENT Purely mathematical single-value linear interpolation.
 			COMMENT {@code lerp(0, a, b) == b}, {@code lerp(1, a, b) == a}.
@@ -79,7 +85,11 @@ CLASS net/minecraft/class_1058 net/minecraft/client/texture/Sprite
 			ARG 4 from
 		METHOD method_24130 getPixelColor (Lnet/minecraft/class_1058$class_5790;IIII)I
 			COMMENT Returns the pixel color at frame {@code frameIndex} within mipmap {@code layer} at sprite relative coordinates.
+			ARG 1 animation
 			ARG 2 frameIndex
+			ARG 3 layer
+			ARG 4 x
+			ARG 5 y
 	CLASS class_5790 Animation
 		FIELD field_28470 frameIndex I
 		FIELD field_28471 frameTicks I
@@ -89,9 +99,11 @@ CLASS net/minecraft/class_1058 net/minecraft/client/texture/Sprite
 		METHOD <init> (Lnet/minecraft/class_1058;Ljava/util/List;ILnet/minecraft/class_1058$class_4728;)V
 			ARG 2 frames
 			ARG 3 frameCount
+			ARG 4 interpolation
 		METHOD method_33445 upload ()V
 		METHOD method_33446 getFrameX (I)I
 			ARG 1 frame
+		METHOD method_33450 getDistinctFrameCount ()Ljava/util/stream/IntStream;
 		METHOD method_33451 getFrameY (I)I
 			ARG 1 frame
 		METHOD method_33455 upload (I)V
