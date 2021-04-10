@@ -15,3 +15,30 @@ CLASS net/minecraft/class_3242 net/minecraft/server/ServerNetworkIo
 		ARG 2 port
 	METHOD method_14356 stop ()V
 	METHOD method_14357 tick ()V
+	CLASS class_5980 DelayingChannelInboundHandler
+		COMMENT A channel in-bound handler that only forwards received messages to the next
+		COMMENT channel in-bound handler in the channel pipeline after a random delay between
+		COMMENT {@link #baseDelay} and {@code baseDelay + }{@link #extraDelay} milliseconds.
+		COMMENT
+		COMMENT @apiNote This may be used to simulate a laggy network enviroment.
+		FIELD field_29772 timer Lio/netty/util/Timer;
+		FIELD field_29773 baseDelay I
+		FIELD field_29774 extraDelay I
+		FIELD field_29775 packets Ljava/util/List;
+		METHOD <init> (II)V
+			ARG 1 baseDelay
+			ARG 2 extraDelay
+		METHOD channelRead (Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Object;)V
+			ARG 1 ctx
+			ARG 2 msg
+		METHOD method_34880 delay (Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Object;)V
+			ARG 1 ctx
+			ARG 2 msg
+		METHOD method_34881 forward (Lio/netty/util/Timeout;)V
+			ARG 1 timeout
+		CLASS class_5981 Packet
+			FIELD field_29776 context Lio/netty/channel/ChannelHandlerContext;
+			FIELD field_29777 message Ljava/lang/Object;
+			METHOD <init> (Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Object;)V
+				ARG 1 context
+				ARG 2 message
