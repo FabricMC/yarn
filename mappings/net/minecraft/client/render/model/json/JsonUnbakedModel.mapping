@@ -1,6 +1,9 @@
 CLASS net/minecraft/class_793 net/minecraft/client/render/model/json/JsonUnbakedModel
 	FIELD field_21857 guiLight Lnet/minecraft/class_793$class_4751;
 	FIELD field_32792 PARTICLE_KEY Ljava/lang/String;
+	FIELD field_32793 TEXTURE_REFERENCE_INITIAL C
+		COMMENT The initial character ({@value}) of a texture reference in JSON; used to
+		COMMENT distinguish texture references from other references.
 	FIELD field_4244 ambientOcclusion Z
 	FIELD field_4245 elements Ljava/util/List;
 	FIELD field_4247 parentId Lnet/minecraft/class_2960;
@@ -57,7 +60,10 @@ CLASS net/minecraft/class_793 net/minecraft/client/render/model/json/JsonUnbaked
 		ARG 3 side
 		ARG 4 settings
 		ARG 5 id
+	METHOD method_35789 needsResolution ()Z
 	CLASS class_795 Deserializer
+		FIELD field_32794 DEFAULT_AMBIENT_OCCLUSION Z
+			COMMENT The default value for ambient occlusion if unspecified in JSON; is {@value}.
 		METHOD deserialize (Lcom/google/gson/JsonElement;Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)Ljava/lang/Object;
 			ARG 1 element
 			ARG 2 unused
@@ -65,17 +71,17 @@ CLASS net/minecraft/class_793 net/minecraft/client/render/model/json/JsonUnbaked
 		METHOD method_24079 resolveReference (Lnet/minecraft/class_2960;Ljava/lang/String;)Lcom/mojang/datafixers/util/Either;
 			ARG 0 id
 			ARG 1 name
-		METHOD method_3448 deserializeTextures (Lcom/google/gson/JsonObject;)Ljava/util/Map;
+		METHOD method_3448 texturesFromJson (Lcom/google/gson/JsonObject;)Ljava/util/Map;
 			ARG 1 object
-		METHOD method_3449 deserializeElements (Lcom/google/gson/JsonDeserializationContext;Lcom/google/gson/JsonObject;)Ljava/util/List;
+		METHOD method_3449 elementsFromJson (Lcom/google/gson/JsonDeserializationContext;Lcom/google/gson/JsonObject;)Ljava/util/List;
 			ARG 1 context
 			ARG 2 json
-		METHOD method_3450 deserializeParent (Lcom/google/gson/JsonObject;)Ljava/lang/String;
+		METHOD method_3450 parentFromJson (Lcom/google/gson/JsonObject;)Ljava/lang/String;
 			ARG 1 json
-		METHOD method_3452 deserializeOverrides (Lcom/google/gson/JsonDeserializationContext;Lcom/google/gson/JsonObject;)Ljava/util/List;
+		METHOD method_3452 overridesFromJson (Lcom/google/gson/JsonDeserializationContext;Lcom/google/gson/JsonObject;)Ljava/util/List;
 			ARG 1 context
 			ARG 2 object
-		METHOD method_3453 deserializeAmbientOcclusion (Lcom/google/gson/JsonObject;)Z
+		METHOD method_3453 ambientOcclusionFromJson (Lcom/google/gson/JsonObject;)Z
 			ARG 1 json
 	CLASS class_4751 GuiLight
 		FIELD field_21858 ITEM Lnet/minecraft/class_793$class_4751;
@@ -86,5 +92,9 @@ CLASS net/minecraft/class_793 net/minecraft/client/render/model/json/JsonUnbaked
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
 			ARG 3 name
 		METHOD method_24299 isSide ()Z
-		METHOD method_24300 deserialize (Ljava/lang/String;)Lnet/minecraft/class_793$class_4751;
+		METHOD method_24300 byName (Ljava/lang/String;)Lnet/minecraft/class_793$class_4751;
 			ARG 0 value
+	CLASS class_6246 UncheckedModelException
+		COMMENT An unused unchecked exception. Probably related to unbaked models.
+		METHOD <init> (Ljava/lang/String;)V
+			ARG 1 message
