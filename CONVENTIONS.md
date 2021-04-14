@@ -122,6 +122,18 @@ Write quick descriptions for parameter javadocs as well as `@return` tags, with 
 
 Use `@link`, `@linkplain` and `@see` tags to refer to other parts of the code.
 
+### Game Content Capitalization
+
+When describing content in the game itself, do not use capitalization. For example, the following is incorrect:
+
+> The quick Snow Fox jumped over the tamed Wolf.
+
+The following is acceptable:
+
+> The quick snow fox jumped over the tamed wolf.
+
+In order to hint that the description references the game's content, inline links may be used.
+
 ## Mojang names
 
 **Do not use names from Mojang's obfuscation maps.**
