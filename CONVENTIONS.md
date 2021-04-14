@@ -122,7 +122,7 @@ Write quick descriptions for parameter javadocs as well as `@return` tags, with 
 
 Use `@link`, `@linkplain` and `@see` tags to refer to other parts of the code.
 
-### Game Content Capitalization
+### Game content capitalization
 
 When describing content in the game itself, do not use capitalization. For example, the following is incorrect:
 
