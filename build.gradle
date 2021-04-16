@@ -23,10 +23,10 @@ plugins {
 	id 'maven-publish'
 	id 'java' // for jd gen
 	id 'org.cadixdev.licenser' version '0.5.1'
-	id 'build-logic'
+	id 'net.fabricmc.filament' version '0.2.0'
 }
 
-def minecraft_version = "21w14a"
+def minecraft_version = "21w15a"
 
 def ENV = System.getenv()
 // Fetch build number from Github Actions
@@ -777,12 +777,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 compilePackageDocsJava {
 	it.options.encoding = "UTF-8"
-	// use java 11 as the package info files aren't consumed by downstream java 8 mods etc.
-	if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
-		javaCompiler = javaToolchains.compilerFor {
-			languageVersion = JavaLanguageVersion.of(11)
-		}
-	}
 	it.options.release = 11
 }
 
@@ -885,12 +879,6 @@ task genFakeSource(type: JavaExec, dependsOn: ["mergeV2", "mapNamedJar"]) {
 	group = "javadoc generation"
 	outputs.upToDateWhen { false }
 
-	if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
-		javaLauncher = javaToolchains.launcherFor {
-			languageVersion = JavaLanguageVersion.of(11)
-		}
-	}
-
 	main "net.fabricmc.mappingpoet.Main"
 	classpath configurations.mappingPoet
 	// use merged v2 so we have all namespaces in jd
@@ -924,11 +912,6 @@ javadoc {
 
 	failOnError = false
 
-	if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
-		javadocTool = javaToolchains.javadocToolFor {
-			languageVersion = JavaLanguageVersion.of(11)
-		}
-	}
 	// verbose = true // enable to debug
 	options {
 		// verbose() // enable to debug
@@ -1007,6 +990,13 @@ generatePackageInfoMappings {
 	packageName = "net/minecraft/unused/packageinfo/"
 	outputDir = file("mappings/net/minecraft/unused/packageinfo")
 }
+
+javadocLint {
+	group = "javadoc generation"
+	mappingDirectory = file("mappings")
+}
+
+check.dependsOn javadocLint
 
 publishing {
 	publications {

@@ -4,11 +4,21 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     container:
-      image: openjdk:15-jdk
+      image: openjdk:16-jdk
       options: --user root
     steps:
       - uses: actions/checkout@v1
       - uses: gradle/wrapper-validation-action@v1
+
+      # Ensure that releases are not ran in parallel, this ensures that the latest commit is the latest release
+      # See https://github.com/softprops/turnstyle
+      - name: Turnstyle
+        uses: softprops/turnstyle@v1
+        with:
+          continue-after-seconds: 3600
+          same-branch-only: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Generate the build number based on tags to allow per branch build numbers, not something github provides by default.
       - name: Generate build number

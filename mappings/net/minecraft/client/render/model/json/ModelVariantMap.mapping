@@ -11,9 +11,25 @@ CLASS net/minecraft/class_790 net/minecraft/client/render/model/json/ModelVarian
 	METHOD method_3421 getMultipartModel ()Lnet/minecraft/class_816;
 	METHOD method_3422 hasMultipartModel ()Z
 	METHOD method_3423 getVariantMap ()Ljava/util/Map;
-	METHOD method_3424 deserialize (Lnet/minecraft/class_790$class_791;Ljava/io/Reader;)Lnet/minecraft/class_790;
+	METHOD method_3424 fromJson (Lnet/minecraft/class_790$class_791;Ljava/io/Reader;)Lnet/minecraft/class_790;
 		ARG 0 context
 		ARG 1 reader
+	METHOD method_35790 containsVariant (Ljava/lang/String;)Z
+		COMMENT Checks if there's a variant under the {@code key} in this map.
+		COMMENT
+		COMMENT @return {@code true} if the {@code key} has a variant, {@code false} otherwise
+		ARG 1 key
+			COMMENT the variant's key
+	METHOD method_35791 getAllModels ()Ljava/util/Set;
+	METHOD method_35792 getVariant (Ljava/lang/String;)Lnet/minecraft/class_807;
+		COMMENT Finds and returns the definition of the variant under the {@code key}. If the
+		COMMENT {@code key} does not {@linkplain #containsVariant(String) exist}, this throws
+		COMMENT an exception.
+		COMMENT
+		COMMENT @return the variant definition
+		COMMENT @throws VariantAbsentException if no variant with the given {@code key} exists
+		ARG 1 key
+			COMMENT the variant's key
 	CLASS class_791 DeserializationContext
 		FIELD field_4242 stateFactory Lnet/minecraft/class_2689;
 		FIELD field_4243 gson Lcom/google/gson/Gson;
@@ -25,9 +41,11 @@ CLASS net/minecraft/class_790 net/minecraft/client/render/model/json/ModelVarian
 			ARG 1 functionJson
 			ARG 2 unused
 			ARG 3 context
-		METHOD method_3427 deserializeMultipart (Lcom/google/gson/JsonDeserializationContext;Lcom/google/gson/JsonObject;)Lnet/minecraft/class_816;
+		METHOD method_3427 multipartFromJson (Lcom/google/gson/JsonDeserializationContext;Lcom/google/gson/JsonObject;)Lnet/minecraft/class_816;
 			ARG 1 context
 			ARG 2 object
-		METHOD method_3429 deserializeVariants (Lcom/google/gson/JsonDeserializationContext;Lcom/google/gson/JsonObject;)Ljava/util/Map;
+		METHOD method_3429 variantsFromJson (Lcom/google/gson/JsonDeserializationContext;Lcom/google/gson/JsonObject;)Ljava/util/Map;
 			ARG 1 context
 			ARG 2 object
+	CLASS class_6247 VariantAbsentException
+		COMMENT An unchecked exception indicating a variant is not found with a string key.

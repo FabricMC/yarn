@@ -11,6 +11,7 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	FIELD field_24747 biomeSource Lnet/minecraft/class_1966;
 	FIELD field_24748 worldSeed J
 	FIELD field_24749 strongholds Ljava/util/List;
+	FIELD field_33512 blockSource Lnet/minecraft/class_5840;
 	METHOD <init> (Lnet/minecraft/class_1966;Lnet/minecraft/class_1966;Lnet/minecraft/class_5311;J)V
 		ARG 1 populationSource
 		ARG 2 biomeSource
@@ -26,6 +27,7 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		ARG 3 chunk
 	METHOD method_12098 getBiomeSource ()Lnet/minecraft/class_1966;
 	METHOD method_12100 getSpawnHeight (Lnet/minecraft/class_5539;)I
+		ARG 1 world
 	METHOD method_12102 generateFeatures (Lnet/minecraft/class_3233;Lnet/minecraft/class_5138;)V
 		ARG 1 region
 		ARG 2 accessor
@@ -33,14 +35,15 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		COMMENT Tries to find the closest structure of a given type near a given block.
 		COMMENT <p>
 		COMMENT New chunks will only be generated up to the {@link net.minecraft.world.chunk.ChunkStatus#STRUCTURE_STARTS} phase by this method.
+		COMMENT <p>
+		COMMENT The radius is ignored for strongholds.
 		COMMENT
 		COMMENT @return {@code null} if no structure could be found within the given search radius
 		ARG 1 world
 		ARG 2 feature
 		ARG 3 center
 		ARG 4 radius
-			COMMENT The search radius in chunks around the chunk the given block position is in. A radius of 0 will only search in the given chunk.
-			COMMENT This is ignored for strongholds.
+			COMMENT the search radius in chunks around the chunk the given block position is in; a radius of 0 will only search in the given chunk
 		ARG 5 skipExistingChunks
 			COMMENT whether only structures that are not referenced by generated chunks (chunks past the STRUCTURE_STARTS stage) are returned, excluding strongholds
 	METHOD method_12104 getWorldHeight ()I
@@ -67,6 +70,10 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		ARG 4 pos
 	METHOD method_16129 setStructureStarts (Lnet/minecraft/class_5455;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;Lnet/minecraft/class_3485;J)V
 		COMMENT Determines which structures should start in the given chunk and creates their starting points.
+		ARG 1 registryManager
+		ARG 2 accessor
+		ARG 3 chunk
+		ARG 4 structureManager
 		ARG 5 worldSeed
 	METHOD method_16130 addStructureReferences (Lnet/minecraft/class_5281;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;)V
 		COMMENT Finds all structures that the given chunk intersects, and adds references to their starting chunks to it.
@@ -102,7 +109,13 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	METHOD method_28507 isStrongholdStartingChunk (Lnet/minecraft/class_1923;)Z
 		ARG 1 pos
 	METHOD method_28508 setStructureStart (Lnet/minecraft/class_5312;Lnet/minecraft/class_5455;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;Lnet/minecraft/class_3485;JLnet/minecraft/class_1959;)V
+		ARG 1 feature
+		ARG 2 registryManager
+		ARG 3 accessor
 		ARG 4 chunk
+		ARG 5 structureManager
 		ARG 6 worldSeed
+		ARG 8 biome
 	METHOD method_28509 generateStrongholdPositions ()V
 	METHOD method_33730 getMinimumY ()I
+	METHOD method_36294 getBlockSource ()Lnet/minecraft/class_5840;

@@ -1,6 +1,6 @@
 CLASS net/minecraft/class_1869 net/minecraft/recipe/ShapedRecipe
 	FIELD field_9051 id Lnet/minecraft/class_2960;
-	FIELD field_9052 inputs Lnet/minecraft/class_2371;
+	FIELD field_9052 input Lnet/minecraft/class_2371;
 	FIELD field_9053 output Lnet/minecraft/class_1799;
 	FIELD field_9054 height I
 	FIELD field_9055 width I
@@ -10,7 +10,7 @@ CLASS net/minecraft/class_1869 net/minecraft/recipe/ShapedRecipe
 		ARG 2 group
 		ARG 3 width
 		ARG 4 height
-		ARG 5 ingredients
+		ARG 5 input
 		ARG 6 output
 	METHOD method_31585 (Lnet/minecraft/class_1856;)Z
 		ARG 0 ingredient
@@ -20,25 +20,50 @@ CLASS net/minecraft/class_1869 net/minecraft/recipe/ShapedRecipe
 		ARG 0 json
 	METHOD method_8145 getPattern (Lcom/google/gson/JsonArray;)[Ljava/lang/String;
 		ARG 0 json
-	METHOD method_8146 combinePattern ([Ljava/lang/String;)[Ljava/lang/String;
-		ARG 0 lines
-	METHOD method_8148 getIngredients ([Ljava/lang/String;Ljava/util/Map;II)Lnet/minecraft/class_2371;
+	METHOD method_8146 removePadding ([Ljava/lang/String;)[Ljava/lang/String;
+		COMMENT Removes empty space from around the recipe pattern.
+		COMMENT
+		COMMENT <p>Turns patterns such as:</p>
+		COMMENT <pre>
+		COMMENT {@code
+		COMMENT "   o"
+		COMMENT "   a"
+		COMMENT "    "
+		COMMENT }
+		COMMENT </pre>
+		COMMENT Into:
+		COMMENT <pre>
+		COMMENT {@code
+		COMMENT "o"
+		COMMENT "a"
+		COMMENT }
+		COMMENT </pre>
+		COMMENT
+		COMMENT @return a new recipe pattern with all leading and trailing empty rows/columns removed
 		ARG 0 pattern
-		ARG 1 key
+	METHOD method_8148 createPatternMatrix ([Ljava/lang/String;Ljava/util/Map;II)Lnet/minecraft/class_2371;
+		COMMENT Compiles a pattern and series of symbols into a list of ingredients (the matrix) suitable for matching
+		COMMENT against a crafting grid.
+		ARG 0 pattern
+		ARG 1 symbols
 		ARG 2 width
 		ARG 3 height
 	METHOD method_8150 getWidth ()I
-	METHOD method_8151 findNextIngredient (Ljava/lang/String;)I
-		ARG 0 pattern
-	METHOD method_8153 findNextIngredientReverse (Ljava/lang/String;)I
+	METHOD method_8151 findFirstSymbol (Ljava/lang/String;)I
+		ARG 0 line
+	METHOD method_8153 findLastSymbol (Ljava/lang/String;)I
 		ARG 0 pattern
 	METHOD method_8155 getItemStack (Lcom/google/gson/JsonObject;)Lnet/minecraft/class_1792;
 		ARG 0 json
-	METHOD method_8157 getComponents (Lcom/google/gson/JsonObject;)Ljava/util/Map;
+	METHOD method_8157 readSymbols (Lcom/google/gson/JsonObject;)Ljava/util/Map;
+		COMMENT Reads the pattern symbols.
+		COMMENT
+		COMMENT @return a mapping from a symbol to the ingredient it represents
 		ARG 0 json
 	METHOD method_8158 getHeight ()I
-	METHOD method_8161 matchesSmall (Lnet/minecraft/class_1715;IIZ)Z
+	METHOD method_8161 matchesPattern (Lnet/minecraft/class_1715;IIZ)Z
 		ARG 1 inv
 		ARG 2 offsetX
 		ARG 3 offsetY
+		ARG 4 flipped
 	CLASS class_1870 Serializer

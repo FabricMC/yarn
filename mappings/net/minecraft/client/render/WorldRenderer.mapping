@@ -11,6 +11,9 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_25277 weatherFramebuffer Lnet/minecraft/class_276;
 	FIELD field_25278 cloudsFramebuffer Lnet/minecraft/class_276;
 	FIELD field_25279 transparencyShader Lnet/minecraft/class_279;
+	FIELD field_27740 frustum Lnet/minecraft/class_4604;
+	FIELD field_27741 blockEntityRenderDispatcher Lnet/minecraft/class_824;
+	FIELD field_29619 chunkInfos Lnet/minecraft/class_761$class_5972;
 	FIELD field_4055 noCullingBlockEntities Ljava/util/Set;
 	FIELD field_4056 capturedFrustum Lnet/minecraft/class_4604;
 	FIELD field_4057 textureManager Lnet/minecraft/class_1060;
@@ -172,6 +175,10 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	METHOD method_29364 getCloudsFramebuffer ()Lnet/minecraft/class_276;
 	METHOD method_29365 loadTransparencyShader ()V
 	METHOD method_29701 resetTransparencyShader ()V
+	METHOD method_32133 setupFrustum (Lnet/minecraft/class_4587;Lnet/minecraft/class_243;Lnet/minecraft/class_1159;)V
+		ARG 1 matrices
+		ARG 2 pos
+		ARG 3 projectionMatrix
 	METHOD method_3239 renderClouds (Lnet/minecraft/class_287;DDDLnet/minecraft/class_243;)V
 		ARG 1 builder
 		ARG 2 x
@@ -333,9 +340,32 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		FIELD field_4124 chunk Lnet/minecraft/class_846$class_851;
 		FIELD field_4125 direction B
 		FIELD field_4126 cullingState B
+		METHOD <init> (Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_2350;I)V
+			ARG 1 chunk
+			ARG 2 cull
+			ARG 3 propagationLevel
 		METHOD method_3298 canCull (Lnet/minecraft/class_2350;)Z
 			ARG 1 from
 		METHOD method_3299 updateCullingState (BLnet/minecraft/class_2350;)V
 			ARG 1 parentCullingState
 			ARG 2 from
+		METHOD method_34813 hasAnyDirection ()Z
+		METHOD method_34814 hasDirection (I)Z
+			ARG 1 ordinal
+		METHOD method_34816 addDirection (Lnet/minecraft/class_2350;)V
+			ARG 1 direction
 	CLASS class_5347 ShaderException
+		METHOD <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+			ARG 1 message
+			ARG 2 cause
+	CLASS class_5972 ChunkInfoList
+		FIELD field_29620 current [Lnet/minecraft/class_761$class_762;
+		FIELD field_29621 pending [Lnet/minecraft/class_761$class_762;
+		METHOD <init> (I)V
+			ARG 1 size
+		METHOD method_34818 update ()V
+		METHOD method_34820 getInfo (Lnet/minecraft/class_846$class_851;)Lnet/minecraft/class_761$class_762;
+			ARG 1 chunk
+		METHOD method_34821 setInfo (Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_761$class_762;)V
+			ARG 1 chunk
+			ARG 2 info

@@ -10,6 +10,8 @@ To use yarn-deobfuscated Minecraft for Minecraft modding or as a dependency in a
 
 To obtain a deobfuscated Minecraft jar, [`./gradlew mapNamedJar`](#mapNamedJar) will generate a jar named like `<minecraft version>-named.jar`, which can be sent to a decompiler for deobfuscated code.
 
+Please note to run the yarn build script **Java 11** or higher is required!
+
 ## Contributing
 
 Please remember that copying and pasting mappings from alternate projects under more restrictive licenses (such as MCP, Spigot's or Mojang's obfuscation maps)
