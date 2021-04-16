@@ -1,0 +1,92 @@
+CLASS net/minecraft/class_6136 net/minecraft/util/collection/LinkedBlockPosHashSet
+	COMMENT Represents a set of block positions (long representation).
+	COMMENT <p>
+	COMMENT Uses a {@link Long2LongLinkedOpenHashMap} as its internal storage medium
+	COMMENT to facilitate the quick addition and removal of block positions.
+	COMMENT <p>
+	COMMENT Positions are index into a 2x cubed area that then stores as a long, a bitset
+	COMMENT representing which positions within that area are currently set.
+	COMMENT <p>
+	COMMENT This has two major advantages:
+	COMMENT <ol>
+	COMMENT <li>Positions that are geometrically close together are grouped together in memory. This localises adjacent reads and writes.</li>
+	COMMENT <li>A larger number of positions can be comprised together into one long allowing for a smaller memory footprint.</li>
+	COMMENT </ol>
+	COMMENT @see LevelPropagator
+	FIELD field_31715 buffer Lnet/minecraft/class_6136$class_6137;
+	METHOD <init> (IF)V
+		ARG 1 expectedSize
+		ARG 2 loadFactor
+	METHOD add (J)Z
+		COMMENT Marks a block position as "set".
+		ARG 1 posLong
+	METHOD isEmpty ()Z
+		COMMENT Checks whether there are any block positions that have been "set".
+		COMMENT
+		COMMENT @return {@code true} is this collection is empty.
+	METHOD rem (J)Z
+		COMMENT Marks a block position as "not set". Effectively removing it from this collection.
+		ARG 1 posLong
+	METHOD removeFirstLong ()J
+		COMMENT Pops first block position off of this set.
+	METHOD size ()I
+		COMMENT @throws UnsupportedOperationException
+	CLASS class_6137 Storage
+		COMMENT Represents a three-dimensional mapping from a block position to a bitset
+		COMMENT of values set at that position.
+		FIELD field_31716 STARTING_OFFSET I
+		FIELD field_31717 HORIZONTAL_COLUMN_BIT_SEPARATION I
+		FIELD field_31718 FIELD_SPACING I
+		FIELD field_31719 Y_BIT_OFFSET I
+		FIELD field_31720 X_BIT_OFFSET I
+		FIELD field_31721 Z_BIT_OFFSET I
+		FIELD field_31722 MAX_POSITION J
+		FIELD field_31723 lastWrittenIndex I
+		FIELD field_31724 lastWrittenKey J
+		FIELD field_31725 expectedSize I
+		METHOD <init> (IF)V
+			ARG 1 expectedSize
+			ARG 2 loadFactor
+		METHOD method_35481 removeFirstLong ()J
+		METHOD method_35482 setBits (IJ)Z
+			COMMENT Sets flags within a specific 2x cubed region represented by {@code index}.
+			COMMENT
+			COMMENT @return {@code true} if the map already contained set bits for the indicated mask
+			COMMENT            (i.e. an overlap occurred)
+			ARG 1 index
+				COMMENT zero-based index of a 2x cubed area
+			ARG 2 mask
+				COMMENT mask of bits to set
+		METHOD method_35483 getKey (J)J
+			COMMENT Converts a individual position into a key
+			COMMENT representing the 2x cube region containing that position.
+			ARG 0 posLong
+		METHOD method_35484 getBlockPosLong (JI)J
+			ARG 0 key
+			ARG 2 valueLength
+		METHOD method_35485 unsetBitsAt (IJ)Z
+			COMMENT Unsets flags within a specific 2x cubed region contained within this map.
+			COMMENT
+			COMMENT @return {@code true} if the collection was changed as a result of this call
+			ARG 1 index
+			ARG 2 mask
+		METHOD method_35486 getBlockOffset (J)I
+			COMMENT Gets a position's index relative to its containing 2x cube region
+			ARG 0 posLong
+		METHOD method_35487 add (J)Z
+			COMMENT Ensures that this collection contains the specified element (optional operation).
+			COMMENT
+			COMMENT @see Collection#add(Object)
+			ARG 1 posLong
+		METHOD method_35488 rem (J)Z
+			COMMENT Removes a block position from this map.
+			ARG 1 posLong
+		METHOD method_35489 unsetBits (J)Z
+			COMMENT Unsets flags within the last 2x cubed region contained within this map.
+			COMMENT <p>
+			COMMENT This is equivalent to the call {@code unsetBitsAt(this.n, mask)}
+			COMMENT
+			COMMENT @return {@code true} if the collection was changed as a result of this call
+			ARG 1 mask
+		METHOD rehash (I)V
+			ARG 1 newN
