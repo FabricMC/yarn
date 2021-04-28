@@ -24,7 +24,6 @@ plugins {
 	id 'java' // for jd gen
 	id 'org.cadixdev.licenser' version '0.5.1'
 	id 'net.fabricmc.filament' version '0.2.0'
-	id "org.ajoberstar.grgit" version "4.1.0"
 	id "me.modmuss50.remotesign" version "0.1.0"
 }
 
@@ -37,8 +36,8 @@ def build_number = ENV.BUILD_NUMBER ?: "local"
 def yarnVersion = "${minecraft_version}+build.$build_number"
 version = yarnVersion
 
-if (ENV.VALIDATE_BRANCH) {
-	def branch = grgit.branch.current().name
+if (ENV.BRANCH_NAME) {
+	def branch = ENV.BRANCH_NAME.substring(0, ENV.BRANCH_NAME.lastIndexOf('/'))
 	if (minecraft_version != branch) {
 		throw new IllegalStateException("Branch name (${branch}) does not match the mc version (${minecraft_version})")
 	}
