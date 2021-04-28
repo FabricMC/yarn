@@ -24,7 +24,6 @@ plugins {
 	id 'java' // for jd gen
 	id 'org.cadixdev.licenser' version '0.5.1'
 	id 'net.fabricmc.filament' version '0.2.0'
-	id "me.modmuss50.remotesign" version "0.1.0"
 }
 
 def minecraft_version = "21w17a"
@@ -1005,17 +1004,6 @@ javadocLint {
 }
 
 check.dependsOn javadocLint
-
-if (ENV.SIGNING_SERVER) {
-	remoteSign {
-		requestUrl ENV.SIGNING_SERVER
-		pgpAuthKey ENV.SIGNING_PGP_KEY
-
-		afterEvaluate {
-			sign publishing.publications.maven
-		}
-	}
-}
 
 publishing {
 	publications {
