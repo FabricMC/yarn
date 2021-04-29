@@ -45,6 +45,7 @@ time to type thanks to IDE autocompletion. Common abbreviations you should use a
  - "init" for "initialize"
  - "min"/"max" for "minimum"/"maximum"
  - Any abbreviations used by Java or libraries ("json", "html", etc.)
+ - "o" for the parameter of `equals(Ljava/lang/Object;)Z` methods
 
 Treat acronyms as single words rather than capitalising every letter. This improves readability (compare `JsonObject` and
 `JSONObject`) and it's consistent with Mojang naming (a known name is `NbtIo`).
