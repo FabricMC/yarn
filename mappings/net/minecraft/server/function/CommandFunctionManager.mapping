@@ -5,6 +5,7 @@ CLASS net/minecraft/class_2991 net/minecraft/server/function/CommandFunctionMana
 	FIELD field_13419 server Lnet/minecraft/server/MinecraftServer;
 	FIELD field_13422 needToRunLoadFunctions Z
 	FIELD field_25333 loader Lnet/minecraft/class_5349;
+	FIELD field_33542 NO_RECURSION_TEXT Lnet/minecraft/class_2561;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_5349;)V
 		ARG 1 server
 		ARG 2 loader
@@ -30,9 +31,47 @@ CLASS net/minecraft/class_2991 net/minecraft/server/function/CommandFunctionMana
 	METHOD method_29464 getFunctionTags ()Ljava/lang/Iterable;
 	METHOD method_29773 initialize (Lnet/minecraft/class_5349;)V
 		ARG 1 loader
+	METHOD method_36341 execute (Lnet/minecraft/class_2158;Lnet/minecraft/class_2168;Lnet/minecraft/class_2991$class_6346;)I
+		ARG 1 function
+		ARG 2 source
+		ARG 3 tracer
 	CLASS class_2992 Entry
 		FIELD field_13424 source Lnet/minecraft/class_2168;
 		FIELD field_13425 element Lnet/minecraft/class_2158$class_2161;
+		FIELD field_33549 depth I
 		METHOD <init> (Lnet/minecraft/class_2168;ILnet/minecraft/class_2158$class_2161;)V
+			ARG 1 source
+			ARG 2 depth
 			ARG 3 element
 		METHOD method_12914 execute (Lnet/minecraft/class_2991;Ljava/util/Deque;ILnet/minecraft/class_2991$class_6346;)V
+			ARG 1 manager
+			ARG 3 maxChainLength
+			ARG 4 tracer
+	CLASS class_6345
+		FIELD field_33545 depth I
+		FIELD field_33546 tracer Lnet/minecraft/class_2991$class_6346;
+		METHOD <init> (Lnet/minecraft/class_2991;Lnet/minecraft/class_2991$class_6346;)V
+			ARG 2 tracer
+		METHOD method_36343 (Lnet/minecraft/class_2158;Lnet/minecraft/class_2168;)V
+			ARG 1 function
+			ARG 2 source
+		METHOD method_36344 reportError (Ljava/lang/String;)V
+			ARG 1 message
+		METHOD method_36346 (Lnet/minecraft/class_2158;Lnet/minecraft/class_2168;)I
+			ARG 1 function
+			ARG 2 source
+	CLASS class_6346 Tracer
+		METHOD method_36349 traceCommandStart (ILjava/lang/String;)V
+			ARG 1 depth
+			ARG 2 command
+		METHOD method_36350 traceCommandEnd (ILjava/lang/String;I)V
+			ARG 1 depth
+			ARG 2 command
+			ARG 3 result
+		METHOD method_36351 traceFunctionCall (ILnet/minecraft/class_2960;I)V
+			ARG 1 depth
+			ARG 2 function
+			ARG 3 size
+		METHOD method_36352 traceError (ILjava/lang/String;)V
+			ARG 1 depth
+			ARG 2 message

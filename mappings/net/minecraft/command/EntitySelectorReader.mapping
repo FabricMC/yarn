@@ -62,6 +62,7 @@ CLASS net/minecraft/class_2303 net/minecraft/command/EntitySelectorReader
 	METHOD <init> (Lcom/mojang/brigadier/StringReader;Z)V
 		ARG 1 reader
 		ARG 2 atAllowed
+	METHOD method_35816 excludesTeam ()Z
 	METHOD method_35817 suggestDefinerNext (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
 	METHOD method_35818 getSorter ()Ljava/util/function/BiConsumer;
@@ -70,7 +71,12 @@ CLASS net/minecraft/class_2303 net/minecraft/command/EntitySelectorReader
 	METHOD method_9834 suggestSelectorRest (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
 	METHOD method_9835 getReader ()Lcom/mojang/brigadier/StringReader;
+	METHOD method_9836 (Lnet/minecraft/class_243;Ljava/util/List;)V
+		ARG 0 pos
+		ARG 1 entities
 	METHOD method_9837 excludesGameMode ()Z
+	METHOD method_9838 (Lnet/minecraft/class_1297;)Z
+		ARG 0 entity
 	METHOD method_9839 selectsGameMode ()Z
 	METHOD method_9840 getDy ()Ljava/lang/Double;
 	METHOD method_9841 setIncludesNonPlayers (Z)V
@@ -93,24 +99,42 @@ CLASS net/minecraft/class_2303 net/minecraft/command/EntitySelectorReader
 	METHOD method_9851 getDx ()Ljava/lang/Double;
 	METHOD method_9852 setLocalWorldOnly ()V
 	METHOD method_9853 getYawRange ()Lnet/minecraft/class_2152;
+	METHOD method_9854 (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 builder
 	METHOD method_9855 setYawRange (Lnet/minecraft/class_2152;)V
 		ARG 1 yawRange
+	METHOD method_9856 (Lnet/minecraft/class_1297;)Z
+		ARG 1 entity
 	METHOD method_9857 setHasNegatedGameMode (Z)V
 		ARG 1 hasNegatedGameMode
 	METHOD method_9858 suggestNormal (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
 	METHOD method_9859 rotationPredicate (Lnet/minecraft/class_2152;Ljava/util/function/ToDoubleFunction;)Ljava/util/function/Predicate;
+		ARG 1 angleRange
+		ARG 2 entityToAngle
 	METHOD method_9860 setExcludesEntityType ()V
 	METHOD method_9861 selectsAdvancements ()Z
+	METHOD method_9862 (Lnet/minecraft/class_243;Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;)I
+		ARG 1 entity1
+		ARG 2 entity2
+	METHOD method_9863 (Ljava/lang/Object;)Lcom/mojang/brigadier/Message;
+		ARG 0 selectorType
 	METHOD method_9864 setY (D)V
 		ARG 1 y
 	METHOD method_9865 setSelectsTeam (Z)V
 		ARG 1 selectsTeam
 	METHOD method_9866 hasLimit ()Z
+	METHOD method_9867 (Lnet/minecraft/class_243;Ljava/util/List;)V
+		ARG 0 pos
+		ARG 1 entities
 	METHOD method_9868 getZ ()Ljava/lang/Double;
+	METHOD method_9869 (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 0 pos
 	METHOD method_9870 setDistance (Lnet/minecraft/class_2096$class_2099;)V
 		ARG 1 distance
 	METHOD method_9871 build ()Lnet/minecraft/class_2300;
+	METHOD method_9872 (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 1 pos
 	METHOD method_9873 getDistance ()Lnet/minecraft/class_2096$class_2099;
 	METHOD method_9874 readArguments ()V
 	METHOD method_9875 setSuggestionProvider (Ljava/util/function/BiFunction;)V
@@ -122,6 +146,8 @@ CLASS net/minecraft/class_2303 net/minecraft/command/EntitySelectorReader
 		ARG 1 z
 	METHOD method_9880 suggestSelector (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
+	METHOD method_9881 (Ljava/util/function/ToDoubleFunction;DDLnet/minecraft/class_1297;)Z
+		ARG 5 entity
 	METHOD method_9882 read ()Lnet/minecraft/class_2300;
 	METHOD method_9883 getPitchRange ()Lnet/minecraft/class_2152;
 	METHOD method_9884 getY ()Ljava/lang/Double;
@@ -129,6 +155,9 @@ CLASS net/minecraft/class_2303 net/minecraft/command/EntitySelectorReader
 	METHOD method_9886 selectsEntityType ()Z
 	METHOD method_9887 setHasSorter (Z)V
 		ARG 1 hasSorter
+	METHOD method_9888 (Lnet/minecraft/class_243;Ljava/util/List;)V
+		ARG 0 pos
+		ARG 1 entities
 	METHOD method_9889 hasSorter ()Z
 	METHOD method_9890 setSelectsGameMode (Z)V
 		ARG 1 selectsGameMode
@@ -144,13 +173,21 @@ CLASS net/minecraft/class_2303 net/minecraft/command/EntitySelectorReader
 	METHOD method_9895 getLevelRange ()Lnet/minecraft/class_2096$class_2100;
 	METHOD method_9896 suggestSelector (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)V
 		ARG 0 builder
+	METHOD method_9897 (Lnet/minecraft/class_243;Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;)I
+		ARG 1 entity1
+		ARG 2 entity2
 	METHOD method_9898 setPitchRange (Lnet/minecraft/class_2152;)V
 		ARG 1 pitchRange
 	METHOD method_9899 setSelectsName (Z)V
 		ARG 1 selectsName
 	METHOD method_9900 setLimit (I)V
 		ARG 1 limit
+	METHOD method_9901 (Lnet/minecraft/class_243;Ljava/util/List;)V
+		ARG 0 pos
+		ARG 1 entities
 	METHOD method_9902 getX ()Ljava/lang/Double;
+	METHOD method_9903 (Ljava/lang/Object;)Lcom/mojang/brigadier/Message;
+		ARG 0 option
 	METHOD method_9904 selectsTeam ()Z
 	METHOD method_9905 setDy (D)V
 		ARG 1 dy
@@ -166,6 +203,7 @@ CLASS net/minecraft/class_2303 net/minecraft/command/EntitySelectorReader
 		ARG 1 builder
 	METHOD method_9912 selectsName ()Z
 	METHOD method_9913 setExcludesName (Z)V
+		ARG 1 excludesName
 	METHOD method_9915 readTagCharacter ()Z
 	METHOD method_9916 setPredicate (Ljava/util/function/Predicate;)V
 		ARG 1 predicate
