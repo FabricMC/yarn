@@ -125,7 +125,7 @@ Use `{@index}` to allow enclosed text to be indexed by the Javadoc search.
 
 Avoid using the `@param` tag for documentation of methods. Add parameter documentations to the parameter itself instead of adding `@param` tags to its owner method, so Matcher can update them properly across Minecraft updates. However, you can use the tag for type parameters (such as `<T>` in `public class Lazy<T>`), which cannot be documented separately.
 
-Javadoc will take the first sentence, ended by the first `.`, as a brief description of the member you are documenting. Note that `.` from abbrieviations, such as `i.e.`, count.
+Javadoc will take the first sentence, ended by the first `.`, as a brief description of the member you are documenting. Note that `.` from abbreviations, such as `i.e.`, count.
 
 ### Packages
 
