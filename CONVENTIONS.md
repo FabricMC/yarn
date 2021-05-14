@@ -119,15 +119,21 @@ Name screen coordinates `x` and `y`, rather than `left` and `top`.
 
 Write sentences for class, method and fields javadocs, starting with an uppercase and ending with a period. Start method docs with verbs, like `Gets` or `Called`. Use HTML tags such as `<p>` if the docs have several paragraphs, as line wraps are converted to spaces in the generated documentation. Feel free to start a new line whenever you feel the current line is too long.
 
-Parameter and `@return` documentation should use quick descriptions without initial capitalization or punctuation, such as `{@code true} if the block placement was successful, {@code false} otherwise`.
+Parameter and `@return` documentation should use quick descriptions without initial capitalization or punctuation, such as `{@code true} if the block placement was successful, {@code false} otherwise`. `{@return}` used in first sentence can duplicate enclosed text to the return description.
+
+Use `{@index}` to allow enclosed text to be indexed by the Javadoc search.
 
 Avoid using the `@param` tag for documentation of methods. Add parameter documentations to the parameter itself instead of adding `@param` tags to its owner method, so Matcher can update them properly across Minecraft updates. However, you can use the tag for type parameters (such as `<T>` in `public class Lazy<T>`), which cannot be documented separately.
 
 Javadoc will take the first sentence, ended by the first `.`, as a brief description of the member you are documenting. Note that `.` from abbrieviations, such as `i.e.`, count.
 
+### Packages
+
+Since enigma format does not support `package-info.java` file creation, yarn keeps these files in `src/packageDocs/java` to supply javadocs for packages. Their only purpose is to host Javadoc for yarn packages, which are currently not exported to mappings, and their Javadocs should follow the conventions just like enigma-based Javadocs.
+
 ### Tooling
 
-Fabric-hosted Javadocs are generated using [JDK 11 Standard Doclet](https://docs.oracle.com/en/java/javase/11/docs/specs/doc-comment-spec.html) and can use any feature it supports, though you can personally build the documentation with a newer Java version. See [the 'Checking Javadoc' section](#checking-javadoc) for how to build the documentation locally.
+Fabric-hosted Javadocs are generated using [JDK 16 Standard Doclet](https://docs.oracle.com/en/java/javase/16/docs/specs/javadoc/doc-comment-spec.html) and can use any feature it supports. For example, it has a [list of supported tags](https://docs.oracle.com/en/java/javase/16/docs/specs/javadoc/doc-comment-spec.html#where-tags-can-be-used). You can personally build the documentation with a newer Java version. See [the 'Checking Javadoc' section](#checking-javadoc) for how to build the documentation locally.
 
 ### Custom tags
 
@@ -149,9 +155,9 @@ A class is assumed to be imported in the following scenarios:
 
 - If it is from the `java.lang` package
 - If it is from the same package as the currently documented class
-- If it is used as part of its API, such as in the signature of the class or its members (methods and fields). See Javadoc's definition of "use" in its [`-use` command line option specification](https://docs.oracle.com/en/java/javase/15/docs/specs/man/javadoc.html#options-for-javadoc).
+- If it is used as part of its API, such as in the signature of the class or its members (methods and fields). See Javadoc's definition of "use" in its [`-use` command line option specification](https://docs.oracle.com/en/java/javase/16/docs/specs/man/javadoc.html#options-for-javadoc).
 
-If it does not fulfill one of these scenarios, use the [full binary name](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/ClassLoader.html#binary-name), such as `com.google.common.collect.Lists` rather than simply `Lists`. Unlike class naming in enigma, do not use `/` to separate packages; use `.` instead.
+If it does not fulfill one of these scenarios, use the [full binary name](https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/ClassLoader.html#binary-name), such as `com.google.common.collect.Lists` rather than simply `Lists`. Unlike class naming in enigma, do not use `/` to separate packages; use `.` instead.
 
 Use Yarn mappings when referencing Minecraft members, such as `net.minecraft.server.world.ThreadedAnvilChunkStorage` rather than `net.minecraft.class_3898`. The Javadoc task will warn if some links no longer work after a rename.
 
