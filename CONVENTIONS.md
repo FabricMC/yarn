@@ -117,11 +117,92 @@ Name screen coordinates `x` and `y`, rather than `left` and `top`.
 
 ## Javadocs
 
-Write sentences for class, method and fields javadocs, starting with an uppercase and ending with a period. Start method docs with verbs, like `Gets` or `Called`. Use HTML tags such as `<p>` if the docs have several paragraphs.
+Write sentences for class, method and fields javadocs, starting with an uppercase and ending with a period. Start method docs with verbs, like `Gets` or `Called`. Use HTML tags such as `<p>` if the docs have several paragraphs, as line wraps are converted to spaces in the generated documentation. Feel free to start a new line whenever you feel the current line is too long.
 
-Write quick descriptions for parameter javadocs as well as `@return` tags, with no uppercase or period. Add parameter docs to the parameter itself instead of using the `@param` tag.
+Parameter and `@return` documentation should use quick descriptions without initial capitalization or punctuation, such as `{@code true} if the block placement was successful, {@code false} otherwise`. `{@return}` used in first sentence can duplicate enclosed text to the return description.
+
+Use `{@index}` to allow enclosed text to be indexed by the Javadoc search.
+
+Avoid using the `@param` tag for documentation of methods. Add parameter documentations to the parameter itself instead of adding `@param` tags to its owner method, so Matcher can update them properly across Minecraft updates. However, you can use the tag for type parameters (such as `<T>` in `public class Lazy<T>`), which cannot be documented separately.
+
+Javadoc will take the first sentence, ended by the first `.`, as a brief description of the member you are documenting. Note that `.` from abbreviations, such as `i.e.`, count.
+
+### Packages
+
+Since enigma format does not support `package-info.java` file creation, yarn keeps these files in `src/packageDocs/java` to supply javadocs for packages. Their only purpose is to host Javadoc for yarn packages, which are currently not exported to mappings, and their Javadocs should follow the conventions just like enigma-based Javadocs.
+
+### Tooling
+
+Fabric-hosted Javadocs are generated using [JDK 16 Standard Doclet](https://docs.oracle.com/en/java/javase/16/docs/specs/javadoc/doc-comment-spec.html) and can use any feature it supports. For example, it has a [list of supported tags](https://docs.oracle.com/en/java/javase/16/docs/specs/javadoc/doc-comment-spec.html#where-tags-can-be-used). You can personally build the documentation with a newer Java version. See [the 'Checking Javadoc' section](#checking-javadoc) for how to build the documentation locally.
+
+### Custom tags
+
+A few additional block tags are supported:
+
+ - `@apiNote`: API Notes. A few comments for users of the documented API.
+ - `@implSpec`: Implementation Specification. Tells how this method is implemented; usually avoided as yarn doesn't define implementations.
+ - `@implNote`: Implementation Notes. A few comments on the implementation.
+
+Feel free to use these tags and write under these sections.
+
+### Linking to other members
 
 Use `@link`, `@linkplain` and `@see` tags to refer to other parts of the code.
+
+You can use the simple name of a class when its import is assumed to exist.
+
+A class is assumed to be imported in the following scenarios:
+
+- If it is from the `java.lang` package
+- If it is from the same package as the currently documented class
+- If it is used as part of its API, such as in the signature of the class or its members (methods and fields). See Javadoc's definition of "use" in its [`-use` command line option specification](https://docs.oracle.com/en/java/javase/16/docs/specs/man/javadoc.html#options-for-javadoc).
+
+If it does not fulfill one of these scenarios, use the [full binary name](https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/ClassLoader.html#binary-name), such as `com.google.common.collect.Lists` rather than simply `Lists`. Unlike class naming in enigma, do not use `/` to separate packages; use `.` instead.
+
+Use Yarn mappings when referencing Minecraft members, such as `net.minecraft.server.world.ThreadedAnvilChunkStorage` rather than `net.minecraft.class_3898`. The Javadoc task will warn if some links no longer work after a rename.
+
+<details>
+<summary>
+An example
+</summary>
+
+Assume this is the decompiled content in Enigma, which does not show imports:
+
+```java
+/**
+ * Assume this class is from the {@code net.example.stuff} package.
+ *
+ * <p>You can link to {@link Optional} as it's part of the class signature (type parameter bound).
+ *
+ * <p>You must fully qualify {@link net.example.stuff.basic.BasicStuffUser} when linking as it is not in
+ * any signature and is from a different package.
+ */
+public class Stuff<T extends Optional<?>> {
+	/**
+	 * You can link to {@link Listener} with the simple name as it's part of a field's signature.
+	 */
+	protected Listener listener;
+
+	/**
+	 * You can link to {@link List} with the simple name as it's part of a method's signature.
+	 *
+	 * <p>You must fully qualify {@link net.example.util.UtilityClass} when linking because it is not part
+	 * of any signature (even though it is used in code) and is from a different package.
+	 */
+	public Stuff(List<Integer> opt) {
+		UtilityClass.callMethod(opt);
+	}
+}
+```
+</details>
+
+### Checking Javadoc
+
+After writing a Javadoc, you should check its validity. This can easily be done from GitHub using the 'Checks' section, or by clicking the check icon after each commit. For any JDK version, the section titled `Run ./gradlew build javadocJar checkMappings mapNamedJar --stacktrace` will contain output related to Javadoc generation in the `Task :javadoc` section.
+
+You can also check Javadoc validity locally using the `./gradlew javadoc` (Linux, macOS) or `gradlew javadoc` (Windows) commands; this will take a while given the sheer size of the Minecraft codebase. After that, you can enter the `build/docs/javadoc` directory to obtain the generated Javadoc and ensure it renders correctly.
+
+If you are unsure if your Javadoc is correct stylistically, we recommend you to run the `javadoc` task and check its output, as described in the previous paragraph.
 
 ### Game content capitalization
 
