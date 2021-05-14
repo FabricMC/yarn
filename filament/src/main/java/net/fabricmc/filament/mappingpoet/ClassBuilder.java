@@ -146,15 +146,15 @@ public class ClassBuilder {
 			builder = TypeSpec.enumBuilder(name);
 		} else {
 			builder = TypeSpec.classBuilder(name)
-					.superclass(signature.superclass);
+					.superclass(signature.superclass());
 		}
 
-		if (!signature.generics.isEmpty()) {
-			builder.addTypeVariables(signature.generics);
+		if (!signature.generics().isEmpty()) {
+			builder.addTypeVariables(signature.generics());
 			StringBuilder sb = new StringBuilder();
 			sb.append(classNode.name);
 			sb.append("<");
-			for (TypeVariableName each : signature.generics) {
+			for (TypeVariableName each : signature.generics()) {
 				sb.append("T").append(each.name).append(";");
 			}
 			sb.append(">");
@@ -170,7 +170,7 @@ public class ClassBuilder {
 			return;
 		}
 		if (signature != null) {
-			builder.addSuperinterfaces(signature.superinterfaces);
+			builder.addSuperinterfaces(signature.superinterfaces());
 			return;
 		}
 		if (classNode.interfaces.isEmpty()) return;
@@ -284,6 +284,7 @@ public class ClassBuilder {
 			classBuilder.builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC);
 			classBuilder.builder.addModifiers(javax.lang.model.element.Modifier.STATIC);
 		} else {
+			classBuilder.builder.modifiers.remove(javax.lang.model.element.Modifier.PUBLIC); // this modifier may come from class access
 			classBuilder.builder.addModifiers(new ModifierBuilder(innerClassNode.access).getModifiers(classBuilder.enumClass ? ModifierBuilder.Type.ENUM : ModifierBuilder.Type.CLASS));
 			if (!Modifier.isStatic(innerClassNode.access)) {
 				classBuilder.instanceInner = true;
@@ -295,7 +296,7 @@ public class ClassBuilder {
 				sb.append(this.receiverSignature).append("."); // like O<TT;>. for O<T>
 				sb.append(innerClassNode.innerName); // append simple name
 
-				List<TypeVariableName> innerClassGenerics = classBuilder.signature.generics;
+				List<TypeVariableName> innerClassGenerics = classBuilder.signature.generics();
 				if (!innerClassGenerics.isEmpty()) {
 					sb.append("<");
 					for (TypeVariableName each : innerClassGenerics) {

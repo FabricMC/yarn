@@ -21,16 +21,8 @@ import java.util.List;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
 
-public final class MethodSignature {
-	public final List<TypeVariableName> generics;
-	public final List<TypeName> parameters;
-	public final TypeName result;
-	public final List<TypeName> thrown;
+public record MethodSignature(List<TypeVariableName> generics,
+															List<TypeName> parameters, TypeName result,
+															List<TypeName> thrown) {
 
-	public MethodSignature(List<TypeVariableName> generics, List<TypeName> parameters, TypeName result, List<TypeName> thrown) {
-		this.generics = generics;
-		this.parameters = parameters;
-		this.result = result;
-		this.thrown = thrown;
-	}
 }

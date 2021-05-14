@@ -159,7 +159,7 @@ public class MethodBuilder {
 
 		if (methodNode.signature != null) {
 			signature = AnnotationAwareSignatures.parseMethodSignature(methodNode.signature, typeAnnotations, context);
-			builder.addTypeVariables(signature.generics);
+			builder.addTypeVariables(signature.generics());
 		}
 
 		return builder;
@@ -187,7 +187,7 @@ public class MethodBuilder {
 
 		TypeName typeName;
 		if (signature != null) {
-			typeName = signature.result;
+			typeName = signature.result();
 		} else {
 			String returnDesc = methodNode.desc.substring(methodNode.desc.lastIndexOf(")") + 1);
 			typeName = AnnotationAwareDescriptors.parseDesc(returnDesc, typeAnnotations.getBank(TypeReference.newTypeReference(TypeReference.METHOD_RETURN)), context);
@@ -257,7 +257,7 @@ public class MethodBuilder {
 		}
 		index++; // consume '('
 
-		Iterator<TypeName> signatureParamIterator = signature == null ? Collections.emptyIterator() : signature.parameters.iterator();
+		Iterator<TypeName> signatureParamIterator = signature == null ? Collections.emptyIterator() : signature.parameters().iterator();
 		while (desc.charAt(index) != ')') {
 			int oldIndex = index;
 			Map.Entry<Integer, TypeName> parsedParam = FieldBuilder.parseType(desc, index);
@@ -288,8 +288,8 @@ public class MethodBuilder {
 	}
 
 	private void addExceptions() {
-		if (signature != null && !signature.thrown.isEmpty()) {
-			for (TypeName each : signature.thrown) {
+		if (signature != null && !signature.thrown().isEmpty()) {
+			for (TypeName each : signature.thrown()) {
 				builder.addException(each);
 			}
 			return;

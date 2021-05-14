@@ -27,7 +27,7 @@ public interface ClassStaticContext {
 	/**
 	 * Returns if this class is an instance inner class.
 	 *
-	 * <p>For example, a top-level class is not so. A static inner
+	 * <p>For example, a top-level class is not so. A static nested
 	 * class, such as {@code Map.Entry}, is not as well.</p>
 	 *
 	 * @param internalName the JVM name of the class

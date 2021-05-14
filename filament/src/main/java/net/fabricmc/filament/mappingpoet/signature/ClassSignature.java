@@ -22,14 +22,7 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
 
 // no more a class signature but general super info about class
-public final class ClassSignature {
-	public final List<TypeVariableName> generics;
-	public final TypeName superclass;
-	public final List<TypeName> superinterfaces;
+public record ClassSignature(List<TypeVariableName> generics, TypeName superclass,
+														 List<TypeName> superinterfaces) {
 
-	public ClassSignature(List<TypeVariableName> generics, TypeName superclass, List<TypeName> superinterfaces) {
-		this.generics = generics;
-		this.superclass = superclass;
-		this.superinterfaces = superinterfaces;
-	}
 }

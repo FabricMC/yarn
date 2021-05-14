@@ -166,7 +166,7 @@ public class Main {
 
 	private static void scanInnerClasses(Map<String, Boolean> instanceInnerClasses, Path librariesDir) {
 		try {
-			Files.walkFileTree(librariesDir, new SimpleFileVisitor<Path>() {
+			Files.walkFileTree(librariesDir, new SimpleFileVisitor<>() {
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 					if (!file.getFileName().toString().endsWith(".jar")) {

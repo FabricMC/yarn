@@ -150,20 +150,12 @@ public final class PoetTypeSignatureWriter extends SignatureVisitor {
 	private void collectLastTypeArgument() {
 		if (activeTypeArgument != null) {
 			TypeName hold = activeTypeArgument.compute();
-			TypeName used;
-			switch (activeTypeArgumentKind) {
-			case SignatureVisitor.EXTENDS:
-				used = WildcardTypeName.subtypeOf(hold);
-				break;
-			case SignatureVisitor.SUPER:
-				used = WildcardTypeName.supertypeOf(hold);
-				break;
-			case SignatureVisitor.INSTANCEOF:
-				used = hold;
-				break;
-			default:
-				throw new IllegalStateException(String.format("Illegal type argument wildcard %s", activeTypeArgumentKind));
-			}
+			TypeName used = switch (activeTypeArgumentKind) {
+				case SignatureVisitor.EXTENDS -> WildcardTypeName.subtypeOf(hold);
+				case SignatureVisitor.SUPER -> WildcardTypeName.supertypeOf(hold);
+				case SignatureVisitor.INSTANCEOF -> hold;
+				default -> throw new IllegalStateException(String.format("Illegal type argument wildcard %s", activeTypeArgumentKind));
+			};
 
 			used = AnnotationAwareDescriptors.annotate(used, storage.advance(TypePath.TYPE_ARGUMENT, params.size()));
 			params.addLast(used);
