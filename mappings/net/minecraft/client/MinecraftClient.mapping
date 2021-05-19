@@ -163,6 +163,10 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_27388 blockEntityRenderDispatcher Lnet/minecraft/class_824;
 	FIELD field_29569 debugRecorder Lnet/minecraft/class_5962;
 	FIELD field_33697 resourceReloadLogger Lnet/minecraft/class_6360;
+	FIELD field_33735 GL_ERROR_DIALOGUE Ljava/lang/String;
+		COMMENT A message, in English, displayed in a dialog when a GLFW error is encountered.
+		COMMENT
+		COMMENT @see net.minecraft.client.util.Window#throwGlError(int, long)
 	METHOD <init> (Lnet/minecraft/class_542;)V
 		ARG 1 args
 	METHOD method_1476 checkIs64Bit ()Z
@@ -303,6 +307,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 0 name
 		ARG 1 displayName
 		ARG 2 alwaysEnabled
+		ARG 3 packFactory
 		ARG 4 metadata
 		ARG 5 insertionPosition
 		ARG 6 source
@@ -414,8 +419,31 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_34745 toggleDebugProfiler (Ljava/lang/Runnable;Ljava/util/function/Consumer;)V
 		ARG 1 startAction
 		ARG 2 completeAction
+	METHOD method_35698 takePanorama (Ljava/io/File;II)Lnet/minecraft/class_2561;
+		COMMENT Takes a panorama. The panorama is stored in the given {@code directory}, in
+		COMMENT where 6 screenshots of size {@code width} and {@code height} will be taken.
+		COMMENT
+		COMMENT @return a user-oriented piece of text for screenshot result
+		ARG 1 directory
+		ARG 2 width
+		ARG 3 height
+	METHOD method_35699 takeHugeScreenshot (Ljava/io/File;IIII)Lnet/minecraft/class_2561;
+		COMMENT Takes a huge screenshot in the tga file format.
+		COMMENT
+		COMMENT <p>The {@code unitWidth} and {@code unitHeight} controls the size of the
+		COMMENT partial image rendered; it does not affect the screenshot outcome, but may
+		COMMENT affect the screenshot performance.
+		COMMENT
+		COMMENT @return a user-oriented piece of text for screenshot result
+		ARG 1 gameDirectory
+		ARG 2 unitWidth
+		ARG 3 unitHeight
+		ARG 4 width
+		ARG 5 height
 	METHOD method_35702 getCurrentFps ()I
 	METHOD method_35703 getWorldGenerationProgressTracker ()Lnet/minecraft/class_3953;
+	METHOD method_35705 addGlInfo (Lnet/minecraft/class_1276;)V
+		ARG 0 snooper
 	METHOD method_35706 isRealmsEnabled ()Z
 	METHOD method_36561 reloadResources (Z)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 force
