@@ -1,0 +1,66 @@
+CLASS net/minecraft/class_6336 net/minecraft/entity/ai/brain/task/PrepareRamTask
+	COMMENT The task where an entity finds a target, a place to start its ram, and wait to
+	COMMENT start its ram.
+	COMMENT
+	COMMENT @param <E> the task owner, usually a goat
+	FIELD field_33461 RUN_TIME I
+	FIELD field_33462 cooldownFactory Ljava/util/function/ToIntFunction;
+	FIELD field_33463 minRamDistance I
+	FIELD field_33464 maxRamDistance I
+	FIELD field_33465 speed F
+	FIELD field_33466 targetPredicate Lnet/minecraft/class_4051;
+	FIELD field_33467 prepareTime I
+	FIELD field_33468 soundFactory Ljava/util/function/Function;
+	FIELD field_33469 prepareStartTime Ljava/util/Optional;
+	FIELD field_33470 ram Ljava/util/Optional;
+	METHOD <init> (Ljava/util/function/ToIntFunction;IIFLnet/minecraft/class_4051;ILjava/util/function/Function;)V
+		COMMENT Creates a ram preparation task. It has a fixed run time of {@value #RUN_TIME}.
+		ARG 1 cooldownFactory
+			COMMENT the factory for the cooldown, in ticks, of the ram task, given the entity
+		ARG 2 minDistance
+			COMMENT the min manhattan distance from the ram starting location to the ram target
+		ARG 3 maxDistance
+			COMMENT the max straight-line distance from the ram starting location to the ram target
+		ARG 4 speed
+			COMMENT the speed the entity walks at
+		ARG 5 targetPredicate
+			COMMENT the predicate for the ram target
+		ARG 6 prepareTime
+			COMMENT the prepare time, in ticks, the entity will stand between reaching the ram
+			COMMENT start position and the start of the ram
+		ARG 7 soundFactory
+			COMMENT the factory of the ram prepare sound given the entity
+	METHOD method_36261 (Lnet/minecraft/class_1309;Lnet/minecraft/class_2338;)Lnet/minecraft/class_6336$class_6337;
+		ARG 1 start
+	METHOD method_36262 findRamStart (Lnet/minecraft/class_1314;Lnet/minecraft/class_1309;)Ljava/util/Optional;
+		ARG 1 entity
+		ARG 2 target
+	METHOD method_36263 canReach (Lnet/minecraft/class_1314;Lnet/minecraft/class_2338;)Z
+		ARG 1 entity
+		ARG 2 target
+	METHOD method_36264 (Lnet/minecraft/class_1314;Ljava/util/List;)Ljava/util/Optional;
+		ARG 2 mobs
+	METHOD method_36265 (Lnet/minecraft/class_1408;Lnet/minecraft/class_2338;)Z
+		ARG 1 start
+	METHOD method_36266 calculateRamTarget (Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
+		ARG 1 start
+		ARG 2 end
+	METHOD method_36268 findRam (Lnet/minecraft/class_1314;Lnet/minecraft/class_1309;)V
+		ARG 1 entity
+		ARG 2 target
+	METHOD method_36270 (Lnet/minecraft/class_1314;Lnet/minecraft/class_1309;)V
+		ARG 2 mob
+	METHOD method_36272 (Lnet/minecraft/class_1314;Lnet/minecraft/class_1309;)Z
+		ARG 2 mob
+	CLASS class_6337 Ram
+		COMMENT A ram chosen during the preparation.
+		FIELD field_33471 start Lnet/minecraft/class_2338;
+		FIELD field_33472 end Lnet/minecraft/class_2338;
+		FIELD field_33473 entity Lnet/minecraft/class_1309;
+		METHOD <init> (Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;Lnet/minecraft/class_1309;)V
+			ARG 1 start
+			ARG 2 end
+			ARG 3 entity
+		METHOD method_36273 getStart ()Lnet/minecraft/class_2338;
+		METHOD method_36275 getEnd ()Lnet/minecraft/class_2338;
+		METHOD method_36276 getEntity ()Lnet/minecraft/class_1309;
