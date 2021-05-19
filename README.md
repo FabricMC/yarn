@@ -34,7 +34,7 @@ Yarn uses Gradle to provide a number of utility tasks for working with the mappi
 ### `yarn`
 Setup and download and launch the latest version of [Enigma](https://github.com/FabricMC/Enigma) automatically configured to use the merged jar and the mappings.
 
-Compared to launching Enigma externally, the gradle task adds a name guesser plugin that automatically map enums and a few constant field names.
+Compared to launching Enigma externally, the gradle task adds a name guesser plugin that automatically maps enums and a few constant field names.
 
 ### `yarnUnpicked`
 Same as above, but unpicks the constants and launches Enigma with them. Can be a little bit slower to get going.
