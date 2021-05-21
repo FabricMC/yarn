@@ -79,7 +79,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_17264 entryIterator ()Ljava/lang/Iterable;
 	METHOD method_17604 getCompletedLevelSupplier (J)Ljava/util/function/IntSupplier;
 		ARG 1 pos
-	METHOD method_17979 getUpdatedChunkTag (Lnet/minecraft/class_1923;)Lnet/minecraft/class_2487;
+	METHOD method_17979 getUpdatedChunkNbt (Lnet/minecraft/class_1923;)Lnet/minecraft/class_2487;
 		ARG 1 pos
 	METHOD method_18701 loadEntity (Lnet/minecraft/class_1297;)V
 	METHOD method_18702 sendToOtherNearbyPlayers (Lnet/minecraft/class_1297;Lnet/minecraft/class_2596;)V
@@ -92,7 +92,11 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_18704 getSquaredDistance (Lnet/minecraft/class_1923;Lnet/minecraft/class_1297;)D
 		ARG 0 pos
 		ARG 1 entity
-	METHOD method_18713 updateCameraPosition (Lnet/minecraft/class_3222;)V
+	METHOD method_18713 updatePosition (Lnet/minecraft/class_3222;)V
+		COMMENT Updates the chunk section position of the {@code player}. This updates the player
+		COMMENT position for both entity tracking and chunk loading (watching) logic.
+		COMMENT
+		COMMENT @see ServerChunkManager#updatePosition(ServerPlayerEntity)
 		ARG 1 player
 	METHOD method_18714 handlePlayerAddedOrRemoved (Lnet/minecraft/class_3222;Z)V
 		ARG 1 player
@@ -108,11 +112,17 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_18719 getChebyshevDistance (Lnet/minecraft/class_1923;Lnet/minecraft/class_3222;Z)I
 		ARG 0 pos
 		ARG 1 player
-		ARG 2 useCameraPosition
+		ARG 2 useWatchedPosition
 	METHOD method_18722 doesNotGenerateChunks (Lnet/minecraft/class_3222;)Z
 		ARG 1 player
 	METHOD method_18724 isTooFarFromPlayersToSpawnMobs (Lnet/minecraft/class_1923;)Z
-	METHOD method_18727 tickPlayerMovement ()V
+	METHOD method_18727 tickEntityMovement ()V
+		COMMENT Ticks and updates the tracked status of each tracker.
+		COMMENT
+		COMMENT <p>This first checks if entities have changed chunk sections, and updates
+		COMMENT tracking status of those entities to all players. It then checks if any player
+		COMMENT has changed chunk sections, and updates all entities tracking status to those
+		COMMENT players. This ensures all possible updates are accounted for.
 	METHOD method_19488 getPointOfInterestStorage ()Lnet/minecraft/class_4153;
 	METHOD method_20441 releaseLightTicket (Lnet/minecraft/class_1923;)V
 		ARG 1 pos

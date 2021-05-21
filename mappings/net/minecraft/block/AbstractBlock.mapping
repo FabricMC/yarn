@@ -2,7 +2,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	FIELD field_23154 dynamicBounds Z
 	FIELD field_23155 settings Lnet/minecraft/class_4970$class_2251;
 	FIELD field_23156 lootTableId Lnet/minecraft/class_2960;
-	FIELD field_23157 FACINGS [Lnet/minecraft/class_2350;
+	FIELD field_23157 DIRECTIONS [Lnet/minecraft/class_2350;
 	FIELD field_23158 material Lnet/minecraft/class_3614;
 	FIELD field_23159 collidable Z
 	FIELD field_23160 resistance F
@@ -30,7 +30,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
-	METHOD method_26159 getVisualShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
+	METHOD method_26159 getCameraCollisionShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
@@ -38,7 +38,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	METHOD method_26160 asBlock ()Lnet/minecraft/class_2248;
 	METHOD method_26161 hasBlockEntity ()Z
 	METHOD method_26162 getLootTableId ()Lnet/minecraft/class_2960;
-	METHOD method_26403 getDefaultMaterialColor ()Lnet/minecraft/class_3620;
+	METHOD method_26403 getDefaultMapColor ()Lnet/minecraft/class_3620;
 	METHOD method_8389 asItem ()Lnet/minecraft/class_1792;
 	METHOD method_9498 hasComparatorOutput (Lnet/minecraft/class_2680;)Z
 		ARG 1 state
@@ -125,12 +125,21 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 2 world
 		ARG 3 pos
 	METHOD method_9559 getStateForNeighborUpdate (Lnet/minecraft/class_2680;Lnet/minecraft/class_2350;Lnet/minecraft/class_2680;Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;
+		COMMENT Gets the possibly updated block state of this block when a neighboring block is updated.
+		COMMENT
+		COMMENT @return the new state of this block
 		ARG 1 state
+			COMMENT the state of this block
 		ARG 2 direction
-		ARG 3 newState
+			COMMENT the direction from this block to the neighbor
+		ARG 3 neighborState
+			COMMENT the state of the updated neighbor block
 		ARG 4 world
+			COMMENT the world
 		ARG 5 pos
-		ARG 6 posFrom
+			COMMENT the position of this block
+		ARG 6 neighborPos
+			COMMENT the position of the neighbor block
 	METHOD method_9560 getDroppedStacks (Lnet/minecraft/class_2680;Lnet/minecraft/class_47$class_48;)Ljava/util/List;
 		ARG 1 state
 		ARG 2 builder
