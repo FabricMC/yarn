@@ -18,7 +18,7 @@ grouping classes together in an IDE's tree view, reading and writing code is don
 
 Use American English for consistency throughout Yarn and with known Mojang names.
 
-If there are two accepted spellings of the same word, first check if one is already being used in Yarn or by Mojang, and if
+If there are two acceptable spellings of the same word, first check if one is already being used in Yarn or by Mojang, and if
 not, use the most common spelling.
 
 ## Conciseness
@@ -47,7 +47,7 @@ time to type thanks to IDE autocompletion. Common abbreviations you should use a
  - Any abbreviations used by Java or libraries ("json", "html", etc.)
  - "o" for the parameter of `equals(Ljava/lang/Object;)Z` methods
 
-Treat acronyms as single words rather than capitalising every letter. This improves readability (compare `JsonObject` and
+Treat acronyms as single words rather than capitalizing every letter. This improves readability (compare `JsonObject` and
 `JSONObject`) and it's consistent with Mojang naming (a known name is `NbtIo`).
 
 ## Packages
@@ -117,9 +117,9 @@ Name screen coordinates `x` and `y`, rather than `left` and `top`.
 
 ## Javadocs
 
-Write sentences for class, method and fields javadocs, starting with an uppercase and ending with a period. Start method docs with verbs, like `Gets` or `Called`. Use HTML tags such as `<p>` if the docs have several paragraphs, as line wraps are converted to spaces in the generated documentation. Feel free to start a new line whenever you feel the current line is too long.
+Write sentences for class, method and field javadocs, starting with an uppercase and ending with a period. Start method docs with verbs, like `Gets` or `Called`. Use HTML tags such as `<p>` if the docs have several paragraphs, as line wraps are converted to spaces in the generated documentation. Feel free to start a new line whenever you feel the current line is too long.
 
-Parameter and `@return` documentation should use quick descriptions without initial capitalization or punctuation, such as `{@code true} if the block placement was successful, {@code false} otherwise`. `{@return}` used in first sentence can duplicate enclosed text to the return description.
+Parameter and `@return` documentation should use quick descriptions without initial capitalization or punctuation, such as `{@code true} if the block placement was successful, {@code false} otherwise`. `{@return}` used in the first sentence can duplicate enclosed text to the return description.
 
 Use `{@index}` to allow enclosed text to be indexed by the Javadoc search.
 
@@ -221,10 +221,10 @@ In order to hint that the description references the game's content, inline link
 **Do not use names from Mojang's obfuscation maps.**
 
 Use names that match names in strings in the vanilla code, unless that string is outdated or inaccurate. This avoids confusion,
-especially from new modders who may not understand what an class exception message is referring to.
+especially from new modders who may not understand what a class exception message is referring to.
 
 Even if a known Mojang name doesn't appear in any strings, it's a good idea to use it since the official name is a good
-indicator of the the class's actual purpose and makes it less likely the name will have to be changed in the future. For
+indicator of the class's actual purpose and makes it less likely the name will have to be changed in the future. For
 example, don't name a class that Mojang calls `BedrockBlock` `NoSpawningBlock`, even if its only purpose is to disable mob
 spawning, because Mojang may decide to override more methods in that class, breaking mods that were using it in an unexpected
 way.
