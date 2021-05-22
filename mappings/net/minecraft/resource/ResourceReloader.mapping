@@ -1,0 +1,65 @@
+CLASS net/minecraft/class_3302 net/minecraft/resource/ResourceReloader
+	COMMENT A resource reloader performs actual reloading in its {@linkplain #reload
+	COMMENT reload} in a reloadable resource manager it is registered to.
+	COMMENT
+	COMMENT @see ReloadableResourceManager
+	COMMENT @see SinglePreparationResourceReloader SinglePreparationResourceReloader
+	COMMENT (completes preparation in one method)
+	COMMENT @see SynchronousResourceReloader SynchronousResourceReloader
+	COMMENT (performs all reloading in the apply executor)
+	METHOD method_22322 getName ()Ljava/lang/String;
+		COMMENT Returns a user-friendly name for logging.
+	METHOD method_25931 reload (Lnet/minecraft/class_3302$class_4045;Lnet/minecraft/class_3300;Lnet/minecraft/class_3695;Lnet/minecraft/class_3695;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT Performs a reload. Returns a future that is completed when the reload
+		COMMENT is completed.
+		COMMENT
+		COMMENT <p>In a reload, there is a prepare stage and an apply stage. For the
+		COMMENT prepare stage, you should create completable futures with {@linkplain
+		COMMENT CompletableFuture#supplyAsync(Supplier, Executor)
+		COMMENT CompletableFuture.supplyAsync(..., prepareExecutor)}
+		COMMENT to ensure the prepare actions are done with the prepare executor. Then,
+		COMMENT you should have a completable future for all the prepared actions, and
+		COMMENT call {@linkplain CompletableFuture#thenCompose(Function)
+		COMMENT combinedPrepare.thenCompose(synchronizer::waitFor)}
+		COMMENT to notify the {@code synchronizer}. Finally, you should run {@linkplain
+		COMMENT CompletableFuture#thenAcceptAsync(Consumer, Executor)
+		COMMENT CompletableFuture.thenAcceptAsync(..., applyExecutor)} for apply actions.
+		COMMENT In the end, returns the result of {@code thenAcceptAsync}.
+		COMMENT
+		COMMENT @return a future for the reload
+		COMMENT @see ReloadableResourceManager#reload(Executor, Executor,
+		COMMENT CompletableFuture, List)
+		ARG 1 synchronizer
+			COMMENT the synchronizer
+		ARG 2 manager
+			COMMENT the resource manager
+		ARG 3 prepareProfiler
+			COMMENT the profiler for prepare stage
+		ARG 4 applyProfiler
+			COMMENT the profiler for apply stage
+		ARG 5 prepareExecutor
+			COMMENT the executor for prepare stage
+		ARG 6 applyExecutor
+			COMMENT the executor for apply stage
+	CLASS class_4045 Synchronizer
+		COMMENT A synchronizer to indicate completion of a reloader's prepare stage and
+		COMMENT to allow start of the apply stage only if all reloaders have finished
+		COMMENT the prepare stage.
+		METHOD method_18352 whenPrepared (Ljava/lang/Object;)Ljava/util/concurrent/CompletableFuture;
+			COMMENT Indicates, to the ongoing reload, that this reloader has finished its
+			COMMENT preparation stage with the {@code preparedObject} as its result.
+			COMMENT
+			COMMENT <p>Returns a completable future that the apply stage depends on. This
+			COMMENT returned future is completed when all the reloaders have completed their
+			COMMENT prepare stages in the reload.
+			COMMENT
+			COMMENT <p>Example:
+			COMMENT {@code
+			COMMENT CompletableFuture<SomeObject> prepareStage = ...;
+			COMMENT prepareStage.thenCompose(synchronizer::whenPrepared)
+			COMMENT         .thenAcceptAsync(..., applyExecutor);
+			COMMENT }
+			COMMENT
+			COMMENT @return a completable future as the precondition for the apply stage
+			ARG 1 preparedObject
+				COMMENT the result of the prepare stage
