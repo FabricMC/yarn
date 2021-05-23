@@ -12,22 +12,13 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>Codec-based</td><td>{@link #decode(Codec)}</td><td>{@link #encode(Codec, Object)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>{@link Collection}</td><td>{@link #readCollection(IntFunction, Function)}</td><td>{@link #writeCollection(Collection, BiConsumer)}</td>
-	COMMENT </tr>
-	COMMENT <tr>
-	COMMENT  <td>{@link IntList}</td><td>{@link #readIntList()}</td><td>{@link #writeIntList(IntList)}</td>
-	COMMENT </tr>
-	COMMENT <tr>
-	COMMENT  <td>{@link Map}</td><td>{@link #readMap(IntFunction, Function, Function)}</td><td>{@link #writeMap(Map, BiConsumer, BiConsumer)}</td>
-	COMMENT </tr>
-	COMMENT <tr>
 	COMMENT  <td>{@code byte[]}</td><td>{@link #readByteArray()}</td><td>{@link #writeByteArray(byte[])}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@code int[]}</td><td>{@link #readIntArray()}</td><td>{@link #writeIntArray(int[])}</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>{@code long[]}</td><td>{@link #readLongArray()}</td><td>{@link #writeLongArray(long[])}</td>
+	COMMENT  <td>{@code long[]}</td><td>{@link #readLongArray(long[])}</td><td>{@link #writeLongArray(long[])}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link BlockPos}</td><td>{@link #readBlockPos()}</td><td>{@link #writeBlockPos(BlockPos)}</td>
@@ -68,9 +59,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT <tr>
 	COMMENT  <td>{@link BlockHitResult}</td><td>{@link #readBlockHitResult()}</td><td>{@link #writeBlockHitResult(BlockHitResult)}</td>
 	COMMENT </tr>
-	COMMENT <tr>
-	COMMENT  <td>{@link BitSet}</td><td>{@link #readBitSet()}</td><td>{@link #writeBitSet(BitSet)}</td>
-	COMMENT </tr>
 	COMMENT </table></div>
 	COMMENT
 	COMMENT <p>All {@code read} and {@code write} methods throw {@link
@@ -86,7 +74,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @see #readIntArray(int)
 		COMMENT @see #writeIntArray(int[])
-		COMMENT @see #readIntList()
 		COMMENT @return the read byte array
 	METHOD method_10788 writeString (Ljava/lang/String;I)Lnet/minecraft/class_2540;
 		COMMENT Writes a string to this buf. A string is represented by a byte array of
@@ -108,7 +95,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT var int indicating its length, followed by the regular long (not var
 		COMMENT long) values.
 		COMMENT
-		COMMENT @see #readLongArray()
+		COMMENT @see #readLongArray(long[])
 		COMMENT @return this buf, for chaining
 		ARG 1 array
 			COMMENT the array to write
@@ -126,7 +113,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @see #readVarLong()
-		COMMENT @see #getVarLongLength(long)
 		ARG 1 value
 			COMMENT the value to write
 	METHOD method_10792 readVarLong ()J
@@ -185,7 +171,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT Reads an NBT compound from this buf. The binary representation of NBT is
 		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an NBT null is encountered,
 		COMMENT this method returns {@code null}. The compound can have a maximum size of
-		COMMENT {@value #MAX_READ_NBT_SIZE} bytes.
+		COMMENT {@code 2097152} bytes.
 		COMMENT
 		COMMENT @return the read compound, may be {@code null}
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
@@ -193,7 +179,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #writeNbt(NbtCompound)
 		COMMENT @see #readUnlimitedNbt()
 		COMMENT @see #readNbt(NbtTagSizeTracker)
-		COMMENT @see #MAX_READ_NBT_SIZE
 	METHOD method_10799 readIntArray (I)[I
 		COMMENT Reads an array of primitive ints from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the var int entries. The array
@@ -231,7 +216,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT of proper size is created.
 		COMMENT
 		COMMENT @see #writeLongArray(long[])
-		COMMENT @see #readLongArray()
 		COMMENT @see #readLongArray(long[], int)
 		COMMENT @return the read long array
 		ARG 1 toArray
@@ -268,13 +252,12 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 			COMMENT the value to write
 	METHOD method_10805 writeText (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2540;
 		COMMENT Writes a text to this buf. A text is represented by a JSON string with
-		COMMENT max length {@value #MAX_TEXT_LENGTH}.
+		COMMENT max length {@code 262144}.
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @throws io.netty.handler.codec.EncoderException if the JSON string
-		COMMENT written exceeds {@value #MAX_TEXT_LENGTH} in length
+		COMMENT written exceeds {@code 262144} in length
 		COMMENT @see #readText()
-		COMMENT @see #MAX_TEXT_LENGTH
 		ARG 1 text
 			COMMENT the text to write
 	METHOD method_10806 writeIntArray ([I)Lnet/minecraft/class_2540;
@@ -285,7 +268,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @see #readIntArray(int)
 		COMMENT @see #writeIntArray(int[])
-		COMMENT @see #writeIntList(IntList)
 		COMMENT @return this buf, for chaining
 		ARG 1 array
 			COMMENT the array to write
@@ -299,13 +281,12 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 			COMMENT the pos to write
 	METHOD method_10808 readText ()Lnet/minecraft/class_2561;
 		COMMENT Reads a text from this buf. A text is represented by a JSON string with
-		COMMENT max length {@value #MAX_TEXT_LENGTH}.
+		COMMENT max length {@code 262144}.
 		COMMENT
 		COMMENT @return the read text
 		COMMENT @throws io.netty.handler.codec.DecoderException if the JSON string read
-		COMMENT exceeds {@value #MAX_TEXT_LENGTH} in length
+		COMMENT exceeds {@code 262144} in length
 		COMMENT @see #writeText(Text)
-		COMMENT @see #MAX_TEXT_LENGTH
 	METHOD method_10809 readLongArray ([JI)[J
 		COMMENT Reads an array of primitive longs from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the regular long (not var
@@ -317,7 +298,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT of proper size is created.
 		COMMENT
 		COMMENT @see #writeLongArray(long[])
-		COMMENT @see #readLongArray()
 		COMMENT @see #readLongArray(long[])
 		COMMENT @return the read long array
 		COMMENT @throws io.netty.handler.codec.DecoderException if the read array has a
@@ -329,11 +309,11 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	METHOD method_10810 readIdentifier ()Lnet/minecraft/class_2960;
 		COMMENT Reads an identifier from this buf. An identifier is represented by its
 		COMMENT string form. The read identifier's string form can have a max length of
-		COMMENT {@value #DEFAULT_MAX_STRING_LENGTH}.
+		COMMENT {@code 32767}.
 		COMMENT
 		COMMENT @return the read identifier
 		COMMENT @throws io.netty.handler.codec.DecoderException if the identifier's
-		COMMENT string form is longer than {@value #DEFAULT_MAX_STRING_LENGTH}
+		COMMENT string form is longer than {@code 32767}
 		COMMENT @see #writeIdentifier(Identifier)
 	METHOD method_10811 readBlockPos ()Lnet/minecraft/class_2338;
 		COMMENT Reads a block position from this buf. A block position is represented by
@@ -344,11 +324,11 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	METHOD method_10812 writeIdentifier (Lnet/minecraft/class_2960;)Lnet/minecraft/class_2540;
 		COMMENT Writes an identifier to this buf. An identifier is represented by its
 		COMMENT string form. The written identifier's byte array can have a max length of
-		COMMENT {@value #DEFAULT_MAX_STRING_LENGTH}.
+		COMMENT {@code 32767}.
 		COMMENT
 		COMMENT @return the read identifier
 		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code id}'s
-		COMMENT byte array is longer than {@value #DEFAULT_MAX_STRING_LENGTH}
+		COMMENT byte array is longer than {@code 32767}
 		COMMENT @see #readIdentifier()
 		ARG 1 id
 			COMMENT the identifier to write
@@ -363,11 +343,11 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	METHOD method_10814 writeString (Ljava/lang/String;)Lnet/minecraft/class_2540;
 		COMMENT Writes a string to this buf. A string is represented by a byte array of
 		COMMENT its UTF-8 data. That byte array can have a maximum length of
-		COMMENT {@value #DEFAULT_MAX_STRING_LENGTH}.
+		COMMENT {@code 32767}.
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @throws io.netty.handler.codec.EncoderException if the byte array of the
-		COMMENT string to write is longer than {@value #DEFAULT_MAX_STRING_LENGTH}
+		COMMENT string to write is longer than {@code 32767}
 		COMMENT @see #readString()
 		COMMENT @see #readString(int)
 		COMMENT @see #writeString(String, int)
@@ -376,7 +356,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	METHOD method_10815 getVarIntLength (I)I
 		COMMENT Returns the number of bytes needed to encode {@code value} as a
 		COMMENT {@linkplain #writeVarInt(int) var int}. Guaranteed to be between {@code
-		COMMENT 1} and {@value #MAX_VAR_INT_LENGTH}.
+		COMMENT 1} and {@code 5}.
 		COMMENT
 		COMMENT @return the number of bytes a var int {@code value} uses
 		ARG 0 value
@@ -432,8 +412,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @return the read chunk section pos
 	METHOD method_19772 readString ()Ljava/lang/String;
 		COMMENT Reads a string from this buf. A string is represented by a byte array of
-		COMMENT its UTF-8 data. The string can have a maximum length of {@value
-		COMMENT #DEFAULT_MAX_STRING_LENGTH}.
+		COMMENT its UTF-8 data. The string can have a maximum length of {@code 32767}.
 		COMMENT
 		COMMENT @return the string read
 		COMMENT @throws io.netty.handler.codec.DecoderException if the string read
@@ -462,3 +441,29 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 			COMMENT the codec to encode the object
 		ARG 2 object
 			COMMENT the object to write to this buf
+	METHOD method_30616 readNbt (Lnet/minecraft/class_2505;)Lnet/minecraft/class_2487;
+		COMMENT Reads an NBT compound from this buf. The binary representation of NBT is
+		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an NBT null is encountered,
+		COMMENT this method returns {@code null}. The compound can have a maximum size
+		COMMENT controlled by the {@code sizeTracker}.
+		COMMENT
+		COMMENT @return the read compound, may be {@code null}
+		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
+		COMMENT @throws RuntimeException if the compound exceeds the allowed maximum size
+		COMMENT @see #writeNbt(NbtCompound)
+		COMMENT @see #readNbt()
+		COMMENT @see #readUnlimitedNbt()
+		ARG 1 sizeTracker
+	METHOD method_30617 readUnlimitedNbt ()Lnet/minecraft/class_2487;
+		COMMENT Reads an NBT compound from this buf. The binary representation of NBT is
+		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an NBT null is encountered,
+		COMMENT this method returns {@code null}. The compound does not have a size limit.
+		COMMENT
+		COMMENT @apiNote Since this version does not have a size limit, it may be
+		COMMENT vulnerable to malicious NBT spam attacks.
+		COMMENT
+		COMMENT @return the read compound, may be {@code null}
+		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
+		COMMENT @see #writeNbt(NbtCompound)
+		COMMENT @see #readNbt()
+		COMMENT @see #readNbt(NbtTagSizeTracker)
