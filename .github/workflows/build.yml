@@ -12,9 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
-      - run: ./gradlew build javadocJar checkMappings --stacktrace
+      - run: |
+          curl https://maven.fabricmc.net/net/java/jdk/openjdk-17-ea%2B24_linux-x64_bin.tar.gz --output java.tar.gz
+          tar -xf java.tar.gz
+      - run: ./gradlew build javadocJar checkMappings --stacktrace -Porg.gradle.java.installations.auto-download=false -Porg.gradle.java.installations.paths=$(pwd)/jdk-17
       - name: Build artifacts
-        if: ${{ matrix.java == '15-jdk' }}
+        if: ${{ matrix.java == '16-jdk' }}
         continue-on-error: true
         uses: actions/upload-artifact@v2
         with:

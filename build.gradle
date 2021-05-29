@@ -833,6 +833,13 @@ javadoc {
 	group = "javadoc generation"
 	outputs.upToDateWhen { false }
 
+	if (ENV.CI) {
+		// Java 17 is provided on CI to build the javadocs with, see https://github.com/FabricMC/yarn/issues/2429
+		javadocTool = javaToolchains.javadocToolFor {
+			languageVersion = JavaLanguageVersion.of(17)
+		}
+	}
+
 	def mappingPoetJar = project.provider { zipTree configurations.mappingPoetJar.singleFile }
 
 	failOnError = false
