@@ -12,7 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
-      - run: ./gradlew build javadocJar checkMappings --stacktrace
+      - run: |
+        wget https://maven.fabricmc.net/net/java/jdk/openjdk-17-ea%2B24_linux-x64_bin.tar.gz -O java.tar.gz
+        tar -xf java.tar.gz -C ./java17
+      - run: ./gradlew build javadocJar checkMappings --stacktrace -Porg.gradle.java.installations.paths=./java17
       - name: Build artifacts
         if: ${{ matrix.java == '15-jdk' }}
         continue-on-error: true

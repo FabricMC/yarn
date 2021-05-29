@@ -833,6 +833,12 @@ javadoc {
 	group = "javadoc generation"
 	outputs.upToDateWhen { false }
 
+	if (ENV.CI) {
+		javaLauncher = javaToolchains.launcherFor {
+			languageVersion = JavaLanguageVersion.of(17)
+		}
+	}
+
 	def mappingPoetJar = project.provider { zipTree configurations.mappingPoetJar.singleFile }
 
 	failOnError = false
