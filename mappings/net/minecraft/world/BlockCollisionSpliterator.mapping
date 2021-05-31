@@ -6,7 +6,7 @@ CLASS net/minecraft/class_5329 net/minecraft/world/BlockCollisionSpliterator
 	FIELD field_25172 pos Lnet/minecraft/class_2338$class_2339;
 	FIELD field_25173 boxShape Lnet/minecraft/class_265;
 	FIELD field_25174 world Lnet/minecraft/class_1941;
-	FIELD field_25175 checkEntity Z
+	FIELD field_25175 checkWorldBorder Z
 	FIELD field_25669 blockPredicate Ljava/util/function/BiPredicate;
 	METHOD <init> (Lnet/minecraft/class_1941;Lnet/minecraft/class_1297;Lnet/minecraft/class_238;)V
 		ARG 1 world
@@ -20,11 +20,23 @@ CLASS net/minecraft/class_5329 net/minecraft/world/BlockCollisionSpliterator
 	METHOD method_29283 getChunk (II)Lnet/minecraft/class_1922;
 		ARG 1 x
 		ARG 2 z
-	METHOD method_29284 isInWorldBorder (Lnet/minecraft/class_2784;Lnet/minecraft/class_238;)Z
+	METHOD method_29284 isIn (Lnet/minecraft/class_2784;Lnet/minecraft/class_238;)Z
 		ARG 0 border
 		ARG 1 box
 	METHOD method_29285 offerBlockShape (Ljava/util/function/Consumer;)Z
-	METHOD method_29286 offerEntityShape (Ljava/util/function/Consumer;)Z
+		ARG 1 action
+	METHOD method_29286 offerWorldBorderShape (Ljava/util/function/Consumer;)Z
+		ARG 1 action
 	METHOD method_30031 (Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;)Z
 		ARG 0 state
 		ARG 1 pos
+	METHOD method_30130 collidesSlightlyLarger (Lnet/minecraft/class_265;Lnet/minecraft/class_238;)Z
+		COMMENT {@return whether the world border collides with the slightly expanded entity bounding box}
+		ARG 0 worldBorderShape
+		ARG 1 entityBox
+	METHOD method_30131 collidesSlightlySmaller (Lnet/minecraft/class_265;Lnet/minecraft/class_238;)Z
+		COMMENT {@return whether the world border collides with the slightly shrinked entity bounding box}
+		ARG 0 worldBorderShape
+		ARG 1 entityBox
+	METHOD tryAdvance (Ljava/util/function/Consumer;)Z
+		ARG 1 action
