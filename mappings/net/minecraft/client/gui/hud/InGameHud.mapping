@@ -1,4 +1,8 @@
 CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
+	COMMENT Responsible for rendering the HUD elements while the player is in game.
+	COMMENT
+	COMMENT <p>The current instance used by the client can be obtained by {@link
+	COMMENT MinecraftClient#inGameHud MinecraftClient.getInstance().inGameHud}.
 	FIELD field_2011 scaledWidth I
 	FIELD field_2012 lastHealthCheckTime J
 	FIELD field_2013 vignetteDarkness F
@@ -67,6 +71,8 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 	METHOD method_1749 renderHeldItemTooltip (Lnet/minecraft/class_4587;)V
 		ARG 1 matrices
 	METHOD method_1750 getPlayerListHud ()Lnet/minecraft/class_355;
+	METHOD method_1751 (Lnet/minecraft/class_267;)Z
+		ARG 0 score
 	METHOD method_1752 renderMountJumpBar (Lnet/minecraft/class_4587;I)V
 		ARG 1 matrices
 		ARG 2 x
@@ -93,6 +99,7 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 		ARG 1 tickDelta
 		ARG 2 matrices
 	METHOD method_1760 renderStatusBars (Lnet/minecraft/class_4587;)V
+		COMMENT Renders the armor, health, air, and hunger bars.
 		ARG 1 matrices
 	METHOD method_1762 renderHotbarItem (IIFLnet/minecraft/class_1657;Lnet/minecraft/class_1799;I)V
 		ARG 1 x
@@ -100,6 +107,7 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 		ARG 3 tickDelta
 		ARG 4 player
 		ARG 5 stack
+		ARG 6 seed
 	METHOD method_1765 renderStatusEffectOverlay (Lnet/minecraft/class_4587;)V
 		ARG 1 matrices
 	METHOD method_1766 renderDemoTimer (Lnet/minecraft/class_4587;)V
@@ -126,3 +134,35 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 	METHOD method_34003 clearTitle ()V
 	METHOD method_34004 setTitle (Lnet/minecraft/class_2561;)V
 		ARG 1 title
+	METHOD method_37298 renderHealthBar (Lnet/minecraft/class_4587;Lnet/minecraft/class_1657;IIIIFIIIZ)V
+		ARG 1 matrices
+		ARG 2 player
+		ARG 3 x
+		ARG 4 y
+		ARG 5 lines
+		ARG 6 regeneratingHeartIndex
+		ARG 7 maxHealth
+		ARG 8 lastHealth
+		ARG 9 health
+		ARG 10 absorption
+		ARG 11 blinking
+	METHOD method_37299 drawHeart (Lnet/minecraft/class_4587;Lnet/minecraft/class_329$class_6411;IIIZZ)V
+		ARG 1 matrices
+		ARG 2 type
+		ARG 3 x
+		ARG 4 y
+		ARG 5 v
+		ARG 6 blinking
+		ARG 7 halfHeart
+	CLASS class_6411 HeartType
+		FIELD field_33950 textureIndex I
+		FIELD field_33951 hasBlinkingTexture Z
+		METHOD <init> (Ljava/lang/String;IIZ)V
+			ARG 3 textureIndex
+			ARG 4 hasBlinkingTexture
+		METHOD method_37301 fromPlayerState (Lnet/minecraft/class_1657;)Lnet/minecraft/class_329$class_6411;
+			ARG 0 player
+		METHOD method_37302 getU (ZZ)I
+			COMMENT {@return the left-most coordinate of the heart texture}
+			ARG 1 halfHeart
+			ARG 2 blinking
