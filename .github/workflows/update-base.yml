@@ -29,7 +29,6 @@ jobs:
             } else {
                 await github.pulls.update({ owner, repo, pull_number, base });
                 await github.issues.createComment({ owner, repo, issue_number, body: '🚀 Target branch has been updated to ' + base });
-                await github.issues.removeLabel({ owner, repo, issue_number, name: updateLabel });
 
                 try {
                     // Updates the pull request with the latest upstream changes.
@@ -45,3 +44,5 @@ jobs:
                     throw error;
                 }
             }
+            
+            await github.issues.removeLabel({ owner, repo, issue_number, name: updateLabel });
