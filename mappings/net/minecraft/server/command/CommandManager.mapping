@@ -5,8 +5,19 @@ CLASS net/minecraft/class_2170 net/minecraft/server/command/CommandManager
 		ARG 1 environment
 	METHOD method_23917 getException (Lcom/mojang/brigadier/ParseResults;)Lcom/mojang/brigadier/exceptions/CommandSyntaxException;
 		ARG 0 parse
+	METHOD method_30851 (Lcom/mojang/brigadier/arguments/ArgumentType;)Ljava/lang/String;
+		ARG 0 type
 	METHOD method_30852 checkMissing ()V
+	METHOD method_30853 (Lcom/mojang/brigadier/arguments/ArgumentType;)Z
+		ARG 0 type
 	METHOD method_9235 getDispatcher ()Lcom/mojang/brigadier/CommandDispatcher;
+	METHOD method_9236 (Ljava/lang/String;Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
+		ARG 1 style
+	METHOD method_9237 (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/tree/CommandNode;Ljava/util/Collection;)V
+		ARG 1 parent
+		ARG 2 child
+		ARG 3 sibling
+		ARG 4 inputs
 	METHOD method_9238 getCommandValidator (Lnet/minecraft/class_2170$class_2171;)Ljava/util/function/Predicate;
 		ARG 0 parser
 	METHOD method_9239 makeTreeForSource (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/tree/CommandNode;Lnet/minecraft/class_2168;Ljava/util/Map;)V
@@ -14,17 +25,31 @@ CLASS net/minecraft/class_2170 net/minecraft/server/command/CommandManager
 		ARG 2 result
 		ARG 3 source
 		ARG 4 resultNodes
+	METHOD method_9240 (Lnet/minecraft/class_2170$class_2171;Ljava/lang/String;)Z
+		ARG 1 string
 	METHOD method_9241 sendCommandTree (Lnet/minecraft/class_3222;)V
 		ARG 1 player
+	METHOD method_9242 (Lnet/minecraft/class_5250;Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
+		ARG 1 style
 	METHOD method_9244 argument (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;)Lcom/mojang/brigadier/builder/RequiredArgumentBuilder;
 		ARG 0 name
 		ARG 1 type
+	METHOD method_9245 (Lnet/minecraft/class_2172;)Z
+		ARG 0 source
+	METHOD method_9246 (Lcom/mojang/brigadier/context/CommandContext;)I
+		ARG 0 context
 	METHOD method_9247 literal (Ljava/lang/String;)Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;
 		ARG 0 literal
+	METHOD method_9248 (Lcom/mojang/brigadier/context/CommandContext;ZI)V
+		ARG 0 context
+		ARG 1 success
+		ARG 2 result
 	METHOD method_9249 execute (Lnet/minecraft/class_2168;Ljava/lang/String;)I
 		ARG 1 commandSource
 		ARG 2 command
 	CLASS class_2171 CommandParser
+		METHOD parse (Lcom/mojang/brigadier/StringReader;)V
+			ARG 1 reader
 	CLASS class_5364 RegistrationEnvironment
 		COMMENT Describes the environment in which commands are registered.
 		FIELD field_25422 integrated Z
@@ -32,7 +57,3 @@ CLASS net/minecraft/class_2170 net/minecraft/server/command/CommandManager
 		METHOD <init> (Ljava/lang/String;IZZ)V
 			ARG 3 integrated
 			ARG 4 dedicated
-		METHOD method_29576 isDedicated (Lnet/minecraft/class_2170$class_5364;)Z
-			ARG 0 rule
-		METHOD method_29577 isIntegrated (Lnet/minecraft/class_2170$class_5364;)Z
-			ARG 0 rule

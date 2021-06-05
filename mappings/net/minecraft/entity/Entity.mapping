@@ -16,9 +16,17 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_27858 FROZEN_TICKS Lnet/minecraft/class_2940;
 	FIELD field_28628 wasInPowderSnow Z
 	FIELD field_28629 wasOnFire Z
+	FIELD field_29975 SNEAKING_FLAG_INDEX I
+	FIELD field_29976 SPRINTING_FLAG_INDEX I
+	FIELD field_29977 SWIMMING_FLAG_INDEX I
+	FIELD field_29978 INVISIBLE_FLAG_INDEX I
+	FIELD field_29979 ON_FIRE_FLAG_INDEX I
+	FIELD field_29980 GLOWING_FLAG_INDEX I
+	FIELD field_29981 FALL_FLYING_FLAG_INDEX I
 	FIELD field_29985 ID_KEY Ljava/lang/String;
 	FIELD field_29986 PASSENGERS_KEY Ljava/lang/String;
 	FIELD field_29994 UUID_KEY Ljava/lang/String;
+	FIELD field_33758 hasVisualFire Z
 	FIELD field_5951 ridingCooldown I
 	FIELD field_5952 onGround Z
 	FIELD field_5953 firstUpdate Z
@@ -95,8 +103,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 4 collisions
 	METHOD method_17835 adjustMovementForCollisions (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
 		ARG 1 movement
-	METHOD method_17996 squaredHorizontalLength (Lnet/minecraft/class_243;)D
-		ARG 0 vector
 	METHOD method_18002 createSpawnPacket ()Lnet/minecraft/class_2596;
 	METHOD method_18003 updateTrackedPosition (DDD)V
 		ARG 1 x
@@ -262,6 +268,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_30229 resetNetherPortalCooldown ()V
 	METHOD method_30230 hasNetherPortalCooldown ()Z
 	METHOD method_30329 getTeleportTarget (Lnet/minecraft/class_3218;)Lnet/minecraft/class_5454;
+		COMMENT Determines a {@link TeleportTarget} for the entity
+		COMMENT based on its current and destination worlds, plus
+		COMMENT any portals that may be present.
 		ARG 1 destination
 	METHOD method_30330 getPortalRect (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Z)Ljava/util/Optional;
 		ARG 1 destWorld
@@ -313,9 +322,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_32316 canFreeze ()Z
 	METHOD method_32317 setFrozenTicks (I)V
 		ARG 1 frozenTicks
-	METHOD method_32318 getCommandItemSlot (I)Lnet/minecraft/class_5630;
-		COMMENT Obtains an item slot for command modification purpose. Used by commands
-		COMMENT like {@code /loot} or {@code /replaceitem}.
+	METHOD method_32318 getStackReference (I)Lnet/minecraft/class_5630;
+		COMMENT Obtains a stack reference to be modified. Used by commands like
+		COMMENT {@code /loot} or {@code /item}.
 		COMMENT
 		COMMENT @see net.minecraft.command.argument.ItemSlotArgumentType
 		ARG 1 mappedIndex
@@ -375,6 +384,20 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT each axis and checks whether the expanded box's smallest enclosing
 		COMMENT axis-aligned integer box is fully loaded in the world.
 	METHOD method_35049 getRemovalReason ()Lnet/minecraft/class_1297$class_5529;
+	METHOD method_36209 onRemoved ()V
+	METHOD method_36361 isGlowingLocal ()Z
+	METHOD method_36454 getYaw ()F
+	METHOD method_36455 getPitch ()F
+	METHOD method_36456 setYaw (F)V
+		ARG 1 yaw
+	METHOD method_36457 setPitch (F)V
+		ARG 1 pitch
+	METHOD method_36601 getBlockStateAtPos ()Lnet/minecraft/class_2680;
+	METHOD method_36971 canModifyAt (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)Z
+		ARG 1 world
+		ARG 2 pos
+	METHOD method_36974 tryCheckBlockCollision ()V
+	METHOD method_36975 playExtinguishSound ()V
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		ARG 1 state
@@ -400,8 +423,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 3 y
 		ARG 5 z
 	METHOD method_5634 getSoundCategory ()Lnet/minecraft/class_3419;
-	METHOD method_5636 setYaw (F)V
-		ARG 1 yaw
+	METHOD method_5636 setBodyYaw (F)V
+		ARG 1 bodyYaw
 	METHOD method_5637 isWet ()Z
 		COMMENT Returns whether this entity is touching water, or is being rained on, or is inside a bubble column...
 		COMMENT
@@ -520,6 +543,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 anchorPoint
 		ARG 2 target
 	METHOD method_5703 hasPassengerType (Ljava/util/function/Predicate;)Z
+		ARG 1 predicate
 	METHOD method_5705 getYaw (F)F
 		ARG 1 tickDelta
 	METHOD method_5706 dropItem (Lnet/minecraft/class_1935;)Lnet/minecraft/class_1542;
@@ -534,7 +558,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 status
 	METHOD method_5712 playStepSound (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 1 pos
-		ARG 2 state
 	METHOD method_5713 checkWaterState ()V
 	METHOD method_5715 isSneaking ()Z
 	METHOD method_5716 updateKilledAdvancementCriterion (Lnet/minecraft/class_1297;ILnet/minecraft/class_1282;)V
@@ -550,8 +573,20 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5721 isTouchingWaterOrRain ()Z
 	METHOD method_5722 isTeammate (Lnet/minecraft/class_1297;)Z
 		ARG 1 other
-	METHOD method_5723 dealDamage (Lnet/minecraft/class_1309;Lnet/minecraft/class_1297;)V
+	METHOD method_5723 applyDamageEffects (Lnet/minecraft/class_1309;Lnet/minecraft/class_1297;)V
+		COMMENT Applies damage effects to {@code attacker} or {@code target}.
+		COMMENT
+		COMMENT <p>Called when {@code attacker} damages {@code target}.
+		COMMENT
+		COMMENT <p>Used to apply damage effects based on enchantments, such
+		COMMENT as Thorns attacker damage or slowness from Bane of Arthropods.
+		COMMENT
+		COMMENT @implNote Although this method is non-static, {@code this} keyword is
+		COMMENT not used anywhere in this method.
 		ARG 1 attacker
+			COMMENT the attacker; usually this entity, but may be a {@linkplain
+			COMMENT net.minecraft.entity.projectile.ProjectileEntity#getOwner() projectile's
+			COMMENT owner entity}
 		ARG 2 target
 	METHOD method_5724 updateVelocity (FLnet/minecraft/class_243;)V
 		ARG 1 speed

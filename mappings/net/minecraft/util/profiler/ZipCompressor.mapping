@@ -1,0 +1,43 @@
+CLASS net/minecraft/class_6397 net/minecraft/util/profiler/ZipCompressor
+	COMMENT A ZIP compressor builds up a ZIP file. It completes the ZIP file when it is
+	COMMENT {@linkplain #close() closed}. All its methods and constructors throw
+	COMMENT {@link java.io.UncheckedIOException} when an I/O error occurs.
+	COMMENT
+	COMMENT @implSpec The compressor writes the contents of the ZIP to a {@link #temp} file
+	COMMENT first; then, it replaces the desired {@link #file} with the temp file when
+	COMMENT closed.
+	FIELD field_33864 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_33865 file Ljava/nio/file/Path;
+	FIELD field_33866 temp Ljava/nio/file/Path;
+	FIELD field_33867 zip Ljava/nio/file/FileSystem;
+	METHOD <init> (Ljava/nio/file/Path;)V
+		COMMENT Creates a ZIP compressor.
+		ARG 1 file
+			COMMENT the path of the ZIP file
+	METHOD method_37161 copyAll (Ljava/nio/file/Path;)V
+		COMMENT Copies the {@code source} file or directory to the root of the ZIP.
+		ARG 1 source
+			COMMENT the source file or directory to copy
+	METHOD method_37162 copy (Ljava/nio/file/Path;Ljava/io/File;)V
+		COMMENT Copies a {@code source} file to the {@code target} path within the ZIP.
+		COMMENT
+		COMMENT <p>If the {@code source} is a directory, then an empty directory would be
+		COMMENT copied. The {@code target} should be a relative path, as it will be resolved
+		COMMENT against the root of the ZIP.
+		ARG 1 target
+			COMMENT the target path in the ZIP
+		ARG 2 source
+			COMMENT the source file to copy
+	METHOD method_37163 write (Ljava/nio/file/Path;Ljava/lang/String;)V
+		COMMENT Writes the {@code content}, in UTF-8 encoding, to the {@code target} path
+		COMMENT within the ZIP.
+		COMMENT
+		COMMENT <p>The {@code target} should be a relative path, as it will be resolved
+		COMMENT against the root of the ZIP.
+		ARG 1 target
+			COMMENT the target path in the ZIP
+		ARG 2 content
+			COMMENT the file content to write in UTF-8
+	METHOD method_37164 (Ljava/nio/file/Path;Ljava/nio/file/attribute/BasicFileAttributes;)Z
+		ARG 0 path
+		ARG 1 attributes

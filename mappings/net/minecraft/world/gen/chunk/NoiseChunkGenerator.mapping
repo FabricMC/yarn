@@ -15,8 +15,11 @@ CLASS net/minecraft/class_3754 net/minecraft/world/gen/chunk/NoiseChunkGenerator
 	FIELD field_28747 noiseSizeY I
 	FIELD field_28748 noiseColumnSampler Lnet/minecraft/class_5818;
 	FIELD field_28843 edgeDensityNoise Lnet/minecraft/class_5216;
-	FIELD field_28844 waterLevelNoise Lnet/minecraft/class_5216;
+	FIELD field_28844 fluidLevelNoise Lnet/minecraft/class_5216;
 	FIELD field_28913 deepslateSource Lnet/minecraft/class_5840;
+	FIELD field_33578 fluidTypeNoise Lnet/minecraft/class_5216;
+	FIELD field_33579 oreVeinGenerator Lnet/minecraft/class_6353;
+	FIELD field_33644 noodleCavesGenerator Lnet/minecraft/class_6358;
 	METHOD <init> (Lnet/minecraft/class_1966;JLjava/util/function/Supplier;)V
 		ARG 1 biomeSource
 		ARG 2 seed
@@ -44,20 +47,52 @@ CLASS net/minecraft/class_3754 net/minecraft/world/gen/chunk/NoiseChunkGenerator
 	METHOD method_28548 matchesSettings (JLnet/minecraft/class_5321;)Z
 		ARG 1 seed
 		ARG 3 settingsKey
-	METHOD method_33643 getBlockState (Lnet/minecraft/class_5817;Lnet/minecraft/class_6350;Lnet/minecraft/class_5840;IIID)Lnet/minecraft/class_2680;
+	METHOD method_28550 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 0 instance
+	METHOD method_33643 getBlockState (Lnet/minecraft/class_5817;Lnet/minecraft/class_6350;Lnet/minecraft/class_5840;Lnet/minecraft/class_6357;IIID)Lnet/minecraft/class_2680;
 		ARG 1 structures
 		ARG 2 aquiferSampler
 		ARG 3 blockInterpolator
-		ARG 4 x
-		ARG 5 y
-		ARG 6 z
-		ARG 7 noise
 	METHOD method_33754 populateNoise (Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;II)Lnet/minecraft/class_2791;
 		ARG 1 accessor
 		ARG 2 chunk
+		ARG 3 startY
+		ARG 4 noiseSizeY
 	METHOD method_34284 sampleNoiseColumn ([DIIII)V
 		ARG 1 buffer
 		ARG 2 x
 		ARG 3 z
 		ARG 4 minY
 		ARG 5 noiseSizeY
+	METHOD method_36386 createBlockSampler (IILnet/minecraft/class_1923;)Lnet/minecraft/class_6350;
+		ARG 1 startY
+		ARG 2 deltaY
+		ARG 3 pos
+	METHOD method_36387 createBlockSourceFactory (ILnet/minecraft/class_1923;Ljava/util/function/Consumer;)Ljava/util/function/DoubleFunction;
+		ARG 1 minY
+		ARG 2 pos
+	METHOD method_36393 hasAquifers ()Z
+	METHOD method_36462 createWeightSamplerFactory (ILnet/minecraft/class_1923;Ljava/util/function/Consumer;)Ljava/util/function/DoubleFunction;
+		ARG 1 minY
+		ARG 2 pos
+	METHOD method_36463 (Lnet/minecraft/class_3754$class_6352;Lnet/minecraft/class_5840;D)Lnet/minecraft/class_5840;
+		ARG 2 deltaZ
+	CLASS class_6352 OreVeinSource
+		FIELD field_33584 deltaZ D
+		FIELD field_33585 seed J
+		FIELD field_33586 random Lnet/minecraft/class_2919;
+		METHOD <init> (Lnet/minecraft/class_3754;Lnet/minecraft/class_1923;IJ)V
+			ARG 2 pos
+			ARG 3 minY
+			ARG 4 seed
+		METHOD method_36394 setDeltaZ (D)V
+			ARG 1 deltaZ
+		METHOD method_36395 feed (Ljava/util/function/Consumer;)V
+	CLASS class_6356 NoodleCavesSampler
+		FIELD field_33650 deltaZ D
+		METHOD <init> (Lnet/minecraft/class_3754;Lnet/minecraft/class_1923;I)V
+			ARG 2 pos
+			ARG 3 minY
+		METHOD method_36466 setDeltaZ (D)Lnet/minecraft/class_6357;
+			ARG 1 deltaZ
+		METHOD method_36467 feed (Ljava/util/function/Consumer;)V

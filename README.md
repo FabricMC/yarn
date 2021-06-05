@@ -10,7 +10,7 @@ To use yarn-deobfuscated Minecraft for Minecraft modding or as a dependency in a
 
 To obtain a deobfuscated Minecraft jar, [`./gradlew mapNamedJar`](#mapNamedJar) will generate a jar named like `<minecraft version>-named.jar`, which can be sent to a decompiler for deobfuscated code.
 
-Please note to run the yarn build script **Java 11** or higher is required!
+Please note to run the yarn build script **Java 16** or higher is required!
 
 ## Contributing
 
@@ -34,7 +34,7 @@ Yarn uses Gradle to provide a number of utility tasks for working with the mappi
 ### `yarn`
 Setup and download and launch the latest version of [Enigma](https://github.com/FabricMC/Enigma) automatically configured to use the merged jar and the mappings.
 
-Compared to launching Enigma externally, the gradle task adds a name guesser plugin that automatically map enums and a few constant field names.
+Compared to launching Enigma externally, the gradle task adds a name guesser plugin that automatically maps enums and a few constant field names.
 
 ### `yarnUnpicked`
 Same as above, but unpicks the constants and launches Enigma with them. Can be a little bit slower to get going.

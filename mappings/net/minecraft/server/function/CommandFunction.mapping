@@ -16,6 +16,10 @@ CLASS net/minecraft/class_2158 net/minecraft/server/function/CommandFunction
 		ARG 3 lines
 			COMMENT the raw lines (including comments) read from a function file
 	CLASS class_2159 LazyContainer
+		COMMENT A lazy reference to another command function that may or may not exist.
+		COMMENT
+		COMMENT <p>Notice that such an instance does not refresh upon reloads and may become
+		COMMENT invalid.
 		FIELD field_9807 id Lnet/minecraft/class_2960;
 		FIELD field_9808 function Ljava/util/Optional;
 		FIELD field_9809 EMPTY Lnet/minecraft/class_2158$class_2159;
@@ -24,20 +28,34 @@ CLASS net/minecraft/class_2158 net/minecraft/server/function/CommandFunction
 			ARG 1 function
 		METHOD <init> (Lnet/minecraft/class_2960;)V
 			ARG 1 id
+		METHOD method_17913 (Lnet/minecraft/class_2158;)Lnet/minecraft/class_2960;
+			ARG 0 f
 		METHOD method_9196 get (Lnet/minecraft/class_2991;)Ljava/util/Optional;
 			ARG 1 manager
 		METHOD method_9197 getId ()Lnet/minecraft/class_2960;
 	CLASS class_2160 CommandElement
+		COMMENT A standard element of a command function. Functions created by {@link
+		COMMENT CommandFunction#create} will only contain these elements.
 		FIELD field_9811 parsed Lcom/mojang/brigadier/ParseResults;
 		METHOD <init> (Lcom/mojang/brigadier/ParseResults;)V
 			ARG 1 parsed
+		METHOD method_36318 execute (Lnet/minecraft/class_2991;Lnet/minecraft/class_2168;)I
+			ARG 1 manager
+			ARG 2 source
 	CLASS class_2161 Element
 		METHOD method_9198 execute (Lnet/minecraft/class_2991;Lnet/minecraft/class_2168;Ljava/util/Deque;IILnet/minecraft/class_2991$class_6346;)V
 			ARG 1 manager
 			ARG 2 source
 			ARG 3 entries
 			ARG 4 maxChainLength
+			ARG 5 depth
+			ARG 6 tracer
 	CLASS class_2162 FunctionElement
+		COMMENT A synthetic element to be stored in a {@link CommandFunctionManager.Entry}.
+		COMMENT This is not present as parts of command functions, but created by {@link
+		COMMENT CommandFunctionManager.Execution#recursiveRun}.
 		FIELD field_9812 function Lnet/minecraft/class_2158$class_2159;
 		METHOD <init> (Lnet/minecraft/class_2158;)V
 			ARG 1 function
+		METHOD method_17914 (Lnet/minecraft/class_2991$class_6346;IILjava/util/Deque;Lnet/minecraft/class_2168;Lnet/minecraft/class_2158;)V
+			ARG 5 f

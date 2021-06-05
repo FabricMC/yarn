@@ -7,7 +7,7 @@ jobs:
       image: openjdk:16-jdk
       options: --user root
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
 
       # Ensure that releases are not ran in parallel, this ensures that the latest commit is the latest release
@@ -28,8 +28,12 @@ jobs:
           token: ${{ secrets.github_token }}
           prefix: ${{ github.ref }}
 
-      - run: ./gradlew build javadocJar publish --stacktrace
+      - run: |
+          curl https://maven.fabricmc.net/net/java/jdk/openjdk-17-ea%2B24_linux-x64_bin.tar.gz --output java.tar.gz
+          tar -xf java.tar.gz
+      - run: ./gradlew build javadocJar checkVersion publish --stacktrace -Porg.gradle.java.installations.auto-download=false -Porg.gradle.java.installations.paths=$(pwd)/jdk-17
         env:
           MAVEN_URL: ${{ secrets.MAVEN_URL }}
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+          BRANCH_NAME: ${{ github.ref }}

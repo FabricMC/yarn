@@ -49,6 +49,8 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	METHOD method_10744 getPacketListener ()Lnet/minecraft/class_2547;
 	METHOD method_10745 getAveragePacketsSent ()F
 	METHOD method_10746 setupEncryption (Ljavax/crypto/Cipher;Ljavax/crypto/Cipher;)V
+		ARG 1 decryptionCipher
+		ARG 2 encryptionCipher
 	METHOD method_10747 disconnect (Lnet/minecraft/class_2561;)V
 		ARG 1 disconnectReason
 	METHOD method_10748 getDisconnectReason ()Lnet/minecraft/class_2561;
@@ -58,10 +60,9 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	METHOD method_10752 send (Lnet/minecraft/class_2596;Lio/netty/util/concurrent/GenericFutureListener;)V
 		ARG 1 packet
 		ARG 2 callback
-	METHOD method_10753 connect (Ljava/net/InetAddress;IZ)Lnet/minecraft/class_2535;
+	METHOD method_10753 connect (Ljava/net/InetSocketAddress;Z)Lnet/minecraft/class_2535;
 		ARG 0 address
-		ARG 1 port
-		ARG 2 shouldUseNativeTransport
+		ARG 1 useEpoll
 	METHOD method_10754 tick ()V
 	METHOD method_10755 getAddress ()Ljava/net/SocketAddress;
 	METHOD method_10756 isLocal ()Z
@@ -97,6 +98,15 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	METHOD method_36122 getOppositeSide ()Lnet/minecraft/class_2598;
 		COMMENT Returns the opposite side of this connection, or the direction of the packets
 		COMMENT sent by this connection.
+	METHOD method_36942 sendInternal (Lnet/minecraft/class_2596;Lio/netty/util/concurrent/GenericFutureListener;Lnet/minecraft/class_2539;Lnet/minecraft/class_2539;)V
+		ARG 1 packet
+		ARG 2 callback
+	CLASS 1
+		METHOD initChannel (Lio/netty/channel/Channel;)V
+			ARG 1 channel
+	CLASS 2
+		METHOD initChannel (Lio/netty/channel/Channel;)V
+			ARG 1 channel
 	CLASS class_2536 QueuedPacket
 		FIELD field_11661 packet Lnet/minecraft/class_2596;
 		FIELD field_11662 callback Lio/netty/util/concurrent/GenericFutureListener;

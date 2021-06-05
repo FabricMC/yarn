@@ -1,17 +1,36 @@
 CLASS net/minecraft/class_5413 net/minecraft/tag/RequiredTagListRegistry
-	FIELD field_25741 REQUIRED_TAG_LISTS Ljava/util/List;
-	FIELD field_28303 REGISTRY_KEYS Ljava/util/Set;
+	FIELD field_25741 ALL Ljava/util/List;
+	FIELD field_28303 REQUIRED_LIST_KEYS Ljava/util/Set;
 	METHOD method_30196 clearAllTags ()V
 	METHOD method_30198 updateTagManager (Lnet/minecraft/class_5415;)V
 		ARG 0 tagManager
 	METHOD method_30199 (Lnet/minecraft/class_5415;Lnet/minecraft/class_5120;)V
 		ARG 1 list
+	METHOD method_30200 (Lcom/google/common/collect/Multimap;Lnet/minecraft/class_5415;Lnet/minecraft/class_5120;)V
+		ARG 2 list
 	METHOD method_30201 register (Lnet/minecraft/class_5321;Ljava/lang/String;)Lnet/minecraft/class_5120;
+		COMMENT Creates and registers a required tag list.
+		COMMENT
+		COMMENT <p>The registered tag must be in the set returned by {@link #getBuiltinTags()},
+		COMMENT or the registry will fail {@linkplain #validate() validation}.
+		COMMENT
+		COMMENT @return the created and registered list
+		COMMENT @throws IllegalStateException if there is a list with a duplicate {@code registryKey}
 		ARG 0 registryKey
+			COMMENT the key representing the element type of the tags
 		ARG 1 dataType
+			COMMENT the data type, or ID's path prefix, for the tag JSONs in the data pack
 	METHOD method_30202 validateRegistrations ()V
 	METHOD method_30203 getMissingTags (Lnet/minecraft/class_5415;)Lcom/google/common/collect/Multimap;
 		ARG 0 tagManager
+	METHOD method_33150 (Lnet/minecraft/class_5415$class_5749;Lnet/minecraft/class_5120;)V
+		ARG 1 list
 	METHOD method_33151 forEach (Ljava/util/function/Consumer;)V
 		ARG 0 consumer
-	METHOD method_33153 getRequiredTags ()Ljava/util/Set;
+	METHOD method_33152 createBuiltinTagManager ()Lnet/minecraft/class_5415;
+	METHOD method_33153 getBuiltinTags ()Ljava/util/Set;
+	METHOD method_33154 validate ()V
+		COMMENT Ensures that each key in {@link #REQUIRED_LIST_KEYS} have a corresponding list
+		COMMENT in the return value of {@link #getBuiltinTags()}.
+		COMMENT
+		COMMENT @throws IllegalStateException when the validation fails

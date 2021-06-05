@@ -9,24 +9,24 @@ buildscript {
 	dependencies {
 		classpath "cuchaz:enigma-cli:${project.enigma_version}"
 		classpath "net.fabricmc:stitch:${project.stitch_version}"
-		classpath "commons-io:commons-io:2.6"
-		classpath 'de.undercouch:gradle-download-task:4.0.4'
-		classpath 'net.fabricmc:tiny-remapper:0.3.1.72'
+		classpath "commons-io:commons-io:2.8.0"
+		classpath 'de.undercouch:gradle-download-task:4.1.1'
+		classpath 'net.fabricmc:tiny-remapper:0.3.2'
 		classpath "net.fabricmc.unpick:unpick:${project.unpick_version}"
 		classpath "net.fabricmc.unpick:unpick-format-utils:${project.unpick_version}"
 	}
 }
 
 plugins {
-	id 'de.undercouch.download' version '4.0.4'
+	id 'de.undercouch.download' version '4.1.1'
 	id 'base'
 	id 'maven-publish'
 	id 'java' // for jd gen
 	id 'org.cadixdev.licenser' version '0.5.1'
-	id 'net.fabricmc.filament' version '0.2.0'
+	id 'net.fabricmc.filament' version '0.3.0'
 }
 
-def minecraft_version = "21w16a"
+def minecraft_version = "1.17-rc1"
 
 def ENV = System.getenv()
 // Fetch build number from Github Actions
@@ -34,6 +34,13 @@ def build_number = ENV.BUILD_NUMBER ?: "local"
 
 def yarnVersion = "${minecraft_version}+build.$build_number"
 version = yarnVersion
+
+if (ENV.BRANCH_NAME) {
+	def branch = ENV.BRANCH_NAME.substring(ENV.BRANCH_NAME.lastIndexOf('/') + 1)
+	if (minecraft_version != branch) {
+		throw new IllegalStateException("Branch name (${branch}) does not match the mc version (${minecraft_version})")
+	}
+}
 
 repositories {
 	mavenCentral()
@@ -75,8 +82,8 @@ dependencies {
 	javadocClasspath "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 	javadocClasspath "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
 	javadocClasspath "com.google.code.findbugs:jsr305:3.0.2" // for some other jsr annotations
-	decompileClasspath "org.benf:cfr:0.150"
-	mappingPoetJar 'net.fabricmc:mappingpoet:0.2.7'
+	decompileClasspath "net.fabricmc:cfr:${project.cfr_version}"
+	mappingPoetJar 'net.fabricmc:mappingpoet:0.2.8'
 	unpick "net.fabricmc.unpick:unpick-cli:${project.unpick_version}"
 }
 
@@ -630,99 +637,17 @@ task mapNamedJar(dependsOn: ["mergeV2", "unpickIntermediaryJar"]) {
 	}
 }
 
-import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Reader
-import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Writer
-import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Remapper
-import daomephsta.unpick.constantmappers.datadriven.parser.FieldKey
-import daomephsta.unpick.constantmappers.datadriven.parser.MethodKey
-import net.fabricmc.mapping.tree.TinyMappingFactory
-
-// Merge all of the unpick definitions into a single file to be shipped
-task combineUnpickDefinitions(type : FileOutput) {
-	output = new File(tempDir, "definitions.unpick")
-	outputs.upToDateWhen { false }
-	group "unpick"
-
-	doFirst {
-		output.delete()
-	}
-
-	doLast {
-		def writer = new UnpickV2Writer()
-
-		file("unpick-definitions").eachFile {
-			if (!it.name.endsWith(".unpick")) {
-				return
-			}
-
-			it.withInputStream {
-				new UnpickV2Reader(it).withCloseable {
-					it.accept(writer)
-				}
-			}
-		}
-
-		output.text = writer.output
-	}
+combineUnpickDefinitions {
+	group = 'unpick'
+	input = file('unpick-definitions')
+	output = new File(tempDir, 'definitions.unpick')
 }
 
-task remapUnpickDefinitionsIntermediary(type : FileOutputInput, dependsOn: [combineUnpickDefinitions, buildYarnTiny]) {
-	output = new File(tempDir, "intermediary-definitions.unpick")
-	input = combineUnpickDefinitions.output
-	File mappingsInput = buildYarnTiny.v2Output
-
-	outputs.upToDateWhen { false }
-	group "unpick"
-
-	doFirst {
-		output.delete()
-	}
-
-	doLast {
-		def classMappings = [:]
-		def methodMappings = [:]
-		def fieldMappings = [:]
-
-		mappingsInput.withReader {reader ->
-			def tinyTree = TinyMappingFactory.loadWithDetection(reader)
-
-			tinyTree.classes.each { classDef ->
-				classMappings.put(
-					classDef.getName("named"),
-					classDef.getName("intermediary")
-				)
-
-				classDef.methods.each { methodDef ->
-					methodMappings.put(
-						new MethodKey(
-							classDef.getName("named"),
-							methodDef.getName("named"),
-							methodDef.getDescriptor("named")
-						),
-						methodDef.getName("intermediary")
-					)
-				}
-
-				classDef.fields.forEach { fieldDef ->
-					fieldMappings.put(
-						new FieldKey(
-							classDef.getName("named"),
-							fieldDef.getName("named")
-						),
-						fieldDef.getName("intermediary")
-					)
-				}
-			}
-		}
-
-		input.withInputStream {
-			new UnpickV2Reader(it).withCloseable {reader ->
-				def writer = new UnpickV2Writer()
-				reader.accept(new UnpickV2Remapper(classMappings, methodMappings, fieldMappings, writer))
-				output.text = writer.output
-			}
-		}
-	}
+remapUnpickDefinitionsIntermediary {
+	dependsOn buildYarnTiny
+	group = 'unpick'
+	output = new File(tempDir, 'intermediary-definitions.unpick')
+	mappings = buildYarnTiny.v2Output
 }
 
 task unpickIntermediaryJar(type: JavaExec, dependsOn: [mapIntermediaryJar, "constantsJar", remapUnpickDefinitionsIntermediary]) {
@@ -734,7 +659,7 @@ task unpickIntermediaryJar(type: JavaExec, dependsOn: [mapIntermediaryJar, "cons
 	classpath configurations.unpick
 
 	doFirst {
-		args intermediaryJar.absolutePath, unpickedJar.absolutePath, remapUnpickDefinitionsIntermediary.output.absolutePath, constantsJar.archiveFile.get().asFile.absolutePath
+		args intermediaryJar.absolutePath, unpickedJar.absolutePath, remapUnpickDefinitionsIntermediary.output.get().asFile.absolutePath, constantsJar.archiveFile.get().asFile.absolutePath
 
 		configurations.decompileClasspath.files.each {
 			args it.absolutePath
@@ -777,7 +702,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 compilePackageDocsJava {
 	it.options.encoding = "UTF-8"
-	it.options.release = 11
+	it.options.release = 16
 }
 
 // Only build jars for package infos if we need to actually expose stuff like annotation in the future.
@@ -846,7 +771,7 @@ task v2UnmergedYarnJar(dependsOn: [insertAutoGeneratedEnumMappings, combineUnpic
 		rename mappings.name, "mappings/mappings.tiny"
 	}
 	from(combineUnpickDefinitions.output) {
-		rename combineUnpickDefinitions.output.name, "extras/definitions.unpick"
+		rename combineUnpickDefinitions.output.get().asFile.name, "extras/definitions.unpick"
 	}
 	from (file(unpickMetaFile)) {
 		expand version: project.unpick_version
@@ -865,7 +790,7 @@ task v2MergedYarnJar(dependsOn: ["mergeV2"], type: Jar) {
 		rename mappings.name, "mappings/mappings.tiny"
 	}
 	from(combineUnpickDefinitions.output) {
-		rename combineUnpickDefinitions.output.name, "extras/definitions.unpick"
+		rename combineUnpickDefinitions.output.get().asFile.name, "extras/definitions.unpick"
 	}
 	from (file(unpickMetaFile)) {
 		expand version: project.unpick_version
@@ -908,6 +833,13 @@ javadoc {
 	group = "javadoc generation"
 	outputs.upToDateWhen { false }
 
+	if (ENV.CI) {
+		// Java 17 is provided on CI to build the javadocs with, see https://github.com/FabricMC/yarn/issues/2429
+		javadocTool = javaToolchains.javadocToolFor {
+			languageVersion = JavaLanguageVersion.of(17)
+		}
+	}
+
 	def mappingPoetJar = project.provider { zipTree configurations.mappingPoetJar.singleFile }
 
 	failOnError = false
@@ -915,7 +847,7 @@ javadoc {
 	// verbose = true // enable to debug
 	options {
 		// verbose() // enable to debug
-		source = "11"
+		source = "16"
 		encoding = 'UTF-8'
 		charSet = 'UTF-8'
 		memberLevel = JavadocMemberLevel.PRIVATE
@@ -945,7 +877,7 @@ javadoc {
 				'https://commons.apache.org/proper/commons-codec/archives/1.10/apidocs',
 				'https://commons.apache.org/proper/commons-compress/javadocs/api-1.8.1/',
 				"https://maven.fabricmc.net/docs/fabric-loader-${project.fabric_loader_version}/",
-				"https://docs.oracle.com/en/java/javase/11/docs/api/"
+				"https://docs.oracle.com/en/java/javase/16/docs/api/"
 				// Need to add loader jd publication for env annotations!
 		)
 		// https://docs.oracle.com/en/java/javase/15/docs/specs/man/javadoc.html#additional-options-provided-by-the-standard-doclet
@@ -1036,6 +968,20 @@ publishing {
 		}
 	}
 }
+
+// A task to ensure that the version being released has not already been released.
+task checkVersion {
+	doFirst {
+		def xml = new URL("https://maven.fabricmc.net/net/fabricmc/yarn/maven-metadata.xml").text
+		def metadata = new XmlSlurper().parseText(xml)
+		def versions = metadata.versioning.versions.version*.text();
+		if (versions.contains(version)) {
+			throw new RuntimeException("${version} has already been released!")
+		}
+	}
+}
+
+publish.mustRunAfter checkVersion
 
 void mapJar(File output, File input, File mappings, File libraries, String from, String to,
 		Action<TinyRemapper.Builder> action = { }) {

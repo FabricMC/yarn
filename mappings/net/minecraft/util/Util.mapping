@@ -6,6 +6,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	FIELD field_24477 IO_WORKER_EXECUTOR Ljava/util/concurrent/ExecutorService;
 	FIELD field_24622 BOOTSTRAP_EXECUTOR Ljava/util/concurrent/ExecutorService;
 	FIELD field_25140 NIL_UUID Ljava/util/UUID;
+	FIELD field_33859 JAR_FILE_SYSTEM_PROVIDER Ljava/nio/file/spi/FileSystemProvider;
 	METHOD method_17815 stream (Ljava/util/Optional;)Ljava/util/stream/Stream;
 		ARG 0 optional
 	METHOD method_17974 ifPresentOrElse (Ljava/util/Optional;Ljava/util/function/Consumer;Ljava/lang/Runnable;)Ljava/util/Optional;
@@ -93,6 +94,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_30623 (Lnet/minecraft/class_5462;I)Ljava/lang/String;
 		ARG 1 charCode
 	METHOD method_30624 deleteTask (Ljava/nio/file/Path;)Ljava/util/function/BooleanSupplier;
+		ARG 0 path
 	METHOD method_30625 renameTask (Ljava/nio/file/Path;Ljava/nio/file/Path;)Ljava/util/function/BooleanSupplier;
 		ARG 0 src
 		ARG 1 dest
@@ -111,22 +113,14 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 list
 		ARG 1 random
 	METHOD method_33141 toArray (Ljava/util/List;I)Lcom/mojang/serialization/DataResult;
+		ARG 0 list
 		ARG 1 length
 	METHOD method_33559 error (Ljava/lang/String;)V
 		ARG 0 message
 	METHOD method_33560 pause ()V
-	METHOD method_33786 (Ljava/lang/Object;Ljava/util/List;)Ljava/util/List;
-		ARG 0 eachResult
-		ARG 1 collectedResults
 	METHOD method_33787 debugRunnable (Ljava/lang/String;Ljava/lang/Runnable;)Ljava/lang/Runnable;
 		ARG 0 activeThreadName
 		ARG 1 task
-	METHOD method_33788 (Ljava/util/List;Ljava/util/List;)Ljava/util/List;
-		ARG 0 firstResults
-		ARG 1 secondResults
-	METHOD method_33789 (Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletableFuture;
-		ARG 0 firstCollected
-		ARG 1 secondCollected
 	METHOD method_33791 combineSafe (Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
 		COMMENT Combines a list of {@code futures} into one future that holds a list
 		COMMENT of their results.
@@ -138,13 +132,12 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		COMMENT @see #combine(List)
 		ARG 0 futures
 			COMMENT the completable futures to combine
-	METHOD method_33792 (Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletableFuture;
-		ARG 0 collected
-		ARG 1 each
 	METHOD method_34865 memoize (Ljava/util/function/BiFunction;)Ljava/util/function/BiFunction;
 		ARG 0 biFunction
 	METHOD method_34866 memoize (Ljava/util/function/Function;)Ljava/util/function/Function;
 		ARG 0 function
+	METHOD method_37153 (Ljava/nio/file/spi/FileSystemProvider;)Z
+		ARG 0 fileSystemProvider
 	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
 		ARG 0 iterable
 		ARG 1 object
@@ -182,7 +175,6 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_664 toMap ()Ljava/util/stream/Collector;
 	METHOD method_666 (Ljava/lang/String;)Z
 		ARG 0 runtimeArg
-	METHOD method_667 getLogger ()Lorg/apache/logging/log4j/Logger;
 	METHOD method_668 getOperatingSystem ()Lnet/minecraft/class_156$class_158;
 	CLASS 7
 		FIELD field_29655 cache Ljava/util/Map;

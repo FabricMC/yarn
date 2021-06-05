@@ -162,6 +162,11 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_27387 entityModelLoader Lnet/minecraft/class_5599;
 	FIELD field_27388 blockEntityRenderDispatcher Lnet/minecraft/class_824;
 	FIELD field_29569 debugRecorder Lnet/minecraft/class_5962;
+	FIELD field_33697 resourceReloadLogger Lnet/minecraft/class_6360;
+	FIELD field_33735 GL_ERROR_DIALOGUE Ljava/lang/String;
+		COMMENT A message, in English, displayed in a dialog when a GLFW error is encountered.
+		COMMENT
+		COMMENT @see net.minecraft.client.util.Window#throwGlError(int, long)
 	METHOD <init> (Lnet/minecraft/class_542;)V
 		ARG 1 args
 	METHOD method_1476 checkIs64Bit ()Z
@@ -290,20 +295,24 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 1 pause
 	METHOD method_22107 shouldRenderAsync ()Z
 	METHOD method_22108 isRunning ()Z
-	METHOD method_22681 addSystemDetailsToCrashReport (Lnet/minecraft/class_1076;Ljava/lang/String;Lnet/minecraft/class_315;Lnet/minecraft/class_128;)V
-		ARG 0 languageManager
-		ARG 1 version
-		ARG 2 options
-		ARG 3 report
+	METHOD method_22681 addSystemDetailsToCrashReport (Lnet/minecraft/class_310;Lnet/minecraft/class_1076;Ljava/lang/String;Lnet/minecraft/class_315;Lnet/minecraft/class_128;)V
+		ARG 0 client
+		ARG 1 languageManager
+		ARG 2 version
+		ARG 3 options
+		ARG 4 report
 	METHOD method_22683 getWindow ()Lnet/minecraft/class_1041;
 	METHOD method_22940 getBufferBuilders ()Lnet/minecraft/class_4599;
 	METHOD method_24038 createResourcePackProfile (Ljava/lang/String;Lnet/minecraft/class_2561;ZLjava/util/function/Supplier;Lnet/minecraft/class_3272;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)Lnet/minecraft/class_3288;
 		ARG 0 name
 		ARG 1 displayName
 		ARG 2 alwaysEnabled
+		ARG 3 packFactory
 		ARG 4 metadata
 		ARG 5 insertionPosition
 		ARG 6 source
+	METHOD method_24040 (Ljava/util/Optional;)V
+		ARG 1 throwable
 	METHOD method_24041 setMipmapLevels (I)V
 		ARG 1 mipmapLevels
 	METHOD method_24042 createV3ResourcePackFactory (Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
@@ -312,6 +321,8 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 0 packFactory
 	METHOD method_24226 handleResourceReloadException (Ljava/lang/Throwable;)V
 		ARG 1 exception
+	METHOD method_24228 (Ljava/util/concurrent/CompletableFuture;Ljava/util/Optional;)V
+		ARG 2 throwable
 	METHOD method_24287 getWindowTitle ()Ljava/lang/String;
 	METHOD method_24288 updateWindowTitle ()V
 	METHOD method_24289 isModded ()Z
@@ -338,6 +349,8 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		COMMENT them.
 		ARG 1 sender
 	METHOD method_29043 isMultiplayerEnabled ()Z
+	METHOD method_29597 (Lnet/minecraft/class_1940;Lnet/minecraft/class_32$class_5143;)Lnet/minecraft/class_5359;
+		ARG 1 session
 	METHOD method_29598 loadDataPackSettings (Lnet/minecraft/class_32$class_5143;)Lnet/minecraft/class_5359;
 		ARG 0 storageSession
 	METHOD method_29599 createSaveProperties (Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_3300;Lnet/minecraft/class_5359;)Lnet/minecraft/class_5219;
@@ -369,7 +382,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 5 storageSession
 	METHOD method_29606 startIntegratedServer (Ljava/lang/String;)V
 		ARG 1 worldName
-	METHOD method_29607 (Ljava/lang/String;Lnet/minecraft/class_1940;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_5285;)V
+	METHOD method_29607 createWorld (Ljava/lang/String;Lnet/minecraft/class_1940;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_5285;)V
 		ARG 1 worldName
 		ARG 2 levelInfo
 		ARG 3 registryTracker
@@ -385,6 +398,13 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_29970 (Lnet/minecraft/class_437;)V
 		ARG 1 screen
 	METHOD method_30049 getVideoWarningManager ()Lnet/minecraft/class_5407;
+	METHOD method_31125 (Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_5285;Lnet/minecraft/class_1940;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_3300;Lnet/minecraft/class_5359;)Lnet/minecraft/class_5219;
+		ARG 3 session
+		ARG 4 registryManager
+		ARG 5 resourceManager
+		ARG 6 dataPackSettings
+	METHOD method_31126 (Lnet/minecraft/class_5382;Lcom/google/gson/JsonElement;)Lcom/mojang/serialization/DataResult;
+		ARG 1 json
 	METHOD method_31186 onResourceReloadFailure (Ljava/lang/Throwable;Lnet/minecraft/class_2561;)V
 		ARG 1 exception
 		ARG 2 resourceName
@@ -396,9 +416,40 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_31975 getBlockEntityRenderDispatcher ()Lnet/minecraft/class_824;
 	METHOD method_33883 shouldFilterText ()Z
 	METHOD method_33884 getChatRestriction ()Lnet/minecraft/class_310$class_5859;
-	METHOD method_34745 toggleDebugProfiler (Ljava/lang/Runnable;Ljava/util/function/Consumer;)V
-		ARG 1 startAction
-		ARG 2 completeAction
+	METHOD method_34745 toggleDebugProfiler (Ljava/util/function/Consumer;)Z
+	METHOD method_35698 takePanorama (Ljava/io/File;II)Lnet/minecraft/class_2561;
+		COMMENT Takes a panorama. The panorama is stored in the given {@code directory}, in
+		COMMENT where 6 screenshots of size {@code width} and {@code height} will be taken.
+		COMMENT
+		COMMENT @return a user-oriented piece of text for screenshot result
+		ARG 1 directory
+		ARG 2 width
+		ARG 3 height
+	METHOD method_35699 takeHugeScreenshot (Ljava/io/File;IIII)Lnet/minecraft/class_2561;
+		COMMENT Takes a huge screenshot in the tga file format.
+		COMMENT
+		COMMENT <p>The {@code unitWidth} and {@code unitHeight} controls the size of the
+		COMMENT partial image rendered; it does not affect the screenshot outcome, but may
+		COMMENT affect the screenshot performance.
+		COMMENT
+		COMMENT @return a user-oriented piece of text for screenshot result
+		ARG 1 gameDirectory
+		ARG 2 unitWidth
+		ARG 3 unitHeight
+		ARG 4 width
+		ARG 5 height
+	METHOD method_35703 getWorldGenerationProgressTracker ()Lnet/minecraft/class_3953;
+	METHOD method_35705 addGlInfo (Lnet/minecraft/class_1276;)V
+		ARG 0 snooper
+	METHOD method_35706 isRealmsEnabled ()Z
+	METHOD method_36561 reloadResources (Z)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 force
+	METHOD method_37274 addSystemDetailsToCrashReport (Lnet/minecraft/class_6396;Lnet/minecraft/class_310;Lnet/minecraft/class_1076;Ljava/lang/String;Lnet/minecraft/class_315;)Lnet/minecraft/class_6396;
+		ARG 0 systemDetails
+		ARG 1 client
+		ARG 2 languageManager
+		ARG 3 version
+		ARG 4 options
 	CLASS class_5366 WorldLoadAction
 	CLASS class_5367 IntegratedResourceManager
 		FIELD field_25439 resourcePackManager Lnet/minecraft/class_3283;
