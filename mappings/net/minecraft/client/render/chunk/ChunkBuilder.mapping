@@ -8,6 +8,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 	FIELD field_20832 worldRenderer Lnet/minecraft/class_761;
 	FIELD field_20992 queuedTaskCount I
 	FIELD field_20993 bufferCount I
+	FIELD field_29500 POSITION_COLOR_TEXTURE_LIGHT_NORMAL Lnet/minecraft/class_293;
 	FIELD field_4435 rebuildQueue Ljava/util/PriorityQueue;
 	FIELD field_4443 uploadQueue Ljava/util/Queue;
 	FIELD field_4445 LOGGER Lorg/apache/logging/log4j/Logger;
@@ -22,6 +23,9 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 	METHOD method_19420 getCameraPosition ()Lnet/minecraft/class_243;
 	METHOD method_22752 setWorld (Lnet/minecraft/class_1937;)V
 		ARG 1 world
+	METHOD method_22755 (Lnet/minecraft/class_750;Lnet/minecraft/class_846$class_4690;Ljava/lang/Throwable;)V
+		ARG 2 result
+		ARG 3 throwable
 	METHOD method_22756 send (Lnet/minecraft/class_846$class_851$class_4577;)V
 		ARG 1 task
 	METHOD method_22759 upload (Lnet/minecraft/class_287;Lnet/minecraft/class_291;)Ljava/util/concurrent/CompletableFuture;
@@ -55,6 +59,8 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		METHOD method_3642 getBlockEntities ()Ljava/util/List;
 		METHOD method_3645 isEmpty ()Z
 		METHOD method_3650 isVisibleThrough (Lnet/minecraft/class_2350;Lnet/minecraft/class_2350;)Z
+			ARG 1 from
+			ARG 2 to
 	CLASS class_851 BuiltChunk
 		FIELD field_20834 rebuildTask Lnet/minecraft/class_846$class_851$class_4578;
 		FIELD field_29641 index I
@@ -68,6 +74,8 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		FIELD field_4467 origin Lnet/minecraft/class_2338$class_2339;
 		FIELD field_4471 rebuildFrame I
 		FIELD field_4472 neighborPositions [Lnet/minecraft/class_2338$class_2339;
+		METHOD <init> (Lnet/minecraft/class_846;I)V
+			ARG 2 index
 		METHOD method_22773 scheduleSort (Lnet/minecraft/class_1921;Lnet/minecraft/class_846;)Z
 			ARG 1 layer
 			ARG 2 chunkRenderer
@@ -106,11 +114,18 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		CLASS class_4577 Task
 			FIELD field_20835 distance D
 			FIELD field_20836 cancelled Ljava/util/concurrent/atomic/AtomicBoolean;
+			METHOD <init> (Lnet/minecraft/class_846$class_851;D)V
+				ARG 2 distance
+			METHOD compareTo (Ljava/lang/Object;)I
+				ARG 1 other
 			METHOD method_22782 cancel ()V
 			METHOD method_22783 run (Lnet/minecraft/class_750;)Ljava/util/concurrent/CompletableFuture;
 				ARG 1 buffers
 		CLASS class_4578 RebuildTask
 			FIELD field_20838 region Lnet/minecraft/class_853;
+			METHOD <init> (Lnet/minecraft/class_846$class_851;DLnet/minecraft/class_853;)V
+				ARG 2 distance
+				ARG 4 region
 			METHOD method_22785 render (FFFLnet/minecraft/class_846$class_849;Lnet/minecraft/class_750;)Ljava/util/Set;
 				ARG 1 cameraX
 				ARG 2 cameraY
@@ -123,4 +138,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 				ARG 3 blockEntity
 		CLASS class_4579 SortTask
 			FIELD field_20841 data Lnet/minecraft/class_846$class_849;
+			METHOD <init> (Lnet/minecraft/class_846$class_851;DLnet/minecraft/class_846$class_849;)V
+				ARG 2 distance
+				ARG 4 data
 	CLASS class_4690 Result

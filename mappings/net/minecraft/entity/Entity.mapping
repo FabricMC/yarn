@@ -9,7 +9,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_23807 inanimate Z
 	FIELD field_25599 submergedFluidTag Lnet/minecraft/class_3494;
 	FIELD field_25750 trackedPosition Lnet/minecraft/class_243;
-	FIELD field_26994 prevAge I
+	FIELD field_26994 lastChimeAge I
 	FIELD field_26995 removalReason Lnet/minecraft/class_1297$class_5529;
 	FIELD field_26996 entityChangeListener Lnet/minecraft/class_5569;
 	FIELD field_27857 inPowderSnow Z
@@ -47,12 +47,20 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_5974 random Ljava/util/Random;
 	FIELD field_5975 NAME_VISIBLE Lnet/minecraft/class_2940;
 	FIELD field_5976 horizontalCollision Z
-	FIELD field_5978 ENTITY_ID_COUNTER Ljava/util/concurrent/atomic/AtomicInteger;
+	FIELD field_5978 CURRENT_ID Ljava/util/concurrent/atomic/AtomicInteger;
+		COMMENT A generator of unique entity {@link #id network IDs}. The generated
+		COMMENT ID for client entities are useless and discarded subsequently through
+		COMMENT {@link #setId(int)} calls.
 	FIELD field_5979 passengerList Lcom/google/common/collect/ImmutableList;
 	FIELD field_5981 uuidString Ljava/lang/String;
 	FIELD field_5982 prevYaw F
 	FIELD field_5985 ignoreCameraFrustum Z
-	FIELD field_5986 entityId I
+	FIELD field_5986 id I
+		COMMENT The entity's network ID, used as a reference for synchronization over network.
+		COMMENT This is not persistent across save and loads; use {@link #uuid} to identify
+		COMMENT an entity in those cases.
+		COMMENT
+		COMMENT @see #getId()
 	FIELD field_5989 lastRenderZ D
 	FIELD field_5990 FLAGS Lnet/minecraft/class_2940;
 	FIELD field_5991 lastNetherPortalPosition Lnet/minecraft/class_2338;
@@ -345,6 +353,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @implNote The vanilla implementation always returns {@code null}.
 	METHOD method_33189 occludeVibrationSignals ()Z
+	METHOD method_33331 (Lnet/minecraft/class_4048;Lnet/minecraft/class_243;)V
+		ARG 2 pos
 	METHOD method_33332 calculateBoundingBox ()Lnet/minecraft/class_238;
 	METHOD method_33567 requestTeleportAndDismount (DDD)V
 		ARG 1 destX
@@ -398,6 +408,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 2 pos
 	METHOD method_36974 tryCheckBlockCollision ()V
 	METHOD method_36975 playExtinguishSound ()V
+	METHOD method_37215 playAmethystChimeSound (Lnet/minecraft/class_2680;)V
+		ARG 1 state
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		ARG 1 state
@@ -558,6 +570,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 status
 	METHOD method_5712 playStepSound (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 1 pos
+		ARG 2 state
 	METHOD method_5713 checkWaterState ()V
 	METHOD method_5715 isSneaking ()Z
 	METHOD method_5716 updateKilledAdvancementCriterion (Lnet/minecraft/class_1297;ILnet/minecraft/class_1282;)V
@@ -787,7 +800,14 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 tickDelta
 	METHOD method_5837 onStartedTrackingBy (Lnet/minecraft/class_3222;)V
 		ARG 1 player
-	METHOD method_5838 setEntityId (I)V
+	METHOD method_5838 setId (I)V
+		COMMENT Sets the network ID of this entity.
+		COMMENT
+		COMMENT @apiNote This is used by client-side networking logic to set up the network
+		COMMENT ID of entities from the server. This shouldn't be used by server-side logic
+		COMMENT as the network ID is already properly initialized on entity object construction.
+		COMMENT
+		COMMENT @see #getId()
 		ARG 1 id
 	METHOD method_5839 spawnSprintingParticles ()V
 	METHOD method_5840 setRenderDistanceMultiplier (D)V
