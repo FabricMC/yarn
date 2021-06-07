@@ -1,6 +1,7 @@
 CLASS net/minecraft/class_1303 net/minecraft/entity/ExperienceOrbEntity
 	FIELD field_27009 pickingCount I
 	FIELD field_30055 DESPAWN_AGE I
+	FIELD field_30056 EXPENSIVE_UPDATE_INTERVAL I
 	FIELD field_6159 amount I
 	FIELD field_6161 health I
 	FIELD field_6162 target Lnet/minecraft/class_1657;
@@ -11,6 +12,8 @@ CLASS net/minecraft/class_1303 net/minecraft/entity/ExperienceOrbEntity
 		ARG 4 y
 		ARG 6 z
 		ARG 8 amount
+	METHOD method_31492 (IILnet/minecraft/class_1303;)Z
+		ARG 2 orb
 	METHOD method_31493 spawn (Lnet/minecraft/class_3218;Lnet/minecraft/class_243;I)V
 		ARG 0 world
 		ARG 1 pos
@@ -27,10 +30,11 @@ CLASS net/minecraft/class_1303 net/minecraft/entity/ExperienceOrbEntity
 		ARG 2 amount
 	METHOD method_31497 merge (Lnet/minecraft/class_1303;)V
 		ARG 1 other
-	METHOD method_31498 onEverySecond ()V
-		COMMENT Called every second (every 20 ticks).
+	METHOD method_31498 expensiveUpdate ()V
+		COMMENT Performs an expensive update.
 		COMMENT
-		COMMENT @implSpec This method first checks if the orb still has a nearby {@link #target},
+		COMMENT @implSpec Called every second (every {@link #EXPENSIVE_UPDATE_INTERVAL} ticks).
+		COMMENT This method first checks if the orb still has a nearby {@link #target},
 		COMMENT and assigns a new target if there is none. It then tries to merge nearby experience orbs.
 	METHOD method_35051 repairPlayerGears (Lnet/minecraft/class_1657;I)I
 		COMMENT Repairs a player's gears using the experience recursively, until the experience is
