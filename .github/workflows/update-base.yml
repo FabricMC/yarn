@@ -34,14 +34,14 @@ jobs:
                     // Updates the pull request with the latest upstream changes.
                     await github.pulls.updateBranch({ owner, repo, pull_number })
                     
-                    // Checks if the branch is a development version
-                    if (contains(base, '-')) {
-                        await github.issues.addLabels({ owner, repo, issue_number, labels: ['snapshot'] });
-                        await github.issues.removeLabel({ owner, repo, issue_number, name: 'release' });
-                    // Otherwise it's a release
-                    } else {
+                    // Checks if the branch is a release
+                    if (base.match(/^([0-9].[0-9]{1,2})$/)) {
                         await github.issues.addLabels({ owner, repo, issue_number, labels: ['release'] });
                         await github.issues.removeLabel({ owner, repo, issue_number, name: 'snapshot' });
+                    // Otherwise it's a development version
+                    } else {
+                        await github.issues.addLabels({ owner, repo, issue_number, labels: ['snapshot'] });
+                        await github.issues.removeLabel({ owner, repo, issue_number, name: 'release' });
                     }
                     
                 } catch (error) {
