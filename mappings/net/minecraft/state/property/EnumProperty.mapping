@@ -1,4 +1,20 @@
 CLASS net/minecraft/class_2754 net/minecraft/state/property/EnumProperty
+	COMMENT Represents a property that has enum values.
+	COMMENT
+	COMMENT <p id="notes-on-enum">Notes on the enum class:
+	COMMENT <ul>
+	COMMENT   <li>The enum class is required to have 2 or more values.
+	COMMENT   <li>The enum class is required to provide a name for each value by
+	COMMENT overriding {@link StringIdentifiable#asString()}.
+	COMMENT   <li>The names of the values are required to match the {@linkplain
+	COMMENT net.minecraft.state.StateManager#VALID_NAME_PATTERN valid name pattern}.
+	COMMENT Otherwise, {@link IllegalArgumentException} will be thrown during the
+	COMMENT {@linkplain net.minecraft.state.StateManager.Builder#validate(Property)
+	COMMENT validation of a property}.
+	COMMENT </ul>
+	COMMENT
+	COMMENT <p>See {@link net.minecraft.state.property.Properties} for example
+	COMMENT usages.
 	FIELD field_12595 values Lcom/google/common/collect/ImmutableSet;
 	FIELD field_12596 byName Ljava/util/Map;
 	METHOD <init> (Ljava/lang/String;Ljava/lang/Class;Ljava/util/Collection;)V
@@ -6,28 +22,59 @@ CLASS net/minecraft/class_2754 net/minecraft/state/property/EnumProperty
 		ARG 2 type
 		ARG 3 values
 	METHOD method_11847 of (Ljava/lang/String;Ljava/lang/Class;Ljava/util/Collection;)Lnet/minecraft/class_2754;
-		COMMENT Creates an enum property.
+		COMMENT Creates an enum property with the given values.
+		COMMENT
+		COMMENT <p>See <a href="#notes-on-enum">notes on the enum class</a>.
+		COMMENT
+		COMMENT @throws IllegalArgumentException if multiple values have the same name
+		COMMENT
+		COMMENT @see #of(String, Class)
 		ARG 0 name
-			COMMENT the name of this property
+			COMMENT the name of the property; see {@linkplain Property#name the note on the
+			COMMENT name}
 		ARG 1 type
-			COMMENT the type this property contains
+			COMMENT the type of the values the property contains
 		ARG 2 values
-			COMMENT the values this property could contain
+			COMMENT the values the property contains; required to have 2 or more values
 	METHOD method_11848 of (Ljava/lang/String;Ljava/lang/Class;Ljava/util/function/Predicate;)Lnet/minecraft/class_2754;
-		COMMENT Creates an enum property.
+		COMMENT Creates an enum property with the values allowed by the given filter.
+		COMMENT
+		COMMENT <p>See <a href="#notes-on-enum">notes on the enum class</a>.
+		COMMENT
+		COMMENT @throws IllegalArgumentException if multiple values have the same name
+		COMMENT
+		COMMENT @see #of(String, Class)
 		ARG 0 name
-			COMMENT the name of this property
+			COMMENT the name of the property; see {@linkplain Property#name the note on the
+			COMMENT name}
 		ARG 1 type
-			COMMENT the type this property contains
+			COMMENT the type of the values the property contains
 		ARG 2 filter
-			COMMENT a filter that specifies if a value is allowed
+			COMMENT the filter which specifies if a value is allowed; required to allow 2
+			COMMENT or more values
 	METHOD method_11849 of (Ljava/lang/String;Ljava/lang/Class;[Ljava/lang/Enum;)Lnet/minecraft/class_2754;
+		COMMENT Creates an enum property with the given values.
+		COMMENT
+		COMMENT <p>See <a href="#notes-on-enum">notes on the enum class</a>.
+		COMMENT
+		COMMENT @throws IllegalArgumentException if multiple values have the same name
+		COMMENT
+		COMMENT @see #of(String, Class)
 		ARG 0 name
+			COMMENT the name of the property; see {@linkplain Property#name the note on the
+			COMMENT name}
 		ARG 1 type
+			COMMENT the type of the values the property contains
 		ARG 2 values
+			COMMENT the values the property contains; required to have 2 or more values
 	METHOD method_11850 of (Ljava/lang/String;Ljava/lang/Class;)Lnet/minecraft/class_2754;
-		COMMENT Creates an enum property.
+		COMMENT Creates an enum property with all values of the given enum class.
+		COMMENT
+		COMMENT <p>See <a href="#notes-on-enum">notes on the enum class</a>.
+		COMMENT
+		COMMENT @throws IllegalArgumentException if multiple values have the same name
 		ARG 0 name
-			COMMENT the name of this property
+			COMMENT the name of the property; see {@linkplain Property#name the note on the
+			COMMENT name}
 		ARG 1 type
-			COMMENT the type this property contains
+			COMMENT the type of the values the property contains

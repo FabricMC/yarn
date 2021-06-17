@@ -3,7 +3,7 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	COMMENT as well as populating the generated chunks with {@linkplain net.minecraft.world.gen.feature.Feature features} and {@linkplain net.minecraft.entity.Entity entities}.
 	COMMENT Biome placement starts here, however all vanilla and most modded chunk generators delegate this to a {@linkplain net.minecraft.world.biome.source.BiomeSource biome source}.
 	FIELD field_12761 populationSource Lnet/minecraft/class_1966;
-		COMMENT Used to control the population step without replacing the actual biome that comes from the original {@link biomeSource}.
+		COMMENT Used to control the population step without replacing the actual biome that comes from the original {@link #biomeSource}.
 		COMMENT
 		COMMENT <p>This is used by {@link FlatChunkGenerator} to overwrite biome properties like whether lakes generate, while preserving the original biome ID.
 	FIELD field_16567 structuresConfig Lnet/minecraft/class_5311;
@@ -33,14 +33,15 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		COMMENT Tries to find the closest structure of a given type near a given block.
 		COMMENT <p>
 		COMMENT New chunks will only be generated up to the {@link net.minecraft.world.chunk.ChunkStatus#STRUCTURE_STARTS} phase by this method.
+		COMMENT <p>
+		COMMENT The radius is ignored for strongholds.
 		COMMENT
 		COMMENT @return {@code null} if no structure could be found within the given search radius
 		ARG 1 world
 		ARG 2 feature
 		ARG 3 center
 		ARG 4 radius
-			COMMENT The search radius in chunks around the chunk the given block position is in. A radius of 0 will only search in the given chunk.
-			COMMENT This is ignored for strongholds.
+			COMMENT the search radius in chunks around the chunk the given block position is in; a radius of 0 will only search in the given chunk
 		ARG 5 skipExistingChunks
 			COMMENT whether only structures that are not referenced by generated chunks (chunks past the STRUCTURE_STARTS stage) are returned, excluding strongholds
 	METHOD method_12104 getWorldHeight ()I
@@ -50,12 +51,14 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	METHOD method_12107 populateEntities (Lnet/minecraft/class_3233;)V
 		ARG 1 region
 	METHOD method_12108 carve (JLnet/minecraft/class_4543;Lnet/minecraft/class_2791;Lnet/minecraft/class_2893$class_2894;)V
+		COMMENT Generates caves for the given chunk.
 		ARG 1 seed
 		ARG 3 access
 		ARG 4 chunk
 		ARG 5 carver
 	METHOD method_12109 getStructuresConfig ()Lnet/minecraft/class_5311;
 	METHOD method_12110 buildSurface (Lnet/minecraft/class_3233;Lnet/minecraft/class_2791;)V
+		COMMENT Places the surface blocks of the biomes after the noise has been generated.
 		ARG 1 region
 		ARG 2 chunk
 	METHOD method_12113 getEntitySpawnList (Lnet/minecraft/class_1959;Lnet/minecraft/class_5138;Lnet/minecraft/class_1311;Lnet/minecraft/class_2338;)Ljava/util/List;
@@ -65,6 +68,10 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		ARG 4 pos
 	METHOD method_16129 setStructureStarts (Lnet/minecraft/class_5455;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;Lnet/minecraft/class_3485;J)V
 		COMMENT Determines which structures should start in the given chunk and creates their starting points.
+		ARG 1 registryManager
+		ARG 2 accessor
+		ARG 3 chunk
+		ARG 4 structureManager
 		ARG 5 worldSeed
 	METHOD method_16130 addStructureReferences (Lnet/minecraft/class_5281;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;)V
 		COMMENT Finds all structures that the given chunk intersects, and adds references to their starting chunks to it.
@@ -92,6 +99,7 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		ARG 1 seed
 	METHOD method_28506 getCodec ()Lcom/mojang/serialization/Codec;
 	METHOD method_28507 isStrongholdStartingChunk (Lnet/minecraft/class_1923;)Z
+		ARG 1 pos
 	METHOD method_28508 setStructureStart (Lnet/minecraft/class_5312;Lnet/minecraft/class_5455;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;Lnet/minecraft/class_3485;JLnet/minecraft/class_1923;Lnet/minecraft/class_1959;)V
 		ARG 6 worldSeed
 	METHOD method_28509 generateStrongholdPositions ()V

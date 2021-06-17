@@ -13,14 +13,14 @@ CLASS net/minecraft/class_1914 net/minecraft/village/TradeOffer
 		ARG 1 buyItem
 		ARG 2 sellItem
 		ARG 3 maxUses
-		ARG 4 rewardedExp
+		ARG 4 merchantExperience
 		ARG 5 priceMultiplier
 	METHOD <init> (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;IIF)V
 		ARG 1 firstBuyItem
 		ARG 2 secondBuyItem
 		ARG 3 sellItem
 		ARG 4 maxUses
-		ARG 5 rewardedExp
+		ARG 5 merchantExperience
 		ARG 6 priceMultiplier
 	METHOD <init> (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;IIIF)V
 		ARG 1 firstBuyItem
@@ -28,33 +28,83 @@ CLASS net/minecraft/class_1914 net/minecraft/village/TradeOffer
 		ARG 3 sellItem
 		ARG 4 uses
 		ARG 5 maxUses
-		ARG 6 rewardedExp
+		ARG 6 merchantExperience
 		ARG 7 priceMultiplier
 	METHOD method_16952 matchesBuyItems (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 1 first
 		ARG 2 second
 	METHOD method_16953 depleteBuyItems (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+		ARG 1 firstBuyStack
+		ARG 2 secondBuyStack
 	METHOD method_16954 acceptsBuy (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 1 given
 		ARG 2 sample
-	METHOD method_18019 getSellItem ()Lnet/minecraft/class_1799;
+	METHOD method_18019 copySellItem ()Lnet/minecraft/class_1799;
+		COMMENT Returns a copy of the sell item of this trade offer.
 	METHOD method_19272 getAdjustedFirstBuyItem ()Lnet/minecraft/class_1799;
+		COMMENT Returns a copy of the first buy item of this trade offer,
+		COMMENT with its price adjusted depending on the demand bonus, the
+		COMMENT special price and the price multiplier.
 	METHOD method_19273 setSpecialPrice (I)V
-	METHOD method_19274 updatePriceOnDemand ()V
+		COMMENT Sets the special price of this trade offer to {@code specialPrice}.
+		ARG 1 specialPrice
+	METHOD method_19274 updateDemandBonus ()V
+		COMMENT Updates the demand bonus of this trade offer depending on its
+		COMMENT previous demand bonus, the number of times it has been used and
+		COMMENT its remaining uses.
 	METHOD method_19275 resetUses ()V
+		COMMENT Resets the number of times this trade offer has been used.
 	METHOD method_19276 clearSpecialPrice ()V
+		COMMENT Resets the special price of this trade offer.
 	METHOD method_19277 getSpecialPrice ()I
+		COMMENT Returns the special price of this trade offer. It is used to
+		COMMENT adjust the price of its first buy item.
+		COMMENT
+		COMMENT <p>The less the special price is, the more the price will be low.
 	METHOD method_19278 getPriceMultiplier ()F
+		COMMENT Returns the price multiplier of this trade offer. It is used to
+		COMMENT adjust the price of its first buy item.
 	METHOD method_19279 getMerchantExperience ()I
+		COMMENT Returns the amount of experience that will be given to a merchant
+		COMMENT after this trade offer has been used.
 	METHOD method_21725 getDemandBonus ()I
+		COMMENT Returns the demand bonus of this trade offer. It is used to
+		COMMENT adjust the price of its first buy item.
+		COMMENT
+		COMMENT <p>The more the demand bonus is, the more the price will be high.
+		COMMENT
+		COMMENT <p>It is updated when a villager restocks.
+		COMMENT
+		COMMENT @see #updateDemandBonus()
 	METHOD method_8244 use ()V
+		COMMENT Increments the number of times this trade offer has been used.
 	METHOD method_8245 increaseSpecialPrice (I)V
+		COMMENT Increases the special price of this trade offer by {@code increment}.
+		COMMENT
+		COMMENT <p>A negative {@code increment} value will decrease the special price.
+		ARG 1 increment
 	METHOD method_8246 getOriginalFirstBuyItem ()Lnet/minecraft/class_1799;
+		COMMENT Returns the first buy item of this trade offer.
 	METHOD method_8247 getSecondBuyItem ()Lnet/minecraft/class_1799;
+		COMMENT Returns the second buy item of this trade offer.
+		COMMENT
+		COMMENT <p>If there is no second buy item, this returns the {@linkplain ItemStack#EMPTY empty
+		COMMENT item stack}.
 	METHOD method_8248 getMaxUses ()I
+		COMMENT Returns the maximum number of times this trade offer can be used.
 	METHOD method_8249 getUses ()I
-	METHOD method_8250 getMutableSellItem ()Lnet/minecraft/class_1799;
-	METHOD method_8251 toTag ()Lnet/minecraft/class_2487;
-	METHOD method_8254 clearUses ()V
+		COMMENT Returns the number of times this trade offer has been used.
+	METHOD method_8250 getSellItem ()Lnet/minecraft/class_1799;
+		COMMENT Returns the sell item of this trade offer.
+	METHOD method_8251 toNbt ()Lnet/minecraft/class_2487;
+	METHOD method_8254 disable ()V
+		COMMENT Sets the number of times this trade offer has been used to
+		COMMENT its maximum uses, making it disabled.
 	METHOD method_8255 isDisabled ()Z
+		COMMENT Returns whether this trade offer is disabled.
+		COMMENT
+		COMMENT <p>Checks if the number of times this trade offer has been used
+		COMMENT is greater or equal to its maximum uses.
 	METHOD method_8256 shouldRewardPlayerExperience ()Z
+		COMMENT Returns whether experience should be given to a player when
+		COMMENT they use this trade offer.

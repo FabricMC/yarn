@@ -1,8 +1,11 @@
 CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
+	COMMENT The information of a server entry in the list of servers available in
+	COMMENT the multiplayer screen from the menu. The list of these servers is
+	COMMENT stored in the {@code servers.dat} file within the client game directory.
 	FIELD field_3752 name Ljava/lang/String;
 	FIELD field_3753 playerCountLabel Lnet/minecraft/class_2561;
 	FIELD field_3754 online Z
-	FIELD field_3755 resourcePackState Lnet/minecraft/class_642$class_643;
+	FIELD field_3755 resourcePackPolicy Lnet/minecraft/class_642$class_643;
 	FIELD field_3756 protocolVersion I
 	FIELD field_3757 label Lnet/minecraft/class_2561;
 	FIELD field_3758 ping J
@@ -16,14 +19,22 @@ CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 		ARG 2 address
 		ARG 3 local
 	METHOD method_2989 setIcon (Ljava/lang/String;)V
-	METHOD method_2990 getResourcePack ()Lnet/minecraft/class_642$class_643;
+		ARG 1 icon
+	METHOD method_2990 getResourcePackPolicy ()Lnet/minecraft/class_642$class_643;
+		COMMENT Returns the policy on resource packs sent by this server.
 	METHOD method_2991 getIcon ()Ljava/lang/String;
-	METHOD method_2992 serialize ()Lnet/minecraft/class_2487;
-	METHOD method_2993 deserialize (Lnet/minecraft/class_2487;)Lnet/minecraft/class_642;
-		ARG 0 tag
+	METHOD method_2992 toNbt ()Lnet/minecraft/class_2487;
+	METHOD method_2993 fromNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_642;
+		ARG 0 root
 	METHOD method_2994 isLocal ()Z
-	METHOD method_2995 setResourcePackState (Lnet/minecraft/class_642$class_643;)V
+	METHOD method_2995 setResourcePackPolicy (Lnet/minecraft/class_642$class_643;)V
+		COMMENT Sets the resource pack policy on this server.
+		COMMENT
+		COMMENT <p>This is called when a user has responded to the prompt on whether to
+		COMMENT accept server resource packs from this server in the future.
+		ARG 1 policy
 	METHOD method_2996 copyFrom (Lnet/minecraft/class_642;)V
+		ARG 1 serverInfo
 	CLASS class_643 ResourcePackState
 		FIELD field_3765 name Lnet/minecraft/class_2561;
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V

@@ -7,13 +7,18 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	FIELD field_24622 BOOTSTRAP_EXECUTOR Ljava/util/concurrent/ExecutorService;
 	FIELD field_25140 NIL_UUID Ljava/util/UUID;
 	METHOD method_17815 stream (Ljava/util/Optional;)Ljava/util/stream/Stream;
+		ARG 0 optional
 	METHOD method_17974 ifPresentOrElse (Ljava/util/Optional;Ljava/util/function/Consumer;Ljava/lang/Runnable;)Ljava/util/Optional;
+		ARG 0 optional
+		ARG 1 presentAction
+		ARG 2 elseAction
 	METHOD method_18349 getMainWorkerExecutor ()Ljava/util/concurrent/Executor;
 	METHOD method_18350 shutdownExecutors ()V
 	METHOD method_18839 debugRunnable (Ljava/lang/Runnable;Ljava/util/function/Supplier;)Ljava/lang/Runnable;
 		ARG 0 runnable
 		ARG 1 messageSupplier
 	METHOD method_19483 completeExceptionally (Ljava/lang/Throwable;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 throwable
 	METHOD method_20793 getLast (Ljava/util/List;)Ljava/lang/Object;
 		ARG 0 list
 	METHOD method_22320 throwOrPause (Ljava/lang/Throwable;)Ljava/lang/Throwable;
@@ -21,6 +26,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_22321 getInnermostMessage (Ljava/lang/Throwable;)Ljava/lang/String;
 		ARG 0 t
 	METHOD method_24155 throwUnchecked (Ljava/lang/Throwable;)V
+		ARG 0 t
 	METHOD method_27172 getRandom ([ILjava/util/Random;)I
 		ARG 0 array
 		ARG 1 random
@@ -47,8 +53,8 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_29187 getChoiceType (Lcom/mojang/datafixers/DSL$TypeReference;Ljava/lang/String;)Lcom/mojang/datafixers/types/Type;
 		ARG 0 typeReference
 		ARG 1 id
-	METHOD method_29190 toIntArray (Ljava/util/stream/IntStream;I)Lcom/mojang/serialization/DataResult;
-		ARG 0 intStream
+	METHOD method_29190 toArray (Ljava/util/stream/IntStream;I)Lcom/mojang/serialization/DataResult;
+		ARG 0 stream
 		ARG 1 length
 	METHOD method_29191 getChoiceTypeInternal (Lcom/mojang/datafixers/DSL$TypeReference;Ljava/lang/String;)Lcom/mojang/datafixers/types/Type;
 		ARG 0 typeReference
@@ -61,12 +67,14 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 1 dest
 		ARG 2 toCopy
 	METHOD method_30309 replaceInvalidChars (Ljava/lang/String;Lnet/minecraft/class_5462;)Ljava/lang/String;
+		ARG 0 string
 		ARG 1 predicate
 	METHOD method_30622 attemptTasks (ILjava/lang/String;[Ljava/util/function/BooleanSupplier;)Z
 		ARG 0 retries
 		ARG 1 taskName
 		ARG 2 tasks
 	METHOD method_30624 deleteTask (Ljava/nio/file/Path;)Ljava/util/function/BooleanSupplier;
+		ARG 0 path
 	METHOD method_30625 renameTask (Ljava/nio/file/Path;Ljava/nio/file/Path;)Ljava/util/function/BooleanSupplier;
 		ARG 0 src
 		ARG 1 dest
@@ -76,19 +84,33 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 1 newPath
 		ARG 2 backup
 	METHOD method_30627 attemptTasks ([Ljava/util/function/BooleanSupplier;)Z
+		ARG 0 tasks
 	METHOD method_30628 deletionVerifyTask (Ljava/nio/file/Path;)Ljava/util/function/BooleanSupplier;
 		ARG 0 path
 	METHOD method_30629 existenceCheckTask (Ljava/nio/file/Path;)Ljava/util/function/BooleanSupplier;
 		ARG 0 path
 	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
+		ARG 0 iterable
+		ARG 1 object
 	METHOD method_646 createTranslationKey (Ljava/lang/String;Lnet/minecraft/class_2960;)Ljava/lang/String;
 		ARG 0 type
 		ARG 1 id
 	METHOD method_648 getMeasuringTimeNano ()J
 	METHOD method_650 getValueAsString (Lnet/minecraft/class_2769;Ljava/lang/Object;)Ljava/lang/String;
+		ARG 0 property
+		ARG 1 value
 	METHOD method_651 getJVMFlags ()Ljava/util/stream/Stream;
 	METHOD method_652 combine (Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT Combines a list of {@code futures} into one future that holds a list
+		COMMENT of their results.
+		COMMENT
+		COMMENT <p>The returned future is fail-fast; if any of the input futures fails,
+		COMMENT this returned future will be immediately completed exceptionally than
+		COMMENT waiting for other input futures.
+		COMMENT
+		COMMENT @return the combined future
 		ARG 0 futures
+			COMMENT the completable futures to combine
 	METHOD method_654 make (Ljava/lang/Object;Ljava/util/function/Consumer;)Ljava/lang/Object;
 		ARG 0 object
 		ARG 1 initializer
@@ -98,6 +120,8 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_658 getMeasuringTimeMs ()J
 	METHOD method_659 getEpochTimeMs ()J
 	METHOD method_660 next (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
+		ARG 0 iterable
+		ARG 1 object
 	METHOD method_664 toMap ()Ljava/util/stream/Collector;
 	METHOD method_667 getLogger ()Lorg/apache/logging/log4j/Logger;
 	METHOD method_668 getOperatingSystem ()Lnet/minecraft/class_156$class_158;
