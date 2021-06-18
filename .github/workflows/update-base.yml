@@ -35,7 +35,7 @@ jobs:
                     await github.pulls.updateBranch({ owner, repo, pull_number })
                     
                     // Checks if the branch is a development version
-                    if (contains(base, '-') || contains(base, 'w')) {
+                    if (base.includes('-') || base.includes('w')) {
                         await github.issues.addLabels({ owner, repo, issue_number, labels: ['snapshot'] });
                         await github.issues.removeLabel({ owner, repo, issue_number, name: 'release' });
                     // Otherwise it's a release
