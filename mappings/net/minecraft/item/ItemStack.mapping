@@ -1,4 +1,5 @@
 CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
+	COMMENT Represents a stack of items.
 	FIELD field_24092 LORE_STYLE Lnet/minecraft/class_2583;
 	FIELD field_24093 holder Lnet/minecraft/class_1297;
 	FIELD field_24671 CODEC Lcom/mojang/serialization/Codec;
@@ -24,7 +25,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	FIELD field_8037 EMPTY Lnet/minecraft/class_1799;
 	FIELD field_8038 item Lnet/minecraft/class_1792;
 	FIELD field_8039 lastDestroyPos Lnet/minecraft/class_2694;
-	FIELD field_8040 tag Lnet/minecraft/class_2487;
+	FIELD field_8040 nbt Lnet/minecraft/class_2487;
 	METHOD <init> (Lnet/minecraft/class_1935;)V
 		ARG 1 item
 	METHOD <init> (Lnet/minecraft/class_1935;I)V
@@ -33,9 +34,9 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD <init> (Lnet/minecraft/class_1935;ILjava/util/Optional;)V
 		ARG 1 item
 		ARG 2 count
-		ARG 3 tag
+		ARG 3 nbt
 	METHOD <init> (Lnet/minecraft/class_2487;)V
-		ARG 1 tag
+		ARG 1 nbt
 	METHOD method_17869 (Ljava/util/List;Lnet/minecraft/class_2487;Lnet/minecraft/class_1887;)V
 		ARG 2 e
 	METHOD method_17870 appendEnchantments (Ljava/util/List;Lnet/minecraft/class_2499;)V
@@ -92,7 +93,15 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7910 finishUsing (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)Lnet/minecraft/class_1799;
 		ARG 1 world
 		ARG 2 user
-	METHOD method_7911 getOrCreateSubTag (Ljava/lang/String;)Lnet/minecraft/class_2487;
+	METHOD method_7911 getOrCreateNbt (Ljava/lang/String;)Lnet/minecraft/class_2487;
+		COMMENT Returns the {@linkplain NbtCompound} at the specified key in this item stack's custom NBT, or creates it if absent.
+		COMMENT
+		COMMENT @return the {@linkplain NbtCompound} at the specified key in this item stack's custom NBT
+		COMMENT @see #hasNbt()
+		COMMENT @see #getNbt()
+		COMMENT @see #getOrCreateNbt(String)
+		COMMENT @see #putNbtElement(String, NbtElement)
+		COMMENT @see #removeSubNbt(String)
 		ARG 1 key
 	METHOD method_7912 setCooldown (I)V
 		ARG 1 cooldown
@@ -139,20 +148,33 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 3 remainingUseTicks
 	METHOD method_7932 getRarity ()Lnet/minecraft/class_1814;
 	METHOD method_7933 increment (I)V
+		COMMENT Increments the count of items in this item stack.
 		ARG 1 amount
+			COMMENT the amount to increment
 	METHOD method_7934 decrement (I)V
+		COMMENT Decrements the count of items in this item stack.
 		ARG 1 amount
+			COMMENT the amount to decrement
 	METHOD method_7935 getMaxUseTime ()I
 	METHOD method_7936 getMaxDamage ()I
 	METHOD method_7937 parseBlockTag (Ljava/lang/String;)Ljava/util/Collection;
 		ARG 0 tag
 	METHOD method_7938 hasCustomName ()Z
 	METHOD method_7939 setCount (I)V
+		COMMENT Sets the count of items in this item stack.
 		ARG 1 count
+			COMMENT the count of items
 	METHOD method_7940 canDestroy (Lnet/minecraft/class_5415;Lnet/minecraft/class_2694;)Z
 		ARG 1 tagManager
 		ARG 2 pos
-	METHOD method_7941 getSubTag (Ljava/lang/String;)Lnet/minecraft/class_2487;
+	METHOD method_7941 getNbt (Ljava/lang/String;)Lnet/minecraft/class_2487;
+		COMMENT {@return the {@linkplain NbtCompound} at the specified key in this item stack's custom NBT, may be {@code null}}
+		COMMENT
+		COMMENT @see #hasNbt()
+		COMMENT @see #getNbt()
+		COMMENT @see #getOrCreateNbt(String)
+		COMMENT @see #putNbtElement(String, NbtElement)
+		COMMENT @see #removeSubNbt(String)
 		ARG 1 key
 	METHOD method_7942 hasEnchantments ()Z
 	METHOD method_7944 canPlaceOn (Lnet/minecraft/class_5415;Lnet/minecraft/class_2694;)Z
@@ -161,7 +183,15 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7945 getFrame ()Lnet/minecraft/class_1533;
 	METHOD method_7946 isStackable ()Z
 	METHOD method_7947 getCount ()I
-	METHOD method_7948 getOrCreateTag ()Lnet/minecraft/class_2487;
+		COMMENT {@return the count of items in this item stack}
+	METHOD method_7948 getOrCreateNbt ()Lnet/minecraft/class_2487;
+		COMMENT Returns the custom NBT of this item stack, or creates the custom NBT if the item stack did not have a custom NBT previously.
+		COMMENT
+		COMMENT @return the custom NBT of this item stack
+		COMMENT
+		COMMENT @see #hasNbt()
+		COMMENT @see #getNbt()
+		COMMENT @see #setNbt(NbtCompound)
 	METHOD method_7949 usageTick (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;I)V
 		ARG 1 world
 		ARG 2 user
@@ -184,7 +214,11 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 3 pos
 		ARG 4 miner
 	METHOD method_7953 writeNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
+		COMMENT Writes the serialized item stack into the given {@link NbtCompound}.
+		COMMENT
+		COMMENT @return the written NBT compound
 		ARG 1 nbt
+			COMMENT the NBT compound to write to
 	METHOD method_7954 toHoverableText ()Lnet/minecraft/class_2561;
 	METHOD method_7955 (Lnet/minecraft/class_5250;)Lnet/minecraft/class_5250;
 		ARG 0 text
@@ -194,10 +228,18 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 3 breakCallback
 	METHOD method_7957 updateEmptyState ()V
 	METHOD method_7958 hasGlint ()Z
-	METHOD method_7959 putSubTag (Ljava/lang/String;Lnet/minecraft/class_2520;)V
+	METHOD method_7959 putNbtElement (Ljava/lang/String;Lnet/minecraft/class_2520;)V
+		COMMENT Puts the given {@link NbtElement} in the item stack's custom NBT at the specified key.
+		COMMENT
+		COMMENT @see #hasNbt()
+		COMMENT @see #getNbt()
+		COMMENT @see #setNbt(NbtCompound)
 		ARG 1 key
-		ARG 2 tag
+			COMMENT the key where to put the given {@link NbtElement}
+		ARG 2 element
+			COMMENT the NBT element to put
 	METHOD method_7960 isEmpty ()Z
+		COMMENT {@return whether this item stack is empty}
 	METHOD method_7961 isInFrame ()Z
 	METHOD method_7962 isItemEqualIgnoreDamage (Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
@@ -209,7 +251,12 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7967 isUsedOnRelease ()Z
 	METHOD method_7968 isEqual (Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
-	METHOD method_7969 getTag ()Lnet/minecraft/class_2487;
+	METHOD method_7969 getNbt ()Lnet/minecraft/class_2487;
+		COMMENT {@return the custom NBT of this item stack, may be {@code null}}
+		COMMENT
+		COMMENT @see #hasNbt()
+		COMMENT @see #getOrCreateNbt()
+		COMMENT @see #setNbt(NbtCompound)
 	METHOD method_7970 damage (ILjava/util/Random;Lnet/minecraft/class_3222;)Z
 		ARG 1 amount
 		ARG 2 random
@@ -217,12 +264,14 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7971 split (I)Lnet/minecraft/class_1799;
 		ARG 1 amount
 	METHOD method_7972 copy ()Lnet/minecraft/class_1799;
+		COMMENT Creates and returns a copy of this item stack.
 	METHOD method_7973 areEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 0 left
 		ARG 1 right
 	METHOD method_7974 setDamage (I)V
 		ARG 1 damage
-	METHOD method_7975 areTagsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+	METHOD method_7975 areNbtEquals (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+		COMMENT {@return whether the given item stacks have equivalent custom NBT}
 		ARG 0 left
 		ARG 1 right
 	METHOD method_7976 getUseAction ()Lnet/minecraft/class_1839;
@@ -234,20 +283,38 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7979 postHit (Lnet/minecraft/class_1309;Lnet/minecraft/class_1657;)V
 		ARG 1 target
 		ARG 2 attacker
-	METHOD method_7980 setTag (Lnet/minecraft/class_2487;)V
-		ARG 1 tag
+	METHOD method_7980 setNbt (Lnet/minecraft/class_2487;)V
+		COMMENT Sets the custom NBT of this item stack.
+		COMMENT
+		COMMENT @see #hasNbt()
+		COMMENT @see #getNbt()
+		COMMENT @see #getOrCreateNbt()
+		ARG 1 nbt
+			COMMENT the custom NBT compound, may be {@code null} to reset
 	METHOD method_7981 useOnBlock (Lnet/minecraft/class_1838;)Lnet/minecraft/class_1269;
 		ARG 1 context
 	METHOD method_7982 onCraft (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;I)V
 		ARG 1 world
 		ARG 2 player
 		ARG 3 amount
-	METHOD method_7983 removeSubTag (Ljava/lang/String;)V
+	METHOD method_7983 removeSubNbt (Ljava/lang/String;)V
+		COMMENT Removes the sub {@linkplain NbtElement} at the specified key in this item stack's custom NBT.
+		COMMENT
+		COMMENT @see #hasNbt()
+		COMMENT @see #getNbt()
+		COMMENT @see #getNbt(String)
+		COMMENT @see #getOrCreateNbt(String)
+		COMMENT @see #putNbtElement(String, NbtElement)
 		ARG 1 key
 	METHOD method_7984 areItemsEqualIgnoreDamage (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 0 left
 		ARG 1 right
-	METHOD method_7985 hasTag ()Z
+	METHOD method_7985 hasNbt ()Z
+		COMMENT {@return whether this item stack has custom NBT}
+		COMMENT
+		COMMENT @see #getNbt()
+		COMMENT @see #getOrCreateNbt()
+		COMMENT @see #setNbt(NbtCompound)
 	METHOD method_7986 isDamaged ()Z
 	METHOD method_7987 areItemsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 0 left
