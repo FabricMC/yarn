@@ -53,16 +53,16 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	COMMENT   <td>Custom NBT</td><td>{@link #setNbt(NbtCompound)}</td><td>Sets the custom NBT of the item stack.</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT   <td>Sub Custom NBT</td><td>{@link #getNbt(String)}</td><td>Returns the sub NBT compound at the specified key.</td>
+	COMMENT   <td>Sub Custom NBT</td><td>{@link #getSubNbt(String)}</td><td>Returns the sub NBT compound at the specified key.</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT   <td>Sub Custom NBT</td><td>{@link #getOrCreateNbt(String)}</td><td>Returns the sub NBT compound at the specified key, or create one if absent.</td>
+	COMMENT   <td>Sub Custom NBT</td><td>{@link #getOrCreateSubNbt(String)}</td><td>Returns the sub NBT compound at the specified key, or create one if absent.</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT   <td>Sub Custom NBT</td><td>{@link #removeNbt(String)}</td><td>Removes the sub NBT element at the specified key.</td>
+	COMMENT   <td>Sub Custom NBT</td><td>{@link #removeSubNbt(String)}</td><td>Removes the sub NBT element at the specified key.</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT   <td>Sub Custom NBT</td><td>{@link #setNbt(String, NbtElement)}</td><td>Sets the sub NBT element at the specified key.</td>
+	COMMENT   <td>Sub Custom NBT</td><td>{@link #setSubNbt(String, NbtElement)}</td><td>Sets the sub NBT element at the specified key.</td>
 	COMMENT </tr>
 	COMMENT </table>
 	COMMENT </div>
@@ -172,10 +172,10 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7910 finishUsing (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)Lnet/minecraft/class_1799;
 		ARG 1 world
 		ARG 2 user
-	METHOD method_7911 getOrCreateNbt (Ljava/lang/String;)Lnet/minecraft/class_2487;
+	METHOD method_7911 getOrCreateSubNbt (Ljava/lang/String;)Lnet/minecraft/class_2487;
 		COMMENT {@return the compound NBT at the specified key in this item stack's NBT, or a new compound if absent}
 		COMMENT
-		COMMENT @see <a href="nbt-operations">Item Stack NBT Operations</a>
+		COMMENT @see <a href="#nbt-operations">Item Stack NBT Operations</a>
 		ARG 1 key
 	METHOD method_7912 setCooldown (I)V
 		ARG 1 cooldown
@@ -185,6 +185,9 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 3 hand
 	METHOD method_7914 getMaxCount ()I
 	METHOD method_7915 fromNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_1799;
+		COMMENT Deserializes an item stack from NBT.
+		COMMENT
+		COMMENT @see <a href="#nbt-operations">Item Stack NBT Operations</a>
 		ARG 0 nbt
 	METHOD method_7916 addAttributeModifier (Lnet/minecraft/class_1320;Lnet/minecraft/class_1322;Lnet/minecraft/class_1304;)V
 		ARG 1 attribute
@@ -241,10 +244,10 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7940 canDestroy (Lnet/minecraft/class_5415;Lnet/minecraft/class_2694;)Z
 		ARG 1 tagManager
 		ARG 2 pos
-	METHOD method_7941 getNbt (Ljava/lang/String;)Lnet/minecraft/class_2487;
+	METHOD method_7941 getSubNbt (Ljava/lang/String;)Lnet/minecraft/class_2487;
 		COMMENT {@return the NBT compound at the specified key in this item stack's custom NBT, may be {@code null}}
 		COMMENT
-		COMMENT @see <a href="nbt-operations">Item Stack NBT Operations</a>
+		COMMENT @see <a href="#nbt-operations">Item Stack NBT Operations</a>
 		ARG 1 key
 	METHOD method_7942 hasEnchantments ()Z
 	METHOD method_7944 canPlaceOn (Lnet/minecraft/class_5415;Lnet/minecraft/class_2694;)Z
@@ -259,7 +262,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT
 		COMMENT @return the custom NBT of this item stack
 		COMMENT
-		COMMENT @see <a href="nbt-operations">Item Stack NBT Operations</a>
+		COMMENT @see <a href="#nbt-operations">Item Stack NBT Operations</a>
 	METHOD method_7949 usageTick (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;I)V
 		ARG 1 world
 		ARG 2 user
@@ -285,7 +288,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT Writes the serialized item stack into the given {@link NbtCompound}.
 		COMMENT
 		COMMENT @return the written NBT compound
-		COMMENT @see <a href="nbt-operations">Item Stack NBT Operations</a>
+		COMMENT @see <a href="#nbt-operations">Item Stack NBT Operations</a>
 		ARG 1 nbt
 			COMMENT the NBT compound to write to
 	METHOD method_7954 toHoverableText ()Lnet/minecraft/class_2561;
@@ -297,10 +300,10 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 3 breakCallback
 	METHOD method_7957 updateEmptyState ()V
 	METHOD method_7958 hasGlint ()Z
-	METHOD method_7959 setNbt (Ljava/lang/String;Lnet/minecraft/class_2520;)V
+	METHOD method_7959 setSubNbt (Ljava/lang/String;Lnet/minecraft/class_2520;)V
 		COMMENT Sets the given NBT element in the item stack's custom NBT at the specified key.
 		COMMENT
-		COMMENT @see <a href="nbt-operations">Item Stack NBT Operations</a>
+		COMMENT @see <a href="#nbt-operations">Item Stack NBT Operations</a>
 		ARG 1 key
 			COMMENT the key where to put the given {@link NbtElement}
 		ARG 2 element
@@ -321,7 +324,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7969 getNbt ()Lnet/minecraft/class_2487;
 		COMMENT {@return the custom NBT of this item stack, may be {@code null}}
 		COMMENT
-		COMMENT @see <a href="nbt-operations">Item Stack NBT Operations</a>
+		COMMENT @see <a href="#nbt-operations">Item Stack NBT Operations</a>
 	METHOD method_7970 damage (ILjava/util/Random;Lnet/minecraft/class_3222;)Z
 		ARG 1 amount
 		ARG 2 random
@@ -351,7 +354,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7980 setNbt (Lnet/minecraft/class_2487;)V
 		COMMENT Sets the custom NBT of this item stack.
 		COMMENT
-		COMMENT @see <a href="nbt-operations">Item Stack NBT Operations</a>
+		COMMENT @see <a href="#nbt-operations">Item Stack NBT Operations</a>
 		ARG 1 nbt
 			COMMENT the custom NBT compound, may be {@code null} to reset
 	METHOD method_7981 useOnBlock (Lnet/minecraft/class_1838;)Lnet/minecraft/class_1269;
@@ -360,10 +363,10 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 1 world
 		ARG 2 player
 		ARG 3 amount
-	METHOD method_7983 removeNbt (Ljava/lang/String;)V
+	METHOD method_7983 removeSubNbt (Ljava/lang/String;)V
 		COMMENT Removes the sub NBT element at the specified key in this item stack's custom NBT.
 		COMMENT
-		COMMENT @see <a href="nbt-operations">Item Stack NBT Operations</a>
+		COMMENT @see <a href="#nbt-operations">Item Stack NBT Operations</a>
 		ARG 1 key
 	METHOD method_7984 areItemsEqualIgnoreDamage (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 0 left
@@ -371,7 +374,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7985 hasNbt ()Z
 		COMMENT {@return whether this item stack has custom NBT}
 		COMMENT
-		COMMENT @see <a href="nbt-operations">Item Stack NBT Operations</a>
+		COMMENT @see <a href="#nbt-operations">Item Stack NBT Operations</a>
 	METHOD method_7986 isDamaged ()Z
 	METHOD method_7987 areItemsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 0 left
