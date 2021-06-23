@@ -1,6 +1,8 @@
 CLASS net/minecraft/class_1066 net/minecraft/client/resource/ClientBuiltinResourcePackProvider
 	FIELD field_16263 index Lnet/minecraft/class_1064;
 	FIELD field_27772 DEFAULT_PACK_METADATA Lnet/minecraft/class_3272;
+	FIELD field_32958 MAX_FILE_SIZE I
+	FIELD field_32959 MAX_SAVED_PACKS I
 	FIELD field_32960 VANILLA Ljava/lang/String;
 	FIELD field_32961 SERVER Ljava/lang/String;
 	FIELD field_32962 PROGRAMER_ART_ID Ljava/lang/String;
@@ -10,7 +12,7 @@ CLASS net/minecraft/class_1066 net/minecraft/client/resource/ClientBuiltinResour
 	FIELD field_5293 pack Lnet/minecraft/class_3268;
 	FIELD field_5294 downloadTask Ljava/util/concurrent/CompletableFuture;
 	FIELD field_5295 serverContainer Lnet/minecraft/class_3288;
-	FIELD field_5296 ALPHANUMERAL Ljava/util/regex/Pattern;
+	FIELD field_5296 SHA1_PATTERN Ljava/util/regex/Pattern;
 	FIELD field_5297 lock Ljava/util/concurrent/locks/ReentrantLock;
 	FIELD field_5298 LOGGER Lorg/apache/logging/log4j/Logger;
 	METHOD <init> (Ljava/io/File;Lnet/minecraft/class_1064;)V
@@ -18,6 +20,8 @@ CLASS net/minecraft/class_1066 net/minecraft/client/resource/ClientBuiltinResour
 		ARG 2 index
 	METHOD method_16048 getProgrammerArtResourcePackFromZipFile (Ljava/io/File;)Lnet/minecraft/class_3262;
 		ARG 0 zipFile
+	METHOD method_19436 (Ljava/io/File;Ljava/lang/Void;Ljava/lang/Throwable;)V
+		ARG 2 throwable
 	METHOD method_19437 delete (Ljava/io/File;)V
 		ARG 0 file
 	METHOD method_25453 getProgrammerArtResourcePackProfile (Lnet/minecraft/class_3288$class_5351;Ljava/util/function/Supplier;)Lnet/minecraft/class_3288;
@@ -27,12 +31,17 @@ CLASS net/minecraft/class_1066 net/minecraft/client/resource/ClientBuiltinResour
 		ARG 1 factory
 	METHOD method_25455 getProgrammerArtResourcePackFromDirectory (Ljava/io/File;)Lnet/minecraft/class_3259;
 		ARG 0 packDirectory
+	METHOD method_36324 (Lnet/minecraft/class_310;Z)V
+		ARG 1 confirmed
 	METHOD method_4633 getPack ()Lnet/minecraft/class_3268;
 	METHOD method_4636 getDownloadHeaders ()Ljava/util/Map;
 	METHOD method_4638 loadServerPack (Ljava/io/File;Lnet/minecraft/class_5352;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 packZip
 		ARG 2 packSource
 	METHOD method_4640 download (Ljava/lang/String;Ljava/lang/String;Z)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 url
+		ARG 2 packSha1
+		ARG 3 closeAfterDownload
 	METHOD method_4641 verifyFile (Ljava/lang/String;Ljava/io/File;)Z
 		ARG 1 expectedSha1
 		ARG 2 file
