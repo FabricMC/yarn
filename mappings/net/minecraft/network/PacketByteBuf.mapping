@@ -74,6 +74,9 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT <tr>
 	COMMENT  <td>{@link BitSet}</td><td>{@link #readBitSet()}</td><td>{@link #writeBitSet(BitSet)}</td>
 	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link Optional}</td><td>{@link #readOptional(Function)}</td><td>{@link #writeOptional(Optional, BiConsumer)}</td>
+	COMMENT </tr>
 	COMMENT </table></div>
 	COMMENT
 	COMMENT <p>All {@code read} and {@code write} methods throw {@link
@@ -683,3 +686,19 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return the read chunk position
 		COMMENT @see #writeChunkPos(ChunkPos)
+	METHOD method_37435 writeOptional (Ljava/util/Optional;Ljava/util/function/BiConsumer;)V
+		COMMENT Writes an optional value to this buf. An optional value is represented by
+		COMMENT a boolean indicating if the value is present, followed by the value only if
+		COMMENT the value is present.
+		COMMENT
+		COMMENT @see #readOptional(Function)
+		ARG 1 value
+		ARG 2 serializer
+	METHOD method_37436 readOptional (Ljava/util/function/Function;)Ljava/util/Optional;
+		COMMENT Reads an optional value from this buf. An optional value is represented by
+		COMMENT a boolean indicating if the value is present, followed by the value only if
+		COMMENT the value is present.
+		COMMENT
+		COMMENT @return the read optional value
+		COMMENT @see #writeOptional(Optional, BiConsumer)
+		ARG 1 parser
