@@ -203,13 +203,16 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_1507 setScreen (Lnet/minecraft/class_437;)V
 		COMMENT Sets the current screen to a new screen.
 		COMMENT
-		COMMENT <p>If the screen being opened is {@code null} and the client is not in game, the title screen will be opened.
-		COMMENT If the previous screen is {@code null} and the player is dead, then the death screen will be opened.
-		COMMENT Otherwise, the previous screen will be closed.
+		COMMENT <p>If the screen being opened is {@code null}:
+		COMMENT <ul>
+		COMMENT <li>if the client is not in game, the title screen will be opened</li>
+		COMMENT <li>if the {@linkplain #player} is dead, the death screen will be opened</li>
+		COMMENT </ul>
 		COMMENT
-		COMMENT <p>If there is an open screen when the current screen is changed, {@link Screen#removed()} will
-		COMMENT be called on it.
+		COMMENT <p>If there is an open screen when the current screen is changed, {@link Screen#removed()}
+		COMMENT will be called on it to notify it of the closing.
 		ARG 1 screen
+			COMMENT the new screen, or {@code null} to just close the previous screen
 	METHOD method_1508 handleInputEvents ()V
 	METHOD method_1511 doItemPick ()V
 	METHOD method_1513 reloadResourcesConcurrently ()Ljava/util/concurrent/CompletableFuture;
