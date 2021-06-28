@@ -1,0 +1,79 @@
+CLASS net/minecraft/class_5965 net/minecraft/util/profiler/Sampler
+	FIELD field_29598 type Lnet/minecraft/class_5949;
+	FIELD field_29599 retriever Ljava/util/function/DoubleSupplier;
+	FIELD field_29600 valueBuffer Lio/netty/buffer/ByteBuf;
+	FIELD field_29601 active Z
+	FIELD field_29602 startAction Ljava/lang/Runnable;
+	FIELD field_29603 deviationChecker Lnet/minecraft/class_5965$class_5967;
+	FIELD field_33882 name Ljava/lang/String;
+	FIELD field_33883 ticksBuffer Lio/netty/buffer/ByteBuf;
+	FIELD field_33884 currentSample D
+	METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_5949;Ljava/util/function/DoubleSupplier;Ljava/lang/Runnable;Lnet/minecraft/class_5965$class_5967;)V
+		ARG 1 name
+		ARG 2 type
+		ARG 3 retriever
+		ARG 4 startAction
+		ARG 5 deviationChecker
+	METHOD equals (Ljava/lang/Object;)Z
+		ARG 1 o
+	METHOD method_34776 create (Ljava/lang/String;Lnet/minecraft/class_5949;Ljava/util/function/DoubleSupplier;)Lnet/minecraft/class_5965;
+		ARG 0 name
+		ARG 1 type
+		ARG 2 retriever
+	METHOD method_34778 create (Ljava/lang/String;Lnet/minecraft/class_5949;Ljava/lang/Object;Ljava/util/function/ToDoubleFunction;)Lnet/minecraft/class_5965;
+		ARG 0 name
+		ARG 1 type
+		ARG 2 context
+		ARG 3 retriever
+	METHOD method_34779 builder (Ljava/lang/String;Lnet/minecraft/class_5949;Ljava/util/function/ToDoubleFunction;Ljava/lang/Object;)Lnet/minecraft/class_5965$class_5966;
+		ARG 0 name
+		ARG 1 type
+		ARG 2 retriever
+		ARG 3 context
+	METHOD method_34780 start ()V
+	METHOD method_34781 sample (I)V
+		ARG 1 tick
+	METHOD method_34782 stop ()V
+	METHOD method_34786 ensureActive ()V
+	METHOD method_37170 getRetriever ()Ljava/util/function/DoubleSupplier;
+	METHOD method_37171 getName ()Ljava/lang/String;
+	METHOD method_37172 getType ()Lnet/minecraft/class_5949;
+	METHOD method_37173 collectData ()Lnet/minecraft/class_5965$class_6398;
+	METHOD method_37174 hasDeviated ()Z
+	CLASS class_5966 Builder
+		FIELD field_29605 timeGetter Ljava/util/function/DoubleSupplier;
+		FIELD field_29606 context Ljava/lang/Object;
+		FIELD field_29607 startAction Ljava/lang/Runnable;
+		FIELD field_29608 deviationChecker Lnet/minecraft/class_5965$class_5967;
+		FIELD field_33885 name Ljava/lang/String;
+		FIELD field_33886 type Lnet/minecraft/class_5949;
+		METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_5949;Ljava/util/function/ToDoubleFunction;Ljava/lang/Object;)V
+			ARG 1 name
+			ARG 2 type
+			ARG 3 timeFunction
+			ARG 4 context
+		METHOD method_34787 build ()Lnet/minecraft/class_5965;
+		METHOD method_34788 deviationChecker (Lnet/minecraft/class_5965$class_5967;)Lnet/minecraft/class_5965$class_5966;
+			ARG 1 deviationChecker
+		METHOD method_34789 startAction (Ljava/util/function/Consumer;)Lnet/minecraft/class_5965$class_5966;
+			ARG 1 action
+	CLASS class_5967 DeviationChecker
+		METHOD method_34792 check (D)Z
+			ARG 1 value
+	CLASS class_5968 RatioDeviationChecker
+		FIELD field_29609 threshold F
+		FIELD field_29611 lastValue D
+		METHOD <init> (F)V
+			ARG 1 threshold
+	CLASS class_6398 Data
+		FIELD field_33887 values Lit/unimi/dsi/fastutil/ints/Int2DoubleMap;
+		FIELD field_33888 startTick I
+		FIELD field_33889 endTick I
+		METHOD <init> (IILit/unimi/dsi/fastutil/ints/Int2DoubleMap;)V
+			ARG 1 startTick
+			ARG 2 endTick
+			ARG 3 values
+		METHOD method_37175 getStartTick ()I
+		METHOD method_37176 getValue (I)D
+			ARG 1 tick
+		METHOD method_37177 getEndTick ()I
