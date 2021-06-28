@@ -10,6 +10,7 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	FIELD field_30730 EMPTY_SPACE_SLOT_INDEX I
 		COMMENT A special slot index value ({@value}) indicating that the player has clicked outside the main panel
 		COMMENT of a screen. Used for dropping the cursor stack.
+	FIELD field_34024 revision I
 	FIELD field_7757 quickCraftSlots Ljava/util/Set;
 	FIELD field_7759 quickCraftStage I
 	FIELD field_7761 slots Lnet/minecraft/class_2371;
@@ -64,8 +65,12 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		ARG 1 handler
 	METHOD method_34248 updateSyncHandler (Lnet/minecraft/class_5916;)V
 		ARG 1 handler
+	METHOD method_34249 (Lnet/minecraft/class_1735;Lnet/minecraft/class_1657;Lnet/minecraft/class_1799;)V
+		ARG 3 stack
 	METHOD method_34250 setPreviousCursorStack (Lnet/minecraft/class_1799;)V
 		ARG 1 stack
+	METHOD method_34251 (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_1657;Lnet/minecraft/class_1799;)V
+		ARG 3 stack
 	METHOD method_34252 syncState ()V
 	METHOD method_34253 checkSlotUpdates (ILnet/minecraft/class_1799;Ljava/util/function/Supplier;)V
 		ARG 1 slot
@@ -81,6 +86,15 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	METHOD method_34715 checkPropertyUpdates (II)V
 		ARG 1 id
 		ARG 2 value
+	METHOD method_37418 getSlotIndex (Lnet/minecraft/class_1263;I)Ljava/util/OptionalInt;
+		ARG 1 inventory
+		ARG 2 index
+	METHOD method_37419 notifyPropertyUpdate (II)V
+		ARG 1 index
+		ARG 2 value
+	METHOD method_37420 updateToClient ()V
+	METHOD method_37421 getRevision ()I
+	METHOD method_37422 nextRevision ()I
 	METHOD method_7591 packQuickCraftData (II)I
 		ARG 0 quickCraftStage
 		ARG 1 buttonId
@@ -98,6 +112,7 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	METHOD method_7594 unpackQuickCraftStage (I)I
 		ARG 0 quickCraftData
 	METHOD method_7595 close (Lnet/minecraft/class_1657;)V
+		ARG 1 player
 	METHOD method_7596 addListener (Lnet/minecraft/class_1712;)V
 		ARG 1 listener
 	METHOD method_7597 canUse (Lnet/minecraft/class_1657;)Z
@@ -125,8 +140,10 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		ARG 0 entity
 	METHOD method_7609 onContentChanged (Lnet/minecraft/class_1263;)V
 		ARG 1 inventory
-	METHOD method_7610 updateSlotStacks (Ljava/util/List;)V
-		ARG 1 stacks
+	METHOD method_7610 updateSlotStacks (ILjava/util/List;Lnet/minecraft/class_1799;)V
+		ARG 1 revision
+		ARG 2 stacks
+		ARG 3 cursorStack
 	METHOD method_7611 getSlot (I)Lnet/minecraft/class_1735;
 		ARG 1 index
 	METHOD method_7613 canInsertIntoSlot (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;)Z
@@ -146,9 +163,10 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		ARG 3 stackSize
 	METHOD method_7618 calculateComparatorOutput (Lnet/minecraft/class_1263;)I
 		ARG 0 inventory
-	METHOD method_7619 setStackInSlot (ILnet/minecraft/class_1799;)V
+	METHOD method_7619 setStackInSlot (IILnet/minecraft/class_1799;)V
 		ARG 1 slot
-		ARG 2 stack
+		ARG 2 revision
+		ARG 3 stack
 	METHOD method_7620 unpackQuickCraftButton (I)I
 		ARG 0 quickCraftData
 	METHOD method_7621 addSlot (Lnet/minecraft/class_1735;)Lnet/minecraft/class_1735;
