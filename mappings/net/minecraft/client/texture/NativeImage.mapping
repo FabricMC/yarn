@@ -1,5 +1,18 @@
 CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 	FIELD field_21684 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_32031 ALPHA_OFFSET I
+		COMMENT The bit offset of the alpha data in the {@linkplain Format#RGBA RGBA} format.
+		COMMENT Is {@value}. Notice the alpha data in {@linkplain Format#LUMINANCE_ALPHA
+		COMMENT luminance-alpha} format has a different offset of {@code 8}.
+	FIELD field_32032 BLUE_OFFSET I
+		COMMENT The bit offset of the blue data in the {@linkplain Format#RGBA RGBA} or the
+		COMMENT {@linkplain Format#RGB RGB} formats. Is {@value}.
+	FIELD field_32033 GREEN_OFFSET I
+		COMMENT The bit offset of the green data in the {@linkplain Format#RGBA RGBA} or the
+		COMMENT {@linkplain Format#RGB RGB} formats. Is {@value}.
+	FIELD field_32034 RED_OFFSET I
+		COMMENT The bit offset of the red data in the {@linkplain Format#RGBA RGBA} or the
+		COMMENT {@linkplain Format#RGB RGB} formats. Is {@value}.
 	FIELD field_4986 format Lnet/minecraft/class_1011$class_1012;
 	FIELD field_4987 sizeBytes J
 	FIELD field_4988 pointer J
@@ -38,13 +51,15 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		ARG 11 close
 	METHOD method_24030 getAlpha (I)I
 		ARG 0 color
-	METHOD method_24031 getAbgrColor (IIII)I
-		COMMENT The resulting color of this operation is stored as least to most significant bits.
+	METHOD method_24031 packColor (IIII)I
+		COMMENT The resulting color of this operation is stored as RGBA from least to most
+		COMMENT significant bits, or from smallest to biggest bits.
 		ARG 0 alpha
 		ARG 1 blue
 		ARG 2 green
 		ARG 3 red
 	METHOD method_24032 write (Ljava/nio/channels/WritableByteChannel;)Z
+		ARG 1 channel
 	METHOD method_24033 getRed (I)I
 		ARG 0 color
 	METHOD method_24034 getGreen (I)I
@@ -52,14 +67,18 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 	METHOD method_24035 getBlue (I)I
 		ARG 0 color
 	METHOD method_24036 getBytes ()[B
-	METHOD method_35621 setPixelLuminance (IIB)V
+	METHOD method_35620 readDepthComponent (F)V
+		ARG 1 unused
+	METHOD method_35621 setLuminance (IIB)V
 		ARG 1 x
 		ARG 2 y
 		ARG 3 luminance
+	METHOD method_35622 writeTo (Ljava/lang/String;)V
+		ARG 1 path
 	METHOD method_35623 getRed (II)B
 		ARG 1 x
 		ARG 2 y
-	METHOD method_35624 blendPixel (III)V
+	METHOD method_35624 blend (III)V
 		ARG 1 x
 		ARG 2 y
 		ARG 3 color
@@ -69,6 +88,9 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 	METHOD method_35626 getBlue (II)B
 		ARG 1 x
 		ARG 2 y
+	METHOD method_35627 drawPixels ()V
+		COMMENT Use {@code upload} to upload this image to GL so it can be used later. This
+		COMMENT method is not used in vanilla, and its side effects are not yet known.
 	METHOD method_36559 isOutOfBounds (II)Z
 		ARG 1 x
 		ARG 2 y
@@ -86,6 +108,7 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 	METHOD method_4302 untrack ()V
 	METHOD method_4303 read (Lnet/minecraft/class_1011$class_1012;Ljava/nio/ByteBuffer;)Lnet/minecraft/class_1011;
 		ARG 0 format
+		ARG 1 buffer
 	METHOD method_4304 copyRect (IIIIIIZZ)V
 		ARG 1 x
 		ARG 2 y
@@ -95,22 +118,27 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		ARG 6 height
 		ARG 7 flipX
 		ARG 8 flipY
-	METHOD method_4305 setPixelColor (III)V
+	METHOD method_4305 setColor (III)V
 		COMMENT Sets the color of a pixel on this native image.
-		COMMENT The color to be set using this method should be in a ABGR format.
+		COMMENT The color to be set by this method will be in a big-endian (from biggest
+		COMMENT to smallest bits) ABGR format, or little-endian RGBA.
 		COMMENT
-		COMMENT <p>This is only supported when this native image's format is {@link NativeImage.Format#ABGR ABGR}
+		COMMENT @throws IllegalArgumentException when this native image's format is not
+		COMMENT {@linkplain Format#RGBA little-endian RGBA}, or the coordinate is out-of-bounds
 		ARG 1 x
 		ARG 2 y
 		ARG 3 color
+			COMMENT the color, with red at smallest and alpha at biggest bits
 	METHOD method_4307 getWidth ()I
 	METHOD method_4308 setTextureFilter (ZZ)V
 		ARG 0 blur
 		ARG 1 mipmap
 	METHOD method_4309 read (Ljava/io/InputStream;)Lnet/minecraft/class_1011;
+		ARG 0 stream
 	METHOD method_4310 read (Lnet/minecraft/class_1011$class_1012;Ljava/io/InputStream;)Lnet/minecraft/class_1011;
 		ARG 0 format
-	METHOD method_4311 getPixelOpacity (II)B
+		ARG 1 stream
+	METHOD method_4311 getOpacity (II)B
 		ARG 1 x
 		ARG 2 y
 	METHOD method_4312 upload (IIIIIIIZZ)V
@@ -123,13 +151,16 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		ARG 7 height
 		ARG 8 mipmap
 		ARG 9 close
-	METHOD method_4314 writeFile (Ljava/nio/file/Path;)V
+	METHOD method_4314 writeTo (Ljava/nio/file/Path;)V
 		ARG 1 path
-	METHOD method_4315 getPixelColor (II)I
+	METHOD method_4315 getColor (II)I
 		COMMENT Gets the color of a pixel on this native image.
-		COMMENT The color returned by this method will be in a ABGR format.
+		COMMENT The color returned by this method will be in a big-endian (from biggest
+		COMMENT to smallest bits) ABGR format, or little-endian RGBA.
 		COMMENT
-		COMMENT <p>This is only supported when this native image's format is {@link NativeImage.Format#ABGR ABGR}.
+		COMMENT @throws IllegalArgumentException when this native image's format is not
+		COMMENT {@linkplain Format#RGBA little-endian RGBA}, or the coordinate is out-of-bounds
+		COMMENT @return the color, with red at smallest and alpha at biggest bits
 		ARG 1 x
 		ARG 2 y
 	METHOD method_4316 makeGlyphBitmapSubpixel (Lorg/lwjgl/stb/STBTTFontinfo;IIIFFFFII)V
@@ -163,7 +194,9 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 	METHOD method_4322 makePixelArray ()[I
 	METHOD method_4323 getHeight ()I
 	METHOD method_4324 read (Ljava/nio/ByteBuffer;)Lnet/minecraft/class_1011;
-	METHOD method_4325 writeFile (Ljava/io/File;)V
+		ARG 0 buffer
+	METHOD method_4325 writeTo (Ljava/io/File;)V
+		ARG 1 path
 	METHOD method_4326 fillRect (IIIII)V
 		ARG 1 x
 		ARG 2 y
@@ -174,23 +207,30 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		ARG 1 level
 		ARG 2 removeAlpha
 	CLASS class_1012 Format
-		FIELD field_4993 pixelDataFormat I
+		FIELD field_4993 glFormat I
 		FIELD field_4994 channelCount I
 		FIELD field_4996 writeable Z
-		FIELD field_4997 ABGR Lnet/minecraft/class_1011$class_1012;
+		FIELD field_4997 RGBA Lnet/minecraft/class_1011$class_1012;
+			COMMENT The format stores RGBA in little endian order, so it's ABGR from the biggest to
+			COMMENT the smallest bits.
 		FIELD field_4999 hasAlpha Z
 		FIELD field_5000 hasLuminance Z
-		FIELD field_5001 BGR Lnet/minecraft/class_1011$class_1012;
+		FIELD field_5001 RGB Lnet/minecraft/class_1011$class_1012;
+			COMMENT The format stores RGB in little endian order, so it's BGR from the biggest to
+			COMMENT the smallest bits.
+		FIELD field_5002 LUMINANCE_ALPHA Lnet/minecraft/class_1011$class_1012;
+			COMMENT The format stores luminance and alpha in little endian order, so it's alpha then
+			COMMENT luminance from the biggest to the smallest bits.
 		FIELD field_5003 hasBlue Z
 		FIELD field_5004 hasGreen Z
 		FIELD field_5005 hasRed Z
-		FIELD field_5006 alphaChannelOffset I
-		FIELD field_5007 luminanceChannelOffset I
+		FIELD field_5006 alphaOffset I
+		FIELD field_5007 luminanceOffset I
 		FIELD field_5008 blueOffset I
 		FIELD field_5009 greenOffset I
 		FIELD field_5010 redOffset I
 		METHOD <init> (Ljava/lang/String;IIIZZZZZIIIIIZ)V
-			ARG 3 channels
+			ARG 3 channelCount
 			ARG 4 glFormat
 			ARG 5 hasRed
 			ARG 6 hasGreen
@@ -210,34 +250,41 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		METHOD method_35632 getRedOffset ()I
 		METHOD method_35633 getGreenOffset ()I
 		METHOD method_35634 getBlueOffset ()I
-		METHOD method_35635 getLuminanceChannelOffset ()I
+		METHOD method_35635 getLuminanceOffset ()I
 		METHOD method_35636 hasRedChannel ()Z
 		METHOD method_35637 hasGreenChannel ()Z
 		METHOD method_35638 hasBlueChannel ()Z
-		METHOD method_35639 getRedOrLuminanceOffset ()I
-		METHOD method_35640 getGreenOrLuminanceOffset ()I
-		METHOD method_35641 getBlueOrLuminanceOffset ()I
-		METHOD method_4329 hasAlphaChannel ()Z
-		METHOD method_4330 getOpacityOffset ()I
-		METHOD method_4332 getAlphaChannelOffset ()I
-		METHOD method_4333 getPixelDataFormat ()I
+		METHOD method_35639 getRedChannelOffset ()I
+		METHOD method_35640 getGreenChannelOffset ()I
+		METHOD method_35641 getBlueChannelOffset ()I
+		METHOD method_4329 hasAlpha ()Z
+		METHOD method_4330 getOpacityChannelOffset ()I
+			COMMENT @apiNote For luminance-alpha format, this would return the luminance offset
+			COMMENT than the alpha offset.
+		METHOD method_4332 getAlphaOffset ()I
+		METHOD method_4333 toGl ()I
 		METHOD method_4335 getChannelCount ()I
-		METHOD method_4336 getFormat (I)Lnet/minecraft/class_1011$class_1012;
+		METHOD method_4336 fromGl (I)Lnet/minecraft/class_1011$class_1012;
 			ARG 0 glFormat
 		METHOD method_4337 hasOpacityChannel ()Z
 		METHOD method_4338 isWriteable ()Z
 		METHOD method_4339 setPackAlignment ()V
 		METHOD method_4340 setUnpackAlignment ()V
-	CLASS class_1013 GLFormat
-		FIELD field_5011 BGR Lnet/minecraft/class_1011$class_1013;
-		FIELD field_5012 ABGR Lnet/minecraft/class_1011$class_1013;
-		FIELD field_5015 glConstant I
+	CLASS class_1013 InternalFormat
+		COMMENT Represents the internal formats sent to {@code glTexImage2D}, representing the
+		COMMENT number of color channels present in an image to prepare.
+		COMMENT
+		COMMENT @see <a href="http://docs.gl/gl4/glTexImage2D#idm2352">Base Internal Formats</a>
+		COMMENT @see com.mojang.blaze3d.platform.TextureUtil#prepareImage(InternalFormat, int, int, int, int)
+		FIELD field_5015 value I
 		METHOD <init> (Ljava/lang/String;II)V
-			ARG 3 glConstant
-		METHOD method_4341 getGlConstant ()I
+			ARG 3 value
+		METHOD method_4341 getValue ()I
 	CLASS class_1014 WriteCallback
 		FIELD field_5018 channel Ljava/nio/channels/WritableByteChannel;
 		FIELD field_5019 exception Ljava/io/IOException;
+		METHOD <init> (Ljava/nio/channels/WritableByteChannel;)V
+			ARG 1 channel
 		METHOD invoke (JJI)V
 			ARG 1 context
 			ARG 3 data
