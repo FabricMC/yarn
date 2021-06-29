@@ -2,7 +2,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	FIELD field_17212 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_17213 currentChunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 	FIELD field_17214 world Lnet/minecraft/class_3218;
-	FIELD field_17215 serverLightingProvider Lnet/minecraft/class_3227;
+	FIELD field_17215 lightingProvider Lnet/minecraft/class_3227;
 	FIELD field_17216 mainThreadExecutor Lnet/minecraft/class_1255;
 	FIELD field_17218 chunkGenerator Lnet/minecraft/class_2794;
 	FIELD field_17220 chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
@@ -42,7 +42,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 11 persistentStateManagerFactory
 		ARG 12 viewDistance
 		ARG 13 dsync
-	METHOD method_17212 getLightProvider ()Lnet/minecraft/class_3227;
+	METHOD method_17212 getLightingProvider ()Lnet/minecraft/class_3227;
 	METHOD method_17214 setViewDistance (I)V
 		ARG 1 watchDistance
 	METHOD method_17216 getChunkHolder (J)Lnet/minecraft/class_3193;
@@ -134,6 +134,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		COMMENT tracking status of those entities to all players. It then checks if any player
 		COMMENT has changed chunk sections, and updates all entities tracking status to those
 		COMMENT players. This ensures all possible updates are accounted for.
+	METHOD method_18843 (Lnet/minecraft/class_3193;Ljava/util/concurrent/CompletableFuture;JLnet/minecraft/class_2791;)V
+		ARG 5 chunk
 	METHOD method_19488 getPointOfInterestStorage ()Lnet/minecraft/class_4153;
 	METHOD method_20441 releaseLightTicket (Lnet/minecraft/class_1923;)V
 		ARG 1 pos
@@ -155,6 +157,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 1 player
 	METHOD method_21619 dump (Ljava/io/Writer;)V
 		ARG 1 writer
+	METHOD method_21620 (Lnet/minecraft/class_2791;)Ljava/util/Optional;
+		ARG 0 chunk
 	METHOD method_21676 getFutureStatus (Ljava/util/concurrent/CompletableFuture;)Ljava/lang/String;
 	METHOD method_23272 getChunkLoadingDebugInfo (Lnet/minecraft/class_1923;)Ljava/lang/String;
 		ARG 1 chunkPos

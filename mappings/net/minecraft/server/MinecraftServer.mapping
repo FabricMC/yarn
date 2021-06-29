@@ -25,7 +25,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_19248 nextTickTimestamp J
 	FIELD field_19249 waitingForNextTick Z
 	FIELD field_20850 dataCommandStorage Lnet/minecraft/class_4565;
-	FIELD field_22250 tickTimeTracker Lnet/minecraft/class_5962;
+	FIELD field_22250 recorder Lnet/minecraft/class_5962;
 	FIELD field_23784 session Lnet/minecraft/class_32$class_5143;
 	FIELD field_24370 structureManager Lnet/minecraft/class_3485;
 	FIELD field_24371 saveHandler Lnet/minecraft/class_29;
@@ -40,7 +40,11 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_33211 MAX_WORLD_BORDER_RADIUS I
 	FIELD field_33217 PLAYER_SAMPLE_UPDATE_INTERVAL J
 	FIELD field_33219 START_TICKET_CHUNKS I
-	FIELD field_33979 profilerEnabled Z
+	FIELD field_33975 recorderResultConsumer Ljava/util/function/Consumer;
+	FIELD field_33976 recorderDumpConsumer Ljava/util/function/Consumer;
+	FIELD field_33977 needsRecorderSetup Z
+	FIELD field_33978 debugStart Lnet/minecraft/server/MinecraftServer$class_6414;
+	FIELD field_33979 needsDebugSetup Z
 	FIELD field_4543 onlineMode Z
 	FIELD field_4544 running Z
 	FIELD field_4546 LOGGER Lorg/apache/logging/log4j/Logger;
@@ -99,6 +103,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_15876 getMetricsData ()Lnet/minecraft/class_3517;
 	METHOD method_16043 isStopping ()Z
 	METHOD method_16044 getProfiler ()Lnet/minecraft/class_3695;
+	METHOD method_16208 runTasksTillTickEnd ()V
 	METHOD method_17819 setServerId (Ljava/lang/String;)V
 		ARG 1 serverId
 	METHOD method_17976 initScoreboard (Lnet/minecraft/class_26;)V
@@ -111,6 +116,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 profile
 	METHOD method_19467 setDifficultyLocked (Z)V
 		ARG 1 locked
+	METHOD method_20415 runOneTask ()Z
 	METHOD method_21613 dump (Ljava/nio/file/Path;)V
 		ARG 1 path
 	METHOD method_21615 dumpGamerules (Ljava/nio/file/Path;)V
@@ -125,10 +131,10 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_22827 getDataCommandStorage ()Lnet/minecraft/class_4565;
 	METHOD method_22828 getPredicateManager ()Lnet/minecraft/class_4567;
 	METHOD method_24307 getModdedStatusMessage ()Ljava/util/Optional;
-	METHOD method_24487 startMonitor ()V
+	METHOD method_24487 startTickMetrics ()V
 	METHOD method_24488 isDebugRunning ()Z
 	METHOD method_24489 stopDebug ()Lnet/minecraft/class_3696;
-	METHOD method_24490 endMonitor ()V
+	METHOD method_24490 endTickMetrics ()V
 	METHOD method_27050 getSavePath (Lnet/minecraft/class_5218;)Ljava/nio/file/Path;
 		ARG 1 worldSavePath
 	METHOD method_27051 syncChunkWrites ()Z
@@ -181,6 +187,8 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_34864 getResourceManager ()Lnet/minecraft/class_3300;
 	METHOD method_36113 getProxy ()Ljava/net/Proxy;
 	METHOD method_36326 getResourcePackPrompt ()Lnet/minecraft/class_2561;
+	METHOD method_37113 dumpProperties (Ljava/nio/file/Path;)V
+		ARG 1 file
 	METHOD method_3716 getKeyPair ()Ljava/security/KeyPair;
 	METHOD method_3718 isFlightEnabled ()Z
 	METHOD method_3719 getGameProfileRepo ()Lcom/mojang/authlib/GameProfileRepository;
@@ -205,8 +213,17 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 demo
 	METHOD method_3731 setEnforceWhitelist (Z)V
 		ARG 1 whitelistEnabled
+	METHOD method_37319 (Ljava/util/function/Consumer;Lnet/minecraft/class_3696;)V
+		ARG 2 result
 	METHOD method_3732 shouldBroadcastRconToOps ()Z
-	METHOD method_37321 isRunningMonitor ()Z
+	METHOD method_37320 setupRecorder (Ljava/util/function/Consumer;Ljava/util/function/Consumer;)V
+		ARG 1 resultConsumer
+		ARG 2 dumpConsumer
+	METHOD method_37321 isRecorderActive ()Z
+	METHOD method_37322 resetRecorder ()V
+	METHOD method_37323 stopRecorder ()V
+	METHOD method_37324 addSystemDetails (Lnet/minecraft/class_6396;)Lnet/minecraft/class_6396;
+		ARG 1 details
 	METHOD method_3734 getCommandManager ()Lnet/minecraft/class_2170;
 		COMMENT Gets the server's command manager.
 		COMMENT The command manager is responsible for parsing and dispatching commands.
@@ -310,7 +327,7 @@ CLASS net/minecraft/server/MinecraftServer
 		COMMENT This method does several things including loading server properties and loading worlds.
 		COMMENT
 		COMMENT @return true if the Minecraft server was successfully setup, false if the server failed to be setup.
-	METHOD method_3826 getServerStartTime ()J
+	METHOD method_3826 getTimeReference ()J
 	METHOD method_3827 getVersion ()Ljava/lang/String;
 	METHOD method_3828 isOnlineMode ()Z
 		COMMENT Checks whether this Minecraft server should require all connected players are using a licensed Minecraft account when connecting to this server.
@@ -318,7 +335,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 world
 	METHOD method_3830 getTickTime ()F
 	METHOD method_3831 getRunDirectory ()Ljava/io/File;
-	METHOD method_3832 enableProfiler ()V
+	METHOD method_3832 startDebug ()V
 	METHOD method_3834 setMotd (Ljava/lang/String;)V
 		ARG 1 motd
 	METHOD method_3835 getPermissionLevel (Lcom/mojang/authlib/GameProfile;)I
@@ -348,7 +365,8 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3856 forcePlayerSampleUpdate ()V
 	METHOD method_3857 getLootManager ()Lnet/minecraft/class_60;
 	METHOD method_3858 getPlayerNames ()[Ljava/lang/String;
-	METHOD method_3859 populateCrashReport (Lnet/minecraft/class_6396;)Lnet/minecraft/class_6396;
+	METHOD method_3859 addExtraSystemDetails (Lnet/minecraft/class_6396;)Lnet/minecraft/class_6396;
+		ARG 1 details
 	METHOD method_3860 isRemote ()Z
 	METHOD method_3861 loadWorldResourcePack ()V
 	METHOD method_3862 getPlayerIdleTimeout ()I
@@ -358,3 +376,12 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_5387 isMainThread ()Z
 	CLASS 1
 		FIELD field_4609 lastProgressUpdate J
+	CLASS class_6414 DebugStart
+		FIELD field_33980 time J
+		FIELD field_33981 tick I
+		METHOD <init> (JI)V
+			ARG 1 time
+			ARG 3 tick
+		METHOD method_37330 end (JI)Lnet/minecraft/class_3696;
+			ARG 1 endTime
+			ARG 3 endTick
