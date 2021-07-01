@@ -9,51 +9,6 @@ jobs:
     if: ${{ github.event.label.name == 'update-base' }}
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/github-script@v4
+      - uses: FabricMC/fabric-action-scripts@v1
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const updateLabel = 'update-base';
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const pull_number = issue_number = ${{ github.event.number }};
-
-            const { data: repoData } = await github.repos.get({ owner, repo });
-            const base = repoData.default_branch;
-
-            const { data: pull } = await github.pulls.get({ owner, repo, pull_number });
-
-            if (pull.base.ref == base) {
-                await github.issues.createComment({ owner, repo, issue_number, body: '🚨 Target branch is already set to ' + base });
-
-            } else {
-                await github.pulls.update({ owner, repo, pull_number, base });
-                await github.issues.createComment({ owner, repo, issue_number, body: '🚀 Target branch has been updated to ' + base });
-
-                try {
-                    // Updates the pull request with the latest upstream changes.
-                    await github.pulls.updateBranch({ owner, repo, pull_number })
-                    
-                    // Checks if the branch is a development version
-                    if (base.includes('-') || base.includes('w')) {
-                        await github.issues.addLabels({ owner, repo, issue_number, labels: ['snapshot'] });
-                        await github.issues.removeLabel({ owner, repo, issue_number, name: 'release' });
-                    // Otherwise it's a release
-                    } else {
-                        await github.issues.addLabels({ owner, repo, issue_number, labels: ['release'] });
-                        await github.issues.removeLabel({ owner, repo, issue_number, name: 'snapshot' });
-                    }
-                    
-                } catch (error) {
-                    // 422 is returned when there is a merge conflict
-                    if (error.status === 422) {
-                        await github.issues.createComment({ owner, repo, issue_number, body: '🚨 Please fix merge conflicts before this can be merged' });
-                        await github.issues.addLabels({ owner, repo, issue_number, labels: ['outdated'] });
-                        return;
-                    }
-
-                    throw error;
-                }
-            }
-            
-            await github.issues.removeLabel({ owner, repo, issue_number, name: updateLabel });
+          context: yarn-update-base
