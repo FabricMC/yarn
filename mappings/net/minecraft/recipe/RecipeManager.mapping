@@ -1,42 +1,126 @@
 CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
+	COMMENT A recipe manager allows easier use of recipes, such as finding matches and
+	COMMENT remainders. It is also integrated with a recipe loader, which loads recipes
+	COMMENT from data packs' JSON files.
 	FIELD field_19359 GSON Lcom/google/gson/Gson;
 	FIELD field_9023 recipes Ljava/util/Map;
 	FIELD field_9024 errored Z
+		COMMENT This isn't quite indicating an errored state; its value is only set to
+		COMMENT {@code false} and is never {@code true}, and isn't used anywhere.
 	FIELD field_9027 LOGGER Lorg/apache/logging/log4j/Logger;
 	METHOD method_17717 getAllOfType (Lnet/minecraft/class_3956;)Ljava/util/Map;
 		ARG 1 type
 	METHOD method_17718 (Lnet/minecraft/class_3956;Lnet/minecraft/class_1937;Lnet/minecraft/class_1263;Lnet/minecraft/class_1860;)Ljava/util/stream/Stream;
 		ARG 3 recipe
 	METHOD method_17720 deserialize (Lnet/minecraft/class_2960;Lcom/google/gson/JsonObject;)Lnet/minecraft/class_1860;
+		COMMENT Reads a recipe from a JSON object.
+		COMMENT
+		COMMENT @implNote Even though a recipe's {@linkplain Recipe#getSerializer() serializer}
+		COMMENT is stored in a {@code type} field in the JSON format and referred so in this
+		COMMENT method, its registry has key {@code minecraft:root/minecraft:recipe_serializer}
+		COMMENT and is thus named.
+		COMMENT
+		COMMENT @throws com.google.gson.JsonParseException if the recipe JSON is invalid
+		COMMENT @return the read recipe
+		COMMENT @see RecipeSerializer#read
 		ARG 0 id
+			COMMENT the recipe's ID
 		ARG 1 json
+			COMMENT the recipe JSON
+	METHOD method_17721 (Lnet/minecraft/class_2960;Ljava/util/Map;)Lnet/minecraft/class_1860;
+		ARG 1 map
+	METHOD method_17722 (Ljava/util/Map;)Ljava/util/stream/Stream;
+		ARG 0 map
+	METHOD method_17723 (Ljava/util/Map;)Ljava/util/stream/Stream;
+		ARG 0 map
 	METHOD method_17874 (Lnet/minecraft/class_3956;Lnet/minecraft/class_1937;Lnet/minecraft/class_1263;Lnet/minecraft/class_1860;)Ljava/util/stream/Stream;
 		ARG 3 recipe
 	METHOD method_17876 (Lnet/minecraft/class_1860;)Ljava/lang/String;
 		ARG 0 recipe
 	METHOD method_17877 getAllMatches (Lnet/minecraft/class_3956;Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;)Ljava/util/List;
+		COMMENT Creates a list of all recipes of the given {@code type} that match the
+		COMMENT given {@code inventory} and {@code world}. The list is ordered by the
+		COMMENT translation key of the output item stack of each recipe.
+		COMMENT
+		COMMENT <p>This list does not update with this manager. Modifications to
+		COMMENT the returned list do not affect this manager.
+		COMMENT
+		COMMENT @return the created list of matching recipes
 		ARG 1 type
+			COMMENT the desired recipe type
 		ARG 2 inventory
+			COMMENT the input inventory
 		ARG 3 world
+			COMMENT the input world
 	METHOD method_20702 setRecipes (Ljava/lang/Iterable;)V
+		COMMENT Sets the recipes for this recipe manager. Used by the client to set the server
+		COMMENT side recipes.
 		ARG 1 recipes
+			COMMENT the recipes to set
+	METHOD method_20704 (Ljava/util/Map;Lnet/minecraft/class_1860;)V
+		ARG 1 recipe
+	METHOD method_20706 (Lnet/minecraft/class_3956;)Ljava/util/Map;
+		ARG 0 t
 	METHOD method_20707 (Lnet/minecraft/class_3956;)Lcom/google/common/collect/ImmutableMap$Builder;
 		ARG 0 recipeType
 	METHOD method_30027 listAllOfType (Lnet/minecraft/class_3956;)Ljava/util/List;
-		COMMENT Creates a list of all recipes of the given type.
-		COMMENT Modifications to the returned list do not affect the manager.
-		ARG 1 recipeType
+		COMMENT Creates a list of all recipes of the given {@code type}. The list has an
+		COMMENT arbitrary order.
+		COMMENT
+		COMMENT <p>This list does not update with this manager. Modifications to
+		COMMENT the returned list do not affect this manager.
+		COMMENT
+		COMMENT @return the created list of recipes of the given {@code type}
+		ARG 1 type
+			COMMENT the desired recipe type
 	METHOD method_30028 (Lnet/minecraft/class_1860;)Lnet/minecraft/class_1860;
 		ARG 0 recipe
+	METHOD method_35227 isErrored ()Z
+		COMMENT {@return the {@link #errored} field} This is unused in vanilla and will only
+		COMMENT return {@code false} without mods.
 	METHOD method_8126 values ()Ljava/util/Collection;
+		COMMENT {@return all recipes in this manager}
+		COMMENT
+		COMMENT <p>The returned set does not update with the manager. Modifications to the
+		COMMENT returned set does not affect this manager.
 	METHOD method_8127 keys ()Ljava/util/stream/Stream;
+		COMMENT {@return a stream of IDs of recipes in this manager}
+		COMMENT
+		COMMENT <p>The returned stream does not update after {@link #setRecipes(Iterable)}
+		COMMENT call.
+		COMMENT
+		COMMENT @apiNote This is used by the command sources to suggest recipe IDs for command
+		COMMENT arguments.
 	METHOD method_8128 getRemainingStacks (Lnet/minecraft/class_3956;Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;)Lnet/minecraft/class_2371;
-		ARG 1 recipeType
-		ARG 2 inventory
-		ARG 3 world
-	METHOD method_8130 get (Lnet/minecraft/class_2960;)Ljava/util/Optional;
-		ARG 1 id
-	METHOD method_8132 getFirstMatch (Lnet/minecraft/class_3956;Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;)Ljava/util/Optional;
+		COMMENT {@return the remainder of a recipe of the given {@code type} that match
+		COMMENT the given {@code inventory} and {@code world}, or a shallow copy of the
+		COMMENT {@code inventory}}
+		COMMENT
+		COMMENT <p>This retrieves the {@linkplain Recipe#getRemainders(Inventory)
+		COMMENT remainders} of {@link #getFirstMatch(RecipeType, Inventory, World)
+		COMMENT getFirstMatch(type, inventory, world)} if the match exists.
+		COMMENT
+		COMMENT @see Recipe#getRemainders(Inventory)
 		ARG 1 type
+			COMMENT the desired recipe type
 		ARG 2 inventory
+			COMMENT the input inventory
 		ARG 3 world
+			COMMENT the input world
+	METHOD method_8130 get (Lnet/minecraft/class_2960;)Ljava/util/Optional;
+		COMMENT {@return a recipe with the given {@code id}, or empty if there is no such recipe}
+		ARG 1 id
+			COMMENT the ID of the desired recipe
+	METHOD method_8132 getFirstMatch (Lnet/minecraft/class_3956;Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;)Ljava/util/Optional;
+		COMMENT {@return a recipe of the given {@code type} that match the given
+		COMMENT {@code inventory} and {@code world}}
+		COMMENT
+		COMMENT <p>If there are multiple matching recipes, the result is arbitrary,
+		COMMENT but this method will return the same result unless the recipes in this
+		COMMENT manager are updated.
+		ARG 1 type
+			COMMENT the desired recipe type
+		ARG 2 inventory
+			COMMENT the input inventory
+		ARG 3 world
+			COMMENT the input world
