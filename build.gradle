@@ -703,7 +703,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 // Only build jars for package infos if we need to actually expose stuff like annotation in the future.
-// Also need to downgrade java in that case!
 
 build.dependsOn constantsJar
 
@@ -812,15 +811,13 @@ task genFakeSource(type: JavaExec, dependsOn: ["mergeV2", "mapNamedJar"]) {
 }
 
 task decompileCFR(type: JavaExec, dependsOn: [mapNamedJar]) {
-	doFirst {
-		classpath = configurations.decompileClasspath
-	}
 	mainClass.set "org.benf.cfr.reader.Main"
 
 	args namedJar.getAbsolutePath(), "--outputdir", file("namedSrc").absolutePath
 
 	doFirst {
 		file("namedSrc").deleteDir()
+		classpath = configurations.decompileClasspath
 	}
 }
 
@@ -875,7 +872,6 @@ javadoc {
 				'https://commons.apache.org/proper/commons-compress/javadocs/api-1.8.1/',
 				"https://maven.fabricmc.net/docs/fabric-loader-${project.fabric_loader_version}/",
 				"https://docs.oracle.com/en/java/javase/16/docs/api/"
-				// Need to add loader jd publication for env annotations!
 		)
 		// https://docs.oracle.com/en/java/javase/16/docs/specs/man/javadoc.html#additional-options-provided-by-the-standard-doclet
 		addBooleanOption 'Xdoclint:html', true
