@@ -659,7 +659,7 @@ task unpickIntermediaryJar(type: JavaExec, dependsOn: [mapIntermediaryJar, "cons
 	outputs.upToDateWhen { false }
 	group "unpick"
 
-	mainClass.set "daomephsta.unpick.cli.Main"
+	mainClass = "daomephsta.unpick.cli.Main"
 	systemProperty "java.util.logging.config.file", file('unpick-logging.properties')
 	classpath configurations.unpick
 
@@ -800,7 +800,7 @@ task genFakeSource(type: JavaExec, dependsOn: ["mergeV2", "mapNamedJar"]) {
 	group = "javadoc generation"
 	outputs.upToDateWhen { false }
 
-	mainClass.set "net.fabricmc.mappingpoet.Main"
+	mainClass = "net.fabricmc.mappingpoet.Main"
 	classpath configurations.mappingPoet
 	// use merged v2 so we have all namespaces in jd
 	args mergeV2.output.getAbsolutePath(), namedJar.getAbsolutePath(), fakeSourceDir.getAbsolutePath(), libraries.getAbsolutePath()
@@ -811,7 +811,7 @@ task genFakeSource(type: JavaExec, dependsOn: ["mergeV2", "mapNamedJar"]) {
 }
 
 task decompileCFR(type: JavaExec, dependsOn: [mapNamedJar]) {
-	mainClass.set "org.benf.cfr.reader.Main"
+	mainClass = "org.benf.cfr.reader.Main"
 
 	args namedJar.getAbsolutePath(), "--outputdir", file("namedSrc").absolutePath
 
