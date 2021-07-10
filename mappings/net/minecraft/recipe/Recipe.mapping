@@ -1,43 +1,91 @@
 CLASS net/minecraft/class_1860 net/minecraft/recipe/Recipe
+	COMMENT A recipe is an arrangement of item stacks in an inventory that can
+	COMMENT yield a product item stack.
+	COMMENT
+	COMMENT <p>Recipes are loaded by and stored in the {@link RecipeManager}. They
+	COMMENT are part of the server's data packs and are sent to the client, governed
+	COMMENT by their {@linkplain #getSerializer() serializers}. Hence, recipes
+	COMMENT should not be stored, as they may become obsolete after reloads.
+	COMMENT
+	COMMENT <p>A few of the methods in this class are dedicated to crafting recipes
+	COMMENT or recipe books. Users can have stub implementations if they do not use
+	COMMENT those functionalities.
 	METHOD method_17447 createIcon ()Lnet/minecraft/class_1799;
-		COMMENT Creates the stack that is displayed on the recipe book tab containing this recipe, and on a toast when a recipe of this type is unlocked.
-		COMMENT Used in conjunction with {@link #getGroup()}.
+		COMMENT {@return an item rendered on the top left of the {@linkplain #getOutput()
+		COMMENT output preview} on the recipe toast when a new recipe is unlocked} This
+		COMMENT can be interpreted as a catalyst for the recipe.
 	METHOD method_17716 getType ()Lnet/minecraft/class_3956;
+		COMMENT {@return the type of this recipe}
+		COMMENT
+		COMMENT <p>The {@code type} in the recipe JSON format is the {@linkplain
+		COMMENT #getSerializer() serializer} instead.
 	METHOD method_31583 (Lnet/minecraft/class_1856;)Z
 		ARG 0 ingredient
 	METHOD method_31584 isEmpty ()Z
+		COMMENT {@return whether this recipe has no ingredient or has any empty ingredient}
+		COMMENT The recipe book uses this to ignore recipes for display.
 	METHOD method_8110 getOutput ()Lnet/minecraft/class_1799;
-	METHOD method_8111 getRemainder (Lnet/minecraft/class_1263;)Lnet/minecraft/class_2371;
-		COMMENT Returns the remaining stacks to be left in the crafting grid after crafting is complete.
-		COMMENT Should return the same number of items as the input grid contains in the same order they're expected
-		COMMENT to appear in that grid.
+		COMMENT {@return a preview of the recipe's output}
 		COMMENT
-		COMMENT @implSpec Default implementation simply returns a grid of all empty stacks where all stacks from the
-		COMMENT input grid have been replaced with the result of calling {@link net.minecraft.item.Item#getRecipeRemainder()} on them.
+		COMMENT <p>The returned stack should not be modified. To obtain the actual output,
+		COMMENT call {@link #craft(Inventory)}.
+	METHOD method_8111 getRemainder (Lnet/minecraft/class_1263;)Lnet/minecraft/class_2371;
+		COMMENT {@return the remaining stacks to be left in the {@code inventory} after the recipe is used}
+		COMMENT At each index, the remainder item stack in the list should correspond to the original
+		COMMENT item stack in the {@code inventory}.
+		COMMENT
+		COMMENT @implSpec The default implementation returns a list of the same size as the {@code inventory}.
+		COMMENT At each index, the list contains the {@linkplain net.minecraft.item.Item#getRecipeRemainder()
+		COMMENT remainder} of the item stack at the same index in the {@code inventory}, or is {@linkplain
+		COMMENT ItemStack#EMPTY empty} if the stack has no remainder.
 		ARG 1 inventory
+			COMMENT the input inventory
 	METHOD method_8112 getGroup ()Ljava/lang/String;
-		COMMENT Optional group this recipe belongs in. Used to group recipes into different categories by the recipe book.
+		COMMENT {@return a group this recipe belongs in, or an empty string} This is
+		COMMENT only used by the recipe book.
+		COMMENT
+		COMMENT <p>The group string is arbitrary, and is not rendered anywhere; in
+		COMMENT the recipe book, recipes with the same group will belong to the same
+		COMMENT cell in the grid of recipes. If the string is empty, this recipe will
+		COMMENT belong to its own cell.
 	METHOD method_8113 fits (II)Z
-		COMMENT Determines whether this recipe's pattern will fit into the available crafting area.
+		COMMENT {@return whether this recipe will fit into the given grid size}
+		COMMENT
+		COMMENT <p>This is currently only used by recipe book.
 		ARG 1 width
+			COMMENT the width of the input inventory
 		ARG 2 height
+			COMMENT the height of the input inventory
 	METHOD method_8114 getId ()Lnet/minecraft/class_2960;
+		COMMENT {@return the ID of this recipe}
 	METHOD method_8115 matches (Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;)Z
-		COMMENT Determines whether this recipe matches the contents currently placed inside the available crafting grid.
+		COMMENT {@return whether this recipe matches the contents inside the
+		COMMENT {@code inventory} in the given {@code world}}
+		COMMENT
+		COMMENT <p>The {@code world} currently is only used by the map cloning recipe to
+		COMMENT prevent duplication of explorer maps.
 		ARG 1 inventory
+			COMMENT the input inventory
 		ARG 2 world
+			COMMENT the input world
 	METHOD method_8116 craft (Lnet/minecraft/class_1263;)Lnet/minecraft/class_1799;
 		COMMENT Crafts this recipe.
 		COMMENT
-		COMMENT <p>This method may perform side effects on the {@code inventory} argument.</p>
+		COMMENT <p>This method does not perform side effects on the {@code inventory}.
 		COMMENT
-		COMMENT <p>This method should return a new item stack on each call.</p>
+		COMMENT <p>This method should return a new item stack on each call.
 		COMMENT
 		COMMENT @return the resulting item stack
 		ARG 1 inventory
+			COMMENT the input inventory
 	METHOD method_8117 getIngredients ()Lnet/minecraft/class_2371;
-		COMMENT The ingredients accepted as inputs for this recipe. Used by the recipe book
+		COMMENT {@return the ingredients accepted as inputs for this recipe} Used by the recipe book
 		COMMENT when displaying a ghost form of this recipe on the crafting grid as well as for
 		COMMENT previewing the possible inputs in the book itself.
 	METHOD method_8118 isIgnoredInRecipeBook ()Z
+		COMMENT {@return whether this recipe is ignored by the recipe book} If a recipe
+		COMMENT is ignored by the recipe book, it will be never displayed. In addition,
+		COMMENT it won't be restricted by the {@link net.minecraft.world.GameRules#DO_LIMITED_CRAFTING
+		COMMENT doLimitedCrafting} game rule.
 	METHOD method_8119 getSerializer ()Lnet/minecraft/class_1865;
+		COMMENT {@return the serializer associated with this recipe}
