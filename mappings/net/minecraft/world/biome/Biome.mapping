@@ -6,22 +6,14 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	FIELD field_26392 FROZEN_OCEAN_NOISE Lnet/minecraft/class_3543;
 	FIELD field_26393 weather Lnet/minecraft/class_1959$class_5482;
 	FIELD field_26395 spawnSettings Lnet/minecraft/class_5483;
-	FIELD field_26634 structures Ljava/util/Map;
 	FIELD field_26635 generationSettings Lnet/minecraft/class_5485;
 	FIELD field_9324 FOLIAGE_NOISE Lnet/minecraft/class_3543;
 	FIELD field_9329 category Lnet/minecraft/class_1959$class_1961;
 	FIELD field_9330 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_9335 TEMPERATURE_NOISE Lnet/minecraft/class_3543;
-	FIELD field_9341 scale F
-	FIELD field_9343 depth F
-	METHOD <init> (Lnet/minecraft/class_1959$class_5482;Lnet/minecraft/class_1959$class_1961;FFLnet/minecraft/class_4763;Lnet/minecraft/class_5485;Lnet/minecraft/class_5483;)V
+	METHOD <init> (Lnet/minecraft/class_1959$class_5482;Lnet/minecraft/class_1959$class_1961;Lnet/minecraft/class_4763;Lnet/minecraft/class_5485;Lnet/minecraft/class_5483;)V
 		ARG 1 weather
 		ARG 2 category
-		ARG 3 depth
-		ARG 4 scale
-		ARG 5 effects
-		ARG 6 generationSettings
-		ARG 7 spawnSettings
 	METHOD method_21740 getTemperature (Lnet/minecraft/class_2338;)F
 		ARG 1 blockPos
 	METHOD method_24376 getFogColor ()I
@@ -45,23 +37,14 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 doWaterCheck
-	METHOD method_8686 getScale ()F
 	METHOD method_8687 getWaterColor ()I
 	METHOD method_8688 getCategory ()Lnet/minecraft/class_1959$class_1961;
 	METHOD method_8694 getPrecipitation ()Lnet/minecraft/class_1959$class_1963;
-	METHOD method_8695 getDepth ()F
 	METHOD method_8696 canSetSnow (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z
 		ARG 1 world
 		ARG 2 blockPos
 	METHOD method_8697 getSkyColor ()I
 	METHOD method_8698 getFoliageColor ()I
-	METHOD method_8702 generateFeatureStep (Lnet/minecraft/class_5138;Lnet/minecraft/class_2794;Lnet/minecraft/class_3233;JLnet/minecraft/class_2919;Lnet/minecraft/class_2338;)V
-		ARG 1 structureAccessor
-		ARG 2 chunkGenerator
-		ARG 3 region
-		ARG 4 populationSeed
-		ARG 6 random
-		ARG 7 origin
 	METHOD method_8703 buildSurface (Ljava/util/Random;Lnet/minecraft/class_2791;IIIDLnet/minecraft/class_2680;Lnet/minecraft/class_2680;IIJ)V
 		ARG 1 random
 		ARG 2 chunk
@@ -89,10 +72,8 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 		FIELD field_26396 temperatureModifier Lnet/minecraft/class_1959$class_5484;
 		FIELD field_26636 spawnSettings Lnet/minecraft/class_5483;
 		FIELD field_26637 generationSettings Lnet/minecraft/class_5485;
-		FIELD field_9344 depth Ljava/lang/Float;
 		FIELD field_9345 category Lnet/minecraft/class_1959$class_1961;
 		FIELD field_9346 precipitation Lnet/minecraft/class_1959$class_1963;
-		FIELD field_9348 scale Ljava/lang/Float;
 		FIELD field_9349 temperature Ljava/lang/Float;
 		FIELD field_9351 downfall Ljava/lang/Float;
 		METHOD method_24379 effects (Lnet/minecraft/class_4763;)Lnet/minecraft/class_1959$class_1960;
@@ -110,10 +91,6 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 			ARG 1 precipitation
 		METHOD method_8738 category (Lnet/minecraft/class_1959$class_1961;)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 category
-		METHOD method_8740 depth (F)Lnet/minecraft/class_1959$class_1960;
-			ARG 1 depth
-		METHOD method_8743 scale (F)Lnet/minecraft/class_1959$class_1960;
-			ARG 1 scale
 		METHOD method_8747 temperature (F)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 temperature
 	CLASS class_1961 Category
@@ -138,48 +115,6 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 		METHOD method_8752 getName ()Ljava/lang/String;
 		METHOD method_8753 (Lnet/minecraft/class_1959$class_1963;)Lnet/minecraft/class_1959$class_1963;
 			ARG 0 precipitation
-	CLASS class_4762 MixedNoisePoint
-		COMMENT Represents a point in a multi-dimensional cartesian plane. Mixed-noise
-		COMMENT biome generator picks the closest noise point from its selected point
-		COMMENT and choose the biome associated to that closest point. Another factor,
-		COMMENT rarity potential, favors larger differences in values instead, contrary
-		COMMENT to other point values.
-		FIELD field_22043 temperature F
-		FIELD field_22044 humidity F
-		FIELD field_22045 altitude F
-		FIELD field_22046 weirdness F
-		FIELD field_22047 weight F
-			COMMENT This value awards another point with value farthest from this one; i.e.
-			COMMENT unlike other points where closer distance is better, for this value the
-			COMMENT farther the better. The result of the different values can be
-			COMMENT approximately modeled by a hyperbola weight=cosh(peak-1) as used by the
-			COMMENT mixed-noise generator.
-		FIELD field_24679 CODEC Lcom/mojang/serialization/Codec;
-		METHOD <init> (FFFFF)V
-			ARG 1 temperature
-			ARG 2 humidity
-			ARG 3 altitude
-			ARG 4 weirdness
-			ARG 5 weight
-		METHOD equals (Ljava/lang/Object;)Z
-			ARG 1 o
-		METHOD method_24381 calculateDistanceTo (Lnet/minecraft/class_1959$class_4762;)F
-			COMMENT Calculates the distance from this noise point to another one. The
-			COMMENT distance is a squared distance in a multi-dimensional cartesian plane
-			COMMENT from a mathematical point of view, with a special parameter that
-			COMMENT reduces the calculated distance.
-			COMMENT
-			COMMENT <p>For most fields except weight, smaller difference between
-			COMMENT two points' fields will lead to smaller distance. For weight,
-			COMMENT larger differences lead to smaller distance.
-			COMMENT
-			COMMENT <p>This distance is used by the mixed-noise biome layer source. The
-			COMMENT layer source calculates an arbitrary noise point, and selects the
-			COMMENT biome that offers a closest point to its arbitrary point.
-			ARG 1 other
-				COMMENT the other noise point
-		METHOD method_28425 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
-			ARG 0 instance
 	CLASS class_5482 Weather
 		FIELD field_26398 CODEC Lcom/mojang/serialization/MapCodec;
 		FIELD field_26399 precipitation Lnet/minecraft/class_1959$class_1963;
