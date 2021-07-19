@@ -12,19 +12,18 @@ buildscript {
 		classpath "net.fabricmc:stitch:${project.stitch_version}"
 		classpath "commons-io:commons-io:2.8.0"
 		classpath 'de.undercouch:gradle-download-task:4.1.1'
-		classpath 'net.fabricmc:tiny-remapper:0.3.2'
+		classpath 'net.fabricmc:tiny-remapper:0.4.2'
 		classpath "net.fabricmc.unpick:unpick:${project.unpick_version}"
 		classpath "net.fabricmc.unpick:unpick-format-utils:${project.unpick_version}"
 	}
 }
 
 plugins {
+	id 'java' // for constants, packages, javadoc
 	id 'de.undercouch.download' version '4.1.1'
-	id 'base'
 	id 'maven-publish'
-	id 'java' // for jd gen
-	id 'org.cadixdev.licenser' version '0.5.1'
-	id 'net.fabricmc.filament' version '0.3.0'
+	id 'org.cadixdev.licenser' version '0.6.1'
+	id 'net.fabricmc.filament' version '0.3.1'
 }
 
 def minecraft_version = "1.17.1"
@@ -145,11 +144,11 @@ task downloadVersionsManifest {
 	group = setupGroup
 	//inputs.property "mc_ver", minecraft_version
 	inputs.property "currenttime", new Date()
-	def manifestFile = new File(cacheFilesMinecraft, "version_manifest.json")
+	def manifestFile = new File(cacheFilesMinecraft, "version_manifest_v2.json")
 	outputs.file(manifestFile)
 	doLast {
 		logger.lifecycle(":downloading minecraft versions manifest")
-		FileUtils.copyURLToFile(new URL("https://launchermeta.mojang.com/mc/game/version_manifest.json"), manifestFile)
+		FileUtils.copyURLToFile(new URL("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json"), manifestFile)
 	}
 }
 
@@ -232,15 +231,20 @@ task downloadIntermediaryV2(type: Download) {
 	def url = "https://maven.fabricmc.net/net/fabricmc/intermediary/${minecraft_version}/intermediary-${minecraft_version}-v2.jar"
 	src com.google.common.net.UrlEscapers.urlFragmentEscaper().escape(url)
 	dest new File(cacheFilesMinecraft, "${minecraft_version}-intermediary-v2.jar")
-}
 
-task extractIntermediaryV2(dependsOn: downloadIntermediaryV2, type: Copy) {
 	def output = new File(cacheFilesMinecraft, "${minecraft_version}-intermediary-v2.tiny")
-	from({ zipTree(downloadIntermediaryV2.dest) }) {
-		include 'mappings/mappings.tiny'
-		rename 'mappings.tiny', "../${output.name}"
+	outputs.file output
+
+	doLast {
+		copy {
+			from({ zipTree(downloadIntermediaryV2.dest) }) {
+				from 'mappings/mappings.tiny'
+				rename 'mappings.tiny', "../${output.name}"
+			}
+
+			into output.parentFile
+		}
 	}
-	into output.parentFile
 }
 
 task mergeJars(dependsOn: downloadMcJars) {
@@ -322,7 +326,7 @@ task invertIntermediary(dependsOn: downloadIntermediary, type: FileOutput) {
 	}
 }
 
-task invertIntermediaryv2(dependsOn: extractIntermediaryV2, type: FileOutput) {
+task invertIntermediaryv2(dependsOn: downloadIntermediaryV2, type: FileOutput) {
 	group = buildMappingGroup
 	def v2Input = new File(cacheFilesMinecraft, "${minecraft_version}-intermediary-v2.tiny")
 
@@ -655,7 +659,7 @@ task unpickIntermediaryJar(type: JavaExec, dependsOn: [mapIntermediaryJar, "cons
 	outputs.upToDateWhen { false }
 	group "unpick"
 
-	main "daomephsta.unpick.cli.Main"
+	mainClass = "daomephsta.unpick.cli.Main"
 	systemProperty "java.util.logging.config.file", file('unpick-logging.properties')
 	classpath configurations.unpick
 
@@ -670,14 +674,12 @@ task unpickIntermediaryJar(type: JavaExec, dependsOn: [mapIntermediaryJar, "cons
 
 // Setup the build for the unpicked constants
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
-	if (JavaVersion.current().isJava9Compatible()) {
-		it.options.release = 8
-	}
+	it.options.release = 16
 }
 
 sourceSets {
@@ -687,7 +689,6 @@ sourceSets {
 
 license {
 	header file("HEADER")
-	sourceSets = [sourceSets.constants, sourceSets.packageDocs]
 	include '**/*.java'
 }
 
@@ -701,13 +702,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	from sourceSets.constants.allSource
 }
 
-compilePackageDocsJava {
-	it.options.encoding = "UTF-8"
-	it.options.release = 16
-}
-
 // Only build jars for package infos if we need to actually expose stuff like annotation in the future.
-// Also need to downgrade java in that case!
 
 build.dependsOn constantsJar
 
@@ -805,7 +800,7 @@ task genFakeSource(type: JavaExec, dependsOn: ["mergeV2", "mapNamedJar"]) {
 	group = "javadoc generation"
 	outputs.upToDateWhen { false }
 
-	main "net.fabricmc.mappingpoet.Main"
+	mainClass = "net.fabricmc.mappingpoet.Main"
 	classpath configurations.mappingPoet
 	// use merged v2 so we have all namespaces in jd
 	args mergeV2.output.getAbsolutePath(), namedJar.getAbsolutePath(), fakeSourceDir.getAbsolutePath(), libraries.getAbsolutePath()
@@ -816,15 +811,13 @@ task genFakeSource(type: JavaExec, dependsOn: ["mergeV2", "mapNamedJar"]) {
 }
 
 task decompileCFR(type: JavaExec, dependsOn: [mapNamedJar]) {
-	doFirst {
-		classpath = configurations.decompileClasspath
-	}
-	main = "org.benf.cfr.reader.Main"
+	mainClass = "org.benf.cfr.reader.Main"
 
 	args namedJar.getAbsolutePath(), "--outputdir", file("namedSrc").absolutePath
 
 	doFirst {
 		file("namedSrc").deleteDir()
+		classpath = configurations.decompileClasspath
 	}
 }
 
@@ -844,6 +837,7 @@ javadoc {
 	def mappingPoetJar = project.provider { zipTree configurations.mappingPoetJar.singleFile }
 
 	failOnError = false
+	maxMemory = '2G'
 
 	// verbose = true // enable to debug
 	options {
@@ -879,9 +873,8 @@ javadoc {
 				'https://commons.apache.org/proper/commons-compress/javadocs/api-1.8.1/',
 				"https://maven.fabricmc.net/docs/fabric-loader-${project.fabric_loader_version}/",
 				"https://docs.oracle.com/en/java/javase/16/docs/api/"
-				// Need to add loader jd publication for env annotations!
 		)
-		// https://docs.oracle.com/en/java/javase/15/docs/specs/man/javadoc.html#additional-options-provided-by-the-standard-doclet
+		// https://docs.oracle.com/en/java/javase/16/docs/specs/man/javadoc.html#additional-options-provided-by-the-standard-doclet
 		addBooleanOption 'Xdoclint:html', true
 		addBooleanOption 'Xdoclint:syntax', true
 		addBooleanOption 'Xdoclint:reference', true
@@ -890,8 +883,8 @@ javadoc {
 	source fileTree(fakeSourceDir) + sourceSets.constants.allJava + sourceSets.packageDocs.allJava
 	classpath = configurations.javadocClasspath.plus downloadMcLibs.outputs.files.asFileTree
 
-	finalizedBy {
-		task copyCopyOnClickScript(type: Copy) {
+	doLast {
+		project.copy {
 			from mappingPoetJar
 			include "copy_on_click.js"
 			into javadoc.outputDirectory
@@ -902,7 +895,7 @@ javadoc {
 		// lazy setting
 		options {
 			tagletPath configurations.mappingPoet.files.toList()
-			header mappingPoetJar.get().filter { it.name == 'javadoc_header.txt' }.singleFile.readLines()[0] // cannot include line breaks
+			header mappingPoetJar.get().filter { it.name == 'javadoc_header.txt' }.singleFile.text.trim() // cannot include line breaks
 			addFileOption "-add-stylesheet", mappingPoetJar.get().filter { it.name == 'forms.css' }.singleFile
 		}
 	}
