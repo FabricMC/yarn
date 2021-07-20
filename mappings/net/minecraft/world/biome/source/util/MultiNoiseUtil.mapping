@@ -1,0 +1,123 @@
+CLASS net/minecraft/class_6452 net/minecraft/world/biome/source/util/MultiNoiseUtil
+	METHOD method_37620 createParameterConfig (F)Lnet/minecraft/class_6452$class_6454;
+		ARG 0 parameter
+	METHOD method_37621 createParameterConfig (FF)Lnet/minecraft/class_6452$class_6454;
+		ARG 0 parameter1
+		ARG 1 parameter2
+	METHOD method_37622 (FFFFFF)Lnet/minecraft/class_6452$class_6460;
+		ARG 0 temperatureNoise
+		ARG 1 humidityNoise
+		ARG 2 continentalnessNoise
+		ARG 3 erosionNoise
+		ARG 5 weirdnessNoise
+	METHOD method_37623 createMixedNoisePoint (FFFFFFF)Lnet/minecraft/class_6452$class_4762;
+		ARG 0 temperature
+		ARG 1 humidity
+		ARG 2 continentalness
+		ARG 3 erosion
+		ARG 4 depth
+		ARG 5 weirdness
+		ARG 6 offset
+	METHOD method_37625 createMixedNoisePoint (Lnet/minecraft/class_6452$class_6454;Lnet/minecraft/class_6452$class_6454;Lnet/minecraft/class_6452$class_6454;Lnet/minecraft/class_6452$class_6454;Lnet/minecraft/class_6452$class_6454;Lnet/minecraft/class_6452$class_6454;F)Lnet/minecraft/class_6452$class_4762;
+		ARG 0 temperature
+		ARG 1 humidity
+		ARG 2 continentalness
+		ARG 3 erosion
+		ARG 4 depth
+		ARG 5 weirdness
+		ARG 6 offset
+	CLASS class_4762 MixedNoisePoint
+		COMMENT Represents a point in a multi-dimensional cartesian plane. Mixed-noise
+		COMMENT biome generator picks the closest noise point from its selected point
+		COMMENT and choose the biome associated to that closest point. Another factor,
+		COMMENT rarity potential, favors larger differences in values instead, contrary
+		COMMENT to other point values.
+		FIELD field_22043 temperature Lnet/minecraft/class_6452$class_6454;
+		FIELD field_22044 humidity Lnet/minecraft/class_6452$class_6454;
+		FIELD field_22046 weirdness Lnet/minecraft/class_6452$class_6454;
+		FIELD field_22047 offset F
+			COMMENT This value awards another point with value farthest from this one; i.e.
+			COMMENT unlike other points where closer distance is better, for this value the
+			COMMENT farther the better. The result of the different values can be
+			COMMENT approximately modeled by a hyperbola weight=cosh(peak-1) as used by the
+			COMMENT mixed-noise generator.
+		FIELD field_24679 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_34174 continentalness Lnet/minecraft/class_6452$class_6454;
+		FIELD field_34175 erosion Lnet/minecraft/class_6452$class_6454;
+		FIELD field_34176 depth Lnet/minecraft/class_6452$class_6454;
+		FIELD field_34177 parameters Ljava/util/List;
+		METHOD <init> (Lnet/minecraft/class_6452$class_6454;Lnet/minecraft/class_6452$class_6454;Lnet/minecraft/class_6452$class_6454;Lnet/minecraft/class_6452$class_6454;Lnet/minecraft/class_6452$class_6454;Lnet/minecraft/class_6452$class_6454;F)V
+			ARG 1 temperature
+			ARG 2 humidity
+			ARG 3 continentalness
+			ARG 4 erosion
+			ARG 5 depth
+			ARG 6 weirdness
+			ARG 7 offset
+		METHOD equals (Ljava/lang/Object;)Z
+			ARG 1 o
+		METHOD method_37642 getTemperature ()Lnet/minecraft/class_6452$class_6454;
+		METHOD method_37643 (Lnet/minecraft/class_6452$class_4762;)F
+			ARG 1 point
+		METHOD method_37644 (Lnet/minecraft/class_6452$class_6460;)F
+			ARG 1 point
+		METHOD method_37646 getHumidity ()Lnet/minecraft/class_6452$class_6454;
+		METHOD method_37648 getContinentalness ()Lnet/minecraft/class_6452$class_6454;
+		METHOD method_37650 getErosion ()Lnet/minecraft/class_6452$class_6454;
+		METHOD method_37652 getDepth ()Lnet/minecraft/class_6452$class_6454;
+		METHOD method_37654 getWeirdness ()Lnet/minecraft/class_6452$class_6454;
+		METHOD method_37656 getOffset ()F
+		METHOD method_37658 getParameters ()Ljava/util/List;
+	CLASS class_6454 ParameterConfig
+		FIELD field_34169 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_34170 parameter1 F
+		FIELD field_34171 parameter2 F
+		METHOD <init> (FF)V
+			ARG 1 parameter1
+			ARG 2 parameter2
+		METHOD method_37626 getParameter1 ()F
+		METHOD method_37627 (F)F
+			ARG 1 noise
+		METHOD method_37632 getParameter2 ()F
+	CLASS class_6455 BiomeEntry
+		FIELD field_34172 biomes Ljava/util/List;
+		METHOD <init> (Ljava/util/List;)V
+			ARG 1 biomes
+		METHOD method_37638 (Lnet/minecraft/class_6452$class_6460;)Ljava/lang/Object;
+			ARG 1 point
+		METHOD method_37639 (Lnet/minecraft/class_6452$class_6460;Lnet/minecraft/class_6452$class_6453;)Ljava/lang/Object;
+			ARG 1 point
+		METHOD method_37640 (Lnet/minecraft/class_6452$class_6460;Ljava/util/function/Supplier;)Ljava/lang/Object;
+			ARG 1 point
+			ARG 2 defaultBiome
+		METHOD method_37641 (Lnet/minecraft/class_6452$class_6460;Ljava/util/function/Supplier;)Ljava/lang/Object;
+			ARG 1 point
+			ARG 2 defaultBiome
+	CLASS class_6456 BiomeSearchTree
+		METHOD method_37660 createDefaultParameterList (I)Ljava/util/List;
+		METHOD method_37667 (Ljava/util/List;)Lnet/minecraft/class_6452$class_6456;
+			ARG 0 biomes
+		METHOD method_37673 (Ljava/util/List;)Ljava/util/List;
+			ARG 0 subTree
+		CLASS class_6458
+			FIELD field_34181 parameters [Lnet/minecraft/class_6452$class_6454;
+			METHOD <init> (Ljava/util/List;)V
+				ARG 1 parameters
+	CLASS class_6460 NoiseValuePoint
+		FIELD field_34183 temperatureNoise F
+		FIELD field_34184 humidityNoise F
+		FIELD field_34185 continentalnessNoise F
+		FIELD field_34186 erosionNoise F
+		FIELD field_34188 weirdnessNoise F
+		METHOD <init> (FFFFFF)V
+			ARG 1 temperatureNoise
+			ARG 2 humidityNoise
+			ARG 3 continentalnessNoise
+			ARG 4 erosionNoise
+			ARG 6 weirdnessNoise
+		METHOD method_37676 getTemperatureNoise ()F
+		METHOD method_37677 getHumidityNoise ()F
+		METHOD method_37678 getContinentalnessNoise ()F
+		METHOD method_37679 getErosionNoise ()F
+		METHOD method_37681 getWeirdnessNoise ()F
+		METHOD method_37682 getNoiseValueList ()[F
