@@ -351,7 +351,12 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3826 getTimeReference ()J
 	METHOD method_3827 getVersion ()Ljava/lang/String;
 	METHOD method_3828 isOnlineMode ()Z
-		COMMENT Checks whether this Minecraft server should require all connected players are using a licensed Minecraft account when connecting to this server.
+		COMMENT {@return whether this Minecraft server authenticates players logging in with the
+		COMMENT {@linkplain #getSessionService() Minecraft Session Service}} If this server is
+		COMMENT {@linkplain #isSinglePlayer() singleplayer}, such as integrated servers, it will
+		COMMENT accept unauthenticated players; otherwise, it disconnects such players.
+		COMMENT
+		COMMENT @see net.minecraft.server.network.ServerLoginNetworkHandler
 	METHOD method_3829 getSpawnRadius (Lnet/minecraft/class_3218;)I
 		ARG 1 world
 	METHOD method_3830 getTickTime ()F
@@ -402,7 +407,14 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3861 loadWorldResourcePack ()V
 	METHOD method_3862 getPlayerIdleTimeout ()I
 	METHOD method_3864 setOnlineMode (Z)V
+		COMMENT Sets whether this server is in the online mode, or whether it
+		COMMENT authenticates connecting players with the Minecraft Session Service.
+		COMMENT
+		COMMENT <p>This is called by individual server implementations on their setup.
+		COMMENT
+		COMMENT @see #isOnlineMode()
 		ARG 1 onlineMode
+			COMMENT whether the server will be in online mode
 	METHOD method_3866 shouldKeepTicking ()Z
 	METHOD method_5387 isMainThread ()Z
 	CLASS 1
