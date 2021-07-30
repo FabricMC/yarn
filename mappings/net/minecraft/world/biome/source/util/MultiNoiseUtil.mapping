@@ -39,17 +39,16 @@ CLASS net/minecraft/class_6452 net/minecraft/world/biome/source/util/MultiNoiseU
 	CLASS class_4762 NoiseHypercube
 		COMMENT Represents a hypercube in a multi-dimensional cartesian plane. The multi-noise
 		COMMENT biome source picks the closest noise hypercube from its selected point
-		COMMENT and chooses the biome associated to it. Another factor, rarity potential,
-		COMMENT favors larger differences in values instead, contrary to other range values.
+		COMMENT and chooses the biome associated to it.
 		FIELD field_22043 temperature Lnet/minecraft/class_6452$class_6454;
 		FIELD field_22044 humidity Lnet/minecraft/class_6452$class_6454;
 		FIELD field_22046 weirdness Lnet/minecraft/class_6452$class_6454;
 		FIELD field_22047 offset F
-			COMMENT This value awards another point with value farthest from this one; i.e.
-			COMMENT unlike other parameters where closer distance is better, for this value the
-			COMMENT farther the better. The result of the different values can be
-			COMMENT approximately modeled by a hyperbola weight=cosh(peak-1) as used by the
-			COMMENT multi-noise biome source.
+			COMMENT This value works differently from the other parameters, in that it is
+			COMMENT always {@code 0} during biome generation and does not use noise.
+			COMMENT This means that setting it to a non-null number will make the biome smaller.
+			COMMENT The farther {@code offset} is from {@code 0}, the smaller the biome will be.
+			COMMENT For this, it does not matter whether {@code offset} is positive or negative.
 		FIELD field_24679 CODEC Lcom/mojang/serialization/Codec;
 		FIELD field_34174 continentalness Lnet/minecraft/class_6452$class_6454;
 		FIELD field_34175 erosion Lnet/minecraft/class_6452$class_6454;
@@ -70,6 +69,8 @@ CLASS net/minecraft/class_6452 net/minecraft/world/biome/source/util/MultiNoiseU
 			ARG 1 other
 		METHOD method_37644 getSquaredDistance (Lnet/minecraft/class_6452$class_6460;)F
 			ARG 1 point
+		METHOD method_37645 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
 		METHOD method_37646 getHumidity ()Lnet/minecraft/class_6452$class_6454;
 		METHOD method_37648 getContinentalness ()Lnet/minecraft/class_6452$class_6454;
 		METHOD method_37650 getErosion ()Lnet/minecraft/class_6452$class_6454;
@@ -119,7 +120,7 @@ CLASS net/minecraft/class_6452 net/minecraft/world/biome/source/util/MultiNoiseU
 			ARG 1 point
 			ARG 2 defaultValue
 	CLASS class_6456 SearchTree
-		FIELD field_34178 MAX_NODES_FOR_UNBATCHED_TREE I
+		FIELD field_34178 MAX_NODES_FOR_SIMPLE_TREE I
 		FIELD field_34179 firstNode Lnet/minecraft/class_6452$class_6456$class_6458;
 		METHOD <init> (Lnet/minecraft/class_6452$class_6456$class_6458;)V
 			ARG 1 firstNode
