@@ -68,7 +68,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4571 timeReference J
 	FIELD field_4572 ticks I
 	FIELD field_4573 lastTickLengths [J
-	FIELD field_4578 userName Ljava/lang/String;
+	FIELD field_4578 singlePlayerName Ljava/lang/String;
 	FIELD field_4582 snooper Lnet/minecraft/class_1276;
 	FIELD field_4584 resourcePackHash Ljava/lang/String;
 	FIELD field_4585 serverIp Ljava/lang/String;
@@ -202,7 +202,20 @@ CLASS net/minecraft/server/MinecraftServer
 			COMMENT if it should immediately write all data to storage device
 		ARG 3 force
 			COMMENT when set to true, all the {@link ServerWorld}s will be saved even if {@link ServerWorld#savingDisabled} is set to true
-	METHOD method_3724 isSinglePlayer ()Z
+	METHOD method_3724 isSingleplayer ()Z
+		COMMENT {@return whether this server is a singleplayer server} A {@index singleplayer}
+		COMMENT server has a "single player" to whom the player data in the {@code level.dat}
+		COMMENT applies. Otherwise, the player data is not applied to anyone. Hence, it is
+		COMMENT necessary to properly load some single-player save games.
+		COMMENT
+		COMMENT <p>All vanilla integrated servers and dedicated servers launched with the argument
+		COMMENT {@code --singleplayer <singlePlayerName>} are singleplayer servers.
+		COMMENT
+		COMMENT <p>A dedicated singleplayer server always turns online mode off, regardless of the
+		COMMENT content of {@code server.properties}.
+		COMMENT
+		COMMENT @see #getSinglePlayerName
+		COMMENT @see #setSinglePlayerName
 	METHOD method_3725 getIconFile ()Ljava/util/Optional;
 	METHOD method_3727 hasGui ()Z
 	METHOD method_3728 kickNonWhitelistedPlayers (Lnet/minecraft/class_2168;)V
@@ -306,7 +319,15 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 playerIdleTimeout
 	METHOD method_3805 getResourcePackHash ()Ljava/lang/String;
 	METHOD method_3806 isRunning ()Z
-	METHOD method_3811 getUserName ()Ljava/lang/String;
+	METHOD method_3811 getSinglePlayerName ()Ljava/lang/String;
+		COMMENT {@return the name of the single player of this server} This may be
+		COMMENT {@code null} for non-singleplayer servers.
+		COMMENT
+		COMMENT <p>In vanilla, outside of integrated servers, this is used to
+		COMMENT determine to whom the {@code Player} NBT from {@code level.dat} applies.
+		COMMENT
+		COMMENT @see #setSinglePlayerName(String)
+		COMMENT @see #isSingleplayer()
 	METHOD method_3812 areCommandBlocksEnabled ()Z
 		COMMENT Specifies whether command blocks can execute commands on the server.
 	METHOD method_3813 tickWorlds (Ljava/util/function/BooleanSupplier;)V
@@ -330,7 +351,12 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3826 getTimeReference ()J
 	METHOD method_3827 getVersion ()Ljava/lang/String;
 	METHOD method_3828 isOnlineMode ()Z
-		COMMENT Checks whether this Minecraft server should require all connected players are using a licensed Minecraft account when connecting to this server.
+		COMMENT {@return whether this Minecraft server authenticates players logging in with the
+		COMMENT {@linkplain #getSessionService() Minecraft Session Service}} If this server is
+		COMMENT {@linkplain #isSingleplayer() singleplayer}, such as integrated servers, it will
+		COMMENT accept unauthenticated players; otherwise, it disconnects such players.
+		COMMENT
+		COMMENT @see net.minecraft.server.network.ServerLoginNetworkHandler
 	METHOD method_3829 getSpawnRadius (Lnet/minecraft/class_3218;)I
 		ARG 1 world
 	METHOD method_3830 getTickTime ()F
@@ -357,8 +383,18 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 playerManager
 	METHOD method_3847 getWorld (Lnet/minecraft/class_5321;)Lnet/minecraft/class_3218;
 		ARG 1 key
-	METHOD method_3849 setServerName (Ljava/lang/String;)V
-		ARG 1 serverName
+	METHOD method_3849 setSinglePlayerName (Ljava/lang/String;)V
+		COMMENT Sets the name of the single player of this server.
+		COMMENT
+		COMMENT <p>This is called by vanilla when setting up this server. The
+		COMMENT {@code singlePlayerName} is the client's player name for integrated
+		COMMENT servers and specified by the {@code --singleplayer <singlePlayerName>}
+		COMMENT command-line argument or {@code null} for dedicated servers.
+		COMMENT
+		COMMENT @see #getSinglePlayerName()
+		COMMENT @see #isSingleplayer()
+		ARG 1 singlePlayerName
+			COMMENT the single player's name, or {@code null} for non-singleplayer servers
 	METHOD method_3851 getAdvancementLoader ()Lnet/minecraft/class_2989;
 	METHOD method_3852 isPvpEnabled ()Z
 	METHOD method_3855 getDataFixer ()Lcom/mojang/datafixers/DataFixer;
@@ -371,7 +407,14 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3861 loadWorldResourcePack ()V
 	METHOD method_3862 getPlayerIdleTimeout ()I
 	METHOD method_3864 setOnlineMode (Z)V
+		COMMENT Sets whether this server is in the online mode, or whether it
+		COMMENT authenticates connecting players with the Minecraft Session Service.
+		COMMENT
+		COMMENT <p>This is called by individual server implementations on their setup.
+		COMMENT
+		COMMENT @see #isOnlineMode()
 		ARG 1 onlineMode
+			COMMENT whether the server will be in online mode
 	METHOD method_3866 shouldKeepTicking ()Z
 	METHOD method_5387 isMainThread ()Z
 	CLASS 1
