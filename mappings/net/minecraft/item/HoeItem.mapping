@@ -1,5 +1,9 @@
 CLASS net/minecraft/class_1794 net/minecraft/item/HoeItem
-	FIELD field_8023 TILLED_BLOCKS Ljava/util/Map;
+	FIELD field_8023 TILLING_ACTIONS Ljava/util/Map;
+		COMMENT A map of input blocks to predicate-consumer action pairs.
+		COMMENT
+		COMMENT <p>Tilling works so that if the predicate succeeds, the consumer (the real action)
+		COMMENT is executed, and the hoe is damaged.
 	METHOD <init> (Lnet/minecraft/class_1832;IFLnet/minecraft/class_1792$class_1793;)V
 		ARG 1 material
 		ARG 2 attackDamage
@@ -9,12 +13,19 @@ CLASS net/minecraft/class_1794 net/minecraft/item/HoeItem
 		ARG 1 p
 	METHOD method_36984 (Lnet/minecraft/class_2680;Lnet/minecraft/class_1838;)V
 		ARG 1 context
-	METHOD method_36985 getTillingConsumer (Lnet/minecraft/class_2680;Lnet/minecraft/class_1935;)Ljava/util/function/Consumer;
-		ARG 0 state
-		ARG 1 dropItem
+	METHOD method_36985 getTillingAction (Lnet/minecraft/class_2680;Lnet/minecraft/class_1935;)Ljava/util/function/Consumer;
+		COMMENT {@return a tilling action that sets a block state and drops an item}
+		ARG 0 result
+			COMMENT the tilled block state
+		ARG 1 droppedItem
+			COMMENT the item to drop
 	METHOD method_36986 (Lnet/minecraft/class_2680;Lnet/minecraft/class_1935;Lnet/minecraft/class_1838;)V
 		ARG 2 context
-	METHOD method_36987 usagePredicate (Lnet/minecraft/class_1838;)Z
+	METHOD method_36987 canUse (Lnet/minecraft/class_1838;)Z
+		COMMENT {@return whether the used block can be tilled} This method is used as
+		COMMENT the tilling predicate for most blocks.
 		ARG 0 context
-	METHOD method_36988 getTillingConsumer (Lnet/minecraft/class_2680;)Ljava/util/function/Consumer;
-		ARG 0 state
+	METHOD method_36988 getTillingAction (Lnet/minecraft/class_2680;)Ljava/util/function/Consumer;
+		COMMENT {@return a tilling action that sets a block state}
+		ARG 0 result
+			COMMENT the tilled block state
