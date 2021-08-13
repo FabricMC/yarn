@@ -6,9 +6,9 @@ everyone mod Minecraft freely and openly, while also being able to innovate and 
 To see the current version being targeted, check the branch name!
 
 ## Usage
-To use yarn-deobfuscated Minecraft for Minecraft modding or as a dependency in a Java project, you can use [loom](https://github.com/fabricmc/fabric-loom) Gradle plugin. See [fabric wiki tutorial](https://fabricmc.net/wiki/tutorial:setup) for more information.
+To use yarn-deobfuscated Minecraft for Minecraft modding or as a dependency in a Java project, you can use the [loom](https://github.com/fabricmc/fabric-loom) Gradle plugin. See the [Fabric Wiki tutorial](https://fabricmc.net/wiki/tutorial:setup) for more information.
 
-To obtain a deobfuscated Minecraft jar, [`./gradlew mapNamedJar`](#mapNamedJar) will generate a jar named like `<minecraft version>-named.jar`, which can be sent to a decompiler for deobfuscated code.
+To obtain a deobfuscated Minecraft JAR, [`./gradlew mapNamedJar`](#mapNamedJar) will generate a JAR named like `<minecraft version>-named.jar`, which can be sent to a decompiler for deobfuscated code.
 
 Please note to run the yarn build script **Java 16** or higher is required!
 
@@ -41,16 +41,16 @@ Same as above, but unpicks the constants and launches Enigma with them. Can be a
 
 
 ### `build`
-Build a GZip'd archive containing a tiny mapping between official (obfuscated), [intermediary](https://github.com/FabricMC/intermediary), and yarn names ("named") and packages enigma mappings into a zip archive..
+Build a GZip'd archive containing a tiny mapping between official (obfuscated), [intermediary](https://github.com/FabricMC/intermediary), and yarn names ("named") and packages enigma mappings into a ZIP archive.
 
 ### `mapNamedJar`
-Builds a deobfuscated jar with yarn mappings and automapped fields (enums, etc.). Unmapped names will be filled with [intermediary](https://github.com/FabricMC/Intermediary) names.
+Builds a deobfuscated JAR with yarn mappings and automapped fields (enums, etc.). Unmapped names will be filled with [intermediary](https://github.com/FabricMC/Intermediary) names.
 
 ### `decompileCFR`
 Decompile the mapped source code. **Note:** This is not designed to be recompiled.
 
 ### `download`
-Downloads the client and server Minecraft jars for the current Minecraft version to `.gradle/minecraft`
+Downloads the client and server Minecraft JARs for the current Minecraft version to `.gradle/minecraft`
 
 ### `mergeJars`
-Merges the client and server jars into one merged jar, located at `VERSION-merged.jar` in the mappings directory where `VERSION` is the current Minecraft version.
+Merges the client and server JARs into one merged JAR, located at `VERSION-merged.jar` in the mappings directory where `VERSION` is the current Minecraft version.
