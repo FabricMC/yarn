@@ -1,24 +1,15 @@
 name: Publish
 on: [push]
+concurrency: ci-${{ github.ref }}
 jobs:
   build:
     runs-on: ubuntu-20.04
     container:
-      image: openjdk:16-jdk
+      image: openjdk:17-jdk
       options: --user root
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
-
-      # Ensure that releases are not ran in parallel, this ensures that the latest commit is the latest release
-      # See https://github.com/softprops/turnstyle
-      - name: Turnstyle
-        uses: softprops/turnstyle@v1
-        with:
-          continue-after-seconds: 3600
-          same-branch-only: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Generate the build number based on tags to allow per branch build numbers, not something github provides by default.
       - name: Generate build number
@@ -28,10 +19,7 @@ jobs:
           token: ${{ secrets.github_token }}
           prefix: ${{ github.ref }}
 
-      - run: |
-          curl https://maven.fabricmc.net/net/java/jdk/openjdk-17-ea%2B24_linux-x64_bin.tar.gz --output java.tar.gz
-          tar -xf java.tar.gz
-      - run: ./gradlew build javadocJar checkVersion publish --stacktrace -Porg.gradle.java.installations.auto-download=false -Porg.gradle.java.installations.paths=$(pwd)/jdk-17
+      - run: ./gradlew build javadocJar checkVersion publish --stacktrace
         env:
           MAVEN_URL: ${{ secrets.MAVEN_URL }}
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
