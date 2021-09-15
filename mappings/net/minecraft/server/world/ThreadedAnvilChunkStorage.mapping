@@ -68,10 +68,9 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_17236 getChunk (Lnet/minecraft/class_3193;Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 holder
 		ARG 2 requiredStatus
-	METHOD method_17241 sendWatchPackets (Lnet/minecraft/class_3222;Lnet/minecraft/class_1923;[Lnet/minecraft/class_2596;ZZ)V
+	METHOD method_17241 sendWatchPackets (Lnet/minecraft/class_3222;Lnet/minecraft/class_1923;Lorg/apache/commons/lang3/mutable/MutableObject;ZZ)V
 		ARG 1 player
 		ARG 2 pos
-		ARG 3 packets
 		ARG 4 withinMaxWatchDistance
 		ARG 5 withinViewDistance
 	METHOD method_17242 save (Z)V
@@ -94,10 +93,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_18702 sendToOtherNearbyPlayers (Lnet/minecraft/class_1297;Lnet/minecraft/class_2596;)V
 		ARG 1 entity
 		ARG 2 packet
-	METHOD method_18703 getChebyshevDistance (Lnet/minecraft/class_1923;II)I
-		ARG 0 pos
-		ARG 1 x
-		ARG 2 z
 	METHOD method_18704 getSquaredDistance (Lnet/minecraft/class_1923;Lnet/minecraft/class_1297;)D
 		ARG 0 pos
 		ARG 1 entity
@@ -110,23 +105,17 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_18714 handlePlayerAddedOrRemoved (Lnet/minecraft/class_3222;Z)V
 		ARG 1 player
 		ARG 2 added
-	METHOD method_18715 sendChunkDataPackets (Lnet/minecraft/class_3222;[Lnet/minecraft/class_2596;Lnet/minecraft/class_2818;)V
+	METHOD method_18715 sendChunkDataPackets (Lnet/minecraft/class_3222;Lorg/apache/commons/lang3/mutable/MutableObject;Lnet/minecraft/class_2818;)V
 		ARG 1 player
-		ARG 2 packets
 		ARG 3 chunk
 	METHOD method_18716 unloadEntity (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
 	METHOD method_18717 sendToNearbyPlayers (Lnet/minecraft/class_1297;Lnet/minecraft/class_2596;)V
 		ARG 1 entity
 		ARG 2 packet
-	METHOD method_18719 getChebyshevDistance (Lnet/minecraft/class_1923;Lnet/minecraft/class_3222;Z)I
-		ARG 0 pos
-		ARG 1 player
-		ARG 2 useWatchedPosition
 	METHOD method_18722 doesNotGenerateChunks (Lnet/minecraft/class_3222;)Z
 		ARG 1 player
 	METHOD method_18724 isTooFarFromPlayersToSpawnMobs (Lnet/minecraft/class_1923;)Z
-		ARG 1 chunkPos
 	METHOD method_18727 tickEntityMovement ()V
 		COMMENT Ticks and updates the tracked status of each tracker.
 		COMMENT
@@ -162,9 +151,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_21676 getFutureStatus (Ljava/util/concurrent/CompletableFuture;)Ljava/lang/String;
 	METHOD method_23272 getChunkLoadingDebugInfo (Lnet/minecraft/class_1923;)Ljava/lang/String;
 		ARG 1 chunkPos
-	METHOD method_34869 getChebyshevDistance (Lnet/minecraft/class_1923;Lnet/minecraft/class_1297;)I
-		ARG 0 chunkPos
-		ARG 1 entity
 	CLASS class_3208 EntityTracker
 		COMMENT An entity tracker governs which players' clients can see an entity. Each
 		COMMENT tracker corresponds to one entity in a server world and is mapped from the

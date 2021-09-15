@@ -1,0 +1,32 @@
+CLASS net/minecraft/class_6544
+	CLASS class_4762 MixedNoisePoint
+		COMMENT Represents a point in a multi-dimensional cartesian plane. Mixed-noise
+		COMMENT biome generator picks the closest noise point from its selected point
+		COMMENT and choose the biome associated to that closest point. Another factor,
+		COMMENT rarity potential, favors larger differences in values instead, contrary
+		COMMENT to other point values.
+		FIELD field_22043 temperature Lnet/minecraft/class_6544$class_6546;
+		FIELD field_22044 humidity Lnet/minecraft/class_6544$class_6546;
+		FIELD field_22046 weirdness Lnet/minecraft/class_6544$class_6546;
+		FIELD field_22047 weight F
+			COMMENT This value awards another point with value farthest from this one; i.e.
+			COMMENT unlike other points where closer distance is better, for this value the
+			COMMENT farther the better. The result of the different values can be
+			COMMENT approximately modeled by a hyperbola weight=cosh(peak-1) as used by the
+			COMMENT mixed-noise generator.
+		FIELD field_24679 CODEC Lcom/mojang/serialization/Codec;
+		METHOD equals (Ljava/lang/Object;)Z
+			ARG 1 o
+		METHOD method_24381 calculateDistanceTo (Lnet/minecraft/class_6544$class_6553;)F
+			COMMENT Calculates the distance from this noise point to another one. The
+			COMMENT distance is a squared distance in a multi-dimensional cartesian plane
+			COMMENT from a mathematical point of view, with a special parameter that
+			COMMENT reduces the calculated distance.
+			COMMENT
+			COMMENT <p>For most fields except weight, smaller difference between
+			COMMENT two points' fields will lead to smaller distance. For weight,
+			COMMENT larger differences lead to smaller distance.
+			COMMENT
+			COMMENT <p>This distance is used by the mixed-noise biome layer source. The
+			COMMENT layer source calculates an arbitrary noise point, and selects the
+			COMMENT biome that offers a closest point to its arbitrary point.
