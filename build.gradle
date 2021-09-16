@@ -365,6 +365,9 @@ task patchIntermediary(dependsOn: [mergeJars, downloadIntermediary]) {
 	}
 }
 
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.ClassVisitor;
+
 task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJars]) {
 	group = mapJarGroup
 	inputs.files downloadMcLibs.outputs.files.files
@@ -373,10 +376,34 @@ task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJ
 	//Force the task to always run
 	outputs.upToDateWhen { false }
 
+	// Please use single quotes, as double quotes interfere with $
+	def brokenSignatures = [
+		'net/minecraft/class_6561': '<T:Ljava/lang/Object;>Ljava/lang/Record;',
+		'net/minecraft/class_6497': '<T::Ljava/lang/Comparable<TT;>;>Ljava/lang/Record;',
+		'net/minecraft/class_6535': '<T::Lnet/minecraft/class_6534;>Ljava/lang/Record;',
+		'net/minecraft/class_2769$class_4933': '<T::Ljava/lang/Comparable<TT;>;>Ljava/lang/Record;'
+	]
+
 	doLast {
 		logger.lifecycle(":mapping minecraft to intermediary")
 		def tinyInput = downloadIntermediary.dest
-		mapJar(intermediaryJar, mergedFile, tinyInput, libraries, "official", "intermediary")
+		mapJar(intermediaryJar, mergedFile, tinyInput, libraries, "official", "intermediary") { remapperBuilder ->
+			// Fix the broken record signatures
+			remapperBuilder.extraPostApplyVisitor { cls, next ->
+				return new ClassVisitor(Opcodes.ASM9, next) {
+					@Override
+					public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+						if (signature == null) {
+							signature = brokenSignatures.getOrDefault(name, null);
+							if (signature != null) {
+								logger.lifecycle("replacing signature for " + name);
+							}
+						}
+						super.visit(version, access, name, signature, superName, interfaces);
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -971,7 +998,9 @@ void mapJar(File output, File input, File mappings, File libraries, String from,
 			.build()
 
 	try {
-		def outputConsumer = new OutputConsumerPath(output.toPath())
+		def outputConsumerBuilder = new OutputConsumerPath.Builder(output.toPath())
+		// expose output consumer builder to function if there is need in the future
+		def outputConsumer = outputConsumerBuilder.build()
 		outputConsumer.addNonClassFiles(input.toPath())
 		remapper.readInputs(input.toPath())
 
