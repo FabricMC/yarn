@@ -1,16 +1,26 @@
 CLASS net/minecraft/class_2804 net/minecraft/world/chunk/ChunkNibbleArray
+	COMMENT A chunk nibble array is an array of nibbles for each block position in
+	COMMENT a chunk. It is most often used to store light data.
+	COMMENT
+	COMMENT <p>A {@index nibble} is 4 bits, storing an integer from {@code 0} to
+	COMMENT {@code 15}. It takes half the space of a byte.
+	COMMENT
+	COMMENT <p>The nibbles are stored in an X-Z-Y major order; in the backing array,
+	COMMENT the indices increases by first increasing X, then Z, and finally Y.
 	FIELD field_12783 bytes [B
 	FIELD field_31403 BYTES_LENGTH I
 	FIELD field_31404 COPY_BLOCK_SIZE I
+	FIELD field_31405 NIBBLE_BITS I
 	FIELD field_34052 COPY_TIMES I
 	METHOD <init> (I)V
 		ARG 1 size
 	METHOD <init> ([B)V
 		ARG 1 bytes
 	METHOD method_12137 asByteArray ()[B
-	METHOD method_12138 divideByTwo (I)I
+	METHOD method_12138 getArrayIndex (I)I
 		ARG 0 i
 	METHOD method_12139 get (III)I
+		COMMENT {@return the integer value of a nibble, in {@code [0, 15]}}
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
@@ -24,10 +34,23 @@ CLASS net/minecraft/class_2804 net/minecraft/world/chunk/ChunkNibbleArray
 		ARG 2 value
 	METHOD method_12144 copy ()Lnet/minecraft/class_2804;
 	METHOD method_12145 set (IIII)V
+		COMMENT Sets the value of a nibble.
+		COMMENT
+		COMMENT <p>If the {@code value} has bits outside of the lowest 4 set to {@code 1},
+		COMMENT (value is outside of {@code [0, 15]}), the extraneous bits are discarded.
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
 		ARG 4 value
 	METHOD method_12146 isUninitialized ()Z
-	METHOD method_37459 isOdd (I)I
+	METHOD method_35320 bottomToString (I)Ljava/lang/String;
+		COMMENT {@return a hexademical string representation of the {@code y=0} level of
+		COMMENT this array}
+		COMMENT
+		COMMENT <p>It is useful for debugging the grid nibble array.
+		ARG 1 unused
+			COMMENT unused
+	METHOD method_37459 occupiesSmallerBits (I)I
+		COMMENT {@return if the nibble at {@code n} is stored in the less
+		COMMENT significant (smaller) 4 bits of the byte in the backing array}
 		ARG 0 i

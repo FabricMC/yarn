@@ -23,9 +23,13 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 		ARG 7 loadTask
 	METHOD method_12152 getTaskMargin ()I
 	METHOD method_12154 runGenerationTask (Ljava/util/concurrent/Executor;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Ljava/util/List;Z)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 executor
 		ARG 2 world
+		ARG 3 generator
 		ARG 4 structureManager
 		ARG 5 lightingProvider
+		ARG 6 fullChunkConverter
+		ARG 7 chunks
 	METHOD method_12155 getMaxDistanceFromFull ()I
 	METHOD method_12160 getHeightmapTypes ()Ljava/util/EnumSet;
 	METHOD method_12161 byDistanceFromFull (I)Lnet/minecraft/class_2806;
@@ -95,11 +99,13 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 		METHOD doWork (Lnet/minecraft/class_2806;Ljava/util/concurrent/Executor;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Ljava/util/List;Lnet/minecraft/class_2791;Z)Ljava/util/concurrent/CompletableFuture;
 			ARG 1 targetStatus
 				COMMENT the status the chunk will be set to after the task is completed
+			ARG 2 executor
 			ARG 3 world
+			ARG 4 generator
 			ARG 5 structureManager
 			ARG 6 lightingProvider
-			ARG 7 convertCallback
-				COMMENT will be invoked by statuses which have some special convert logic (e.g. the FULL status to convert the chunk to a full chunk)
+			ARG 7 fullChunkConverter
+				COMMENT a function that can convert a raw chunk to a full chunk
 	CLASS class_2808 ChunkType
 		COMMENT Specifies the type of a chunk
 		FIELD field_12807 LEVELCHUNK Lnet/minecraft/class_2806$class_2808;
@@ -117,6 +123,6 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 			ARG 2 world
 			ARG 3 structureManager
 			ARG 4 lightingProvider
-			ARG 5 convertCallback
-				COMMENT will be invoked by statuses which have some special convert logic (e.g. the FULL status to convert the chunk to a full chunk)
+			ARG 5 fullChunkConverter
+				COMMENT a function that can convert a raw chunk to a full chunk
 			ARG 6 chunk
