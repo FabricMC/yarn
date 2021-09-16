@@ -12,7 +12,7 @@ buildscript {
 		classpath "net.fabricmc:stitch:${project.stitch_version}"
 		classpath "commons-io:commons-io:2.8.0"
 		classpath 'de.undercouch:gradle-download-task:4.1.1'
-		classpath 'net.fabricmc:tiny-remapper:0.4.2'
+		classpath 'net.fabricmc:tiny-remapper:0.6.0'
 		classpath "net.fabricmc.unpick:unpick:${project.unpick_version}"
 		classpath "net.fabricmc.unpick:unpick-format-utils:${project.unpick_version}"
 	}
@@ -56,12 +56,7 @@ repositories {
 }
 
 configurations {
-	enigmaRuntime {
-		resolutionStrategy {
-			cacheDynamicVersionsFor 0, "seconds"
-			cacheChangingModulesFor 0, "seconds"
-		}
-	}
+	enigmaRuntime
 	javadocClasspath
 	decompileClasspath
 	mappingPoetJar {
@@ -77,7 +72,7 @@ configurations {
 def unpickMetaFile = file("unpick-definitions/unpick.json")
 
 dependencies {
-	enigmaRuntime "cuchaz:enigma-swing:${project.enigma_version}"
+	enigmaRuntime "cuchaz:enigma-swing:${project.enigma_version}:all"
 	enigmaRuntime "net.fabricmc:stitch:${project.stitch_version}"
 	javadocClasspath "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 	javadocClasspath "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
@@ -385,46 +380,36 @@ task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJ
 	}
 }
 
-task yarnUnpicked(dependsOn: "unpickIntermediaryJar") {
+task yarnUnpicked(dependsOn: "unpickIntermediaryJar", type: JavaExec) {
 	group = yarnGroup
-	doLast {
-		ant.setLifecycleLogLevel "WARN"
-		ant.java(
-				classname: 'cuchaz.enigma.gui.Main',
-				classpath: configurations.enigmaRuntime.asPath,
-				fork: true,
-				spawn: true
-		) {
-			jvmarg(value: "-Xmx2048m")
-			arg(value: '-jar')
-			arg(value: unpickedJar.getAbsolutePath())
-			arg(value: '-mappings')
-			arg(value: mappingsDir.getAbsolutePath())
-			arg(value: '-profile')
-			arg(value: 'enigma_profile.json')
-		}
-	}
+
+	classpath = configurations.enigmaRuntime
+	mainClass = 'cuchaz.enigma.gui.Main'
+
+	args '-jar'
+	args unpickedJar.getAbsolutePath()
+	args '-mappings'
+	args mappingsDir.getAbsolutePath()
+	args '-profile'
+	args 'enigma_profile.json'
+
+	jvmArgs "-Xmx2048m"
 }
 
-task yarn(dependsOn: mapIntermediaryJar) {
+task yarn(dependsOn: mapIntermediaryJar, type: JavaExec) {
 	group = yarnGroup
-	doLast {
-		ant.setLifecycleLogLevel "WARN"
-		ant.java(
-				classname: 'cuchaz.enigma.gui.Main',
-				classpath: configurations.enigmaRuntime.asPath,
-				fork: true,
-				spawn: true
-		) {
-			jvmarg(value: "-Xmx2048m")
-			arg(value: '-jar')
-			arg(value: intermediaryJar.getAbsolutePath())
-			arg(value: '-mappings')
-			arg(value: mappingsDir.getAbsolutePath())
-			arg(value: '-profile')
-			arg(value: 'enigma_profile.json')
-		}
-	}
+
+	classpath = configurations.enigmaRuntime
+	mainClass = 'cuchaz.enigma.gui.Main'
+
+	args '-jar'
+	args intermediaryJar.getAbsolutePath()
+	args '-mappings'
+	args mappingsDir.getAbsolutePath()
+	args '-profile'
+	args 'enigma_profile.json'
+
+	jvmArgs "-Xmx2048m"
 }
 
 task checkMappings(dependsOn: mapIntermediaryJar) {
@@ -980,6 +965,7 @@ void mapJar(File output, File input, File mappings, File libraries, String from,
 			.withMappings(TinyUtils.createTinyMappingProvider(mappings.toPath(), from, to))
 			.renameInvalidLocals(true)
 			.rebuildSourceFilenames(true)
+			.invalidLvNamePattern(~/\$\$\d+/)
 	action.execute(remapperBuilder)
 	def remapper = remapperBuilder
 			.build()
