@@ -3,7 +3,8 @@ CLASS net/minecraft/class_6538 net/minecraft/item/BlockPredicatesChecker
 	COMMENT matches the block in a world. The predicate must be stored inside
 	COMMENT the {@code key} sub NBT of the item stack.
 	COMMENT
-	COMMENT <p>The result is cached.
+	COMMENT <p>The result is cached to reduce cost for successive lookups
+	COMMENT on the same block.
 	COMMENT
 	COMMENT @apiNote This is used to implement checks for restrictions specified
 	COMMENT using {@code CanPlaceOn} or {@code CanDestroy}.
@@ -14,10 +15,10 @@ CLASS net/minecraft/class_6538 net/minecraft/item/BlockPredicatesChecker
 	FIELD field_34452 nbtAware Z
 	METHOD <init> (Ljava/lang/String;)V
 		ARG 1 key
-			COMMENT The sub NBT key that stores the predicate, for
-			COMMENT example {@code "CanPlaceOn"}.
+			COMMENT the sub NBT key that stores the predicate, for
+			COMMENT example {@code "CanPlaceOn"}
 	METHOD method_38070 check (Lnet/minecraft/class_1799;Lnet/minecraft/class_5415;Lnet/minecraft/class_2694;)Z
-		COMMENT {@return true if any of the the predicates in the {@code stack}'s NBT
+		COMMENT {@return true if any of the predicates in the {@code stack}'s NBT
 		COMMENT matched against the block at {@code pos}, false otherwise}
 		ARG 1 stack
 		ARG 2 tagManager
@@ -25,4 +26,4 @@ CLASS net/minecraft/class_6538 net/minecraft/item/BlockPredicatesChecker
 	METHOD method_38071 canUseCache (Lnet/minecraft/class_2694;Lnet/minecraft/class_2694;Z)Z
 		ARG 0 pos
 		ARG 1 cachedPos
-		ARG 2 cachedHasNbt
+		ARG 2 nbtAware
