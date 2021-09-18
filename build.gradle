@@ -375,7 +375,7 @@ task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJ
 	//Force the task to always run
 	outputs.upToDateWhen { false }
 
-	def brokenSignatures = new JsonSlurper().parse(recordSignaturesJson)
+	def brokenSignatures = new HashMap((Map) new JsonSlurper().parse(recordSignaturesJson))
 
 	doLast {
 		logger.lifecycle(":mapping minecraft to intermediary")
