@@ -16,20 +16,21 @@
 
 package net.fabricmc.mappingpoet;
 
-import java.util.AbstractMap;
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import net.fabricmc.mapping.util.EntryTriple;
+import net.fabricmc.mappingpoet.signature.AnnotationAwareDescriptors;
+import net.fabricmc.mappingpoet.signature.AnnotationAwareSignatures;
+import net.fabricmc.mappingpoet.signature.ClassStaticContext;
+import net.fabricmc.mappingpoet.signature.TypeAnnotationBank;
+import net.fabricmc.mappingpoet.signature.TypeAnnotationMapping;
+import net.fabricmc.mappingpoet.signature.TypeAnnotationStorage;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.TypePath;
@@ -38,19 +39,18 @@ import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 
-import net.fabricmc.mapping.util.EntryTriple;
-import net.fabricmc.mappingpoet.signature.AnnotationAwareDescriptors;
-import net.fabricmc.mappingpoet.signature.AnnotationAwareSignatures;
-import net.fabricmc.mappingpoet.signature.ClassStaticContext;
-import net.fabricmc.mappingpoet.signature.TypeAnnotationBank;
-import net.fabricmc.mappingpoet.signature.TypeAnnotationMapping;
-import net.fabricmc.mappingpoet.signature.TypeAnnotationStorage;
+import java.util.AbstractMap;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class FieldBuilder {
 	private final MappingsStore mappings;
 	private final ClassNode classNode;
 	private final FieldNode fieldNode;
-	private final FieldSpec.Builder builder;
+	private final FieldSpec.Builder builder; // todo extract interface to build both record param/field easily
 	private final TypeAnnotationMapping annotations;
 	private final ClassStaticContext context;
 
@@ -129,90 +129,90 @@ public class FieldBuilder {
 
 		TypeName current;
 		switch (desc.charAt(index)) {
-		case 'B': {
-			current = TypeName.BYTE;
-			index++;
-			break;
-		}
-		case 'C': {
-			current = TypeName.CHAR;
-			index++;
-			break;
-		}
-		case 'D': {
-			current = TypeName.DOUBLE;
-			index++;
-			break;
-		}
-		case 'F': {
-			current = TypeName.FLOAT;
-			index++;
-			break;
-		}
-		case 'I': {
-			current = TypeName.INT;
-			index++;
-			break;
-		}
-		case 'J': {
-			current = TypeName.LONG;
-			index++;
-			break;
-		}
-		case 'S': {
-			current = TypeName.SHORT;
-			index++;
-			break;
-		}
-		case 'Z': {
-			current = TypeName.BOOLEAN;
-			index++;
-			break;
-		}
-		case 'V': {
-			current = TypeName.VOID;
-			index++;
-			break;
-		}
-		case 'L': {
-			int classNameSeparator = index;
-			index++;
-			int nameStart = index;
-			ClassName currentClassName = null;
-
-			char ch;
-			do {
-				ch = desc.charAt(index);
-
-				if (ch == '$' || ch == ';') {
-					// collect class name
-					if (currentClassName == null) {
-						String packageName = nameStart < classNameSeparator ? desc.substring(nameStart, classNameSeparator).replace('/', '.') : "";
-						String simpleName = desc.substring(classNameSeparator + 1, index);
-						currentClassName = ClassName.get(packageName, simpleName);
-					} else {
-						String simpleName = desc.substring(classNameSeparator + 1, index);
-						currentClassName = currentClassName.nestedClass(simpleName);
-					}
-				}
-
-				if (ch == '/' || ch == '$') {
-					// Start of simple name
-					classNameSeparator = index;
-				}
-
+			case 'B': {
+				current = TypeName.BYTE;
 				index++;
-			} while (ch != ';');
-
-			if (currentClassName == null) {
-				throw invalidDesc(desc, index);
+				break;
 			}
+			case 'C': {
+				current = TypeName.CHAR;
+				index++;
+				break;
+			}
+			case 'D': {
+				current = TypeName.DOUBLE;
+				index++;
+				break;
+			}
+			case 'F': {
+				current = TypeName.FLOAT;
+				index++;
+				break;
+			}
+			case 'I': {
+				current = TypeName.INT;
+				index++;
+				break;
+			}
+			case 'J': {
+				current = TypeName.LONG;
+				index++;
+				break;
+			}
+			case 'S': {
+				current = TypeName.SHORT;
+				index++;
+				break;
+			}
+			case 'Z': {
+				current = TypeName.BOOLEAN;
+				index++;
+				break;
+			}
+			case 'V': {
+				current = TypeName.VOID;
+				index++;
+				break;
+			}
+			case 'L': {
+				int classNameSeparator = index;
+				index++;
+				int nameStart = index;
+				ClassName currentClassName = null;
 
-			current = currentClassName;
-			break;
-		}
-		default:
-			throw invalidDesc(desc, index);
+				char ch;
+				do {
+					ch = desc.charAt(index);
+
+					if (ch == '$' || ch == ';') {
+						// collect class name
+						if (currentClassName == null) {
+							String packageName = nameStart < classNameSeparator ? desc.substring(nameStart, classNameSeparator).replace('/', '.') : "";
+							String simpleName = desc.substring(classNameSeparator + 1, index);
+							currentClassName = ClassName.get(packageName, simpleName);
+						} else {
+							String simpleName = desc.substring(classNameSeparator + 1, index);
+							currentClassName = currentClassName.nestedClass(simpleName);
+						}
+					}
+
+					if (ch == '/' || ch == '$') {
+						// Start of simple name
+						classNameSeparator = index;
+					}
+
+					index++;
+				} while (ch != ';');
+
+				if (currentClassName == null) {
+					throw invalidDesc(desc, index);
+				}
+
+				current = currentClassName;
+				break;
+			}
+			default:
+				throw invalidDesc(desc, index);
 		}
 
 		for (int i = 0; i < arrayLevel; i++) {
@@ -233,101 +233,101 @@ public class FieldBuilder {
 
 		TypeName current;
 		switch (desc.charAt(index)) {
-		case 'B': {
-			current = TypeName.BYTE;
-			index++;
-			break;
-		}
-		case 'C': {
-			current = TypeName.CHAR;
-			index++;
-			break;
-		}
-		case 'D': {
-			current = TypeName.DOUBLE;
-			index++;
-			break;
-		}
-		case 'F': {
-			current = TypeName.FLOAT;
-			index++;
-			break;
-		}
-		case 'I': {
-			current = TypeName.INT;
-			index++;
-			break;
-		}
-		case 'J': {
-			current = TypeName.LONG;
-			index++;
-			break;
-		}
-		case 'S': {
-			current = TypeName.SHORT;
-			index++;
-			break;
-		}
-		case 'Z': {
-			current = TypeName.BOOLEAN;
-			index++;
-			break;
-		}
-		case 'V': {
-			current = TypeName.VOID;
-			index++;
-			break;
-		}
-		case 'L': {
-			int classNameSeparator = index;
-			index++;
-			int nameStart = index;
-			ClassName currentClassName = null;
-			boolean instanceInner = false;
+			case 'B': {
+				current = TypeName.BYTE;
+				index++;
+				break;
+			}
+			case 'C': {
+				current = TypeName.CHAR;
+				index++;
+				break;
+			}
+			case 'D': {
+				current = TypeName.DOUBLE;
+				index++;
+				break;
+			}
+			case 'F': {
+				current = TypeName.FLOAT;
+				index++;
+				break;
+			}
+			case 'I': {
+				current = TypeName.INT;
+				index++;
+				break;
+			}
+			case 'J': {
+				current = TypeName.LONG;
+				index++;
+				break;
+			}
+			case 'S': {
+				current = TypeName.SHORT;
+				index++;
+				break;
+			}
+			case 'Z': {
+				current = TypeName.BOOLEAN;
+				index++;
+				break;
+			}
+			case 'V': {
+				current = TypeName.VOID;
+				index++;
+				break;
+			}
+			case 'L': {
+				int classNameSeparator = index;
+				index++;
+				int nameStart = index;
+				ClassName currentClassName = null;
+				boolean instanceInner = false;
 
-			char ch;
-			do {
-				ch = desc.charAt(index);
+				char ch;
+				do {
+					ch = desc.charAt(index);
 
-				if (ch == '$' || ch == ';') {
-					// collect class name
-					if (currentClassName == null) {
-						String packageName = nameStart < classNameSeparator ? desc.substring(nameStart, classNameSeparator).replace('/', '.') : "";
-						String simpleName = desc.substring(classNameSeparator + 1, index);
-						currentClassName = ClassName.get(packageName, simpleName);
-					} else {
-						String simpleName = desc.substring(classNameSeparator + 1, index);
+					if (ch == '$' || ch == ';') {
+						// collect class name
+						if (currentClassName == null) {
+							String packageName = nameStart < classNameSeparator ? desc.substring(nameStart, classNameSeparator).replace('/', '.') : "";
+							String simpleName = desc.substring(classNameSeparator + 1, index);
+							currentClassName = ClassName.get(packageName, simpleName);
+						} else {
+							String simpleName = desc.substring(classNameSeparator + 1, index);
 
-						if (!instanceInner && context.isInstanceInner(desc.substring(nameStart, index))) {
-							instanceInner = true;
-						}
+							if (!instanceInner && context.isInstanceInner(desc.substring(nameStart, index))) {
+								instanceInner = true;
+							}
 
-						currentClassName = currentClassName.nestedClass(simpleName);
+							currentClassName = currentClassName.nestedClass(simpleName);
 
-						if (instanceInner) {
-							currentClassName = AnnotationAwareDescriptors.annotate(currentClassName, annotations);
-							annotations = annotations.advance(TypePath.INNER_TYPE, 0);
+							if (instanceInner) {
+								currentClassName = AnnotationAwareDescriptors.annotate(currentClassName, annotations);
+								annotations = annotations.advance(TypePath.INNER_TYPE, 0);
+							}
 						}
 					}
+
+					if (ch == '/' || ch == '$') {
+						// Start of simple name
+						classNameSeparator = index;
+					}
+
+					index++;
+				} while (ch != ';');
+
+				if (currentClassName == null) {
+					throw invalidDesc(desc, index);
 				}
 
-				if (ch == '/' || ch == '$') {
-					// Start of simple name
-					classNameSeparator = index;
-				}
-
-				index++;
-			} while (ch != ';');
-
-			if (currentClassName == null) {
-				throw invalidDesc(desc, index);
+				current = currentClassName;
+				break;
 			}
-
-			current = currentClassName;
-			break;
-		}
-		default:
-			throw invalidDesc(desc, index);
+			default:
+				throw invalidDesc(desc, index);
 		}
 
 		while (!arrayAnnos.isEmpty()) {
@@ -348,24 +348,24 @@ public class FieldBuilder {
 	@Deprecated // use typeFromDesc, non-recursive
 	public static TypeName getFieldType(String desc) {
 		switch (desc) {
-		case "B":
-			return TypeName.BYTE;
-		case "C":
-			return TypeName.CHAR;
-		case "S":
-			return TypeName.SHORT;
-		case "Z":
-			return TypeName.BOOLEAN;
-		case "I":
-			return TypeName.INT;
-		case "J":
-			return TypeName.LONG;
-		case "F":
-			return TypeName.FLOAT;
-		case "D":
-			return TypeName.DOUBLE;
-		case "V":
-			return TypeName.VOID;
+			case "B":
+				return TypeName.BYTE;
+			case "C":
+				return TypeName.CHAR;
+			case "S":
+				return TypeName.SHORT;
+			case "Z":
+				return TypeName.BOOLEAN;
+			case "I":
+				return TypeName.INT;
+			case "J":
+				return TypeName.LONG;
+			case "F":
+				return TypeName.FLOAT;
+			case "D":
+				return TypeName.DOUBLE;
+			case "V":
+				return TypeName.VOID;
 		}
 		if (desc.startsWith("[")) {
 			return ArrayTypeName.of(getFieldType(desc.substring(1)));
@@ -390,48 +390,48 @@ public class FieldBuilder {
 	private CodeBlock makeInitializer(String desc) {
 		// fake initializers exclude fields from constant values
 		switch (desc.charAt(0)) {
-		case 'B':
-			if (fieldNode.value instanceof Integer) {
-				return CodeBlock.builder().add("(byte) $L", fieldNode.value).build();
-			}
-			// fake initializer falls through
-		case 'C':
-			if (fieldNode.value instanceof Integer) {
-				int value = (int) fieldNode.value;
-				char c = (char) value;
-				return printChar(CodeBlock.builder(), c, value).build();
-			}
-			// fake initializer falls through
-		case 'D':
-			if (fieldNode.value instanceof Double) {
-				return CodeBlock.builder().add("$LD", fieldNode.value).build();
-			}
-			// fake initializer falls through
-		case 'I':
-			if (fieldNode.value instanceof Integer) {
-				return CodeBlock.builder().add("$L", fieldNode.value).build();
-			}
-			// fake initializer falls through
-		case 'J':
-			if (fieldNode.value instanceof Long) {
-				return CodeBlock.builder().add("$LL", fieldNode.value).build();
-			}
-			// fake initializer falls through
-		case 'S':
-			if (fieldNode.value instanceof Integer) {
-				return CodeBlock.builder().add("(short) $L", fieldNode.value).build();
-			}
-			return CodeBlock.builder().add("java.lang.Byte.parseByte(\"dummy\")").build();
-		case 'F':
-			if (fieldNode.value instanceof Float) {
-				return CodeBlock.builder().add("$LF", fieldNode.value).build();
-			}
-			return CodeBlock.builder().add("java.lang.Float.parseFloat(\"dummy\")").build();
-		case 'Z':
-			if (fieldNode.value instanceof Integer) {
-				return CodeBlock.builder().add("$L", ((int) fieldNode.value) != 0).build();
-			}
-			return CodeBlock.builder().add("java.lang.Boolean.parseBoolean(\"dummy\")").build();
+			case 'B':
+				if (fieldNode.value instanceof Integer) {
+					return CodeBlock.builder().add("(byte) $L", fieldNode.value).build();
+				}
+				// fake initializer falls through
+			case 'C':
+				if (fieldNode.value instanceof Integer) {
+					int value = (int) fieldNode.value;
+					char c = (char) value;
+					return printChar(CodeBlock.builder(), c, value).build();
+				}
+				// fake initializer falls through
+			case 'D':
+				if (fieldNode.value instanceof Double) {
+					return CodeBlock.builder().add("$LD", fieldNode.value).build();
+				}
+				// fake initializer falls through
+			case 'I':
+				if (fieldNode.value instanceof Integer) {
+					return CodeBlock.builder().add("$L", fieldNode.value).build();
+				}
+				// fake initializer falls through
+			case 'J':
+				if (fieldNode.value instanceof Long) {
+					return CodeBlock.builder().add("$LL", fieldNode.value).build();
+				}
+				// fake initializer falls through
+			case 'S':
+				if (fieldNode.value instanceof Integer) {
+					return CodeBlock.builder().add("(short) $L", fieldNode.value).build();
+				}
+				return CodeBlock.builder().add("java.lang.Byte.parseByte(\"dummy\")").build();
+			case 'F':
+				if (fieldNode.value instanceof Float) {
+					return CodeBlock.builder().add("$LF", fieldNode.value).build();
+				}
+				return CodeBlock.builder().add("java.lang.Float.parseFloat(\"dummy\")").build();
+			case 'Z':
+				if (fieldNode.value instanceof Integer) {
+					return CodeBlock.builder().add("$L", ((int) fieldNode.value) != 0).build();
+				}
+				return CodeBlock.builder().add("java.lang.Boolean.parseBoolean(\"dummy\")").build();
 		}
 		if (desc.equals("Ljava/lang/String;") && fieldNode.value instanceof String) {
 			return CodeBlock.builder().add("$S", fieldNode.value).build();
@@ -448,20 +448,20 @@ public class FieldBuilder {
 		// See https://docs.oracle.com/javase/specs/jls/se16/html/jls-3.html#jls-EscapeSequence
 		// ignore space or ", just use direct in those cases
 		switch (c) {
-		case '\b':
-			return builder.add("'\\b'");
-		case '\t':
-			return builder.add("'\\t'");
-		case '\n':
-			return builder.add("'\\n'");
-		case '\f':
-			return builder.add("'\\f'");
-		case '\r':
-			return builder.add("'\\r'");
-		case '\'':
-			return builder.add("'\\''");
-		case '\\':
-			return builder.add("'\\\\'");
+			case '\b':
+				return builder.add("'\\b'");
+			case '\t':
+				return builder.add("'\\t'");
+			case '\n':
+				return builder.add("'\\n'");
+			case '\f':
+				return builder.add("'\\f'");
+			case '\r':
+				return builder.add("'\\r'");
+			case '\'':
+				return builder.add("'\\''");
+			case '\\':
+				return builder.add("'\\\\'");
 		}
 
 		return builder.add("'$L'", c);
@@ -469,6 +469,10 @@ public class FieldBuilder {
 
 	private void addJavaDoc() {
 		mappings.addFieldDoc(builder::addJavadoc, new EntryTriple(classNode.name, fieldNode.name, fieldNode.desc));
+	}
+
+	void addJavaDoc(ParameterSpec.Builder paramBuilder) {
+		mappings.addFieldDoc(paramBuilder::addJavadoc, new EntryTriple(classNode.name, fieldNode.name, fieldNode.desc));
 	}
 
 	private void addDirectAnnotations() {
@@ -485,7 +489,21 @@ public class FieldBuilder {
 		}
 	}
 
-	private TypeName calculateType() {
+	void addDirectAnnotations(ParameterSpec.Builder paramBuilder) {
+		addDirectAnnotations(paramBuilder, fieldNode.invisibleAnnotations);
+		addDirectAnnotations(paramBuilder, fieldNode.visibleAnnotations);
+	}
+
+	private void addDirectAnnotations(ParameterSpec.Builder paramBuilder, List<AnnotationNode> regularAnnotations) {
+		if (regularAnnotations == null) {
+			return;
+		}
+		for (AnnotationNode annotation : regularAnnotations) {
+			paramBuilder.addAnnotation(parseAnnotation(annotation));
+		}
+	}
+
+	TypeName calculateType() {
 		if (fieldNode.signature != null) {
 			return AnnotationAwareSignatures.parseFieldSignature(fieldNode.signature, annotations, context);
 		}

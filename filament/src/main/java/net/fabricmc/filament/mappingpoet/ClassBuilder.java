@@ -16,34 +16,45 @@
 
 package net.fabricmc.mappingpoet;
 
-import static net.fabricmc.mappingpoet.FieldBuilder.parseAnnotation;
-
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Function;
-
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.TypeReference;
-import org.objectweb.asm.tree.AnnotationNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.InnerClassNode;
-import org.objectweb.asm.tree.MethodNode;
-
 import net.fabricmc.mappingpoet.signature.AnnotationAwareDescriptors;
 import net.fabricmc.mappingpoet.signature.AnnotationAwareSignatures;
 import net.fabricmc.mappingpoet.signature.ClassSignature;
 import net.fabricmc.mappingpoet.signature.ClassStaticContext;
 import net.fabricmc.mappingpoet.signature.TypeAnnotationMapping;
 import net.fabricmc.mappingpoet.signature.TypeAnnotationStorage;
+import org.objectweb.asm.Handle;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.TypeReference;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.AnnotationNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.InnerClassNode;
+import org.objectweb.asm.tree.InvokeDynamicInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+import static net.fabricmc.mappingpoet.FieldBuilder.parseAnnotation;
 
 public class ClassBuilder {
+	static final Handle OBJ_MTH_BOOTSTRAP = new Handle(
+			Opcodes.H_INVOKESTATIC,
+			"java/lang/runtime/ObjectMethods",
+			"bootstrap",
+			"(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/TypeDescriptor;Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/invoke/MethodHandle;)Ljava/lang/Object;",
+			false
+	);
 
 	private final MappingsStore mappings;
 	private final ClassNode classNode;
@@ -51,21 +62,24 @@ public class ClassBuilder {
 	private final TypeSpec.Builder builder;
 	private final List<ClassBuilder> innerClasses = new ArrayList<>();
 	private final Function<String, Collection<String>> superGetter;
+	private final Predicate<String> sealChecker;
 	private final ClassStaticContext context;
 
 	private final ClassSignature signature; // not really signature
 	private final TypeAnnotationMapping typeAnnotations;
 	private boolean annotationClass;
 	private boolean enumClass;
+	private boolean recordClass;
 	private boolean instanceInner = false;
 	// only nonnull if any class in the inner class chain creates a generic <T> decl
 	// omits L and ;
 	private String receiverSignature;
 
-	public ClassBuilder(MappingsStore mappings, ClassNode classNode, Function<String, Collection<String>> superGetter, ClassStaticContext context) {
+	public ClassBuilder(MappingsStore mappings, ClassNode classNode, Function<String, Collection<String>> superGetter, Predicate<String> sealChecker, ClassStaticContext context) {
 		this.mappings = mappings;
 		this.classNode = classNode;
 		this.superGetter = superGetter;
+		this.sealChecker = sealChecker;
 		this.context = context;
 		this.typeAnnotations = setupAnnotations();
 		this.signature = setupSignature();
@@ -144,6 +158,9 @@ public class ClassBuilder {
 		} else if (classNode.superName.equals("java/lang/Enum")) {
 			enumClass = true;
 			builder = TypeSpec.enumBuilder(name);
+		} else if (classNode.superName.equals("java/lang/Record")) {
+			recordClass = true;
+			builder = TypeSpec.recordBuilder(name);
 		} else {
 			builder = TypeSpec.classBuilder(name)
 					.superclass(signature.superclass());
@@ -162,7 +179,10 @@ public class ClassBuilder {
 		}
 
 		return builder
-				.addModifiers(new ModifierBuilder(classNode.access).getModifiers(enumClass ? ModifierBuilder.Type.ENUM : ModifierBuilder.Type.CLASS));
+				.addModifiers(new ModifierBuilder(classNode.access)
+						.checkUnseal(classNode, sealChecker)
+						.getModifiers(ModifierBuilder.getType(enumClass, recordClass))
+				);
 	}
 
 	private void addInterfaces() {
@@ -197,6 +217,7 @@ public class ClassBuilder {
 
 	private void addMethods() {
 		if (classNode.methods == null) return;
+		methodsLoop:
 		for (MethodNode method : classNode.methods) {
 			if ((method.access & Opcodes.ACC_SYNTHETIC) != 0 || (method.access & Opcodes.ACC_MANDATED) != 0) {
 				continue;
@@ -217,6 +238,21 @@ public class ClassBuilder {
 					formalParamStartIndex = 2; // 0 String 1 int
 				}
 			}
+			if (recordClass) {
+				// skip record sugars
+				if (method.name.equals("equals") && method.desc.equals("(Ljava/lang/Object;)Z")
+						|| method.name.equals("toString") && method.desc.equals("()Ljava/lang/String;")
+						|| method.name.equals("hashCode") && method.desc.equals("()I")) {
+					for (AbstractInsnNode insn : method.instructions) {
+						if (insn instanceof InvokeDynamicInsnNode indy
+								&& indy.bsm.equals(OBJ_MTH_BOOTSTRAP)
+								&& indy.name.equals(method.name))
+							continue methodsLoop;
+					}
+				}
+
+				// todo test component getters
+			}
 			if (instanceInner) {
 				if (method.name.equals("<init>")) {
 					formalParamStartIndex = 1; // 0 this$0
@@ -229,6 +265,19 @@ public class ClassBuilder {
 	private void addFields() {
 		if (classNode.fields == null) return;
 		for (FieldNode field : classNode.fields) {
+			if (recordClass && !Modifier.isStatic(field.access)) {
+				if (!Modifier.isFinal(field.access) || !Modifier.isPrivate(field.access)) {
+					System.out.println("abnormal instance field " + field.name + " in record " + getClassName() + ", skipping");
+				} else {
+					var fieldBuilder = new FieldBuilder(mappings, classNode, field, context);
+					var paramBuilder = ParameterSpec.builder(fieldBuilder.calculateType(), field.name);
+					fieldBuilder.addJavaDoc(paramBuilder);
+					fieldBuilder.addDirectAnnotations(paramBuilder);
+					builder.addRecordComponent(paramBuilder.build());
+				}
+
+				continue;
+			}
 			if ((field.access & Opcodes.ACC_SYNTHETIC) != 0 || (field.access & Opcodes.ACC_MANDATED) != 0) {
 				continue; // hide synthetic stuff
 			}
@@ -285,7 +334,10 @@ public class ClassBuilder {
 			classBuilder.builder.addModifiers(javax.lang.model.element.Modifier.STATIC);
 		} else {
 			classBuilder.builder.modifiers.remove(javax.lang.model.element.Modifier.PUBLIC); // this modifier may come from class access
-			classBuilder.builder.addModifiers(new ModifierBuilder(innerClassNode.access).getModifiers(classBuilder.enumClass ? ModifierBuilder.Type.ENUM : ModifierBuilder.Type.CLASS));
+			classBuilder.builder.addModifiers(new ModifierBuilder(innerClassNode.access)
+					.checkUnseal(classBuilder.classNode, sealChecker)
+					.getModifiers(ModifierBuilder.getType(classBuilder.enumClass, classBuilder.recordClass))
+			);
 			if (!Modifier.isStatic(innerClassNode.access)) {
 				classBuilder.instanceInner = true;
 			}

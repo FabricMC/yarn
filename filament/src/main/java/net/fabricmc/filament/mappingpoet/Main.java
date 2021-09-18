@@ -16,6 +16,14 @@
 
 package net.fabricmc.mappingpoet;
 
+import com.squareup.javapoet.JavaFile;
+import net.fabricmc.mappingpoet.signature.ClassStaticContext;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.InnerClassNode;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,21 +41,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import com.squareup.javapoet.JavaFile;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InnerClassNode;
-
-import net.fabricmc.mappingpoet.signature.ClassStaticContext;
 
 public class Main {
 
@@ -90,7 +92,7 @@ public class Main {
 	public static void generate(Path mappings, Path inputJar, Path outputDirectory, Path librariesDir) {
 		final MappingsStore mapping = new MappingsStore(mappings);
 		Map<String, ClassBuilder> classes = new HashMap<>();
-		forEachClass(inputJar, (superGetter, classNode, context) -> writeClass(mapping, classNode, classes, superGetter, context), librariesDir);
+		forEachClass(inputJar, (superGetter, classNode, context, sealChecker) -> writeClass(mapping, classNode, classes, superGetter, sealChecker, context), librariesDir);
 
 		classes.values().stream()
 				.filter(classBuilder -> !classBuilder.getClassName().contains("$"))
@@ -111,6 +113,7 @@ public class Main {
 	private static void forEachClass(Path jar, ClassNodeConsumer classNodeConsumer, Path librariesDir) {
 		List<ClassNode> classes = new ArrayList<>();
 		Map<String, Collection<String>> supers = new HashMap<>();
+		Set<String> sealedClasses = new HashSet<>(); // their subclsses/impls need non-sealed modifier
 
 		Map<String, Boolean> instanceInnerClasses = new ConcurrentHashMap<>();
 
@@ -149,6 +152,10 @@ public class Main {
 						}
 					}
 
+					if (classNode.permittedSubclasses != null) {
+						sealedClasses.add(classNode.name);
+					}
+
 					classes.add(classNode);
 				}
 			}
@@ -161,7 +168,7 @@ public class Main {
 
 		ClassStaticContext innerClassContext = new InnerClassStats(instanceInnerClasses);
 		Function<String, Collection<String>> superGetter = k -> supers.getOrDefault(k, Collections.emptyList());
-		classes.forEach(node -> classNodeConsumer.accept(superGetter, node, innerClassContext));
+		classes.forEach(node -> classNodeConsumer.accept(superGetter, node, innerClassContext, sealedClasses::contains));
 	}
 
 	private static void scanInnerClasses(Map<String, Boolean> instanceInnerClasses, Path librariesDir) {
@@ -218,7 +225,7 @@ public class Main {
 		return ch >= '0' && ch <= '9';
 	}
 
-	private static void writeClass(MappingsStore mappings, ClassNode classNode, Map<String, ClassBuilder> existingClasses, Function<String, Collection<String>> superGetter, ClassStaticContext context) {
+	private static void writeClass(MappingsStore mappings, ClassNode classNode, Map<String, ClassBuilder> existingClasses, Function<String, Collection<String>> superGetter, Predicate<String> sealChecker, ClassStaticContext context) {
 		String name = classNode.name;
 		{
 			//Block anonymous class and their nested classes
@@ -232,7 +239,7 @@ public class Main {
 			}
 		}
 
-		ClassBuilder classBuilder = new ClassBuilder(mappings, classNode, superGetter, context);
+		ClassBuilder classBuilder = new ClassBuilder(mappings, classNode, superGetter, sealChecker, context);
 
 		if (name.contains("$")) {
 			String parentClass = name.substring(0, name.lastIndexOf("$"));
@@ -249,7 +256,7 @@ public class Main {
 
 	@FunctionalInterface
 	private interface ClassNodeConsumer {
-		void accept(Function<String, Collection<String>> superGetter, ClassNode node, ClassStaticContext staticContext);
+		void accept(Function<String, Collection<String>> superGetter, ClassNode node, ClassStaticContext staticContext, Predicate<String> sealedChecker);
 	}
 
 	private static final class InnerClassStats implements ClassStaticContext {

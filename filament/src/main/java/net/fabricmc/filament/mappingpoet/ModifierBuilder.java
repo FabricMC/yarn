@@ -16,17 +16,42 @@
 
 package net.fabricmc.mappingpoet;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.objectweb.asm.tree.ClassNode;
 
 import javax.lang.model.element.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class ModifierBuilder {
 
 	private final int access;
+	private boolean needsUnseal;
 
 	public ModifierBuilder(int access) {
 		this.access = access;
+	}
+
+	public ModifierBuilder checkUnseal(ClassNode node, Predicate<String> sealChecker) {
+		if (java.lang.reflect.Modifier.isFinal(node.access)) {
+			return this;
+		}
+
+		if (node.interfaces != null) {
+			for (String itf : node.interfaces) {
+				if (sealChecker.test(itf)) {
+					needsUnseal = true;
+					return this;
+				}
+			}
+		}
+
+		if (node.superName != null && sealChecker.test(node.superName)) {
+			needsUnseal = true;
+		}
+
+
+		return this;
 	}
 
 	public Modifier[] getModifiers(Type type) {
@@ -36,7 +61,7 @@ public class ModifierBuilder {
 			if (java.lang.reflect.Modifier.isFinal(access)) {
 				modifiers.add(Modifier.FINAL);
 			}
-			return modifiers.toArray(new Modifier[] {});
+			return modifiers.toArray(new Modifier[]{});
 		}
 
 		if (java.lang.reflect.Modifier.isPublic(access)) {
@@ -57,7 +82,7 @@ public class ModifierBuilder {
 			modifiers.add(Modifier.DEFAULT);
 		}
 
-		if (java.lang.reflect.Modifier.isFinal(access) && type != Type.ENUM) {
+		if (java.lang.reflect.Modifier.isFinal(access) && type != Type.ENUM && type != Type.RECORD) {
 			modifiers.add(Modifier.FINAL);
 		}
 		if (java.lang.reflect.Modifier.isTransient(access) && type == Type.FIELD) {
@@ -76,12 +101,21 @@ public class ModifierBuilder {
 			modifiers.add(Modifier.STRICTFP);
 		}
 
-		return modifiers.toArray(new Modifier[] {});
+		if (needsUnseal && type == Type.CLASS) {
+			modifiers.add(Modifier.NON_SEALED);
+		}
+
+		return modifiers.toArray(new Modifier[]{});
+	}
+
+	public static Type getType(boolean enumType, boolean recordType) {
+		return enumType ? Type.ENUM : recordType ? Type.RECORD : Type.CLASS;
 	}
 
 	public enum Type {
 		CLASS,
 		ENUM,
+		RECORD,
 		METHOD,
 		FIELD,
 		PARAM
