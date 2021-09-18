@@ -1,12 +1,37 @@
 CLASS net/minecraft/class_2837 net/minecraft/world/chunk/Palette
-	METHOD method_12197 getIndexBits ()I
+	COMMENT A palette maps objects from and to ids to make storage easier.
+	COMMENT While the objects palettes handle are already represented by integer
+	COMMENT IDs, further shrinking IDs in cases where only a few are used can better
+	COMMENT decrease storage usage and network traffic volume.
+	METHOD method_12197 getSize ()I
+		COMMENT {@return the size of the palette}
 	METHOD method_12287 toPacket (Lnet/minecraft/class_2540;)V
 		ARG 1 buf
-	METHOD method_12288 getByIndex (I)Ljava/lang/Object;
-		ARG 1 index
+	METHOD method_12288 get (I)Ljava/lang/Object;
+		COMMENT {@return the object associated with the given {@code id}}
+		COMMENT
+		COMMENT @throws EntryMissingException if this ID does not exist in this palette
+		ARG 1 id
+			COMMENT the ID to look up
 	METHOD method_12289 fromPacket (Lnet/minecraft/class_2540;)V
 		ARG 1 buf
 	METHOD method_12290 getPacketSize ()I
-	METHOD method_12291 getIndex (Ljava/lang/Object;)I
+		COMMENT {@return the serialized size of this palette in a byte buf, in bytes}
+	METHOD method_12291 index (Ljava/lang/Object;)I
+		COMMENT {@return the ID of an object in this palette}
+		COMMENT
+		COMMENT <p>If the object does not yet exist in this palette, this palette will
+		COMMENT register the object. If the palette is too small to include this object,
+		COMMENT the resize listener will be called and this palette will be discarded.
 		ARG 1 object
-	METHOD method_19525 accepts (Ljava/util/function/Predicate;)Z
+			COMMENT the object to look up
+	METHOD method_19525 hasAny (Ljava/util/function/Predicate;)Z
+		COMMENT {@return {@code true} if any entry in this palette passes the {@code
+		COMMENT predicate}}
+		ARG 1 predicate
+	CLASS class_6559 Factory
+		COMMENT An interface for the palettes' constructors.
+		METHOD create (ILnet/minecraft/class_2359;Lnet/minecraft/class_2835;)Lnet/minecraft/class_2837;
+			ARG 1 bits
+			ARG 2 idList
+			ARG 3 listener
