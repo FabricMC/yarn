@@ -1,20 +1,29 @@
 CLASS net/minecraft/class_2837 net/minecraft/world/chunk/Palette
-	COMMENT A palette maps objects from and to ids to make storage easier.
-	COMMENT While the objects palettes handle are already represented by integer
-	COMMENT IDs, further shrinking IDs in cases where only a few are used can better
-	COMMENT decrease storage usage and network traffic volume.
+	COMMENT A palette maps objects from and to small integer IDs that uses less
+	COMMENT number of bits to make storage smaller.
+	COMMENT
+	COMMENT <p>While the objects palettes handle are already represented by integer
+	COMMENT IDs, shrinking IDs in cases where only a few appear can further reduce
+	COMMENT storage space and network traffic volume.
+	COMMENT
+	COMMENT @see PalettedContainer
 	METHOD method_12197 getSize ()I
 		COMMENT {@return the size of the palette}
-	METHOD method_12287 toPacket (Lnet/minecraft/class_2540;)V
+	METHOD method_12287 writePacket (Lnet/minecraft/class_2540;)V
+		COMMENT Writes this palette to the {@code buf}.
 		ARG 1 buf
+			COMMENT the packet byte buffer
 	METHOD method_12288 get (I)Ljava/lang/Object;
 		COMMENT {@return the object associated with the given {@code id}}
 		COMMENT
 		COMMENT @throws EntryMissingException if this ID does not exist in this palette
 		ARG 1 id
 			COMMENT the ID to look up
-	METHOD method_12289 fromPacket (Lnet/minecraft/class_2540;)V
+	METHOD method_12289 readPacket (Lnet/minecraft/class_2540;)V
+		COMMENT Initializes this palette from the {@code buf}. Clears the preexisting
+		COMMENT data in this palette.
 		ARG 1 buf
+			COMMENT the packet byte buffer
 	METHOD method_12290 getPacketSize ()I
 		COMMENT {@return the serialized size of this palette in a byte buf, in bytes}
 	METHOD method_12291 index (Ljava/lang/Object;)I
@@ -22,7 +31,8 @@ CLASS net/minecraft/class_2837 net/minecraft/world/chunk/Palette
 		COMMENT
 		COMMENT <p>If the object does not yet exist in this palette, this palette will
 		COMMENT register the object. If the palette is too small to include this object,
-		COMMENT the resize listener will be called and this palette will be discarded.
+		COMMENT a {@linkplain PaletteResizeListener resize listener} will be called and
+		COMMENT this palette may be discarded.
 		ARG 1 object
 			COMMENT the object to look up
 	METHOD method_19525 hasAny (Ljava/util/function/Predicate;)Z
@@ -30,8 +40,16 @@ CLASS net/minecraft/class_2837 net/minecraft/world/chunk/Palette
 		COMMENT predicate}}
 		ARG 1 predicate
 	CLASS class_6559 Factory
-		COMMENT An interface for the palettes' constructors.
+		COMMENT An interface for easy creation of palettes.
 		METHOD create (ILnet/minecraft/class_2359;Lnet/minecraft/class_2835;)Lnet/minecraft/class_2837;
+			COMMENT Creates a palette.
+			COMMENT
+			COMMENT @return the created new palette
 			ARG 1 bits
+				COMMENT the number of bits each entry uses in the storage
 			ARG 2 idList
+				COMMENT the indices of possible palette entries and their full integer IDs;
+				COMMENT useful for palette serialization
 			ARG 3 listener
+				COMMENT the resize listener, called when this palette runs out of capacity when
+				COMMENT assigning index to new entries
