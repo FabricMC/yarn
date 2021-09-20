@@ -34,6 +34,8 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 	METHOD method_11016 getPos ()Lnet/minecraft/class_2338;
 	METHOD method_11017 getType ()Lnet/minecraft/class_2591;
 	METHOD method_16887 toInitialChunkDataNbt ()Lnet/minecraft/class_2487;
+		COMMENT Serializes the state of this block entity that is observable by clients. It is sent alongside the initial chunk data,
+		COMMENT as well as when the block entity implements {@link #toUpdatePacket} and decides to use the default {@link BlockEntityUpdateS2CPacket}.
 	METHOD method_31662 setWorld (Lnet/minecraft/class_1937;)V
 		ARG 1 world
 	METHOD method_31663 markDirty (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
@@ -42,6 +44,14 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		ARG 2 state
 	METHOD method_31664 setCachedState (Lnet/minecraft/class_2680;)V
 		ARG 1 state
+	METHOD method_38235 toUpdatePacket ()Lnet/minecraft/class_2596;
+		COMMENT Implement and return a packet that should be sent to players nearby when the observable state of
+		COMMENT this block entity changes. Return null to not send an update packet.
+		COMMENT <p>
+		COMMENT If the data returned by {@link #toInitialChunkDataNbt initial chunk data} is suitable for updates,
+		COMMENT the following shortcut can be used to create an update packet: {@code BlockEntityUpdateS2CPacket.create(this)}.
+		COMMENT <p>
+		COMMENT The NBT will be passed to {@link #readNbt} on the client.
 	METHOD method_38238 writeIdToNbt (Lnet/minecraft/class_2487;Lnet/minecraft/class_2591;)V
 		ARG 0 nbt
 		ARG 1 type
