@@ -1,15 +1,10 @@
 CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 	FIELD field_13879 LOGGER Lorg/apache/logging/log4j/Logger;
 	FIELD field_24842 STRUCTURES Lcom/google/common/collect/BiMap;
-	FIELD field_24851 SWAMP_HUT Lnet/minecraft/class_3197;
+	FIELD field_24851 SWAMP_HUT Lnet/minecraft/class_3195;
 	FIELD field_24861 LAND_MODIFYING_STRUCTURES Ljava/util/List;
 	FIELD field_24862 STRUCTURE_TO_GENERATION_STEP Ljava/util/Map;
 	FIELD field_24863 codec Lcom/mojang/serialization/Codec;
-	FIELD field_25839 JIGSAW_STRUCTURE_PIECES Ljava/util/Map;
-	FIELD field_26362 JIGSAW_ID Lnet/minecraft/class_2960;
-	METHOD <init> (Lcom/mojang/serialization/Codec;)V
-		ARG 1 codec
-	METHOD method_13149 getMonsterSpawns ()Lnet/minecraft/class_6012;
 	METHOD method_14015 locateStructure (Lnet/minecraft/class_4538;Lnet/minecraft/class_5138;Lnet/minecraft/class_2338;IZJLnet/minecraft/class_5314;)Lnet/minecraft/class_2338;
 		COMMENT Tries to find the closest structure of this type near a given block.
 		COMMENT <p>
@@ -27,7 +22,6 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 		ARG 5 skipExistingChunks
 		ARG 6 worldSeed
 		ARG 8 config
-	METHOD method_14016 getStructureStartFactory ()Lnet/minecraft/class_3195$class_3774;
 	METHOD method_14019 getName ()Ljava/lang/String;
 	METHOD method_14026 shouldStartAt (Lnet/minecraft/class_2794;Lnet/minecraft/class_1966;JLnet/minecraft/class_2919;Lnet/minecraft/class_1923;Lnet/minecraft/class_1923;Lnet/minecraft/class_3037;Lnet/minecraft/class_5539;)Z
 		COMMENT Checks if this structure can <em>actually</em> be placed at a potential structure position determined via
@@ -38,7 +32,6 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 		ARG 3 worldSeed
 		ARG 5 random
 		ARG 6 pos
-	METHOD method_16140 getCreatureSpawns ()Lnet/minecraft/class_6012;
 	METHOD method_27218 getStartChunk (Lnet/minecraft/class_5314;JLnet/minecraft/class_2919;II)Lnet/minecraft/class_1923;
 		COMMENT Determines the cell of the structure placement grid a chunk belongs to, and
 		COMMENT returns the chunk within that cell, that this structure will actually be placed at.
@@ -58,8 +51,6 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 		COMMENT If true, this structure's start position will be uniformly distributed within
 		COMMENT a placement grid cell. If false, the structure's starting point will be biased
 		COMMENT towards the center of the cell.
-	METHOD method_28656 createStart (Lnet/minecraft/class_1923;IJ)Lnet/minecraft/class_3449;
-		ARG 1 pos
 	METHOD method_28657 tryPlaceStart (Lnet/minecraft/class_5455;Lnet/minecraft/class_2794;Lnet/minecraft/class_1966;Lnet/minecraft/class_3485;JLnet/minecraft/class_1923;ILnet/minecraft/class_2919;Lnet/minecraft/class_5314;Lnet/minecraft/class_3037;Lnet/minecraft/class_5539;Ljava/util/function/Predicate;)Lnet/minecraft/class_3449;
 		COMMENT Tries to place a starting point for this type of structure in the given chunk.
 		COMMENT <p>
@@ -72,8 +63,7 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 		ARG 7 pos
 	METHOD method_28659 configure (Lnet/minecraft/class_3037;)Lnet/minecraft/class_5312;
 		ARG 1 config
-	METHOD method_28660 readStructureStart (Lnet/minecraft/class_3218;Lnet/minecraft/class_2487;J)Lnet/minecraft/class_3449;
-		ARG 0 world
+	METHOD method_28660 readStructureStart (Lnet/minecraft/class_6625;Lnet/minecraft/class_2487;J)Lnet/minecraft/class_3449;
 		ARG 1 nbt
 		ARG 2 worldSeed
 	METHOD method_28661 register (Ljava/lang/String;Lnet/minecraft/class_3195;Lnet/minecraft/class_2893$class_2895;)Lnet/minecraft/class_3195;
@@ -85,30 +75,4 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 		COMMENT Structures will generate before other features in the same generation step.
 	METHOD method_28664 init ()V
 	METHOD method_28665 getCodec ()Lcom/mojang/serialization/Codec;
-	METHOD method_36420 getUndergroundWaterCreatureSpawns ()Lnet/minecraft/class_6012;
-	METHOD method_38428 getCornerInGroundHeights (Lnet/minecraft/class_2794;IIIILnet/minecraft/class_5539;)[I
-		ARG 0 generator
-		ARG 1 x
-		ARG 2 deltaX
-		ARG 3 z
-		ARG 4 deltaZ
-		ARG 5 world
-	METHOD method_38429 getLowestCornerInGroundHeight (Lnet/minecraft/class_2794;IILnet/minecraft/class_1923;Lnet/minecraft/class_5539;)I
-		ARG 0 generator
-		ARG 1 deltaX
-		ARG 2 deltaZ
-		ARG 3 chunkPos
-		ARG 4 world
-	METHOD method_38430 checkBiome (Lnet/minecraft/class_2794;Lnet/minecraft/class_5539;Ljava/util/function/Predicate;Lnet/minecraft/class_2902$class_2903;II)Z
-		ARG 0 generator
-		ARG 1 world
-		ARG 2 biomePredicate
-		ARG 3 heightmap
-		ARG 4 x
-		ARG 5 z
-	CLASS class_3774 StructureStartFactory
-		METHOD create (Lnet/minecraft/class_3195;Lnet/minecraft/class_1923;IJ)Lnet/minecraft/class_3449;
-			ARG 1 feature
-			ARG 2 pos
-			ARG 3 references
-			ARG 4 seed
+	METHOD method_36217 calculateBoundingBox (Lnet/minecraft/class_3341;)Lnet/minecraft/class_3341;
