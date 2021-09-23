@@ -266,7 +266,8 @@ public class ClassBuilder {
 		if (classNode.fields == null) return;
 		for (FieldNode field : classNode.fields) {
 			if (recordClass && !Modifier.isStatic(field.access)) {
-				if (!Modifier.isFinal(field.access) || !Modifier.isPrivate(field.access)) {
+				// proguard elevates record field access for direct record field gets
+				if (!Modifier.isFinal(field.access) || Modifier.isProtected(field.access) || Modifier.isPublic(field.access)) {
 					System.out.println("abnormal instance field " + field.name + " in record " + getClassName() + ", skipping");
 				} else {
 					var fieldBuilder = new FieldBuilder(mappings, classNode, field, context);
