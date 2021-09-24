@@ -119,7 +119,8 @@ import net.fabricmc.tinyremapper.OutputConsumerPath
 import net.fabricmc.tinyremapper.TinyRemapper
 import net.fabricmc.tinyremapper.TinyUtils
 import org.apache.commons.io.FileUtils
-import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.FieldVisitor
 import org.objectweb.asm.Opcodes;
 
 import java.nio.charset.StandardCharsets
@@ -395,6 +396,23 @@ task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJ
 						super.visit(version, access, name, signature, superName, interfaces);
 					}
 				}
+			}
+
+			remapperBuilder.extraPostApplyVisitor { cls, next ->
+				if (!cls.record && cls.superName == "java/lang/Record") {
+					return new ClassVisitor(Opcodes.ASM9, next) {
+						@Override
+						FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
+							if (name.startsWith("comp_")) {
+								super.visitRecordComponent(name, descriptor, signature);
+							}
+
+							return super.visitField(access, name, descriptor, signature, value);
+						}
+					}
+				}
+
+				return next
 			}
 		}
 	}
