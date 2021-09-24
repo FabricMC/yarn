@@ -2,6 +2,11 @@ CLASS net/minecraft/class_3620 net/minecraft/block/MapColor
 	COMMENT Represents the surface color of a block when rendered from the {@link net.minecraft.client.render.MapRenderer}.
 	COMMENT Color names refer to a material or an object which refers to their vanilla Minecraft textures, not their real-world counterparts, eg. "emerald green".
 	COMMENT Names are in the form of either <i>blockReference_baseColor</i> or <i>color</i>.
+	COMMENT
+	COMMENT <p>When the map is rendered, the {@link MapColor.Brightness#brightness} value is added to the
+	COMMENT base color. The "rendered color" is internally represented as a byte; the first six bits
+	COMMENT indicate the base color, and the last two bits indicate the brightness. This value is returned
+	COMMENT from {@link MapColor#getRenderColorByte} and is passed to {@link MapColor#getRenderColor}.
 	FIELD field_15976 LIGHT_BLUE_GRAY Lnet/minecraft/class_3620;
 	FIELD field_15977 BROWN Lnet/minecraft/class_3620;
 	FIELD field_15978 GRAY Lnet/minecraft/class_3620;
@@ -71,3 +76,23 @@ CLASS net/minecraft/class_3620 net/minecraft/block/MapColor
 		ARG 1 id
 		ARG 2 color
 	METHOD method_15820 getRenderColor (Lnet/minecraft/class_3620$class_6594;)I
+		ARG 1 brightness
+	METHOD method_38479 get (I)Lnet/minecraft/class_3620;
+		ARG 0 id
+	METHOD method_38480 getRenderColor (I)I
+		ARG 0 colorByte
+	METHOD method_38481 getRenderColorByte (Lnet/minecraft/class_3620$class_6594;)B
+		ARG 1 brightness
+	METHOD method_38482 getUnchecked (I)Lnet/minecraft/class_3620;
+		ARG 0 id
+	CLASS class_6594 Brightness
+		FIELD field_34763 id I
+		FIELD field_34764 brightness I
+		FIELD field_34765 VALUES [Lnet/minecraft/class_3620$class_6594;
+		METHOD <init> (Ljava/lang/String;III)V
+			ARG 3 id
+			ARG 4 brightness
+		METHOD method_38484 validateAndGet (I)Lnet/minecraft/class_3620$class_6594;
+			ARG 0 id
+		METHOD method_38485 get (I)Lnet/minecraft/class_3620$class_6594;
+			ARG 0 id
