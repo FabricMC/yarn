@@ -4,12 +4,20 @@ CLASS net/minecraft/class_1676 net/minecraft/entity/projectile/ProjectileEntity
 	FIELD field_28646 shot Z
 	FIELD field_33399 owner Lnet/minecraft/class_1297;
 	METHOD method_24919 setProperties (Lnet/minecraft/class_1297;FFFFF)V
-		ARG 1 user
+		COMMENT Sets velocity and rotation.
+		ARG 1 shooter
+			COMMENT the entity who shot this projectile; used to add the shooter's velocity
+			COMMENT to this projectile
 		ARG 2 pitch
+			COMMENT the pitch
 		ARG 3 yaw
+			COMMENT the yaw
 		ARG 4 roll
-		ARG 5 modifierZ
-		ARG 6 modifierXYZ
+			COMMENT the roll
+		ARG 5 speed
+			COMMENT the length of the velocity
+		ARG 6 divergence
+			COMMENT the multiplier for the random vector added to the direction
 	METHOD method_24920 onBlockHit (Lnet/minecraft/class_3965;)V
 		ARG 1 blockHitResult
 	METHOD method_24921 getOwner ()Lnet/minecraft/class_1297;
@@ -30,11 +38,23 @@ CLASS net/minecraft/class_1676 net/minecraft/entity/projectile/ProjectileEntity
 		ARG 1 entity
 	METHOD method_7454 onEntityHit (Lnet/minecraft/class_3966;)V
 		ARG 1 entityHitResult
-	METHOD method_7485 setVelocity (DDDFF)V
+	METHOD method_7485 setProperties (DDDFF)V
+		COMMENT Sets velocity and rotation.
+		COMMENT
+		COMMENT <p>The velocity and rotation will be set to the same direction.
+		COMMENT
+		COMMENT <p>The direction is calculated as follows: Based on the direction vector
+		COMMENT {@code (x, y, z)}, a random vector is added, then multiplied by the
+		COMMENT {@code speed}.
 		ARG 1 x
+			COMMENT the X component of the direction vector
 		ARG 3 y
+			COMMENT the Y component of the direction vector
 		ARG 5 z
+			COMMENT the Z component of the direction vector
 		ARG 7 speed
+			COMMENT the length of the velocity
 		ARG 8 divergence
+			COMMENT the multiplier for the random vector
 	METHOD method_7488 onCollision (Lnet/minecraft/class_239;)V
 		ARG 1 hitResult
