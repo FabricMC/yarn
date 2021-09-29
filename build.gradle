@@ -930,7 +930,7 @@ void inheritMappedNames(MemoryMappingTree tree) {
 		tree.setIndexByDstNames true
 	}
 
-	for (MappingTree.ClassMapping classEntry : tree.getClasses()) {
+	for (MappingTree.ClassMapping classEntry : tree.classes) {
 		def intermediaryName = classEntry.getName intermediaryIdx
 		def namedName = classEntry.getDstName namedIdx
 
@@ -949,6 +949,24 @@ void inheritMappedNames(MemoryMappingTree tree) {
 
 			if (awaitUpdate) {
 				classEntry.setDstName intermediaryName, namedIdx
+			}
+		}
+
+		for (MappingTree.MethodMapping methodEntry : classEntry.methods) {
+			def intermediaryMethodName = methodEntry.getName intermediaryIdx
+			def namedMethodName = methodEntry.getDstName namedIdx
+
+			if (intermediaryMethodName != null && namedMethodName == null) {
+				methodEntry.setDstName intermediaryMethodName, namedIdx
+			}
+		}
+
+		for (MappingTree.FieldMapping fieldEntry : classEntry.fields) {
+			def intermediaryFieldName = fieldEntry.getName intermediaryIdx
+			def namedFieldName = fieldEntry.getDstName namedIdx
+
+			if (intermediaryFieldName != null && namedFieldName == null) {
+				fieldEntry.setDstName intermediaryFieldName, namedIdx
 			}
 		}
 	}
