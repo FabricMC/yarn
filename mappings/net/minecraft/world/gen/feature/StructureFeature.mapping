@@ -5,6 +5,15 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 	FIELD field_24861 LAND_MODIFYING_STRUCTURES Ljava/util/List;
 	FIELD field_24862 STRUCTURE_TO_GENERATION_STEP Ljava/util/Map;
 	FIELD field_24863 codec Lcom/mojang/serialization/Codec;
+	FIELD field_34929 piecesGenerator Lnet/minecraft/class_6622;
+	FIELD field_34930 postProcessor Lnet/minecraft/class_6621;
+	METHOD <init> (Lcom/mojang/serialization/Codec;Lnet/minecraft/class_6622;)V
+		ARG 1 configCodec
+		ARG 2 piecesGenerator
+	METHOD <init> (Lcom/mojang/serialization/Codec;Lnet/minecraft/class_6622;Lnet/minecraft/class_6621;)V
+		ARG 1 configCodec
+		ARG 2 piecesGenerator
+		ARG 3 postGenerationProcessor
 	METHOD method_14015 locateStructure (Lnet/minecraft/class_4538;Lnet/minecraft/class_5138;Lnet/minecraft/class_2338;IZJLnet/minecraft/class_5314;)Lnet/minecraft/class_2338;
 		COMMENT Tries to find the closest structure of this type near a given block.
 		COMMENT <p>
@@ -32,6 +41,11 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 		ARG 3 worldSeed
 		ARG 5 random
 		ARG 6 pos
+			COMMENT the chunk position currently under generation
+		ARG 7 startPos
+			COMMENT the starting chunk position of this structure
+		ARG 8 config
+		ARG 9 heightView
 	METHOD method_27218 getStartChunk (Lnet/minecraft/class_5314;JLnet/minecraft/class_2919;II)Lnet/minecraft/class_1923;
 		COMMENT Determines the cell of the structure placement grid a chunk belongs to, and
 		COMMENT returns the chunk within that cell, that this structure will actually be placed at.
@@ -56,14 +70,22 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 		COMMENT <p>
 		COMMENT If this structure doesn't have a starting point in the chunk, {@link StructureStart#DEFAULT}
 		COMMENT will be returned.
+		ARG 1 registries
 		ARG 2 generator
 		ARG 3 biomeSource
 		ARG 4 manager
 		ARG 5 worldSeed
 		ARG 7 pos
+		ARG 8 structureReferences
+		ARG 9 random
+		ARG 10 structureConfig
+		ARG 11 config
+		ARG 12 heightView
+		ARG 13 biomeLimit
 	METHOD method_28659 configure (Lnet/minecraft/class_3037;)Lnet/minecraft/class_5312;
 		ARG 1 config
 	METHOD method_28660 readStructureStart (Lnet/minecraft/class_6625;Lnet/minecraft/class_2487;J)Lnet/minecraft/class_3449;
+		ARG 0 context
 		ARG 1 nbt
 		ARG 2 worldSeed
 	METHOD method_28661 register (Ljava/lang/String;Lnet/minecraft/class_3195;Lnet/minecraft/class_2893$class_2895;)Lnet/minecraft/class_3195;
@@ -76,3 +98,12 @@ CLASS net/minecraft/class_3195 net/minecraft/world/gen/feature/StructureFeature
 	METHOD method_28664 init ()V
 	METHOD method_28665 getCodec ()Lcom/mojang/serialization/Codec;
 	METHOD method_36217 calculateBoundingBox (Lnet/minecraft/class_3341;)Lnet/minecraft/class_3341;
+		ARG 1 box
+	METHOD method_38671 getLocatedPos (Lnet/minecraft/class_1923;)Lnet/minecraft/class_2338;
+		COMMENT {@return a block position for feature location}
+		ARG 1 chunkPos
+	METHOD method_38688 (Lnet/minecraft/class_5312;)Lnet/minecraft/class_3037;
+		ARG 0 configuredFeature
+	METHOD method_38689 (Lnet/minecraft/class_3037;)Lnet/minecraft/class_5312;
+		ARG 1 config
+	METHOD method_38690 getPostProcessor ()Lnet/minecraft/class_6621;
