@@ -1,55 +1,193 @@
 CLASS net/minecraft/class_5818 net/minecraft/world/gen/NoiseColumnSampler
 	COMMENT Samples noise values for use in chunk generation.
-	FIELD field_28749 BIOME_WEIGHT_TABLE [F
-		COMMENT Table of weights used to weight faraway biomes less than nearby biomes.
-	FIELD field_28750 biomeSource Lnet/minecraft/class_1966;
-	FIELD field_28751 horizontalNoiseResolution I
 	FIELD field_28752 verticalNoiseResolution I
 	FIELD field_28753 noiseSizeY I
 	FIELD field_28754 config Lnet/minecraft/class_5309;
-	FIELD field_28755 noise Lnet/minecraft/class_5822;
 	FIELD field_28756 islandNoise Lnet/minecraft/class_3541;
-	FIELD field_28757 densityNoise Lnet/minecraft/class_3537;
-	FIELD field_28758 topSlideTarget D
-	FIELD field_28759 topSlideSize D
-	FIELD field_28760 topSlideOffset D
-	FIELD field_28761 bottomSlideTarget D
-	FIELD field_28762 bottomSlideSize D
-	FIELD field_28763 bottomSlideOffset D
 	FIELD field_28764 densityFactor D
 	FIELD field_28765 densityOffset D
-	METHOD <init> (Lnet/minecraft/class_1966;IIILnet/minecraft/class_5309;Lnet/minecraft/class_5822;Lnet/minecraft/class_3541;Lnet/minecraft/class_3537;Lnet/minecraft/class_6357;)V
-		ARG 1 biomeSource
-		ARG 2 horizontalNoiseResolution
-		ARG 3 verticalNoiseResolution
-		ARG 4 noiseSizeY
-		ARG 5 config
-		ARG 6 noise
-		ARG 7 islandNoise
-		ARG 8 densityNoise
+	FIELD field_34632 noiseSampler Lnet/minecraft/class_3757;
+	FIELD field_34649 temperatureNoise Lnet/minecraft/class_5216;
+	FIELD field_34650 humidityNoise Lnet/minecraft/class_5216;
+	FIELD field_34651 continentalnessNoise Lnet/minecraft/class_5216;
+	FIELD field_34652 erosionNoise Lnet/minecraft/class_5216;
+	FIELD field_34653 weirdnessNoise Lnet/minecraft/class_5216;
+	FIELD field_34654 shiftNoise Lnet/minecraft/class_5216;
+	FIELD field_34655 terrainParameters Lnet/minecraft/class_6555;
+	FIELD field_34657 intialNoiseSampler Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34659 oreFrequencyNoiseSampler Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34660 firstOrePlacementNoiseSampler Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34661 secondOrePlacementNoiseSampler Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34663 noodleCavesFrequencyNoiseSampler Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34664 noodleCavesWeightReducingNoiseSampler Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34665 noodleCavesFirstWeightNoiseSampler Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34666 noodleCavesSecondWeightNoiseSampler Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34667 hasNoiseCaves Z
+	FIELD field_34680 noise Lnet/minecraft/class_6568$class_6572;
+	METHOD <init> (IIILnet/minecraft/class_5309;Lnet/minecraft/class_2088;ZJ)V
+		ARG 1 horizontalNoiseResolution
+		ARG 2 verticalNoiseResolution
+		ARG 3 noiseSizeY
+		ARG 4 config
+		ARG 5 noiseParameters
+		ARG 6 hasNoiseCaves
+		ARG 7 seed
 	METHOD method_33645 applySlides (DI)D
 		COMMENT Interpolates the noise at the top and bottom of the world.
 		ARG 1 noise
 		ARG 3 y
-	METHOD method_33646 getOffset (IDDD)D
-		COMMENT Calculates an offset for the noise.
-		COMMENT <p>For example in the overworld, this makes lower y values solid while making higher y values air.
-		ARG 1 y
-		ARG 2 depth
-		ARG 4 scale
-		ARG 6 randomDensityOffset
-	METHOD method_33647 getDensityNoise (II)D
-		COMMENT Applies a random change to the density to subtly vary the height of the terrain.
+	METHOD method_38372 getNoiseSampler ()Lnet/minecraft/class_3757;
+	METHOD method_38373 getDepth (D)D
+	METHOD method_38374 shouldPlaceOreVeinBlock (DD)Z
+		ARG 1 firstOrePlacementNoise
+		ARG 3 secondOrePlacementNoise
+	METHOD method_38375 sampleTemperatureNoise (DDD)D
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+	METHOD method_38376 createTerrainNoisePoint (IIFFF)Lnet/minecraft/class_6576;
 		ARG 1 x
 		ARG 2 z
-	METHOD method_33648 sampleNoiseColumn ([DIILnet/minecraft/class_5309;III)V
-		COMMENT Samples the noise for the given column and stores it in the buffer parameter.
-		ARG 1 buffer
+		ARG 3 continentalness
+		ARG 4 weirdness
+		ARG 5 erosion
+	METHOD method_38377 sampleShiftNoise (III)D
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+	METHOD method_38378 (IIIDDFFFD)Lnet/minecraft/class_6544$class_6553;
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+		ARG 4 noiseX
+		ARG 6 noiseZ
+		ARG 8 continentalness
+		ARG 9 erosion
+		ARG 10 weirdness
+		ARG 11 offset
+	METHOD method_38379 createNoiseSamplerFactory (IIIDLnet/minecraft/class_5819;I[D)Lnet/minecraft/class_6568$class_6571;
+		ARG 0 minY
+		ARG 1 maxY
+		ARG 2 alternative
+		ARG 3 noiseScale
+		ARG 5 random
+		ARG 6 offset
+		ARG 7 octaves
+	METHOD method_38380 sampleNoiseColumn (IIILnet/minecraft/class_6576;)D
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+		ARG 4 point
+	METHOD method_38381 sampleNoiseColumn (IIILnet/minecraft/class_6576;DZ)D
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+		ARG 4 point
+		ARG 5 noise
+		ARG 7 hasNoNoiseCaves
+	METHOD method_38382 (IIILnet/minecraft/class_5216;DIII)D
+		ARG 6 x
+		ARG 7 y
+		ARG 8 z
+	METHOD method_38383 (IILnet/minecraft/class_6576;)I
+		ARG 1 x
+		ARG 2 z
+		ARG 3 point
+	METHOD method_38385 (Lnet/minecraft/class_6568$class_6573;Lnet/minecraft/class_2680;Lnet/minecraft/class_6568$class_6573;Lnet/minecraft/class_6568$class_6573;III)Lnet/minecraft/class_2680;
+		ARG 5 x
+		ARG 6 y
+		ARG 7 z
+	METHOD method_38386 (Lnet/minecraft/class_6568$class_6573;Lnet/minecraft/class_6568$class_6573;Lnet/minecraft/class_6568$class_6573;Lnet/minecraft/class_6568$class_6573;Lnet/minecraft/class_6568$class_6573;Lnet/minecraft/class_6568$class_6572;Lnet/minecraft/class_6568;III)Lnet/minecraft/class_2680;
+		ARG 7 x
+		ARG 8 y
+		ARG 9 z
+	METHOD method_38387 (Lnet/minecraft/class_6568;)Lnet/minecraft/class_6568$class_6573;
+		ARG 1 chunkNoiseSampler
+	METHOD method_38388 (Lnet/minecraft/class_6568;III)D
+		ARG 2 x
+		ARG 3 y
+		ARG 4 z
+	METHOD method_38389 createAquiferSampler (Lnet/minecraft/class_6568;IIIILnet/minecraft/class_6350$class_6565;Z)Lnet/minecraft/class_6350;
+		ARG 1 chunkNoiseSampler
 		ARG 2 x
 		ARG 3 z
-		ARG 4 config
-		ARG 5 seaLevel
-		ARG 6 minY
-		ARG 7 noiseSizeY
-	METHOD method_33649 ([F)V
-		ARG 0 array
+		ARG 4 minimumY
+		ARG 5 height
+		ARG 6 fluidLevelSampler
+		ARG 7 hasAquifers
+	METHOD method_38390 createInitialNoiseBlockStateSampler (Lnet/minecraft/class_6568;Lnet/minecraft/class_6568$class_6572;Z)Lnet/minecraft/class_6568$class_6569;
+		ARG 1 chunkNoiseSampler
+		ARG 2 columnSampler
+		ARG 3 hasNoodleCaves
+	METHOD method_38391 createOreVeinSampler (Lnet/minecraft/class_6568;Z)Lnet/minecraft/class_6568$class_6569;
+		ARG 1 chunkNoiseSampler
+		ARG 2 hasOreVeins
+	METHOD method_38393 sample (Lnet/minecraft/class_5216;DDDD)D
+		ARG 0 sampler
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+	METHOD method_38396 sampleHumidityNoise (DDD)D
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+	METHOD method_38397 getVeinType (DI)Lnet/minecraft/class_5818$class_6354;
+		ARG 1 oreFrequencyNoise
+		ARG 3 y
+	METHOD method_38398 (III)D
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+	METHOD method_38401 sampleContinentalnessNoise (DDD)D
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+	METHOD method_38402 (III)D
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+	METHOD method_38404 sampleErosionNoise (DDD)D
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+	METHOD method_38405 (III)D
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+	METHOD method_38407 sampleWeirdnessNoise (DDD)D
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+	METHOD method_38408 (III)D
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+	METHOD method_38410 (III)D
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+	METHOD method_38411 (III)D
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+	METHOD method_38412 (III)Lnet/minecraft/class_2680;
+		ARG 0 x
+		ARG 1 y
+		ARG 2 z
+	CLASS class_5841 CaveScaler
+		METHOD method_33835 scaleCaves (D)D
+			ARG 0 value
+		METHOD method_33836 scaleTunnels (D)D
+			ARG 0 value
+	CLASS class_6354 VeinType
+		FIELD field_33605 ore Lnet/minecraft/class_2680;
+		FIELD field_33606 stone Lnet/minecraft/class_2680;
+		FIELD field_33607 minY I
+		FIELD field_33608 maxY I
+		FIELD field_33668 rawBlock Lnet/minecraft/class_2680;
+		METHOD <init> (Ljava/lang/String;ILnet/minecraft/class_2680;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;II)V
+			ARG 3 ore
+			ARG 4 rawBlock
+			ARG 5 stone
+			ARG 6 minY
+			ARG 7 maxY

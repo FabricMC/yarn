@@ -12,9 +12,10 @@ buildscript {
 		classpath "net.fabricmc:stitch:${project.stitch_version}"
 		classpath "commons-io:commons-io:2.8.0"
 		classpath 'de.undercouch:gradle-download-task:4.1.1'
-		classpath 'net.fabricmc:tiny-remapper:0.4.2'
+		classpath 'net.fabricmc:tiny-remapper:0.6.0'
 		classpath "net.fabricmc.unpick:unpick:${project.unpick_version}"
 		classpath "net.fabricmc.unpick:unpick-format-utils:${project.unpick_version}"
+		classpath "net.fabricmc:name-proposal:${project.name_proposal_version}"
 	}
 }
 
@@ -26,7 +27,7 @@ plugins {
 	id 'net.fabricmc.filament' version '0.3.0'
 }
 
-def minecraft_version = "1.17.1"
+def minecraft_version = "21w39a"
 
 def ENV = System.getenv()
 // Fetch build number from Github Actions
@@ -56,12 +57,7 @@ repositories {
 }
 
 configurations {
-	enigmaRuntime {
-		resolutionStrategy {
-			cacheDynamicVersionsFor 0, "seconds"
-			cacheChangingModulesFor 0, "seconds"
-		}
-	}
+	enigmaRuntime
 	javadocClasspath
 	decompileClasspath
 	mappingPoetJar {
@@ -77,8 +73,8 @@ configurations {
 def unpickMetaFile = file("unpick-definitions/unpick.json")
 
 dependencies {
-	enigmaRuntime "cuchaz:enigma-swing:${project.enigma_version}"
-	enigmaRuntime "net.fabricmc:stitch:${project.stitch_version}"
+	enigmaRuntime "cuchaz:enigma-swing:${project.enigma_version}:all"
+	enigmaRuntime "net.fabricmc:name-proposal:${project.name_proposal_version}"
 	javadocClasspath "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 	javadocClasspath "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
 	javadocClasspath "com.google.code.findbugs:jsr305:3.0.2" // for some other jsr annotations
@@ -100,10 +96,13 @@ def unpickedJar = file("${minecraft_version}-intermediary-unpicked.jar")
 def namedJar = file("${minecraft_version}-named.jar")
 def versionFile = new File(cacheFilesMinecraft, "${minecraft_version}.json")
 def clientJar = new File(cacheFilesMinecraft, "${minecraft_version}-client.jar")
+// The vanilla server bootstrap jar (Contains the real server jar)
+def serverBootstrapJar = new File(cacheFilesMinecraft, "${minecraft_version}-serverboostrap.jar")
+// The real server jar, expected from the bootstrap
 def serverJar = new File(cacheFilesMinecraft, "${minecraft_version}-server.jar")
 def libraries = new File(cacheFilesMinecraft, "libraries")
 def libs = new File("build/libs/")
-
+def recordSignaturesJson = file("record_signatures.json")
 
 import com.google.common.hash.Hashing
 import cuchaz.enigma.command.CheckMappingsCommand
@@ -113,17 +112,19 @@ import cuchaz.enigma.command.MapSpecializedMethodsCommand
 import groovy.io.FileType
 import groovy.json.JsonSlurper
 import net.fabricmc.stitch.commands.CommandMergeTiny
-import net.fabricmc.stitch.commands.CommandProposeFieldNames
 import net.fabricmc.stitch.commands.CommandReorderTiny
 import net.fabricmc.stitch.commands.CommandRewriteIntermediary
 import net.fabricmc.stitch.commands.tinyv2.CommandMergeTinyV2
-import net.fabricmc.stitch.commands.tinyv2.CommandProposeV2FieldNames
 import net.fabricmc.stitch.commands.tinyv2.CommandReorderTinyV2
 import net.fabricmc.stitch.merge.JarMerger
 import net.fabricmc.tinyremapper.OutputConsumerPath
 import net.fabricmc.tinyremapper.TinyRemapper
 import net.fabricmc.tinyremapper.TinyUtils
+import net.fabricmc.nameproposal.MappingNameCompleter
 import org.apache.commons.io.FileUtils
+import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.FieldVisitor
+import org.objectweb.asm.Opcodes;
 
 import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPOutputStream
@@ -188,11 +189,11 @@ task downloadMcJars(dependsOn: downloadWantedVersionManifest) {
 	group = setupGroup
 	inputs.files versionFile
 
-	outputs.files(clientJar, serverJar)
+	outputs.files(clientJar, serverBootstrapJar)
 
 	outputs.upToDateWhen {
 		def version = new JsonSlurper().parseText(FileUtils.readFileToString(versionFile))
-		return clientJar.exists() && serverJar.exists() && validateChecksum(clientJar, version.downloads.client.sha1) && validateChecksum(serverJar, version.downloads.server.sha1)
+		return clientJar.exists() && serverBootstrapJar.exists() && validateChecksum(clientJar, version.downloads.client.sha1) && validateChecksum(serverBootstrapJar, version.downloads.server.sha1)
 	}
 
 	doLast {
@@ -213,7 +214,7 @@ task downloadMcJars(dependsOn: downloadWantedVersionManifest) {
 
 		download {
 			src new URL(version.downloads.server.url)
-			dest serverJar
+			dest serverBootstrapJar
 			overwrite false
 		}
 	}
@@ -247,22 +248,42 @@ task downloadIntermediaryV2(type: Download) {
 	}
 }
 
-task mergeJars(dependsOn: downloadMcJars) {
+import java.util.zip.ZipFile
+
+// Extracts the real server jar from the boostrap jar
+task extractServerJar(dependsOn: downloadMcJars) {
 	group = setupGroup
-	inputs.files downloadMcJars.outputs.files.files
+	inputs.file serverBootstrapJar
+	outputs.file serverJar
+
+	doLast {
+		new ZipFile(serverBootstrapJar as File).withCloseable { zip ->
+			def entry = zip.getEntry("META-INF/versions/${minecraft_version}/server-${minecraft_version}.jar")
+
+			if (!entry) {
+				throw new RuntimeException("Failed to find server jar entry: ")
+			}
+
+			zip.getInputStream(entry).withCloseable { is ->
+				serverJar.bytes = is.readAllBytes()
+			}
+		}
+	}
+}
+
+task mergeJars(dependsOn: extractServerJar) {
+	group = setupGroup
+	inputs.files (serverJar, clientJar)
 	outputs.file(mergedFile)
 
 	doLast {
 		logger.lifecycle(":merging jars")
-		def client = inputs.files.files.find { it.name.endsWith("-client.jar") }
-		def server = inputs.files.files.find { it.name.endsWith("-server.jar") }
-		def merged = mergedFile
 
-		if (merged.exists()) {
+		if (mergedFile.exists()) {
 			return
 		}
 
-		def jarMerger = new JarMerger(client, server, merged)
+		def jarMerger = new JarMerger(clientJar, serverJar, mergedFile)
 		jarMerger.merge()
 		jarMerger.close()
 	}
@@ -378,53 +399,78 @@ task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJ
 	//Force the task to always run
 	outputs.upToDateWhen { false }
 
+	def brokenSignatures = new HashMap((Map) new JsonSlurper().parse(recordSignaturesJson))
+
 	doLast {
 		logger.lifecycle(":mapping minecraft to intermediary")
 		def tinyInput = downloadIntermediary.dest
-		mapJar(intermediaryJar, mergedFile, tinyInput, libraries, "official", "intermediary")
-	}
-}
+		mapJar(intermediaryJar, mergedFile, tinyInput, libraries, "official", "intermediary") { remapperBuilder ->
+			// Fix the broken record signatures
+			remapperBuilder.extraPostApplyVisitor { cls, next ->
+				return new ClassVisitor(Opcodes.ASM9, next) {
+					@Override
+					public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+						if (signature == null) {
+							signature = brokenSignatures.getOrDefault(name, null);
+							if (signature != null) {
+								logger.lifecycle("replacing signature for " + name);
+							}
+						}
+						super.visit(version, access, name, signature, superName, interfaces);
+					}
+				}
+			}
 
-task yarnUnpicked(dependsOn: "unpickIntermediaryJar") {
-	group = yarnGroup
-	doLast {
-		ant.setLifecycleLogLevel "WARN"
-		ant.java(
-				classname: 'cuchaz.enigma.gui.Main',
-				classpath: configurations.enigmaRuntime.asPath,
-				fork: true,
-				spawn: true
-		) {
-			jvmarg(value: "-Xmx2048m")
-			arg(value: '-jar')
-			arg(value: unpickedJar.getAbsolutePath())
-			arg(value: '-mappings')
-			arg(value: mappingsDir.getAbsolutePath())
-			arg(value: '-profile')
-			arg(value: 'enigma_profile.json')
+			remapperBuilder.extraPostApplyVisitor { cls, next ->
+				if (!cls.record && cls.superName == "java/lang/Record") {
+					return new ClassVisitor(Opcodes.ASM9, next) {
+						@Override
+						FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
+							if (name.startsWith("comp_")) {
+								super.visitRecordComponent(name, descriptor, signature);
+							}
+
+							return super.visitField(access, name, descriptor, signature, value);
+						}
+					}
+				}
+
+				return next
+			}
 		}
 	}
 }
 
-task yarn(dependsOn: mapIntermediaryJar) {
+task yarnUnpicked(dependsOn: "unpickIntermediaryJar", type: JavaExec) {
 	group = yarnGroup
-	doLast {
-		ant.setLifecycleLogLevel "WARN"
-		ant.java(
-				classname: 'cuchaz.enigma.gui.Main',
-				classpath: configurations.enigmaRuntime.asPath,
-				fork: true,
-				spawn: true
-		) {
-			jvmarg(value: "-Xmx2048m")
-			arg(value: '-jar')
-			arg(value: intermediaryJar.getAbsolutePath())
-			arg(value: '-mappings')
-			arg(value: mappingsDir.getAbsolutePath())
-			arg(value: '-profile')
-			arg(value: 'enigma_profile.json')
-		}
-	}
+
+	classpath = configurations.enigmaRuntime
+	mainClass = 'cuchaz.enigma.gui.Main'
+
+	args '-jar'
+	args unpickedJar.getAbsolutePath()
+	args '-mappings'
+	args mappingsDir.getAbsolutePath()
+	args '-profile'
+	args 'enigma_profile.json'
+
+	jvmArgs "-Xmx2048m"
+}
+
+task yarn(dependsOn: mapIntermediaryJar, type: JavaExec) {
+	group = yarnGroup
+
+	classpath = configurations.enigmaRuntime
+	mainClass = 'cuchaz.enigma.gui.Main'
+
+	args '-jar'
+	args intermediaryJar.getAbsolutePath()
+	args '-mappings'
+	args mappingsDir.getAbsolutePath()
+	args '-profile'
+	args 'enigma_profile.json'
+
+	jvmArgs "-Xmx2048m"
 }
 
 task checkMappings(dependsOn: mapIntermediaryJar) {
@@ -595,26 +641,6 @@ task importMappingsOfficial(dependsOn: invertIntermediary) {
 	}
 }
 
-task buildTinyWithEnum(dependsOn: "mergeTiny", type: FileOutput) {
-	group = buildMappingGroup
-	def noEnum = mergeTiny.output
-	output = new File(tempDir, "named-with-enum.tiny")
-
-	outputs.file(output)
-	outputs.upToDateWhen { false }
-
-	doLast {
-		logger.lifecycle(":seeking auto-mappable fields")
-		String[] argsPropose = [
-				mergedFile.getAbsolutePath(), // must use official jar
-				noEnum.getAbsolutePath(),
-				output.getAbsolutePath()
-		]
-
-		new CommandProposeFieldNames().run(argsPropose)
-	}
-}
-
 task mapNamedJar(dependsOn: ["mergeV2", "unpickIntermediaryJar"]) {
 	group = mapJarGroup
 	inputs.files downloadMcLibs.outputs.files.files
@@ -708,7 +734,7 @@ build.dependsOn constantsJar
 
 task insertAutoGeneratedEnumMappings(dependsOn : [buildYarnTiny,mapIntermediaryJar], type : FileOutput){
 	group = buildMappingGroup
-	def noEnumV2 = buildYarnTiny.v2Output
+	File noEnumV2 = buildYarnTiny.v2Output
 	output = new File(tempDir, "unmerged-named-v2-with-enum.tiny")
 
 	outputs.upToDateWhen { false }
@@ -716,14 +742,12 @@ task insertAutoGeneratedEnumMappings(dependsOn : [buildYarnTiny,mapIntermediaryJ
 	doLast {
 		logger.lifecycle(":seeking auto-mappable fields for unmerged mappings")
 
-		String[] argsProposeV2 = [
-				intermediaryJar.getAbsolutePath(), // must use intermediary jar
-				noEnumV2.getAbsolutePath(),
-				output.getAbsolutePath(),
-				"false" // don't replace existing names right now
-		]
-
-		new CommandProposeV2FieldNames().run(argsProposeV2)
+		MappingNameCompleter.completeNames(
+				intermediaryJar.toPath(),
+				noEnumV2.toPath(),
+				downloadIntermediary.dest.toPath(),
+				output.toPath()
+		)
 	}
 }
 
@@ -773,6 +797,9 @@ task v2UnmergedYarnJar(dependsOn: [insertAutoGeneratedEnumMappings, combineUnpic
 		expand version: project.unpick_version
 		rename unpickMetaFile.name, "extras/unpick.json"
 	}
+	from(recordSignaturesJson) {
+		into "extras/"
+	}
 	destinationDirectory.set(file("build/libs"))
 }
 
@@ -791,6 +818,9 @@ task v2MergedYarnJar(dependsOn: ["mergeV2"], type: Jar) {
 	from (file(unpickMetaFile)) {
 		expand version: project.unpick_version
 		rename unpickMetaFile.name, "extras/unpick.json"
+	}
+	from(recordSignaturesJson) {
+		into "extras/"
 	}
 	destinationDirectory.set(file("build/libs"))
 }
@@ -980,12 +1010,15 @@ void mapJar(File output, File input, File mappings, File libraries, String from,
 			.withMappings(TinyUtils.createTinyMappingProvider(mappings.toPath(), from, to))
 			.renameInvalidLocals(true)
 			.rebuildSourceFilenames(true)
+			.invalidLvNamePattern(~/\$\$\d+/)
 	action.execute(remapperBuilder)
 	def remapper = remapperBuilder
 			.build()
 
 	try {
-		def outputConsumer = new OutputConsumerPath(output.toPath())
+		def outputConsumerBuilder = new OutputConsumerPath.Builder(output.toPath())
+		// expose output consumer builder to function if there is need in the future
+		def outputConsumer = outputConsumerBuilder.build()
 		outputConsumer.addNonClassFiles(input.toPath())
 		remapper.readInputs(input.toPath())
 

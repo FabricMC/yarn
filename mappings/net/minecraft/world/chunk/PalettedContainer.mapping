@@ -1,69 +1,217 @@
 CLASS net/minecraft/class_2841 net/minecraft/world/chunk/PalettedContainer
-	FIELD field_12934 paletteSize I
-	FIELD field_12935 defaultValue Ljava/lang/Object;
-	FIELD field_12936 palette Lnet/minecraft/class_2837;
-	FIELD field_12937 writeLock Ljava/util/concurrent/Semaphore;
-	FIELD field_12938 idList Lnet/minecraft/class_2361;
-	FIELD field_12939 elementSerializer Ljava/util/function/Function;
-	FIELD field_12940 fallbackPalette Lnet/minecraft/class_2837;
-	FIELD field_12941 data Lnet/minecraft/class_3508;
-	FIELD field_12942 noOpPaletteResizeHandler Lnet/minecraft/class_2835;
-	FIELD field_12943 elementDeserializer Ljava/util/function/Function;
-	FIELD field_28812 lockStack Lnet/minecraft/class_5831;
-	METHOD <init> (Lnet/minecraft/class_2837;Lnet/minecraft/class_2361;Ljava/util/function/Function;Ljava/util/function/Function;Ljava/lang/Object;)V
-		ARG 1 fallbackPalette
-		ARG 2 idList
-		ARG 3 elementDeserializer
-		ARG 4 elementSerializer
-		ARG 5 defaultElement
+	COMMENT A paletted container stores objects in 3D voxels as small integer indices,
+	COMMENT governed by "palettes" that map between these objects and indices.
+	COMMENT
+	COMMENT @see Palette
+	FIELD field_34558 dummyListener Lnet/minecraft/class_2835;
+	FIELD field_34559 idList Lnet/minecraft/class_2359;
+	FIELD field_34560 data Lnet/minecraft/class_2841$class_6561;
+	FIELD field_34561 paletteProvider Lnet/minecraft/class_2841$class_6563;
+	FIELD field_34562 semaphore Ljava/util/concurrent/Semaphore;
+	FIELD field_34563 lockStack Lnet/minecraft/class_5831;
+	METHOD <init> (Lnet/minecraft/class_2359;Ljava/lang/Object;Lnet/minecraft/class_2841$class_6563;)V
+		ARG 1 idList
+		ARG 2 object
+		ARG 3 paletteProvider
+	METHOD <init> (Lnet/minecraft/class_2359;Lnet/minecraft/class_2841$class_6563;Lnet/minecraft/class_2841$class_6560;Lnet/minecraft/class_6490;Ljava/util/List;)V
+		ARG 1 idList
+		ARG 2 paletteProvider
+		ARG 3 dataProvider
+		ARG 4 storage
+		ARG 5 entries
 	METHOD method_12321 get (III)Ljava/lang/Object;
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
 	METHOD method_12322 set (ILjava/lang/Object;)V
 		ARG 1 index
-	METHOD method_12323 toIndex (III)I
-		ARG 0 x
-		ARG 1 y
-		ARG 2 z
-	METHOD method_12324 setPaletteSize (I)V
-		ARG 1 size
-	METHOD method_12325 toPacket (Lnet/minecraft/class_2540;)V
+		ARG 2 value
+	METHOD method_12325 writePacket (Lnet/minecraft/class_2540;)V
+		COMMENT Writes this container to the packet byte buffer.
 		ARG 1 buf
-	METHOD method_12326 fromPacket (Lnet/minecraft/class_2540;)V
+			COMMENT the packet byte buffer
+	METHOD method_12326 readPacket (Lnet/minecraft/class_2540;)V
+		COMMENT Reads data from the packet byte buffer into this container. Previous data
+		COMMENT in this container is discarded.
 		ARG 1 buf
+			COMMENT the packet byte buffer
 	METHOD method_12327 getPacketSize ()I
-	METHOD method_12328 setSync (IIILjava/lang/Object;)Ljava/lang/Object;
+	METHOD method_12328 swap (IIILjava/lang/Object;)Ljava/lang/Object;
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
 		ARG 4 value
-	METHOD method_12329 read (Lnet/minecraft/class_2499;[J)V
-		ARG 1 paletteNbt
-		ARG 2 data
-	METHOD method_12330 write (Lnet/minecraft/class_2487;Ljava/lang/String;Ljava/lang/String;)V
-		ARG 1 nbt
-		ARG 2 paletteKey
-		ARG 3 dataKey
 	METHOD method_12331 get (I)Ljava/lang/Object;
 		ARG 1 index
 	METHOD method_12333 (ILjava/lang/Object;)I
 		ARG 0 newSize
 		ARG 1 added
 	METHOD method_12334 lock ()V
+		COMMENT Acquires the semaphore on this container, and crashes if it cannot be
+		COMMENT acquired.
 	METHOD method_12335 unlock ()V
-	METHOD method_12336 setAndGetOldValue (ILjava/lang/Object;)Ljava/lang/Object;
+		COMMENT Releases the semaphore on this container.
+	METHOD method_12336 swap (ILjava/lang/Object;)Ljava/lang/Object;
 		ARG 1 index
 		ARG 2 value
-	METHOD method_16678 set (IIILjava/lang/Object;)Ljava/lang/Object;
+	METHOD method_16678 swapUnsafe (IIILjava/lang/Object;)Ljava/lang/Object;
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
 		ARG 4 value
 	METHOD method_19526 hasAny (Ljava/util/function/Predicate;)Z
+		COMMENT {@return {@code true} if any object in this container's palette matches
+		COMMENT this predicate}
+		ARG 1 predicate
 	METHOD method_21732 count (Lnet/minecraft/class_2841$class_4464;)V
-		ARG 1 consumer
-	CLASS class_4464 CountConsumer
+		ARG 1 counter
+	METHOD method_21733 (Lnet/minecraft/class_2841$class_4464;Lit/unimi/dsi/fastutil/ints/Int2IntMap$Entry;)V
+		ARG 2 entry
+	METHOD method_21734 increment (Lit/unimi/dsi/fastutil/ints/Int2IntMap;I)V
+		ARG 0 map
+		ARG 1 key
+	METHOD method_35321 set (IIILjava/lang/Object;)V
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+		ARG 4 value
+	METHOD method_38296 (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 1 instance
+	METHOD method_38297 getCompatibleData (Lnet/minecraft/class_2841$class_6561;I)Lnet/minecraft/class_2841$class_6561;
+		COMMENT {@return a compatible data object for the given entry {@code bits} size}
+		COMMENT This may return a new data object or return {@code previousData} if it
+		COMMENT can be reused.
+		ARG 1 previousData
+			COMMENT the previous data, may be reused if suitable
+		ARG 2 bits
+			COMMENT the number of bits each entry uses
+	METHOD method_38298 createCodec (Lnet/minecraft/class_2359;Lcom/mojang/serialization/Codec;Lnet/minecraft/class_2841$class_6563;)Lcom/mojang/serialization/Codec;
+		COMMENT Creates a codec for a paletted container with a specific palette provider.
+		COMMENT
+		COMMENT @return the created codec
+		ARG 0 idList
+			COMMENT the id list to map between objects and full integer IDs
+		ARG 1 entryCodec
+			COMMENT the codec for each entry in the palette
+		ARG 2 provider
+			COMMENT the palette provider that controls how the data are serialized and what
+			COMMENT types of palette are used for what entry bit sizes
+	METHOD method_38300 write (Lnet/minecraft/class_2359;Lnet/minecraft/class_2841$class_6563;)Lnet/minecraft/class_2841$class_6562;
+		ARG 1 idList
+		ARG 2 provider
+	METHOD method_38301 read (Lnet/minecraft/class_2359;Lnet/minecraft/class_2841$class_6563;Lnet/minecraft/class_2841$class_6562;)Lcom/mojang/serialization/DataResult;
+		ARG 0 idList
+		ARG 1 provider
+		ARG 2 serialized
+	METHOD method_38302 (Lnet/minecraft/class_2359;Lnet/minecraft/class_2841$class_6563;Lnet/minecraft/class_2841;)Lnet/minecraft/class_2841$class_6562;
+		ARG 2 container
+	METHOD method_38303 (Lnet/minecraft/class_2359;Lnet/minecraft/class_2841$class_6563;Lnet/minecraft/class_2841$class_6562;)Lcom/mojang/serialization/DataResult;
+		ARG 2 serialized
+	CLASS class_4464 Counter
+		COMMENT A counter that receives a palette entry and its number of occurences
+		COMMENT in the container.
 		METHOD accept (Ljava/lang/Object;I)V
 			ARG 1 object
+				COMMENT the palette entry
 			ARG 2 count
+				COMMENT the entry's number of occurence
+	CLASS class_6560 DataProvider
+		COMMENT A palette data provider constructs an empty data for a paletted
+		COMMENT container given a palette provider and a desired entry size in bits.
+		FIELD comp_72 factory Lnet/minecraft/class_2837$class_6559;
+			COMMENT the palette factory
+		FIELD comp_73 bits I
+			COMMENT the number of bits each element use
+		METHOD comp_72 factory ()Lnet/minecraft/class_2837$class_6559;
+		METHOD comp_73 bits ()I
+		METHOD method_38305 createData (Lnet/minecraft/class_2359;Lnet/minecraft/class_2835;I[J)Lnet/minecraft/class_2841$class_6561;
+			ARG 1 idList
+			ARG 2 listener
+			ARG 3 size
+			ARG 4 storage
+	CLASS class_6561 Data
+		COMMENT Runtime representation of data in a paletted container.
+		FIELD comp_118 storage Lnet/minecraft/class_6490;
+			COMMENT the data
+		FIELD comp_119 palette Lnet/minecraft/class_2837;
+			COMMENT the palette for the storage
+		FIELD comp_74 configuration Lnet/minecraft/class_2841$class_6560;
+			COMMENT the data provider that derives the palette and storage of this data
+		METHOD <init> (Lnet/minecraft/class_2841$class_6560;Lnet/minecraft/class_6490;Lnet/minecraft/class_2837;)V
+			ARG 1 configuration
+			ARG 2 storage
+			ARG 3 palette
+		METHOD comp_118 storage ()Lnet/minecraft/class_6490;
+		METHOD comp_119 palette ()Lnet/minecraft/class_2837;
+		METHOD comp_74 configuration ()Lnet/minecraft/class_2841$class_6560;
+		METHOD method_38306 getPacketSize ()I
+			COMMENT {@return the size of this data, in bytes, when written to a packet}
+			COMMENT
+			COMMENT @see #writePacket(PacketByteBuf)
+		METHOD method_38307 set (ILjava/lang/Object;)V
+			COMMENT Sets an entry to the storage's given index.
+			ARG 1 index
+				COMMENT the index in the storage
+			ARG 2 value
+				COMMENT the entry to set
+		METHOD method_38308 importFrom (Lnet/minecraft/class_2837;Lnet/minecraft/class_6490;)V
+			COMMENT Imports the data from the other {@code storage} with the other
+			COMMENT {@code palette}.
+			ARG 1 palette
+				COMMENT the other palette
+			ARG 2 storage
+				COMMENT the other storage
+		METHOD method_38309 writePacket (Lnet/minecraft/class_2540;)V
+			ARG 1 buf
+	CLASS class_6562 Serialized
+		COMMENT The storage form of the paletted container in the {@linkplain
+		COMMENT PalettedContainer#createCodec codec}. The {@code palette} is the entries
+		COMMENT in the palette, but the interpretation of data depends on the palette
+		COMMENT provider specified for the codec.
+		COMMENT
+		COMMENT @see PalettedContainer#createCodec
+		FIELD comp_75 paletteEntries Ljava/util/List;
+			COMMENT the palette
+		FIELD comp_76 storage Ljava/util/Optional;
+			COMMENT the data of the container
+		METHOD comp_75 paletteEntries ()Ljava/util/List;
+		METHOD comp_76 storage ()Ljava/util/Optional;
+	CLASS class_6563 PaletteProvider
+		COMMENT A palette provider determines what type of palette to choose given the
+		COMMENT bits used to represent each element. In addition, it controls how the
+		COMMENT data in the serialized container is read based on the palette given.
+		FIELD field_34566 SINGULAR Lnet/minecraft/class_2837$class_6559;
+		FIELD field_34567 ARRAY Lnet/minecraft/class_2837$class_6559;
+		FIELD field_34568 BI_MAP Lnet/minecraft/class_2837$class_6559;
+		FIELD field_34569 BLOCK_STATE Lnet/minecraft/class_2841$class_6563;
+			COMMENT A palette provider that stores {@code 4096} objects in a container.
+			COMMENT Used in vanilla by block states in a chunk section.
+		FIELD field_34570 BIOME Lnet/minecraft/class_2841$class_6563;
+			COMMENT A palette provider that stores {@code 64} objects in a container.
+			COMMENT Used in vanilla by biomes in a chunk section.
+		FIELD field_34571 ID_LIST Lnet/minecraft/class_2837$class_6559;
+		FIELD field_34572 edgeBits I
+		METHOD <init> (I)V
+			ARG 1 edgeBits
+		METHOD method_38312 getContainerSize ()I
+			COMMENT {@return the size of the container's data desired by this provider}
+		METHOD method_38313 computeIndex (III)I
+			COMMENT {@return the index of an object in the storage given its x, y, z coordinates}
+			ARG 1 x
+				COMMENT the x coordinate
+			ARG 2 y
+				COMMENT the y coordinate
+			ARG 3 z
+				COMMENT the z coordinate
+		METHOD method_38314 createDataProvider (Lnet/minecraft/class_2359;I)Lnet/minecraft/class_2841$class_6560;
+			COMMENT Creates a data provider that is suitable to represent objects with
+			COMMENT {@code bits} size in the storage.
+			COMMENT
+			COMMENT @return the data provider
+			ARG 1 idList
+				COMMENT the id list that maps between objects and full integer IDs
+			ARG 2 bits
+				COMMENT the number of bits needed to represent all palette entries
+		METHOD method_38315 getBits (Lnet/minecraft/class_2359;I)I
+			ARG 1 idList
+			ARG 2 size

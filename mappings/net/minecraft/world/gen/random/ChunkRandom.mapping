@@ -1,0 +1,71 @@
+CLASS net/minecraft/class_2919 net/minecraft/world/gen/random/ChunkRandom
+	FIELD field_28768 sampleCount I
+	METHOD <init> (J)V
+		ARG 1 seed
+	METHOD method_12659 setTerrainSeed (II)V
+		COMMENT Seeds the randomizer to generate the surface terrain blocks (such as grass, sand, etc.)
+		COMMENT and the bedrock patterns.
+		COMMENT
+		COMMENT <p>Note that the terrain seed does not depend on the world seed and only gets affected by
+		COMMENT chunk coordinates.
+		ARG 1 chunkX
+		ARG 2 chunkZ
+	METHOD method_12661 setPopulationSeed (JII)J
+		COMMENT Seeds the randomizer to create population features such as decorators and animals.
+		COMMENT
+		COMMENT <p>This method takes in the world seed and the negative-most block coordinates of the
+		COMMENT chunk. The coordinate pair provided is equivalent to (chunkX * 16, chunkZ * 16). The
+		COMMENT three values are mixed together through some layers of hashing to produce the
+		COMMENT population seed.
+		COMMENT
+		COMMENT <p>This function has been proved to be reversible through some exploitation of the underlying
+		COMMENT nextLong() weaknesses. It is also important to remember that since setSeed()
+		COMMENT truncates the 16 upper bits of world seed, only the 48 lowest bits affect the population
+		COMMENT seed output.
+		ARG 1 worldSeed
+		ARG 3 blockX
+		ARG 4 blockZ
+	METHOD method_12662 getSlimeRandom (IIJJ)Ljava/util/Random;
+		ARG 0 chunkX
+		ARG 1 chunkZ
+		ARG 2 worldSeed
+		ARG 4 scrambler
+	METHOD method_12663 setCarverSeed (JII)V
+		COMMENT Seeds the randomizer to generate larger features such as caves, ravines, mineshafts
+		COMMENT and strongholds. It is also used to initiate structure start behavior such as rotation.
+		COMMENT
+		COMMENT <p>Similar to the population seed, only the 48 lowest bits of the world seed affect the
+		COMMENT output since it the upper 16 bits are truncated in the setSeed() call.
+		ARG 1 worldSeed
+		ARG 3 chunkX
+		ARG 4 chunkZ
+	METHOD method_12664 setDecoratorSeed (JII)V
+		COMMENT Seeds the randomizer to generate a given feature.
+		COMMENT
+		COMMENT The salt, in the form of {@code index + 10000 * step} assures that each feature is seeded
+		COMMENT differently, making the decoration feel more random. Even though it does a good job
+		COMMENT at doing so, many entropy issues arise from the salt being so small and result in
+		COMMENT weird alignments between features that have an index close apart.
+		ARG 1 populationSeed
+			COMMENT the population seed computed in {@link #setPopulationSeed(long, int, int)}
+		ARG 3 index
+			COMMENT the index of the feature in the feature list
+		ARG 4 step
+			COMMENT the generation step's ordinal for this feature
+	METHOD method_12665 setRegionSeed (JIII)V
+		COMMENT Seeds the randomizer to determine the start position of structure features such as
+		COMMENT temples, monuments and buried treasures within a region.
+		COMMENT
+		COMMENT <p>The region coordinates pair corresponds to the coordinates of the region the seeded
+		COMMENT chunk lies in. For example, a swamp hut region is 32 by 32 chunks meaning that all
+		COMMENT chunks that lie within that region get seeded the same way.
+		COMMENT
+		COMMENT <p>Similarly, the upper 16 bits of world seed also do not affect the region seed because
+		COMMENT they get truncated in the setSeed() call.
+		ARG 1 worldSeed
+		ARG 3 regionX
+		ARG 4 regionZ
+		ARG 5 salt
+	METHOD method_35335 getSampleCount ()I
+	METHOD next (I)I
+		ARG 1 count

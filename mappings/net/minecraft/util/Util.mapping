@@ -7,6 +7,9 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	FIELD field_24622 BOOTSTRAP_EXECUTOR Ljava/util/concurrent/ExecutorService;
 	FIELD field_25140 NIL_UUID Ljava/util/UUID;
 	FIELD field_33859 JAR_FILE_SYSTEM_PROVIDER Ljava/nio/file/spi/FileSystemProvider;
+	FIELD field_34891 MAX_PARALLELISM I
+	FIELD field_34892 MAX_BG_THREADS_PROPERTY Ljava/lang/String;
+	FIELD field_34893 missingBreakpointHandler Ljava/util/function/Consumer;
 	METHOD method_17815 stream (Ljava/util/Optional;)Ljava/util/stream/Stream;
 		ARG 0 optional
 	METHOD method_17974 ifPresentOrElse (Ljava/util/Optional;Ljava/util/function/Consumer;Ljava/lang/Runnable;)Ljava/util/Optional;
@@ -16,7 +19,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_18347 uncaughtExceptionHandler (Ljava/lang/Thread;Ljava/lang/Throwable;)V
 		ARG 0 thread
 		ARG 1 t
-	METHOD method_18349 getMainWorkerExecutor ()Ljava/util/concurrent/Executor;
+	METHOD method_18349 getMainWorkerExecutor ()Ljava/util/concurrent/ExecutorService;
 	METHOD method_18350 shutdownExecutors ()V
 	METHOD method_18839 debugRunnable (Ljava/lang/Runnable;Ljava/util/function/Supplier;)Ljava/lang/Runnable;
 		ARG 0 runnable
@@ -56,13 +59,13 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 runnable
 	METHOD method_27957 attemptShutdown (Ljava/util/concurrent/ExecutorService;)V
 		ARG 0 service
-	METHOD method_27958 getIoWorkerExecutor ()Ljava/util/concurrent/Executor;
+	METHOD method_27958 getIoWorkerExecutor ()Ljava/util/concurrent/ExecutorService;
 	METHOD method_27959 createIoWorker ()Ljava/util/concurrent/ExecutorService;
 	METHOD method_28122 createWorker (Ljava/lang/String;)Ljava/util/concurrent/ExecutorService;
 		ARG 0 name
 	METHOD method_28123 (Ljava/lang/String;Ljava/util/concurrent/ForkJoinPool;)Ljava/util/concurrent/ForkJoinWorkerThread;
 		ARG 1 forkJoinPool
-	METHOD method_28124 getBootstrapExecutor ()Ljava/util/concurrent/Executor;
+	METHOD method_28124 getBootstrapExecutor ()Ljava/util/concurrent/ExecutorService;
 	METHOD method_29187 getChoiceType (Lcom/mojang/datafixers/DSL$TypeReference;Ljava/lang/String;)Lcom/mojang/datafixers/types/Type;
 		ARG 0 typeReference
 		ARG 1 id
@@ -117,7 +120,8 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 1 length
 	METHOD method_33559 error (Ljava/lang/String;)V
 		ARG 0 message
-	METHOD method_33560 pause ()V
+	METHOD method_33560 pause (Ljava/lang/String;)V
+		ARG 0 message
 	METHOD method_33787 debugRunnable (Ljava/lang/String;Ljava/lang/Runnable;)Ljava/lang/Runnable;
 		ARG 0 activeThreadName
 		ARG 1 task
@@ -138,6 +142,12 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 function
 	METHOD method_37153 (Ljava/nio/file/spi/FileSystemProvider;)Z
 		ARG 0 fileSystemProvider
+	METHOD method_37910 debugSupplier (Ljava/lang/String;Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
+		ARG 0 activeThreadName
+		ARG 1 supplier
+	METHOD method_38646 setMissingBreakpointHandler (Ljava/util/function/Consumer;)V
+		ARG 0 missingBreakpointHandler
+	METHOD method_38648 getMaxBackgroundThreads ()I
 	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
 		ARG 0 iterable
 		ARG 1 object
@@ -176,12 +186,19 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_666 (Ljava/lang/String;)Z
 		ARG 0 runtimeArg
 	METHOD method_668 getOperatingSystem ()Lnet/minecraft/class_156$class_158;
+	CLASS 1
+		METHOD onTermination (Ljava/lang/Throwable;)V
+			ARG 1 throwable
 	CLASS 7
 		FIELD field_29655 cache Ljava/util/Map;
 	CLASS 8
 		FIELD field_29657 cache Ljava/util/Map;
 	CLASS class_157 IdentityHashStrategy
 	CLASS class_158 OperatingSystem
+		FIELD field_34894 name Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
+			ARG 3 name
+		METHOD method_38649 getName ()Ljava/lang/String;
 		METHOD method_669 open (Ljava/net/URL;)V
 			ARG 1 url
 		METHOD method_670 open (Ljava/lang/String;)V

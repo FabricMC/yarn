@@ -1,0 +1,198 @@
+CLASS net/minecraft/class_6544 net/minecraft/world/biome/source/util/MultiNoiseUtil
+	FIELD field_34476 HYPERCUBE_DIMENSION I
+	METHOD method_38116 createNoiseValuePoint (FFFFFF)Lnet/minecraft/class_6544$class_6553;
+		ARG 0 temperatureNoise
+		ARG 1 humidityNoise
+		ARG 2 continentalnessNoise
+		ARG 3 erosionNoise
+		ARG 4 depth
+		ARG 5 weirdnessNoise
+	METHOD method_38117 createNoiseHypercube (FFFFFFF)Lnet/minecraft/class_6544$class_4762;
+		ARG 0 temperature
+		ARG 1 humidity
+		ARG 2 continentalness
+		ARG 3 erosion
+		ARG 4 depth
+		ARG 5 weirdness
+		ARG 6 offset
+	METHOD method_38118 createNoiseHypercube (Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;F)Lnet/minecraft/class_6544$class_4762;
+		ARG 0 temperature
+		ARG 1 humidity
+		ARG 2 continentalness
+		ARG 3 erosion
+		ARG 4 depth
+		ARG 5 weirdness
+		ARG 6 offset
+	CLASS class_4762 NoiseHypercube
+		COMMENT Represents a hypercube in a multi-dimensional cartesian plane. The multi-noise
+		COMMENT biome source picks the closest noise hypercube from its selected point
+		COMMENT and chooses the biome associated to it.
+		FIELD comp_105 temperature Lnet/minecraft/class_6544$class_6546;
+		FIELD comp_106 humidity Lnet/minecraft/class_6544$class_6546;
+		FIELD comp_107 continentalness Lnet/minecraft/class_6544$class_6546;
+		FIELD comp_108 erosion Lnet/minecraft/class_6544$class_6546;
+		FIELD comp_109 depth Lnet/minecraft/class_6544$class_6546;
+		FIELD comp_110 weirdness Lnet/minecraft/class_6544$class_6546;
+		FIELD comp_111 offset J
+			COMMENT This value works differently from the other parameters, in that it is
+			COMMENT always {@code 0} during biome generation and does not use noise.
+			COMMENT This means that setting it to a non-null number will make the biome smaller.
+			COMMENT The farther {@code offset} is from {@code 0}, the smaller the biome will be.
+			COMMENT For this, it does not matter whether {@code offset} is positive or negative.
+		FIELD field_24679 CODEC Lcom/mojang/serialization/Codec;
+		METHOD <init> (Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;J)V
+			ARG 1 temperature
+			ARG 2 humidity
+			ARG 3 continentalness
+			ARG 4 erosion
+			ARG 5 depth
+			ARG 6 weirdness
+		METHOD comp_105 temperature ()Lnet/minecraft/class_6544$class_6546;
+		METHOD comp_106 humidity ()Lnet/minecraft/class_6544$class_6546;
+		METHOD comp_107 continentalness ()Lnet/minecraft/class_6544$class_6546;
+		METHOD comp_108 erosion ()Lnet/minecraft/class_6544$class_6546;
+		METHOD comp_109 depth ()Lnet/minecraft/class_6544$class_6546;
+		METHOD comp_110 weirdness ()Lnet/minecraft/class_6544$class_6546;
+		METHOD comp_111 offset ()J
+		METHOD equals (Ljava/lang/Object;)Z
+			ARG 1 o
+		METHOD method_24381 getSquaredDistance (Lnet/minecraft/class_6544$class_6553;)J
+			COMMENT Calculates the distance from this noise point to another one. The
+			COMMENT distance is a squared distance in a multi-dimensional cartesian plane
+			COMMENT from a mathematical point of view, with a special parameter that
+			COMMENT reduces the calculated distance.
+			COMMENT
+			COMMENT <p>For most fields except weight, smaller difference between
+			COMMENT two points' fields will lead to smaller distance. For weight,
+			COMMENT larger differences lead to smaller distance.
+			COMMENT
+			COMMENT <p>This distance is used by the mixed-noise biome layer source. The
+			COMMENT layer source calculates an arbitrary noise point, and selects the
+			COMMENT biome that offers a closest point to its arbitrary point.
+			ARG 1 point
+		METHOD method_28425 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
+		METHOD method_38145 getParameters ()Ljava/util/List;
+	CLASS class_6545 NodeDistanceFunction
+		METHOD distance getDistance (Lnet/minecraft/class_6544$class_6548$class_6550;[J)J
+			ARG 1 node
+	CLASS class_6546 ParameterRange
+		FIELD comp_103 min J
+		FIELD comp_104 max J
+		FIELD field_34478 CODEC Lcom/mojang/serialization/Codec;
+		METHOD comp_103 min ()J
+		METHOD comp_104 max ()J
+		METHOD equals (Ljava/lang/Object;)Z
+			ARG 1 o
+		METHOD method_38120 of (F)Lnet/minecraft/class_6544$class_6546;
+			ARG 0 point
+		METHOD method_38121 of (FF)Lnet/minecraft/class_6544$class_6546;
+			ARG 0 min
+			ARG 1 max
+		METHOD method_38122 getDistance (Lnet/minecraft/class_6544$class_6546;)J
+			ARG 1 other
+		METHOD method_38123 combine (Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;)Lnet/minecraft/class_6544$class_6546;
+			COMMENT Creates a new {@link MultiNoiseUtil.ParameterRange} that combines the parameters.
+			COMMENT
+			COMMENT @return the created parameter range.
+			ARG 0 min
+				COMMENT this will be used for the created range's minimum value
+			ARG 1 max
+				COMMENT this will be used for the created range's maximum value
+		METHOD method_38124 (Ljava/lang/Float;Ljava/lang/Float;)Lcom/mojang/serialization/DataResult;
+			ARG 0 min
+			ARG 1 max
+		METHOD method_38126 getDistance (J)J
+			ARG 1 noise
+		METHOD method_38127 combine (Lnet/minecraft/class_6544$class_6546;)Lnet/minecraft/class_6544$class_6546;
+			ARG 1 other
+	CLASS class_6547 Entries
+		FIELD field_34481 entries Ljava/util/List;
+		FIELD field_34482 tree Lnet/minecraft/class_6544$class_6548;
+		METHOD <init> (Ljava/util/List;)V
+			ARG 1 entries
+		METHOD method_38128 getEntries ()Ljava/util/List;
+		METHOD method_38129 getValue (Lnet/minecraft/class_6544$class_6553;)Ljava/lang/Object;
+			ARG 1 point
+		METHOD method_38130 getValue (Lnet/minecraft/class_6544$class_6553;Lnet/minecraft/class_6544$class_6545;)Ljava/lang/Object;
+			ARG 1 point
+			ARG 2 distanceFunction
+		METHOD method_38131 getValue (Lnet/minecraft/class_6544$class_6553;Ljava/util/function/Supplier;)Ljava/lang/Object;
+			ARG 1 point
+			ARG 2 defaultValue
+		METHOD method_38132 getValueSimple (Lnet/minecraft/class_6544$class_6553;Ljava/util/function/Supplier;)Ljava/lang/Object;
+			ARG 1 point
+			ARG 2 defaultValue
+	CLASS class_6548 SearchTree
+		FIELD field_34486 MAX_NODES_FOR_SIMPLE_TREE I
+		FIELD field_34487 firstNode Lnet/minecraft/class_6544$class_6548$class_6550;
+		FIELD field_34488 previousResultNode Ljava/lang/ThreadLocal;
+		METHOD <init> (Lnet/minecraft/class_6544$class_6548$class_6550;)V
+			ARG 1 firstNode
+		METHOD method_38146 (ILnet/minecraft/class_6544$class_6548$class_6550;)J
+			ARG 1 node
+		METHOD method_38147 (ILnet/minecraft/class_6544$class_6548$class_6551;)Lnet/minecraft/class_6544$class_6548$class_6550;
+			ARG 1 node
+		METHOD method_38148 createNode (ILjava/util/List;)Lnet/minecraft/class_6544$class_6548$class_6550;
+			ARG 0 parameterNumber
+			ARG 1 subTree
+		METHOD method_38149 createNodeComparator (IZ)Ljava/util/Comparator;
+			ARG 0 currentParameter
+			ARG 1 abs
+		METHOD method_38151 get (Lnet/minecraft/class_6544$class_6553;Lnet/minecraft/class_6544$class_6545;)Ljava/lang/Object;
+			ARG 1 point
+			ARG 2 distanceFunction
+		METHOD method_38152 (Lcom/mojang/datafixers/util/Pair;)Lnet/minecraft/class_6544$class_6548$class_6549;
+			ARG 0 entry
+		METHOD method_38153 create (Ljava/util/List;)Lnet/minecraft/class_6544$class_6548;
+			ARG 0 entries
+		METHOD method_38154 sortTree (Ljava/util/List;IIZ)V
+			ARG 0 subTree
+			ARG 1 parameterNumber
+			ARG 2 currentParameter
+			ARG 3 abs
+		METHOD method_38155 getRangeLengthSum ([Lnet/minecraft/class_6544$class_6546;)J
+			ARG 0 parameters
+		METHOD method_38156 getBatchedTree (Ljava/util/List;)Ljava/util/List;
+			ARG 0 nodes
+		METHOD method_38157 getEnclosingParameters (Ljava/util/List;)Ljava/util/List;
+			ARG 0 subTree
+		CLASS class_6549 TreeLeafNode
+			FIELD field_34489 value Ljava/util/function/Supplier;
+			METHOD <init> (Lnet/minecraft/class_6544$class_4762;Ljava/util/function/Supplier;)V
+				ARG 1 parameters
+				ARG 2 value
+		CLASS class_6550 TreeNode
+			FIELD field_34490 parameters [Lnet/minecraft/class_6544$class_6546;
+			METHOD <init> (Ljava/util/List;)V
+				ARG 1 subTree
+			METHOD method_38158 getResultingNode ([JLnet/minecraft/class_6544$class_6548$class_6549;Lnet/minecraft/class_6544$class_6545;)Lnet/minecraft/class_6544$class_6548$class_6549;
+				ARG 1 otherParameters
+				ARG 2 alternative
+				ARG 3 distanceFunction
+			METHOD method_38159 getSquaredDistance ([J)J
+				ARG 1 otherParameters
+		CLASS class_6551 TreeBranchNode
+			FIELD field_34491 subTree [Lnet/minecraft/class_6544$class_6548$class_6550;
+			METHOD <init> (Ljava/util/List;Ljava/util/List;)V
+				ARG 1 parameters
+				ARG 2 subTree
+	CLASS class_6552 MultiNoiseSampler
+		METHOD sample (III)Lnet/minecraft/class_6544$class_6553;
+			ARG 1 x
+			ARG 2 y
+			ARG 3 z
+	CLASS class_6553 NoiseValuePoint
+		FIELD comp_112 temperatureNoise J
+		FIELD comp_113 humidityNoise J
+		FIELD comp_114 continentalnessNoise J
+		FIELD comp_115 erosionNoise J
+		FIELD comp_116 depth J
+		FIELD comp_117 weirdnessNoise J
+		METHOD comp_112 temperatureNoise ()J
+		METHOD comp_113 humidityNoise ()J
+		METHOD comp_114 continentalnessNoise ()J
+		METHOD comp_115 erosionNoise ()J
+		METHOD comp_116 depth ()J
+		METHOD comp_117 weirdnessNoise ()J
+		METHOD method_38166 getNoiseValueList ()[J
