@@ -48,7 +48,12 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 1 id
 	METHOD method_19540 setAttacking (Z)V
 		ARG 1 attacking
-	METHOD method_20240 getLookYawSpeed ()I
+	METHOD method_20240 getMaxLookYawChange ()I
+		COMMENT {@return the maximum degrees which the yaw can change when looking}
+		COMMENT
+		COMMENT <p>This is used by the look control.
+		COMMENT
+		COMMENT <p>The default return value is {@code 10}.
 	METHOD method_20417 updateGoalControls ()V
 	METHOD method_20636 canMobSpawn (Lnet/minecraft/class_1299;Lnet/minecraft/class_1936;Lnet/minecraft/class_3730;Lnet/minecraft/class_2338;Ljava/util/Random;)Z
 		ARG 0 type
@@ -163,9 +168,13 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	METHOD method_5958 mobTick ()V
 	METHOD method_5959 initGoals ()V
 	METHOD method_5960 changeAngle (FFF)F
-		ARG 1 oldAngle
-		ARG 2 newAngle
-		ARG 3 maxChangeInAngle
+		COMMENT Changes the angle from {@code from} to {@code to}, or by {@code max} degrees
+		COMMENT if {@code to} is too big a change.
+		COMMENT
+		COMMENT <p>This is the same as {@link LookControl#changeAngle(float, float, float)}.
+		ARG 1 from
+		ARG 2 to
+		ARG 3 max
 	METHOD method_5961 isLeftHanded ()Z
 	METHOD method_5962 getMoveControl ()Lnet/minecraft/class_1335;
 	METHOD method_5963 createBodyControl ()Lnet/minecraft/class_1330;
@@ -187,7 +196,14 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 1 upwardSpeed
 	METHOD method_5977 setAiDisabled (Z)V
 		ARG 1 aiDisabled
-	METHOD method_5978 getLookPitchSpeed ()I
+	METHOD method_5978 getMaxLookPitchChange ()I
+		COMMENT {@return the maximum degrees which the pitch can change when looking}
+		COMMENT
+		COMMENT <p>This is used by the look control.
+		COMMENT
+		COMMENT <p>It can return from {@code 1} for entities that can hardly raise their head,
+		COMMENT like axolotols or dolphins, or {@code 180} for entities that can freely raise
+		COMMENT and lower their head, like guardians. The default return value is {@code 40}.
 	METHOD method_5979 canSpawn (Lnet/minecraft/class_1936;Lnet/minecraft/class_3730;)Z
 		ARG 1 world
 		ARG 2 spawnReason
@@ -197,7 +213,14 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	METHOD method_5984 updateEnchantments (Lnet/minecraft/class_1266;)V
 		ARG 1 difficulty
 	METHOD method_5985 getVisibilityCache ()Lnet/minecraft/class_1413;
-	METHOD method_5986 getBodyYawSpeed ()I
+	METHOD method_5986 getMaxHeadRotation ()I
+		COMMENT {@return the maximum degrees which the head yaw can differ from the body yaw}
+		COMMENT
+		COMMENT <p>This is used by the body control.
+		COMMENT
+		COMMENT <p>It can return from {@code 1} for entities that can hardly rotate their head,
+		COMMENT like axolotols or dolphins, or {@code 180} for entities that can freely rotate
+		COMMENT their head, like shulkers. The default return value is {@code 75}.
 	METHOD method_5987 isAiDisabled ()Z
 	METHOD method_5988 getLookControl ()Lnet/minecraft/class_1333;
 	METHOD method_5990 playSpawnEffects ()V
