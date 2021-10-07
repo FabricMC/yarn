@@ -1,11 +1,11 @@
 CLASS net/minecraft/class_1333 net/minecraft/entity/ai/control/LookControl
-	FIELD field_6358 pitchSpeed F
-	FIELD field_6359 yawSpeed F
-	FIELD field_6360 active Z
+	COMMENT The look control adjusts a mob's rotations to look at a target position.
+	FIELD field_6358 maxPitchChange F
+	FIELD field_6359 maxYawChange F
 	FIELD field_6361 entity Lnet/minecraft/class_1308;
-	FIELD field_6362 lookZ D
-	FIELD field_6363 lookY D
-	FIELD field_6364 lookX D
+	FIELD field_6362 z D
+	FIELD field_6363 y D
+	FIELD field_6364 x D
 	METHOD <init> (Lnet/minecraft/class_1308;)V
 		ARG 1 entity
 	METHOD method_19615 lookAt (Lnet/minecraft/class_243;)V
@@ -21,14 +21,23 @@ CLASS net/minecraft/class_1333 net/minecraft/entity/ai/control/LookControl
 	METHOD method_20433 shouldStayHorizontal ()Z
 	METHOD method_35111 lookAt (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
+	METHOD method_36980 clampHeadYaw ()V
+	METHOD method_37355 (Ljava/lang/Float;)V
+		ARG 1 pitch
+	METHOD method_37356 (Ljava/lang/Float;)V
+		ARG 1 yaw
 	METHOD method_6225 getLookX ()D
 	METHOD method_6226 lookAt (Lnet/minecraft/class_1297;FF)V
 		ARG 1 entity
-		ARG 2 yawSpeed
-		ARG 3 pitchSpeed
+		ARG 2 maxYawChange
+		ARG 3 maxPitchChange
 	METHOD method_6227 getLookY ()D
 	METHOD method_6228 getLookZ ()D
 	METHOD method_6229 changeAngle (FFF)F
+		COMMENT Changes the angle from {@code from} to {@code to}, or by {@code max} degrees
+		COMMENT if {@code to} is too big a change.
+		COMMENT
+		COMMENT <p>This is the same as {@link MobEntity#changeAngle(float, float, float)}.
 		ARG 1 from
 		ARG 2 to
 		ARG 3 max
@@ -36,7 +45,6 @@ CLASS net/minecraft/class_1333 net/minecraft/entity/ai/control/LookControl
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
-		ARG 7 yawSpeed
-		ARG 8 pitchSpeed
+		ARG 7 maxYawChange
+		ARG 8 maxPitchChange
 	METHOD method_6231 tick ()V
-	METHOD method_6232 isActive ()Z

@@ -240,11 +240,17 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 		ARG 2 end
 	METHOD method_17822 sign (D)I
 		ARG 0 value
-	METHOD method_20306 stepAngleTowards (FFF)F
-		COMMENT Steps from {@code from} degrees towards {@code to} degrees, changing the value by at most {@code step} degrees.
-		ARG 0 from
-		ARG 1 to
-		ARG 2 step
+	METHOD method_20306 clampAngle (FFF)F
+		COMMENT Clamps {@code value}, as an angle, between {@code mean - delta} and {@code
+		COMMENT mean + delta} degrees.
+		COMMENT
+		COMMENT @return the clamped {@code value}
+		ARG 0 value
+			COMMENT the value to clamp
+		ARG 1 mean
+			COMMENT the mean value of the clamp angle range
+		ARG 2 delta
+			COMMENT the maximum difference allowed from the mean, must not be negative
 	METHOD method_20390 approximatelyEquals (DD)Z
 		ARG 0 a
 		ARG 2 b
@@ -326,13 +332,23 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 		ARG 0 string
 		ARG 1 fallback
 	METHOD method_34948 parseDouble (Ljava/lang/String;DD)D
+		COMMENT {@return the parsed double; {@code fallback} if {@code string} is not an
+		COMMENT double; or {@code min} if the parsed double is too small}
 		ARG 0 string
+			COMMENT the string to parse
 		ARG 1 fallback
+			COMMENT the fallback for unparsable {@code string}
 		ARG 3 min
+			COMMENT the minimum if the parsed value is too small
 	METHOD method_34949 parseInt (Ljava/lang/String;II)I
+		COMMENT {@return the parsed integer; {@code fallback} if {@code string} is not an
+		COMMENT integer; or {@code min} if the parsed integer is too small}
 		ARG 0 string
+			COMMENT the string to parse
 		ARG 1 fallback
+			COMMENT the fallback for unparsable {@code string}
 		ARG 2 min
+			COMMENT the minimum if the parsed value is too small
 	METHOD method_34951 getCumulativeDistribution ([D)[D
 		ARG 0 values
 	METHOD method_34952 multiplyColors (II)I
