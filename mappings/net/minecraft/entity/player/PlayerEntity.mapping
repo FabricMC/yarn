@@ -60,6 +60,11 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 2 category
 		ARG 3 volume
 		ARG 4 pitch
+	METHOD method_18400 ()V
+		COMMENT Wakes this player up.
+		COMMENT
+		COMMENT @implSpec Calls {@link #wakeUp(boolean, boolean) wakeUp(true, true)}.
+		COMMENT For more control over the wake-up process, see that overload.
 	METHOD method_21701 isBlockBreakingRestricted (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1934;)Z
 		ARG 1 world
 		ARG 2 pos
@@ -114,7 +119,11 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7268 setReducedDebugInfo (Z)V
 		ARG 1 reducedDebugInfo
 	METHOD method_7269 trySleep (Lnet/minecraft/class_2338;)Lcom/mojang/datafixers/util/Either;
+		COMMENT Tries to start sleeping on a block.
+		COMMENT
+		COMMENT @return an {@link Either.Right} if successful, otherwise an {@link Either.Left} containing the failure reason
 		ARG 1 pos
+			COMMENT the position of the bed block
 	METHOD method_7270 giveItemStack (Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
 	METHOD method_7271 getUuidFromProfile (Lcom/mojang/authlib/GameProfile;)Ljava/util/UUID;
@@ -124,8 +133,8 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 1 entityNbt
 	METHOD method_7274 getEnderChestInventory ()Lnet/minecraft/class_1730;
 	METHOD method_7276 isSleepingLongEnough ()Z
-		COMMENT Returns whether this player has been sleeping long enough to count towards
-		COMMENT resetting the time of day and weather of the server.
+		COMMENT {@return whether this player has been sleeping long enough to count towards
+		COMMENT resetting the time of day and weather of the server}
 	METHOD method_7277 addCritParticles (Lnet/minecraft/class_1297;)V
 		ARG 1 target
 	METHOD method_7278 getEnchantmentTableSeed ()I
@@ -264,9 +273,18 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7356 getShoulderEntityLeft ()Lnet/minecraft/class_2487;
 	METHOD method_7357 getItemCooldownManager ()Lnet/minecraft/class_1796;
 	METHOD method_7358 wakeUp (ZZ)V
+		COMMENT Wakes this player up.
+		ARG 1 skipSleepTimer
+			COMMENT if {@code true}, the {@linkplain #sleepTimer sleep timer} will be set straight to 0 instead of 100
 		ARG 2 updateSleepingPlayers
+			COMMENT if {@code true} and called on the logical server, sends sleeping status updates to all players
 	CLASS class_1658 SleepFailureReason
-		FIELD field_18593 text Lnet/minecraft/class_2561;
+		COMMENT A reason why a player cannot start sleeping.
+		FIELD field_18593 message Lnet/minecraft/class_2561;
 		METHOD <init> (Ljava/lang/String;ILnet/minecraft/class_2561;)V
-			ARG 3 text
-		METHOD method_19206 toText ()Lnet/minecraft/class_2561;
+			ARG 3 message
+		METHOD method_19206 getMessage ()Lnet/minecraft/class_2561;
+			COMMENT Returns the action bar message that is sent to the player
+			COMMENT when sleeping fails with this reason.
+			COMMENT
+			COMMENT @return the message, or null if none is sent for this reason

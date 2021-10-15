@@ -9,9 +9,15 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 	FIELD field_20992 queuedTaskCount I
 	FIELD field_20993 bufferCount I
 	FIELD field_29500 POSITION_COLOR_TEXTURE_LIGHT_NORMAL Lnet/minecraft/class_293;
+	FIELD field_35301 prioritizedTaskQueue Ljava/util/PriorityQueue;
+	FIELD field_35302 taskQueue Ljava/util/Queue;
+	FIELD field_35303 processablePrioritizedTaskCount I
+		COMMENT The number of tasks it can poll from {@link #prioritizedTaskQueue}
+		COMMENT before polling from {@link #taskQueue} first instead.
 	FIELD field_4443 uploadQueue Ljava/util/Queue;
 	FIELD field_4445 LOGGER Lorg/apache/logging/log4j/Logger;
 	METHOD <init> (Lnet/minecraft/class_638;Lnet/minecraft/class_761;Ljava/util/concurrent/Executor;ZLnet/minecraft/class_750;)V
+		ARG 1 world
 		ARG 2 worldRenderer
 		ARG 3 executor
 		ARG 4 is64Bits
@@ -20,6 +26,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		ARG 1 cameraPosition
 	METHOD method_19420 getCameraPosition ()Lnet/minecraft/class_243;
 	METHOD method_22752 setWorld (Lnet/minecraft/class_638;)V
+		ARG 1 world
 	METHOD method_22755 (Lnet/minecraft/class_750;Lnet/minecraft/class_846$class_4690;Ljava/lang/Throwable;)V
 		ARG 2 result
 		ARG 3 throwable
@@ -43,6 +50,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 	METHOD method_3635 scheduleUpload (Lnet/minecraft/class_287;Lnet/minecraft/class_291;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 buffer
 		ARG 2 glBuffer
+	METHOD method_39132 pollTask ()Lnet/minecraft/class_846$class_851$class_4577;
 	CLASS class_849 ChunkData
 		FIELD field_4450 nonEmptyLayers Ljava/util/Set;
 		FIELD field_4451 EMPTY Lnet/minecraft/class_846$class_849;
@@ -108,8 +116,10 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		CLASS class_4577 Task
 			FIELD field_20835 distance D
 			FIELD field_20836 cancelled Ljava/util/concurrent/atomic/AtomicBoolean;
+			FIELD field_35304 prioritized Z
 			METHOD <init> (Lnet/minecraft/class_846$class_851;DZ)V
 				ARG 2 distance
+				ARG 4 prioritized
 			METHOD compareTo (Ljava/lang/Object;)I
 				ARG 1 other
 			METHOD method_22782 cancel ()V
@@ -121,6 +131,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 			METHOD <init> (Lnet/minecraft/class_846$class_851;DLnet/minecraft/class_853;Z)V
 				ARG 2 distance
 				ARG 4 region
+				ARG 5 prioritized
 			METHOD method_22785 render (FFFLnet/minecraft/class_846$class_849;Lnet/minecraft/class_750;)Ljava/util/Set;
 				ARG 1 cameraX
 				ARG 2 cameraY
