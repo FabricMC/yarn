@@ -1,4 +1,10 @@
 CLASS net/minecraft/class_124 net/minecraft/util/Formatting
+	COMMENT An enum holding formattings.
+	COMMENT
+	COMMENT <p>There are two types of formattings, color and modifier. Color formattings
+	COMMENT are associated with a specific color, while modifier formattings modify the
+	COMMENT style, such as by bolding the text. {@link #RESET} is a special formatting
+	COMMENT and is not classified as either of these two.
 	FIELD field_1052 BY_NAME Ljava/util/Map;
 	FIELD field_1053 colorValue Ljava/lang/Integer;
 	FIELD field_1057 name Ljava/lang/String;
@@ -7,6 +13,7 @@ CLASS net/minecraft/class_124 net/minecraft/util/Formatting
 	FIELD field_1069 stringValue Ljava/lang/String;
 	FIELD field_1071 colorIndex I
 	FIELD field_1081 modifier Z
+	FIELD field_33292 FORMATTING_CODE_PREFIX C
 	METHOD <init> (Ljava/lang/String;ILjava/lang/String;CILjava/lang/Integer;)V
 		ARG 3 name
 		ARG 4 code
@@ -23,25 +30,44 @@ CLASS net/minecraft/class_124 net/minecraft/util/Formatting
 		ARG 6 colorIndex
 		ARG 7 colorValue
 	METHOD method_36145 getCode ()C
+		COMMENT {@return the code placed after the {@link FORMATTING_CODE_PREFIX}}
 	METHOD method_531 (Lnet/minecraft/class_124;)Ljava/lang/String;
 		ARG 0 f
 	METHOD method_532 getColorValue ()Ljava/lang/Integer;
+		COMMENT {@return the color of the formatted text, or {@code null} if the formatting
+		COMMENT has no associated color}
 	METHOD method_533 byName (Ljava/lang/String;)Lnet/minecraft/class_124;
+		COMMENT {@return the formatting with the name {@code name}, or {@code null} if there is none}
 		ARG 0 name
 	METHOD method_534 byColorIndex (I)Lnet/minecraft/class_124;
+		COMMENT {@return the formatting with the color index {@code colorIndex},
+		COMMENT or {@code null} if there is none}
 		ARG 0 colorIndex
 	METHOD method_535 sanitize (Ljava/lang/String;)Ljava/lang/String;
 		ARG 0 name
 	METHOD method_536 getColorIndex ()I
+		COMMENT {@return the color index for the formatting, or {@code -1} to indicate no color}
+		COMMENT
+		COMMENT @apiNote This is also used to calculate scoreboard team display slot IDs.
 	METHOD method_537 getName ()Ljava/lang/String;
+		COMMENT {@return the name of the formatting}
 	METHOD method_539 strip (Ljava/lang/String;)Ljava/lang/String;
+		COMMENT {@return the {@code text} with all formatting codes removed}
+		COMMENT
+		COMMENT @see StringHelper.stripTextFormat
 		ARG 0 string
 	METHOD method_540 getNames (ZZ)Ljava/util/Collection;
+		COMMENT {@return the list of formattings matching the given condition}
 		ARG 0 colors
+			COMMENT whether or not to include color formattings
 		ARG 1 modifiers
+			COMMENT whether or not to include modifier formattings
 	METHOD method_541 (Lnet/minecraft/class_124;)Lnet/minecraft/class_124;
 		ARG 0 f
 	METHOD method_542 isModifier ()Z
+		COMMENT {@return true if the formatting is a modifier, false otherwise}
 	METHOD method_543 isColor ()Z
+		COMMENT {@return true if the formatting is associated with a color, false otherwise}
 	METHOD method_544 byCode (C)Lnet/minecraft/class_124;
+		COMMENT {@return the formatting with the code {@code code}, or {@code null} if there is none}
 		ARG 0 code
