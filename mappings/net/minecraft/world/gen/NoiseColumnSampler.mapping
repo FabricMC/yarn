@@ -6,6 +6,22 @@ CLASS net/minecraft/class_5818 net/minecraft/world/gen/NoiseColumnSampler
 	FIELD field_28756 islandNoise Lnet/minecraft/class_3541;
 	FIELD field_28764 densityFactor D
 	FIELD field_28765 densityOffset D
+	FIELD field_34633 caveLayerNoise Lnet/minecraft/class_5216;
+	FIELD field_34634 pillarNoise Lnet/minecraft/class_5216;
+	FIELD field_34635 pillarRarenessNoise Lnet/minecraft/class_5216;
+	FIELD field_34636 pillarThicknessNoise Lnet/minecraft/class_5216;
+	FIELD field_34637 spaghetti2dNoise Lnet/minecraft/class_5216;
+	FIELD field_34638 spaghetti2dElevationNoise Lnet/minecraft/class_5216;
+	FIELD field_34639 spaghetti2dModulatorNoise Lnet/minecraft/class_5216;
+	FIELD field_34640 spaghetti2dThicknessNoise Lnet/minecraft/class_5216;
+	FIELD field_34641 spaghetti3dFirstNoise Lnet/minecraft/class_5216;
+	FIELD field_34642 spaghetti3dSecondNoise Lnet/minecraft/class_5216;
+	FIELD field_34643 spaghetti3dRarityNoise Lnet/minecraft/class_5216;
+	FIELD field_34644 spaghetti3dThicknessNoise Lnet/minecraft/class_5216;
+	FIELD field_34645 spaghettiRoughnessNoise Lnet/minecraft/class_5216;
+	FIELD field_34646 spaghettiRoughnessModulatorNoise Lnet/minecraft/class_5216;
+	FIELD field_34647 caveEntranceNoise Lnet/minecraft/class_5216;
+	FIELD field_34648 caveCheeseNoise Lnet/minecraft/class_5216;
 	FIELD field_34649 temperatureNoise Lnet/minecraft/class_5216;
 	FIELD field_34650 humidityNoise Lnet/minecraft/class_5216;
 	FIELD field_34651 continentalnessNoise Lnet/minecraft/class_5216;
@@ -13,23 +29,31 @@ CLASS net/minecraft/class_5818 net/minecraft/world/gen/NoiseColumnSampler
 	FIELD field_34653 weirdnessNoise Lnet/minecraft/class_5216;
 	FIELD field_34654 shiftNoise Lnet/minecraft/class_5216;
 	FIELD field_34655 terrainParameters Lnet/minecraft/class_6555;
+	FIELD field_34656 oreGapNoise Lnet/minecraft/class_5216;
 	FIELD field_34657 intialNoiseSampler Lnet/minecraft/class_6568$class_6571;
-	FIELD field_34659 oreFrequencyNoiseSampler Lnet/minecraft/class_6568$class_6571;
-	FIELD field_34660 firstOrePlacementNoiseSampler Lnet/minecraft/class_6568$class_6571;
-	FIELD field_34661 secondOrePlacementNoiseSampler Lnet/minecraft/class_6568$class_6571;
-	FIELD field_34663 noodleCavesFrequencyNoiseSampler Lnet/minecraft/class_6568$class_6571;
-	FIELD field_34664 noodleCavesWeightReducingNoiseSampler Lnet/minecraft/class_6568$class_6571;
-	FIELD field_34665 noodleCavesFirstWeightNoiseSampler Lnet/minecraft/class_6568$class_6571;
-	FIELD field_34666 noodleCavesSecondWeightNoiseSampler Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34659 oreFrequencyNoiseSamplerFactory Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34660 firstOrePlacementNoiseFactory Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34661 secondOrePlacementNoiseFactory Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34662 oreRandomDeriver Lnet/minecraft/class_6574;
+	FIELD field_34663 noodleNoiseFactory Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34664 noodleThicknessNoiseFactory Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34665 noodleRidgeFirstNoiseFactory Lnet/minecraft/class_6568$class_6571;
+	FIELD field_34666 noodleRidgeSecondNoiseFactory Lnet/minecraft/class_6568$class_6571;
 	FIELD field_34667 hasNoiseCaves Z
-	FIELD field_34680 noise Lnet/minecraft/class_5822;
-	METHOD <init> (IIILnet/minecraft/class_5309;Lnet/minecraft/class_2088;ZJLnet/minecraft/class_2919$class_6675;)V
+	FIELD field_34680 terrainNoise Lnet/minecraft/class_5822;
+	FIELD field_34681 jaggedNoise Lnet/minecraft/class_5216;
+	FIELD field_34682 minY I
+	FIELD field_34683 aquiferBarrierNoise Lnet/minecraft/class_5216;
+	FIELD field_34685 aquiferLavaNoise Lnet/minecraft/class_5216;
+	FIELD field_34686 aquiferRandomDeriver Lnet/minecraft/class_6574;
+	FIELD field_35131 aquiferFluidLevelFloodednessNoise Lnet/minecraft/class_5216;
+	FIELD field_35132 aquiferFluidLevelSpreadNoise Lnet/minecraft/class_5216;
+	FIELD field_35208 depthBasedLayerRandomDeriver Lnet/minecraft/class_6574;
+	METHOD <init> (IIILnet/minecraft/class_5309;ZJLnet/minecraft/class_2378;Lnet/minecraft/class_2919$class_6675;)V
 		ARG 1 horizontalNoiseResolution
 		ARG 2 verticalNoiseResolution
 		ARG 3 noiseSizeY
 		ARG 4 config
-		ARG 6 hasNoiseCaves
-		ARG 7 seed
 	METHOD method_33645 applySlides (DI)D
 		COMMENT Interpolates the noise at the top and bottom of the world.
 		ARG 1 noise
@@ -63,8 +87,11 @@ CLASS net/minecraft/class_5818 net/minecraft/world/gen/NoiseColumnSampler
 		ARG 10 weirdness
 		ARG 11 offset
 	METHOD method_38379 createNoiseSamplerFactory (Lnet/minecraft/class_5216;IIID)Lnet/minecraft/class_6568$class_6571;
-		ARG 1 maxY
-		ARG 2 alternative
+		ARG 0 noiseSampler
+		ARG 1 minY
+		ARG 2 maxY
+		ARG 3 alternative
+		ARG 4 scale
 	METHOD method_38380 sampleNoiseColumn (IIILnet/minecraft/class_6576;)D
 		ARG 1 x
 		ARG 2 y
@@ -85,6 +112,8 @@ CLASS net/minecraft/class_5818 net/minecraft/world/gen/NoiseColumnSampler
 		ARG 1 x
 		ARG 2 z
 		ARG 3 point
+	METHOD method_38384 (Lnet/minecraft/class_6568$class_6572;Lnet/minecraft/class_6568;)Lnet/minecraft/class_6568$class_6573;
+		ARG 1 chunkNoiseSampler
 	METHOD method_38385 (Lnet/minecraft/class_6568$class_6573;Lnet/minecraft/class_2680;Lnet/minecraft/class_6568$class_6573;Lnet/minecraft/class_6568$class_6573;III)Lnet/minecraft/class_2680;
 		ARG 5 x
 		ARG 6 y
@@ -119,6 +148,9 @@ CLASS net/minecraft/class_5818 net/minecraft/world/gen/NoiseColumnSampler
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
+		ARG 7 invertedScale
+	METHOD method_38395 clampBetweenNoiseRange (D)D
+		ARG 0 value
 	METHOD method_38396 sampleHumidityNoise (DDD)D
 		ARG 1 x
 		ARG 3 y
@@ -126,7 +158,7 @@ CLASS net/minecraft/class_5818 net/minecraft/world/gen/NoiseColumnSampler
 	METHOD method_38397 getVeinType (DI)Lnet/minecraft/class_5818$class_6354;
 		ARG 1 oreFrequencyNoise
 		ARG 3 y
-	METHOD method_38398 (III)D
+	METHOD method_38398 sampleCaveEntranceNoise (III)D
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
@@ -134,7 +166,7 @@ CLASS net/minecraft/class_5818 net/minecraft/world/gen/NoiseColumnSampler
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
-	METHOD method_38402 (III)D
+	METHOD method_38402 samplePillarNoise (III)D
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
@@ -142,7 +174,7 @@ CLASS net/minecraft/class_5818 net/minecraft/world/gen/NoiseColumnSampler
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
-	METHOD method_38405 (III)D
+	METHOD method_38405 sampleCaveLayerNoise (III)D
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
@@ -150,15 +182,15 @@ CLASS net/minecraft/class_5818 net/minecraft/world/gen/NoiseColumnSampler
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
-	METHOD method_38408 (III)D
+	METHOD method_38408 sampleSpaghetti3dNoise (III)D
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
-	METHOD method_38410 (III)D
+	METHOD method_38410 sampleSpaghetti2dNoise (III)D
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
-	METHOD method_38411 (III)D
+	METHOD method_38411 sampleSpaghettiRoughnessNoise (III)D
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
@@ -166,6 +198,7 @@ CLASS net/minecraft/class_5818 net/minecraft/world/gen/NoiseColumnSampler
 		ARG 0 x
 		ARG 1 y
 		ARG 2 z
+	METHOD method_39043 getDepthBasedLayerRandomDeriver ()Lnet/minecraft/class_6574;
 	CLASS class_5841 CaveScaler
 		METHOD method_33835 scaleCaves (D)D
 			ARG 0 value

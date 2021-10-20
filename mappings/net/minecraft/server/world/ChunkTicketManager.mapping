@@ -21,6 +21,7 @@ CLASS net/minecraft/class_3204 net/minecraft/server/world/ChunkTicketManager
 	METHOD method_14035 isUnloaded (J)Z
 		ARG 1 pos
 	METHOD method_14036 setChunkForced (Lnet/minecraft/class_1923;Z)V
+		ARG 1 pos
 		ARG 2 forced
 	METHOD method_14038 getChunkHolder (J)Lnet/minecraft/class_3193;
 		ARG 1 pos
@@ -29,6 +30,7 @@ CLASS net/minecraft/class_3204 net/minecraft/server/world/ChunkTicketManager
 		ARG 3 ticket
 	METHOD method_14045 purge ()V
 	METHOD method_14046 getLevel (Lnet/minecraft/class_4706;)I
+		ARG 0 tickets
 	METHOD method_14048 handleChunkEnter (Lnet/minecraft/class_4076;Lnet/minecraft/class_3222;)V
 		ARG 1 pos
 		ARG 2 player
@@ -39,12 +41,13 @@ CLASS net/minecraft/class_3204 net/minecraft/server/world/ChunkTicketManager
 	METHOD method_14051 handleChunkLeave (Lnet/minecraft/class_4076;Lnet/minecraft/class_3222;)V
 		ARG 1 pos
 		ARG 2 player
-	METHOD method_14052 getSpawningChunkCount ()I
+	METHOD method_14052 getTickedChunkCount ()I
 	METHOD method_14053 setLevel (JILnet/minecraft/class_3193;I)Lnet/minecraft/class_3193;
 		ARG 1 pos
 		ARG 3 level
 		ARG 4 holder
 	METHOD method_15892 tick (Lnet/minecraft/class_3898;)Z
+		ARG 1 tacs
 	METHOD method_17290 addTicketWithLevel (Lnet/minecraft/class_3230;Lnet/minecraft/class_1923;ILjava/lang/Object;)V
 		ARG 1 type
 		ARG 2 pos
@@ -57,6 +60,7 @@ CLASS net/minecraft/class_3204 net/minecraft/server/world/ChunkTicketManager
 		ARG 4 argument
 	METHOD method_17292 removeTicket (Lnet/minecraft/class_3230;Lnet/minecraft/class_1923;ILjava/lang/Object;)V
 		ARG 1 type
+		ARG 2 pos
 		ARG 3 radius
 		ARG 4 argument
 	METHOD method_17645 removeTicket (JLnet/minecraft/class_3228;)V
@@ -67,13 +71,18 @@ CLASS net/minecraft/class_3204 net/minecraft/server/world/ChunkTicketManager
 		ARG 2 pos
 		ARG 3 level
 		ARG 4 argument
+	METHOD method_20800 shouldTick (J)Z
+		ARG 1 chunkPos
 	METHOD method_21623 getTicket (J)Ljava/lang/String;
 		ARG 1 pos
 	METHOD method_21683 toDumpString ()Ljava/lang/String;
+	METHOD method_34876 dump (Ljava/lang/String;)V
+		ARG 1 path
 	METHOD method_38629 setSimulationDistance (I)V
 		ARG 1 simulationDistance
 	METHOD method_38630 isSimulating (J)Z
 		ARG 1 chunkPos
+	METHOD method_38631 getSimulationDistanceTracker ()Lnet/minecraft/class_6609;
 	METHOD method_38633 getPlayerSimulationLevel ()I
 	CLASS class_3205 DistanceFromNearestPlayerTracker
 		FIELD field_13896 distanceFromNearestPlayer Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
@@ -87,6 +96,8 @@ CLASS net/minecraft/class_3204 net/minecraft/server/world/ChunkTicketManager
 			ARG 1 pos
 			ARG 3 oldDistance
 			ARG 4 distance
+		METHOD method_34878 dump (Ljava/lang/String;)V
+			ARG 1 path
 	CLASS class_3948 NearbyChunkTicketUpdater
 		FIELD field_17464 watchDistance I
 		FIELD field_17465 distances Lit/unimi/dsi/fastutil/longs/Long2IntMap;

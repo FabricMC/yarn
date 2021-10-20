@@ -12,7 +12,7 @@ buildscript {
 		classpath "net.fabricmc:stitch:${project.stitch_version}"
 		classpath "commons-io:commons-io:2.8.0"
 		classpath 'de.undercouch:gradle-download-task:4.1.1'
-		classpath 'net.fabricmc:tiny-remapper:0.6.0'
+		classpath 'net.fabricmc:tiny-remapper:0.7.0'
 		classpath "net.fabricmc.unpick:unpick:${project.unpick_version}"
 		classpath "net.fabricmc.unpick:unpick-format-utils:${project.unpick_version}"
 		classpath "net.fabricmc:name-proposal:${project.name_proposal_version}"
@@ -27,7 +27,7 @@ plugins {
 	id 'net.fabricmc.filament' version '0.3.0'
 }
 
-def minecraft_version = "21w41a"
+def minecraft_version = "21w42a"
 
 def ENV = System.getenv()
 // Fetch build number from Github Actions
@@ -73,7 +73,7 @@ configurations {
 def unpickMetaFile = file("unpick-definitions/unpick.json")
 
 dependencies {
-	enigmaRuntime "cuchaz:enigma-swing:${project.enigma_version}:all"
+	enigmaRuntime "cuchaz:enigma-swing:${project.enigma_version}"
 	enigmaRuntime "net.fabricmc:name-proposal:${project.name_proposal_version}"
 	javadocClasspath "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 	javadocClasspath "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
@@ -1011,6 +1011,8 @@ void mapJar(File output, File input, File mappings, File libraries, String from,
 			.renameInvalidLocals(true)
 			.rebuildSourceFilenames(true)
 			.invalidLvNamePattern(~/\$\$\d+/)
+			.inferNameFromSameLvIndex(true)
+
 	action.execute(remapperBuilder)
 	def remapper = remapperBuilder
 			.build()
