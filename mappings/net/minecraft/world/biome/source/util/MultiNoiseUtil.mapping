@@ -23,6 +23,9 @@ CLASS net/minecraft/class_6544 net/minecraft/world/biome/source/util/MultiNoiseU
 		ARG 4 depth
 		ARG 5 weirdness
 		ARG 6 offset
+	METHOD method_39164 findFittestPosition (Ljava/util/List;Lnet/minecraft/class_5818;)Lnet/minecraft/class_2338;
+		ARG 0 noises
+		ARG 1 sampler
 	CLASS class_4762 NoiseHypercube
 		COMMENT Represents a hypercube in a multi-dimensional cartesian plane. The multi-noise
 		COMMENT biome source picks the closest noise hypercube from its selected point
@@ -178,6 +181,7 @@ CLASS net/minecraft/class_6544 net/minecraft/world/biome/source/util/MultiNoiseU
 				ARG 1 parameters
 				ARG 2 subTree
 	CLASS class_6552 MultiNoiseSampler
+		METHOD method_39165 findBestSpawnPosition ()Lnet/minecraft/class_2338;
 		METHOD sample (III)Lnet/minecraft/class_6544$class_6553;
 			ARG 1 x
 			ARG 2 y
@@ -196,3 +200,23 @@ CLASS net/minecraft/class_6544 net/minecraft/world/biome/source/util/MultiNoiseU
 		METHOD comp_116 depth ()J
 		METHOD comp_117 weirdnessNoise ()J
 		METHOD method_38166 getNoiseValueList ()[J
+	CLASS class_6729 FittestPositionFinder
+		FIELD field_35360 bestResult Lnet/minecraft/class_6544$class_6729$class_6730;
+		METHOD <init> (Ljava/util/List;Lnet/minecraft/class_5818;)V
+			ARG 1 noises
+			ARG 2 sampler
+		METHOD method_39166 findFittest (Ljava/util/List;Lnet/minecraft/class_5818;FF)V
+			ARG 1 noises
+			ARG 2 sampler
+			ARG 3 maxDistance
+			ARG 4 step
+		METHOD method_39167 calculateFitness (Ljava/util/List;Lnet/minecraft/class_5818;II)Lnet/minecraft/class_6544$class_6729$class_6730;
+			ARG 0 noises
+			ARG 1 sampler
+			ARG 2 x
+			ARG 3 z
+		CLASS class_6730 Result
+			FIELD comp_223 location Lnet/minecraft/class_2338;
+			FIELD comp_224 fitness J
+			METHOD comp_223 location ()Lnet/minecraft/class_2338;
+			METHOD comp_224 fitness ()J
