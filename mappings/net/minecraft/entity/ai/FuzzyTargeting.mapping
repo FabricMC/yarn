@@ -1,15 +1,31 @@
 CLASS net/minecraft/class_5534 net/minecraft/entity/ai/FuzzyTargeting
 	COMMENT Path targeting utilities using fuzzy, or approximated, positions from
 	COMMENT {@link FuzzyPositions}.
+	COMMENT <p>
+	COMMENT Methods in this class can be used to do pathing for an entity to a random position.
+	COMMENT Positions are chosen to stay within range of the entity's chosen {@link net.minecraft.entity.mob.MobEntity#getPositionTarget() position target}
+	COMMENT if applicable, and will be suitably randomised within that contraint.
 	METHOD method_31527 find (Lnet/minecraft/class_1314;II)Lnet/minecraft/class_243;
+		COMMENT Paths to a random reachable position with positive path-finding favourability.
+		COMMENT
+		COMMENT @return The chosen position or null if none could be found.
 		ARG 0 entity
+			COMMENT The entity doing the pathing.
 		ARG 1 horizontalRange
+			COMMENT The horizontal pathing range. This is how far the point can be from the entity's starting position on the X or Z range.
 		ARG 2 verticalRange
+			COMMENT The vertical pathing range. This is how far the point can be from the entity's starting position on the Y range.
 	METHOD method_31528 findTo (Lnet/minecraft/class_1314;IILnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		COMMENT Paths to a random reachable position leading towards a given end-point.
+		COMMENT
+		COMMENT @return The chosen position or null if none could be found.
 		ARG 0 entity
 		ARG 1 horizontalRange
+			COMMENT The horizontal pathing range. This is how far the point can be from the entity's starting position on the X or Z range.
 		ARG 2 verticalRange
+			COMMENT The vertical pathing range. This is how far the point can be from the entity's starting position on the Y range.
 		ARG 3 end
+			COMMENT The position to path towards.
 	METHOD method_31529 findValid (Lnet/minecraft/class_1314;IILnet/minecraft/class_243;Z)Lnet/minecraft/class_243;
 		ARG 0 entity
 		ARG 1 horizontalRange
@@ -17,22 +33,46 @@ CLASS net/minecraft/class_5534 net/minecraft/entity/ai/FuzzyTargeting
 		ARG 3 direction
 		ARG 4 posTargetInRange
 	METHOD method_31530 find (Lnet/minecraft/class_1314;IILjava/util/function/ToDoubleFunction;)Lnet/minecraft/class_243;
+		COMMENT Paths to a random reachable position with positive path-finding favourability computed by a given function.
+		COMMENT
+		COMMENT @return The chosen position or null if none could be found.
 		ARG 0 entity
+			COMMENT The entity doing the pathing.
 		ARG 1 horizontalRange
+			COMMENT The horizontal pathing range. This is how far the point can be from the entity's starting position on the X or Z range.
 		ARG 2 verticalRange
+			COMMENT The vertical pathing range. This is how far the point can be from the entity's starting position on the Y range.
 		ARG 3 scorer
-	METHOD method_31532 tryMake (Lnet/minecraft/class_1314;IZLnet/minecraft/class_2338;)Lnet/minecraft/class_2338;
+			COMMENT Function to compute the path-finding favourability of a candidate position.
+	METHOD method_31532 towardTarget (Lnet/minecraft/class_1314;IZLnet/minecraft/class_2338;)Lnet/minecraft/class_2338;
+		COMMENT Paths to a random reachable position approaching an entity's chosen {@link net.minecraft.entity.mob.MobEntity#getPositionTarget() position target}.
+		COMMENT
+		COMMENT @return The chosen position or null if none could be found.
 		ARG 0 entity
+			COMMENT The entity doing the pathing.
 		ARG 1 horizontalRange
+			COMMENT The horizontal pathing range. This is how far the point can be from the entity's starting position on the X or Z range.
 		ARG 2 posTargetInRange
 		ARG 3 relativeInRangePos
 	METHOD method_31533 validate (Lnet/minecraft/class_1314;Lnet/minecraft/class_2338;)Lnet/minecraft/class_2338;
+		COMMENT Checks whether a given position is a valid pathable target.
+		COMMENT
+		COMMENT @return The input position, or null if validation failed.
 		ARG 0 entity
+			COMMENT The entity doing the pathing.
 		ARG 1 pos
+			COMMENT The candidate position.
 	METHOD method_31534 findFrom (Lnet/minecraft/class_1314;IILnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		COMMENT Paths to a random reachable position leading away from a given starting point.
+		COMMENT
+		COMMENT @return The chosen position or null if none could be found.
 		ARG 0 entity
+			COMMENT The entity doing the pathing.
 		ARG 1 horizontalRange
+			COMMENT The horizontal pathing range. This is how far the point can be from the entity's starting position on the X or Z range.
 		ARG 2 verticalRange
+			COMMENT The vertical pathing range. This is how far the point can be from the entity's starting position on the Y range.
 		ARG 3 start
+			COMMENT The position to path away from.
 	METHOD method_31536 (Lnet/minecraft/class_1314;Lnet/minecraft/class_2338;)Z
 		ARG 1 currentPos
