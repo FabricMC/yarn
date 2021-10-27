@@ -153,7 +153,7 @@ public class MethodBuilder {
 	private MethodSpec.Builder createBuilder() {
 		MethodSpec.Builder builder = MethodSpec.methodBuilder(methodNode.name)
 				.addModifiers(new ModifierBuilder(methodNode.access).getModifiers(ModifierBuilder.Type.METHOD));
-		if (methodNode.name.equals("<init>") || !java.lang.reflect.Modifier.isInterface(classNode.access)) {
+		if (methodNode.name.equals("<init>") || !java.lang.reflect.Modifier.isInterface(classNode.access) || java.lang.reflect.Modifier.isPrivate(methodNode.access)) {
 			builder.modifiers.remove(Modifier.DEFAULT);
 		}
 
