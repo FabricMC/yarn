@@ -324,6 +324,12 @@ public class ClassBuilder {
 		if (classNode.innerClasses != null) {
 			for (InnerClassNode node : classNode.innerClasses) {
 				if (node.name.equals(classBuilder.classNode.name)) {
+					if (node.outerName == null && classBuilder.recordClass) {
+						// Inline anonymous record.
+						// TODO look into moving this into the method that defines it.
+						return;
+					}
+
 					innerClassNode = node;
 					break;
 				}
