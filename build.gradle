@@ -827,6 +827,11 @@ task v2MergedYarnJar(dependsOn: ["mergeV2"], type: Jar) {
 
 def fakeSourceDir = file(".gradle/temp/fakeSource")
 task genFakeSource(type: JavaExec, dependsOn: ["mergeV2", "mapNamedJar"]) {
+	onlyIf {
+		// Mapping Poet requires Java 17
+		JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)
+	}
+
 	group = "javadoc generation"
 	outputs.upToDateWhen { false }
 
