@@ -33,7 +33,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6231 SPRINTING_SPEED_BOOST Lnet/minecraft/class_1322;
 	FIELD field_6232 scoreAmount I
 	FIELD field_6233 stepBobbingAmount F
-	FIELD field_6234 equippedHand Lnet/minecraft/class_2371;
+	FIELD field_6234 syncedHandStacks Lnet/minecraft/class_2371;
 	FIELD field_6235 hurtTime I
 	FIELD field_6236 attacking Lnet/minecraft/class_1309;
 	FIELD field_6237 SPRINTING_SPEED_BOOST_ID Ljava/util/UUID;
@@ -47,7 +47,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6245 serverY D
 	FIELD field_6246 absorptionAmount F
 	FIELD field_6247 HEALTH Lnet/minecraft/class_2940;
-	FIELD field_6248 equippedArmor Lnet/minecraft/class_2371;
+	FIELD field_6248 syncedArmorStacks Lnet/minecraft/class_2371;
 	FIELD field_6249 limbAngle F
 	FIELD field_6250 forwardSpeed F
 	FIELD field_6251 handSwingProgress F
@@ -255,22 +255,30 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_30120 (Ljava/util/List;Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
 		ARG 2 slot
 		ARG 3 stack
-	METHOD method_30121 swapHandStacks (Ljava/util/Map;)V
-		ARG 1 equipment
-	METHOD method_30122 setArmorInSlot (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
+	METHOD method_30121 sendHandStackSwap (Ljava/util/Map;)V
+		COMMENT Notifies nearby players if the stacks in the hands have been swapped.
+		ARG 1 equipmentChanges
+	METHOD method_30122 setSyncedArmorStack (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
 		ARG 1 slot
 		ARG 2 armor
-	METHOD method_30123 setEquipment (Ljava/util/Map;)V
-		ARG 1 equipment
-	METHOD method_30124 setStackInHandSlot (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
+	METHOD method_30123 sendEquipmentChanges (Ljava/util/Map;)V
+		COMMENT Sends equipment changes to nearby players.
+		COMMENT
+		COMMENT @see #sendEquipmentChanges()
+		ARG 1 equipmentChanges
+	METHOD method_30124 setSyncedHandStack (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
 		ARG 1 slot
 		ARG 2 stack
-	METHOD method_30125 getArmorInSlot (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
+	METHOD method_30125 getSyncedArmorStack (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
 		ARG 1 slot
-	METHOD method_30126 getStackInHandSlot (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
+	METHOD method_30126 getSyncedHandStack (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
 		ARG 1 slot
 	METHOD method_30127 swapHandStacks ()V
-	METHOD method_30129 getEquipment ()Ljava/util/Map;
+	METHOD method_30128 sendEquipmentChanges ()V
+		COMMENT Sends equipment changes to nearby players.
+	METHOD method_30129 getEquipmentChanges ()Ljava/util/Map;
+		COMMENT {@return the difference between the last sent equipment set and the
+		COMMENT current one}
 	METHOD method_31079 positionInPortal (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
 		ARG 0 pos
 	METHOD method_32321 getStackReference (Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)Lnet/minecraft/class_5630;
