@@ -25,6 +25,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	FIELD field_29768 SERVER_IDLE_COOLDOWN I
 		COMMENT The number of ticks ({@value}) the world will continue to tick entities after
 		COMMENT all players have left and the world does not contain any forced chunks.
+	FIELD field_35441 MAX_TICKS I
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5268;Lnet/minecraft/class_5321;Lnet/minecraft/class_2874;Lnet/minecraft/class_3949;Lnet/minecraft/class_2794;ZJLjava/util/List;Z)V
 		ARG 1 server
 		ARG 2 workerExecutor
@@ -51,6 +52,8 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 15 deltaZ
 		ARG 17 speed
 	METHOD method_14171 tickFluid (Lnet/minecraft/class_2338;Lnet/minecraft/class_3611;)V
+		ARG 1 pos
+		ARG 2 fluid
 	METHOD method_14173 getPortalForcer ()Lnet/minecraft/class_1946;
 	METHOD method_14174 processBlockEvent (Lnet/minecraft/class_1919;)Z
 		ARG 1 event
@@ -63,6 +66,8 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_14183 getStructureManager ()Lnet/minecraft/class_3485;
 	METHOD method_14188 saveLevel ()V
 	METHOD method_14189 tickBlock (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;)V
+		ARG 1 pos
+		ARG 2 block
 	METHOD method_14190 getEntity (Ljava/util/UUID;)Lnet/minecraft/class_1297;
 		ARG 1 uuid
 	METHOD method_14191 sendToPlayerIfNearby (Lnet/minecraft/class_3222;ZDDDLnet/minecraft/class_2596;)Z
@@ -233,8 +238,11 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_37116 isChunkLoaded (J)Z
 		ARG 1 chunkPos
 	METHOD method_37117 isTickingFutureReady (J)Z
+		ARG 1 chunkPos
 	METHOD method_37118 shouldTickEntity (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
+	METHOD method_39223 disableTickSchedulers (Lnet/minecraft/class_2818;)V
+		ARG 1 chunk
 	METHOD method_8448 updateSleepingPlayers ()V
 	METHOD method_8487 locateStructure (Lnet/minecraft/class_3195;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
 		ARG 1 feature
