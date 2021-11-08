@@ -32,7 +32,7 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		ARG 2 messageFactory
 	METHOD method_36242 (Ljava/lang/Integer;)Ljava/lang/String;
 		ARG 0 v
-	METHOD method_36243 createRangeChecker (Ljava/lang/Number;Ljava/lang/Number;Ljava/util/function/Function;)Ljava/util/function/Function;
+	METHOD method_36243 createIntRangeChecker (Ljava/lang/Number;Ljava/lang/Number;Ljava/util/function/Function;)Ljava/util/function/Function;
 		ARG 0 min
 		ARG 1 max
 		ARG 2 messageFactory
@@ -50,6 +50,10 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		ARG 0 supplier
 	METHOD method_37351 createPresentValuesChecker ()Ljava/util/function/Function;
 	METHOD method_37352 createPresentValueChecker ()Ljava/util/function/Function;
+	METHOD method_37928 rangedFloat (FFLjava/util/function/Function;)Lcom/mojang/serialization/Codec;
+		ARG 0 min
+		ARG 1 max
+		ARG 2 messageFactory
 	METHOD method_37931 createCodecForPairObject (Lcom/mojang/serialization/Codec;Ljava/lang/String;Ljava/lang/String;Ljava/util/function/BiFunction;Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
 		ARG 0 codec
 		ARG 1 leftFieldName
@@ -57,6 +61,16 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		ARG 3 combineFunction
 		ARG 4 leftFunction
 		ARG 5 rightFunction
+	METHOD method_37932 (Ljava/lang/Float;)Ljava/lang/String;
+		ARG 0 v
+	METHOD method_37933 (Ljava/lang/Number;Ljava/lang/Number;Ljava/util/function/Function;Ljava/lang/Number;)Lcom/mojang/serialization/DataResult;
+		ARG 3 value
+	METHOD method_37940 createFloatRangeChecker (Ljava/lang/Number;Ljava/lang/Number;Ljava/util/function/Function;)Ljava/util/function/Function;
+		ARG 0 min
+		ARG 1 max
+		ARG 2 messageFactory
+	METHOD method_39240 createLazy (Ljava/util/function/Supplier;)Lcom/mojang/serialization/Codec;
+		ARG 0 supplier
 	CLASS class_5839 Xor
 		COMMENT An xor codec that only permits exactly one of the two data choices to be
 		COMMENT present.
@@ -85,3 +99,34 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 			ARG 0 pair
 		METHOD method_33824 (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
 			ARG 3 left
+	CLASS class_6495 Either
+		FIELD field_34388 first Lcom/mojang/serialization/Codec;
+		FIELD field_34389 second Lcom/mojang/serialization/Codec;
+		METHOD <init> (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)V
+			ARG 1 first
+			ARG 2 second
+		METHOD decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 input
+			ARG 2 ops
+			ARG 3 prefix
+		METHOD equals (Ljava/lang/Object;)Z
+			ARG 1 o
+		METHOD method_37946 (Lcom/mojang/datafixers/util/Pair;)Lcom/mojang/datafixers/util/Pair;
+			ARG 0 pair
+		METHOD method_37948 (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 3 right
+		METHOD method_37949 (Lcom/mojang/datafixers/util/Pair;)Lcom/mojang/datafixers/util/Pair;
+			ARG 0 pair
+		METHOD method_37950 (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 3 left
+	CLASS class_6739 Lazy
+		METHOD decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 input
+			ARG 2 ops
+			ARG 3 prefix
