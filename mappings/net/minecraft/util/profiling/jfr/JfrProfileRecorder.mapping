@@ -3,8 +3,8 @@ CLASS net/minecraft/class_6516 net/minecraft/util/profiling/jfr/JfrProfileRecord
 	FIELD field_34423 endTime Ljava/time/Instant;
 	FIELD field_34424 chunkGenerationSamples Ljava/util/List;
 	FIELD field_34425 cpuLoadSamples Ljava/util/List;
-	FIELD field_34426 packetReadSamples Ljava/util/Map;
-	FIELD field_34427 packetSentSamples Ljava/util/Map;
+	FIELD field_34426 receivedPacketsToCounter Ljava/util/Map;
+	FIELD field_34427 sentPacketsToCounter Ljava/util/Map;
 	FIELD field_34428 fileWriteSamples Ljava/util/List;
 	FIELD field_34429 fileReadSamples Ljava/util/List;
 	FIELD field_34430 gcCount I
@@ -26,3 +26,20 @@ CLASS net/minecraft/class_6516 net/minecraft/util/profiling/jfr/JfrProfileRecord
 		ARG 1 event
 		ARG 2 samples
 		ARG 3 bytesKey
+	METHOD method_39432 (Lnet/minecraft/class_6767$class_6769;)Lnet/minecraft/class_6516$class_6766;
+		ARG 0 packet
+	METHOD method_39433 createNetworkIoStatistics (Ljava/time/Duration;Ljava/util/Map;)Lnet/minecraft/class_6767;
+		ARG 0 duration
+		ARG 1 packetsToCounter
+	METHOD method_39434 (Ljava/util/Map$Entry;)Lcom/mojang/datafixers/util/Pair;
+		ARG 0 entry
+	METHOD method_39435 addPacket (Ljdk/jfr/consumer/RecordedEvent;ILjava/util/Map;)V
+		ARG 1 event
+		ARG 2 bytes
+		ARG 3 packetsToCounter
+	CLASS class_6766 PacketCounter
+		FIELD field_35581 totalCount J
+		FIELD field_35582 totalBytes J
+		METHOD method_39436 toStatistics ()Lnet/minecraft/class_6767$class_6768;
+		METHOD method_39437 add (I)V
+			ARG 1 bytes
