@@ -27,7 +27,7 @@ plugins {
 	id 'net.fabricmc.filament' version '0.3.0'
 }
 
-def minecraft_version = "21w44a"
+def minecraft_version = "1.18-pre1"
 
 def ENV = System.getenv()
 // Fetch build number from Github Actions
@@ -258,13 +258,27 @@ task extractServerJar(dependsOn: downloadMcJars) {
 
 	doLast {
 		new ZipFile(serverBootstrapJar as File).withCloseable { zip ->
-			def entry = zip.getEntry("META-INF/versions/${minecraft_version}/server-${minecraft_version}.jar")
+			def serverVersionsEntry = zip.getEntry("META-INF/versions.list")
 
-			if (!entry) {
-				throw new RuntimeException("Failed to find server jar entry: ")
+			if (!serverVersionsEntry) {
+				throw new RuntimeException("Could not find versions.list")
 			}
 
-			zip.getInputStream(entry).withCloseable { is ->
+			def jarPath = null
+
+			zip.getInputStream(serverVersionsEntry).withCloseable { is ->
+				def versions = is.text.split("\t")
+				assert versions.length == 3
+				jarPath = versions[2]
+			}
+
+			def serverJarEntry = zip.getEntry("META-INF/versions/${jarPath}")
+
+			if (!serverJarEntry) {
+				throw new RuntimeException("Failed to find server jar entry ${jarPath}")
+			}
+
+			zip.getInputStream(serverJarEntry).withCloseable { is ->
 				serverJar.bytes = is.readAllBytes()
 			}
 		}
