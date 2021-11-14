@@ -129,20 +129,46 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 	METHOD method_14613 createPlayer (Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/class_3222;
 		ARG 1 profile
 	METHOD method_14614 isWhitelistEnabled ()Z
-	METHOD method_14616 broadcastChatMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_2556;Ljava/util/UUID;)V
+	METHOD method_14616 broadcast (Lnet/minecraft/class_2561;Lnet/minecraft/class_2556;Ljava/util/UUID;)V
+		COMMENT Broadcasts a message to all players and the server console.
+		COMMENT
+		COMMENT @apiNote This method is used to send general messages such as a death
+		COMMENT message or a join/leave message.
+		COMMENT
+		COMMENT @see #broadcast(Text, Function, MessageType, UUID)
 		ARG 1 message
+			COMMENT the message to broadcast
 		ARG 2 type
+			COMMENT the message type
 		ARG 3 sender
+			COMMENT {@linkplain net.minecraft.entity.Entity#getUuid the UUID of the entity}
+			COMMENT that sends a message or {@link net.minecraft.util.Util#NIL_UUID} to
+			COMMENT indicate that the message is not sent by an entity
 	METHOD method_14617 saveAllPlayerData ()V
 	METHOD method_18241 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)Lnet/minecraft/class_1297;
 		ARG 1 vehicle
 	METHOD method_31441 (Lnet/minecraft/class_1297;)V
 		ARG 0 entity
 	METHOD method_33810 broadcast (Lnet/minecraft/class_2561;Ljava/util/function/Function;Lnet/minecraft/class_2556;Ljava/util/UUID;)V
+		COMMENT Broadcasts a message to all players and the server console. A different
+		COMMENT message can be sent to a different player.
+		COMMENT
+		COMMENT @apiNote This method is used to broadcast a message sent by a player
+		COMMENT through {@linkplain net.minecraft.client.gui.screen.ChatScreen the chat
+		COMMENT screen}.
+		COMMENT
+		COMMENT @see #broadcast(Text, MessageType, UUID)
 		ARG 1 serverMessage
+			COMMENT the message to send to the server console
 		ARG 2 playerMessageFactory
-		ARG 3 playerMessageType
+			COMMENT the factory that provides a message for a player; if {@code null} is
+			COMMENT returned, no message will be sent for that player
+		ARG 3 type
+			COMMENT the message type
 		ARG 4 sender
+			COMMENT {@linkplain net.minecraft.entity.Entity#getUuid the UUID of the entity}
+			COMMENT that sends a message or {@link net.minecraft.util.Util#NIL_UUID} to
+			COMMENT indicate that the message is not sent by an entity
 	METHOD method_38650 setSimulationDistance (I)V
 		ARG 1 simulationDistance
 	METHOD method_38651 getSimulationDistance ()I
