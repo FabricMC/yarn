@@ -7,10 +7,12 @@ CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
 	FIELD field_27221 EMPTY_BLOCK_ENTITY_TICKER Lnet/minecraft/class_5562;
 	FIELD field_27222 blockEntityTickers Ljava/util/Map;
 	FIELD field_28129 gameEventDispatchers Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+	FIELD field_35471 blockTickScheduler Lnet/minecraft/class_6755;
+	FIELD field_35472 fluidTickScheduler Lnet/minecraft/class_6755;
 	METHOD <init> (Lnet/minecraft/class_1937;Lnet/minecraft/class_1923;)V
 		ARG 1 world
 		ARG 2 pos
-	METHOD <init> (Lnet/minecraft/class_1937;Lnet/minecraft/class_1923;Lnet/minecraft/class_2843;Lnet/minecraft/class_1951;Lnet/minecraft/class_1951;J[Lnet/minecraft/class_2826;Ljava/util/function/Consumer;)V
+	METHOD <init> (Lnet/minecraft/class_1937;Lnet/minecraft/class_1923;Lnet/minecraft/class_2843;Lnet/minecraft/class_6755;Lnet/minecraft/class_6755;J[Lnet/minecraft/class_2826;Ljava/util/function/Consumer;Lnet/minecraft/class_6749;)V
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 upgradeData
@@ -19,6 +21,7 @@ CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
 		ARG 6 inhabitedTime
 		ARG 8 sectionArrayInitializer
 		ARG 9 loadToWorldConsumer
+		ARG 10 blendingData
 	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_2839;Ljava/util/function/Consumer;)V
 		ARG 1 world
 		ARG 2 protoChunk
@@ -35,28 +38,29 @@ CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
 		ARG 1 levelTypeProvider
 	METHOD method_12208 createBlockEntity (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2586;
 		ARG 1 pos
-	METHOD method_12209 (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2248;
-		ARG 1 pos
 	METHOD method_12214 getBlockEntities ()Ljava/util/Map;
 	METHOD method_12216 addBlockEntity (Lnet/minecraft/class_2586;)V
 		ARG 1 blockEntity
 	METHOD method_12221 runPostProcessing ()V
 	METHOD method_12223 isEmpty ()Z
 	METHOD method_12224 loadFromPacket (Lnet/minecraft/class_2540;Lnet/minecraft/class_2487;Ljava/util/function/Consumer;)V
+		ARG 1 buf
+		ARG 2 nbt
 	METHOD method_12225 getLevelType ()Lnet/minecraft/class_3193$class_3194;
 	METHOD method_12226 setLoadedToWorld (Z)V
 		ARG 1 loaded
-	METHOD method_12230 (Lnet/minecraft/class_2338;)Lnet/minecraft/class_3611;
-		ARG 1 pos
 	METHOD method_12234 getFluidState (III)Lnet/minecraft/class_3610;
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
-	METHOD method_20471 enableTickSchedulers (Lnet/minecraft/class_3218;)V
-		ARG 1 world
-	METHOD method_20530 disableTickSchedulers ()V
+	METHOD method_20530 disableTickSchedulers (J)V
+		ARG 1 time
 	METHOD method_31713 updateAllBlockEntities ()V
 	METHOD method_31715 canTickBlockEntities ()Z
+	METHOD method_31716 (Lnet/minecraft/class_2338;Lnet/minecraft/class_2591;Lnet/minecraft/class_2487;)V
+		ARG 1 pos
+		ARG 2 blockEntityType
+		ARG 3 nbt
 	METHOD method_31718 wrapTicker (Lnet/minecraft/class_2586;Lnet/minecraft/class_5558;)Lnet/minecraft/class_5562;
 		ARG 1 blockEntity
 		ARG 2 blockEntityTicker
@@ -79,6 +83,10 @@ CLASS net/minecraft/class_2818 net/minecraft/world/chunk/WorldChunk
 	METHOD method_38289 clear ()V
 	METHOD method_38290 (Lnet/minecraft/class_2818$class_5564;)V
 		ARG 0 ticker
+	METHOD method_39305 addChunkTickSchedulers (Lnet/minecraft/class_3218;)V
+		ARG 1 world
+	METHOD method_39306 removeChunkTickSchedulers (Lnet/minecraft/class_3218;)V
+		ARG 1 world
 	CLASS class_2819 CreationType
 	CLASS class_5563 DirectBlockEntityTickInvoker
 		FIELD field_27223 worldChunk Lnet/minecraft/class_2818;

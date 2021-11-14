@@ -1,24 +1,54 @@
 CLASS net/minecraft/class_4587 net/minecraft/client/util/math/MatrixStack
+	COMMENT A stack of transformation matrices used to specify how things are
+	COMMENT {@linkplain #translate translated}, {@linkplain #scale scaled} or
+	COMMENT {@linkplain #multiply rotated} in 3D space. Each entry consists of a
+	COMMENT {@linkplain Entry#getPositionMatrix position matrix} and a {@linkplain
+	COMMENT Entry#getNormalMatrix normal matrix}.
+	COMMENT
+	COMMENT <p>By putting matrices in a stack, a transformation can be expressed
+	COMMENT relative to another. You can {@linkplain #push push}, transform, render
+	COMMENT and {@linkplain #pop pop}, which allows you to restore the original
+	COMMENT state after rendering.
+	COMMENT
+	COMMENT <p>An entry of identity matrix is pushed when a stack is created. This
+	COMMENT means that a stack is {@linkplain #isEmpty empty} if and only if the
+	COMMENT stack contains exactly one entry.
 	FIELD field_20898 stack Ljava/util/Deque;
 	METHOD method_22903 push ()V
+		COMMENT Pushes a copy of the top entry onto this stack.
 	METHOD method_22904 translate (DDD)V
+		COMMENT Applies the translation transformation to the top entry.
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
 	METHOD method_22905 scale (FFF)V
+		COMMENT Applies the scale transformation to the top entry.
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
 	METHOD method_22907 multiply (Lnet/minecraft/class_1158;)V
+		COMMENT Applies the rotation transformation to the top entry.
 		ARG 1 quaternion
 	METHOD method_22908 (Ljava/util/ArrayDeque;)V
 		ARG 0 stack
 	METHOD method_22909 pop ()V
+		COMMENT Removes the entry at the top of this stack.
 	METHOD method_22911 isEmpty ()Z
+		COMMENT {@return whether this stack contains exactly one entry}
 	METHOD method_23760 peek ()Lnet/minecraft/class_4587$class_4665;
+		COMMENT {@return the entry at the top of this stack}
+	METHOD method_34425 multiplyPositionMatrix (Lnet/minecraft/class_1159;)V
+		COMMENT Multiplies the top position matrix with the given matrix.
+		ARG 1 matrix
 	METHOD method_34426 loadIdentity ()V
+		COMMENT Sets the top entry to be the identity matrix.
 	CLASS class_4665 Entry
-		FIELD field_21327 modelMatrix Lnet/minecraft/class_1159;
+		FIELD field_21327 positionMatrix Lnet/minecraft/class_1159;
 		FIELD field_21328 normalMatrix Lnet/minecraft/class_4581;
-		METHOD method_23761 getModel ()Lnet/minecraft/class_1159;
-		METHOD method_23762 getNormal ()Lnet/minecraft/class_4581;
+		METHOD <init> (Lnet/minecraft/class_1159;Lnet/minecraft/class_4581;)V
+			ARG 1 positionMatrix
+			ARG 2 normalMatrix
+		METHOD method_23761 getPositionMatrix ()Lnet/minecraft/class_1159;
+			COMMENT {@return the matrix used to transform positions}
+		METHOD method_23762 getNormalMatrix ()Lnet/minecraft/class_4581;
+			COMMENT {@return the normal matrix}
