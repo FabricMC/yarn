@@ -1,6 +1,14 @@
 CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 	FIELD field_11582 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_27816 BLOCK_POS_COMPARATOR Ljava/util/Comparator;
+	FIELD field_27817 ENTITY_POS_COMPARATOR Ljava/util/Comparator;
 	FIELD field_27818 COMMA_SPLITTER Lcom/google/common/base/Splitter;
+	FIELD field_27819 COLON_SPLITTER Lcom/google/common/base/Splitter;
+	FIELD field_33224 DATA_KEY Ljava/lang/String;
+	FIELD field_33225 LEFT_CURLY_BRACKET C
+	FIELD field_33226 RIGHT_CURLY_BRACKET C
+	FIELD field_33227 COMMA Ljava/lang/String;
+	FIELD field_33228 COLON C
 	METHOD method_10681 toBlockState (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2680;
 		ARG 0 compound
 	METHOD method_10682 withProperty (Lnet/minecraft/class_2688;Lnet/minecraft/class_2769;Ljava/lang/String;Lnet/minecraft/class_2487;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2688;
@@ -61,13 +69,89 @@ CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 		COMMENT @throws IllegalArgumentException if {@code element} is not a valid representation of a UUID
 		COMMENT @since 20w10a
 		ARG 0 element
+	METHOD method_32260 fromNbtProviderString (Ljava/lang/String;)Lnet/minecraft/class_2487;
+		COMMENT {@return the {@code string} parsed as an NBT provider-formatted
+		COMMENT NBT compound}
+		COMMENT
+		COMMENT <p>This method first parses the string as an NBT, then performs
+		COMMENT several conversions from human-readable {@link NbtCompound} items
+		COMMENT to the actual values used in-game.
+		COMMENT
+		COMMENT @see net.minecraft.data.SnbtProvider
+		COMMENT @see toNbtProviderString
+		ARG 0 string
+	METHOD method_32261 (Ljava/util/Map;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2499;
+		ARG 1 nbt
+	METHOD method_32262 (Lnet/minecraft/class_2487;Ljava/lang/String;)Ljava/lang/String;
+		ARG 1 key
+	METHOD method_32263 (Lnet/minecraft/class_2487;Ljava/lang/String;Ljava/lang/String;)V
+		ARG 2 property
+	METHOD method_32264 (Lnet/minecraft/class_2499;)D
+		ARG 0 nbt
+	METHOD method_32265 (Lnet/minecraft/class_2499;Lnet/minecraft/class_2487;)V
+		ARG 1 nbt
+	METHOD method_32266 (Lnet/minecraft/class_2499;Lnet/minecraft/class_2499;Lnet/minecraft/class_2499;)V
+		ARG 2 nbt
+	METHOD method_32267 fromNbtProviderFormattedPalette (Ljava/lang/String;)Lnet/minecraft/class_2487;
+		ARG 0 string
+	METHOD method_32268 (Lnet/minecraft/class_2499;)D
+		ARG 0 nbt
+	METHOD method_32269 (Lnet/minecraft/class_2499;)D
+		ARG 0 nbt
 	METHOD method_32270 toPrettyPrintedText (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2561;
 		ARG 0 element
-	METHOD method_32271 toPrettyPrintedString (Lnet/minecraft/class_2487;)Ljava/lang/String;
+	METHOD method_32271 toNbtProviderString (Lnet/minecraft/class_2487;)Ljava/lang/String;
+		COMMENT {@return the string representation of {@code compound} as used
+		COMMENT by the NBT provider in the data generator}
+		COMMENT
+		COMMENT <p>The passed {@code compound} will be sorted and modified in-place
+		COMMENT to make it more human-readable e.g. by converting {@link NbtCompound}
+		COMMENT in the {@code palettes} {@code NbtList} to its short string
+		COMMENT representation. Therefore the returned value is not an accurate
+		COMMENT representation of the original NBT.
+		COMMENT
+		COMMENT @see net.minecraft.data.dev.NbtProvider
+		COMMENT @see #fromNbtProviderString(String)
 		ARG 0 compound
-	METHOD method_32273 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
+	METHOD method_32272 (Lnet/minecraft/class_2499;)I
+		ARG 0 nbt
+	METHOD method_32273 toNbtProviderFormat (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
 		ARG 0 compound
-	METHOD method_32275 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
+	METHOD method_32274 (Lnet/minecraft/class_2499;)I
+		ARG 0 nbt
+	METHOD method_32275 fromNbtProviderFormat (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
 		ARG 0 compound
-	METHOD method_32277 (Lnet/minecraft/class_2487;)Ljava/lang/String;
+	METHOD method_32276 (Lnet/minecraft/class_2499;)I
+		ARG 0 nbt
+	METHOD method_32277 toNbtProviderFormattedPalette (Lnet/minecraft/class_2487;)Ljava/lang/String;
 		ARG 0 compound
+	METHOD method_32278 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2499;
+		ARG 0 nbt
+	METHOD method_32279 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2499;
+		ARG 0 nbt
+	METHOD method_36114 appendIndent (ILjava/lang/StringBuilder;)Ljava/lang/StringBuilder;
+		ARG 0 depth
+		ARG 1 stringBuilder
+	METHOD method_36115 fromFluidState (Lnet/minecraft/class_3610;)Lnet/minecraft/class_2487;
+		ARG 0 state
+	METHOD method_36116 appendFormattedString (Ljava/lang/StringBuilder;Lnet/minecraft/class_2520;IZ)Ljava/lang/StringBuilder;
+		ARG 0 stringBuilder
+		ARG 1 nbt
+		ARG 2 depth
+		ARG 3 withArrayContents
+	METHOD method_36117 toFormattedString (Lnet/minecraft/class_2520;Z)Ljava/lang/String;
+		COMMENT {@return the human-readable, non-deserializable representation of {@code nbt}}
+		ARG 0 nbt
+		ARG 1 withArrayContents
+			COMMENT whether to include contents of {@link NbtByteArray}, {@link NbtIntArray},
+			COMMENT and {@link NbtLongArray}
+	METHOD method_36118 toFormattedString (Lnet/minecraft/class_2520;)Ljava/lang/String;
+		COMMENT {@return the human-readable, non-deserializable representation of {@code nbt}}
+		COMMENT
+		COMMENT <p>This does not include contents of {@link NbtByteArray}, {@link NbtIntArray},
+		COMMENT and {@link NbtLongArray}. To include them, call
+		COMMENT {@link #toFormattedString(NbtElement, boolean)} with {@code withArrayContents}
+		COMMENT parameter set to true.
+		COMMENT
+		COMMENT @see #toFormattedString(NbtElement, boolean)
+		ARG 0 nbt
