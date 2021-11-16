@@ -27,7 +27,7 @@ plugins {
 	id 'net.fabricmc.filament' version '0.3.0'
 }
 
-def minecraft_version = "1.18-pre1"
+def minecraft_version = "1.18-pre2"
 
 def ENV = System.getenv()
 // Fetch build number from Github Actions
@@ -714,12 +714,12 @@ task unpickIntermediaryJar(type: JavaExec, dependsOn: [mapIntermediaryJar, "cons
 
 // Setup the build for the unpicked constants
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
-	it.options.release = 16
+	it.options.release = 17
 }
 
 sourceSets {
@@ -841,11 +841,6 @@ task v2MergedYarnJar(dependsOn: ["mergeV2"], type: Jar) {
 
 def fakeSourceDir = file(".gradle/temp/fakeSource")
 task genFakeSource(type: JavaExec, dependsOn: ["mergeV2", "mapNamedJar"]) {
-	onlyIf {
-		// Mapping Poet requires Java 17
-		JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)
-	}
-
 	group = "javadoc generation"
 	outputs.upToDateWhen { false }
 
@@ -884,7 +879,7 @@ javadoc {
 	// verbose = true // enable to debug
 	options {
 		// verbose() // enable to debug
-		source = "16"
+		source = "17"
 		encoding = 'UTF-8'
 		charSet = 'UTF-8'
 		memberLevel = JavadocMemberLevel.PRIVATE
@@ -914,9 +909,9 @@ javadoc {
 				'https://commons.apache.org/proper/commons-codec/archives/1.10/apidocs',
 				'https://commons.apache.org/proper/commons-compress/javadocs/api-1.8.1/',
 				"https://maven.fabricmc.net/docs/fabric-loader-${project.fabric_loader_version}/",
-				"https://docs.oracle.com/en/java/javase/16/docs/api/"
+				"https://docs.oracle.com/en/java/javase/17/docs/api/"
 		)
-		// https://docs.oracle.com/en/java/javase/16/docs/specs/man/javadoc.html#additional-options-provided-by-the-standard-doclet
+		// https://docs.oracle.com/en/java/javase/17/docs/specs/man/javadoc.html#additional-options-provided-by-the-standard-doclet
 		addBooleanOption 'Xdoclint:html', true
 		addBooleanOption 'Xdoclint:syntax', true
 		addBooleanOption 'Xdoclint:reference', true
