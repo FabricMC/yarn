@@ -324,22 +324,22 @@ public class ClassBuilder {
 		if (classNode.innerClasses != null) {
 			for (InnerClassNode node : classNode.innerClasses) {
 				if (node.name.equals(classBuilder.classNode.name)) {
-					if (node.outerName == null && classBuilder.recordClass) {
-						// Inline anonymous record.
-						// TODO look into moving this into the method that defines it.
-						return;
-					}
-
 					innerClassNode = node;
 					break;
 				}
 			}
 		}
+
 		if (innerClassNode == null) {
 			// fallback
 			classBuilder.builder.addModifiers(javax.lang.model.element.Modifier.PUBLIC);
 			classBuilder.builder.addModifiers(javax.lang.model.element.Modifier.STATIC);
 		} else {
+			if (innerClassNode.outerName == null) {
+				// skip local classes and records, which have null outerName
+				return;
+			}
+
 			classBuilder.builder.modifiers.remove(javax.lang.model.element.Modifier.PUBLIC); // this modifier may come from class access
 			classBuilder.builder.addModifiers(new ModifierBuilder(innerClassNode.access)
 					.checkUnseal(classBuilder.classNode, sealChecker)
