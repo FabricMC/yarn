@@ -1,0 +1,85 @@
+CLASS net/minecraft/class_6836 net/minecraft/nbt/scanner/NbtScanner
+	COMMENT An NBT scanner may reduce unnecessary data parsing to allow finding
+	COMMENT desired information in an NBT structure as fast as possible.
+	COMMENT
+	COMMENT <p>Call format: start -> VisitBody
+	COMMENT <br>
+	COMMENT VisitBody:<br>
+	COMMENT { visitNull | visitString | visitByte | visitShort | visitInt<br>
+	COMMENT | visitLong | visitFloat | visitDouble | visitByteArray<br>
+	COMMENT | visitIntArray | visitLongArray<br>
+	COMMENT | visitListMeta -> [startListItem -> VisitBody]* -> endNested<br>
+	COMMENT | [visitSubNbtType -> startSubNbt -> VisitBody]* -> endNested<br>
+	COMMENT }
+	COMMENT
+	COMMENT <p>The visit order is depth-first.
+	METHOD method_39856 visitNull ()Lnet/minecraft/class_6836$class_6838;
+	METHOD method_39857 visitByte (B)Lnet/minecraft/class_6836$class_6838;
+		ARG 1 value
+	METHOD method_39858 visitDouble (D)Lnet/minecraft/class_6836$class_6838;
+		ARG 1 value
+	METHOD method_39859 visitFloat (F)Lnet/minecraft/class_6836$class_6838;
+		ARG 1 value
+	METHOD method_39860 visitInt (I)Lnet/minecraft/class_6836$class_6838;
+		ARG 1 value
+	METHOD method_39861 visitLong (J)Lnet/minecraft/class_6836$class_6838;
+		ARG 1 value
+	METHOD method_39862 visitString (Ljava/lang/String;)Lnet/minecraft/class_6836$class_6838;
+		ARG 1 value
+	METHOD method_39863 visitSubNbtType (Lnet/minecraft/class_4614;)Lnet/minecraft/class_6836$class_6837;
+		ARG 1 type
+	METHOD method_39864 visitListMeta (Lnet/minecraft/class_4614;I)Lnet/minecraft/class_6836$class_6838;
+		ARG 1 entryType
+		ARG 2 length
+	METHOD method_39865 startSubNbt (Lnet/minecraft/class_4614;Ljava/lang/String;)Lnet/minecraft/class_6836$class_6837;
+		COMMENT Starts a visit to an NBT structure in the sub NBT of a compound NBT.
+		COMMENT
+		COMMENT @see #start
+		COMMENT @see #startListItem
+		ARG 1 type
+		ARG 2 key
+	METHOD method_39866 visitShort (S)Lnet/minecraft/class_6836$class_6838;
+		ARG 1 value
+	METHOD method_39867 visitByteArray ([B)Lnet/minecraft/class_6836$class_6838;
+		ARG 1 value
+	METHOD method_39868 visitIntArray ([I)Lnet/minecraft/class_6836$class_6838;
+		ARG 1 value
+	METHOD method_39869 visitLongArray ([J)Lnet/minecraft/class_6836$class_6838;
+		ARG 1 value
+	METHOD method_39870 endNested ()Lnet/minecraft/class_6836$class_6838;
+		COMMENT Ends a nested visit.
+		COMMENT
+		COMMENT <p>This is guaranteed to be called once for each call to {@link #start},
+		COMMENT {@link #visitSubNbtType}, and {@link #startListItem} where the list or
+		COMMENT the compound NBT type is passed, unless the visit is halted.
+	METHOD method_39871 start (Lnet/minecraft/class_4614;)Lnet/minecraft/class_6836$class_6838;
+		COMMENT Starts a visit to an NBT structure.
+		COMMENT
+		COMMENT @see #startSubNbt
+		COMMENT @see #startListItem
+		ARG 1 rootType
+	METHOD method_39872 startListItem (Lnet/minecraft/class_4614;I)Lnet/minecraft/class_6836$class_6837;
+		COMMENT Starts a visit to an NBT structure in an element of a list NBT.
+		COMMENT
+		COMMENT @see #startSubNbt
+		COMMENT @see #start
+		ARG 1 type
+		ARG 2 index
+	CLASS class_6837 NestedResult
+		FIELD field_36248 Lnet/minecraft/class_6836$class_6837;
+			COMMENT Proceeds to visit more data of this element, or to enter this element.
+			COMMENT (this element is a list element or a sub NBT)
+		FIELD field_36249 Lnet/minecraft/class_6836$class_6837;
+			COMMENT Skips this element and visit the next list element or sub NBT.
+		FIELD field_36250 Lnet/minecraft/class_6836$class_6837;
+			COMMENT Skips the whole list or compound NBT currently under scan. Will make a
+			COMMENT call to {@link NbtScanner#endNested()}.
+		FIELD field_36251 Lnet/minecraft/class_6836$class_6837;
+			COMMENT Halts the whole scanning completely.
+	CLASS class_6838 Result
+		FIELD field_36253 Lnet/minecraft/class_6836$class_6838;
+			COMMENT Proceed to visit more data of this element.
+		FIELD field_36254 Lnet/minecraft/class_6836$class_6838;
+			COMMENT Skips the current element under scan.
+		FIELD field_36255 Lnet/minecraft/class_6836$class_6838;
+			COMMENT Halts the whole scanning completely.
