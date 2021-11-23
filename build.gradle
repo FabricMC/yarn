@@ -420,7 +420,7 @@ task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJ
 	}
 }
 
-task yarnUnpicked(dependsOn: "unpickIntermediaryJar", type: JavaExec) {
+task yarn(dependsOn: "unpickIntermediaryJar", type: JavaExec) {
 	group = yarnGroup
 
 	classpath = configurations.enigmaRuntime
@@ -436,7 +436,7 @@ task yarnUnpicked(dependsOn: "unpickIntermediaryJar", type: JavaExec) {
 	jvmArgs "-Xmx2048m"
 }
 
-task yarn(dependsOn: mapIntermediaryJar, type: JavaExec) {
+task yarnWithoutUnpick(dependsOn: mapIntermediaryJar, type: JavaExec) {
 	group = yarnGroup
 
 	classpath = configurations.enigmaRuntime
@@ -444,6 +444,24 @@ task yarn(dependsOn: mapIntermediaryJar, type: JavaExec) {
 
 	args '-jar'
 	args intermediaryJar.getAbsolutePath()
+	args '-mappings'
+	args mappingsDir.getAbsolutePath()
+	args '-profile'
+	args 'enigma_profile.json'
+
+	jvmArgs "-Xmx2048m"
+}
+
+task yarnUnpicked(dependsOn: "unpickIntermediaryJar", type: JavaExec) {
+	logger.lifecycle(":yarnUnpicked is deprecated, unpick is enabled by default")
+	
+	group = yarnGroup
+
+	classpath = configurations.enigmaRuntime
+	mainClass = 'cuchaz.enigma.gui.Main'
+
+	args '-jar'
+	args unpickedJar.getAbsolutePath()
 	args '-mappings'
 	args mappingsDir.getAbsolutePath()
 	args '-profile'
