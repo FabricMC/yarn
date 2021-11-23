@@ -317,11 +317,6 @@ public class ClassBuilder {
 
 	private void addJavaDoc() {
 		mappings.addClassDoc(builder::addJavadoc, classNode.name);
-
-		// record warning text block
-		if (recordClass) {
-			builder.addJavadoc("@fabricRecordWarning\n");
-		}
 	}
 
 	public void addInnerClass(ClassBuilder classBuilder) {
