@@ -39,12 +39,15 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_13998 joinInvulnerabilityTicks I
 	FIELD field_23191 spawnPointDimension Lnet/minecraft/class_5321;
 	FIELD field_23192 spawnPointPosition Lnet/minecraft/class_2338;
-	FIELD field_23193 spawnPointSet Z
+	FIELD field_23193 spawnForced Z
 	FIELD field_26353 spawnAngle F
 	FIELD field_26821 textStream Lnet/minecraft/class_5513;
 	FIELD field_28860 filterText Z
 	FIELD field_29180 screenHandlerSyncHandler Lnet/minecraft/class_5916;
 	FIELD field_29181 screenHandlerListener Lnet/minecraft/class_1712;
+	FIELD field_35007 fallStartPos Lnet/minecraft/class_243;
+	FIELD field_35008 vehicleInLavaRidingPos Lnet/minecraft/class_243;
+	FIELD field_35566 allowServerListing Z
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_3218;Lcom/mojang/authlib/GameProfile;)V
 		ARG 1 server
 		ARG 2 world
@@ -66,8 +69,6 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 2 score
 	METHOD method_14213 setClientSettings (Lnet/minecraft/class_2803;)V
 		ARG 1 packet
-	METHOD method_14216 sendBlockEntityUpdate (Lnet/minecraft/class_2586;)V
-		ARG 1 blockEntity
 	METHOD method_14217 markHealthDirty ()V
 	METHOD method_14218 updateInput (FFZZ)V
 		ARG 1 sidewaysSpeed
@@ -75,7 +76,6 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 3 jumping
 		ARG 4 sneaking
 	METHOD method_14219 getLastActionTime ()J
-	METHOD method_14220 getServerWorld ()Lnet/minecraft/class_3218;
 	METHOD method_14221 (ILnet/minecraft/class_267;)V
 		ARG 1 score
 	METHOD method_14222 lookAtEntity (Lnet/minecraft/class_2183$class_2184;Lnet/minecraft/class_1297;Lnet/minecraft/class_2183$class_2184;)V
@@ -154,13 +154,18 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 1 origin
 	METHOD method_26280 getSpawnPointPosition ()Lnet/minecraft/class_2338;
 	METHOD method_26281 getSpawnPointDimension ()Lnet/minecraft/class_5321;
-	METHOD method_26282 isSpawnPointSet ()Z
+	METHOD method_26282 isSpawnForced ()Z
 	METHOD method_26284 setSpawnPoint (Lnet/minecraft/class_5321;Lnet/minecraft/class_2338;FZZ)V
+		COMMENT Sets the player's spawn point.
 		ARG 1 dimension
+			COMMENT the new spawn dimension
 		ARG 2 pos
+			COMMENT the new spawn point, or {@code null} if resetting to the world spawn
 		ARG 3 angle
-		ARG 4 spawnPointSet
+		ARG 4 forced
+			COMMENT whether the new spawn point is {@linkplain #isSpawnForced() forced}
 		ARG 5 sendMessage
+			COMMENT if {@code true}, a game message about the spawn point change will be sent
 	METHOD method_26285 isBedTooFarAway (Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Z
 		ARG 1 pos
 		ARG 2 direction
@@ -169,6 +174,10 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 2 direction
 	METHOD method_26287 isBedTooFarAway (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
+	METHOD method_29777 (Lnet/minecraft/class_1308;)V
+		ARG 1 entity
+	METHOD method_29778 (Lnet/minecraft/class_1308;)Z
+		ARG 0 entity
 	METHOD method_29779 forgiveMobAnger ()V
 	METHOD method_30313 createEndSpawnPlatform (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)V
 		ARG 1 world
@@ -201,6 +210,9 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_34879 areClientChatColorsEnabled ()Z
 	METHOD method_37413 dropSelectedItem (Z)Z
 		ARG 1 entireStack
+	METHOD method_38786 tickFallStartPos ()V
+	METHOD method_38787 tickVehicleInLavaRiding ()V
+	METHOD method_39426 allowsServerListing ()Z
 	METHOD method_7336 changeGameMode (Lnet/minecraft/class_1934;)Z
 		ARG 1 gameMode
 	CLASS 1

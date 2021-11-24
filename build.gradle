@@ -12,7 +12,7 @@ buildscript {
 		classpath "net.fabricmc:stitch:${project.stitch_version}"
 		classpath "commons-io:commons-io:2.8.0"
 		classpath 'de.undercouch:gradle-download-task:4.1.1'
-		classpath 'net.fabricmc:tiny-remapper:0.6.0'
+		classpath 'net.fabricmc:tiny-remapper:0.7.0'
 		classpath "net.fabricmc.unpick:unpick:${project.unpick_version}"
 		classpath "net.fabricmc.unpick:unpick-format-utils:${project.unpick_version}"
 		classpath "net.fabricmc:name-proposal:${project.name_proposal_version}"
@@ -28,7 +28,7 @@ plugins {
 	id 'net.fabricmc.filament' version '0.3.0'
 }
 
-def minecraft_version = "21w38a"
+def minecraft_version = "1.18-pre8"
 
 def ENV = System.getenv()
 // Fetch build number from Github Actions
@@ -74,7 +74,7 @@ configurations {
 def unpickMetaFile = file("unpick-definitions/unpick.json")
 
 dependencies {
-	enigmaRuntime "cuchaz:enigma-swing:${project.enigma_version}:all"
+	enigmaRuntime "cuchaz:enigma-swing:${project.enigma_version}"
 	enigmaRuntime "net.fabricmc:name-proposal:${project.name_proposal_version}"
 	javadocClasspath "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 	javadocClasspath "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
@@ -97,10 +97,12 @@ def unpickedJar = file("${minecraft_version}-intermediary-unpicked.jar")
 def namedJar = file("${minecraft_version}-named.jar")
 def versionFile = new File(cacheFilesMinecraft, "${minecraft_version}.json")
 def clientJar = new File(cacheFilesMinecraft, "${minecraft_version}-client.jar")
+// The vanilla server bootstrap jar (Contains the real server jar)
+def serverBootstrapJar = new File(cacheFilesMinecraft, "${minecraft_version}-serverboostrap.jar")
+// The real server jar, expected from the bootstrap
 def serverJar = new File(cacheFilesMinecraft, "${minecraft_version}-server.jar")
 def libraries = new File(cacheFilesMinecraft, "libraries")
 def libs = new File("build/libs/")
-def recordSignaturesJson = file("record_signatures.json")
 
 import com.google.common.hash.Hashing
 import cuchaz.enigma.command.CheckMappingsCommand
@@ -195,11 +197,11 @@ task downloadMcJars(dependsOn: downloadWantedVersionManifest) {
 	group = setupGroup
 	inputs.files versionFile
 
-	outputs.files(clientJar, serverJar)
+	outputs.files(clientJar, serverBootstrapJar)
 
 	outputs.upToDateWhen {
 		def version = new JsonSlurper().parseText(FileUtils.readFileToString(versionFile))
-		return clientJar.exists() && serverJar.exists() && validateChecksum(clientJar, version.downloads.client.sha1) && validateChecksum(serverJar, version.downloads.server.sha1)
+		return clientJar.exists() && serverBootstrapJar.exists() && validateChecksum(clientJar, version.downloads.client.sha1) && validateChecksum(serverBootstrapJar, version.downloads.server.sha1)
 	}
 
 	doLast {
@@ -220,7 +222,7 @@ task downloadMcJars(dependsOn: downloadWantedVersionManifest) {
 
 		download {
 			src new URL(version.downloads.server.url)
-			dest serverJar
+			dest serverBootstrapJar
 			overwrite false
 		}
 	}
@@ -254,22 +256,56 @@ task downloadIntermediaryV2(type: Download) {
 	}
 }
 
-task mergeJars(dependsOn: downloadMcJars) {
+import java.util.zip.ZipFile
+
+// Extracts the real server jar from the boostrap jar
+task extractServerJar(dependsOn: downloadMcJars) {
 	group = setupGroup
-	inputs.files downloadMcJars.outputs.files.files
+	inputs.file serverBootstrapJar
+	outputs.file serverJar
+
+	doLast {
+		new ZipFile(serverBootstrapJar as File).withCloseable { zip ->
+			def serverVersionsEntry = zip.getEntry("META-INF/versions.list")
+
+			if (!serverVersionsEntry) {
+				throw new RuntimeException("Could not find versions.list")
+			}
+
+			def jarPath = null
+
+			zip.getInputStream(serverVersionsEntry).withCloseable { is ->
+				def versions = is.text.split("\t")
+				assert versions.length == 3
+				jarPath = versions[2]
+			}
+
+			def serverJarEntry = zip.getEntry("META-INF/versions/${jarPath}")
+
+			if (!serverJarEntry) {
+				throw new RuntimeException("Failed to find server jar entry ${jarPath}")
+			}
+
+			zip.getInputStream(serverJarEntry).withCloseable { is ->
+				serverJar.bytes = is.readAllBytes()
+			}
+		}
+	}
+}
+
+task mergeJars(dependsOn: extractServerJar) {
+	group = setupGroup
+	inputs.files (serverJar, clientJar)
 	outputs.file(mergedFile)
 
 	doLast {
 		logger.lifecycle(":merging jars")
-		def client = inputs.files.files.find { it.name.endsWith("-client.jar") }
-		def server = inputs.files.files.find { it.name.endsWith("-server.jar") }
-		def merged = mergedFile
 
-		if (merged.exists()) {
+		if (mergedFile.exists()) {
 			return
 		}
 
-		def jarMerger = new JarMerger(client, server, merged)
+		def jarMerger = new JarMerger(clientJar, serverJar, mergedFile)
 		jarMerger.merge()
 		jarMerger.close()
 	}
@@ -341,45 +377,11 @@ task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJ
 	//Force the task to always run
 	outputs.upToDateWhen { false }
 
-	def brokenSignatures = new HashMap((Map) new JsonSlurper().parse(recordSignaturesJson))
 
 	doLast {
 		logger.lifecycle(":mapping minecraft to intermediary")
 		def tinyInput = downloadIntermediary.dest
-		mapJar(intermediaryJar, mergedFile, tinyInput, libraries, "official", "intermediary") { remapperBuilder ->
-			// Fix the broken record signatures
-			remapperBuilder.extraPostApplyVisitor { cls, next ->
-				return new ClassVisitor(Opcodes.ASM9, next) {
-					@Override
-					public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-						if (signature == null) {
-							signature = brokenSignatures.getOrDefault(name, null);
-							if (signature != null) {
-								logger.lifecycle("replacing signature for " + name);
-							}
-						}
-						super.visit(version, access, name, signature, superName, interfaces);
-					}
-				}
-			}
-
-			remapperBuilder.extraPostApplyVisitor { cls, next ->
-				if (!cls.record && cls.superName == "java/lang/Record") {
-					return new ClassVisitor(Opcodes.ASM9, next) {
-						@Override
-						FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
-							if (name.startsWith("comp_")) {
-								super.visitRecordComponent(name, descriptor, signature);
-							}
-
-							return super.visitField(access, name, descriptor, signature, value);
-						}
-					}
-				}
-
-				return next
-			}
-		}
+		mapJar(intermediaryJar, mergedFile, tinyInput, libraries, "official", "intermediary")
 	}
 }
 
@@ -595,12 +597,12 @@ task unpickIntermediaryJar(type: JavaExec, dependsOn: [mapIntermediaryJar, "cons
 
 // Setup the build for the unpicked constants
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
-	it.options.release = 16
+	it.options.release = 17
 }
 
 sourceSets {
@@ -685,9 +687,6 @@ task v2UnmergedYarnJar(dependsOn: [insertAutoGeneratedEnumMappings, combineUnpic
 		expand version: project.unpick_version
 		rename unpickMetaFile.name, "extras/unpick.json"
 	}
-	from(recordSignaturesJson) {
-		into "extras/"
-	}
 	destinationDirectory.set(file("build/libs"))
 }
 
@@ -706,9 +705,6 @@ task v2MergedYarnJar(dependsOn: ["mergeV2"], type: Jar) {
 	from (file(unpickMetaFile)) {
 		expand version: project.unpick_version
 		rename unpickMetaFile.name, "extras/unpick.json"
-	}
-	from(recordSignaturesJson) {
-		into "extras/"
 	}
 	destinationDirectory.set(file("build/libs"))
 }
@@ -753,7 +749,7 @@ javadoc {
 	// verbose = true // enable to debug
 	options {
 		// verbose() // enable to debug
-		source = "16"
+		source = "17"
 		encoding = 'UTF-8'
 		charSet = 'UTF-8'
 		memberLevel = JavadocMemberLevel.PRIVATE
@@ -783,9 +779,9 @@ javadoc {
 				'https://commons.apache.org/proper/commons-codec/archives/1.10/apidocs',
 				'https://commons.apache.org/proper/commons-compress/javadocs/api-1.8.1/',
 				"https://maven.fabricmc.net/docs/fabric-loader-${project.fabric_loader_version}/",
-				"https://docs.oracle.com/en/java/javase/16/docs/api/"
+				"https://docs.oracle.com/en/java/javase/17/docs/api/"
 		)
-		// https://docs.oracle.com/en/java/javase/16/docs/specs/man/javadoc.html#additional-options-provided-by-the-standard-doclet
+		// https://docs.oracle.com/en/java/javase/17/docs/specs/man/javadoc.html#additional-options-provided-by-the-standard-doclet
 		addBooleanOption 'Xdoclint:html', true
 		addBooleanOption 'Xdoclint:syntax', true
 		addBooleanOption 'Xdoclint:reference', true
@@ -899,6 +895,8 @@ void mapJar(File output, File input, File mappings, File libraries, String from,
 			.renameInvalidLocals(true)
 			.rebuildSourceFilenames(true)
 			.invalidLvNamePattern(~/\$\$\d+/)
+			.inferNameFromSameLvIndex(true)
+
 	action.execute(remapperBuilder)
 	def remapper = remapperBuilder
 			.build()

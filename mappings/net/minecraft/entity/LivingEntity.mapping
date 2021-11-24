@@ -33,7 +33,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6231 SPRINTING_SPEED_BOOST Lnet/minecraft/class_1322;
 	FIELD field_6232 scoreAmount I
 	FIELD field_6233 stepBobbingAmount F
-	FIELD field_6234 equippedHand Lnet/minecraft/class_2371;
+	FIELD field_6234 syncedHandStacks Lnet/minecraft/class_2371;
 	FIELD field_6235 hurtTime I
 	FIELD field_6236 attacking Lnet/minecraft/class_1309;
 	FIELD field_6237 SPRINTING_SPEED_BOOST_ID Ljava/util/UUID;
@@ -47,7 +47,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6245 serverY D
 	FIELD field_6246 absorptionAmount F
 	FIELD field_6247 HEALTH Lnet/minecraft/class_2940;
-	FIELD field_6248 equippedArmor Lnet/minecraft/class_2371;
+	FIELD field_6248 syncedArmorStacks Lnet/minecraft/class_2371;
 	FIELD field_6249 limbAngle F
 	FIELD field_6250 forwardSpeed F
 	FIELD field_6251 handSwingProgress F
@@ -79,7 +79,9 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6278 despawnCounter I
 	FIELD field_6279 handSwingTicks I
 	FIELD field_6280 activeStatusEffects Ljava/util/Map;
-	FIELD field_6281 flyingSpeed F
+	FIELD field_6281 airStrafingSpeed F
+		COMMENT Affects horizontal aerial velocity of entities (eg. when a player jumps,
+		COMMENT is falling, or is flying, while holding the horizontal movement keys)
 	FIELD field_6282 jumping Z
 	FIELD field_6283 bodyYaw F
 	FIELD field_6284 serverYaw D
@@ -117,6 +119,9 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_18398 getSleepingPosition ()Ljava/util/Optional;
 	METHOD method_18399 clearSleepingPosition ()V
 	METHOD method_18400 wakeUp ()V
+		COMMENT Wakes this entity up.
+		COMMENT
+		COMMENT @see net.minecraft.entity.player.PlayerEntity#wakeUp(boolean, boolean) a more specific overload for players
 	METHOD method_18401 getSleepingDirection ()Lnet/minecraft/class_2350;
 	METHOD method_18402 setSleepingPosition (Lnet/minecraft/class_2338;)V
 		ARG 1 pos
@@ -215,6 +220,9 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 			COMMENT the source entity or {@code null} for non-entity sources
 	METHOD method_26084 (Lnet/minecraft/class_1309;)V
 		ARG 0 player
+	METHOD method_26318 applyMovementInput (Lnet/minecraft/class_243;F)Lnet/minecraft/class_243;
+		ARG 1 movementInput
+		ARG 2 slipperiness
 	METHOD method_26319 canWalkOnFluid (Lnet/minecraft/class_3611;)Z
 		ARG 1 fluid
 	METHOD method_26825 getAttributeValue (Lnet/minecraft/class_1320;)D
@@ -247,22 +255,30 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_30120 (Ljava/util/List;Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
 		ARG 2 slot
 		ARG 3 stack
-	METHOD method_30121 swapHandStacks (Ljava/util/Map;)V
-		ARG 1 equipment
-	METHOD method_30122 setArmorInSlot (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
+	METHOD method_30121 checkHandStackSwap (Ljava/util/Map;)V
+		COMMENT Notifies nearby players if the stacks in the hands have been swapped.
+		ARG 1 equipmentChanges
+	METHOD method_30122 setSyncedArmorStack (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
 		ARG 1 slot
 		ARG 2 armor
-	METHOD method_30123 setEquipment (Ljava/util/Map;)V
-		ARG 1 equipment
-	METHOD method_30124 setStackInHandSlot (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
+	METHOD method_30123 sendEquipmentChanges (Ljava/util/Map;)V
+		COMMENT Sends equipment changes to nearby players.
+		COMMENT
+		COMMENT @see #sendEquipmentChanges()
+		ARG 1 equipmentChanges
+	METHOD method_30124 setSyncedHandStack (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
 		ARG 1 slot
 		ARG 2 stack
-	METHOD method_30125 getArmorInSlot (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
+	METHOD method_30125 getSyncedArmorStack (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
 		ARG 1 slot
-	METHOD method_30126 getStackInHandSlot (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
+	METHOD method_30126 getSyncedHandStack (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
 		ARG 1 slot
 	METHOD method_30127 swapHandStacks ()V
-	METHOD method_30129 getEquipment ()Ljava/util/Map;
+	METHOD method_30128 sendEquipmentChanges ()V
+		COMMENT Sends equipment changes to nearby players.
+	METHOD method_30129 getEquipmentChanges ()Ljava/util/Map;
+		COMMENT {@return the difference between the last sent equipment set and the
+		COMMENT current one}
 	METHOD method_31079 positionInPortal (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
 		ARG 0 pos
 	METHOD method_32321 getStackReference (Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)Lnet/minecraft/class_5630;
@@ -304,6 +320,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_37410 processEquippedStack (Lnet/minecraft/class_1799;)V
 		ARG 1 stack
 	METHOD method_37416 getJumpBoostVelocityModifier ()D
+	METHOD method_39760 getFallSounds ()Lnet/minecraft/class_1309$class_6823;
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
 	METHOD method_5989 getLootTable ()Lnet/minecraft/class_2960;
@@ -585,3 +602,4 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6132 applyArmorToDamage (Lnet/minecraft/class_1282;F)F
 		ARG 1 source
 		ARG 2 amount
+	CLASS class_6823 FallSounds

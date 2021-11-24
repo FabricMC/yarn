@@ -11,6 +11,7 @@ CLASS net/minecraft/class_32 net/minecraft/world/level/storage/LevelStorage
 		ARG 2 backupsDirectory
 		ARG 3 dataFixer
 	METHOD method_17926 createLevelDataParser (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5359;)Ljava/util/function/BiFunction;
+		ARG 1 dataPackSettings
 	METHOD method_17931 getCurrentVersion ()I
 	METHOD method_19636 getSavesDirectory ()Ljava/nio/file/Path;
 	METHOD method_230 levelExists (Ljava/lang/String;)Z
@@ -20,6 +21,7 @@ CLASS net/minecraft/class_32 net/minecraft/world/level/storage/LevelStorage
 	METHOD method_240 isLevelNameValid (Ljava/lang/String;)Z
 		ARG 1 name
 	METHOD method_26998 readLevelProperties (Ljava/io/File;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+		ARG 1 file
 		ARG 2 levelDataParser
 	METHOD method_26999 create (Ljava/nio/file/Path;)Lnet/minecraft/class_32;
 		ARG 0 path
@@ -32,8 +34,16 @@ CLASS net/minecraft/class_32 net/minecraft/world/level/storage/LevelStorage
 	METHOD method_29014 createLevelDataParser (Ljava/io/File;Z)Ljava/util/function/BiFunction;
 		ARG 1 file
 		ARG 2 locked
+	METHOD method_29015 (Ljava/io/File;ZLjava/io/File;Lcom/mojang/datafixers/DataFixer;)Lnet/minecraft/class_34;
+		ARG 3 file
+		ARG 4 dataFixer
 	METHOD method_29580 parseDataPackSettings (Lcom/mojang/serialization/Dynamic;)Lnet/minecraft/class_5359;
+	METHOD method_29582 (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5359;Ljava/io/File;Lcom/mojang/datafixers/DataFixer;)Lnet/minecraft/class_31;
+		ARG 2 file
+		ARG 3 dataFixer
 	METHOD method_29583 readDataPackSettings (Ljava/io/File;Lcom/mojang/datafixers/DataFixer;)Lnet/minecraft/class_5359;
+		ARG 0 file
+		ARG 1 dataFixer
 	METHOD method_35504 getFormatName ()Ljava/lang/String;
 	CLASS class_5143 Session
 		FIELD field_23767 lock Lnet/minecraft/class_5125;
@@ -48,14 +58,20 @@ CLASS net/minecraft/class_32 net/minecraft/world/level/storage/LevelStorage
 		METHOD method_27010 getDirectory (Lnet/minecraft/class_5218;)Ljava/nio/file/Path;
 			ARG 1 savePath
 		METHOD method_27013 readLevelProperties (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5359;)Lnet/minecraft/class_5219;
+			ARG 2 dataPackSettings
 		METHOD method_27014 getIconFile ()Ljava/util/Optional;
 		METHOD method_27015 deleteSessionLock ()V
 		METHOD method_27016 createBackup ()J
 		METHOD method_27017 checkValid ()V
-		METHOD method_27424 getWorldDirectory (Lnet/minecraft/class_5321;)Ljava/io/File;
+		METHOD method_27424 getWorldDirectory (Lnet/minecraft/class_5321;)Ljava/nio/file/Path;
 			ARG 1 key
 		METHOD method_27425 backupLevelDataFile (Lnet/minecraft/class_5455;Lnet/minecraft/class_5219;)V
+			ARG 1 registryManager
+			ARG 2 saveProperties
 		METHOD method_27426 backupLevelDataFile (Lnet/minecraft/class_5455;Lnet/minecraft/class_5219;Lnet/minecraft/class_2487;)V
+			ARG 1 registryManager
+			ARG 2 saveProperties
+			ARG 3 nbt
 		METHOD method_27427 createSaveHandler ()Lnet/minecraft/class_29;
 		METHOD method_27428 (Lnet/minecraft/class_5218;)Ljava/nio/file/Path;
 			ARG 1 path

@@ -6,6 +6,7 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	FIELD field_25273 worldKeys Ljava/util/Set;
 	FIELD field_26620 DISCONNECT_LOST_TEXT Lnet/minecraft/class_2561;
 	FIELD field_34963 telemetrySender Lnet/minecraft/class_6628;
+	FIELD field_35164 simulationDistance I
 	FIELD field_3687 random Ljava/util/Random;
 	FIELD field_3688 recipeManager Lnet/minecraft/class_1863;
 	FIELD field_3689 connection Lnet/minecraft/class_2535;
@@ -38,6 +39,10 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 2 chunkZ
 		ARG 3 provider
 		ARG 4 type
+		ARG 5 inited
+		ARG 6 uninited
+		ARG 7 nibbles
+		ARG 8 nonEdge
 	METHOD method_2871 getPlayerListEntry (Ljava/util/UUID;)Lnet/minecraft/class_640;
 		ARG 1 uuid
 	METHOD method_2873 sendResourcePackStatus (Lnet/minecraft/class_2856$class_2857;)V
@@ -62,10 +67,17 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	METHOD method_29091 getRegistryManager ()Lnet/minecraft/class_5455;
 	METHOD method_29356 getWorldKeys ()Ljava/util/Set;
 	METHOD method_31363 getPlayerUuids ()Ljava/util/Collection;
+	METHOD method_34007 (ILnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
+		ARG 2 pos
+		ARG 3 state
 	METHOD method_34009 (Lnet/minecraft/class_1703;Lnet/minecraft/class_1860;)V
 		ARG 2 recipe
 	METHOD method_34010 (Lnet/minecraft/class_268;Lnet/minecraft/class_5900$class_5902;)V
 		ARG 1 team
+	METHOD method_34011 (Lnet/minecraft/class_299;Lnet/minecraft/class_1860;)V
+		ARG 2 recipe
+	METHOD method_34012 (Lnet/minecraft/class_299;Lnet/minecraft/class_516;)V
+		ARG 1 recipeResultCollection
 	METHOD method_34014 (Ljava/lang/String;Ljava/lang/String;ZZ)V
 		ARG 4 enabled
 	METHOD method_36322 getServerResourcePackPrompt (Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
@@ -73,3 +85,23 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 1 customPrompt
 	METHOD method_37472 (I)V
 		ARG 1 entityId
+	METHOD method_38539 loadChunk (IILnet/minecraft/class_6603;)V
+		ARG 1 x
+		ARG 2 z
+		ARG 3 chunkData
+	METHOD method_38540 updateChunk (IILnet/minecraft/class_6606;)V
+		ARG 1 x
+		ARG 2 z
+		ARG 3 lightData
+	METHOD method_38541 scheduleRenderChunk (Lnet/minecraft/class_2818;II)V
+		ARG 1 chunk
+		ARG 2 x
+		ARG 3 z
+	METHOD method_38542 (Lnet/minecraft/class_2622;Lnet/minecraft/class_2586;)V
+		ARG 2 blockEntity
+	METHOD method_38543 readLightData (IILnet/minecraft/class_6606;)V
+		ARG 1 x
+		ARG 2 z
+		ARG 3 data
+	METHOD method_38544 unloadChunk (Lnet/minecraft/class_2666;)V
+		ARG 1 packet

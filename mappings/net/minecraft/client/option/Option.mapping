@@ -23,7 +23,6 @@ CLASS net/minecraft/class_316 net/minecraft/client/option/Option
 	FIELD field_19243 DISCRETE_MOUSE_SCROLL Lnet/minecraft/class_4064;
 	FIELD field_1924 AO Lnet/minecraft/class_4064;
 	FIELD field_1925 CHAT_LINKS_PROMPT Lnet/minecraft/class_4064;
-	FIELD field_1926 SNOOPER Lnet/minecraft/class_4064;
 	FIELD field_1927 VSYNC Lnet/minecraft/class_4064;
 	FIELD field_1930 TOUCHSCREEN Lnet/minecraft/class_4064;
 	FIELD field_1932 FULLSCREEN Lnet/minecraft/class_4064;
@@ -63,8 +62,14 @@ CLASS net/minecraft/class_316 net/minecraft/client/option/Option
 	FIELD field_34779 AUDIO_DEVICE Lnet/minecraft/class_4064;
 	FIELD field_34780 HIDE_LIGHTNING_FLASHES Lnet/minecraft/class_4064;
 	FIELD field_34781 HIDE_LIGHTNING_FLASHES_TOOLTIP Lnet/minecraft/class_2561;
-	FIELD field_34782 PRIORITIZE_CHUNK_UPDATES_MODE Lnet/minecraft/class_4064;
+	FIELD field_34782 CHUNK_BUILDER_MODE Lnet/minecraft/class_4064;
 	FIELD field_34958 SIMULATION_DISTANCE Lnet/minecraft/class_4067;
+	FIELD field_35425 SHOW_AUTOSAVE_INDICATOR Lnet/minecraft/class_4064;
+	FIELD field_35553 CHUNK_BUILDER_THREADED_TEXT Lnet/minecraft/class_2561;
+	FIELD field_35554 CHUNK_BUILDER_SEMI_BLOCKING_TEXT Lnet/minecraft/class_2561;
+	FIELD field_35555 CHUNK_BUILDER_FULLY_BLOCKING_TEXT Lnet/minecraft/class_2561;
+	FIELD field_35635 ALLOW_SERVER_LISTING Lnet/minecraft/class_4064;
+	FIELD field_35636 ALLOW_SERVER_LISTING_TOOLTIP Lnet/minecraft/class_2561;
 	METHOD <init> (Ljava/lang/String;)V
 		ARG 1 key
 	METHOD method_18513 (Lnet/minecraft/class_315;)Ljava/lang/Double;
@@ -116,10 +121,6 @@ CLASS net/minecraft/class_316 net/minecraft/client/option/Option
 	METHOD method_18539 (Lnet/minecraft/class_315;Lnet/minecraft/class_4067;)Lnet/minecraft/class_2561;
 		ARG 0 gameOptions
 		ARG 1 option
-	METHOD method_18540 (Lnet/minecraft/class_315;Lnet/minecraft/class_316;Ljava/lang/Boolean;)V
-		ARG 0 gameOptions
-		ARG 1 option
-		ARG 2 snooperEnabled
 	METHOD method_18541 (Lnet/minecraft/class_315;Ljava/lang/Double;)V
 		ARG 0 gameOptions
 		ARG 1 mipmapLevels
@@ -249,10 +250,6 @@ CLASS net/minecraft/class_316 net/minecraft/client/option/Option
 		ARG 1 textBackgroundOpacity
 	METHOD method_19342 (Lnet/minecraft/class_315;)Ljava/lang/Double;
 		ARG 0 gameOptions
-	METHOD method_20404 (Lnet/minecraft/class_315;Lnet/minecraft/class_316;Ljava/lang/Boolean;)V
-		ARG 0 gameOptions
-		ARG 1 option
-		ARG 2 discreteMouseScroll
 	METHOD method_21669 (Lnet/minecraft/class_315;Lnet/minecraft/class_316;Ljava/lang/Boolean;)V
 		ARG 0 gameOptions
 		ARG 1 option
@@ -346,7 +343,7 @@ CLASS net/minecraft/class_316 net/minecraft/client/option/Option
 	METHOD method_32550 (Lnet/minecraft/class_315;Lnet/minecraft/class_316;Lnet/minecraft/class_6597;)V
 		ARG 0 gameOptions
 		ARG 1 option
-		ARG 2 prioritizeChunkUpdateMode
+		ARG 2 chunkBuilderMode
 	METHOD method_32551 (Lnet/minecraft/class_315;Lnet/minecraft/class_316;Lnet/minecraft/class_4063;)V
 		ARG 0 gameOptions
 		ARG 1 option
@@ -395,8 +392,6 @@ CLASS net/minecraft/class_316 net/minecraft/client/option/Option
 		ARG 0 gameOptions
 		ARG 1 option
 		ARG 2 sneakToggled
-	METHOD method_32570 (Lnet/minecraft/class_315;)Ljava/lang/Boolean;
-		ARG 0 gameOptions
 	METHOD method_32571 (Lnet/minecraft/class_315;)Ljava/lang/Boolean;
 		ARG 0 gameOptions
 	METHOD method_32572 (Lnet/minecraft/class_315;)Ljava/lang/Boolean;
@@ -441,8 +436,6 @@ CLASS net/minecraft/class_316 net/minecraft/client/option/Option
 		ARG 0 gameOptions
 	METHOD method_32590 (Lnet/minecraft/class_315;)Lnet/minecraft/class_4065;
 		ARG 0 gameOptions
-	METHOD method_32591 (Lnet/minecraft/class_315;)Lnet/minecraft/class_1306;
-		ARG 0 gameOptions
 	METHOD method_32592 (Lnet/minecraft/class_315;)Lnet/minecraft/class_4063;
 		ARG 0 gameOptions
 	METHOD method_32593 (Lnet/minecraft/class_315;)Ljava/lang/Integer;
@@ -472,7 +465,7 @@ CLASS net/minecraft/class_316 net/minecraft/client/option/Option
 		ARG 1 option
 		ARG 2 audioDevice
 	METHOD method_38517 (Lnet/minecraft/class_6597;)Lnet/minecraft/class_2561;
-		ARG 0 prioritizeChunkUpdatesMode
+		ARG 0 chunkBuilderMode
 	METHOD method_38518 (Ljava/lang/String;)Lnet/minecraft/class_2561;
 		ARG 0 device
 	METHOD method_38737 (Lnet/minecraft/class_315;)Ljava/lang/Double;
@@ -483,3 +476,23 @@ CLASS net/minecraft/class_316 net/minecraft/client/option/Option
 	METHOD method_38739 (Lnet/minecraft/class_315;Ljava/lang/Double;)V
 		ARG 0 gameOptions
 		ARG 1 mouseSensitivity
+	METHOD method_39189 (Lnet/minecraft/class_315;)Ljava/lang/Boolean;
+		ARG 0 gameOptions
+	METHOD method_39190 (Lnet/minecraft/class_315;Lnet/minecraft/class_316;Ljava/lang/Boolean;)V
+		ARG 0 gameOptions
+		ARG 1 option
+		ARG 2 showAutosaveIndicator
+	METHOD method_39416 (Lnet/minecraft/class_315;)Lnet/minecraft/class_1306;
+		ARG 0 gameOptions
+	METHOD method_39417 (Lnet/minecraft/class_310;Lnet/minecraft/class_6597;)Ljava/util/List;
+		ARG 1 chunkBuilderMode
+	METHOD method_39419 (Lnet/minecraft/class_315;Lnet/minecraft/class_316;Ljava/lang/Boolean;)V
+		ARG 0 gameOptions
+		ARG 1 option
+		ARG 2 discreteMouseScroll
+	METHOD method_39484 (Lnet/minecraft/class_315;)Ljava/lang/Boolean;
+		ARG 0 gameOptions
+	METHOD method_39485 (Lnet/minecraft/class_315;Lnet/minecraft/class_316;Ljava/lang/Boolean;)V
+		ARG 0 gameOptions
+		ARG 1 option
+		ARG 2 allowServerListing
