@@ -12,6 +12,8 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_25279 transparencyShader Lnet/minecraft/class_279;
 	FIELD field_27740 frustum Lnet/minecraft/class_4604;
 	FIELD field_27741 blockEntityRenderDispatcher Lnet/minecraft/class_824;
+	FIELD field_34807 chunkInfos Lit/unimi/dsi/fastutil/objects/ObjectArrayList;
+	FIELD field_34816 builtChunks Ljava/util/concurrent/BlockingQueue;
 	FIELD field_4055 noCullingBlockEntities Ljava/util/Set;
 	FIELD field_4056 capturedFrustum Lnet/minecraft/class_4604;
 	FIELD field_4058 blockBreakingInfos Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
@@ -89,6 +91,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 5 renderBlockOutline
 		ARG 6 camera
 		ARG 7 gameRenderer
+		ARG 8 lightmapTextureManager
 	METHOD method_22712 drawBlockOutline (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Lnet/minecraft/class_1297;DDDLnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 1 matrices
 	METHOD method_22713 tickRainSplashing (Lnet/minecraft/class_4184;)V
@@ -211,6 +214,8 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 1 buffer
 	METHOD method_3257 renderSky (Lnet/minecraft/class_4587;Lnet/minecraft/class_1159;FLjava/lang/Runnable;)V
 		ARG 1 matrices
+		ARG 2 projectionMatrix
+		ARG 3 tickDelta
 	METHOD method_3258 drawBox (Lnet/minecraft/class_287;DDDDDDFFFF)V
 		ARG 0 buffer
 		ARG 1 x1
@@ -225,6 +230,8 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 16 alpha
 	METHOD method_3259 renderClouds (Lnet/minecraft/class_4587;Lnet/minecraft/class_1159;FDDD)V
 		ARG 1 matrices
+		ARG 2 projectionMatrix
+		ARG 3 tickDelta
 	METHOD method_3265 renderDarkSky ()V
 	METHOD method_3267 cleanUp ()V
 	METHOD method_3268 getRandomParticleSpawnChance (Z)Lnet/minecraft/class_4066;
@@ -381,7 +388,10 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 			ARG 2 cause
 	CLASS class_5972 ChunkInfoList
 		FIELD field_29620 current [Lnet/minecraft/class_761$class_762;
+		METHOD <init> (I)V
+			ARG 1 size
 		METHOD method_34820 getInfo (Lnet/minecraft/class_846$class_851;)Lnet/minecraft/class_761$class_762;
+			ARG 1 chunk
 		METHOD method_34821 setInfo (Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_761$class_762;)V
 			ARG 1 chunk
 			ARG 2 info
