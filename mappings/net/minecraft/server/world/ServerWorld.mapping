@@ -42,6 +42,10 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 12 spawners
 		ARG 13 shouldTickTime
 	METHOD method_14166 spawnParticles (Lnet/minecraft/class_3222;Lnet/minecraft/class_2394;ZDDDIDDDD)Z
+		COMMENT Spawns a particle visible to {@code viewer}, if the viewer is near the provided
+		COMMENT coordinates. Returns true if successful.
+		COMMENT
+		COMMENT @see #spawnParticle(T, boolean, double, double, double, int, double, double, double, double
 		ARG 1 viewer
 		ARG 2 particle
 		ARG 3 force
@@ -62,9 +66,13 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_14175 addEntity (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_14176 save (Lnet/minecraft/class_3536;ZZ)V
+		COMMENT Saves the world.
 		ARG 1 progressListener
+			COMMENT the listener for the saving process, or {@code null} to specify none
 		ARG 2 flush
+			COMMENT if it should immediately write all data to storage device
 		ARG 3 savingDisabled
+			COMMENT if true, this method does nothing.
 	METHOD method_14177 isInBlockTick ()Z
 	METHOD method_14183 getStructureManager ()Lnet/minecraft/class_3485;
 	METHOD method_14188 saveLevel ()V
@@ -72,8 +80,16 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 pos
 		ARG 2 block
 	METHOD method_14190 getEntity (Ljava/util/UUID;)Lnet/minecraft/class_1297;
+		COMMENT {@return the entity using the UUID, or {@code null} if none was found}
+		COMMENT
+		COMMENT @see World#getEntityById
 		ARG 1 uuid
 	METHOD method_14191 sendToPlayerIfNearby (Lnet/minecraft/class_3222;ZDDDLnet/minecraft/class_2596;)Z
+		COMMENT Sends the {@code packet} to {@code player} if the player
+		COMMENT is near the provided coordinates. Returns true if successful.
+		COMMENT
+		COMMENT @implNote The threshold is 32 blocks if {@code force} is {@code false}, and
+		COMMENT 512 blocks if {@code force} is true.
 		ARG 1 player
 		ARG 2 force
 		ARG 3 x
@@ -84,6 +100,10 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_14195 resetWeather ()V
 	METHOD method_14197 resetIdleTimeout ()V
 	METHOD method_14199 spawnParticles (Lnet/minecraft/class_2394;DDDIDDDD)I
+		COMMENT Spawns a particle visible to nearby players. Returns the number of players
+		COMMENT the particle packet was sent to.
+		COMMENT
+		COMMENT @see #spawnParticle(ServerPlayerEntity, T, boolean, double, double, double, int, double, double, double, double
 		ARG 1 particle
 		ARG 2 x
 		ARG 4 y
@@ -95,10 +115,18 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 15 speed
 	METHOD method_17983 getPersistentStateManager ()Lnet/minecraft/class_26;
 	METHOD method_17984 getForcedChunks ()Lit/unimi/dsi/fastutil/longs/LongSet;
+		COMMENT {@return the set that contains {@link ChunkPos} of forced chunks serialized as a long}
 	METHOD method_17988 setChunkForced (IIZ)Z
+		COMMENT Sets the forced status of the chunk.
+		COMMENT
+		COMMENT <p>Forced chunks are created in-game using
+		COMMENT {@link net.minecraft.server.command.ForceLoadCommand /forceload command}.
 		ARG 1 x
+			COMMENT the chunk's X coordinates
 		ARG 2 z
+			COMMENT the chunk's Z coordinates
 		ARG 3 forced
+			COMMENT whether to mark the chunk as forced
 	METHOD method_18198 getEntitiesByType (Lnet/minecraft/class_5575;Ljava/util/function/Predicate;)Ljava/util/List;
 		COMMENT Computes a list of entities of the given type.
 		COMMENT
@@ -116,15 +144,30 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 chunk
 		ARG 2 randomTickSpeed
 	METHOD method_18207 onPlayerTeleport (Lnet/minecraft/class_3222;)V
+		COMMENT Called on the destination world when a player changed the dimension
+		COMMENT by teleportation.
+		COMMENT
+		COMMENT @see ServerPlayerEntity#moveToWorld
+		COMMENT @see #onDimensionChanged
+		COMMENT @see #onPlayerChangeDimension
 		ARG 1 player
 	METHOD method_18210 getSurface (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2338;
 		ARG 1 pos
 	METHOD method_18211 onPlayerChangeDimension (Lnet/minecraft/class_3222;)V
+		COMMENT Called on the destination world when a player changed the dimension using portals.
+		COMMENT
+		COMMENT @see ServerPlayerEntity#moveToWorld
+		COMMENT @see #onDimensionChanged
+		COMMENT @see #onPlayerTeleport
 		ARG 1 player
 	METHOD method_18213 onPlayerConnected (Lnet/minecraft/class_3222;)V
+		COMMENT Called on the player's world when the player connected to the server and spawned.
 		ARG 1 player
 	METHOD method_18215 onPlayerRespawned (Lnet/minecraft/class_3222;)V
+		COMMENT Called on the world that has the player's respawn point when the player respawned.
 		ARG 1 player
+	METHOD method_18456 ()Ljava/util/List;
+		COMMENT {@return the list of players (including dead ones)}
 	METHOD method_18762 tickEntity (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
 	METHOD method_18763 tickPassenger (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;)V
@@ -135,10 +178,20 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_18765 tick (Ljava/util/function/BooleanSupplier;)V
 		ARG 1 shouldKeepTicking
 	METHOD method_18766 getPlayers (Ljava/util/function/Predicate;)Ljava/util/List;
+		COMMENT {@return the list of players filtered using {@code predicate}}
 		ARG 1 predicate
 	METHOD method_18768 tryLoadEntity (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_18769 onDimensionChanged (Lnet/minecraft/class_1297;)V
+		COMMENT Called on the destination world when an entity changed the dimension.
+		COMMENT
+		COMMENT <p>This does not get called for players changing dimensions.
+		COMMENT Use {@link #onPlayerChangeDimension} (for portals) or
+		COMMENT {@link #onPlayerTeleport} (for teleportation) instead.
+		COMMENT
+		COMMENT @see Entity#moveToWorld
+		COMMENT @see #onPlayerTeleport
+		COMMENT @see #onPlayerChangeDimension
 		ARG 1 entity
 	METHOD method_18770 removePlayer (Lnet/minecraft/class_3222;Lnet/minecraft/class_1297$class_5529;)V
 		ARG 1 player
@@ -148,7 +201,9 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_18773 (Lnet/minecraft/class_3222;)V
 		ARG 0 player
 	METHOD method_18776 getAliveEnderDragons ()Ljava/util/List;
+		COMMENT {@return the list of alive ender dragons in the world}
 	METHOD method_18779 getRandomAlivePlayer ()Lnet/minecraft/class_3222;
+		COMMENT {@return a randomly selected alive player, or {@code null} if there is none}
 	METHOD method_19494 getPointOfInterestStorage ()Lnet/minecraft/class_4153;
 	METHOD method_19495 getRaidManager ()Lnet/minecraft/class_3767;
 	METHOD method_19496 handleInteraction (Lnet/minecraft/class_4151;Lnet/minecraft/class_1297;Lnet/minecraft/class_4094;)V
@@ -163,8 +218,10 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_19500 isNearOccupiedPointOfInterest (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
 	METHOD method_19502 getRaidAt (Lnet/minecraft/class_2338;)Lnet/minecraft/class_3765;
+		COMMENT {@return the raid occuring in 96 block radius, or {@code null} if there is none}
 		ARG 1 pos
 	METHOD method_19503 hasRaidAt (Lnet/minecraft/class_2338;)Z
+		COMMENT {@return true if a raid exists within 96 block radius of {@code pos}}
 		ARG 1 pos
 	METHOD method_19535 (Lnet/minecraft/class_2338;Lnet/minecraft/class_4158;)V
 		ARG 2 poiType
@@ -189,14 +246,38 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_27056 getStructureAccessor ()Lnet/minecraft/class_5138;
 	METHOD method_27909 iterateEntities ()Ljava/lang/Iterable;
 	METHOD method_27910 setWeather (IIZZ)V
+		COMMENT Sets the current weather, as well as how long it should last.
+		COMMENT
+		COMMENT @see ServerWorldProperties#setClearWeatherTime
+		COMMENT @see ServerWorldProperties#setRainTime
+		COMMENT @see ServerWorldProperties#setThunderTime
+		COMMENT @see ServerWorldProperties#setRaining
+		COMMENT @see ServerWorldProperties#setThundering
 		ARG 1 clearDuration
+			COMMENT how long the clear weather should last, in seconds
 		ARG 2 rainDuration
+			COMMENT how long the rain or the thunderstorm should last, in seconds
 		ARG 3 raining
+			COMMENT whether a rain is ongoing
 		ARG 4 thundering
+			COMMENT whether a thunderstorm is ongoing
 	METHOD method_27911 getSpawnPos ()Lnet/minecraft/class_2338;
+		COMMENT {@return the world spawn point}
+		COMMENT
+		COMMENT @implNote If it is outside the world border, this returns the position of the
+		COMMENT highest block at the center of the world border.
 	METHOD method_28125 isFlat ()Z
 	METHOD method_29198 getEnderDragonFight ()Lnet/minecraft/class_2881;
 	METHOD method_29199 setTimeOfDay (J)V
+		COMMENT Sets the time of day.
+		COMMENT
+		COMMENT <p>Time of day is different to "time", which is incremented on every tick and
+		COMMENT cannot be modified; Time of day affects the day-night cycle, can be changed using
+		COMMENT {@link net.minecraft.server.command.TimeCommand /time command}, and can be frozen
+		COMMENT if {@code doDaylightCycle} gamerule is turned off. Time is used to track scheduled
+		COMMENT ticks and cannot be modified or frozen.
+		COMMENT
+		COMMENT @see ServerWorldProperties#setTimeOfDay
 		ARG 1 timeOfDay
 	METHOD method_29200 createEndSpawnPlatform (Lnet/minecraft/class_3218;)V
 		ARG 0 world
@@ -251,17 +332,21 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_33143 sendSleepingStatus ()V
 		COMMENT Sends sleeping status action bar messages to players in this world.
 	METHOD method_33144 isSleepingEnabled ()Z
+		COMMENT {@return whether sleeping can cause the night to skip}
 	METHOD method_34679 (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2338;
 		ARG 0 pos
 	METHOD method_34680 (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
 	METHOD method_37115 shouldTickEntity (Lnet/minecraft/class_1923;)Z
+		COMMENT {@return whether to tick entities at {@code pos}}
 		ARG 1 pos
 	METHOD method_37116 isChunkLoaded (J)Z
+		COMMENT {@return true if the chunk {@code chunkPos} is loaded}
 		ARG 1 chunkPos
 	METHOD method_37117 isTickingFutureReady (J)Z
 		ARG 1 chunkPos
 	METHOD method_37118 shouldTickEntity (Lnet/minecraft/class_2338;)Z
+		COMMENT {@return whether to tick entities at {@code pos}}
 		ARG 1 pos
 	METHOD method_39223 disableTickSchedulers (Lnet/minecraft/class_2818;)V
 		ARG 1 chunk
@@ -269,12 +354,27 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_39778 cacheStructures (Lnet/minecraft/class_2791;)V
 		ARG 1 chunk
 	METHOD method_8448 updateSleepingPlayers ()V
+	METHOD method_8469 (I)Lnet/minecraft/class_1297;
+		COMMENT {@return the entity using the entity ID, or {@code null} if none was found}
+		COMMENT
+		COMMENT <p>Entity ID is ephemeral and changes after server restart. Use the UUID
+		COMMENT for persistent storage instead.
+		COMMENT
+		COMMENT @see net.minecraft.server.world.ServerWorld#getEntity
 	METHOD method_8487 locateStructure (Lnet/minecraft/class_3195;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
+		COMMENT {@return the location of the structure, or {@code null} if it does not/cannot exist}
 		ARG 1 feature
+			COMMENT the structure feature to search for
 		ARG 2 pos
+			COMMENT the position to start the searching at
 		ARG 3 radius
+			COMMENT the radius for searching
 		ARG 4 skipExistingChunks
+			COMMENT whether existing chunks should be ignored
 	METHOD method_8554 setSpawnPos (Lnet/minecraft/class_2338;F)V
+		COMMENT Sets the world spawn point.
 		ARG 1 pos
+			COMMENT the position of the spawn point
 		ARG 2 angle
+			COMMENT the angle of the spawned entity
 	CLASS class_5526 ServerEntityHandler

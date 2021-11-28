@@ -63,6 +63,10 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 tickConsumer
 		ARG 2 entity
 	METHOD method_19282 onBlockChanged (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)V
+		COMMENT Called when a block state changed.
+		COMMENT
+		COMMENT @apiNote To implement logic for specific type of blocks, override
+		COMMENT {@link net.minecraft.block.AbstractBlock#onStateReplaced} instead.
 		ARG 1 pos
 		ARG 2 oldBlock
 		ARG 3 newBlock
@@ -106,6 +110,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_38989 shouldUpdatePostDeath (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_39425 shouldTickBlocksInChunk (J)Z
+		COMMENT {@return whether the blocks in the specified chunk should get ticked}
 		ARG 1 chunkPos
 	METHOD method_39522 shouldRemoveEntityLater (Lnet/minecraft/class_1297$class_5529;)Z
 		ARG 1 reason
@@ -116,6 +121,9 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 4 flags
 	METHOD method_8419 isRaining ()Z
 	METHOD method_8421 sendEntityStatus (Lnet/minecraft/class_1297;B)V
+		COMMENT Sends the entity status to nearby players.
+		COMMENT
+		COMMENT @see net.minecraft.entity.EntityStatuses
 		ARG 1 entity
 		ARG 2 status
 	METHOD method_8424 setMobSpawnOptions (ZZ)V
@@ -131,6 +139,9 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 delta
 	METHOD method_8433 getRecipeManager ()Lnet/minecraft/class_1863;
 	METHOD method_8437 createExplosion (Lnet/minecraft/class_1297;DDDFLnet/minecraft/class_1927$class_4179;)Lnet/minecraft/class_1927;
+		COMMENT Creates an explosion without creating fire.
+		COMMENT
+		COMMENT @see #createExplosion(Entity, DamageSource, ExplosionBehavior, double, double, double, float, boolean, Explosion.DestructionType)
 		ARG 1 entity
 		ARG 2 x
 		ARG 4 y
@@ -154,15 +165,22 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 pos
 		ARG 2 block
 	METHOD method_8454 createExplosion (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1927$class_4179;)Lnet/minecraft/class_1927;
+		COMMENT Creates an explosion.
 		ARG 1 entity
+			COMMENT the entity that exploded (like TNT) or {@code null} to indicate no entity exploded
 		ARG 2 damageSource
+			COMMENT the custom damage source, or {@code null} to use the default
+			COMMENT ({@link DamageSource#explosion(Explosion)})
 		ARG 3 behavior
+			COMMENT the explosion behavior, or {@code null} to use the default
 		ARG 4 x
 		ARG 6 y
 		ARG 8 z
 		ARG 10 power
 		ARG 11 createFire
+			COMMENT whether the explosion should create fire
 		ARG 12 destructionType
+			COMMENT the destruction type of the explosion
 	METHOD method_8455 updateComparators (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;)V
 		ARG 1 pos
 		ARG 2 block
@@ -190,6 +208,12 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 11 velocityY
 		ARG 13 velocityZ
 	METHOD method_8469 getEntityById (I)Lnet/minecraft/class_1297;
+		COMMENT Gets the entity using the entity ID, or {@code null} if none was found.
+		COMMENT
+		COMMENT <p>Entity ID is ephemeral and changes after server restart. Use the UUID
+		COMMENT for persistent storage instead.
+		COMMENT
+		COMMENT @see net.minecraft.server.world.ServerWorld#getEntity
 		ARG 1 id
 	METHOD method_8474 syncGlobalEvent (ILnet/minecraft/class_2338;I)V
 		ARG 1 eventId
@@ -239,6 +263,9 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 pos
 		ARG 2 state
 	METHOD method_8505 canPlayerModifyAt (Lnet/minecraft/class_1657;Lnet/minecraft/class_2338;)Z
+		COMMENT {@return whether {@code player} can modify blocks at {@code pos}}
+		COMMENT
+		COMMENT @implNote This checks the spawn protection and the world border.
 		ARG 1 player
 		ARG 2 pos
 	METHOD method_8508 updateNeighborsExcept (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2350;)V
@@ -273,6 +300,9 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 2 y
 		ARG 3 z
 	METHOD method_8537 createExplosion (Lnet/minecraft/class_1297;DDDFZLnet/minecraft/class_1927$class_4179;)Lnet/minecraft/class_1927;
+		COMMENT Creates an explosion.
+		COMMENT
+		COMMENT @see #createExplosion(Entity, DamageSource, ExplosionBehavior, double, double, double, float, boolean, Explosion.DestructionType)
 		ARG 1 entity
 		ARG 2 x
 		ARG 4 y
