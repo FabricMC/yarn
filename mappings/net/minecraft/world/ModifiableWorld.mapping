@@ -1,6 +1,15 @@
 CLASS net/minecraft/class_1945 net/minecraft/world/ModifiableWorld
 	COMMENT Represents a modifiable world where block states can be changed and entities spawned.
 	METHOD method_22352 breakBlock (Lnet/minecraft/class_2338;Z)Z
+		COMMENT Removes the block and replaces it with the fluid occupying the block
+		COMMENT (such as water inside kelp), or air if it does not exist. Additionally,
+		COMMENT this emits the {@link WorldEvents.BLOCK_BROKEN world event}
+		COMMENT and the {@link net.minecraft.world.event.GameEvent.BLOCK_DESTROY game event}.
+		COMMENT
+		COMMENT @return whether the block was removed successfully
+		COMMENT
+		COMMENT @see #removeBlock(BlockPos, boolean)
+		COMMENT @see #breakBlock(BlockPos, boolean, Entity)
 		ARG 1 pos
 		ARG 2 drop
 	METHOD method_30092 setBlockState (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;II)Z
@@ -21,6 +30,15 @@ CLASS net/minecraft/class_1945 net/minecraft/world/ModifiableWorld
 		ARG 4 maxUpdateDepth
 			COMMENT the limit for the cascading block updates
 	METHOD method_30093 breakBlock (Lnet/minecraft/class_2338;ZLnet/minecraft/class_1297;I)Z
+		COMMENT Removes the block and replaces it with the fluid occupying the block
+		COMMENT (such as water inside kelp), or air if it does not exist. Additionally,
+		COMMENT this emits the {@link WorldEvents.BLOCK_BROKEN world event}
+		COMMENT and the {@link net.minecraft.world.event.GameEvent.BLOCK_DESTROY game event}.
+		COMMENT
+		COMMENT @return whether the block was removed successfully
+		COMMENT
+		COMMENT @see #breakBlock(BlockPos, boolean)
+		COMMENT @see #breakBlock(BlockPos, boolean, Entity)
 		ARG 1 pos
 		ARG 2 drop
 		ARG 3 breakingEntity
@@ -34,9 +52,28 @@ CLASS net/minecraft/class_1945 net/minecraft/world/ModifiableWorld
 		COMMENT @see ServerWorldAccess#spawnEntityAndPassengers
 		ARG 1 entity
 	METHOD method_8650 removeBlock (Lnet/minecraft/class_2338;Z)Z
+		COMMENT Removes the block and replaces it with the fluid occupying the block
+		COMMENT (such as water inside kelp), or air if it does not exist.
+		COMMENT
+		COMMENT @implNote This does not emit the {@link WorldEvents.BLOCK_BROKEN world event}
+		COMMENT or the {@link net.minecraft.world.event.GameEvent.BLOCK_DESTROY game event}.
+		COMMENT
+		COMMENT @return whether the block was removed successfully
+		COMMENT
+		COMMENT @see #breakBlock(BlockPos, boolean)
 		ARG 1 pos
 		ARG 2 move
+			COMMENT whether the block was removed as part of piston moving blocks
 	METHOD method_8651 breakBlock (Lnet/minecraft/class_2338;ZLnet/minecraft/class_1297;)Z
+		COMMENT Removes the block and replaces it with the fluid occupying the block
+		COMMENT (such as water inside kelp), or air if it does not exist. Additionally,
+		COMMENT this emits the {@link WorldEvents.BLOCK_BROKEN world event}
+		COMMENT and the {@link net.minecraft.world.event.GameEvent.BLOCK_DESTROY game event}.
+		COMMENT
+		COMMENT @return whether the block was removed successfully
+		COMMENT
+		COMMENT @see #breakBlock(BlockPos, boolean)
+		COMMENT @see #breakBlock(BlockPos, boolean, Entity, int)
 		ARG 1 pos
 		ARG 2 drop
 		ARG 3 breakingEntity
