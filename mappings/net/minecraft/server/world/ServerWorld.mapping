@@ -43,7 +43,9 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 13 shouldTickTime
 	METHOD method_14166 spawnParticles (Lnet/minecraft/class_3222;Lnet/minecraft/class_2394;ZDDDIDDDD)Z
 		COMMENT Spawns a particle visible to {@code viewer}, if the viewer is near the provided
-		COMMENT coordinates. Returns true if successful.
+		COMMENT coordinates.
+		COMMENT
+		COMMENT @return whether the particle packet was sent
 		COMMENT
 		COMMENT @see #spawnParticle(T, boolean, double, double, double, int, double, double, double, double
 		ARG 1 viewer
@@ -72,7 +74,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 2 flush
 			COMMENT if it should immediately write all data to storage device
 		ARG 3 savingDisabled
-			COMMENT if true, this method does nothing.
+			COMMENT if {@code true}, this method does nothing.
 	METHOD method_14177 isInBlockTick ()Z
 	METHOD method_14183 getStructureManager ()Lnet/minecraft/class_3485;
 	METHOD method_14188 saveLevel ()V
@@ -86,10 +88,12 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 uuid
 	METHOD method_14191 sendToPlayerIfNearby (Lnet/minecraft/class_3222;ZDDDLnet/minecraft/class_2596;)Z
 		COMMENT Sends the {@code packet} to {@code player} if the player
-		COMMENT is near the provided coordinates. Returns true if successful.
+		COMMENT is near the provided coordinates.
+		COMMENT
+		COMMENT @return whether the packet was sent
 		COMMENT
 		COMMENT @implNote The threshold is 32 blocks if {@code force} is {@code false}, and
-		COMMENT 512 blocks if {@code force} is true.
+		COMMENT 512 blocks if {@code force} is {@code true}.
 		ARG 1 player
 		ARG 2 force
 		ARG 3 x
@@ -100,8 +104,9 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_14195 resetWeather ()V
 	METHOD method_14197 resetIdleTimeout ()V
 	METHOD method_14199 spawnParticles (Lnet/minecraft/class_2394;DDDIDDDD)I
-		COMMENT Spawns a particle visible to nearby players. Returns the number of players
-		COMMENT the particle packet was sent to.
+		COMMENT Spawns a particle visible to nearby players.
+		COMMENT
+		COMMENT @return the number of players the particle packet was sent to
 		COMMENT
 		COMMENT @see #spawnParticle(ServerPlayerEntity, T, boolean, double, double, double, int, double, double, double, double
 		ARG 1 particle
@@ -119,12 +124,12 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_17988 setChunkForced (IIZ)Z
 		COMMENT Sets the forced status of the chunk.
 		COMMENT
-		COMMENT <p>Forced chunks are created in-game using
-		COMMENT {@link net.minecraft.server.command.ForceLoadCommand /forceload command}.
+		COMMENT <p>Forced chunks are created in-game using the
+		COMMENT {@linkplain net.minecraft.server.command.ForceLoadCommand {@code /forceload} command}.
 		ARG 1 x
-			COMMENT the chunk's X coordinates
+			COMMENT the chunk's X coordinate
 		ARG 2 z
-			COMMENT the chunk's Z coordinates
+			COMMENT the chunk's Z coordinate
 		ARG 3 forced
 			COMMENT whether to mark the chunk as forced
 	METHOD method_18198 getEntitiesByType (Lnet/minecraft/class_5575;Ljava/util/function/Predicate;)Ljava/util/List;
@@ -221,7 +226,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		COMMENT {@return the raid occuring in 96 block radius, or {@code null} if there is none}
 		ARG 1 pos
 	METHOD method_19503 hasRaidAt (Lnet/minecraft/class_2338;)Z
-		COMMENT {@return true if a raid exists within 96 block radius of {@code pos}}
+		COMMENT {@return {@code true} if a raid exists within 96 block radius of {@code pos}}
 		ARG 1 pos
 	METHOD method_19535 (Lnet/minecraft/class_2338;Lnet/minecraft/class_4158;)V
 		ARG 2 poiType
@@ -341,7 +346,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		COMMENT {@return whether to tick entities at {@code pos}}
 		ARG 1 pos
 	METHOD method_37116 isChunkLoaded (J)Z
-		COMMENT {@return true if the chunk {@code chunkPos} is loaded}
+		COMMENT {@return {@code true} if the chunk {@code chunkPos} is loaded}
 		ARG 1 chunkPos
 	METHOD method_37117 isTickingFutureReady (J)Z
 		ARG 1 chunkPos
