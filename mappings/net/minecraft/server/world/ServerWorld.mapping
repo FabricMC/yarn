@@ -279,8 +279,8 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		COMMENT <p>Time of day is different to "time", which is incremented on every tick and
 		COMMENT cannot be modified; Time of day affects the day-night cycle, can be changed using
 		COMMENT {@link net.minecraft.server.command.TimeCommand /time command}, and can be frozen
-		COMMENT if {@code doDaylightCycle} gamerule is turned off. Time is used to track scheduled
-		COMMENT ticks and cannot be modified or frozen.
+		COMMENT if {@link GameRules.DO_DAYLIGHT_CYCLE doDaylightCycle} gamerule is turned off.
+		COMMENT Time is used to track scheduled ticks and cannot be modified or frozen.
 		COMMENT
 		COMMENT @see ServerWorldProperties#setTimeOfDay
 		ARG 1 timeOfDay
@@ -359,23 +359,18 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_39778 cacheStructures (Lnet/minecraft/class_2791;)V
 		ARG 1 chunk
 	METHOD method_8448 updateSleepingPlayers ()V
-	METHOD method_8469 (I)Lnet/minecraft/class_1297;
-		COMMENT {@return the entity using the entity ID, or {@code null} if none was found}
-		COMMENT
-		COMMENT <p>Entity ID is ephemeral and changes after server restart. Use the UUID
-		COMMENT for persistent storage instead.
-		COMMENT
-		COMMENT @see net.minecraft.server.world.ServerWorld#getEntity
 	METHOD method_8487 locateStructure (Lnet/minecraft/class_3195;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
 		COMMENT {@return the location of the structure, or {@code null} if it does not/cannot exist}
+		COMMENT
+		COMMENT @see ChunkGenerator#locateStructure
 		ARG 1 feature
 			COMMENT the structure feature to search for
 		ARG 2 pos
 			COMMENT the position to start the searching at
 		ARG 3 radius
-			COMMENT the radius for searching
+			COMMENT the search radius in chunks around the chunk the given block position is in; a radius of 0 will only search in the given chunk
 		ARG 4 skipExistingChunks
-			COMMENT whether existing chunks should be ignored
+			COMMENT whether only structures that are not referenced by generated chunks (chunks past the STRUCTURE_STARTS stage) are returned, excluding strongholds
 	METHOD method_8554 setSpawnPos (Lnet/minecraft/class_2338;F)V
 		COMMENT Sets the world spawn point.
 		ARG 1 pos
