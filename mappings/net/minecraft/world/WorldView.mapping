@@ -22,6 +22,7 @@ CLASS net/minecraft/class_4538 net/minecraft/world/WorldView
 		ARG 1 pos
 		ARG 2 direction
 	METHOD method_22345 containsFluid (Lnet/minecraft/class_238;)Z
+		COMMENT {@return {@code true} if any of the blocks inside {@code box} contain fluid}
 		ARG 1 box
 	METHOD method_22346 getLightLevel (Lnet/minecraft/class_2338;I)I
 		ARG 1 pos
@@ -29,6 +30,13 @@ CLASS net/minecraft/class_4538 net/minecraft/world/WorldView
 	METHOD method_22347 isAir (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
 	METHOD method_22348 isSkyVisibleAllowingSea (Lnet/minecraft/class_2338;)Z
+		COMMENT {@return whether the sky is visible at {@code pos}}
+		COMMENT
+		COMMENT <p>In addition to the normal logic that checks the sky light level, this method
+		COMMENT also returns {@code true} if {@code pos} is below the sea level, and every block
+		COMMENT between the sea level and {@code pos} is either transparent or liquid.
+		COMMENT
+		COMMENT @see BlockRenderView#isSkyVisible
 		ARG 1 pos
 	METHOD method_22349 getBrightness (Lnet/minecraft/class_2338;)F
 		ARG 1 pos
@@ -69,6 +77,8 @@ CLASS net/minecraft/class_4538 net/minecraft/world/WorldView
 	METHOD method_8594 getAmbientDarkness ()I
 	METHOD method_8597 getDimension ()Lnet/minecraft/class_2874;
 	METHOD method_8598 getTopPosition (Lnet/minecraft/class_2902$class_2903;Lnet/minecraft/class_2338;)Lnet/minecraft/class_2338;
+		COMMENT {@retuen the position of the topmost block in the column
+		COMMENT containing {@code pos} using {@code heightmap} heightmap}
 		ARG 1 heightmap
 		ARG 2 pos
 	METHOD method_8608 isClient ()Z
