@@ -12,10 +12,16 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_26994 lastChimeAge I
 	FIELD field_26995 removalReason Lnet/minecraft/class_1297$class_5529;
 	FIELD field_26996 entityChangeListener Lnet/minecraft/class_5569;
+	FIELD field_26997 lastChimeIntensity F
 	FIELD field_27857 inPowderSnow Z
 	FIELD field_27858 FROZEN_TICKS Lnet/minecraft/class_2940;
+	FIELD field_28627 speed F
 	FIELD field_28628 wasInPowderSnow Z
 	FIELD field_28629 wasOnFire Z
+	FIELD field_29973 DEFAULT_FRICTION F
+		COMMENT The factor by which an entity's speed is reduced every tick.
+		COMMENT <p>
+		COMMENT For example: {@code horizontalSpeed = velocity.horizontalSpeed() * FRICTION_RATE}
 	FIELD field_29975 SNEAKING_FLAG_INDEX I
 	FIELD field_29976 SPRINTING_FLAG_INDEX I
 	FIELD field_29977 SWIMMING_FLAG_INDEX I
@@ -23,8 +29,25 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_29979 ON_FIRE_FLAG_INDEX I
 	FIELD field_29980 GLOWING_FLAG_INDEX I
 	FIELD field_29981 FALL_FLYING_FLAG_INDEX I
+	FIELD field_29982 SPEED_IN_LAVA_IN_NETHER D
+	FIELD field_29983 SPEED_IN_LAVA D
+	FIELD field_29984 SPEED_IN_WATER D
 	FIELD field_29985 ID_KEY Ljava/lang/String;
 	FIELD field_29986 PASSENGERS_KEY Ljava/lang/String;
+	FIELD field_29987 MAX_RIDING_COOLDOWN I
+		COMMENT @see Entity#removePassenger
+	FIELD field_29988 DEFAULT_PORTAL_COOLDOWN I
+		COMMENT @see Entity#getDefaultNetherPortalCooldown
+		COMMENT @see Entity#getMaxAir
+	FIELD field_29989 MAX_SCOREBOARD_TAGS I
+		COMMENT @see Entity#addScoreboardTag
+		COMMENT @see Entity#readNbt
+	FIELD field_29990 VELOCITY_AFFECTING_POS_Y_OFFSET D
+		COMMENT @see Entity#getVelocityAffectingPos
+	FIELD field_29992 DEFAULT_MIN_FREEZE_DAMAGE_TICKS I
+		COMMENT @see Entity#getMinFreezeDamageTicks
+	FIELD field_29993 FREEZING_DAMAGE_INTERVAL I
+		COMMENT @see LivingEntity#tickMovement
 	FIELD field_29994 UUID_KEY Ljava/lang/String;
 	FIELD field_33758 hasVisualFire Z
 	FIELD field_5951 ridingCooldown I
@@ -301,6 +324,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 other
 	METHOD method_30950 getLerpedPos (F)Lnet/minecraft/class_243;
 		ARG 1 delta
+	METHOD method_30951 getLeashPos (F)Lnet/minecraft/class_243;
+		ARG 1 delta
 	METHOD method_31166 getClientCameraPosVec (F)Lnet/minecraft/class_243;
 		ARG 1 tickDelta
 	METHOD method_31469 (Lnet/minecraft/class_1297;)Z
@@ -410,6 +435,10 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_36975 playExtinguishSound ()V
 	METHOD method_37215 playAmethystChimeSound (Lnet/minecraft/class_2680;)V
 		ARG 1 state
+	METHOD method_37216 (Lnet/minecraft/class_1297;)V
+		ARG 0 player
+	METHOD method_37217 (Lnet/minecraft/class_1297;)Z
+		ARG 0 passenger
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		ARG 1 state
@@ -535,6 +564,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5691 getPermissionLevel ()I
 	METHOD method_5692 updateMovementInFluid (Lnet/minecraft/class_3494;D)Z
 		ARG 1 tag
+		ARG 2 speed
 	METHOD method_5693 initDataTracker ()V
 	METHOD method_5694 onPlayerCollision (Lnet/minecraft/class_1657;)V
 		ARG 1 player
