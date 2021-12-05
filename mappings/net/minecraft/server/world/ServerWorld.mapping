@@ -60,6 +60,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_14176 save (Lnet/minecraft/class_3536;ZZ)V
 		ARG 1 progressListener
 		ARG 2 flush
+		ARG 3 savingDisabled
 	METHOD method_14177 isInBlockTick ()Z
 	METHOD method_14183 getStructureManager ()Lnet/minecraft/class_3485;
 	METHOD method_14188 saveLevel ()V
@@ -101,6 +102,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		COMMENT in the returned list or {@link ClassCastException} can occur.
 		COMMENT
 		COMMENT @return a list of entities of the given type
+		ARG 1 filter
 		ARG 2 predicate
 			COMMENT a predicate which returned entities must satisfy
 	METHOD method_18199 (Lnet/minecraft/class_1309;)Z
@@ -159,6 +161,8 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 pos
 	METHOD method_19503 hasRaidAt (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
+	METHOD method_19535 (Lnet/minecraft/class_2338;Lnet/minecraft/class_4158;)V
+		ARG 2 poiType
 	METHOD method_20588 isNearOccupiedPointOfInterest (Lnet/minecraft/class_4076;)Z
 		ARG 1 sectionPos
 	METHOD method_21624 dumpEntities (Ljava/io/Writer;Ljava/lang/Iterable;)V
@@ -170,6 +174,8 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 writer
 	METHOD method_23658 clearUpdatesInArea (Lnet/minecraft/class_3341;)V
 		ARG 1 box
+	METHOD method_23659 (Lnet/minecraft/class_3341;Lnet/minecraft/class_1919;)Z
+		ARG 1 event
 	METHOD method_23660 wakeSleepingPlayers ()V
 	METHOD method_24500 locateBiome (Lnet/minecraft/class_1959;Lnet/minecraft/class_2338;II)Lnet/minecraft/class_2338;
 		ARG 1 biome
@@ -189,12 +195,22 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 timeOfDay
 	METHOD method_29200 createEndSpawnPlatform (Lnet/minecraft/class_3218;)V
 		ARG 0 world
+	METHOD method_29201 (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)V
+		ARG 1 pos
 	METHOD method_29202 tickSpawners (ZZ)V
 		ARG 1 spawnMonsters
 		ARG 2 spawnAnimals
 	METHOD method_29203 tickTime ()V
+	METHOD method_29204 (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)V
+		ARG 1 pos
 	METHOD method_30630 getSpawnAngle ()F
-	METHOD method_30736 shouldCreateNewEntityWithPassenger (Lnet/minecraft/class_1297;)Z
+	METHOD method_30736 spawnNewEntityAndPassengers (Lnet/minecraft/class_1297;)Z
+		COMMENT Checks whether any of the entity and its passengers already exist
+		COMMENT in the world, and if not, spawns the entity with its passengers.
+		COMMENT
+		COMMENT @return {@code true} if the spawning was successful, otherwise {@code false}
+		COMMENT
+		COMMENT @see net.minecraft.world.ServerWorldAccess#spawnEntityAndPassengers
 		ARG 1 entity
 	METHOD method_31268 getDebugString ()Ljava/lang/String;
 	METHOD method_31270 getTopFive (Ljava/lang/Iterable;Ljava/util/function/Function;)Ljava/lang/String;
@@ -210,6 +226,8 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 2 entity
 	METHOD method_31421 (Lnet/minecraft/class_4158;)Z
 		ARG 0 poiType
+	METHOD method_31422 (Ljava/util/function/Predicate;Ljava/util/List;Lnet/minecraft/class_1297;)V
+		ARG 2 entity
 	METHOD method_31423 loadEntities (Ljava/util/stream/Stream;)V
 		ARG 1 entities
 	METHOD method_31424 getDragonPart (I)Lnet/minecraft/class_1297;
@@ -218,15 +236,27 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 entities
 	METHOD method_31430 shouldCancelSpawn (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
+	METHOD method_32310 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_3767;
+		ARG 1 nbt
 	METHOD method_32817 sendVibrationPacket (Lnet/minecraft/class_5720;)V
 		ARG 1 vibration
 	METHOD method_32818 (Lnet/minecraft/class_2338;Lnet/minecraft/class_5747;Lnet/minecraft/class_3222;)V
 		ARG 3 player
+	METHOD method_32819 getLogicalHeight ()I
 	METHOD method_33143 sendSleepingStatus ()V
+		COMMENT Sends sleeping status action bar messages to players in this world.
 	METHOD method_33144 isSleepingEnabled ()Z
 	METHOD method_34679 (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2338;
 		ARG 0 pos
 	METHOD method_34680 (Lnet/minecraft/class_2338;)Z
+		ARG 1 pos
+	METHOD method_37115 shouldTickEntity (Lnet/minecraft/class_1923;)Z
+		ARG 1 pos
+	METHOD method_37116 isChunkLoaded (J)Z
+		ARG 1 chunkPos
+	METHOD method_37117 isTickingFutureReady (J)Z
+		ARG 1 chunkPos
+	METHOD method_37118 shouldTickEntity (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
 	METHOD method_8448 updateSleepingPlayers ()V
 	METHOD method_8487 locateStructure (Lnet/minecraft/class_3195;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
