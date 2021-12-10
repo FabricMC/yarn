@@ -16,6 +16,7 @@ buildscript {
 		classpath "net.fabricmc.unpick:unpick:${project.unpick_version}"
 		classpath "net.fabricmc.unpick:unpick-format-utils:${project.unpick_version}"
 		classpath "net.fabricmc:name-proposal:${project.name_proposal_version}"
+		classpath 'net.fabricmc:mapping-io:0.3.0'
 	}
 }
 
@@ -112,6 +113,14 @@ import groovy.io.FileType
 import groovy.json.JsonSlurper
 import net.fabricmc.stitch.commands.CommandMergeTiny
 import net.fabricmc.stitch.commands.CommandReorderTiny
+import net.fabricmc.mappingio.MappingReader
+import net.fabricmc.mappingio.MappingWriter
+import net.fabricmc.mappingio.format.MappingFormat
+import net.fabricmc.mappingio.format.Tiny1Writer
+import net.fabricmc.mappingio.tree.MappingTree
+import net.fabricmc.mappingio.tree.MappingTreeView
+import net.fabricmc.mappingio.tree.MemoryMappingTree
+import net.fabricmc.stitch.commands.CommandProposeFieldNames
 import net.fabricmc.stitch.commands.CommandRewriteIntermediary
 import net.fabricmc.stitch.commands.tinyv2.CommandMergeTinyV2
 import net.fabricmc.stitch.commands.tinyv2.CommandReorderTinyV2
@@ -338,50 +347,6 @@ task downloadMcLibs(dependsOn: downloadWantedVersionManifest) {
 	}
 }
 
-task invertIntermediary(dependsOn: downloadIntermediary, type: FileOutput) {
-	group = buildMappingGroup
-	def v1Input = downloadIntermediary.dest
-
-	output = new File(cacheFilesMinecraft, "${minecraft_version}-intermediary-inverted.tiny")
-	outputs.file(output)
-
-	outputs.upToDateWhen { false }
-
-	doLast {
-		logger.lifecycle(":building inverted intermediary")
-
-		String[] v1Args = [
-				v1Input.getAbsolutePath(),
-				output.getAbsolutePath(),
-				"intermediary", "official"
-		]
-
-		new CommandReorderTiny().run(v1Args)
-	}
-}
-
-task invertIntermediaryv2(dependsOn: downloadIntermediaryV2, type: FileOutput) {
-	group = buildMappingGroup
-	def v2Input = new File(cacheFilesMinecraft, "${minecraft_version}-intermediary-v2.tiny")
-
-	output = new File(cacheFilesMinecraft, "${minecraft_version}-intermediary-inverted-v2.tiny")
-	outputs.file(output)
-
-	outputs.upToDateWhen { false }
-
-	doLast {
-		logger.lifecycle(":building inverted intermediary v2")
-
-		String[] v2Args = [
-				v2Input.getAbsolutePath(),
-				output.getAbsolutePath(),
-				"intermediary", "official"
-		]
-
-		new CommandReorderTinyV2().run(v2Args)
-	}
-}
-
 task patchIntermediary(dependsOn: [mergeJars, downloadIntermediary]) {
 	group = buildMappingGroup
 	def intermediaryTinyInput = downloadIntermediary.outputs.files.singleFile
@@ -502,12 +467,11 @@ task buildYarnTiny(dependsOn: mapIntermediaryJar, type: WithV2FileOutput) {
 	}
 }
 
-task mergeTiny(dependsOn: ["buildYarnTiny", "invertIntermediary"], type: FileOutput) {
+task mergeTiny(dependsOn: ["buildYarnTiny", "downloadIntermediary"], type: FileOutput) {
 	group = buildMappingGroup
 	def yarnTinyInput = buildYarnTiny.v1Output
-	def intermediaryTinyInput = invertIntermediary.output
+	def intermediaryTinyInput = downloadIntermediary.dest
 
-	def unorderedResultMappings = new File(tempDir, "mappings-unordered.tiny")
 	output = new File(tempDir, "mappings.tiny")
 	outputs.file(output)
 
@@ -515,24 +479,16 @@ task mergeTiny(dependsOn: ["buildYarnTiny", "invertIntermediary"], type: FileOut
 
 	doLast {
 		logger.lifecycle(":merging yarn and intermediary")
-		String[] args = [
-				intermediaryTinyInput.getAbsolutePath(),
-				yarnTinyInput.getAbsolutePath(),
-				unorderedResultMappings.getAbsolutePath(),
-				"intermediary",
-				"official"
-		]
 
-		new CommandMergeTiny().run(args)
+		def tree = new MemoryMappingTree()
+		MappingReader.read(intermediaryTinyInput.toPath(), MappingFormat.TINY, tree)
+		tree.reset()
+		MappingReader.read(yarnTinyInput.toPath(), MappingFormat.TINY, tree)
 
-		logger.lifecycle(":reordering merged intermediary")
-		String[] args2 = [
-				unorderedResultMappings.getAbsolutePath(),
-				output.getAbsolutePath(),
-				"official", "intermediary", "named"
-		]
-
-		new CommandReorderTiny().run(args2)
+		inheritMappedNames(tree)
+		new Tiny1Writer(new BufferedWriter(new FileWriter(output))).withCloseable { writer ->
+			tree.accept(writer)
+		}
 	}
 }
 
@@ -581,44 +537,6 @@ clean.doFirst {
 }
 
 tasks.build.dependsOn "compressTiny","tinyJar","v2UnmergedYarnJar", "v2MergedYarnJar"
-
-task exportMappingsOfficial(dependsOn: downloadIntermediary) {
-	def composeInput = downloadIntermediary.dest
-
-	doLast {
-		logger.lifecycle(":exporting mappings")
-		String[] args = [
-				"tiny",
-				composeInput.getAbsolutePath(),
-				"enigma",
-				file("mappings/").getAbsolutePath(),
-				"enigma",
-				file("mappings_official/").getAbsolutePath(),
-				"right"
-		]
-
-		new ComposeMappingsCommand().run(args)
-	}
-}
-
-task importMappingsOfficial(dependsOn: invertIntermediary) {
-	def composeInput = invertIntermediary.output
-
-	doLast {
-		logger.lifecycle(":importing mappings")
-		String[] args = [
-				"tiny",
-				composeInput.getAbsolutePath(),
-				"enigma",
-				file("mappings_official/").getAbsolutePath(),
-				"enigma",
-				file("mappings/").getAbsolutePath(),
-				"right"
-		]
-
-		new ComposeMappingsCommand().run(args)
-	}
-}
 
 task mapNamedJar(dependsOn: ["mergeV2", "unpickIntermediaryJar"]) {
 	group = mapJarGroup
@@ -730,33 +648,26 @@ task insertAutoGeneratedEnumMappings(dependsOn : [buildYarnTiny,mapIntermediaryJ
 	}
 }
 
-task mergeV2(dependsOn: ["v2UnmergedYarnJar", "invertIntermediaryv2"], type: FileOutput) {
+task mergeV2(dependsOn: ["v2UnmergedYarnJar", "downloadIntermediaryV2"], type: FileOutput) {
 	def mergedV2 = new File(tempDir, "merged-v2.tiny");
 
 	output = new File(tempDir, "merged-reordered-v2.tiny")
 	outputs.upToDateWhen { false }
 
+	def v2Input = new File(cacheFilesMinecraft, "${minecraft_version}-intermediary-v2.tiny")
+
 	doLast {
-		logger.lifecycle(":merging yarn and intermediary v2")
-		String[] args = [
-				invertIntermediaryv2.output.getAbsolutePath(),
-				insertAutoGeneratedEnumMappings.output.getAbsolutePath(),
-				mergedV2.getAbsolutePath(),
-				"intermediary",
-				"official"
-		]
+		logger.lifecycle(":merging yarn and intermediary V2")
 
-		new CommandMergeTinyV2().run(args)
+		def tree = new MemoryMappingTree()
+		MappingReader.read(v2Input.toPath(), MappingFormat.TINY_2, tree)
+		tree.reset()
+		MappingReader.read(insertAutoGeneratedEnumMappings.output.toPath(), MappingFormat.TINY_2, tree)
 
-		//Reorder the mappings to match the output of loom
-		args = [
-				mergedV2.getAbsolutePath(),
-				output.getAbsolutePath(),
-				"official",
-				"intermediary",
-				"named"
-		]
-		new CommandReorderTinyV2().run(args)
+		inheritMappedNames(tree)
+		MappingWriter.create(output.toPath(), MappingFormat.TINY_2).withCloseable { writer ->
+			tree.accept(writer)
+		}
 	}
 }
 
@@ -1006,6 +917,56 @@ void mapJar(File output, File input, File mappings, File libraries, String from,
 	} catch (Exception e) {
 		remapper.finish()
 		throw new RuntimeException("Failed to remap jar", e)
+	}
+}
+
+void inheritMappedNames(MemoryMappingTree tree) {
+	def intermediaryIdx = tree.getNamespaceId 'intermediary'
+	def namedIdx = tree.getNamespaceId 'named'
+
+	if (intermediaryIdx != MappingTreeView.SRC_NAMESPACE_ID) {
+		tree.setIndexByDstNames true
+	}
+
+	for (MappingTree.ClassMapping classEntry : tree.classes) {
+		def intermediaryName = classEntry.getName intermediaryIdx
+		def namedName = classEntry.getDstName namedIdx
+
+		if (intermediaryName != null && namedName == null) {
+			def awaitUpdate = true
+			for (int i = intermediaryName.lastIndexOf('$'); i >= 0; i = intermediaryName.lastIndexOf('$', i - 1)) {
+				def currentPath = intermediaryName.substring 0, i
+				def namedParentClass = tree.mapClassName currentPath, intermediaryIdx, namedIdx
+
+				if (!namedParentClass.equals(currentPath)) {
+					classEntry.setDstName namedParentClass + intermediaryName.substring(i), namedIdx
+					awaitUpdate = false
+					break
+				}
+			}
+
+			if (awaitUpdate) {
+				classEntry.setDstName intermediaryName, namedIdx
+			}
+		}
+
+		for (MappingTree.MethodMapping methodEntry : classEntry.methods) {
+			def intermediaryMethodName = methodEntry.getName intermediaryIdx
+			def namedMethodName = methodEntry.getDstName namedIdx
+
+			if (intermediaryMethodName != null && namedMethodName == null) {
+				methodEntry.setDstName intermediaryMethodName, namedIdx
+			}
+		}
+
+		for (MappingTree.FieldMapping fieldEntry : classEntry.fields) {
+			def intermediaryFieldName = fieldEntry.getName intermediaryIdx
+			def namedFieldName = fieldEntry.getDstName namedIdx
+
+			if (intermediaryFieldName != null && namedFieldName == null) {
+				fieldEntry.setDstName intermediaryFieldName, namedIdx
+			}
+		}
 	}
 }
 
