@@ -1,5 +1,18 @@
 CLASS net/minecraft/class_2382 net/minecraft/util/math/Vec3i
-	COMMENT A publicly read-only but mutable vector composed of 3 integers.
+	COMMENT A vector composed of 3 integers.
+	COMMENT
+	COMMENT <p>This class is very often used to hold the coordinates. To hold a block position
+	COMMENT specifically, use {@code BlockPos} instead, which extends {@code Vec3i}. To hold
+	COMMENT positions for entities and other non-voxels, consider using {@link Vec3f} (that holds
+	COMMENT values using {@code float}) or {@link Vec3d} (that holds values using {@code double})
+	COMMENT instead.
+	COMMENT
+	COMMENT <p>{@code Vec3i} is normally immutable; however, the subclass {@link BlockPos.Mutable}
+	COMMENT is mutable.
+	COMMENT
+	COMMENT @see Vec3f
+	COMMENT @see Vec3d
+	COMMENT @see BlockPos
 	FIELD field_11173 z I
 	FIELD field_11174 y I
 	FIELD field_11175 x I
@@ -23,23 +36,42 @@ CLASS net/minecraft/class_2382 net/minecraft/util/math/Vec3i
 		ARG 1 vec
 	METHOD method_10260 getZ ()I
 	METHOD method_10262 getSquaredDistance (Lnet/minecraft/class_2382;)D
+		COMMENT {@return the squared distance between here and {@code vec}}
+		COMMENT
+		COMMENT @apiNote Passing {@link BlockPos} to this method will return a wrong value. Use
+		COMMENT {@link #getSquaredDistance(Vec3i, boolean)} with {@code treatAsBlockPos} set to
+		COMMENT {@code false} instead.
 		ARG 1 vec
 	METHOD method_10263 getX ()I
 	METHOD method_10264 getY ()I
 	METHOD method_10268 getSquaredDistance (DDDZ)D
+		COMMENT {@return the squared distance between here and {@code x}, {@code y}, {@code z}}
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
 		ARG 7 treatAsBlockPos
+			COMMENT whether to convert the value to {@link BlockPos}; pass {@code false}
+			COMMENT if it is already so
 	METHOD method_19455 getManhattanDistance (Lnet/minecraft/class_2382;)I
+		COMMENT {@return the Manhattan distance between here and {@code vec}}
+		COMMENT
+		COMMENT <p>Manhattan distance, also called taxicab distance or snake distance, is the
+		COMMENT distance measured as the sum of the absolute differences of their coordinates.
+		COMMENT For example, the Manhattan distance between {@code (0, 0, 0)} and {@code (1, 1, 1)}
+		COMMENT is {@code 3}.
 		ARG 1 vec
 	METHOD method_19769 isWithinDistance (Lnet/minecraft/class_2374;D)Z
+		COMMENT {@return whether the distance between here and {@code pos} is less than {@code distance}}
 		ARG 1 pos
 		ARG 2 distance
 	METHOD method_19770 getSquaredDistance (Lnet/minecraft/class_2374;Z)D
+		COMMENT {@return the squared distance between here and {@code pos}}
 		ARG 1 pos
 		ARG 2 treatAsBlockPos
+			COMMENT whether to convert the value to {@link BlockPos}; pass {@code false}
+			COMMENT if it is already so
 	METHOD method_19771 isWithinDistance (Lnet/minecraft/class_2382;D)Z
+		COMMENT {@return whether the distance between here and {@code vec} is less than {@code distance}}
 		ARG 1 vec
 		ARG 2 distance
 	METHOD method_20787 setX (I)Lnet/minecraft/class_2382;
@@ -47,54 +79,105 @@ CLASS net/minecraft/class_2382 net/minecraft/util/math/Vec3i
 	METHOD method_20788 setZ (I)Lnet/minecraft/class_2382;
 		ARG 1 z
 	METHOD method_23226 offset (Lnet/minecraft/class_2350;I)Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code distance} in {@code direction} direction}
+		COMMENT
+		COMMENT @implNote This can return the same vector if {@code distance} equals {@code 0}.
 		ARG 1 direction
 		ARG 2 distance
 	METHOD method_23227 down (I)Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code distance} in the downward direction.
+		COMMENT
+		COMMENT @implNote This can return the same vector if {@code distance} equals {@code 0}.
 		ARG 1 distance
 	METHOD method_23228 down ()Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code 1} in the downward direction.
 	METHOD method_23854 toShortString ()Ljava/lang/String;
+		COMMENT {@return the coordinates joined with a colon and a space}
 	METHOD method_30558 getComponentAlongAxis (Lnet/minecraft/class_2350$class_2351;)I
+		COMMENT {@return the component on the {@code axis} axis}
 		ARG 1 axis
 	METHOD method_30930 up (I)Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code distance} in the upward direction.
+		COMMENT
+		COMMENT @implNote This can return the same vector if {@code distance} equals {@code 0}.
 		ARG 1 distance
 	METHOD method_30931 up ()Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code 1} in the upward direction.
 	METHOD method_33106 getSquaredDistance (Lnet/minecraft/class_2382;Z)D
+		COMMENT {@return the squared distance between here and {@code vec}}
 		ARG 1 vec
 		ARG 2 treatAsBlockPos
+			COMMENT whether to convert the value to {@link BlockPos}; pass {@code false}
+			COMMENT if it is already so
 	METHOD method_34592 add (III)Lnet/minecraft/class_2382;
-		COMMENT Returns another Vec3i whose coordinates have the parameter x, y, and z
-		COMMENT added to the coordinates of this vector.
+		COMMENT {@return another Vec3i whose coordinates have the parameter x, y, and z
+		COMMENT added to the coordinates of this vector}
 		COMMENT
 		COMMENT <p>This method always returns an immutable object.
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
 	METHOD method_35849 add (DDD)Lnet/minecraft/class_2382;
+		COMMENT {@return another Vec3i whose coordinates have the parameter x, y, and z
+		COMMENT added to the coordinates of this vector}
+		COMMENT
+		COMMENT <p>This method always returns an immutable object.
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
 	METHOD method_35850 offset (Lnet/minecraft/class_2350$class_2351;I)Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code distance} on {@code axis} axis}
+		COMMENT
+		COMMENT @implNote This can return the same vector if {@code distance} equals {@code 0}.
 		ARG 1 axis
 		ARG 2 distance
 	METHOD method_35851 offset (Lnet/minecraft/class_2350;)Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code 1} in {@code direction} direction}
 		ARG 1 direction
 	METHOD method_35852 subtract (Lnet/minecraft/class_2382;)Lnet/minecraft/class_2382;
+		COMMENT {@return another Vec3i whose coordinates have the coordinates of {@code vec}
+		COMMENT subtracted from the coordinates of this vector}
+		COMMENT
+		COMMENT <p>This method always returns an immutable object.
 		ARG 1 vec
 	METHOD method_35853 add (Lnet/minecraft/class_2382;)Lnet/minecraft/class_2382;
+		COMMENT {@return another Vec3i whose coordinates have the coordinates of {@code vec}
+		COMMENT added to the coordinates of this vector}
+		COMMENT
+		COMMENT <p>This method always returns an immutable object.
 		ARG 1 vec
 	METHOD method_35854 east (I)Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code distance} in the eastward direction.
+		COMMENT
+		COMMENT @implNote This can return the same vector if {@code distance} equals {@code 0}.
 		ARG 1 distance
 	METHOD method_35855 east ()Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code 1} in the eastward direction.
 	METHOD method_35856 west (I)Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code distance} in the westward direction.
+		COMMENT
+		COMMENT @implNote This can return the same vector if {@code distance} equals {@code 0}.
 		ARG 1 distance
 	METHOD method_35857 west ()Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code 1} in the westward direction.
 	METHOD method_35858 south (I)Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code distance} in the southward direction.
+		COMMENT
+		COMMENT @implNote This can return the same vector if {@code distance} equals {@code 0}.
 		ARG 1 distance
 	METHOD method_35859 south ()Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code 1} in the southward direction.
 	METHOD method_35860 north (I)Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code distance} in the northward direction.
+		COMMENT
+		COMMENT @implNote This can return the same vector if {@code distance} equals {@code 0}.
 		ARG 1 distance
 	METHOD method_35861 north ()Lnet/minecraft/class_2382;
+		COMMENT {@return a vector which is offset by {@code 1} in the northward direction.
 	METHOD method_35862 multiply (I)Lnet/minecraft/class_2382;
+		COMMENT {@return a vector with all components multiplied by {@code scale}}
+		COMMENT
+		COMMENT @implNote This can return the same vector if {@code scale} equals {@code 1}.
 		ARG 1 scale
 	METHOD method_39675 createRangeValidator (I)Ljava/util/function/Function;
 		ARG 0 maxAbsValue
