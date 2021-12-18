@@ -37,22 +37,23 @@ CLASS net/minecraft/class_2382 net/minecraft/util/math/Vec3i
 		ARG 1 vec
 	METHOD method_10260 getZ ()I
 	METHOD method_10262 getSquaredDistance (Lnet/minecraft/class_2382;)D
-		COMMENT {@return the squared distance between here and {@code vec}}
+		COMMENT {@return the squared distance between here (center) and {@code vec}}
 		COMMENT
-		COMMENT @apiNote Passing {@link BlockPos} to this method will return a wrong value. Use
-		COMMENT {@link #getSquaredDistance(Vec3i, boolean)} with {@code treatAsBlockPos} set to
-		COMMENT {@code false} instead.
+		COMMENT @see #getSquaredDistance(Vec3i, boolean)
 		ARG 1 vec
 	METHOD method_10263 getX ()I
 	METHOD method_10264 getY ()I
 	METHOD method_10268 getSquaredDistance (DDDZ)D
-		COMMENT {@return the squared distance between here and {@code (x, y, z)}}
+		COMMENT {@return the squared distance between here (center or vertex) and {@code (x, y, z)}}
+		COMMENT If {@code center} is {@code true}, this is equivalent to {@link Vec3d#ofCenter(Vec3i)
+		COMMENT Vec3d.ofCenter(this).sqauredDistanceTo(x, y, z)}; otherwise,
+		COMMENT this is equivalent to {@code Vec3d.of(this).sqauredDistanceTo(x, y, z)}.
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
-		ARG 7 treatAsBlockPos
-			COMMENT whether to convert the value to {@link BlockPos}; pass {@code false}
-			COMMENT if it is already so
+		ARG 7 center
+			COMMENT {@code true} to calculate the distance from the voxel's center (with 0.5 block offset in all axes)
+			COMMENT to the given {@code (x, y, z)}; or {@code false} to calculate without an offset
 	METHOD method_19455 getManhattanDistance (Lnet/minecraft/class_2382;)I
 		COMMENT {@return the Manhattan distance between here and {@code vec}}
 		COMMENT
@@ -68,9 +69,9 @@ CLASS net/minecraft/class_2382 net/minecraft/util/math/Vec3i
 	METHOD method_19770 getSquaredDistance (Lnet/minecraft/class_2374;Z)D
 		COMMENT {@return the squared distance between here and {@code pos}}
 		ARG 1 pos
-		ARG 2 treatAsBlockPos
-			COMMENT whether to convert the value to {@link BlockPos}; pass {@code false}
-			COMMENT if it is already so
+		ARG 2 center
+			COMMENT {@code true} to calculate the distance from the voxel's center (with 0.5 block offset in all axes)
+			COMMENT to the given pos; or {@code false} to calculate without an offset
 	METHOD method_19771 isWithinDistance (Lnet/minecraft/class_2382;D)Z
 		COMMENT {@return whether the distance between here and {@code vec} is less than {@code distance}}
 		ARG 1 vec
@@ -107,9 +108,9 @@ CLASS net/minecraft/class_2382 net/minecraft/util/math/Vec3i
 	METHOD method_33106 getSquaredDistance (Lnet/minecraft/class_2382;Z)D
 		COMMENT {@return the squared distance between here and {@code vec}}
 		ARG 1 vec
-		ARG 2 treatAsBlockPos
-			COMMENT whether to convert the value to {@link BlockPos}; pass {@code false}
-			COMMENT if it is already so
+		ARG 2 center
+			COMMENT {@code true} to calculate the distance from the voxel's center (with 0.5 block offset in all axes)
+			COMMENT to the given vec; or {@code false} to calculate without an offset
 	METHOD method_34592 add (III)Lnet/minecraft/class_2382;
 		COMMENT {@return another Vec3i whose coordinates have the parameter x, y, and z
 		COMMENT added to the coordinates of this vector}
