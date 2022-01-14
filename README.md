@@ -1,4 +1,4 @@
-# Yarn
+# <img src="https://raw.githubusercontent.com/FabricMC/community/c6f24b3b651517fc6b1451e9a63ed4438366b880/media/unascribed/png/yarn.png" style="height: 1.25em; vertical-align: bottom;" alt="Yarn logo" /> Yarn
 
 Yarn is a set of open, unencumbered Minecraft mappings, free for everyone to use under the Creative Commons Zero license. The intention is to let 
 everyone mod Minecraft freely and openly, while also being able to innovate and process the mappings as they see fit.
