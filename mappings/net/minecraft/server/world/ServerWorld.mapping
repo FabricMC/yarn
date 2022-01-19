@@ -3,7 +3,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	FIELD field_13949 blockTickScheduler Lnet/minecraft/class_6757;
 	FIELD field_13950 syncedBlockEventQueue Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;
 	FIELD field_13951 fluidTickScheduler Lnet/minecraft/class_6757;
-	FIELD field_13952 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_13952 LOGGER Lorg/slf4j/Logger;
 	FIELD field_13953 inBlockTick Z
 	FIELD field_13956 portalForcer Lnet/minecraft/class_1946;
 	FIELD field_13957 savingDisabled Z
@@ -28,6 +28,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	FIELD field_35441 MAX_TICKS I
 	FIELD field_35565 blockEventQueue Ljava/util/List;
 	FIELD field_36208 structureLocator Lnet/minecraft/class_6832;
+	FIELD field_36317 duringListenerUpdate Z
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5268;Lnet/minecraft/class_5321;Lnet/minecraft/class_2874;Lnet/minecraft/class_3949;Lnet/minecraft/class_2794;ZJLjava/util/List;Z)V
 		ARG 1 server
 		ARG 2 workerExecutor
@@ -117,7 +118,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 2 randomTickSpeed
 	METHOD method_18207 onPlayerTeleport (Lnet/minecraft/class_3222;)V
 		ARG 1 player
-	METHOD method_18210 getSurface (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2338;
+	METHOD method_18210 getLightningPos (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2338;
 		ARG 1 pos
 	METHOD method_18211 onPlayerChangeDimension (Lnet/minecraft/class_3222;)V
 		ARG 1 player
@@ -168,6 +169,8 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 pos
 	METHOD method_19535 (Lnet/minecraft/class_2338;Lnet/minecraft/class_4158;)V
 		ARG 2 poiType
+	METHOD method_19536 (Lnet/minecraft/class_2338;Lnet/minecraft/class_4158;)V
+		ARG 2 poiType
 	METHOD method_20588 isNearOccupiedPointOfInterest (Lnet/minecraft/class_4076;)Z
 		ARG 1 sectionPos
 	METHOD method_21624 dumpEntities (Ljava/io/Writer;Ljava/lang/Iterable;)V
@@ -186,6 +189,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 biome
 		ARG 2 pos
 		ARG 3 radius
+		ARG 4 blockCheckInterval
 	METHOD method_27056 getStructureAccessor ()Lnet/minecraft/class_5138;
 	METHOD method_27909 iterateEntities ()Ljava/lang/Iterable;
 	METHOD method_27910 setWeather (IIZZ)V
@@ -254,8 +258,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_34679 (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2338;
 		ARG 0 pos
 	METHOD method_34680 (Lnet/minecraft/class_2338;)Z
-		ARG 1 pos
-	METHOD method_37115 shouldTickEntity (Lnet/minecraft/class_1923;)Z
 		ARG 1 pos
 	METHOD method_37116 isChunkLoaded (J)Z
 		ARG 1 chunkPos
