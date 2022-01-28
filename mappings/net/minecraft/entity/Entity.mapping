@@ -6,7 +6,19 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_18276 velocity Lnet/minecraft/class_243;
 	FIELD field_22467 pos Lnet/minecraft/class_243;
 	FIELD field_22468 blockPos Lnet/minecraft/class_2338;
-	FIELD field_23807 inanimate Z
+	FIELD field_23807 intersectionChecked Z
+		COMMENT Whether the entity should be included in intersection checks.
+		COMMENT
+		COMMENT <p>An intersection check is used to prevent block placement or
+		COMMENT mob spawning within the bounding box.
+		COMMENT
+		COMMENT @implNote Intersection is always checked for
+		COMMENT {@link net.minecraft.entity.vehicle.BoatEntity},
+		COMMENT {@link net.minecraft.entity.vehicle.AbstractMinecartEntity}, {@link TntEntity},
+		COMMENT {@link net.minecraft.entity.decoration.EndCrystalEntity},
+		COMMENT {@link FallingBlockEntity}, and {@link LivingEntity}.
+		COMMENT Intersection with {@link net.minecraft.entity.decoration.ArmorStandEntity} is checked if
+		COMMENT it is not a {@link net.minecraft.entity.decoration.ArmorStandEntity#isMarker marker}.
 	FIELD field_25599 submergedFluidTag Lnet/minecraft/class_3494;
 	FIELD field_25750 trackedPosition Lnet/minecraft/class_243;
 	FIELD field_26994 lastChimeAge I
@@ -56,7 +68,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_5951 ridingCooldown I
 	FIELD field_5952 onGround Z
 	FIELD field_5953 firstUpdate Z
-	FIELD field_5955 LOGGER Lorg/apache/logging/log4j/Logger;
+	FIELD field_5955 LOGGER Lorg/slf4j/Logger;
 	FIELD field_5956 fireTicks I
 	FIELD field_5957 touchingWater Z
 	FIELD field_5958 glowing Z
@@ -285,8 +297,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_29495 refreshPositionAfterTeleport (Lnet/minecraft/class_243;)V
 		ARG 1 pos
 	METHOD method_29919 getLeashOffset ()Lnet/minecraft/class_243;
-	METHOD method_30022 (Lnet/minecraft/class_243;Lnet/minecraft/class_238;Lnet/minecraft/class_2680;)Z
-		ARG 3 state
 	METHOD method_30076 removeFromDimension ()V
 	METHOD method_30227 getTrackedPosition ()Lnet/minecraft/class_243;
 	METHOD method_30228 updateTrackedPosition (Lnet/minecraft/class_243;)V
@@ -604,7 +614,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5713 checkWaterState ()V
 	METHOD method_5715 isSneaking ()Z
 	METHOD method_5716 updateKilledAdvancementCriterion (Lnet/minecraft/class_1297;ILnet/minecraft/class_1282;)V
-		ARG 1 killer
+		ARG 1 entityKilled
 		ARG 2 score
 		ARG 3 damageSource
 	METHOD method_5717 setInNetherPortal (Lnet/minecraft/class_2338;)V
