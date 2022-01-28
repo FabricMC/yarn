@@ -48,7 +48,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		COMMENT
 		COMMENT @return whether the particle packet was sent
 		COMMENT
-		COMMENT @see #spawnParticle(T, boolean, double, double, double, int, double, double, double, double
+		COMMENT @see #spawnParticle(T, boolean, double, double, double, int, double, double, double, double)
 		ARG 1 viewer
 		ARG 2 particle
 		ARG 3 force
@@ -109,7 +109,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		COMMENT
 		COMMENT @return the number of players the particle packet was sent to
 		COMMENT
-		COMMENT @see #spawnParticle(ServerPlayerEntity, T, boolean, double, double, double, int, double, double, double, double
+		COMMENT @see #spawnParticle(ServerPlayerEntity, T, boolean, double, double, double, int, double, double, double, double)
 		ARG 1 particle
 		ARG 2 x
 		ARG 4 y
@@ -222,7 +222,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_19500 isNearOccupiedPointOfInterest (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
 	METHOD method_19502 getRaidAt (Lnet/minecraft/class_2338;)Lnet/minecraft/class_3765;
-		COMMENT {@return the raid occuring in 96 block radius, or {@code null} if there is none}
+		COMMENT {@return the raid occurring within 96 block radius, or {@code null} if there is none}
 		ARG 1 pos
 	METHOD method_19503 hasRaidAt (Lnet/minecraft/class_2338;)Z
 		COMMENT {@return {@code true} if a raid exists within 96 block radius of {@code pos}}
@@ -281,10 +281,10 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		COMMENT <p>Time of day is different to "time", which is incremented on every tick and
 		COMMENT cannot be modified; Time of day affects the day-night cycle, can be changed using
 		COMMENT {@link net.minecraft.server.command.TimeCommand /time command}, and can be frozen
-		COMMENT if {@link GameRules.DO_DAYLIGHT_CYCLE doDaylightCycle} gamerule is turned off.
+		COMMENT if {@link GameRules#DO_DAYLIGHT_CYCLE doDaylightCycle} gamerule is turned off.
 		COMMENT Time is used to track scheduled ticks and cannot be modified or frozen.
 		COMMENT
-		COMMENT @see ServerWorldProperties#setTimeOfDay
+		COMMENT @see net.minecraft.world.WorldProperties#setTimeOfDay
 		ARG 1 timeOfDay
 	METHOD method_29200 createEndSpawnPlatform (Lnet/minecraft/class_3218;)V
 		ARG 0 world
@@ -359,7 +359,13 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 chunk
 	METHOD method_8448 updateSleepingPlayers ()V
 	METHOD method_8487 locateStructure (Lnet/minecraft/class_3195;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
-		COMMENT {@return the location of the structure, or {@code null} if it does not/cannot exist}
+		COMMENT Tries to find the closest structure of a given type near a given block.
+		COMMENT <p>
+		COMMENT New chunks will only be generated up to the {@link net.minecraft.world.chunk.ChunkStatus#STRUCTURE_STARTS} phase by this method.
+		COMMENT <p>
+		COMMENT The radius is ignored for strongholds.
+		COMMENT
+		COMMENT @return the position of the structure, or {@code null} if no structure could be found within the given search radius
 		COMMENT
 		COMMENT @see ChunkGenerator#locateStructure
 		ARG 1 feature
