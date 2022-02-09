@@ -153,6 +153,7 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 	METHOD method_10224 create (Lnet/minecraft/class_5321;Ljava/lang/String;Lnet/minecraft/class_2378$class_6889;)Lnet/minecraft/class_2348;
 		ARG 0 key
 		ARG 1 defaultId
+		ARG 2 defaultEntrySupplier
 	METHOD method_10226 register (Lnet/minecraft/class_2378;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;
 		ARG 0 registry
 		ARG 1 id
@@ -160,6 +161,7 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 	METHOD method_10227 create (Lnet/minecraft/class_5321;Lnet/minecraft/class_2385;Lnet/minecraft/class_2378$class_6889;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/class_2385;
 		ARG 0 key
 		ARG 1 registry
+		ARG 2 defaultEntrySupplier
 		ARG 3 lifecycle
 	METHOD method_10230 register (Lnet/minecraft/class_2378;Lnet/minecraft/class_2960;Ljava/lang/Object;)Ljava/lang/Object;
 		ARG 0 registry
@@ -175,11 +177,13 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 		ARG 1 random
 	METHOD method_10247 create (Lnet/minecraft/class_5321;Lnet/minecraft/class_2378$class_6889;)Lnet/minecraft/class_2378;
 		ARG 0 key
+		ARG 1 defaultEntrySupplier
 	METHOD method_10250 containsId (Lnet/minecraft/class_2960;)Z
 		ARG 1 id
 	METHOD method_17966 getOrEmpty (Lnet/minecraft/class_2960;)Ljava/util/Optional;
 		ARG 1 id
 	METHOD method_29103 validate (Lnet/minecraft/class_2378;)V
+		ARG 0 registry
 	METHOD method_29106 createRegistryKey (Ljava/lang/String;)Lnet/minecraft/class_5321;
 		ARG 0 registryId
 	METHOD method_29107 get (Lnet/minecraft/class_5321;)Ljava/lang/Object;
@@ -187,10 +191,12 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 	METHOD method_29108 create (Lnet/minecraft/class_5321;Lcom/mojang/serialization/Lifecycle;Lnet/minecraft/class_2378$class_6889;)Lnet/minecraft/class_2378;
 		ARG 0 key
 		ARG 1 lifecycle
+		ARG 2 defaultEntrySupplier
 	METHOD method_29109 create (Lnet/minecraft/class_5321;Ljava/lang/String;Lcom/mojang/serialization/Lifecycle;Lnet/minecraft/class_2378$class_6889;)Lnet/minecraft/class_2348;
 		ARG 0 key
 		ARG 1 defaultId
 		ARG 2 lifecycle
+		ARG 3 defaultEntrySupplier
 	METHOD method_29113 getKey (Ljava/lang/Object;)Ljava/util/Optional;
 		ARG 1 entry
 	METHOD method_29722 getEntries ()Ljava/util/Set;
@@ -206,6 +212,8 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 		ARG 1 key
 	METHOD method_31189 getOrEmpty (Lnet/minecraft/class_5321;)Ljava/util/Optional;
 		ARG 1 key
+	METHOD method_34029 (Lnet/minecraft/class_2378;Lnet/minecraft/class_2378;)V
+		ARG 1 registeredRegistry
 	METHOD method_34031 (Lnet/minecraft/class_2960;Ljava/util/function/Supplier;)V
 		ARG 0 id
 		ARG 1 defaultEntry
@@ -216,3 +224,33 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 		ARG 1 key
 		ARG 2 entry
 	METHOD method_39673 getCodec ()Lcom/mojang/serialization/Codec;
+	METHOD method_40264 getTagsHolder (Lnet/minecraft/class_5321;)Ljava/util/Optional;
+		ARG 1 key
+	METHOD method_40265 getTagsHolder (I)Ljava/util/Optional;
+		ARG 1 rawId
+	METHOD method_40268 getOrCreateTagsHolder (Lnet/minecraft/class_5321;)Lnet/minecraft/class_6880;
+		ARG 1 key
+	METHOD method_40269 createTagsHolder (Ljava/lang/Object;)Lnet/minecraft/class_6880$class_6883;
+		ARG 1 entry
+	METHOD method_40270 streamTagsHolders ()Ljava/util/stream/Stream;
+	METHOD method_40276 freeze ()Lnet/minecraft/class_2378;
+	METHOD method_40281 create (Lnet/minecraft/class_5321;Lcom/mojang/serialization/Lifecycle;Ljava/util/function/Function;Lnet/minecraft/class_2378$class_6889;)Lnet/minecraft/class_2378;
+		ARG 0 key
+		ARG 1 lifecycle
+		ARG 2 entryToTagsHolderGetter
+		ARG 3 defaultEntrySupplier
+	METHOD method_40282 create (Lnet/minecraft/class_5321;Ljava/lang/String;Lcom/mojang/serialization/Lifecycle;Ljava/util/function/Function;Lnet/minecraft/class_2378$class_6889;)Lnet/minecraft/class_2348;
+		ARG 0 key
+		ARG 1 defaultId
+		ARG 2 lifecycle
+		ARG 3 entryToTagsHolderGetter
+		ARG 4 defaultEntrySupplier
+	METHOD method_40283 create (Lnet/minecraft/class_5321;Ljava/lang/String;Ljava/util/function/Function;Lnet/minecraft/class_2378$class_6889;)Lnet/minecraft/class_2348;
+		ARG 0 key
+		ARG 1 defaultId
+		ARG 2 entryToTagsHolderGetter
+		ARG 3 defaultEntrySupplier
+	METHOD method_40290 getTagsHolderOrThrow (Lnet/minecraft/class_5321;)Lnet/minecraft/class_6880;
+		ARG 1 key
+	METHOD method_40292 register ()V
+	CLASS class_6889 DefaultEntrySupplier
