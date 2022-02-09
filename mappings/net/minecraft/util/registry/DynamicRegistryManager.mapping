@@ -11,37 +11,20 @@ CLASS net/minecraft/class_5455 net/minecraft/util/registry/DynamicRegistryManage
 	COMMENT or configuration of dynamic registries.
 	FIELD field_25918 LOGGER Lorg/slf4j/Logger;
 	FIELD field_25919 INFOS Ljava/util/Map;
-	FIELD field_26733 BUILTIN Lnet/minecraft/class_5455$class_5457;
-	METHOD method_30519 load (Lnet/minecraft/class_5455;Lnet/minecraft/class_5382;)V
+	FIELD field_26733 BUILTIN Ljava/util/function/Supplier;
+	METHOD method_30519 load (Lnet/minecraft/class_5455$class_6893;Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_6900;)V
 		COMMENT Loads a dynamic registry manager from the resource manager's data files.
-		ARG 0 manager
-		ARG 1 ops
 	METHOD method_30520 register (Lcom/google/common/collect/ImmutableMap$Builder;Lnet/minecraft/class_5321;Lcom/mojang/serialization/Codec;)V
 		ARG 0 infosBuilder
 		ARG 1 registryRef
 		ARG 2 entryCodec
-	METHOD method_30524 addBuiltinEntries (Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_2378;)V
-		COMMENT Add all entries of the {@code registry} to the corresponding registry
-		COMMENT within this manager.
-		ARG 0 manager
-		ARG 1 registry
-	METHOD method_30525 copyFromBuiltin (Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_5321;)V
-		COMMENT Add all entries of the registry referred by {@code registryRef} to the
-		COMMENT corresponding registry within this manager.
-		ARG 0 manager
-		ARG 1 registryRef
-	METHOD method_30526 load (Lnet/minecraft/class_5382;Lnet/minecraft/class_5455;Lnet/minecraft/class_5455$class_5456;)V
+	METHOD method_30526 load (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_6900$class_6901;Lnet/minecraft/class_5455$class_5456;)V
 		COMMENT Loads elements from the {@code ops} into the registry specified by {@code
 		COMMENT info} within the {@code manager}. Note that the resource manager instance
 		COMMENT is kept within the {@code ops}.
-		ARG 0 ops
-		ARG 1 manager
-		ARG 2 info
 	METHOD method_30527 getOptionalMutable (Lnet/minecraft/class_5321;)Ljava/util/Optional;
 		COMMENT Retrieves a registry optionally from this manager.
 		ARG 1 key
-	METHOD method_30528 create ()Lnet/minecraft/class_5455$class_5457;
-		COMMENT Creates a default dynamic registry manager.
 	METHOD method_30530 get (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2378;
 		COMMENT Retrieves a registry from this manager, or throws an exception when the
 		COMMENT registry does not exist.
@@ -53,11 +36,11 @@ CLASS net/minecraft/class_5455 net/minecraft/util/registry/DynamicRegistryManage
 		ARG 1 registryRef
 		ARG 2 entryCodec
 		ARG 3 networkEntryCodec
-	METHOD method_31141 (Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_5506$class_5507;Lnet/minecraft/class_5455$class_5456;)V
+	METHOD method_31141 (Lnet/minecraft/class_5455$class_6893;Lnet/minecraft/class_5506$class_5507;Lnet/minecraft/class_5455$class_5456;)V
 		ARG 0 registryManager
 		ARG 1 entryLoader
 		ARG 2 info
-	METHOD method_33309 getMutable (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2385;
+	METHOD method_33309 getMutable (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2378;
 		ARG 1 key
 	METHOD method_33310 getOptional (Lnet/minecraft/class_5321;)Ljava/util/Optional;
 		ARG 1 key
@@ -77,17 +60,3 @@ CLASS net/minecraft/class_5455 net/minecraft/util/registry/DynamicRegistryManage
 		METHOD comp_294 entryCodec ()Lcom/mojang/serialization/Codec;
 		METHOD comp_295 networkEntryCodec ()Lcom/mojang/serialization/Codec;
 		METHOD method_30537 isSynced ()Z
-	CLASS class_5457 Impl
-		COMMENT An immutable implementation of the dynamic registry manager, representing
-		COMMENT a specialized configuration of registries. It has a codec that allows
-		COMMENT conversion from and to data pack JSON or packet NBT.
-		FIELD field_25923 CODEC Lcom/mojang/serialization/Codec;
-		FIELD field_25924 registries Ljava/util/Map;
-		METHOD <init> (Ljava/util/Map;)V
-			ARG 1 registries
-		METHOD method_30538 fromRegistryCodecs (Lcom/mojang/serialization/codecs/UnboundedMapCodec;)Lcom/mojang/serialization/Codec;
-		METHOD method_30546 setupCodec ()Lcom/mojang/serialization/Codec;
-		METHOD method_30547 getDataResultForCodec (Lnet/minecraft/class_5321;)Lcom/mojang/serialization/DataResult;
-			ARG 0 registryRef
-		METHOD method_30548 createRegistry (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2370;
-			ARG 0 registryRef
