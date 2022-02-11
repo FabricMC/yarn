@@ -22,12 +22,12 @@ CLASS net/minecraft/class_5455 net/minecraft/util/registry/DynamicRegistryManage
 		COMMENT Loads elements from the {@code ops} into the registry specified by {@code
 		COMMENT info} within the {@code manager}. Note that the resource manager instance
 		COMMENT is kept within the {@code ops}.
-	METHOD method_30527 getOptionalMutable (Lnet/minecraft/class_5321;)Ljava/util/Optional;
+	METHOD method_30527 getOptionalManaged (Lnet/minecraft/class_5321;)Ljava/util/Optional;
 		COMMENT Retrieves a registry optionally from this manager.
 		ARG 1 key
 	METHOD method_30530 get (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2378;
-		COMMENT Retrieves a registry from this manager, or throws an exception when the
-		COMMENT registry does not exist.
+		COMMENT Retrieves a registry from this manager or {@link Registry.REGISTRIES},
+		COMMENT or throws an exception when the registry does not exist.
 		COMMENT
 		COMMENT @throws IllegalStateException if the registry does not exist
 		ARG 1 key
@@ -40,13 +40,39 @@ CLASS net/minecraft/class_5455 net/minecraft/util/registry/DynamicRegistryManage
 		ARG 0 registryManager
 		ARG 1 entryLoader
 		ARG 2 info
-	METHOD method_33309 getMutable (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2378;
+	METHOD method_33309 getManaged (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2378;
+		COMMENT Retrieves a registry from this manager,
+		COMMENT or throws an exception when the registry does not exist.
+		COMMENT
+		COMMENT @throws IllegalStateException if the registry does not exist
 		ARG 1 key
 	METHOD method_33310 getOptional (Lnet/minecraft/class_5321;)Ljava/util/Optional;
 		ARG 1 key
 	METHOD method_39674 getInfos ()Ljava/lang/Iterable;
-	METHOD method_40302 (Lnet/minecraft/class_2378;)Lnet/minecraft/class_5455$class_6890;
+	METHOD method_40302 of (Lnet/minecraft/class_2378;)Lnet/minecraft/class_5455$class_6890;
 		ARG 0 registries
+	METHOD method_40303 (Lnet/minecraft/class_5455$class_5456;)Lcom/mojang/serialization/Codec;
+		ARG 0 info
+	METHOD method_40304 (Lnet/minecraft/class_5455$class_6892;)Z
+		ARG 0 entry
+	METHOD method_40305 (Lnet/minecraft/class_5455;)Ljava/util/Map;
+		ARG 0 dynamicRegistryManager
+	METHOD method_40308 streamManagedRegistries ()Ljava/util/stream/Stream;
+	METHOD method_40309 (Lnet/minecraft/class_2378;)Lcom/mojang/serialization/DataResult;
+		ARG 0 registry
+	METHOD method_40310 (Lnet/minecraft/class_5455$class_6892;)Lnet/minecraft/class_2378;
+		ARG 0 entry
+	METHOD method_40311 streamAllRegistries ()Ljava/util/stream/Stream;
+	METHOD method_40312 (Lnet/minecraft/class_5455$class_6892;)Lnet/minecraft/class_5321;
+		ARG 0 entry
+	METHOD method_40313 streamSyncedRegistries ()Ljava/util/stream/Stream;
+	METHOD method_40318 streamStaticRegistries ()Ljava/util/stream/Stream;
+	METHOD method_40319 getNetworkEntryCodec (Lnet/minecraft/class_5321;)Lcom/mojang/serialization/DataResult;
+		ARG 0 registryKey
+	METHOD method_40320 createCodec ()Lcom/mojang/serialization/Codec;
+	METHOD method_40321 streamSyncedManagedRegistries ()Ljava/util/stream/Stream;
+	METHOD method_40323 collectMutableRegistries ()Ljava/util/Map;
+	METHOD method_40325 createMutableRegistryManager ()Lnet/minecraft/class_5455$class_6893;
 	CLASS class_5456 Info
 		COMMENT Represents the serialization behavior of the registries, including the
 		COMMENT id of the registry, the codec for its elements, and whether the registry
@@ -62,3 +88,25 @@ CLASS net/minecraft/class_5455 net/minecraft/util/registry/DynamicRegistryManage
 		METHOD comp_294 entryCodec ()Lcom/mojang/serialization/Codec;
 		METHOD comp_295 networkEntryCodec ()Lcom/mojang/serialization/Codec;
 		METHOD method_30537 isSynced ()Z
+	CLASS class_6892 Entry
+		METHOD method_40329 of (Lnet/minecraft/class_6880$class_6883;)Lnet/minecraft/class_5455$class_6892;
+			ARG 0 entry
+		METHOD method_40330 of (Ljava/util/Map$Entry;)Lnet/minecraft/class_5455$class_6892;
+			ARG 0 entry
+		METHOD method_40331 of (Lnet/minecraft/class_5321;Lnet/minecraft/class_2378;)Lnet/minecraft/class_5455$class_6892;
+			ARG 0 key
+			ARG 1 value
+		METHOD method_40332 freeze ()Lnet/minecraft/class_5455$class_6892;
+	CLASS class_6893 MutableRegistryManager
+		METHOD method_40333 getOptionalMutable (Lnet/minecraft/class_5321;)Ljava/util/Optional;
+			ARG 1 key
+		METHOD method_40334 getMutable (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2385;
+			ARG 1 key
+	CLASS class_6894 MutableRegistryManagerImpl
+		FIELD field_36472 mutableRegistries Ljava/util/Map;
+		METHOD <init> (Ljava/util/Map;)V
+			ARG 1 mutableRegistries
+		METHOD method_40336 (Lnet/minecraft/class_2385;)Lnet/minecraft/class_2385;
+			ARG 0 registry
+		METHOD method_40337 (Lnet/minecraft/class_2385;)Lnet/minecraft/class_2378;
+			ARG 0 registry
