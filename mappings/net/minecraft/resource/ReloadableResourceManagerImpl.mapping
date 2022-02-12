@@ -1,8 +1,27 @@
 CLASS net/minecraft/class_3304 net/minecraft/resource/ReloadableResourceManagerImpl
+	COMMENT A reloadable resource manager is always available to be accessed, and is the
+	COMMENT type used by the minecraft client instance. It has a backing {@linkplain
+	COMMENT #activeManager active resource manager} that it delegates to.
+	COMMENT
+	COMMENT <p>It starts with an empty active resource manager, and swaps the active
+	COMMENT resource manager whenever it {@linkplain #reload reloads}; in addition,
+	COMMENT {@linkplain #close closing} it will replace the active resource manager
+	COMMENT with an empty one, and the reloadable manager itself is still accessible to
+	COMMENT users, as opposed to the lifecycled resource manager.
 	FIELD field_14294 type Lnet/minecraft/class_3264;
 	FIELD field_14295 LOGGER Lorg/slf4j/Logger;
 	FIELD field_17935 reloaders Ljava/util/List;
+	FIELD field_36391 activeManager Lnet/minecraft/class_6860;
 	METHOD <init> (Lnet/minecraft/class_3264;)V
 		ARG 1 type
 	METHOD method_14477 registerReloader (Lnet/minecraft/class_3302;)V
+		COMMENT Registers a reloader to all future reloads on this resource
+		COMMENT manager.
+		ARG 1 reloader
 	METHOD method_18232 reload (Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;Ljava/util/List;)Lnet/minecraft/class_4011;
+		COMMENT Swaps the active resource manager with another one backed by the given
+		COMMENT {@code packs} and start a {@linkplain SimpleResourceReload#start reload}.
+		ARG 1 prepareExecutor
+		ARG 2 applyExecutor
+		ARG 3 initialStage
+		ARG 4 packs
