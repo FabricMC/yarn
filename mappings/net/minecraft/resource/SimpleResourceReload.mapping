@@ -42,6 +42,24 @@ CLASS net/minecraft/class_4014 net/minecraft/resource/SimpleResourceReload
 		ARG 4 initialStage
 	METHOD method_18372 (Ljava/util/concurrent/Executor;Ljava/lang/Runnable;)V
 		ARG 2 preparation
+	METHOD method_40087 start (Lnet/minecraft/class_3300;Ljava/util/List;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;Z)Lnet/minecraft/class_4011;
+		COMMENT Starts a resource reload with the content from the {@code manager} supplied
+		COMMENT to the {@code reloaders}.
+		COMMENT
+		COMMENT @apiNote In vanilla, this is respectively called by {@link ReloadableResourceManagerImpl}
+		COMMENT on the client and {@link ServerResourceManager} on the server.
+		ARG 0 manager
+			COMMENT the resource manager, providing resources to the reloaders
+		ARG 1 reloaders
+			COMMENT the reloaders performing the reload
+		ARG 2 prepareExecutor
+			COMMENT the executor for the prepare stage, often asynchronous
+		ARG 3 applyExecutor
+			COMMENT the executor for the apply stage, synchronous with the game engine
+		ARG 4 initialStage
+			COMMENT the initial stage, must be completed before the reloaders can prepare resources
+		ARG 5 profiled
+			COMMENT whether to profile this reload and log the statistics
 	CLASS class_4047 Factory
 		COMMENT A factory that creates a completable future for each reloader in the
 		COMMENT resource reload.
