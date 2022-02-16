@@ -63,8 +63,61 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		ARG 0 min
 		ARG 1 max
 		ARG 2 messageFactory
+	METHOD method_39028 orElsePartial (Ljava/lang/Object;)Lcom/mojang/serialization/Codec$ResultFunction;
 	METHOD method_39240 createLazy (Ljava/util/function/Supplier;)Lcom/mojang/serialization/Codec;
 		ARG 0 supplier
+	METHOD method_39504 withLifecycle (Lcom/mojang/serialization/Codec;Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+		ARG 0 originalCodec
+	METHOD method_39509 (Ljava/util/function/IntFunction;Ljava/lang/Integer;)Lcom/mojang/serialization/DataResult;
+		ARG 1 rawId
+	METHOD method_39510 (Ljava/util/function/ToIntFunction;ILjava/lang/Object;)Lcom/mojang/serialization/DataResult;
+		ARG 2 element
+	METHOD method_39511 rawIdChecked (Ljava/util/function/ToIntFunction;Ljava/util/function/IntFunction;I)Lcom/mojang/serialization/Codec;
+		ARG 0 elementToRawId
+		ARG 1 rawIdToElement
+		ARG 2 errorRawId
+	METHOD method_39512 orCompressed (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
+		ARG 0 uncompressedCodec
+		ARG 1 compressedCodec
+	METHOD method_40109 (Lnet/minecraft/class_6885;)Lcom/mojang/serialization/DataResult;
+		ARG 0 entries
+	METHOD method_40110 createContextRetrievalCodec (Ljava/util/function/Function;)Lcom/mojang/serialization/MapCodec;
+		ARG 0 retriever
+	METHOD method_40111 (Ljava/util/function/Function;Ljava/util/Collection;)Lcom/mojang/serialization/DataResult;
+		ARG 1 collection
+	METHOD method_40112 createNonEmptyEntryListChecker ()Ljava/util/function/Function;
+	METHOD method_40113 nonEmptyEntryList (Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
+		ARG 0 originalCodec
+	METHOD method_40114 createEqualTypeChecker (Ljava/util/function/Function;)Ljava/util/function/Function;
+		ARG 0 typeGetter
+	CLASS 1
+		METHOD apply (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+			ARG 3 result
+		METHOD coApply (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+			ARG 3 result
+	CLASS 2
+		METHOD decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 input
+			ARG 2 ops
+			ARG 3 prefix
+	CLASS 3
+		METHOD apply (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+			ARG 3 result
+		METHOD coApply (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+			ARG 3 result
+		METHOD method_39515 (Lcom/mojang/serialization/DataResult;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Pair;)Lcom/mojang/serialization/DataResult;
+			ARG 2 pair
 	CLASS class_5839 Xor
 		COMMENT An xor codec that only permits exactly one of the two data choices to be
 		COMMENT present.
@@ -124,3 +177,15 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 			ARG 1 input
 			ARG 2 ops
 			ARG 3 prefix
+	CLASS class_6866 ContextRetrievalCodec
+		METHOD <init> (Ljava/util/function/Function;)V
+			ARG 1 retriever
+		METHOD decode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/MapLike;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/RecordBuilder;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 input
+			ARG 2 ops
+			ARG 3 prefix
+		METHOD keys (Lcom/mojang/serialization/DynamicOps;)Ljava/util/stream/Stream;
+			ARG 1 ops
