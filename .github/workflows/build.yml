@@ -13,10 +13,17 @@ jobs:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1
       - run: ./gradlew build javadocJar checkMappings --stacktrace
-      - name: Build artifacts
+      - name: Upload all artifacts
         if: ${{ matrix.java == '18-jdk' }}
         continue-on-error: true
         uses: actions/upload-artifact@v2
         with:
-          name: Artifacts
+          name: All Artifacts
           path: build/libs/
+      - name: Upload loom artifact
+        if: ${{ matrix.java == '18-jdk' }}
+        continue-on-error: true
+        uses: actions/upload-artifact@v2
+        with:
+          name: Loom Artifact
+          path: build/dist/
