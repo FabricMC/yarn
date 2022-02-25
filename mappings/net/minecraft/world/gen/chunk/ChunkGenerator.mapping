@@ -6,9 +6,9 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		COMMENT Used to control the population step without replacing the actual biome that comes from the original {@link #biomeSource}.
 		COMMENT
 		COMMENT <p>This is used by {@link FlatChunkGenerator} to overwrite biome properties like whether lakes generate, while preserving the original biome ID.
-	FIELD field_16567 structuresConfig Lnet/minecraft/class_5311;
 	FIELD field_24746 CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_24747 biomeSource Lnet/minecraft/class_1966;
+	FIELD field_37254 LOGGER Lorg/slf4j/Logger;
 	METHOD method_12088 populateNoise (Ljava/util/concurrent/Executor;Lnet/minecraft/class_6748;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		COMMENT Generates the base shape of the chunk out of the basic block states as decided by this chunk generator's config.
 		ARG 1 executor
@@ -22,7 +22,7 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		ARG 1 world
 		ARG 2 chunk
 		ARG 3 structureAccessor
-	METHOD method_12103 locateStructure (Lnet/minecraft/class_3218;Lnet/minecraft/class_3195;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
+	METHOD method_12103 locateStructure (Lnet/minecraft/class_3218;Lnet/minecraft/class_6885;Lnet/minecraft/class_2338;IZ)Lcom/mojang/datafixers/util/Pair;
 		COMMENT Tries to find the closest structure of a given type near a given block.
 		COMMENT <p>
 		COMMENT New chunks will only be generated up to the {@link net.minecraft.world.chunk.ChunkStatus#STRUCTURE_STARTS} phase by this method.
@@ -30,8 +30,6 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		COMMENT The radius is ignored for strongholds.
 		COMMENT
 		COMMENT @return {@code null} if no structure could be found within the given search radius
-		ARG 1 world
-		ARG 2 feature
 		ARG 3 center
 		ARG 4 radius
 			COMMENT the search radius in chunks around the chunk the given block position is in; a radius of 0 will only search in the given chunk
@@ -48,19 +46,20 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		ARG 5 structureAccessor
 		ARG 6 chunk
 		ARG 7 generationStep
-	METHOD method_12109 getStructuresConfig ()Lnet/minecraft/class_5311;
 	METHOD method_12110 buildSurface (Lnet/minecraft/class_3233;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;)V
 		COMMENT Places the surface blocks of the biomes after the noise has been generated.
 		ARG 1 region
 		ARG 2 structures
 		ARG 3 chunk
 	METHOD method_12113 getEntitySpawnList (Lnet/minecraft/class_6880;Lnet/minecraft/class_5138;Lnet/minecraft/class_1311;Lnet/minecraft/class_2338;)Lnet/minecraft/class_6012;
+		ARG 1 biome
 		ARG 2 accessor
 		ARG 3 group
 		ARG 4 pos
 	METHOD method_16129 setStructureStarts (Lnet/minecraft/class_5455;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;Lnet/minecraft/class_3485;J)V
 		COMMENT Determines which structures should start in the given chunk and creates their starting points.
 		ARG 1 registryManager
+		ARG 2 world
 		ARG 3 chunk
 		ARG 4 structureManager
 		ARG 5 worldSeed
@@ -95,13 +94,14 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	METHOD method_27997 withSeed (J)Lnet/minecraft/class_2794;
 		ARG 1 seed
 	METHOD method_28506 getCodec ()Lcom/mojang/serialization/Codec;
-	METHOD method_28509 generateStrongholdPositions (Lnet/minecraft/class_3195;Lnet/minecraft/class_6871;)V
+	METHOD method_28509 generateStrongholdPositions (Lnet/minecraft/class_6880;Lnet/minecraft/class_6871;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 strongholdSet
+		ARG 2 placement
 	METHOD method_33730 getMinimumY ()I
-	METHOD method_38264 getStructureReferences (Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;Lnet/minecraft/class_4076;Lnet/minecraft/class_3195;)I
+	METHOD method_38264 getStructureReferences (Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;Lnet/minecraft/class_4076;Lnet/minecraft/class_5312;)I
 		ARG 0 structureAccessor
 		ARG 1 chunk
 		ARG 2 sectionPos
-		ARG 3 structureFeature
 	METHOD method_38275 populateBiomes (Lnet/minecraft/class_2378;Ljava/util/concurrent/Executor;Lnet/minecraft/class_6748;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 biomeRegistry
 		ARG 3 blender
@@ -112,4 +112,11 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	METHOD method_39462 getBlockBoxForChunk (Lnet/minecraft/class_2791;)Lnet/minecraft/class_3341;
 		ARG 0 chunk
 	METHOD method_40147 getConcentricRingsStartChunks (Lnet/minecraft/class_6871;)Ljava/util/List;
-	METHOD method_40154 getSeed ()J
+		ARG 1 structurePlacement
+	METHOD method_40149 filterBiome (Lnet/minecraft/class_6880;)Lnet/minecraft/class_6880;
+		ARG 1 biome
+	METHOD method_40450 getDebugHudText (Ljava/util/List;Lnet/minecraft/class_2338;)V
+		ARG 1 text
+		ARG 2 pos
+	METHOD method_40451 (Lnet/minecraft/class_7059$class_7060;)Ljava/util/stream/Stream;
+		ARG 0 entry
