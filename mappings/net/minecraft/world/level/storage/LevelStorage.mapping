@@ -6,12 +6,15 @@ CLASS net/minecraft/class_32 net/minecraft/world/level/storage/LevelStorage
 	FIELD field_200 TIME_FORMATTER Ljava/time/format/DateTimeFormatter;
 	FIELD field_25020 GENERATOR_OPTION_KEYS Lcom/google/common/collect/ImmutableList;
 	FIELD field_31836 DEFAULT_ICON Ljava/lang/String;
+	FIELD field_36348 DATA_KEY Ljava/lang/String;
 	METHOD <init> (Ljava/nio/file/Path;Ljava/nio/file/Path;Lcom/mojang/datafixers/DataFixer;)V
 		ARG 1 savesDirectory
 		ARG 2 backupsDirectory
 		ARG 3 dataFixer
-	METHOD method_17926 createLevelDataParser (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5359;)Ljava/util/function/BiFunction;
+	METHOD method_17926 createLevelDataParser (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5359;Lcom/mojang/serialization/Lifecycle;)Ljava/util/function/BiFunction;
+		ARG 0 ops
 		ARG 1 dataPackSettings
+		ARG 2 lifecycle
 	METHOD method_17931 getCurrentVersion ()I
 	METHOD method_19636 getSavesDirectory ()Ljava/nio/file/Path;
 	METHOD method_230 levelExists (Ljava/lang/String;)Z
@@ -38,13 +41,19 @@ CLASS net/minecraft/class_32 net/minecraft/world/level/storage/LevelStorage
 		ARG 3 file
 		ARG 4 dataFixer
 	METHOD method_29580 parseDataPackSettings (Lcom/mojang/serialization/Dynamic;)Lnet/minecraft/class_5359;
-	METHOD method_29582 (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5359;Ljava/io/File;Lcom/mojang/datafixers/DataFixer;)Lnet/minecraft/class_31;
-		ARG 2 file
-		ARG 3 dataFixer
+		ARG 0 dynamic
+	METHOD method_29582 (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5359;Lcom/mojang/serialization/Lifecycle;Ljava/io/File;Lcom/mojang/datafixers/DataFixer;)Lnet/minecraft/class_31;
+		ARG 3 file
+		ARG 4 dataFixer
 	METHOD method_29583 readDataPackSettings (Ljava/io/File;Lcom/mojang/datafixers/DataFixer;)Lnet/minecraft/class_5359;
 		ARG 0 file
 		ARG 1 dataFixer
 	METHOD method_35504 getFormatName ()Ljava/lang/String;
+	METHOD method_40035 loadCompactLevelData (Ljava/io/File;)Lnet/minecraft/class_2520;
+		COMMENT {@return the compact version of the NBT for the level data {@code file}}
+		COMMENT
+		COMMENT <p>The returned NBT will not have {@code Player} and {@code WorldGenSettings} keys.
+		ARG 0 file
 	CLASS class_5143 Session
 		FIELD field_23767 lock Lnet/minecraft/class_5125;
 		FIELD field_23768 directory Ljava/nio/file/Path;
@@ -57,8 +66,10 @@ CLASS net/minecraft/class_32 net/minecraft/world/level/storage/LevelStorage
 			ARG 1 name
 		METHOD method_27010 getDirectory (Lnet/minecraft/class_5218;)Ljava/nio/file/Path;
 			ARG 1 savePath
-		METHOD method_27013 readLevelProperties (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5359;)Lnet/minecraft/class_5219;
+		METHOD method_27013 readLevelProperties (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5359;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/class_5219;
+			ARG 1 ops
 			ARG 2 dataPackSettings
+			ARG 3 lifecycle
 		METHOD method_27014 getIconFile ()Ljava/util/Optional;
 		METHOD method_27015 deleteSessionLock ()V
 		METHOD method_27016 createBackup ()J
@@ -77,3 +88,14 @@ CLASS net/minecraft/class_32 net/minecraft/world/level/storage/LevelStorage
 			ARG 1 path
 		METHOD method_29584 getLevelSummary ()Lnet/minecraft/class_34;
 		METHOD method_29585 getDataPackSettings ()Lnet/minecraft/class_5359;
+		CLASS 1
+			METHOD postVisitDirectory (Ljava/lang/Object;Ljava/io/IOException;)Ljava/nio/file/FileVisitResult;
+				ARG 1 path
+				ARG 2 exception
+			METHOD visitFile (Ljava/lang/Object;Ljava/nio/file/attribute/BasicFileAttributes;)Ljava/nio/file/FileVisitResult;
+				ARG 1 path
+				ARG 2 attributes
+		CLASS 2
+			METHOD visitFile (Ljava/lang/Object;Ljava/nio/file/attribute/BasicFileAttributes;)Ljava/nio/file/FileVisitResult;
+				ARG 1 path
+				ARG 2 attributes

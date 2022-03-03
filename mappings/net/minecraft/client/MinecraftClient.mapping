@@ -100,7 +100,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_1742 itemRenderer Lnet/minecraft/class_918;
 	FIELD field_1743 skipGameRender Z
 	FIELD field_1744 connectedToRealms Z
-	FIELD field_1745 resourceManager Lnet/minecraft/class_3296;
+	FIELD field_1745 resourceManager Lnet/minecraft/class_3304;
 	FIELD field_1746 integratedServerConnection Lnet/minecraft/class_2535;
 		COMMENT The client connection to the integrated server.
 		COMMENT This is only used when connecting to the integrated server.
@@ -167,6 +167,8 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		COMMENT
 		COMMENT @see net.minecraft.client.util.Window#throwGlError(int, long)
 	FIELD field_34956 deviceSessionId Ljava/util/UUID;
+	FIELD field_36433 REGIONAL_COMPLIANCIES_ID Lnet/minecraft/class_2960;
+	FIELD field_36434 regionalComplianciesManager Lnet/minecraft/class_6877;
 	METHOD <init> (Lnet/minecraft/class_542;)V
 		ARG 1 args
 	METHOD method_1476 checkIs64Bit ()Z
@@ -321,6 +323,8 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 1 overlay
 	METHOD method_18505 getStatusEffectSpriteManager ()Lnet/minecraft/class_4074;
 	METHOD method_18506 getOverlay ()Lnet/minecraft/class_4071;
+	METHOD method_18507 (Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletionStage;
+		ARG 0 future
 	METHOD method_20539 openPauseMenu (Z)V
 		ARG 1 pause
 	METHOD method_22107 shouldRenderAsync ()Z
@@ -350,7 +354,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_24043 createV4ResourcePackFactory (Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
 		ARG 0 packFactory
 	METHOD method_24226 handleResourceReloadException (Ljava/lang/Throwable;)V
-		ARG 1 exception
+		ARG 1 throwable
 	METHOD method_24228 (Ljava/util/concurrent/CompletableFuture;Ljava/util/Optional;)V
 		ARG 2 throwable
 	METHOD method_24287 getWindowTitle ()Ljava/lang/String;
@@ -377,15 +381,8 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		COMMENT them.
 		ARG 1 sender
 	METHOD method_29043 isMultiplayerEnabled ()Z
-	METHOD method_29597 (Lnet/minecraft/class_1940;Lnet/minecraft/class_32$class_5143;)Lnet/minecraft/class_5359;
+	METHOD method_29597 (Lnet/minecraft/class_1940;Lnet/minecraft/class_32$class_5143;)Lnet/minecraft/class_6904$class_6905;
 		ARG 1 session
-	METHOD method_29598 loadDataPackSettings (Lnet/minecraft/class_32$class_5143;)Lnet/minecraft/class_5359;
-		ARG 0 storageSession
-	METHOD method_29599 createSaveProperties (Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_3300;Lnet/minecraft/class_5359;)Lnet/minecraft/class_5219;
-		ARG 0 session
-		ARG 1 registryTracker
-		ARG 2 resourceManager
-		ARG 3 dataPackSettings
 	METHOD method_29600 (Ljava/lang/String;Ljava/lang/Runnable;ZZ)V
 		ARG 3 shouldBackup
 		ARG 4 eraseCache
@@ -394,48 +391,28 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 2 levelName
 		ARG 3 legacyCustomized
 		ARG 4 onConfirm
-	METHOD method_29603 (Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_310$class_5367;Lnet/minecraft/class_5219;Lcom/mojang/authlib/minecraft/MinecraftSessionService;Lcom/mojang/authlib/GameProfileRepository;Lnet/minecraft/class_3312;Ljava/lang/Thread;)Lnet/minecraft/class_1132;
-		ARG 1 registryTracker
-		ARG 2 session
+	METHOD method_29603 (Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Lcom/mojang/authlib/minecraft/MinecraftSessionService;Lcom/mojang/authlib/GameProfileRepository;Lnet/minecraft/class_3312;Ljava/lang/Thread;)Lnet/minecraft/class_1132;
+		ARG 1 thread
 		ARG 3 resourceManager
-		ARG 4 saveProperties
-		ARG 5 sessionService
-		ARG 6 profileRepository
-		ARG 7 userCache
-		ARG 8 serverThread
-	METHOD method_29604 createIntegratedResourceManager (Lnet/minecraft/class_5455$class_5457;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Function4;ZLnet/minecraft/class_32$class_5143;)Lnet/minecraft/class_310$class_5367;
-		ARG 1 registryManager
-		ARG 2 dataPackSettingsGetter
-		ARG 3 savePropertiesGetter
-		ARG 4 safeMode
-		ARG 5 storageSession
 	METHOD method_29605 (Ljava/lang/Runnable;Ljava/lang/String;Z)V
 		ARG 3 confirmed
 	METHOD method_29606 startIntegratedServer (Ljava/lang/String;)V
 		ARG 1 worldName
-	METHOD method_29607 createWorld (Ljava/lang/String;Lnet/minecraft/class_1940;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_5285;)V
+	METHOD method_29607 createWorld (Ljava/lang/String;Lnet/minecraft/class_1940;Lnet/minecraft/class_5455;Lnet/minecraft/class_5285;)V
 		ARG 1 worldName
 		ARG 2 levelInfo
-		ARG 3 registryTracker
+		ARG 3 dynamicRegistryManager
 		ARG 4 generatorOptions
-	METHOD method_29610 startIntegratedServer (Ljava/lang/String;Lnet/minecraft/class_5455$class_5457;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Function4;ZLnet/minecraft/class_310$class_5366;)V
+	METHOD method_29610 startIntegratedServer (Ljava/lang/String;Ljava/util/function/Function;Ljava/util/function/Function;ZLnet/minecraft/class_310$class_5366;)V
 		ARG 1 worldName
-		ARG 2 registryTracker
-		ARG 3 dataPackSettingsGetter
-		ARG 4 savePropertiesGetter
-		ARG 5 safeMode
-		ARG 6 worldLoadAction
+		ARG 2 dataPackSettingsSupplierGetter
+		ARG 3 savePropertiesSupplierGetter
+		ARG 4 safeMode
+		ARG 5 worldLoadAction
 	METHOD method_29611 isFabulousGraphicsOrBetter ()Z
 	METHOD method_29970 setScreenAndRender (Lnet/minecraft/class_437;)V
 		ARG 1 screen
 	METHOD method_30049 getVideoWarningManager ()Lnet/minecraft/class_5407;
-	METHOD method_31125 (Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_5285;Lnet/minecraft/class_1940;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5455$class_5457;Lnet/minecraft/class_3300;Lnet/minecraft/class_5359;)Lnet/minecraft/class_5219;
-		ARG 3 session
-		ARG 4 registryManager
-		ARG 5 resourceManager
-		ARG 6 dataPackSettings
-	METHOD method_31126 (Lnet/minecraft/class_5382;Lcom/google/gson/JsonElement;)Lcom/mojang/serialization/DataResult;
-		ARG 1 json
 	METHOD method_31186 onResourceReloadFailure (Ljava/lang/Throwable;Lnet/minecraft/class_2561;)V
 		ARG 1 exception
 		ARG 2 resourceName
@@ -505,18 +482,26 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 2 path
 	METHOD method_38736 createTelemetrySender ()Lnet/minecraft/class_6628;
 	METHOD method_38932 loadBlockList ()V
+	METHOD method_40183 createSaveLoader (Lnet/minecraft/class_3283;ZLnet/minecraft/class_6904$class_6905;Lnet/minecraft/class_6904$class_6907;)Lnet/minecraft/class_6904;
+		ARG 1 dataPackManager
+		ARG 2 safeMode
+		ARG 3 dataPackSettingsSupplier
+		ARG 4 savePropertiesSupplier
+	METHOD method_40184 (Lcom/mojang/serialization/DynamicOps;Lcom/google/gson/JsonElement;)Lcom/mojang/serialization/DataResult;
+		ARG 1 json
+	METHOD method_40185 createServerDataManager (Lnet/minecraft/class_32$class_5143;)Lnet/minecraft/class_3283;
+		ARG 0 session
+	METHOD method_40186 createSaveLoader (Lnet/minecraft/class_32$class_5143;Z)Lnet/minecraft/class_6904;
+		ARG 1 session
+		ARG 2 safeMode
+	METHOD method_40187 (Lnet/minecraft/class_5455;Lnet/minecraft/class_5285;Lnet/minecraft/class_1940;Lnet/minecraft/class_3300;Lnet/minecraft/class_5359;)Lcom/mojang/datafixers/util/Pair;
+		ARG 3 resourceManager
+		ARG 4 dataPackSettings
+	METHOD method_40188 (Lnet/minecraft/class_5455;Lnet/minecraft/class_5285;Lnet/minecraft/class_1940;Lnet/minecraft/class_32$class_5143;)Lnet/minecraft/class_6904$class_6907;
+		ARG 3 session
+	METHOD method_40189 isCountrySetTo (Ljava/lang/Object;)Z
+		ARG 0 country
 	CLASS class_5366 WorldLoadAction
-	CLASS class_5367 IntegratedResourceManager
-		FIELD field_25439 resourcePackManager Lnet/minecraft/class_3283;
-		FIELD field_25440 serverResourceManager Lnet/minecraft/class_5350;
-		FIELD field_25441 saveProperties Lnet/minecraft/class_5219;
-		METHOD <init> (Lnet/minecraft/class_3283;Lnet/minecraft/class_5350;Lnet/minecraft/class_5219;)V
-			ARG 1 resourcePackManager
-			ARG 2 serverResourceManager
-			ARG 3 saveProperties
-		METHOD method_29612 getResourcePackManager ()Lnet/minecraft/class_3283;
-		METHOD method_29613 getServerResourceManager ()Lnet/minecraft/class_5350;
-		METHOD method_29614 getSaveProperties ()Lnet/minecraft/class_5219;
 	CLASS class_5859 ChatRestriction
 		COMMENT Represents the restrictions on chat on a Minecraft client.
 		COMMENT
