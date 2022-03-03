@@ -3,7 +3,7 @@
  */
 
 /**
- * Provides resources to Minecraft, including resource access and provision.
+ * Provides resources to Minecraft, including resource access, provision, and reloading.
  *
  * <p>"Data" as in "Data Packs" is considered resource as well.
  *
@@ -15,26 +15,25 @@
  * </tr>
  * <tr>
  *     <td>{@link Resource}</td>
- *     <td>Accesses binary data.</td>
+ *     <td>Accesses to binary data.</td>
  * </tr>
  * <tr>
  *     <td>{@link ResourceFactory}</td>
  *     <td>Provides a resource given an {@link net.minecraft.util.Identifier}.</td>
-
  * </tr>
  * <tr>
  *     <td>{@link ResourceManager}</td>
  *     <td>Exposes more resource access in addition to being a {@link ResourceFactory}.</td>
  * </tr>
  * <tr>
- *     <td>{@link ResourceReloader}</td>
- *     <td>The most common accessor to resources, acting during "reloads" to set up in-game contents.
- *     <br><i>This is usually implemented by mods using resources.</i></td>
+ *     <td>{@link LifecycledResourceManager}</td>
+ *     <td>A resource manager with a specific lifecycle, to fine-grain resource access.</td>
  * </tr>
  * <tr>
- *     <td>{@link ReloadableResourceManager}</td>
- *     <td>Performs reloads and manages {@link ResourceReloader}s in addition to being a {@link ResourceManager}.
- *     <br>Usually held by the game engine, it may be provided by the modding APIs as well.</td>
+ *     <td>{@link ResourceReloader}</td>
+ *     <td>The most common accessor to resources, acting during {@linkplain
+ *     SimpleResourceReload#start reloads} to set up in-game contents.
+ *     <br><i>This is usually implemented by mods using resources.</i></td>
  * </tr>
  * </table></div>
  *

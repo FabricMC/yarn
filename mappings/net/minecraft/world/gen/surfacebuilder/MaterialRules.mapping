@@ -3,6 +3,8 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 	FIELD field_35223 STONE_DEPTH_FLOOR_WITH_SURFACE_DEPTH Lnet/minecraft/class_6686$class_6693;
 	FIELD field_35224 STONE_DEPTH_CEILING_WITH_SURFACE_DEPTH Lnet/minecraft/class_6686$class_6693;
 	FIELD field_35494 STONE_DEPTH_CEILING Lnet/minecraft/class_6686$class_6693;
+	FIELD field_36341 STONE_DEPTH_FLOOR_WITH_SURFACE_DEPTH_RANGE_6 Lnet/minecraft/class_6686$class_6693;
+	FIELD field_36342 STONE_DEPTH_FLOOR_WITH_SURFACE_DEPTH_RANGE_30 Lnet/minecraft/class_6686$class_6693;
 	METHOD method_39045 steepSlope ()Lnet/minecraft/class_6686$class_6693;
 	METHOD method_39046 water (II)Lnet/minecraft/class_6686$class_6693;
 		ARG 0 offset
@@ -44,11 +46,15 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 		ARG 1 trueAtAndBelow
 		ARG 2 falseAtAndAbove
 	METHOD method_39473 surface ()Lnet/minecraft/class_6686$class_6693;
-	METHOD method_39549 stoneDepth (IZZLnet/minecraft/class_5932;)Lnet/minecraft/class_6686$class_6693;
+	METHOD method_39549 stoneDepth (IZLnet/minecraft/class_5932;)Lnet/minecraft/class_6686$class_6693;
 		ARG 0 offset
 		ARG 1 addSurfaceDepth
-		ARG 2 addSecondarySurfaceDepth
-		ARG 3 surfaceType
+		ARG 2 verticalSurfaceType
+	METHOD method_40023 stoneDepth (IZILnet/minecraft/class_5932;)Lnet/minecraft/class_6686$class_6693;
+		ARG 0 offset
+		ARG 1 addSurfaceDepth
+		ARG 2 secondaryDepthRange
+		ARG 3 verticalSurfaceType
 	CLASS class_6687 TerracottaBandsMaterialRule
 		FIELD field_35226 RULE_CODEC Lcom/mojang/serialization/Codec;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
@@ -69,7 +75,7 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 	CLASS class_6693 MaterialCondition
 		FIELD field_35232 CODEC Lcom/mojang/serialization/Codec;
 		METHOD method_39064 codec ()Lcom/mojang/serialization/Codec;
-		METHOD method_39070 registerAndGetDefault ()Lcom/mojang/serialization/Codec;
+		METHOD method_39070 registerAndGetDefault (Lnet/minecraft/class_2378;)Lcom/mojang/serialization/Codec;
 	CLASS class_6694 MaterialRuleContext
 		FIELD field_35233 surfaceBuilder Lnet/minecraft/class_6724;
 		FIELD field_35234 biomeTemperaturePredicate Lnet/minecraft/class_6686$class_6692;
@@ -79,7 +85,6 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 		FIELD field_35604 surfacePredicate Lnet/minecraft/class_6686$class_6692;
 		FIELD field_35605 chunk Lnet/minecraft/class_2791;
 		FIELD field_35606 posToBiome Ljava/util/function/Function;
-		FIELD field_35607 biomeRegistry Lnet/minecraft/class_2378;
 		FIELD field_35608 uniqueHorizontalPosValue J
 		FIELD field_35609 x I
 		FIELD field_35610 z I
@@ -87,7 +92,6 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 		FIELD field_35612 uniquePosValue J
 		FIELD field_35613 pos Lnet/minecraft/class_2338$class_2339;
 		FIELD field_35614 biomeSupplier Ljava/util/function/Supplier;
-		FIELD field_35615 biomeKeySupplier Ljava/util/function/Supplier;
 		FIELD field_35616 surfaceMinY I
 		FIELD field_35617 y I
 		FIELD field_35618 fluidHeight I
@@ -144,7 +148,7 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 	CLASS class_6708 MaterialRule
 		FIELD field_35252 CODEC Lcom/mojang/serialization/Codec;
 		METHOD method_39061 codec ()Lcom/mojang/serialization/Codec;
-		METHOD method_39085 registerAndGetDefault ()Lcom/mojang/serialization/Codec;
+		METHOD method_39085 registerAndGetDefault (Lnet/minecraft/class_2378;)Lcom/mojang/serialization/Codec;
 	CLASS class_6709 SequenceBlockStateRule
 		COMMENT Applies the given block state rules in sequence, and returns the first result that
 		COMMENT isn't {@code null}. Returns {@code null} if none of the passed rules match.
