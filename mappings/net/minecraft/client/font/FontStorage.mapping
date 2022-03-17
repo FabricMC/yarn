@@ -16,6 +16,9 @@ CLASS net/minecraft/class_377 net/minecraft/client/font/FontStorage
 		ARG 1 fonts
 	METHOD method_2010 closeGlyphAtlases ()V
 	METHOD method_2011 getGlyph (I)Lnet/minecraft/class_379;
+		COMMENT {@return the glyph of {@code codePoint}}
+		COMMENT
+		COMMENT @implNote {@link BuiltinEmptyGlyph#MISSING} is returned for missing code points.
 		ARG 1 codePoint
 	METHOD method_2012 getGlyphRenderer (Lnet/minecraft/class_383;)Lnet/minecraft/class_382;
 		ARG 1 c
@@ -27,10 +30,12 @@ CLASS net/minecraft/class_377 net/minecraft/client/font/FontStorage
 	METHOD method_24290 closeFonts ()V
 	METHOD method_27545 (Ljava/util/List;Ljava/util/Set;I)V
 		ARG 3 codePoint
-	METHOD method_40038 getEmptyGlyph (I)Lnet/minecraft/class_379;
-		COMMENT {@return the pre-defined empty glyph for the code point, or
-		COMMENT {@code null} if it is not defined}
+	METHOD method_27546 (I)Lit/unimi/dsi/fastutil/ints/IntList;
+		ARG 0 advance
+	METHOD method_40038 findGlyph (I)Lnet/minecraft/class_379;
+		COMMENT {@return the glyph of {@code codePoint}}
 		COMMENT
-		COMMENT @implNote Pre-defined empty glyphs include the space ({@code U+0020})
-		COMMENT and zero-width non joiner ({@code U+200C}).
+		COMMENT @apiNote Call {@link #getGlyph} instead, as that method provides caching.
+		ARG 1 codePoint
+	METHOD method_41832 findGlyphRenderer (I)Lnet/minecraft/class_382;
 		ARG 1 codePoint
