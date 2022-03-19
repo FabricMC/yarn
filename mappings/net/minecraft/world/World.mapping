@@ -136,6 +136,13 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_39425 shouldTickBlocksInChunk (J)Z
 		COMMENT {@return whether the blocks in the specified chunk should get ticked}
 		ARG 1 chunkPos
+	METHOD method_41249 getNeighborUpdater ()Lnet/minecraft/class_7165;
+	METHOD method_41410 updateNeighbor (Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338;Z)V
+		ARG 1 state
+		ARG 2 pos
+		ARG 3 sourceBlock
+		ARG 4 sourcePos
+		ARG 5 notify
 	METHOD method_41411 shouldTickBlockPos (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
 	METHOD method_8413 updateListeners (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;I)V
@@ -194,7 +201,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		COMMENT
 		COMMENT @see #updateNeighborsExcept(BlockPos, Block, Direction)
 		ARG 1 pos
-		ARG 2 block
+		ARG 2 sourceBlock
 	METHOD method_8454 createExplosion (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1927$class_4179;)Lnet/minecraft/class_1927;
 		COMMENT Creates an explosion.
 		ARG 1 entity
@@ -275,13 +282,13 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8488 getReceivedStrongRedstonePower (Lnet/minecraft/class_2338;)I
 		ARG 1 pos
 	METHOD method_8492 updateNeighbor (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338;)V
-		COMMENT Triggers a neighbor update originating from {@code pos} at
-		COMMENT {@code neighborPos}.
+		COMMENT Triggers a neighbor update originating from {@code sourcePos} at
+		COMMENT {@code pos}.
 		COMMENT
 		COMMENT @see #updateNeighborsAlways(BlockPos, Block)
 		ARG 1 pos
 		ARG 2 sourceBlock
-		ARG 3 neighborPos
+		ARG 3 sourcePos
 	METHOD method_8494 addImportantParticle (Lnet/minecraft/class_2394;DDDDDD)V
 		ARG 1 parameters
 		ARG 2 x
@@ -315,7 +322,9 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		COMMENT for the one in {@code direction} direction.
 		COMMENT
 		COMMENT @see #updateNeighborsAlways(BlockPos, Block)
+		ARG 1 pos
 		ARG 2 sourceBlock
+		ARG 3 direction
 	METHOD method_8509 setLightningTicksLeft (I)V
 		ARG 1 lightningTicksLeft
 	METHOD method_8510 getTime ()J
