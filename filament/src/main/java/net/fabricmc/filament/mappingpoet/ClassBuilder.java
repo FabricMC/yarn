@@ -340,6 +340,11 @@ public class ClassBuilder {
 				return;
 			}
 
+			if (classBuilder.classNode.outerMethod != null) {
+				// local class per EnclosingMethod attribute
+				return;
+			}
+
 			classBuilder.builder.modifiers.remove(javax.lang.model.element.Modifier.PUBLIC); // this modifier may come from class access
 			classBuilder.builder.addModifiers(new ModifierBuilder(innerClassNode.access)
 					.checkUnseal(classBuilder.classNode, sealChecker)
