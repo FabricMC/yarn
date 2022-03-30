@@ -204,6 +204,7 @@ CLASS net/minecraft/class_315 net/minecraft/client/option/GameOptions
 	FIELD field_38297 TOGGLE_KEY_TEXT Lnet/minecraft/class_2561;
 	FIELD field_38298 HOLD_KEY_TEXT Lnet/minecraft/class_2561;
 	FIELD field_38299 HIDE_MATCHED_NAMES_TOOLTIP Lnet/minecraft/class_2561;
+	FIELD field_38300 MAX_FRAMERATE I
 	METHOD <init> (Lnet/minecraft/class_310;Ljava/io/File;)V
 		ARG 1 client
 		ARG 2 optionsFile
@@ -267,7 +268,7 @@ CLASS net/minecraft/class_315 net/minecraft/client/option/GameOptions
 	METHOD method_37295 collectProfiledOptions ()Ljava/lang/String;
 	METHOD method_38520 setServerViewDistance (I)V
 		ARG 1 serverViewDistance
-	METHOD method_38521 getViewDistance ()I
+	METHOD method_38521 getClampedViewDistance ()I
 	METHOD method_41772 getMonochromeLogo ()Lnet/minecraft/class_7172;
 	METHOD method_41773 toMouseWheelSensitivitySliderProgressValue (D)I
 		ARG 0 value
@@ -337,12 +338,26 @@ CLASS net/minecraft/class_315 net/minecraft/client/option/GameOptions
 	METHOD method_41807 getRawMouseInput ()Lnet/minecraft/class_7172;
 	METHOD method_41808 getFov ()Lnet/minecraft/class_7172;
 	METHOD method_42423 getAutoJump ()Lnet/minecraft/class_7172;
+	METHOD method_42424 (Ljava/lang/Double;)V
+		ARG 0 value
 	METHOD method_42425 getAutoSuggestions ()Lnet/minecraft/class_7172;
+	METHOD method_42426 (Ljava/lang/Double;)Lnet/minecraft/class_2561;
+		ARG 1 value
 	METHOD method_42427 getChatColors ()Lnet/minecraft/class_7172;
+	METHOD method_42428 (Ljava/lang/Double;)V
+		ARG 0 value
 	METHOD method_42429 getChatLinks ()Lnet/minecraft/class_7172;
+	METHOD method_42430 (Ljava/lang/Double;)I
+		ARG 0 value
 	METHOD method_42431 getChatLinksPrompt ()Lnet/minecraft/class_7172;
+	METHOD method_42432 (Ljava/lang/Double;)Lnet/minecraft/class_2561;
+		ARG 1 value
 	METHOD method_42433 getEnableVsync ()Lnet/minecraft/class_7172;
+	METHOD method_42434 (Ljava/lang/Double;)V
+		ARG 0 value
 	METHOD method_42435 getEntityShadows ()Lnet/minecraft/class_7172;
+	METHOD method_42436 (Ljava/lang/Double;)Lnet/minecraft/class_2561;
+		ARG 1 value
 	METHOD method_42437 getForceUnicodeFont ()Lnet/minecraft/class_7172;
 	METHOD method_42438 getInvertYMouse ()Lnet/minecraft/class_7172;
 	METHOD method_42439 getDiscreteMouseScroll ()Lnet/minecraft/class_7172;
@@ -361,35 +376,196 @@ CLASS net/minecraft/class_315 net/minecraft/client/option/GameOptions
 	METHOD method_42452 getShowAutosaveIndicator ()Lnet/minecraft/class_7172;
 	METHOD method_42453 getDistortionEffectScale ()Lnet/minecraft/class_7172;
 	METHOD method_42454 getFovEffectScale ()Lnet/minecraft/class_7172;
+	METHOD method_42456 (Lnet/minecraft/class_1659;)V
+		ARG 0 value
+	METHOD method_42458 (Lnet/minecraft/class_4061;)V
+		ARG 0 value
+	METHOD method_42459 (Lnet/minecraft/class_4063;)V
+		ARG 0 cloudRenderMode
+	METHOD method_42460 (Lnet/minecraft/class_5365;)V
+		ARG 0 value
+	METHOD method_42461 (Lnet/minecraft/class_310;)Lnet/minecraft/class_7172$class_7277;
+		ARG 0 client
+	METHOD method_42462 (Lnet/minecraft/class_310;Ljava/lang/Double;)Ljava/util/List;
+		ARG 1 value
+	METHOD method_42463 (Lnet/minecraft/class_4065;)V
+		ARG 0 value
+	METHOD method_42464 (Lnet/minecraft/class_7172;Lnet/minecraft/class_5365;)V
+		ARG 0 option
+		ARG 1 graphicsMode
+	METHOD method_42465 (Lnet/minecraft/class_4066;)V
+		ARG 0 value
+	METHOD method_42466 (Ljava/lang/Boolean;)V
+		ARG 0 value
+	METHOD method_42467 (Ljava/lang/Double;)V
+		ARG 0 value
+	METHOD method_42469 (Ljava/util/List;Ljava/lang/Boolean;)Ljava/util/List;
+		ARG 1 value
+	METHOD method_42470 (Ljava/util/List;Ljava/util/List;Ljava/lang/Boolean;)Ljava/util/List;
+		ARG 2 value
+	METHOD method_42471 (Ljava/util/List;Ljava/util/List;Ljava/util/List;Lnet/minecraft/class_5365;)Ljava/util/List;
+		ARG 3 graphicsMode
 	METHOD method_42472 getDarknessEffectScale ()Lnet/minecraft/class_7172;
 	METHOD method_42473 getGamma ()Lnet/minecraft/class_7172;
 	METHOD method_42474 getGuiScale ()Lnet/minecraft/class_7172;
 	METHOD method_42475 getParticles ()Lnet/minecraft/class_7172;
 	METHOD method_42476 getNarrator ()Lnet/minecraft/class_7172;
 	METHOD method_42477 getSoundDevice ()Lnet/minecraft/class_7172;
+	METHOD method_42482 (Lnet/minecraft/class_1659;)Lnet/minecraft/class_2561;
+		ARG 0 chatVisibility
+	METHOD method_42483 (Lcom/mojang/datafixers/util/Either;)Lnet/minecraft/class_4063;
+		ARG 0 either
+	METHOD method_42484 (Lnet/minecraft/class_4061;)Lnet/minecraft/class_2561;
+		ARG 0 attackIndicator
+	METHOD method_42485 (Lnet/minecraft/class_4063;)Lcom/mojang/datafixers/util/Either;
+		ARG 0 cloudRenderMode
+	METHOD method_42486 (Lnet/minecraft/class_5365;)Z
+		ARG 0 graphicsMode
+	METHOD method_42487 (Lnet/minecraft/class_310;)Lnet/minecraft/class_7172$class_7277;
+		ARG 0 client
+	METHOD method_42488 (Lnet/minecraft/class_310;Ljava/lang/Double;)Ljava/util/List;
+		ARG 1 value
+	METHOD method_42489 (Lnet/minecraft/class_4065;)Lnet/minecraft/class_2561;
+		ARG 0 narratorMode
+	METHOD method_42490 (Lnet/minecraft/class_4066;)Lnet/minecraft/class_2561;
+		ARG 0 particlesMode
+	METHOD method_42491 (Ljava/lang/Boolean;)Lnet/minecraft/class_2561;
+		ARG 0 value
+	METHOD method_42492 (Ljava/lang/Double;)Lnet/minecraft/class_2561;
+		ARG 1 value
+	METHOD method_42494 (Ljava/util/List;Ljava/lang/Boolean;)Ljava/util/List;
+		ARG 1 value
 	METHOD method_42495 getMouseSensitivity ()Lnet/minecraft/class_7172;
-	METHOD method_42503 getClientViewDistance ()Lnet/minecraft/class_7172;
+	METHOD method_42496 (Lnet/minecraft/class_4063;)Lnet/minecraft/class_2561;
+		ARG 0 cloudRenderMode
+	METHOD method_42497 (Lnet/minecraft/class_5365;)Lnet/minecraft/class_2561;
+		ARG 0 graphicsMode
+	METHOD method_42498 (Lnet/minecraft/class_310;)Lnet/minecraft/class_7172$class_7277;
+		ARG 0 client
+	METHOD method_42499 (Lnet/minecraft/class_310;Ljava/lang/Double;)Ljava/util/List;
+		ARG 1 value
+	METHOD method_42500 (Ljava/lang/Boolean;)V
+		ARG 0 value
+	METHOD method_42501 (Ljava/lang/Double;)V
+		ARG 0 value
+	METHOD method_42503 getViewDistance ()Lnet/minecraft/class_7172;
+	METHOD method_42504 (I)Ljava/lang/Double;
+		ARG 0 value
+	METHOD method_42505 (Lnet/minecraft/class_310;)Lnet/minecraft/class_7172$class_7277;
+		ARG 0 client
+	METHOD method_42506 (Ljava/lang/Boolean;)Lnet/minecraft/class_2561;
+		ARG 0 value
+	METHOD method_42507 (Ljava/lang/Double;)Lnet/minecraft/class_2561;
+		ARG 1 value
+	METHOD method_42509 (Ljava/lang/String;)V
+		ARG 0 value
 	METHOD method_42510 getSimulationDistance ()Lnet/minecraft/class_7172;
+	METHOD method_42511 (I)Ljava/lang/Integer;
+		ARG 0 value
+	METHOD method_42512 (Lnet/minecraft/class_310;)Lnet/minecraft/class_7172$class_7277;
+		ARG 0 client
+	METHOD method_42513 (Ljava/lang/Boolean;)V
+		ARG 1 value
+	METHOD method_42514 (Ljava/lang/Double;)V
+		ARG 0 value
+	METHOD method_42515 (Ljava/lang/Integer;)V
+		ARG 0 value
+	METHOD method_42516 (Ljava/lang/String;)Ljava/util/Optional;
+		ARG 0 value
 	METHOD method_42517 getEntityDistanceScaling ()Lnet/minecraft/class_7172;
+	METHOD method_42518 (I)Ljava/lang/Double;
+		ARG 0 sliderProgressValue
+	METHOD method_42519 (Lnet/minecraft/class_310;)Lnet/minecraft/class_7172$class_7277;
+		ARG 0 client
+	METHOD method_42520 (Ljava/lang/Boolean;)V
+		ARG 0 value
+	METHOD method_42521 (Ljava/lang/Double;)Lnet/minecraft/class_2561;
+		ARG 1 value
+	METHOD method_42522 (Ljava/lang/Integer;)Lnet/minecraft/class_2561;
+		ARG 0 value
+	METHOD method_42523 (Ljava/lang/String;)Lnet/minecraft/class_2561;
+		ARG 0 value
 	METHOD method_42524 getMaxFps ()Lnet/minecraft/class_7172;
-	METHOD method_42528 getCloudRenderModeSetting ()Lnet/minecraft/class_7172;
+	METHOD method_42525 (Ljava/lang/Boolean;)Lnet/minecraft/class_2561;
+		ARG 0 value
+	METHOD method_42526 (Ljava/lang/Double;)V
+		ARG 0 value
+	METHOD method_42528 getCloudRenderMod ()Lnet/minecraft/class_7172;
+	METHOD method_42529 (Lnet/minecraft/class_310;)Lnet/minecraft/class_7172$class_7277;
+		ARG 0 client
+	METHOD method_42530 (Ljava/lang/Boolean;)V
+		ARG 0 value
+	METHOD method_42531 (Ljava/lang/Double;)Lnet/minecraft/class_2561;
+		ARG 1 value
+	METHOD method_42532 (Ljava/lang/Integer;)Ljava/lang/Double;
+		ARG 0 value
+	METHOD method_42533 (Ljava/lang/String;)Lnet/minecraft/class_4063;
+		ARG 0 cloudRenderMode
 	METHOD method_42534 getGraphicsMode ()Lnet/minecraft/class_7172;
+	METHOD method_42535 (Ljava/lang/Boolean;)V
+		ARG 1 value
+	METHOD method_42536 (Ljava/lang/Double;)Ljava/lang/Integer;
+		ARG 0 value
+	METHOD method_42537 (Ljava/lang/Boolean;)V
+		ARG 0 value
+	METHOD method_42538 (Ljava/lang/Boolean;)V
+		ARG 0 value
 	METHOD method_42539 getChatVisibility ()Lnet/minecraft/class_7172;
-	METHOD method_42542 getChatOpacity ()Lnet/minecraft/class_7172;
+	METHOD method_42540 (Ljava/lang/Double;)V
+		ARG 0 value
+	METHOD method_42541 (Ljava/lang/Integer;)V
+		ARG 0 value
+	METHOD method_42542 getChtOpacity ()Lnet/minecraft/class_7172;
+	METHOD method_42544 (Ljava/lang/Double;)I
+		ARG 0 value
+	METHOD method_42545 (Ljava/lang/Integer;)Lnet/minecraft/class_2561;
+		ARG 1 value
 	METHOD method_42546 getChatLineSpacing ()Lnet/minecraft/class_7172;
+	METHOD method_42547 (Ljava/lang/Boolean;)Lnet/minecraft/class_4063;
+		ARG 0 value
+	METHOD method_42548 (Ljava/lang/Double;)Lnet/minecraft/class_2561;
+		ARG 0 value
 	METHOD method_42550 getTextBackgroundOpacity ()Lnet/minecraft/class_7172;
 	METHOD method_42552 getMainArm ()Lnet/minecraft/class_7172;
 	METHOD method_42554 getChatScale ()Lnet/minecraft/class_7172;
+	METHOD method_42555 (Ljava/lang/Integer;)V
+		ARG 0 value
 	METHOD method_42556 getChatWidth ()Lnet/minecraft/class_7172;
+	METHOD method_42557 (Ljava/lang/Integer;)I
+		ARG 0 value
+	METHOD method_42558 (Ljava/lang/Double;)V
+		ARG 0 value
+	METHOD method_42559 (Ljava/lang/Integer;)Lnet/minecraft/class_2561;
+		ARG 1 value
+	METHOD method_42560 (Ljava/lang/Double;)Lnet/minecraft/class_2561;
+		ARG 1 value
 	METHOD method_42561 getChatDelay ()Lnet/minecraft/class_7172;
+	METHOD method_42562 (Ljava/lang/Double;)V
+		ARG 0 value
 	METHOD method_42563 getMipmapLevels ()Lnet/minecraft/class_7172;
+	METHOD method_42564 (Ljava/lang/Double;)Lnet/minecraft/class_2561;
+		ARG 1 value
 	METHOD method_42565 getAttackIndicator ()Lnet/minecraft/class_7172;
+	METHOD method_42566 (Ljava/lang/Double;)V
+		ARG 0 value
+	METHOD method_42567 (Ljava/lang/Double;)Lnet/minecraft/class_2561;
+		ARG 1 value
+	METHOD method_42568 (Ljava/lang/Double;)V
+		ARG 0 value
+	METHOD method_42569 (Ljava/lang/Double;)Lnet/minecraft/class_2561;
+		ARG 1 value
 	CLASS 2
 		METHOD method_33676 find (Ljava/lang/String;)Ljava/lang/String;
 			ARG 1 key
+		METHOD method_42571 (Ljava/lang/String;Lnet/minecraft/class_7172;Lcom/mojang/serialization/DataResult$PartialResult;)V
+			ARG 2 partialResult
 	CLASS 3
 		METHOD method_33677 print (Ljava/lang/String;)V
 			ARG 1 key
+		METHOD method_42572 (Lnet/minecraft/class_7172;Lcom/mojang/serialization/DataResult$PartialResult;)V
+			ARG 1 partialResult
+		METHOD method_42573 (Ljava/lang/String;Ljava/io/PrintWriter;Lcom/google/gson/JsonElement;)V
+			ARG 3 json
 	CLASS class_5823 Visitor
 		METHOD method_33679 visitFloat (Ljava/lang/String;F)F
 			ARG 1 key
