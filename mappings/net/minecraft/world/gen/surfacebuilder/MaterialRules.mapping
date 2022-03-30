@@ -55,12 +55,20 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 		ARG 1 addSurfaceDepth
 		ARG 2 secondaryDepthRange
 		ARG 3 verticalSurfaceType
+	METHOD method_42377 register (Lnet/minecraft/class_2378;Ljava/lang/String;Lnet/minecraft/class_7243;)Lcom/mojang/serialization/Codec;
+		ARG 0 registry
+		ARG 1 id
+		ARG 2 codecHolder
 	CLASS class_6687 TerracottaBandsMaterialRule
 		FIELD field_35226 RULE_CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 	CLASS class_6689 BiomeMaterialCondition
 		FIELD field_35228 CONDITION_CODEC Lnet/minecraft/class_7243;
+		FIELD field_36414 biomes Ljava/util/List;
+		FIELD field_36415 predicate Ljava/util/function/Predicate;
+		METHOD <init> (Ljava/util/List;)V
+			ARG 1 biomes
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 		CLASS class_6690 BiomePredicate
@@ -76,6 +84,7 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 		FIELD field_35232 CODEC Lcom/mojang/serialization/Codec;
 		METHOD method_39064 codec ()Lnet/minecraft/class_7243;
 		METHOD method_39070 registerAndGetDefault (Lnet/minecraft/class_2378;)Lcom/mojang/serialization/Codec;
+			ARG 0 registry
 	CLASS class_6694 MaterialRuleContext
 		FIELD field_35233 surfaceBuilder Lnet/minecraft/class_6724;
 		FIELD field_35234 biomeTemperaturePredicate Lnet/minecraft/class_6686$class_6692;
@@ -98,8 +107,14 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 		FIELD field_35619 stoneDepthBelow I
 		FIELD field_35620 stoneDepthAbove I
 		FIELD field_35676 chunkNoiseSampler Lnet/minecraft/class_6568;
+		FIELD field_37703 noiseConfig Lnet/minecraft/class_7138;
 		METHOD <init> (Lnet/minecraft/class_6724;Lnet/minecraft/class_7138;Lnet/minecraft/class_2791;Lnet/minecraft/class_6568;Ljava/util/function/Function;Lnet/minecraft/class_2378;Lnet/minecraft/class_5868;)V
 			ARG 1 surfaceBuilder
+			ARG 2 noiseConfig
+			ARG 3 chunk
+			ARG 4 chunkNoiseSampler
+			ARG 5 posToBiome
+			ARG 7 heightContext
 		METHOD method_39072 initHorizontalContext (II)V
 			ARG 1 x
 			ARG 2 z
@@ -144,6 +159,7 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 		FIELD field_35252 CODEC Lcom/mojang/serialization/Codec;
 		METHOD method_39061 codec ()Lnet/minecraft/class_7243;
 		METHOD method_39085 registerAndGetDefault (Lnet/minecraft/class_2378;)Lcom/mojang/serialization/Codec;
+			ARG 0 registry
 	CLASS class_6709 SequenceBlockStateRule
 		COMMENT Applies the given block state rules in sequence, and returns the first result that
 		COMMENT isn't {@code null}. Returns {@code null} if none of the passed rules match.
