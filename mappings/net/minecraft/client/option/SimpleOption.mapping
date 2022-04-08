@@ -1,0 +1,282 @@
+CLASS net/minecraft/class_7172 net/minecraft/client/option/SimpleOption
+	COMMENT A class representing an option of a client. Exactly one instance of this class
+	COMMENT should be created per option. See below for how to create an instance.
+	COMMENT
+	COMMENT <h2 id="option-values">Option values</h2>
+	COMMENT
+	COMMENT <p>This class allows querying and storing of the option value via {@link #getValue()}
+	COMMENT and {@link #setValue(Object)} respectively. Option values are automatically validated,
+	COMMENT and if the value is invalid, the value resets back to the default. Some validators will
+	COMMENT coerce the invalid value (e.g. by clamping) into a valid one instead of failing; in this
+	COMMENT case the new value is used.
+	COMMENT
+	COMMENT <p>Option values are serialized using codecs. Check DataFixerUpper code for the list of
+	COMMENT available codecs. For serialization of enums, you can check the code in {@link GameOptions}.
+	COMMENT
+	COMMENT <p>If the value has changed, the {@code changeCallback} passed to the constructor will
+	COMMENT trigger with the new value.
+	COMMENT
+	COMMENT <h2 id="callbacks">Callbacks</h2>
+	COMMENT <p>This class itself cannot be extended by default; instead, the behavior of the option,
+	COMMENT such as validation or rendering of the {@link ClickableWidget} associated with the
+	COMMENT option, is customized by passing a {@link SimpleOption.Callbacks} instance. There are
+	COMMENT several existing callbacks that should cover most of the needs:
+	COMMENT
+	COMMENT <ul>
+	COMMENT <li>{@link SimpleOption.PotentialValuesBasedCallbacks}: The most simple cycling option.
+	COMMENT Useful for enums.</li>
+	COMMENT <li>{@link SimpleOption.AlternateValuesSupportingCyclingCallbacks}: An option with
+	COMMENT alternate potential values that are used only when certain conditions are met. This is
+	COMMENT used in vanilla to hide "Fabulous!" graphics option after the user cancelled the
+	COMMENT warning.</li>
+	COMMENT <li>{@link SimpleOption.LazyCyclingCallbacks}: An option whose potential values are
+	COMMENT determined lazily.</li>
+	COMMENT <li>{@link SimpleOption.MaxSuppliableIntCallbacks}: A cycling option with an integer value
+	COMMENT that has a fixed minimum value and a dynamic maximum value. Values outside the range are
+	COMMENT clamped. This is used in vanilla to implement the GUI Scale option.</li>
+	COMMENT <li>{@link SimpleOption.DoubleSliderCallbacks}: A slider option of a {@code double}
+	COMMENT between {@code 0.0} and {@code 1.0}. Values outside this range are considered invalid.</li>
+	COMMENT <li>{@link SimpleOption.ValidatingIntSliderCallbacks}: A slider option of an {@code int}
+	COMMENT with a minimum and maximum values. Values outside this range are considered invalid.</li>
+	COMMENT </ul>
+	COMMENT
+	COMMENT <p>See also several {@code ofBoolean} methods for options using boolean values.
+	COMMENT
+	COMMENT <h3 id="callbacks-modifiers">Modifiers</h3>
+	COMMENT <p>Slider option callbacks allow "modifiers" to be applied. The "slider progress value"
+	COMMENT is the value used to calculate the slider's progress and must be linear. The real value,
+	COMMENT simply called "value" in {@code withModifier} methods, is the value used in
+	COMMENT {#link #getValue()} and passed to {@link #textGetter}.
+	COMMENT
+	COMMENT <h2 id="text">Text</h2>
+	COMMENT Options themselves have names; the translation key of the option needs to be passed when
+	COMMENT constructing this class, This corresponds to {@link #text}. Options also have the
+	COMMENT rendered text, composed of the option name and the value; the code obtains the value using
+	COMMENT the {@code valueTextGetter} in the constructor. The getter takes the option's name and the
+	COMMENT current value, and returns the text. Several static methods in {@link GameOptions} can
+	COMMENT be used to format the name and the value. For options backed by an enum that implements
+	COMMENT {@link TranslatableOption}, {@link #enumValueText()} can be passed to {@code valueTextGetter}
+	COMMENT to obtain the rendered text from the enum.
+	COMMENT
+	COMMENT Options can also have a tooltip, specified by passing {@code tooltipFactoryGetter}. If the
+	COMMENT option has no tooltips, you can pass {@link #emptyTooltip()}, and if the option always
+	COMMENT uses one tooltip, you can pass {@link #constantTooltip(Text)}.
+	FIELD field_37862 LOGGER Lorg/slf4j/Logger;
+	FIELD field_37863 tooltipFactoryGetter Lnet/minecraft/class_7172$class_7307;
+	FIELD field_37864 textGetter Ljava/util/function/Function;
+	FIELD field_37865 callbacks Lnet/minecraft/class_7172$class_7178;
+	FIELD field_37866 defaultValue Ljava/lang/Object;
+	FIELD field_37867 changeCallback Ljava/util/function/Consumer;
+	FIELD field_37868 value Ljava/lang/Object;
+	FIELD field_38278 BOOLEAN Lnet/minecraft/class_7172$class_7173;
+		COMMENT A set of callbacks for boolean options.
+		COMMENT
+		COMMENT @apiNote See also several {@code ofBoolean} methods in this class which provide easier ways
+		COMMENT of creating a boolean option.
+	FIELD field_38279 codec Lcom/mojang/serialization/Codec;
+	FIELD field_38280 text Lnet/minecraft/class_2561;
+	FIELD field_38441 TOOLTIP_WIDTH I
+	METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_7172$class_7307;Lnet/minecraft/class_7172$class_7303;Lnet/minecraft/class_7172$class_7178;Lcom/mojang/serialization/Codec;Ljava/lang/Object;Ljava/util/function/Consumer;)V
+		ARG 1 key
+		ARG 2 tooltipFactoryGetter
+		ARG 3 valueTextGetter
+		ARG 4 callbacks
+		ARG 5 codec
+		ARG 6 defaultValue
+		ARG 7 changeCallback
+	METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_7172$class_7307;Lnet/minecraft/class_7172$class_7303;Lnet/minecraft/class_7172$class_7178;Ljava/lang/Object;Ljava/util/function/Consumer;)V
+		ARG 1 key
+		ARG 2 tooltipFactoryGetter
+		ARG 3 valueTextGetter
+		ARG 4 callbacks
+		ARG 5 defaultValue
+		ARG 6 changeCallback
+	METHOD method_18520 createButton (Lnet/minecraft/class_315;III)Lnet/minecraft/class_339;
+		ARG 1 options
+		ARG 2 x
+		ARG 3 y
+		ARG 4 width
+	METHOD method_41747 (Lnet/minecraft/class_2561;Ljava/lang/Boolean;)Lnet/minecraft/class_2561;
+		ARG 0 optionText
+		ARG 1 value
+	METHOD method_41748 setValue (Ljava/lang/Object;)V
+		COMMENT Sets the option's value.
+		COMMENT
+		COMMENT <p>The behavior for invalid {@code value} varies; the validator can either coerce
+		COMMENT the passed value into a valid one by clamping etc, or fail the validation and reset to
+		COMMENT the default value.
+		COMMENT
+		COMMENT <p>If the new value differs from the new value, {@link #changeCallback} will trigger.
+		ARG 1 value
+	METHOD method_41749 ofBoolean (Ljava/lang/String;Lnet/minecraft/class_7172$class_7307;Z)Lnet/minecraft/class_7172;
+		COMMENT Creates a boolean option.
+		ARG 0 key
+		ARG 1 tooltipFactoryGetter
+		ARG 2 defaultValue
+	METHOD method_41750 ofBoolean (Ljava/lang/String;Lnet/minecraft/class_7172$class_7307;ZLjava/util/function/Consumer;)Lnet/minecraft/class_7172;
+		COMMENT Creates a boolean option.
+		ARG 0 key
+		ARG 1 tooltipFactoryGetter
+		ARG 2 defaultValue
+		ARG 3 changeCallback
+	METHOD method_41751 ofBoolean (Ljava/lang/String;ZLjava/util/function/Consumer;)Lnet/minecraft/class_7172;
+		COMMENT Creates a boolean option.
+		ARG 0 key
+		ARG 1 defaultValue
+		ARG 2 changeCallback
+	METHOD method_41752 (Ljava/lang/Boolean;)V
+		ARG 0 value
+	METHOD method_41753 getValue ()Ljava/lang/Object;
+		COMMENT {@return the option's current value}
+	METHOD method_41754 getCallbacks ()Lnet/minecraft/class_7172$class_7178;
+	METHOD method_42399 emptyTooltip ()Lnet/minecraft/class_7172$class_7307;
+		COMMENT {@return the getter for the {@code tooltipFactoryGetter} parameter of the constructor
+		COMMENT to indicate empty tooltips}
+	METHOD method_42401 (Lnet/minecraft/class_310;)Lnet/minecraft/class_7172$class_7277;
+		ARG 0 client
+	METHOD method_42402 ofBoolean (Ljava/lang/String;Z)Lnet/minecraft/class_7172;
+		COMMENT Creates a boolean option.
+		ARG 0 key
+		ARG 1 defaultValue
+	METHOD method_42404 getCodec ()Lcom/mojang/serialization/Codec;
+	METHOD method_42405 (Ljava/lang/Boolean;)V
+		ARG 0 value
+	METHOD method_42406 (Ljava/lang/Object;)Ljava/util/List;
+		ARG 0 value
+	METHOD method_42714 wrapLines (Lnet/minecraft/class_310;Lnet/minecraft/class_2561;)Ljava/util/List;
+		ARG 0 client
+		ARG 1 text
+	METHOD method_42715 (Lnet/minecraft/class_7172$class_7303;Ljava/lang/Object;)Lnet/minecraft/class_2561;
+		ARG 2 value
+	METHOD method_42716 (Ljava/util/List;Ljava/lang/Object;)Ljava/util/List;
+		ARG 1 value
+	METHOD method_42717 constantTooltip (Lnet/minecraft/class_2561;)Lnet/minecraft/class_7172$class_7307;
+		COMMENT {@return the getter for the {@code tooltipFactoryGetter} parameter of the constructor
+		COMMENT to indicate constant tooltips}
+		ARG 0 text
+	METHOD method_42718 (Lnet/minecraft/class_2561;Lnet/minecraft/class_7291;)Lnet/minecraft/class_2561;
+		ARG 0 optionText
+		ARG 1 value
+	METHOD method_42719 (Lnet/minecraft/class_2561;Lnet/minecraft/class_310;)Lnet/minecraft/class_7172$class_7277;
+		ARG 1 client
+	METHOD method_42720 enumValueText ()Lnet/minecraft/class_7172$class_7303;
+		COMMENT {@return the getter for the {@code valueTextGetter} parameter of the constructor
+		COMMENT to use the value's text as the option's rendered text}
+		COMMENT
+		COMMENT @apiNote This requires the value to be an enum extending {@link TranslatableOption}.
+	CLASS class_7173 PotentialValuesBasedCallbacks
+		COMMENT A set of callbacks for a cycling option.
+		COMMENT
+		COMMENT @see <a href="SimpleOption.html#callbacks">Callbacks</a>
+	CLASS class_7174 ValidatingIntSliderCallbacks
+		COMMENT A set of callbacks for a slider of integer values with a fixed minimum and maximum values.
+		COMMENT
+		COMMENT @see <a href="SimpleOption.html#callbacks">Callbacks</a>
+	CLASS class_7175 OptionSliderWidgetImpl
+		FIELD field_37872 option Lnet/minecraft/class_7172;
+		FIELD field_37873 callbacks Lnet/minecraft/class_7172$class_7176;
+		FIELD field_37874 tooltipFactory Lnet/minecraft/class_7172$class_7277;
+		METHOD <init> (Lnet/minecraft/class_315;IIIILnet/minecraft/class_7172;Lnet/minecraft/class_7172$class_7176;Lnet/minecraft/class_7172$class_7277;)V
+			ARG 1 options
+			ARG 2 x
+			ARG 3 y
+			ARG 4 width
+			ARG 5 height
+			ARG 6 option
+			ARG 7 callbacks
+			ARG 8 tooltipFactory
+	CLASS class_7176 SliderCallbacks
+		COMMENT A set of callbacks for slider options.
+		COMMENT
+		COMMENT @see <a href="SimpleOption.html#callbacks">Callbacks</a>
+		METHOD method_41763 toValue (D)Ljava/lang/Object;
+			COMMENT {@return the value from the progress ({@code 0.0} to {@code 1.0}, both inclusive) of the slider}
+			ARG 1 sliderProgress
+		METHOD method_41765 toSliderProgress (Ljava/lang/Object;)D
+			COMMENT {@return the progress ({@code 0.0} to {@code 1.0}, both inclusive) of the slider}
+			ARG 1 value
+		METHOD method_42725 (Lnet/minecraft/class_315;IIILnet/minecraft/class_7172$class_7277;Lnet/minecraft/class_7172;)Lnet/minecraft/class_339;
+			ARG 6 option
+	CLASS class_7177 DoubleSliderCallbacks
+		COMMENT A set of callbacks for a slider of values from {@code 0.0} to {@code 1.0} (both
+		COMMENT inclusive). There is only one instance of this callbacks.
+		COMMENT
+		COMMENT @see <a href="SimpleOption.html#callbacks">Callbacks</a>
+		METHOD method_42418 (Lcom/mojang/datafixers/util/Either;)Ljava/lang/Double;
+			ARG 0 either
+		METHOD method_42419 (Ljava/lang/Boolean;)Ljava/lang/Double;
+			ARG 0 value
+		METHOD method_42420 withModifier (Ljava/util/function/DoubleFunction;Ljava/util/function/ToDoubleFunction;)Lnet/minecraft/class_7172$class_7176;
+			COMMENT Creates a slider callback with the modifier applied.
+			COMMENT
+			COMMENT @see <a href="SimpleOption.html#callbacks-modifiers">Callback Modifiers</a>
+			ARG 1 sliderProgressValueToValue
+			ARG 2 valueToSliderProgressValue
+		METHOD method_42421 (Ljava/lang/Double;)Ljava/lang/Double;
+			ARG 0 value
+		CLASS 1
+	CLASS class_7178 Callbacks
+		COMMENT A set of callbacks to customize an option's behavior.
+		COMMENT
+		COMMENT @see <a href="SimpleOption.html#callbacks">Callbacks</a>
+		METHOD method_41756 getButtonCreator (Lnet/minecraft/class_7172$class_7277;Lnet/minecraft/class_315;III)Ljava/util/function/Function;
+			COMMENT {@return the button creator}
+			COMMENT
+			COMMENT <p>Button creatores are responsible for rendering the option.
+			ARG 1 tooltipFactory
+			ARG 2 gameOptions
+			ARG 3 x
+			ARG 4 y
+			ARG 5 width
+		METHOD method_41758 validate (Ljava/lang/Object;)Ljava/util/Optional;
+			COMMENT {@return the validated value}
+			COMMENT
+			COMMENT <p>Returning {@link Optional.empty()} indicates the passed value is invalid and it
+			COMMENT should reset to the default value. This method can also coerce the invalid value
+			COMMENT into a valid one by clamping, etc.
+			ARG 1 value
+	CLASS class_7273 AlternateValuesSupportingCyclingCallbacks
+		COMMENT A set of callbacks for a cycling option with alternate potential values that are used
+		COMMENT only when certain conditions are met.
+		COMMENT
+		COMMENT @see <a href="SimpleOption.html#callbacks">Callbacks</a>
+	CLASS class_7275 IntSliderCallbacks
+		METHOD method_42414 withModifier (Ljava/util/function/IntFunction;Ljava/util/function/ToIntFunction;)Lnet/minecraft/class_7172$class_7176;
+			COMMENT Creates a slider callback with the modifier applied. Note that when using this,
+			COMMENT {@link SimpleOption.IntSliderCallbacks} must be constructed using the slider progress
+			COMMENT value; the modifier is applied to that callbacks.
+			COMMENT
+			COMMENT @see <a href="SimpleOption.html#callbacks-modifiers">Callback Modifiers</a>
+			ARG 1 sliderProgressValueToValue
+			ARG 2 valueToSliderProgressValue
+		CLASS 1
+	CLASS class_7276 LazyCyclingCallbacks
+		COMMENT A set of callbacks for a cycling option whose potential values are determined lazily.
+		COMMENT
+		COMMENT @see <a href="SimpleOption.html#callbacks">Callbacks</a>
+	CLASS class_7277 TooltipFactory
+	CLASS class_7303 ValueTextGetter
+		METHOD toString (Lnet/minecraft/class_2561;Ljava/lang/Object;)Lnet/minecraft/class_2561;
+			ARG 1 optionText
+			ARG 2 value
+	CLASS class_7304 MaxSuppliableIntCallbacks
+		COMMENT A set of callbacks for a cycling option with a fixed minimum value and a dynamic
+		COMMENT maximum value. This clamps the value during validation.
+		COMMENT
+		COMMENT @see <a href="SimpleOption.html#callbacks">Callbacks</a>
+		METHOD method_42409 (Ljava/lang/Integer;)Lcom/mojang/serialization/DataResult;
+			ARG 1 value
+	CLASS class_7305 CyclingCallbacks
+		METHOD method_42721 getValues ()Lnet/minecraft/class_5676$class_5680;
+		METHOD method_42723 (Lnet/minecraft/class_7172$class_7277;IIILnet/minecraft/class_315;Lnet/minecraft/class_7172;)Lnet/minecraft/class_339;
+			ARG 6 option
+		METHOD method_42724 (Lnet/minecraft/class_7172;Lnet/minecraft/class_315;Lnet/minecraft/class_5676;Ljava/lang/Object;)V
+			ARG 3 button
+			ARG 4 value
+		CLASS class_7274 ValueSetter
+			METHOD set (Lnet/minecraft/class_7172;Ljava/lang/Object;)V
+				ARG 1 option
+				ARG 2 value
+	CLASS class_7306 TypeChangeableCallbacks
+		METHOD method_42722 isCycling ()Z
+	CLASS class_7307 TooltipFactoryGetter

@@ -1,12 +1,41 @@
 CLASS net/minecraft/class_3542 net/minecraft/util/StringIdentifiable
 	METHOD method_15434 asString ()Ljava/lang/String;
-	METHOD method_28140 createCodec (Ljava/util/function/Supplier;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+	METHOD method_28140 createCodec (Ljava/util/function/Supplier;)Lnet/minecraft/class_3542$class_7292;
 		COMMENT Creates a codec that serializes an enum implementing this interface either
 		COMMENT using its ordinals (when compressed) or using its {@link #asString()} method
 		COMMENT and a given decode function.
 		ARG 0 enumValues
-		ARG 1 fromString
 	METHOD method_28142 toKeyable ([Lnet/minecraft/class_3542;)Lcom/mojang/serialization/Keyable;
 		ARG 0 values
-	METHOD method_28143 ([Ljava/lang/Enum;I)Ljava/lang/Enum;
-		ARG 1 ordinal
+	METHOD method_39516 (Ljava/lang/Object;)Ljava/lang/String;
+		ARG 0 identifiable
+	METHOD method_42628 (Ljava/lang/Enum;)Ljava/lang/Enum;
+		ARG 0 enum_
+	METHOD method_42629 (Ljava/util/Map;Ljava/lang/String;)Ljava/lang/Enum;
+		ARG 1 id
+	METHOD method_42630 ([Ljava/lang/Enum;Ljava/lang/String;)Ljava/lang/Enum;
+		ARG 1 id
+	CLASS 1
+		METHOD keys (Lcom/mojang/serialization/DynamicOps;)Ljava/util/stream/Stream;
+			ARG 1 ops
+	CLASS class_7292 Codec
+		FIELD field_38378 base Lcom/mojang/serialization/Codec;
+		FIELD field_38379 idToIdentifiable Ljava/util/function/Function;
+		METHOD <init> ([Ljava/lang/Enum;Ljava/util/function/Function;)V
+			ARG 1 values
+			ARG 2 idToIdentifiable
+		METHOD decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 input
+			ARG 2 ops
+			ARG 3 prefix
+		METHOD method_42632 (Ljava/lang/Object;)I
+			ARG 0 enum_
+		METHOD method_42633 byId (Ljava/lang/String;)Ljava/lang/Enum;
+			ARG 1 id
+		METHOD method_42634 ([Ljava/lang/Enum;I)Ljava/lang/Enum;
+			ARG 1 ordinal
+		METHOD method_42635 (Ljava/lang/Object;)Ljava/lang/String;
+			ARG 0 identifiable
