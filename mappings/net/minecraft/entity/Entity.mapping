@@ -226,7 +226,15 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_22861 getTeamColorValue ()I
 	METHOD method_22862 resetPosition ()V
 	METHOD method_23311 refreshPosition ()V
-	METHOD method_23312 getLandingPos ()Lnet/minecraft/class_2338;
+	METHOD method_23312 getSteppingPos ()Lnet/minecraft/class_2338;
+		COMMENT {@return the stepping position}
+		COMMENT
+		COMMENT @implNote Stepping position is the entity's position, with {@code 1e-05} subtracted
+		COMMENT from the Y coordinate. This means that, for example, if a player is on a carpet on
+		COMMENT a soul soil, the carpet's position would be returned.
+		COMMENT
+		COMMENT @see getLandingPos()
+		COMMENT @see getSteppingBlockState()
 	METHOD method_23313 getJumpVelocityMultiplier ()F
 	METHOD method_23314 getVelocityAffectingPos ()Lnet/minecraft/class_2338;
 	METHOD method_23315 getDefaultName ()Lnet/minecraft/class_2561;
@@ -270,7 +278,14 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 passenger
 	METHOD method_24830 setOnGround (Z)V
 		ARG 1 onGround
-	METHOD method_25936 getLandingBlockState ()Lnet/minecraft/class_2680;
+	METHOD method_25936 getSteppingBlockState ()Lnet/minecraft/class_2680;
+		COMMENT {@return the block state at the stepping position}
+		COMMENT
+		COMMENT @implNote Stepping position is the entity's position, with {@code 1e-05} subtracted
+		COMMENT from the Y coordinate. This means that, for example, if a player is on a carpet on
+		COMMENT a soul soil, the carpet's position would be returned.
+		COMMENT
+		COMMENT @see getSteppingPos()
 	METHOD method_27298 shouldSpawnSprintingParticles ()Z
 	METHOD method_29239 dismountVehicle ()V
 		COMMENT Dismounts the vehicle if present.
@@ -446,9 +461,28 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_43077 playSoundIfNotSilent (Lnet/minecraft/class_3414;)V
 		ARG 1 event
 	METHOD method_43078 getBodyYaw ()F
+	METHOD method_43258 getPosWithYOffset (F)Lnet/minecraft/class_2338;
+		ARG 1 offset
 	METHOD method_43259 isInRange (Lnet/minecraft/class_1297;DD)Z
 		ARG 2 horizontalRadius
 		ARG 4 verticalRadius
+	METHOD method_43260 getLandingPos ()Lnet/minecraft/class_2338;
+		COMMENT {@return the landing position}
+		COMMENT
+		COMMENT @implNote Landing position is the entity's position, with {@code 0.2} subtracted
+		COMMENT from the Y coordinate. This means that, for example, if a player is on a carpet on
+		COMMENT a soul soil, the soul soil's position would be returned.
+		COMMENT
+		COMMENT @see getSteppingPos()
+		COMMENT @see getLandingBlockState()
+	METHOD method_43261 getLandingBlockState ()Lnet/minecraft/class_2680;
+		COMMENT {@return the block state at the landing position}
+		COMMENT
+		COMMENT @implNote Landing position is the entity's position, with {@code 0.2} subtracted
+		COMMENT from the Y coordinate. This means that, for example, if a player is on a carpet on
+		COMMENT a soul soil, the soul soil's position would be returned.
+		COMMENT
+		COMMENT @see getLandingPos()
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		ARG 1 state
