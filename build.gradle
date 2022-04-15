@@ -10,9 +10,9 @@ buildscript {
 	dependencies {
 		classpath "cuchaz:enigma-cli:${project.enigma_version}"
 		classpath "net.fabricmc:stitch:${project.stitch_version}"
-		classpath "commons-io:commons-io:2.8.0"
-		classpath 'de.undercouch:gradle-download-task:4.1.1'
-		classpath 'net.fabricmc:tiny-remapper:0.7.0'
+		classpath "commons-io:commons-io:2.11.0"
+		classpath "de.undercouch:gradle-download-task:4.1.1"
+		classpath "net.fabricmc:tiny-remapper:${project.tiny_remapper_version}"
 		classpath "net.fabricmc.unpick:unpick:${project.unpick_version}"
 		classpath "net.fabricmc.unpick:unpick-format-utils:${project.unpick_version}"
 		classpath "net.fabricmc:name-proposal:${project.name_proposal_version}"
@@ -21,9 +21,9 @@ buildscript {
 
 plugins {
 	id 'java' // for constants, packages, javadoc
-	id 'de.undercouch.download' version '4.1.1'
+	id 'de.undercouch.download' version '4.1.2'
 	id 'maven-publish'
-	id 'org.cadixdev.licenser' version '0.6.1'
+	id "com.diffplug.spotless" version "6.4.2"
 	id 'net.fabricmc.filament' version '0.3.0'
 }
 
@@ -82,10 +82,10 @@ dependencies {
 	mappingPoetJar "net.fabricmc:mappingpoet:${project.mappingpoet_version}"
 	unpick "net.fabricmc.unpick:unpick-cli:${project.unpick_version}"
 	// Update asm to allow running on JDK 18
-	unpick "org.ow2.asm:asm:9.2"
-	unpick "org.ow2.asm:asm-tree:9.2"
-	unpick "org.ow2.asm:asm-commons:9.2"
-	unpick "org.ow2.asm:asm-util:9.2"
+	unpick "org.ow2.asm:asm:${project.asm_version}"
+	unpick "org.ow2.asm:asm-tree:${project.asm_version}"
+	unpick "org.ow2.asm:asm-commons:${project.asm_version}"
+	unpick "org.ow2.asm:asm-util:${project.asm_version}"
 }
 
 def setupGroup = "jar setup"
@@ -700,9 +700,10 @@ sourceSets {
 	packageDocs // package info files
 }
 
-license {
-	header file("HEADER")
-	include '**/*.java'
+spotless {
+	java {
+		licenseHeaderFile(rootProject.file("HEADER"))
+	}
 }
 
 task constantsJar(type: Jar) {
