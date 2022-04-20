@@ -57,17 +57,23 @@ repositories {
 }
 
 configurations {
-	enigmaRuntime
+	asm
+	enigmaRuntime {
+		extendsFrom asm
+	}
 	javadocClasspath
 	decompileClasspath
 	mappingPoetJar {
+		extendsFrom asm
 		transitive = false
 	}
 	mappingPoet {
 		extendsFrom mappingPoetJar
 		transitive = true
 	}
-	unpick
+	unpick {
+		extendsFrom asm
+	}
 }
 
 def unpickMetaFile = file("unpick-definitions/unpick.json")
@@ -81,11 +87,10 @@ dependencies {
 	decompileClasspath "net.fabricmc:cfr:${project.cfr_version}"
 	mappingPoetJar "net.fabricmc:mappingpoet:${project.mappingpoet_version}"
 	unpick "net.fabricmc.unpick:unpick-cli:${project.unpick_version}"
-	// Update asm to allow running on JDK 18
-	unpick "org.ow2.asm:asm:${project.asm_version}"
-	unpick "org.ow2.asm:asm-tree:${project.asm_version}"
-	unpick "org.ow2.asm:asm-commons:${project.asm_version}"
-	unpick "org.ow2.asm:asm-util:${project.asm_version}"
+	asm "org.ow2.asm:asm:${project.asm_version}"
+	asm "org.ow2.asm:asm-tree:${project.asm_version}"
+	asm "org.ow2.asm:asm-commons:${project.asm_version}"
+	asm "org.ow2.asm:asm-util:${project.asm_version}"
 }
 
 def setupGroup = "jar setup"
