@@ -64,11 +64,11 @@ configurations {
 	javadocClasspath
 	decompileClasspath
 	mappingPoetJar {
-		extendsFrom asm
 		transitive = false
 	}
 	mappingPoet {
 		extendsFrom mappingPoetJar
+		extendsFrom asm
 		transitive = true
 	}
 	unpick {
@@ -593,7 +593,7 @@ clean.doFirst {
 	delete tempDir, cacheFilesMinecraft
 }
 
-tasks.build.dependsOn "compressTiny","tinyJar","v2UnmergedYarnJar", "v2MergedYarnJar"
+tasks.build.dependsOn "compressTiny","tinyJar","v2UnmergedYarnJar", "v2MergedYarnJar", "javadocJar"
 
 task exportMappingsOfficial(dependsOn: downloadIntermediary) {
 	def composeInput = downloadIntermediary.dest
