@@ -27,7 +27,7 @@ plugins {
 	id 'net.fabricmc.filament' version '0.3.0'
 }
 
-def minecraft_version = "22w16a"
+def minecraft_version = "22w16b"
 
 def ENV = System.getenv()
 // Fetch build number from Github Actions
@@ -57,7 +57,10 @@ repositories {
 }
 
 configurations {
-	enigmaRuntime
+	asm
+	enigmaRuntime {
+		extendsFrom asm
+	}
 	javadocClasspath
 	decompileClasspath
 	mappingPoetJar {
@@ -65,9 +68,12 @@ configurations {
 	}
 	mappingPoet {
 		extendsFrom mappingPoetJar
+		extendsFrom asm
 		transitive = true
 	}
-	unpick
+	unpick {
+		extendsFrom asm
+	}
 }
 
 def unpickMetaFile = file("unpick-definitions/unpick.json")
@@ -81,11 +87,10 @@ dependencies {
 	decompileClasspath "net.fabricmc:cfr:${project.cfr_version}"
 	mappingPoetJar "net.fabricmc:mappingpoet:${project.mappingpoet_version}"
 	unpick "net.fabricmc.unpick:unpick-cli:${project.unpick_version}"
-	// Update asm to allow running on JDK 18
-	unpick "org.ow2.asm:asm:${project.asm_version}"
-	unpick "org.ow2.asm:asm-tree:${project.asm_version}"
-	unpick "org.ow2.asm:asm-commons:${project.asm_version}"
-	unpick "org.ow2.asm:asm-util:${project.asm_version}"
+	asm "org.ow2.asm:asm:${project.asm_version}"
+	asm "org.ow2.asm:asm-tree:${project.asm_version}"
+	asm "org.ow2.asm:asm-commons:${project.asm_version}"
+	asm "org.ow2.asm:asm-util:${project.asm_version}"
 }
 
 def setupGroup = "jar setup"
@@ -588,7 +593,7 @@ clean.doFirst {
 	delete tempDir, cacheFilesMinecraft
 }
 
-tasks.build.dependsOn "compressTiny","tinyJar","v2UnmergedYarnJar", "v2MergedYarnJar"
+tasks.build.dependsOn "compressTiny","tinyJar","v2UnmergedYarnJar", "v2MergedYarnJar", "javadocJar"
 
 task exportMappingsOfficial(dependsOn: downloadIntermediary) {
 	def composeInput = downloadIntermediary.dest
