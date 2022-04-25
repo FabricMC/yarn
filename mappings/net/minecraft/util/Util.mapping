@@ -180,6 +180,31 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_43253 copyShuffled ([Ljava/lang/Object;Lnet/minecraft/class_5819;)Ljava/util/List;
 		ARG 0 array
 		ARG 1 random
+	METHOD method_43368 (Ljava/util/List;Ljava/lang/Void;)Ljava/util/List;
+		ARG 1 void_
+	METHOD method_43369 (Ljava/util/List;Ljava/util/concurrent/CompletableFuture;Ljava/lang/Throwable;)V
+		ARG 2 throwable
+	METHOD method_43370 combine (Ljava/util/List;Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 futures
+		ARG 1 exceptionHandler
+	METHOD method_43371 (Ljava/util/List;[Ljava/util/concurrent/CompletableFuture;Ljava/util/function/Consumer;Ljava/util/concurrent/CompletableFuture;)V
+		ARG 3 future
+	METHOD method_43372 (Ljava/util/function/Consumer;Ljava/util/List;ILjava/lang/Object;Ljava/lang/Throwable;)V
+		ARG 3 value
+		ARG 4 throwable
+	METHOD method_43373 combineCancellable (Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT Combines a list of {@code futures} into one future that holds a list
+		COMMENT of their results.
+		COMMENT
+		COMMENT <p>The returned future is fail-fast; if any of the input futures fails,
+		COMMENT this returned future will be immediately completed exceptionally than
+		COMMENT waiting for other input futures. Additionally, all other futures will
+		COMMENT be canceled.
+		COMMENT
+		COMMENT @return the combined future
+		COMMENT @see #combine(List)
+		COMMENT @see #combineSafe(List)
+		ARG 0 futures
 	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
 		ARG 0 iterable
 		ARG 1 object
@@ -200,6 +225,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		COMMENT waiting for other input futures.
 		COMMENT
 		COMMENT @return the combined future
+		COMMENT @see #combineCancellable(List)
 		COMMENT @see #combineSafe(List)
 		ARG 0 futures
 			COMMENT the completable futures to combine
