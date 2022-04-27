@@ -1,39 +1,86 @@
 CLASS net/minecraft/class_2641 net/minecraft/network/packet/s2c/play/CommandTreeS2CPacket
-	FIELD field_12123 commandTree Lcom/mojang/brigadier/tree/RootCommandNode;
+	FIELD field_38038 rootSize I
+	FIELD field_38039 nodes Ljava/util/List;
 	METHOD <init> (Lcom/mojang/brigadier/tree/RootCommandNode;)V
-		ARG 1 commandTree
+		ARG 1 rootNode
 	METHOD <init> (Lnet/minecraft/class_2540;)V
 		ARG 1 buf
-	METHOD method_11401 writeNode (Lnet/minecraft/class_2540;Lcom/mojang/brigadier/tree/CommandNode;Ljava/util/Map;)V
+	METHOD method_11401 createNodeData (Lcom/mojang/brigadier/tree/CommandNode;Lit/unimi/dsi/fastutil/objects/Object2IntMap;)Lnet/minecraft/class_2641$class_2642;
+		ARG 0 node
+		ARG 1 nodes
+	METHOD method_11402 readArgumentBuilder (Lnet/minecraft/class_2540;B)Lnet/minecraft/class_2641$class_7235;
 		ARG 0 buf
-		ARG 1 node
-		ARG 2 nodeToIndex
-	METHOD method_11402 readArgumentBuilder (Lnet/minecraft/class_2540;B)Lcom/mojang/brigadier/builder/ArgumentBuilder;
-		ARG 0 buf
-	METHOD method_11403 getCommandTree ()Lcom/mojang/brigadier/tree/RootCommandNode;
+		ARG 1 flags
+	METHOD method_11403 getCommandTree (Lnet/minecraft/class_7157;)Lcom/mojang/brigadier/tree/RootCommandNode;
+		ARG 1 commandRegistryAccess
 	METHOD method_11405 readCommandNode (Lnet/minecraft/class_2540;)Lnet/minecraft/class_2641$class_2642;
 		ARG 0 buf
 	METHOD method_30944 traverse (Lcom/mojang/brigadier/tree/RootCommandNode;)Lit/unimi/dsi/fastutil/objects/Object2IntMap;
 		ARG 0 commandTree
 	METHOD method_30945 collectNodes (Lit/unimi/dsi/fastutil/objects/Object2IntMap;)Ljava/util/List;
 		ARG 0 nodes
-	METHOD method_30946 build (Ljava/util/List;)V
+	METHOD method_30946 validate (Ljava/util/List;)V
 		ARG 0 nodeDatas
-	METHOD method_34119 (Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lnet/minecraft/class_2540;Lcom/mojang/brigadier/tree/CommandNode;)V
-		ARG 2 node
-	METHOD method_34120 (Ljava/util/List;Lnet/minecraft/class_2641$class_2642;)Z
-		ARG 1 nodeData
+	METHOD method_34119 (Lnet/minecraft/class_2540;Lnet/minecraft/class_2641$class_2642;)V
+		ARG 0 buf2
+		ARG 1 node
+	METHOD method_42067 validate (Ljava/util/List;Ljava/util/function/BiPredicate;)V
+		ARG 0 nodeDatas
+		ARG 1 validator
+	METHOD method_42068 (Ljava/util/function/BiPredicate;Ljava/util/List;Lit/unimi/dsi/fastutil/ints/IntSet;I)Z
+		ARG 0 index
 	CLASS class_2642 CommandNodeData
-		FIELD field_12124 flags B
+		FIELD field_12124 flags I
 		FIELD field_12125 childNodeIndices [I
 		FIELD field_12126 redirectNodeIndex I
-		FIELD field_12127 argumentBuilder Lcom/mojang/brigadier/builder/ArgumentBuilder;
-		FIELD field_12128 node Lcom/mojang/brigadier/tree/CommandNode;
-		METHOD <init> (Lcom/mojang/brigadier/builder/ArgumentBuilder;BI[I)V
-			ARG 1 argumentBuilder
+		FIELD field_38043 suggestableNode Lnet/minecraft/class_2641$class_7235;
+		METHOD <init> (Lnet/minecraft/class_2641$class_7235;II[I)V
+			ARG 1 suggestableNode
 			ARG 2 flags
 			ARG 3 redirectNodeIndex
 			ARG 4 childNodeIndices
-		METHOD method_11406 build (Ljava/util/List;)Z
-		METHOD method_11408 (Lcom/mojang/brigadier/context/CommandContext;)I
+		METHOD method_42074 validateRedirectNodeIndex (Lit/unimi/dsi/fastutil/ints/IntSet;)Z
+			ARG 1 indices
+		METHOD method_42075 write (Lnet/minecraft/class_2540;)V
+			ARG 1 buf
+		METHOD method_42076 validateChildNodeIndices (Lit/unimi/dsi/fastutil/ints/IntSet;)Z
+			ARG 1 indices
+	CLASS class_7232 ArgumentNode
+		FIELD field_38040 name Ljava/lang/String;
+		FIELD field_38041 properties Lnet/minecraft/class_2314$class_7217;
+		FIELD field_38042 id Lnet/minecraft/class_2960;
+		METHOD <init> (Lcom/mojang/brigadier/tree/ArgumentCommandNode;)V
+			ARG 1 node
+		METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_2314$class_7217;Lnet/minecraft/class_2960;)V
+			ARG 1 name
+			ARG 2 properties
+			ARG 3 id
+		METHOD method_42069 computeId (Lcom/mojang/brigadier/suggestion/SuggestionProvider;)Lnet/minecraft/class_2960;
+			ARG 0 provider
+		METHOD method_42072 write (Lnet/minecraft/class_2540;Lnet/minecraft/class_2314$class_7217;)V
+			ARG 0 buf
+			ARG 1 properties
+		METHOD method_42073 write (Lnet/minecraft/class_2540;Lnet/minecraft/class_2314;Lnet/minecraft/class_2314$class_7217;)V
+			ARG 0 buf
+			ARG 1 serializer
+			ARG 2 properties
+	CLASS class_7233 LiteralNode
+		FIELD field_38044 literal Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;)V
+			ARG 1 literal
+	CLASS class_7234 CommandTree
+		FIELD field_38045 commandRegistryAccess Lnet/minecraft/class_7157;
+		FIELD field_38046 nodeDatas Ljava/util/List;
+		FIELD field_38047 nodes Ljava/util/List;
+		METHOD <init> (Lnet/minecraft/class_7157;Ljava/util/List;)V
+			ARG 1 commandRegistryAccess
+			ARG 2 nodeDatas
+		METHOD method_42077 getNode (I)Lcom/mojang/brigadier/tree/CommandNode;
+			ARG 1 index
+		METHOD method_42078 (Lcom/mojang/brigadier/context/CommandContext;)I
 			ARG 0 context
+	CLASS class_7235 SuggestableNode
+		METHOD method_42070 createArgumentBuilder (Lnet/minecraft/class_7157;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+			ARG 1 commandRegistryAccess
+		METHOD method_42071 write (Lnet/minecraft/class_2540;)V
+			ARG 1 buf

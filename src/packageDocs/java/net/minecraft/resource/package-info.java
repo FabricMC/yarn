@@ -46,7 +46,7 @@
  *     <td>{@link ResourcePack}</td>
  *     <td>Provides binary data based on queries.
  *     <br>They are usually single-use, created by {@link ResourcePackManager} and provided
- *     to {@link ReloadableResourceManager} in each reload.</td>
+ *     to the resource manager in each reload.</td>
  * </tr>
  * <tr>
  *     <td>{@link ResourcePackProfile}</td>
@@ -61,7 +61,7 @@
  * <tr>
  *     <td>{@link ResourcePackManager}</td>
  *     <td>Keeps track of {@link ResourcePackProvider}s and uses the profiles from the providers
- *     to create {@link ResourcePack}s to send to {@link ReloadableResourceManager}s in each reload.</td>
+ *     to create {@link ResourcePack}s to send to resource managers in each reload.</td>
  * </tr>
  * </table></div>
  *
