@@ -32,6 +32,7 @@ CLASS net/minecraft/class_525 net/minecraft/client/gui/screen/world/CreateWorldS
 	FIELD field_3202 moreOptionsOpen Z
 	FIELD field_3205 createLevelButton Lnet/minecraft/class_4185;
 	FIELD field_32434 TEMP_DIR_PREFIX Ljava/lang/String;
+	FIELD field_37911 PREPARING_TEXT Lnet/minecraft/class_2561;
 	METHOD <init> (Lnet/minecraft/class_437;Lnet/minecraft/class_5359;Lnet/minecraft/class_5292;)V
 		ARG 1 parent
 		ARG 2 dataPackSettings
@@ -61,8 +62,6 @@ CLASS net/minecraft/class_525 net/minecraft/client/gui/screen/world/CreateWorldS
 	METHOD method_28084 setMoreOptionsOpen ()V
 	METHOD method_29682 applyDataPacks (Lnet/minecraft/class_3283;)V
 		ARG 1 dataPackManager
-	METHOD method_29684 (Ljava/nio/file/Path;)Z
-		ARG 1 path
 	METHOD method_29685 copyDataPack (Ljava/nio/file/Path;Lnet/minecraft/class_310;)Ljava/nio/file/Path;
 		ARG 0 srcFolder
 		ARG 1 client
@@ -76,8 +75,6 @@ CLASS net/minecraft/class_525 net/minecraft/client/gui/screen/world/CreateWorldS
 		ARG 2 dataPackFile
 	METHOD method_29689 (Ljava/nio/file/Path;)V
 		ARG 0 path
-	METHOD method_29690 (Ljava/nio/file/Path;Ljava/nio/file/Path;)V
-		ARG 2 path
 	METHOD method_29691 (Z)V
 		ARG 1 confirmed
 	METHOD method_29692 (Lnet/minecraft/class_4185;)V
@@ -85,14 +82,13 @@ CLASS net/minecraft/class_525 net/minecraft/client/gui/screen/world/CreateWorldS
 	METHOD method_29693 getDataPackTempDir ()Ljava/nio/file/Path;
 	METHOD method_29694 openPackScreen ()V
 	METHOD method_29695 clearDataPackTempDir ()V
-	METHOD method_29696 copyTempDirDataPacks ()Z
 	METHOD method_29983 (Ljava/util/List;Ljava/lang/String;)Z
 		ARG 1 name
 	METHOD method_30296 getScannedPack ()Lcom/mojang/datafixers/util/Pair;
 	METHOD method_30297 onCloseScreen ()V
-	METHOD method_30298 clearTempResources ()V
-	METHOD method_31130 create (Lnet/minecraft/class_437;)Lnet/minecraft/class_525;
-		ARG 0 parent
+	METHOD method_31130 create (Lnet/minecraft/class_310;Lnet/minecraft/class_437;)V
+		ARG 0 client
+		ARG 1 parent
 	METHOD method_32667 (Lnet/minecraft/class_5676;)Lnet/minecraft/class_5250;
 		ARG 0 button
 	METHOD method_32668 (Lnet/minecraft/class_5676;Lnet/minecraft/class_1267;)V
@@ -107,8 +103,8 @@ CLASS net/minecraft/class_525 net/minecraft/client/gui/screen/world/CreateWorldS
 	METHOD method_32671 (Lnet/minecraft/class_5676;)Lnet/minecraft/class_5250;
 		ARG 1 button
 	METHOD method_32672 getDifficulty ()Lnet/minecraft/class_1267;
-	METHOD method_37088 (Lnet/minecraft/class_5359;Lnet/minecraft/class_6904;)V
-		ARG 2 saveLoader
+	METHOD method_37088 (Lnet/minecraft/class_5359;Lnet/minecraft/class_7193;)V
+		ARG 2 generatorOptionsHolder
 	METHOD method_37089 (Ljava/lang/Void;Ljava/lang/Throwable;)Ljava/lang/Object;
 		ARG 1 v
 		ARG 2 throwable
@@ -123,6 +119,31 @@ CLASS net/minecraft/class_525 net/minecraft/client/gui/screen/world/CreateWorldS
 		ARG 2 path
 	METHOD method_40213 createLevelInfo (Z)Lnet/minecraft/class_1940;
 		ARG 1 debugWorld
+	METHOD method_41847 startServer ()V
+	METHOD method_41848 createSession ()Ljava/util/Optional;
+	METHOD method_41849 createServerConfig (Lnet/minecraft/class_3283;Lnet/minecraft/class_5359;)Lnet/minecraft/class_7237$class_6906;
+		ARG 0 resourcePackManager
+		ARG 1 dataPackSettings
+	METHOD method_41850 (Lnet/minecraft/class_6860;Lnet/minecraft/class_5350;Lnet/minecraft/class_5455$class_6890;Lcom/mojang/datafixers/util/Pair;)Lnet/minecraft/class_7193;
+		ARG 0 resourceManager
+		ARG 1 dataPackContents
+		ARG 2 dynamicRegistryManager
+		ARG 3 pair
+	METHOD method_41851 (Lnet/minecraft/class_6860;Lnet/minecraft/class_5350;Lnet/minecraft/class_5455$class_6890;Lnet/minecraft/class_5285;)Lnet/minecraft/class_7193;
+		ARG 0 resourceManager
+		ARG 1 dataPackContents
+		ARG 2 dynamicRegistryManager
+		ARG 3 generatorOptions
+	METHOD method_41852 showMessage (Lnet/minecraft/class_310;Lnet/minecraft/class_2561;)V
+		ARG 0 client
+		ARG 1 text
+	METHOD method_41853 (Ljava/nio/file/Path;)Z
+		ARG 1 path
+	METHOD method_41854 (Lnet/minecraft/class_3300;Lnet/minecraft/class_5359;)Lcom/mojang/datafixers/util/Pair;
+		ARG 0 resourceManager
+		ARG 1 dataPackSettings
+	METHOD method_41855 (Ljava/nio/file/Path;Ljava/nio/file/Path;)V
+		ARG 2 path
 	CLASS class_4539 Mode
 		FIELD field_20628 translationSuffix Ljava/lang/String;
 		FIELD field_20629 defaultGameMode Lnet/minecraft/class_1934;
@@ -131,6 +152,3 @@ CLASS net/minecraft/class_525 net/minecraft/client/gui/screen/world/CreateWorldS
 			ARG 3 translationSuffix
 			ARG 4 defaultGameMode
 		METHOD method_32673 asText ()Lnet/minecraft/class_2561;
-	CLASS class_5376 WorldCreationException
-		METHOD <init> (Ljava/lang/Throwable;)V
-			ARG 1 throwable

@@ -29,18 +29,18 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	FIELD field_35565 blockEventQueue Ljava/util/List;
 	FIELD field_36208 structureLocator Lnet/minecraft/class_6832;
 	FIELD field_36317 duringListenerUpdate Z
-	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5268;Lnet/minecraft/class_5321;Lnet/minecraft/class_6880;Lnet/minecraft/class_3949;Lnet/minecraft/class_2794;ZJLjava/util/List;Z)V
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5268;Lnet/minecraft/class_5321;Lnet/minecraft/class_5363;Lnet/minecraft/class_3949;ZJLjava/util/List;Z)V
 		ARG 1 server
 		ARG 2 workerExecutor
 		ARG 3 session
 		ARG 4 properties
 		ARG 5 worldKey
+		ARG 6 dimensionOptions
 		ARG 7 worldGenerationProgressListener
-		ARG 8 chunkGenerator
-		ARG 9 debugWorld
-		ARG 10 seed
-		ARG 12 spawners
-		ARG 13 shouldTickTime
+		ARG 8 debugWorld
+		ARG 9 seed
+		ARG 11 spawners
+		ARG 12 shouldTickTime
 	METHOD method_14166 spawnParticles (Lnet/minecraft/class_3222;Lnet/minecraft/class_2394;ZDDDIDDDD)Z
 		COMMENT Spawns a particle visible to {@code viewer}, if the viewer is near the provided
 		COMMENT coordinates.
@@ -244,11 +244,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_23659 (Lnet/minecraft/class_3341;Lnet/minecraft/class_1919;)Z
 		ARG 1 event
 	METHOD method_23660 wakeSleepingPlayers ()V
-	METHOD method_24500 locateBiome (Ljava/util/function/Predicate;Lnet/minecraft/class_2338;II)Lcom/mojang/datafixers/util/Pair;
-		ARG 1 biomeEntryPredicate
-		ARG 2 pos
-		ARG 3 radius
-		ARG 4 blockCheckInterval
 	METHOD method_27056 getStructureAccessor ()Lnet/minecraft/class_5138;
 	METHOD method_27909 iterateEntities ()Ljava/lang/Iterable;
 	METHOD method_27910 setWeather (IIZZ)V
@@ -267,11 +262,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 			COMMENT whether a rain is ongoing
 		ARG 4 thundering
 			COMMENT whether a thunderstorm is ongoing
-	METHOD method_27911 getSpawnPos ()Lnet/minecraft/class_2338;
-		COMMENT {@return the world spawn point}
-		COMMENT
-		COMMENT @implNote If it is outside the world border, this returns the position of the
-		COMMENT highest {@linkplain Heightmap.Type#MOTION_BLOCKING motion-blocking} block at the center of the world border.
 	METHOD method_28125 isFlat ()Z
 	METHOD method_29198 getEnderDragonFight ()Lnet/minecraft/class_2881;
 	METHOD method_29199 setTimeOfDay (J)V
@@ -295,7 +285,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_29203 tickTime ()V
 	METHOD method_29204 (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)V
 		ARG 1 pos
-	METHOD method_30630 getSpawnAngle ()F
 	METHOD method_30736 spawnNewEntityAndPassengers (Lnet/minecraft/class_1297;)Z
 		COMMENT Checks whether any of the entity and its passengers already exist
 		COMMENT in the world, and if not, spawns the entity with its passengers.
@@ -330,10 +319,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 entity
 	METHOD method_32310 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_3767;
 		ARG 1 nbt
-	METHOD method_32817 sendVibrationPacket (Lnet/minecraft/class_5720;)V
-		ARG 1 vibration
-	METHOD method_32818 (Lnet/minecraft/class_2338;Lnet/minecraft/class_5747;Lnet/minecraft/class_3222;)V
-		ARG 3 player
 	METHOD method_32819 getLogicalHeight ()I
 	METHOD method_33143 sendSleepingStatus ()V
 		COMMENT Sends sleeping status action bar messages to players in this world.
@@ -360,6 +345,12 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 pos
 	METHOD method_39999 shouldTick (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
+	METHOD method_42108 locateBiome (Ljava/util/function/Predicate;Lnet/minecraft/class_2338;III)Lcom/mojang/datafixers/util/Pair;
+		ARG 1 predicate
+		ARG 2 pos
+		ARG 3 radius
+		ARG 4 horizontalBlockCheckInterval
+		ARG 5 verticalBlockCheckInterval
 	METHOD method_8448 updateSleepingPlayers ()V
 	METHOD method_8487 locateStructure (Lnet/minecraft/class_6862;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
 		COMMENT Tries to find the closest structure of a given type near a given block.
