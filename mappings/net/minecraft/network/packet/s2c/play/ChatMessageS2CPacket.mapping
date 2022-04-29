@@ -1,6 +1,37 @@
 CLASS net/minecraft/class_7438 net/minecraft/network/packet/s2c/play/ChatMessageS2CPacket
+	COMMENT A packet used to send a chat message to the clients.
+	COMMENT
+	COMMENT <p>The content is not wrapped in any way (e.g. by {@code chat.type.text} text); the
+	COMMENT raw message content is sent to the clients, and they will wrap it (see {@link
+	COMMENT net.minecraft.client.gui.hud.ChatHudListener#format}.) If custom formats are needed,
+	COMMENT either send it as a {@link GameMessageS2CPacket game message} or use a server resource pack.
+	COMMENT
+	COMMENT <p>Messages that took more than {@link #TIME_TO_LIVE} to reach the clients are
+	COMMENT considered expired. This is measured from the time the client sent the chat message
+	COMMENT to the server. Note that unlike {@link
+	COMMENT net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket} expired messages are not
+	COMMENT discarded by the clients; they instead log a warning.
+	COMMENT
+	COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
+	COMMENT {@link NetworkEncryptionUtils.SignatureData#NONE} - to send a chat message; however
+	COMMENT if the signature is invalid (e.g. because the text's content differs from the one
+	COMMENT sent by the client, or because the passed signature is invalid) the client will
+	COMMENT log a warning. See {@link NetworkEncryptionUtils#updateSignature} for how the message
+	COMMENT is signed.
+	COMMENT
+	COMMENT @see net.minecraft.server.network.ServerPlayerEntity#sendChatMessage
+	COMMENT @see net.minecraft.client.network.ClientPlayNetworkHandler#onChatMessage
+	FIELD comp_758 Lnet/minecraft/class_2561;
+		COMMENT the unwrapped chat message
+	FIELD field_39085 TIME_TO_LIVE Ljava/time/Duration;
 	METHOD <init> (Lnet/minecraft/class_2540;)V
 		ARG 1 buf
 	METHOD method_43627 isSignatureValid (Lnet/minecraft/class_7428$class_7429;)Z
-	METHOD method_43628 (Ljava/time/Instant;)Z
-		ARG 1 sendingTime
+		COMMENT {@return whether the chat message has a valid signature}
+		ARG 1 publicKey
+			COMMENT the sender's public key to use for verifying
+	METHOD method_43628 isExpired (Ljava/time/Instant;)Z
+		COMMENT {@return whether the message is considered expired}
+		ARG 1 currentTime
+	METHOD method_43630 getExpiryTime ()Ljava/time/Instant;
+		COMMENT {@return when the message is considered expired}
