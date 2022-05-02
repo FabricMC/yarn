@@ -137,3 +137,60 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 	METHOD method_38650 setSimulationDistance (I)V
 		ARG 1 simulationDistance
 	METHOD method_38651 getSimulationDistance ()I
+	METHOD method_43511 (Lnet/minecraft/class_2561;Lnet/minecraft/class_3222;)Lnet/minecraft/class_2561;
+		ARG 1 player
+	METHOD method_43512 broadcast (Lnet/minecraft/class_2561;Ljava/util/function/Function;Lnet/minecraft/class_2556;)V
+		COMMENT Broadcasts a message to all players and the server console. A different
+		COMMENT message can be sent to a different player.
+		COMMENT
+		COMMENT @apiNote This is used by {@link net.minecraft.server.command.MeCommand}
+		COMMENT and {@link net.minecraft.server.command.SayCommand}.
+		COMMENT
+		COMMENT @see #broadcast(Text, MessageType)
+		COMMENT @see #broadcast(Text, Function, MessageType, ChatMessageSender, Instant, NetworkEncryptionUtils.SignatureData)
+		ARG 1 message
+		ARG 2 playerMessageFactory
+			COMMENT a function that takes the player to send the message to
+			COMMENT and returns either the text to send to them or {@code null}
+			COMMENT to indicate the message should not be sent to them
+		ARG 3 type
+	METHOD method_43513 broadcast (Lnet/minecraft/class_2561;Ljava/util/function/Function;Lnet/minecraft/class_2556;Lnet/minecraft/class_7436;Ljava/time/Instant;Lnet/minecraft/class_3515$class_7425;)V
+		COMMENT Broadcasts a chat message to all players and the server console. A different
+		COMMENT message can be sent to a different player.
+		COMMENT
+		COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
+		COMMENT {@link NetworkEncryptionUtils.SignatureData#NONE} - to send a chat message; however
+		COMMENT if the signature is invalid (e.g. because the text's content differs from the one
+		COMMENT sent by the client, or because the passed signature is invalid) the client will
+		COMMENT log a warning. See {@link NetworkEncryptionUtils#updateSignature} for how the message
+		COMMENT is signed.
+		COMMENT
+		COMMENT @apiNote This method is used to broadcast a message sent by a player
+		COMMENT through {@linkplain net.minecraft.client.gui.screen.ChatScreen the chat screen}.
+		COMMENT
+		COMMENT @see #broadcast(Text, MessageType)
+		COMMENT @see #broadcast(Text, Function, MessageType)
+		ARG 1 message
+		ARG 2 playerMessageFactory
+			COMMENT a function that takes the player to send the message to
+			COMMENT and returns either the text to send to them or {@code null}
+			COMMENT to indicate the message should not be sent to them
+		ARG 3 type
+		ARG 4 sender
+		ARG 5 instant
+		ARG 6 signature
+	METHOD method_43514 broadcast (Lnet/minecraft/class_2561;Lnet/minecraft/class_2556;)V
+		COMMENT Broadcasts a message to all players and the server console.
+		COMMENT
+		COMMENT @apiNote This is used to send general messages such as a death
+		COMMENT message or a join/leave message. This is also used to send messages from
+		COMMENT non-player-executed commands, such as ones from a command block or the server console.
+		COMMENT
+		COMMENT @see #broadcast(Text, Function, MessageType)
+		COMMENT @see #broadcast(Text, Function, MessageType, ChatMessageSender, Instant, NetworkEncryptionUtils.SignatureData)
+		ARG 1 message
+		ARG 2 type
+	METHOD method_43515 broadcast (Lnet/minecraft/class_2561;Lnet/minecraft/class_2556;Ljava/util/UUID;)V
+		ARG 1 message
+		ARG 2 type
+		ARG 3 uuid
