@@ -1,135 +1,154 @@
 CLASS net/minecraft/class_296 net/minecraft/client/render/VertexFormatElement
-	COMMENT Represents a singular field within a larger vertex format.
-	COMMENT <p>
-	COMMENT This element comprises a data type, a field length,
-	COMMENT and the corresponding GL element type to which this field corresponds.
-	FIELD field_1612 length I
-	FIELD field_1613 textureIndex I
+	COMMENT Represents a singular field within a larger {@link
+	COMMENT net.minecraft.client.render.VertexFormat vertex format}.
+	COMMENT
+	COMMENT <p>This element comprises a component type, the number of components,
+	COMMENT and a type that describes how the components should be interpreted.
+	FIELD field_1612 componentCount I
+	FIELD field_1613 uvIndex I
 	FIELD field_1614 type Lnet/minecraft/class_296$class_298;
-	FIELD field_1615 dataType Lnet/minecraft/class_296$class_297;
+	FIELD field_1615 componentType Lnet/minecraft/class_296$class_297;
 	FIELD field_21329 byteLength I
 		COMMENT The total length of this element (in bytes).
 	METHOD <init> (ILnet/minecraft/class_296$class_297;Lnet/minecraft/class_296$class_298;I)V
-		ARG 1 textureIndex
-		ARG 2 dataType
+		ARG 1 uvIndex
+		ARG 2 componentType
 		ARG 3 type
-		ARG 4 length
+		ARG 4 componentCount
 	METHOD equals (Ljava/lang/Object;)Z
 		ARG 1 o
 	METHOD method_1382 getType ()Lnet/minecraft/class_296$class_298;
 	METHOD method_1383 isValidType (ILnet/minecraft/class_296$class_298;)Z
-		ARG 1 index
+		ARG 1 uvIndex
 		ARG 2 type
-	METHOD method_1385 getTextureIndex ()I
-	METHOD method_1386 getDataType ()Lnet/minecraft/class_296$class_297;
+	METHOD method_1385 getUvIndex ()I
+	METHOD method_1386 getComponentType ()Lnet/minecraft/class_296$class_297;
 	METHOD method_1387 getByteLength ()I
-	METHOD method_22652 startDrawing (IJI)V
+	METHOD method_22652 setupState (IJI)V
+		COMMENT Specifies for OpenGL how the vertex data corresponding to this element
+		COMMENT should be interpreted.
 		ARG 1 elementIndex
-		ARG 2 pointer
+			COMMENT the index of the element in a vertex format
+		ARG 2 offset
+			COMMENT the distance between the start of the buffer and the first instance of
+			COMMENT the element in the buffer
 		ARG 4 stride
-	METHOD method_22653 endDrawing (I)V
+			COMMENT the distance between consecutive instances of the element in the buffer
+	METHOD method_22653 clearState (I)V
 		ARG 1 elementIndex
-	METHOD method_34451 getLength ()I
+	METHOD method_34451 getComponentCount ()I
 	METHOD method_35667 isPosition ()Z
-	CLASS class_297 DataType
+	CLASS class_297 ComponentType
+		COMMENT Represents a type of components in an element.
 		FIELD field_1618 byteLength I
 		FIELD field_1626 name Ljava/lang/String;
-		FIELD field_1627 id I
+		FIELD field_1627 glType I
 		METHOD <init> (Ljava/lang/String;IILjava/lang/String;I)V
-			ARG 3 byteCount
+			ARG 3 byteLength
 			ARG 4 name
-			ARG 5 id
+			ARG 5 glType
 		METHOD method_1389 getName ()Ljava/lang/String;
-		METHOD method_1390 getId ()I
+		METHOD method_1390 getGlType ()I
 		METHOD method_1391 getByteLength ()I
 	CLASS class_298 Type
+		COMMENT Describes how the components should be interpreted.
 		FIELD field_1630 name Ljava/lang/String;
-		FIELD field_20783 starter Lnet/minecraft/class_296$class_298$class_4575;
-		FIELD field_20784 finisher Lnet/minecraft/class_296$class_298$class_5938;
+		FIELD field_20783 setupTask Lnet/minecraft/class_296$class_298$class_4575;
+		FIELD field_20784 clearTask Lnet/minecraft/class_296$class_298$class_5938;
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;Lnet/minecraft/class_296$class_298$class_4575;Lnet/minecraft/class_296$class_298$class_5938;)V
 			ARG 3 name
-			ARG 4 starter
-			ARG 5 finisher
+			ARG 4 setupTask
+			ARG 5 clearTask
 		METHOD method_1392 getName ()Ljava/lang/String;
-		METHOD method_22654 endDrawing (II)V
-			ARG 1 textureIndex
+		METHOD method_22654 clearState (II)V
+			ARG 1 uvIndex
 			ARG 2 elementIndex
-		METHOD method_22655 startDrawing (IIIJII)V
-			ARG 1 size
-			ARG 2 type
+		METHOD method_22655 setupState (IIIJII)V
+			ARG 1 componentCount
+			ARG 2 componentType
 			ARG 3 stride
-			ARG 4 pointer
-			ARG 6 textureIndex
+			ARG 4 offset
+			ARG 6 uvIndex
 			ARG 7 elementIndex
 		METHOD method_22657 (II)V
-			ARG 0 textureIndex
+			ARG 0 uvIndex
 			ARG 1 elementIndex
 		METHOD method_22658 (IIIJII)V
-			ARG 0 size
-			ARG 1 type
+			ARG 0 componentCount
+			ARG 1 componentType
 			ARG 2 stride
-			ARG 3 pointer
-			ARG 5 textureIndex
+			ARG 3 offset
+			ARG 5 uvIndex
 			ARG 6 elementIndex
 		METHOD method_22659 (II)V
-			ARG 0 textureIndex
+			ARG 0 uvIndex
 			ARG 1 elementIndex
 		METHOD method_22660 (IIIJII)V
-			ARG 0 size
-			ARG 1 type
+			ARG 0 componentCount
+			ARG 1 componentType
 			ARG 2 stride
-			ARG 3 pointer
-			ARG 5 textureIndex
+			ARG 3 offset
+			ARG 5 uvIndex
 			ARG 6 elementIndex
 		METHOD method_22661 (II)V
-			ARG 0 textureIndex
+			ARG 0 uvIndex
 			ARG 1 elementIndex
 		METHOD method_22662 (IIIJII)V
-			ARG 0 size
-			ARG 1 type
+			ARG 0 componentCount
+			ARG 1 componentType
 			ARG 2 stride
-			ARG 3 pointer
-			ARG 5 textureIndex
+			ARG 3 offset
+			ARG 5 uvIndex
 			ARG 6 elementIndex
 		METHOD method_22663 (II)V
-			ARG 0 textureIndex
+			ARG 0 uvIndex
 			ARG 1 elementIndex
 		METHOD method_22664 (IIIJII)V
-			ARG 0 size
-			ARG 1 type
+			ARG 0 componentCount
+			ARG 1 componentType
 			ARG 2 stride
-			ARG 3 pointer
-			ARG 5 textureIndex
+			ARG 3 offset
+			ARG 5 uvIndex
 			ARG 6 elementIndex
 		METHOD method_22665 (II)V
-			ARG 0 textureIndex
+			ARG 0 uvIndex
 			ARG 1 elementIndex
 		METHOD method_22666 (IIIJII)V
-			ARG 0 size
-			ARG 1 type
+			ARG 0 componentCount
+			ARG 1 componentType
 			ARG 2 stride
-			ARG 3 pointer
-			ARG 5 textureIndex
+			ARG 3 offset
+			ARG 5 uvIndex
 			ARG 6 elementIndex
 		METHOD method_22667 (IIIJII)V
-			ARG 0 size
-			ARG 1 type
+			ARG 0 componentCount
+			ARG 1 componentType
 			ARG 2 stride
-			ARG 3 pointer
-			ARG 5 textureIndex
+			ARG 3 offset
+			ARG 5 uvIndex
 			ARG 6 elementIndex
 		METHOD method_34452 (II)V
-			ARG 0 textureIndex
+			ARG 0 uvIndex
 			ARG 1 elementIndex
-		CLASS class_4575 Starter
+		CLASS class_4575 SetupTask
 			METHOD setupBufferState (IIIJII)V
-				ARG 1 size
-				ARG 2 type
+				COMMENT Specifies for OpenGL how the vertex data corresponding to the element
+				COMMENT should be interpreted.
+				ARG 1 componentCount
+					COMMENT the number of components in the element
+				ARG 2 componentType
+					COMMENT the GL type of components in the element
 				ARG 3 stride
-				ARG 4 pointer
-				ARG 6 textureIndex
+					COMMENT the distance between consecutive instances of the element in the buffer
+				ARG 4 offset
+					COMMENT the distance between the start of the buffer and the first instance of
+					COMMENT the element in the buffer; be aware that {@code pointer} is a legacy
+					COMMENT name from OpenGL 2
+				ARG 6 uvIndex
 				ARG 7 elementIndex
-		CLASS class_5938 Finisher
+					COMMENT the index of the element in a vertex format
+		CLASS class_5938 ClearTask
 			METHOD clearBufferState (II)V
-				ARG 1 textureIndex
+				ARG 1 uvIndex
 				ARG 2 elementIndex
+					COMMENT the index of the element in a vertex format
