@@ -205,6 +205,25 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		COMMENT @see #combine(List)
 		COMMENT @see #combineSafe(List)
 		ARG 0 futures
+	METHOD method_43498 waitAndApply (Ljava/util/function/Function;Ljava/util/function/Predicate;)Ljava/lang/Object;
+		COMMENT Runs tasks using the prepare-apply model.
+		COMMENT
+		COMMENT @apiNote This method takes a function that supplies an executor to use in the
+		COMMENT apply stage. Inside the function, callers should run the preparation,
+		COMMENT and use the passed executor for applying.
+		ARG 0 resultFactory
+			COMMENT a function that takes the apply-stage executor and returns the preliminary result
+		ARG 1 donePredicate
+			COMMENT a predicate that, given the result, checks whether applying has finished
+	METHOD method_43499 waitAndApply (Ljava/util/function/Function;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT Runs tasks using the prepare-apply model, such as creation of a {@link
+		COMMENT net.minecraft.server.SaveLoader}.
+		COMMENT
+		COMMENT @apiNote This method takes a function that supplies an executor to use in the
+		COMMENT apply stage. Inside the function, callers should run the preparation,
+		COMMENT and use the passed executor for applying.
+		ARG 0 resultFactory
+			COMMENT a function that takes the apply-stage executor and returns the future
 	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
 		ARG 0 iterable
 		ARG 1 object

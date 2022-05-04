@@ -10,12 +10,20 @@ CLASS net/minecraft/class_2797 net/minecraft/network/packet/c2s/play/ChatMessage
 	COMMENT net.minecraft.SharedConstants#isValidChar isValidChar}), the server will
 	COMMENT reject the message and disconnect the client.
 	COMMENT
+	COMMENT <p>Messages that took more than {@link #TIME_TO_LIVE} to reach the server
+	COMMENT are considered expired and will be discarded.
+	COMMENT
 	COMMENT @see net.minecraft.client.network.ClientPlayerEntity#sendChatMessage
 	COMMENT @see net.minecraft.server.network.ServerPlayNetworkHandler#onChatMessage
 	FIELD field_12764 chatMessage Ljava/lang/String;
-	FIELD field_33359 MAX_LENGTH I
-	METHOD <init> (Ljava/lang/String;)V
-		ARG 1 chatMessage
+	FIELD field_39086 TIME_TO_LIVE Ljava/time/Duration;
+	FIELD field_39087 time Ljava/time/Instant;
+	FIELD field_39088 signature Lnet/minecraft/class_3515$class_7425;
 	METHOD <init> (Lnet/minecraft/class_2540;)V
 		ARG 1 buf
 	METHOD method_12114 getChatMessage ()Ljava/lang/String;
+	METHOD method_43633 isExpired (Ljava/time/Instant;)Z
+		COMMENT {@return whether the message is considered expired and should be discarded}
+		ARG 1 currentTime
+	METHOD method_43637 getExpiryTime ()Ljava/time/Instant;
+		COMMENT {@return when the message is considered expired and should be discarded}
