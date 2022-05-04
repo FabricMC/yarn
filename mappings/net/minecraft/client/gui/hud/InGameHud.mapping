@@ -14,7 +14,7 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 	FIELD field_2019 PUMPKIN_BLUR Lnet/minecraft/class_2960;
 	FIELD field_2020 VIGNETTE_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_2021 chatHud Lnet/minecraft/class_338;
-	FIELD field_2022 listeners Ljava/util/Map;
+	FIELD field_2022 listeners Ljava/util/List;
 	FIELD field_2023 titleRemainTicks I
 	FIELD field_2024 itemRenderer Lnet/minecraft/class_918;
 	FIELD field_2025 spectatorHud Lnet/minecraft/class_365;
@@ -159,6 +159,25 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 	METHOD method_39192 renderAutosaveIndicator (Lnet/minecraft/class_4587;)V
 		ARG 1 matrices
 	METHOD method_39193 tickAutosaveIndicator ()V
+	METHOD method_43591 onGameMessage (Lnet/minecraft/class_2556;Lnet/minecraft/class_2561;)V
+		COMMENT Handles a game message.
+		COMMENT
+		COMMENT @implNote This method discards the message if {@linkplain #extractSender the extracted
+		COMMENT sender} is blocked. Otherwise, it calls {@link ClientChatListener#onChatMessage}.
+		COMMENT
+		COMMENT @see net.minecraft.client.network.ClientPlayNetworkHandler#onGameMessage
+		ARG 1 type
+		ARG 2 message
+	METHOD method_43592 onChatMessage (Lnet/minecraft/class_2556;Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;)V
+		COMMENT Handles a chat message.
+		COMMENT
+		COMMENT @implNote This method discards the message if the sender is blocked.
+		COMMENT Otherwise, it calls {@link ClientChatListener#onChatMessage}.
+		COMMENT
+		COMMENT @see net.minecraft.client.network.ClientPlayNetworkHandler#onChatMessage
+		ARG 1 type
+		ARG 2 message
+		ARG 3 sender
 	CLASS class_6411 HeartType
 		FIELD field_33950 textureIndex I
 		FIELD field_33951 hasBlinkingTexture Z
