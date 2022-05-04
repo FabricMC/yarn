@@ -23,6 +23,7 @@
  * can be any of the six numeric types; this cannot be used as the list's held type.
  *
  * <table>
+ * <caption>NBT types</caption>
  * <thead>
  *   <tr>
  *     <th>Class</th>
