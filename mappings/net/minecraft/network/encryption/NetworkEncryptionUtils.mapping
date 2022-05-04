@@ -100,10 +100,6 @@ CLASS net/minecraft/class_3515 net/minecraft/network/encryption/NetworkEncryptio
 		ARG 0 opMode
 		ARG 1 key
 		ARG 2 data
-	METHOD method_43518 uuidToBytes (JJ)[B
-		COMMENT {@return the UUID converted to a big-endian byte array}
-		ARG 0 mostSignificant
-		ARG 2 leastSignificant
 	METHOD method_43519 decodeRsaPrivateKeyPem (Ljava/lang/String;)Ljava/security/PrivateKey;
 		COMMENT Decodes a PEM-formatted RSA private key.
 		COMMENT
@@ -155,23 +151,6 @@ CLASS net/minecraft/class_3515 net/minecraft/network/encryption/NetworkEncryptio
 		COMMENT @see #decodeRsaPrivateKeyPem(String)
 		COMMENT @see #decodeRsaPublicKeyPem(String)
 		ARG 0 key
-	METHOD method_43523 updateSignature (Ljava/security/Signature;JLjava/util/UUID;Ljava/time/Instant;Ljava/lang/String;)V
-		COMMENT Updates {@code signature} with the passed parameters.
-		COMMENT
-		COMMENT @apiNote This is used when signing chat message contents.
-		COMMENT
-		COMMENT @implNote The data to be signed is {@code salt}, followed by big-endian ordered
-		COMMENT {@code uuid}, followed by {@code time} as seconds from the UTC epoch, followed by
-		COMMENT UTF-8 encoded {@code message} bytes.
-		COMMENT
-		COMMENT @throws SignatureException when updating signature fails
-		COMMENT
-		COMMENT @see net.minecraft.client.network.ClientPlayerEntity#signChatMessage(Instant, String)
-		ARG 0 signature
-		ARG 1 salt
-		ARG 3 uuid
-		ARG 4 time
-		ARG 5 message
 	METHOD method_43524 decodeRsaPublicKeyPem (Ljava/lang/String;)Ljava/security/PublicKey;
 		COMMENT Decodes a PEM-formatted RSA public key.
 		COMMENT

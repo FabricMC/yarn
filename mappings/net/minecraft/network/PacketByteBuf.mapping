@@ -705,7 +705,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 			COMMENT the list to write
 	METHOD method_34061 (Ljava/lang/Object;Lcom/mojang/serialization/DataResult$PartialResult;)V
 		ARG 1 partial
-	METHOD method_34062 writeCollection (Ljava/util/Collection;Ljava/util/function/BiConsumer;)V
+	METHOD method_34062 writeCollection (Ljava/util/Collection;Lnet/minecraft/class_2540$class_7462;)V
 		COMMENT Writes a collection to this buf. The collection is stored as a leading
 		COMMENT {@linkplain #readVarInt() var int} size followed by the entries
 		COMMENT sequentially.
@@ -714,9 +714,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readCollection(IntFunction, Function)
 		ARG 1 collection
 			COMMENT the collection to write
-		ARG 2 entrySerializer
-			COMMENT a serializer that writes each entry to this buf
-	METHOD method_34063 writeMap (Ljava/util/Map;Ljava/util/function/BiConsumer;Ljava/util/function/BiConsumer;)V
+	METHOD method_34063 writeMap (Ljava/util/Map;Lnet/minecraft/class_2540$class_7462;Lnet/minecraft/class_2540$class_7462;)V
 		COMMENT Writes a map to this buf. The map is stored as a leading
 		COMMENT {@linkplain #readVarInt() var int} size followed by each key and value
 		COMMENT pair.
@@ -726,11 +724,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readMap(IntFunction, Function, Function)
 		ARG 1 map
 			COMMENT the map to write
-		ARG 2 keySerializer
-			COMMENT a serializer that writes each key in the map to this buf
-		ARG 3 valueSerializer
-			COMMENT a serializer that writes each value in the map to this buf
-	METHOD method_34064 (Ljava/util/function/BiConsumer;Ljava/util/function/BiConsumer;Ljava/lang/Object;Ljava/lang/Object;)V
+	METHOD method_34064 (Lnet/minecraft/class_2540$class_7462;Lnet/minecraft/class_2540$class_7462;Ljava/lang/Object;Ljava/lang/Object;)V
 		ARG 3 key
 		ARG 4 value
 	METHOD method_34065 forEachInCollection (Ljava/util/function/Consumer;)V
@@ -741,26 +735,20 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readCollection(IntFunction, Function)
 		ARG 1 consumer
 			COMMENT the consumer to read entries
-	METHOD method_34066 readList (Ljava/util/function/Function;)Ljava/util/List;
+	METHOD method_34066 readList (Lnet/minecraft/class_2540$class_7461;)Ljava/util/List;
 		COMMENT Reads a collection from this buf as an array list.
 		COMMENT
 		COMMENT @param <T> the list's entry type
 		COMMENT @return the read list
 		COMMENT @see #readCollection(IntFunction, Function)
-		ARG 1 entryParser
-			COMMENT a parser that parses each entry for the collection given this buf
-	METHOD method_34067 readMap (Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/Map;
+	METHOD method_34067 readMap (Lnet/minecraft/class_2540$class_7461;Lnet/minecraft/class_2540$class_7461;)Ljava/util/Map;
 		COMMENT Reads a map from this buf as a hash map.
 		COMMENT
 		COMMENT @param <K> the key type
 		COMMENT @param <V> the value type
 		COMMENT @return the read map
 		COMMENT @see #readMap(IntFunction, Function, Function)
-		ARG 1 keyParser
-			COMMENT a parser that parses each key for the map given this buf
-		ARG 2 valueParser
-			COMMENT a parser that parses each value for the map given this buf
-	METHOD method_34068 readCollection (Ljava/util/function/IntFunction;Ljava/util/function/Function;)Ljava/util/Collection;
+	METHOD method_34068 readCollection (Ljava/util/function/IntFunction;Lnet/minecraft/class_2540$class_7461;)Ljava/util/Collection;
 		COMMENT Reads a collection from this buf. The collection is stored as a leading
 		COMMENT {@linkplain #readVarInt() var int} size followed by the entries
 		COMMENT sequentially.
@@ -772,9 +760,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readList(Function)
 		ARG 1 collectionFactory
 			COMMENT a factory that creates a collection with a given size
-		ARG 2 entryParser
-			COMMENT a parser that parses each entry for the collection given this buf
-	METHOD method_34069 readMap (Ljava/util/function/IntFunction;Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/Map;
+	METHOD method_34069 readMap (Ljava/util/function/IntFunction;Lnet/minecraft/class_2540$class_7461;Lnet/minecraft/class_2540$class_7461;)Ljava/util/Map;
 		COMMENT Reads a map from this buf. The map is stored as a leading
 		COMMENT {@linkplain #readVarInt() var int} size followed by each key and value
 		COMMENT pair.
@@ -787,10 +773,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readMap(Function, Function)
 		ARG 1 mapFactory
 			COMMENT a factory that creates a map with a given size
-		ARG 2 keyParser
-			COMMENT a parser that parses each key for the map given this buf
-		ARG 3 valueParser
-			COMMENT a parser that parses each value for the map given this buf
 	METHOD method_34070 (Lnet/minecraft/class_2487;Lcom/mojang/serialization/DataResult$PartialResult;)V
 		ARG 1 partial
 	METHOD method_36129 getVarLongLength (J)I
@@ -826,22 +808,20 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return the read chunk position
 		COMMENT @see #writeChunkPos(ChunkPos)
-	METHOD method_37435 writeOptional (Ljava/util/Optional;Ljava/util/function/BiConsumer;)V
+	METHOD method_37435 writeOptional (Ljava/util/Optional;Lnet/minecraft/class_2540$class_7462;)V
 		COMMENT Writes an optional value to this buf. An optional value is represented by
 		COMMENT a boolean indicating if the value is present, followed by the value only if
 		COMMENT the value is present.
 		COMMENT
 		COMMENT @see #readOptional(Function)
 		ARG 1 value
-		ARG 2 serializer
-	METHOD method_37436 readOptional (Ljava/util/function/Function;)Ljava/util/Optional;
+	METHOD method_37436 readOptional (Lnet/minecraft/class_2540$class_7461;)Ljava/util/Optional;
 		COMMENT Reads an optional value from this buf. An optional value is represented by
 		COMMENT a boolean indicating if the value is present, followed by the value only if
 		COMMENT the value is present.
 		COMMENT
 		COMMENT @return the read optional value
 		COMMENT @see #writeOptional(Optional, BiConsumer)
-		ARG 1 parser
 	METHOD method_37452 (ILjava/util/function/IntFunction;I)Ljava/lang/Object;
 		ARG 2 value
 	METHOD method_37453 getMaxValidator (Ljava/util/function/IntFunction;I)Ljava/util/function/IntFunction;
@@ -888,28 +868,24 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 property
 	METHOD method_43618 (Lcom/mojang/authlib/properties/PropertyMap;Lnet/minecraft/class_2540;)V
 		ARG 2 buf
-	METHOD method_43619 writeEither (Lcom/mojang/datafixers/util/Either;Ljava/util/function/BiConsumer;Ljava/util/function/BiConsumer;)V
+	METHOD method_43619 writeEither (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/class_2540$class_7462;Lnet/minecraft/class_2540$class_7462;)V
 		COMMENT Writes an {@code Either} to this buf. An either is represented by
 		COMMENT a boolean indicating if the left side or the right side of the either,
 		COMMENT followed by the value.
 		COMMENT
 		COMMENT @see #readEither(Function, Function)
 		ARG 1 either
-		ARG 2 leftSerializer
-		ARG 3 rightSerializer
-	METHOD method_43620 (Ljava/util/function/BiConsumer;Ljava/lang/Object;)V
+	METHOD method_43620 (Lnet/minecraft/class_2540$class_7462;Ljava/lang/Object;)V
 		ARG 2 object
-	METHOD method_43621 (Ljava/util/function/BiConsumer;Ljava/lang/Object;)V
+	METHOD method_43621 (Lnet/minecraft/class_2540$class_7462;Ljava/lang/Object;)V
 		ARG 2 object
-	METHOD method_43622 readEither (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/datafixers/util/Either;
+	METHOD method_43622 readEither (Lnet/minecraft/class_2540$class_7461;Lnet/minecraft/class_2540$class_7461;)Lcom/mojang/datafixers/util/Either;
 		COMMENT Reads an {@code Either} from this buf. An either is represented by
 		COMMENT a boolean indicating if the left side or the right side of the either,
 		COMMENT followed by the value.
 		COMMENT
 		COMMENT @return the read either
 		COMMENT @see #writeEither(Either, BiConsumer, BiConsumer)
-		ARG 1 leftParser
-		ARG 2 rightParser
 	METHOD method_43623 readGameProfile ()Lcom/mojang/authlib/GameProfile;
 		COMMENT Reads a game profile from this buf. A game profile is represented by a
 		COMMENT {@linkplain #readUuid() uuid}, a username string, and a collection of

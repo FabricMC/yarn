@@ -27,7 +27,7 @@ plugins {
 	id 'net.fabricmc.filament' version '0.3.0'
 }
 
-def minecraft_version = "22w17a"
+def minecraft_version = "22w18a"
 
 def ENV = System.getenv()
 // Fetch build number from Github Actions
@@ -335,6 +335,8 @@ task downloadMcLibs(dependsOn: downloadWantedVersionManifest) {
 		}
 
 		version.libraries.each {
+			if (it.downloads.artifact == null) return // TODO: happens for downloads.classifiers - implement properly?
+
 			def downloadUrl = it.downloads.artifact.url
 
 			download {
