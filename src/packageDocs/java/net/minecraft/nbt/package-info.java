@@ -8,7 +8,7 @@
  * <p>NBT is a simple data structure format used in Minecraft's in-game data
  * serialization. Data stored on disks, modified by commands, and transported
  * via packets are usually in this format. In most cases, NBT is <strong>not
- * read or written at runtime</strong>; NBT data are instead written to Java
+ * the runtime form of data</strong>; data are instead written to Java
  * class fields using Java types, and during serialization (as part of saving
  * or network transportation) or modification by commands, the code will write
  * the fields to NBT data. NBT data is also known as "NBT element".
