@@ -87,7 +87,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@link Optional}</td><td>{@link #readOptional(PacketByteBuf.PacketReader)}</td><td>{@link #writeOptional(Optional, PacketByteBuf.PacketWriter)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>Nullable value</td><td>{@link #readNullable(PacketByteBuf.PacketReader)}</td><td>{@link #writeNullable(Optional, PacketByteBuf.PacketWriter)}</td>
+	COMMENT  <td>Nullable value</td><td>{@link #readNullable(PacketByteBuf.PacketReader)}</td><td>{@link #writeNullable(Object, PacketByteBuf.PacketWriter)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@index Either}</td><td>{@link #readEither(PacketByteBuf.PacketReader, PacketByteBuf.PacketReader)}</td><td>{@link #writeEither(Either, PacketByteBuf.PacketWriter, PacketByteBuf.PacketWriter)}</td>
@@ -738,7 +738,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT {@linkplain #readVarInt() var int} {@code size} followed by the entries
 		COMMENT sequentially. The {@code consumer} will be called {@code size} times.
 		COMMENT
-		COMMENT @see #readCollection(IntFunction, Function)
+		COMMENT @see #readCollection(IntFunction, PacketByteBuf.PacketReader)
 		ARG 1 consumer
 			COMMENT the consumer to read entries
 	METHOD method_34066 readList (Lnet/minecraft/class_2540$class_7461;)Ljava/util/List;
@@ -746,7 +746,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @param <T> the list's entry type
 		COMMENT @return the read list
-		COMMENT @see #readCollection(IntFunction, PacketByteBuf.PacketWriter)
+		COMMENT @see #readCollection(IntFunction, PacketByteBuf.PacketReader)
 		ARG 1 reader
 	METHOD method_34067 readMap (Lnet/minecraft/class_2540$class_7461;Lnet/minecraft/class_2540$class_7461;)Ljava/util/Map;
 		COMMENT Reads a map from this buf as a hash map.
@@ -887,7 +887,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT a boolean indicating if the left side or the right side of the either,
 		COMMENT followed by the value.
 		COMMENT
-		COMMENT @see #readEither(Function, Function)
+		COMMENT @see #readEither(PacketByteBuf.PacketReader, PacketByteBuf.PacketReader)
 		ARG 1 either
 		ARG 2 leftWriter
 		ARG 3 rightWriter
@@ -901,7 +901,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT followed by the value.
 		COMMENT
 		COMMENT @return the read either
-		COMMENT @see #writeEither(Either, BiConsumer, BiConsumer)
+		COMMENT @see #writeEither(Either, PacketByteBuf.PacketWriter, PacketByteBuf.PacketWriter)
 		ARG 1 leftReader
 		ARG 2 rightReader
 	METHOD method_43623 readGameProfile ()Lcom/mojang/authlib/GameProfile;
