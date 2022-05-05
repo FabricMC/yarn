@@ -199,6 +199,7 @@
  *
  * <h2 id=using-nbt>Using NBT</h2>
  * <p>As noted before, NBT is a <strong>serialized format, not runtime format</strong>.
+ * Most custom data stored inside NBT will be lost once the game loads it and saves.
  * Therefore, modifying NBT is usually not the solution for attaching custom data to
  * objects like entities. For this purpose it is recommended to use third-party APIs
  * or use Mixin to add a field to the class.
