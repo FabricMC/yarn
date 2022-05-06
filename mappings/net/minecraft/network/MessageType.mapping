@@ -13,22 +13,22 @@ CLASS net/minecraft/class_2556 net/minecraft/network/MessageType
 	COMMENT <li>{@link #narration} controls the narrated content.</li>
 	COMMENT </ul>
 	COMMENT
-	COMMENT <p>The displays and the narration can optionally have a "decoration", which is an
+	COMMENT <p>The display rules and the narration rule can optionally have a "decoration", which is an
 	COMMENT instance of {@link Decoration}. Decorations are pre-defined message formatting and
 	COMMENT styling rules, which can be {@linkplain Decoration#apply applied} to the message to
 	COMMENT produce the displayed or narrated text. If there is no decoration, the message is used
-	COMMENT without any extra processing. See the documentation for {@link MessageType.Display}
-	COMMENT and {@link MessageType.Narration} for details.
+	COMMENT without any extra processing. See the documentation for {@link MessageType.DisplayRule}
+	COMMENT and {@link MessageType.NarrationRule} for details.
 	COMMENT
 	COMMENT @see net.minecraft.server.PlayerManager#broadcast(Text, RegistryKey)
 	FIELD comp_792 Ljava/util/Optional;
-		COMMENT the display for the content displayed in the chat hud, or
+		COMMENT the display rule for the content displayed in the chat hud, or
 		COMMENT {@link java.util.Optional#empty()} if it should not be displayed in the chat hud
 	FIELD comp_793 Ljava/util/Optional;
-		COMMENT the display for the content displayed as the overlay, or
+		COMMENT the display rule for the content displayed as the overlay, or
 		COMMENT {@link java.util.Optional#empty()} if it should not be displayed as the overlay
 	FIELD comp_794 Ljava/util/Optional;
-		COMMENT the narration for the content, or {@link java.util.Optional#empty()}
+		COMMENT the narration rule for the content, or {@link java.util.Optional#empty()}
 		COMMENT if it should not be narrated
 	FIELD field_11733 Lnet/minecraft/class_5321;
 		COMMENT The registry key for the game info message type. This appears on the overlay only
@@ -80,18 +80,18 @@ CLASS net/minecraft/class_2556 net/minecraft/network/MessageType
 		ARG 0 registry
 	METHOD method_43845 register (Ljava/lang/String;)Lnet/minecraft/class_5321;
 		ARG 0 id
-	CLASS class_7466 Narration
-		COMMENT The narration for the message type. This contains the decoration applied
+	CLASS class_7466 NarrationRule
+		COMMENT The narration rule for the message type. This contains the decoration applied
 		COMMENT to the message and the priority of the narration.
 		FIELD field_39233 CODEC Lcom/mojang/serialization/Codec;
 		METHOD method_43846 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
 			ARG 0 instance
 		METHOD method_43847 of (Lnet/minecraft/class_7463;Lnet/minecraft/class_2556$class_7466$class_7467;)Lnet/minecraft/class_2556$class_7466;
-			COMMENT {@return the narration with the specified decoration and priority}
+			COMMENT {@return the narration rule with the specified decoration and priority}
 			ARG 0 decoration
 			ARG 1 priority
 		METHOD method_43848 of (Lnet/minecraft/class_2556$class_7466$class_7467;)Lnet/minecraft/class_2556$class_7466;
-			COMMENT {@return the narration with no decoration and the specified priority}
+			COMMENT {@return the narration rule with no decoration and the specified priority}
 			COMMENT
 			COMMENT <p>This does not mean the message is not narrated; this means that the message
 			COMMENT is narrated as is without any extra processing.
@@ -117,19 +117,19 @@ CLASS net/minecraft/class_2556 net/minecraft/network/MessageType
 			METHOD method_43851 hasPriority ()Z
 				COMMENT {@return whether the message has priority over others and should interrupt
 				COMMENT their narrations}
-	CLASS class_7468 Display
-		COMMENT The display for the message type. This contains the decoration applied
+	CLASS class_7468 DisplayRule
+		COMMENT The display rule for the message type. This contains the decoration applied
 		COMMENT to the message.
 		FIELD field_39240 CODEC Lcom/mojang/serialization/Codec;
 		METHOD method_43853 noDecoration ()Lnet/minecraft/class_2556$class_7468;
-			COMMENT {@return the display with no decoration}
+			COMMENT {@return the display rule with no decoration}
 			COMMENT
 			COMMENT <p>This does not mean the message is not displayed; this means that the message
 			COMMENT is displayed as is without any extra processing.
 		METHOD method_43854 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
 			ARG 0 instance
 		METHOD method_43855 of (Lnet/minecraft/class_7463;)Lnet/minecraft/class_2556$class_7468;
-			COMMENT {@return the display with the specified decoration}
+			COMMENT {@return the display rule with the specified decoration}
 			ARG 0 decoration
 		METHOD method_43856 applyDecoration (Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;)Lnet/minecraft/class_2561;
 			COMMENT {@return the message with the decoration applied, or {@code message} if there is
