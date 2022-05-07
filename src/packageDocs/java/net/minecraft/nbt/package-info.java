@@ -164,11 +164,11 @@
  *
  * <pre>{@code
  *   NbtList list = new NbtList();
- *   list.addElement(NbtFloat.of(0.5f));
+ *   list.addElement(0, NbtFloat.of(0.5f));
  *   float firstItem = list.getFloat(0); // 0.5f
  *   float secondItem = list.getFloat(1); // 0.0f (default value)
  *   double firstItemDouble = list.getDouble(0); // 0.0 (no casting)
- *   list.addElement(NbtDouble.of(1.0)); // returns false, does nothing
+ *   list.addElement(1, NbtDouble.of(1.0)); // returns false, does nothing
  *   list.add(NbtDouble.of(2.0)); // throws UnsupportedOperationException
  * }</pre>
  *
@@ -184,17 +184,20 @@
  * <pre>{@code
  *   NbtCompound compound = new NbtCompound();
  *   compound.put("Awesomeness", NbtInt.of(90));
+ *
  *   // Don't do this! This will crash if the type is incompatible,
  *   // even if they can be casted!
  *   NbtInt awesomenessNbt = (NbtInt)compound.get("Awesomeness");
+ *
  *   compound.putLong("Awesomeness", 100L);
  *   int awesomeness = compound.getInt("Awesomeness"); // 100 (after casting)
  *   int evilness = compound.getInt("Evilness"); // 0 (default value)
+ *
  *   // Shortcuts for getting and putting a boolean value
  *   // (internally represented as a byte)
  *   compound.putBoolean("Awesome", true);
  *   boolean awesome = compound.getBoolean("Awesome");
-*    compound.put("awesome", NbtDouble.of(1.0)); // key is case-sensitive
+ *   compound.put("awesome", NbtDouble.of(1.0)); // key is case-sensitive
  * }</pre>
  *
  * <h2 id=using-nbt>Using NBT</h2>
