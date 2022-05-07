@@ -34,8 +34,7 @@ CLASS net/minecraft/class_2556 net/minecraft/network/MessageType
 		COMMENT The registry key for the game info message type. This appears on the overlay only
 		COMMENT and is not narrated at all. This message type does not have a decoration.
 		COMMENT
-		COMMENT @apiNote This is most often seen when the player tries to place blocks outside
-		COMMENT the build height limit.
+		COMMENT @apiNote This is most often seen when the player uses a bed.
 	FIELD field_11735 Lnet/minecraft/class_5321;
 		COMMENT The registry key for the system message message type. This is also referred to
 		COMMENT as {@linkplain net.minecraft.network.packet.s2c.play.GameMessageS2CPacket game
@@ -83,6 +82,12 @@ CLASS net/minecraft/class_2556 net/minecraft/network/MessageType
 	CLASS class_7466 NarrationRule
 		COMMENT The narration rule for the message type. This contains the decoration applied
 		COMMENT to the message and the priority of the narration.
+	    FIELD comp_795 Ljava/util/Optional;
+		    COMMENT the decoration applied to a message, or {@link Optional#empty()} if the content
+			COMMENT is narrated as is
+		FIELD comp_796 Lnet/minecraft/class_2556$class_7466$class_7467;
+			COMMENT the narration priority, also used to check if this narration can
+			COMMENT interrupt other ones
 		FIELD field_39233 CODEC Lcom/mojang/serialization/Codec;
 		METHOD method_43846 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
 			ARG 0 instance
@@ -120,8 +125,11 @@ CLASS net/minecraft/class_2556 net/minecraft/network/MessageType
 	CLASS class_7468 DisplayRule
 		COMMENT The display rule for the message type. This contains the decoration applied
 		COMMENT to the message.
+		FIELD comp_797 Ljava/util/Optional;
+			COMMENT the decoration applied to a message, or {@link Optional#empty()} if the content
+			COMMENT is displayed as is
 		FIELD field_39240 CODEC Lcom/mojang/serialization/Codec;
-		METHOD method_43853 noDecoration ()Lnet/minecraft/class_2556$class_7468;
+		METHOD method_43853 of ()Lnet/minecraft/class_2556$class_7468;
 			COMMENT {@return the display rule with no decoration}
 			COMMENT
 			COMMENT <p>This does not mean the message is not displayed; this means that the message
