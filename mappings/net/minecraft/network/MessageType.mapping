@@ -38,8 +38,8 @@ CLASS net/minecraft/class_2556 net/minecraft/network/MessageType
 	FIELD field_11735 Lnet/minecraft/class_5321;
 		COMMENT The registry key for the system message message type. This is also referred to
 		COMMENT as {@linkplain net.minecraft.network.packet.s2c.play.GameMessageS2CPacket game
-		COMMENT messages}. This message type does not have a decoration and has a higher narration
-		COMMENT priority than others.
+		COMMENT messages}. This message type does not have a decoration and its narrations will
+		COMMENT interrupt others.
 		COMMENT
 		COMMENT @apiNote System messages include join/leave messages, death messages,
 		COMMENT advancement messages, and other messages that are not sent by players.
@@ -81,22 +81,22 @@ CLASS net/minecraft/class_2556 net/minecraft/network/MessageType
 		ARG 0 id
 	CLASS class_7466 NarrationRule
 		COMMENT The narration rule for the message type. This contains the decoration applied
-		COMMENT to the message and the priority of the narration.
+		COMMENT to the message and the kind of the narration ({@code priority} when serialized).
 		FIELD comp_795 Ljava/util/Optional;
 			COMMENT the decoration applied to a message, or {@link Optional#empty()} if the content
 			COMMENT is narrated as is
-		FIELD comp_796 Lnet/minecraft/class_2556$class_7466$class_7467;
-			COMMENT the narration priority, also used to check if this narration can
-			COMMENT interrupt other ones
+		FIELD comp_796 kind Lnet/minecraft/class_2556$class_7466$class_7467;
+			COMMENT the kind of the narration, also known as {@code priority} in the serialized
+			COMMENT format
 		FIELD field_39233 CODEC Lcom/mojang/serialization/Codec;
 		METHOD method_43846 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
 			ARG 0 instance
 		METHOD method_43847 of (Lnet/minecraft/class_7463;Lnet/minecraft/class_2556$class_7466$class_7467;)Lnet/minecraft/class_2556$class_7466;
-			COMMENT {@return the narration rule with the specified decoration and priority}
+			COMMENT {@return the narration rule with the specified decoration and kind}
 			ARG 0 decoration
 			ARG 1 priority
 		METHOD method_43848 of (Lnet/minecraft/class_2556$class_7466$class_7467;)Lnet/minecraft/class_2556$class_7466;
-			COMMENT {@return the narration rule with no decoration and the specified priority}
+			COMMENT {@return the narration rule with no decoration and the specified kind}
 			COMMENT
 			COMMENT <p>This does not mean the message is not narrated; this means that the message
 			COMMENT is narrated as is without any extra processing.
@@ -108,17 +108,17 @@ CLASS net/minecraft/class_2556 net/minecraft/network/MessageType
 			ARG 2 sender
 		METHOD method_43850 (Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;Lnet/minecraft/class_7463;)Lnet/minecraft/class_2561;
 			ARG 2 decoration
-		CLASS class_7467 Priority
-			COMMENT The priority of narration. When narrating messages that have priority, it will
-			COMMENT interrupt the current narrations. This is also used to determine if something
-			COMMENT {@linkplain net.minecraft.client.option.NarratorMode#shouldNarrate should be
-			COMMENT narrated} when the narrator option is set to "Chat" or "System".
+		CLASS class_7467 Kind
+			COMMENT The kind of narration. This is also known as priority, because it determines
+			COMMENT if the incoming narration should interrupt the current one. This is also used
+			COMMENT to check if the message {@linkplain net.minecraft.client.option.NarratorMode#shouldNarrate
+			COMMENT should be narrated} when the narrator option is set to "Chat" or "System".
 			FIELD field_39236 CODEC Lcom/mojang/serialization/Codec;
 			FIELD field_39237 name Ljava/lang/String;
 			FIELD field_39238 interrupt Z
 			METHOD <init> (Ljava/lang/String;ILjava/lang/String;Z)V
 				ARG 3 name
-				ARG 4 prioritized
+				ARG 4 interrupt
 			METHOD method_43851 shouldInterrupt ()Z
 				COMMENT {@return whether the message has priority over others and should interrupt
 				COMMENT their narrations}
