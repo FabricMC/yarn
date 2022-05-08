@@ -1,1 +1,82 @@
 CLASS net/minecraft/class_2556 net/minecraft/network/MessageType
+	COMMENT A message type, or chat type in registry, or chat style format per
+	COMMENT Minecraft blog, defines how a piece of text content should be rendered.
+	COMMENT It can direct messages to the chat hud, the in-game hud overlay, and the
+	COMMENT narrator, and format them with the sender information.
+	FIELD comp_792 Ljava/util/Optional;
+		COMMENT the display rule of a message to the chat hud, or
+		COMMENT {@code Optional.empty()} if it is not displayed
+	FIELD comp_793 Ljava/util/Optional;
+		COMMENT the display rule of a message to the in-game hud overlay, or
+		COMMENT {@code Optional.empty()} if it is not displayed
+	FIELD comp_794 Ljava/util/Optional;
+		COMMENT the narration rule of a message, or {@code Optional.empty()} if it is
+		COMMENT not narrated
+	FIELD field_39227 CODEC Lcom/mojang/serialization/Codec;
+		COMMENT The codec for the message type.
+	METHOD method_43843 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 0 instance
+	METHOD method_43844 registerAndGetDefault (Lnet/minecraft/class_2378;)Lnet/minecraft/class_2556;
+		COMMENT Registers the built-in message types and returns the default "chat" type.
+		ARG 0 registry
+	METHOD method_43845 getKey (Ljava/lang/String;)Lnet/minecraft/class_5321;
+		ARG 0 id
+	CLASS class_7466 NarrationRule
+		COMMENT A narration rule for a message.
+		FIELD comp_795 Ljava/util/Optional;
+			COMMENT the formatting of a message, or {@code Optional.empty()} if the content
+			COMMENT is displayed directly
+		FIELD comp_796 Lnet/minecraft/class_2556$class_7466$class_7467;
+			COMMENT the narration kind, and if this narration can interrupt other ones
+		FIELD field_39233 CODEC Lcom/mojang/serialization/Codec;
+			COMMENT The codec for the message narraton rule.
+		METHOD method_43846 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
+		METHOD method_43847 of (Lnet/minecraft/class_7463;Lnet/minecraft/class_2556$class_7466$class_7467;)Lnet/minecraft/class_2556$class_7466;
+			COMMENT {@return a rule that narrates a message after formatting} The message
+			COMMENT is narrated as the given {@code kind}, and the narration can include
+			COMMENT sender information in addition to the message content.
+			ARG 0 decoration
+			ARG 1 kind
+		METHOD method_43848 of (Lnet/minecraft/class_2556$class_7466$class_7467;)Lnet/minecraft/class_2556$class_7466;
+			COMMENT {@return a rule that narrates a message's content directly} The message
+			COMMENT is narrated as the given {@code kind}, without any sender-related
+			COMMENT information.
+			ARG 0 kind
+		METHOD method_43849 apply (Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;)Lnet/minecraft/class_2561;
+			COMMENT {@return the text to narrate after applying this rule on the given
+			COMMENT content and sender}
+			ARG 1 content
+			ARG 2 sender
+		CLASS class_7467 Kind
+			COMMENT The narration kind. It also determines if the narration can interrupt
+			COMMENT previous ones.
+			FIELD field_39236 CODEC Lcom/mojang/serialization/Codec;
+				COMMENT The codec for the narration kind.
+			FIELD field_39237 name Ljava/lang/String;
+			FIELD field_39238 interrupt Z
+			METHOD <init> (Ljava/lang/String;ILjava/lang/String;Z)V
+				ARG 3 name
+				ARG 4 interrupt
+			METHOD method_43851 shouldInterrupt ()Z
+	CLASS class_7468 DisplayRule
+		COMMENT A display rule for a message.
+		FIELD comp_797 Ljava/util/Optional;
+			COMMENT the formatting of a message, or {@code Optional.empty()} if the content
+			COMMENT is displayed directly
+		FIELD field_39240 CODEC Lcom/mojang/serialization/Codec;
+			COMMENT The codec for the message display rule.
+		METHOD method_43853 of ()Lnet/minecraft/class_2556$class_7468;
+			COMMENT {@return a rule that displays a message's content directly} The message
+			COMMENT is displayed without any sender-related information.
+		METHOD method_43854 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
+		METHOD method_43855 of (Lnet/minecraft/class_7463;)Lnet/minecraft/class_2556$class_7468;
+			COMMENT {@return a rule to format the message} It allows displaying the sender
+			COMMENT information in addition to the message content.
+			ARG 0 format
+		METHOD method_43856 apply (Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;)Lnet/minecraft/class_2561;
+			COMMENT {@return the text to display after applying this rule on the given
+			COMMENT content and sender}
+			ARG 1 content
+			ARG 2 sender
