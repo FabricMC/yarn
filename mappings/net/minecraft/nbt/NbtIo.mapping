@@ -1,5 +1,11 @@
 CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
+	COMMENT A set of utility functions for reading, writing, and scanning NBT files.
 	METHOD method_10625 read (Ljava/io/DataInput;Lnet/minecraft/class_2505;)Lnet/minecraft/class_2487;
+		COMMENT Reads an NBT compound from {@code input}.
+		COMMENT
+		COMMENT @return the NBT compound from the input
+		COMMENT @throws IOException if the IO operation fails or if the root NBT element is
+		COMMENT not a compound
 		ARG 0 input
 		ARG 1 tracker
 	METHOD method_10626 read (Ljava/io/DataInput;ILnet/minecraft/class_2505;)Lnet/minecraft/class_2520;
@@ -7,29 +13,74 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		ARG 1 depth
 		ARG 2 tracker
 	METHOD method_10627 read (Ljava/io/DataInput;)Lnet/minecraft/class_2487;
+		COMMENT Reads an NBT compound from {@code input}.
+		COMMENT
+		COMMENT @return the NBT compound from the input
+		COMMENT @throws IOException if the IO operation fails or if the root NBT element is
+		COMMENT not a compound
 		ARG 0 input
 	METHOD method_10628 write (Lnet/minecraft/class_2487;Ljava/io/DataOutput;)V
-		ARG 0 compound
+		COMMENT Writes the {@code nbt} to {@code file}.
+		COMMENT
+		COMMENT @throws IOException if the IO operation fails
+		COMMENT @see #write(NbtCompound, File)
+		ARG 0 nbt
 		ARG 1 output
 	METHOD method_10629 readCompressed (Ljava/io/InputStream;)Lnet/minecraft/class_2487;
+		COMMENT Reads an NBT compound from Gzip-compressed {@code stream}.
+		COMMENT
+		COMMENT @return the NBT compound from the stream
+		COMMENT @throws IOException if the IO operation fails or if the root NBT element is
+		COMMENT not a compound
+		COMMENT @see #readCompressed(File)
 		ARG 0 stream
 	METHOD method_10630 write (Lnet/minecraft/class_2487;Ljava/io/File;)V
-		ARG 0 compound
+		COMMENT Writes the {@code nbt} to {@code file}.
+		COMMENT
+		COMMENT @throws IOException if the IO operation fails
+		COMMENT @see #write(NbtCompound, DataOutput)
+		ARG 0 nbt
 		ARG 1 file
 	METHOD method_10631 write (Lnet/minecraft/class_2520;Ljava/io/DataOutput;)V
-		ARG 0 element
+		ARG 0 nbt
 		ARG 1 output
 	METHOD method_10633 read (Ljava/io/File;)Lnet/minecraft/class_2487;
+		COMMENT Reads an NBT compound from {@code file}.
+		COMMENT
+		COMMENT @return the NBT compound from the file, or {@code null} if the file does not exist
+		COMMENT @throws IOException if the IO operation fails or if the root NBT element is
+		COMMENT not a compound
 		ARG 0 file
 	METHOD method_10634 writeCompressed (Lnet/minecraft/class_2487;Ljava/io/OutputStream;)V
-		ARG 0 compound
+		COMMENT Writes the Gzip-compressed {@code nbt} to {@code stream}.
+		COMMENT
+		COMMENT @throws IOException if the IO operation fails
+		COMMENT @see #writeCompressed(NbtCompound, File)
+		ARG 0 nbt
 		ARG 1 stream
 	METHOD method_30613 readCompressed (Ljava/io/File;)Lnet/minecraft/class_2487;
+		COMMENT Reads an NBT compound from Gzip-compressed {@code file}.
+		COMMENT
+		COMMENT @return the NBT compound from the file
+		COMMENT @throws IOException if the IO operation fails or if the root NBT element is
+		COMMENT not a compound
+		COMMENT @see #readCompressed(InputStream)
 		ARG 0 file
 	METHOD method_30614 writeCompressed (Lnet/minecraft/class_2487;Ljava/io/File;)V
-		ARG 0 compound
+		COMMENT Writes the Gzip-compressed {@code nbt} to {@code file}.
+		COMMENT
+		COMMENT @throws IOException if the IO operation fails
+		COMMENT @see #writeCompressed(NbtCompound, OutputStream)
+		ARG 0 nbt
 		ARG 1 file
 	METHOD method_39855 scan (Ljava/io/DataInput;Lnet/minecraft/class_6836;)V
+		COMMENT Scans the NBT input using {@code scanner}.
+		COMMENT
+		COMMENT @apiNote This method does not return the scan result; the user is expected
+		COMMENT to call the appropriate method of the {@link NbtScanner} subclasses, such as
+		COMMENT {@link net.minecraft.nbt.scanner.NbtCollector#getRoot()}.
+		COMMENT
+		COMMENT @throws IOException if the IO operation fails
 		ARG 0 input
 		ARG 1 scanner
 	METHOD method_40057 scanCompressed (Ljava/io/File;Lnet/minecraft/class_6836;)V
@@ -39,6 +90,7 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		COMMENT to call the appropriate method of the {@link NbtScanner} subclasses, such as
 		COMMENT {@link net.minecraft.nbt.scanner.NbtCollector#getRoot()}.
 		COMMENT
+		COMMENT @throws IOException if the IO operation fails
 		COMMENT @see #scanCompressed(InputStream, NbtScanner)
 		ARG 0 file
 		ARG 1 scanner
@@ -49,6 +101,7 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		COMMENT to call the appropriate method of the {@link NbtScanner} subclasses, such as
 		COMMENT {@link net.minecraft.nbt.scanner.NbtCollector#getRoot()}.
 		COMMENT
+		COMMENT @throws IOException if the IO operation fails
 		COMMENT @see #scanCompressed(File, NbtScanner)
 		ARG 0 stream
 		ARG 1 scanner
