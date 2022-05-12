@@ -52,6 +52,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 1 server
 		ARG 2 world
 		ARG 3 profile
+		ARG 4 publicKey
 	METHOD method_14203 copyFrom (Lnet/minecraft/class_3222;Z)V
 		ARG 1 oldPlayer
 		ARG 2 alive
@@ -201,6 +202,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 1 nbt
 	METHOD method_33793 shouldFilterText ()Z
 	METHOD method_33794 acceptsMessage (Lnet/minecraft/class_5321;)Z
+		ARG 1 typeKey
 	METHOD method_33795 shouldFilterMessagesSentTo (Lnet/minecraft/class_3222;)Z
 		ARG 1 player
 	METHOD method_34225 onSpawn ()V
@@ -214,24 +216,32 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		COMMENT Sends a message to the player.
 		COMMENT
 		COMMENT @see #sendMessage(Text)
-		COMMENT @see #sendChatMessage(Text, MessageType, ChatMessageSender, Instant, NetworkEncryptionUtils.SignatureData)
+		COMMENT @see #sendChatMessage(SignedChatMessage, ChatMessageSender, RegistryKey)
 		ARG 1 message
+		ARG 2 typeKey
 	METHOD method_43505 sendChatMessage (Lnet/minecraft/class_7471;Lnet/minecraft/class_7436;Lnet/minecraft/class_5321;)V
 		COMMENT Sends a chat message to the player.
 		COMMENT
 		COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
-		COMMENT {@link NetworkEncryptionUtils.SignatureData#NONE} - to send a chat message; however
-		COMMENT if the signature is invalid (e.g. because the text's content differs from the one
-		COMMENT sent by the client, or because the passed signature is invalid) the client will
-		COMMENT log a warning. See {@link NetworkEncryptionUtils#updateSignature} for how the message
-		COMMENT is signed.
+		COMMENT {@link net.minecraft.network.encryption.ChatMessageSignature#none} - to send a chat
+		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
+		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
+		COMMENT will log a warning. See {@link
+		COMMENT net.minecraft.network.encryption.ChatMessageSignature#updateSignature} for how the
+		COMMENT message is signed.
 		COMMENT
 		COMMENT @see #sendMessage(Text)
-		COMMENT @see #sendMessage(Text, MessageType)
+		COMMENT @see #sendMessage(Text, RegistryKey)
+		ARG 1 message
+		ARG 2 sender
+		ARG 3 typeKey
 	METHOD method_43506 sendMessageDeliverError (Lnet/minecraft/class_2561;Lnet/minecraft/class_5321;)V
 		ARG 1 message
+		ARG 2 typeKey
 	METHOD method_43507 (Lnet/minecraft/class_2561;Lnet/minecraft/class_5321;Lio/netty/util/concurrent/Future;)V
 		ARG 3 future
+	METHOD method_43666 getMessageTypeId (Lnet/minecraft/class_5321;)I
+		ARG 1 typeKey
 	METHOD method_7336 changeGameMode (Lnet/minecraft/class_1934;)Z
 		ARG 1 gameMode
 	CLASS 1
