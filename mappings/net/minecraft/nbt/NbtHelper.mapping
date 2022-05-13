@@ -1,4 +1,5 @@
 CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
+	COMMENT Helper methods for handling NBT.
 	FIELD field_11582 LOGGER Lorg/slf4j/Logger;
 	FIELD field_27816 BLOCK_POS_COMPARATOR Ljava/util/Comparator;
 	FIELD field_27817 ENTITY_POS_COMPARATOR Ljava/util/Comparator;
@@ -10,7 +11,13 @@ CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 	FIELD field_33227 COMMA Ljava/lang/String;
 	FIELD field_33228 COLON C
 	METHOD method_10681 toBlockState (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2680;
-		ARG 0 compound
+		COMMENT {@return the block state from the {@code nbt}}
+		COMMENT
+		COMMENT <p>This returns the default state for {@link net.minecraft.block.Blocks#AIR}
+		COMMENT if the block name is not present.
+		COMMENT
+		COMMENT @see #fromBlockState(BlockState)
+		ARG 0 nbt
 	METHOD method_10682 withProperty (Lnet/minecraft/class_2688;Lnet/minecraft/class_2769;Ljava/lang/String;Lnet/minecraft/class_2487;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2688;
 		ARG 0 state
 		ARG 1 property
@@ -18,19 +25,51 @@ CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 		ARG 3 properties
 		ARG 4 root
 	METHOD method_10683 toGameProfile (Lnet/minecraft/class_2487;)Lcom/mojang/authlib/GameProfile;
-		ARG 0 compound
+		COMMENT {@return the game profile converted from {@code nbt}}
+		COMMENT
+		COMMENT @see #writeGameProfile(NbtCompound, GameProfile)
+		ARG 0 nbt
 	METHOD method_10684 writeGameProfile (Lnet/minecraft/class_2487;Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/class_2487;
-		ARG 0 compound
+		COMMENT Writes the game profile to {@code nbt}. This modifies the passed compound.
+		COMMENT
+		COMMENT @return the compound with the serialized game profile
+		COMMENT @see #toGameProfile(NbtCompound)
+		ARG 0 nbt
 		ARG 1 profile
 	METHOD method_10685 nameValue (Lnet/minecraft/class_2769;Ljava/lang/Comparable;)Ljava/lang/String;
 		ARG 0 property
 		ARG 1 value
 	METHOD method_10686 fromBlockState (Lnet/minecraft/class_2680;)Lnet/minecraft/class_2487;
+		COMMENT {@return the serialized block state}
+		COMMENT
+		COMMENT @see #toBlockState(NbtCompound)
 		ARG 0 state
 	METHOD method_10687 matches (Lnet/minecraft/class_2520;Lnet/minecraft/class_2520;Z)Z
+		COMMENT {@return whether {@code standard} is a subset of {@code subject}}
+		COMMENT
+		COMMENT <p>Elements are matched based on the following order:
+		COMMENT <ol>
+		COMMENT <li>Passing the same reference to both parameters will return {@code true}.</li>
+		COMMENT <li>If {@code standard} is {@code null}, return {@code true}.</li>
+		COMMENT <li>If {@code subject} is {@code null}, return {@code false}.</li>
+		COMMENT <li>If the types of {@code standard} and {@code subject} are different,
+		COMMENT return {@code false}.</li>
+		COMMENT <li>If {@code standard} is {@link NbtCompound}, return {@code true} if all keys
+		COMMENT in the {@code standard} exist in {@code subject} and the values match (comparing
+		COMMENT recursively.)</li>
+		COMMENT <li>If {@code standard} is {@link NbtList} and {@code ignoreListOrder} is {@code true},
+		COMMENT return {@code true} if both lists are empty, or if there exists a "matching" value
+		COMMENT in {@code subject} for all values of {@code standard} (that is, if {@code standard}
+		COMMENT is a subset of {@code subject}, ignoring duplicates.), otherwise {@code false}.
+		COMMENT This means that the comparison ignores the ordering of the lists.</li>
+		COMMENT <li>Otherwise, return {@code standard.equals(subject)}.</li>
+		COMMENT </ol>
 		ARG 0 standard
+			COMMENT the standard (also called as "template" or "schema") element
 		ARG 1 subject
-		ARG 2 equalValue
+			COMMENT the element to test
+		ARG 2 ignoreListOrder
+			COMMENT whether to ignore ordering for {@link NbtList}
 	METHOD method_10688 update (Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_4284;Lnet/minecraft/class_2487;I)Lnet/minecraft/class_2487;
 		COMMENT Uses the data fixer to update an NBT compound object to the latest data version.
 		ARG 0 fixer
@@ -42,8 +81,14 @@ CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 		ARG 3 oldVersion
 			COMMENT the data version of the NBT compound object
 	METHOD method_10691 toBlockPos (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2338;
-		ARG 0 compound
+		COMMENT {@return the block position from the {@code nbt}}
+		COMMENT
+		COMMENT @see #fromBlockPos(BlockPos)
+		ARG 0 nbt
 	METHOD method_10692 fromBlockPos (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2487;
+		COMMENT {@return the serialized block position}
+		COMMENT
+		COMMENT @see #toBlockPos(NbtCompound)
 		ARG 0 pos
 	METHOD method_10693 update (Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_4284;Lnet/minecraft/class_2487;II)Lnet/minecraft/class_2487;
 		COMMENT Uses the data fixer to update an NBT compound object.
@@ -61,6 +106,7 @@ CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 		COMMENT Serializes a {@link UUID} into its equivalent NBT representation.
 		COMMENT
 		COMMENT @since 20w10a
+		COMMENT @see #toUuid(NbtElement)
 		ARG 0 uuid
 	METHOD method_25930 toUuid (Lnet/minecraft/class_2520;)Ljava/util/UUID;
 		COMMENT Deserializes an NBT element into a {@link UUID}.
@@ -68,6 +114,7 @@ CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 		COMMENT
 		COMMENT @throws IllegalArgumentException if {@code element} is not a valid representation of a UUID
 		COMMENT @since 20w10a
+		COMMENT @see #fromUuid(UUID)
 		ARG 0 element
 	METHOD method_32260 fromNbtProviderString (Ljava/lang/String;)Lnet/minecraft/class_2487;
 		COMMENT {@return the {@code string} parsed as an NBT provider-formatted
@@ -99,6 +146,9 @@ CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 	METHOD method_32269 (Lnet/minecraft/class_2499;)D
 		ARG 0 nbt
 	METHOD method_32270 toPrettyPrintedText (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2561;
+		COMMENT {@return the pretty-printed text representation of {@code element}}
+		COMMENT
+		COMMENT @see net.minecraft.nbt.visitor.NbtTextFormatter
 		ARG 0 element
 	METHOD method_32271 toNbtProviderString (Lnet/minecraft/class_2487;)Ljava/lang/String;
 		COMMENT {@return the string representation of {@code compound} as used
@@ -133,6 +183,7 @@ CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 		ARG 0 depth
 		ARG 1 stringBuilder
 	METHOD method_36115 fromFluidState (Lnet/minecraft/class_3610;)Lnet/minecraft/class_2487;
+		COMMENT {@return the serialized fluid state}
 		ARG 0 state
 	METHOD method_36116 appendFormattedString (Ljava/lang/StringBuilder;Lnet/minecraft/class_2520;IZ)Ljava/lang/StringBuilder;
 		ARG 0 stringBuilder
