@@ -1,9 +1,19 @@
 CLASS net/minecraft/class_2499 net/minecraft/nbt/NbtList
-	COMMENT Represents an NBT list.
+	COMMENT Represents a mutable NBT list. Its type is {@value NbtElement#LIST_TYPE}.
 	COMMENT <p>
 	COMMENT An NBT list holds values of the same {@linkplain NbtElement#getType NBT type}.
 	COMMENT The {@linkplain AbstractNbtList#getHeldType NBT type} of an NBT list is determined
-	COMMENT once its first element is inserted; empty NBT lists return {@link NbtElement#END_TYPE} as their held {@linkplain AbstractNbtList#getHeldType NBT type}.
+	COMMENT once its first element is inserted; empty NBT lists return {@link NbtElement#END_TYPE}
+	COMMENT as their held {@linkplain AbstractNbtList#getHeldType NBT type}.
+	COMMENT
+	COMMENT <p>To get values from this list, use methods with type names, such as
+	COMMENT {@link #getInt(int)}. Where applicable, these methods return Java types (e.g. {@code int},
+	COMMENT {@code long[]}) instead of {@link NbtElement} subclasses. If type mismatch occurs or
+	COMMENT the index is out of bounds, it returns the default value for that type instead of
+	COMMENT throwing or returning {@code null}.
+	COMMENT
+	COMMENT <p>Unlike {@link NbtCompound}, there is no Java type-based adder, and numeric value
+	COMMENT getters will not try to cast the values.
 	FIELD field_11550 value Ljava/util/List;
 	FIELD field_11551 type B
 	FIELD field_21039 TYPE Lnet/minecraft/class_4614;
@@ -16,23 +26,47 @@ CLASS net/minecraft/class_2499 net/minecraft/nbt/NbtList
 	METHOD get (I)Ljava/lang/Object;
 		ARG 1 index
 	METHOD method_10600 getInt (I)I
+		COMMENT {@return the integer at {@code index}, or {@code 0} if the index is out of bounds
+		COMMENT or if this is not a list of integers}
 		ARG 1 index
 	METHOD method_10602 getCompound (I)Lnet/minecraft/class_2487;
+		COMMENT {@return the compound at {@code index}, or an empty compound if the index is out
+		COMMENT of bounds or if this is not a list of compounds}
 		ARG 1 index
 	METHOD method_10603 getList (I)Lnet/minecraft/class_2499;
+		COMMENT {@return the list at {@code index}, or an empty list if the index is out
+		COMMENT of bounds or if this is not a list of lists}
 		ARG 1 index
 	METHOD method_10604 getFloat (I)F
+		COMMENT {@return the float at {@code index}, or {@code 0.0f} if the index is out of bounds
+		COMMENT or if this is not a list of floats}
 		ARG 1 index
 	METHOD method_10605 canAdd (Lnet/minecraft/class_2520;)Z
 		ARG 1 element
 	METHOD method_10608 getString (I)Ljava/lang/String;
+		COMMENT {@return the stringified value at {@code index}, or an empty string if the index
+		COMMENT is out of bounds}
+		COMMENT
+		COMMENT <p>Unlike other getters, this works with any type, not just {@link NbtString}.
 		ARG 1 index
 	METHOD method_10609 getShort (I)S
+		COMMENT {@return the short at {@code index}, or {@code 0} if the index is out of bounds
+		COMMENT or if this is not a list of shorts}
 		ARG 1 index
 	METHOD method_10611 getDouble (I)D
+		COMMENT {@return the double at {@code index}, or {@code 0.0} if the index is out of bounds
+		COMMENT or if this is not a list of doubles}
 		ARG 1 index
 	METHOD method_17809 forgetTypeIfEmpty ()V
 	METHOD method_36111 getIntArray (I)[I
+		COMMENT {@return the int array at {@code index}, or an empty int array if the index is
+		COMMENT out of bounds or if this is not a list of int arrays}
+		COMMENT
+		COMMENT @apiNote Modifying the returned array also modifies the NBT int array.
 		ARG 1 index
 	METHOD method_36112 getLongArray (I)[J
+		COMMENT {@return the long array at {@code index}, or an empty int array if the index is
+		COMMENT out of bounds or if this is not a list of long arrays}
+		COMMENT
+		COMMENT @apiNote Modifying the returned array also modifies the NBT long array.
 		ARG 1 index

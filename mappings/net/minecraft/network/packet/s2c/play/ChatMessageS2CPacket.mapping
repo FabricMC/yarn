@@ -1,0 +1,39 @@
+CLASS net/minecraft/class_7438 net/minecraft/network/packet/s2c/play/ChatMessageS2CPacket
+	COMMENT A packet used to send a chat message to the clients.
+	COMMENT
+	COMMENT <p>The content is not wrapped in any way (e.g. by {@code chat.type.text} text); the
+	COMMENT raw message content is sent to the clients, and they will wrap it. To register
+	COMMENT custom wrapping behaviors, check {@link MessageType#register}.
+	COMMENT
+	COMMENT <p>Messages that took more than {@link #TIME_TO_LIVE} to reach the clients are
+	COMMENT considered expired. This is measured from the time the client sent the chat message
+	COMMENT to the server. Note that unlike {@link
+	COMMENT net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket} expired messages are not
+	COMMENT discarded by the clients; they instead log a warning.
+	COMMENT
+	COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
+	COMMENT {@link net.minecraft.network.encryption.ChatMessageSignature#none} - to send a chat
+	COMMENT message; however if the signature is invalid (e.g. because the text's content differs
+	COMMENT from the one sent by the client, or because the passed signature is invalid) the client
+	COMMENT will log a warning. See {@link
+	COMMENT net.minecraft.network.encryption.ChatMessageSignature#updateSignature} for how the
+	COMMENT message is signed.
+	COMMENT
+	COMMENT @see net.minecraft.server.network.ServerPlayerEntity#sendChatMessage
+	COMMENT @see net.minecraft.client.network.ClientPlayNetworkHandler#onChatMessage
+	FIELD comp_761 time Ljava/time/Instant;
+	FIELD field_39085 TIME_TO_LIVE Ljava/time/Duration;
+	METHOD <init> (Lnet/minecraft/class_2540;)V
+		ARG 1 buf
+	METHOD comp_761 time ()Ljava/time/Instant;
+	METHOD method_43628 isExpired (Ljava/time/Instant;)Z
+		COMMENT {@return whether the message is considered expired}
+		ARG 1 currentTime
+	METHOD method_43630 getExpiryTime ()Ljava/time/Instant;
+		COMMENT {@return when the message is considered expired}
+	METHOD method_43884 getMessageType (Lnet/minecraft/class_2378;)Lnet/minecraft/class_2556;
+		COMMENT {@return the message type of the chat message}
+		COMMENT
+		COMMENT @throws NullPointerException when the type ID is invalid (due to unsynced registry, etc)
+		ARG 1 registry
+	METHOD method_43885 getSignedMessage ()Lnet/minecraft/class_7471;

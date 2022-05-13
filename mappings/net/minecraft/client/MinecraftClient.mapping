@@ -171,6 +171,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_37855 metricsSampleDuration J
 	FIELD field_37856 gpuUtilizationPercentage D
 	FIELD field_37857 currentGlTimerQuery Lnet/minecraft/class_7168$class_7169;
+	FIELD field_39068 profileKeys Lnet/minecraft/class_7434;
 	METHOD <init> (Lnet/minecraft/class_542;)V
 		ARG 1 args
 	METHOD method_1476 checkIs64Bit ()Z
@@ -180,7 +181,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_1481 joinWorld (Lnet/minecraft/class_638;)V
 		ARG 1 world
 	METHOD method_1483 getSoundManager ()Lnet/minecraft/class_1144;
-	METHOD method_1484 getSearchableContainer (Lnet/minecraft/class_1124$class_1125;)Lnet/minecraft/class_1123;
+	METHOD method_1484 getSearchProvider (Lnet/minecraft/class_1124$class_1125;)Lnet/minecraft/class_1129;
 		ARG 1 key
 	METHOD method_1485 (Lnet/minecraft/class_1799;)Ljava/util/stream/Stream;
 		ARG 0 stack
@@ -191,15 +192,14 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 1 matrices
 		ARG 2 profileResult
 	METHOD method_1493 isPaused ()Z
-	METHOD method_1494 setCrashReportSupplier (Lnet/minecraft/class_128;)V
+	METHOD method_1494 setCrashReportSupplierAndAddDetails (Lnet/minecraft/class_128;)V
+		ARG 1 crashReport
 	METHOD method_1495 getSessionService ()Lcom/mojang/authlib/minecraft/MinecraftSessionService;
 	METHOD method_1496 isIntegratedServerRunning ()Z
 	METHOD method_1498 isHudEnabled ()Z
 	METHOD method_1499 addBlockEntityNbt (Lnet/minecraft/class_1799;Lnet/minecraft/class_2586;)Lnet/minecraft/class_1799;
 		ARG 1 stack
 		ARG 2 blockEntity
-	METHOD method_1500 (Ljava/lang/String;)Z
-		ARG 0 string
 	METHOD method_1502 (Lnet/minecraft/class_1799;)Ljava/util/stream/Stream;
 		ARG 0 stack
 	METHOD method_1504 setCameraEntity (Lnet/minecraft/class_1297;)V
@@ -230,8 +230,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_1515 getGameVersion ()Ljava/lang/String;
 	METHOD method_1516 getResourcePackProvider ()Lnet/minecraft/class_1066;
 	METHOD method_1517 isFancyGraphicsOrBetter ()Z
-	METHOD method_1518 (Lnet/minecraft/class_516;)Ljava/util/stream/Stream;
-		ARG 0 resultCollection
 	METHOD method_1519 cleanUpAfterCrash ()V
 	METHOD method_1520 getResourcePackManager ()Lnet/minecraft/class_3283;
 	METHOD method_1521 reloadResources ()Ljava/util/concurrent/CompletableFuture;
@@ -243,13 +241,9 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_1525 (Lnet/minecraft/class_1799;)Ljava/util/stream/Stream;
 		ARG 0 stack
 	METHOD method_1526 getLanguageManager ()Lnet/minecraft/class_1076;
-	METHOD method_1529 (Lnet/minecraft/class_516;)Ljava/util/stream/Stream;
-		ARG 0 resultCollection
 	METHOD method_1530 isDemo ()Z
 	METHOD method_1531 getTextureManager ()Lnet/minecraft/class_1060;
 	METHOD method_1534 getLastFrameDuration ()F
-	METHOD method_1535 (Lnet/minecraft/class_1126;Lnet/minecraft/class_1121;Lnet/minecraft/class_1799;)V
-		ARG 2 stack
 	METHOD method_1536 doAttack ()Z
 	METHOD method_1537 setConnectedToRealms (Z)V
 		ARG 1 connectedToRealms
@@ -260,7 +254,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_1542 isInSingleplayer ()Z
 	METHOD method_1543 getDataFixer ()Lcom/mojang/datafixers/DataFixer;
 	METHOD method_1544 getMusicType ()Lnet/minecraft/class_5195;
-	METHOD method_1546 initializeSearchableContainers ()V
+	METHOD method_1546 initializeSearchProviders ()V
 	METHOD method_1547 getVersionType ()Ljava/lang/String;
 	METHOD method_1548 getSession ()Lnet/minecraft/class_320;
 	METHOD method_1549 getSpriteAtlas (Lnet/minecraft/class_2960;)Ljava/util/function/Function;
@@ -270,8 +264,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_1555 hasReducedDebugInfo ()Z
 	METHOD method_1556 (Lnet/minecraft/class_1860;)Lnet/minecraft/class_2960;
 		ARG 0 recipe
-	METHOD method_1557 (Lnet/minecraft/class_2561;)Ljava/lang/String;
-		ARG 0 tooltip
 	METHOD method_1558 getCurrentServerEntry ()Lnet/minecraft/class_642;
 	METHOD method_1560 getCameraEntity ()Lnet/minecraft/class_1297;
 	METHOD method_1561 getEntityRenderDispatcher ()Lnet/minecraft/class_898;
@@ -470,6 +462,26 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_41733 forceStopRecorder ()V
 	METHOD method_41734 getGpuUtilizationPercentage ()D
 	METHOD method_41735 createIntegratedServerLoader ()Lnet/minecraft/class_7196;
+	METHOD method_43587 setCrashReportSupplier (Lnet/minecraft/class_128;)V
+		ARG 1 crashReport
+	METHOD method_43590 getProfileKeys ()Lnet/minecraft/class_7434;
+	METHOD method_43758 (Lnet/minecraft/class_516;)Ljava/util/stream/Stream;
+		ARG 0 resultCollection
+	METHOD method_43759 reloadSearchProvider (Lnet/minecraft/class_1124$class_1125;Ljava/util/List;)V
+		ARG 1 key
+		ARG 2 values
+	METHOD method_43760 (Ljava/util/List;)Lnet/minecraft/class_1123;
+		ARG 0 resultCollections
+	METHOD method_43761 (Lnet/minecraft/class_516;)Ljava/util/stream/Stream;
+		ARG 0 resultCollection
+	METHOD method_43762 (Ljava/util/List;)Lnet/minecraft/class_1123;
+		ARG 0 stacks
+	METHOD method_43763 (Ljava/lang/String;)Z
+		ARG 0 text
+	METHOD method_43764 (Ljava/util/List;)Lnet/minecraft/class_1123;
+		ARG 0 stacks
+	METHOD method_43765 (Lnet/minecraft/class_2561;)Ljava/lang/String;
+		ARG 0 text
 	CLASS class_5859 ChatRestriction
 		COMMENT Represents the restrictions on chat on a Minecraft client.
 		COMMENT

@@ -1,0 +1,50 @@
+CLASS net/minecraft/class_7434 net/minecraft/client/util/ProfileKeys
+	COMMENT A class to fetch, load, and save the player's public and private keys.
+	FIELD field_39074 LOGGER Lorg/slf4j/Logger;
+	FIELD field_39075 PROFILE_KEYS_PATH Ljava/nio/file/Path;
+	FIELD field_39076 jsonPath Ljava/nio/file/Path;
+	FIELD field_39077 keyPairFuture Ljava/util/concurrent/CompletableFuture;
+	METHOD <init> (Lcom/mojang/authlib/minecraft/UserApiService;Ljava/util/UUID;Ljava/nio/file/Path;)V
+		ARG 1 userApiService
+		ARG 2 uuid
+		ARG 3 root
+	METHOD method_43599 createSignatureInstance ()Ljava/security/Signature;
+		COMMENT {@return the SHA1withRSA signature instance used for signing, or {@code null} if
+		COMMENT there is no private key associated with the profile}
+		COMMENT
+		COMMENT @apiNote Use {#link PlayerPublicKey.PublicKeyData#createSignatureInstance()}
+		COMMENT to create the signature for verifying the signatures.
+		COMMENT
+		COMMENT @throws GeneralSecurityException when creation fails
+		COMMENT
+		COMMENT @see PlayerPublicKey.PublicKeyData#createSignatureInstance()
+	METHOD method_43600 saveKeyPairToFile (Lnet/minecraft/class_7427;)V
+		COMMENT Saves the {@code keyPair} to the cache file.
+		ARG 1 keyPair
+	METHOD method_43601 (Lcom/google/gson/JsonElement;)V
+		ARG 1 json
+	METHOD method_43602 getKeyPair (Lcom/mojang/authlib/minecraft/UserApiService;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT Gets the key pair from the file cache, or if it is unavailable or expired,
+		COMMENT the Mojang server.
+		ARG 1 userApiService
+	METHOD method_43603 getPublicKey ()Lnet/minecraft/class_7428;
+		COMMENT {@return the public key, or {@code null} if there is no public key associated
+		COMMENT with the profile}
+	METHOD method_43604 (Lnet/minecraft/class_7427;)Z
+		ARG 0 keyPair
+	METHOD method_43605 fetchKeyPair (Lcom/mojang/authlib/minecraft/UserApiService;)Lnet/minecraft/class_7427;
+		COMMENT {@return the key pair fetched from Mojang's server}
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when the fetched key is malformed
+		COMMENT @throws IOException when fetching fails
+		ARG 1 userApiService
+	METHOD method_43606 loadKeyPairFromFile ()Ljava/util/Optional;
+		COMMENT {@return the profile keys from the local cache}
+		COMMENT
+		COMMENT <p>This can return expired keys.
+		COMMENT
+		COMMENT @implNote The cache file is stored at {@code .minecraft/profilekeys/<uuid>.json}.
+	METHOD method_43608 getPrivateKey ()Ljava/security/PrivateKey;
+		COMMENT {@return the private key, or {@code null} if there is no private key associated
+		COMMENT with the profile}
+	METHOD method_43784 getPublicKeyData ()Ljava/util/Optional;
