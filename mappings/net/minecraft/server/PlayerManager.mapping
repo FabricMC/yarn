@@ -142,43 +142,97 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT Broadcasts a message to all players and the server console. A different
 		COMMENT message can be sent to a different player.
 		COMMENT
-		COMMENT @apiNote This is used by {@link net.minecraft.server.command.MeCommand}
-		COMMENT and {@link net.minecraft.server.command.SayCommand}.
-		COMMENT
-		COMMENT @see #broadcast(Text, MessageType)
-		COMMENT @see #broadcast(Text, Function, MessageType, ChatMessageSender, Instant, NetworkEncryptionUtils.SignatureData)
+		COMMENT @see #broadcast(Text, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, ChatMessageSender, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, Function, ChatMessageSender, RegistryKey)
 		ARG 1 message
 		ARG 2 playerMessageFactory
 			COMMENT a function that takes the player to send the message to
 			COMMENT and returns either the text to send to them or {@code null}
 			COMMENT to indicate the message should not be sent to them
+		ARG 3 typeKey
 	METHOD method_43513 broadcast (Lnet/minecraft/class_7471;Ljava/util/function/Function;Lnet/minecraft/class_7436;Lnet/minecraft/class_5321;)V
 		COMMENT Broadcasts a chat message to all players and the server console. A different
 		COMMENT message can be sent to a different player.
 		COMMENT
 		COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
-		COMMENT {@link NetworkEncryptionUtils.SignatureData#NONE} - to send a chat message; however
-		COMMENT if the signature is invalid (e.g. because the text's content differs from the one
-		COMMENT sent by the client, or because the passed signature is invalid) the client will
-		COMMENT log a warning. See {@link NetworkEncryptionUtils#updateSignature} for how the message
-		COMMENT is signed.
+		COMMENT {@link net.minecraft.network.encryption.ChatMessageSignature#none} - to send a chat
+		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
+		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
+		COMMENT will log a warning. See {@link
+		COMMENT net.minecraft.network.encryption.ChatMessageSignature#updateSignature} for how the
+		COMMENT message is signed.
 		COMMENT
 		COMMENT @apiNote This method is used to broadcast a message sent by a player
-		COMMENT through {@linkplain net.minecraft.client.gui.screen.ChatScreen the chat screen}.
+		COMMENT through {@linkplain net.minecraft.client.gui.screen.ChatScreen the chat screen}
+		COMMENT as well as through commands like {@link net.minecraft.server.command.MeCommand} or
+		COMMENT {@link net.minecraft.server.command.SayCommand} .
 		COMMENT
-		COMMENT @see #broadcast(Text, MessageType)
-		COMMENT @see #broadcast(Text, Function, MessageType)
+		COMMENT @see #broadcast(Text, RegistryKey)
+		COMMENT @see #broadcast(Text, Function, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, ChatMessageSender, RegistryKey)
+		ARG 1 message
 		ARG 2 playerMessageFactory
 			COMMENT a function that takes the player to send the message to
-			COMMENT and returns either the text to send to them or {@code null}
+			COMMENT and returns either the message to send to them or {@code null}
 			COMMENT to indicate the message should not be sent to them
+		ARG 3 sender
+		ARG 4 typeKey
 	METHOD method_43514 broadcast (Lnet/minecraft/class_2561;Lnet/minecraft/class_5321;)V
 		COMMENT Broadcasts a message to all players and the server console.
 		COMMENT
 		COMMENT @apiNote This is used to send general messages such as a death
-		COMMENT message or a join/leave message. This is also used to send messages from
-		COMMENT non-player-executed commands, such as ones from a command block or the server console.
+		COMMENT message or a join/leave message.
 		COMMENT
-		COMMENT @see #broadcast(Text, Function, MessageType)
-		COMMENT @see #broadcast(Text, Function, MessageType, ChatMessageSender, Instant, NetworkEncryptionUtils.SignatureData)
+		COMMENT @see #broadcast(Text, Function, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, MessageSender, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, Function, MessageSender, RegistryKey)
 		ARG 1 message
+		ARG 2 typeKey
+	METHOD method_43671 (Lnet/minecraft/class_3222;Lnet/minecraft/class_7471;Lnet/minecraft/class_7471;Lnet/minecraft/class_3222;)Lnet/minecraft/class_7471;
+		ARG 3 player
+	METHOD method_43672 (Lnet/minecraft/class_7471;Lnet/minecraft/class_3222;)Lnet/minecraft/class_7471;
+		ARG 1 player
+	METHOD method_43673 broadcast (Lnet/minecraft/class_7471;Lnet/minecraft/class_5513$class_5837;Lnet/minecraft/class_3222;Lnet/minecraft/class_5321;)V
+		COMMENT Broadcasts a chat message to all players and the server console.
+		COMMENT
+		COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
+		COMMENT {@link net.minecraft.network.encryption.ChatMessageSignature#none} - to send a chat
+		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
+		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
+		COMMENT will log a warning. See {@link
+		COMMENT net.minecraft.network.encryption.ChatMessageSignature#updateSignature} for how the
+		COMMENT message is signed.
+		COMMENT
+		COMMENT @apiNote This method is used to broadcast a message sent by a player
+		COMMENT through {@linkplain net.minecraft.client.gui.screen.ChatScreen the chat screen}
+		COMMENT as well as through commands like {@link net.minecraft.server.command.MeCommand} or
+		COMMENT {@link net.minecraft.server.command.SayCommand} .
+		COMMENT
+		COMMENT @see #broadcast(Text, RegistryKey)
+		COMMENT @see #broadcast(Text, Function, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, ChatMessageSender, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, Function, ChatMessageSender, RegistryKey)
+		ARG 1 message
+		ARG 3 sender
+		ARG 4 typeKey
+	METHOD method_43674 broadcast (Lnet/minecraft/class_7471;Lnet/minecraft/class_7436;Lnet/minecraft/class_5321;)V
+		COMMENT Broadcasts a chat message to all players and the server console.
+		COMMENT
+		COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
+		COMMENT {@link net.minecraft.network.encryption.ChatMessageSignature#none} - to send a chat
+		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
+		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
+		COMMENT will log a warning. See {@link
+		COMMENT net.minecraft.network.encryption.ChatMessageSignature#updateSignature} for how the
+		COMMENT message is signed.
+		COMMENT
+		COMMENT @apiNote This method is used to broadcast messages from commands like {@link
+		COMMENT net.minecraft.server.command.MeCommand} or {@link net.minecraft.server.command.SayCommand}.
+		COMMENT
+		COMMENT @see #broadcast(Text, RegistryKey)
+		COMMENT @see #broadcast(Text, Function, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, Function, ChatMessageSender, RegistryKey)
+		ARG 1 message
+		ARG 2 sender
+		ARG 3 typeKey

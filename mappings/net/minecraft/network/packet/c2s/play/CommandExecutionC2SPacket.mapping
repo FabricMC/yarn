@@ -1,0 +1,33 @@
+CLASS net/minecraft/class_7472 net/minecraft/network/packet/c2s/play/CommandExecutionC2SPacket
+	COMMENT A packet used to execute commands on the server.
+	COMMENT
+	COMMENT <p>This truncates the command to at most {@value #MAX_COMMAND_LENGTH} characters
+	COMMENT before sending to the server on the client. If the server receives the command
+	COMMENT longer than {@value #MAX_COMMAND_LENGTH} characters, it will reject the message
+	COMMENT and disconnect the client.
+	COMMENT
+	COMMENT <p>If the command contains an invalid character (see {@link
+	COMMENT net.minecraft.SharedConstants#isValidChar isValidChar}), the server will
+	COMMENT reject the command and disconnect the client.
+	COMMENT
+	COMMENT <p>Commands that took more than {@link ChatMessageC2SPacket#TIME_TO_LIVE} to reach
+	COMMENT the server are considered expired and will be discarded.
+	COMMENT
+	COMMENT @see net.minecraft.client.network.ClientPlayerEntity#sendCommand
+	COMMENT @see net.minecraft.server.network.ServerPlayNetworkHandler#onCommandExecution
+	FIELD comp_809 time Ljava/time/Instant;
+	FIELD field_39244 MAX_COMMAND_LENGTH I
+	METHOD <init> (Ljava/lang/String;Ljava/time/Instant;Lnet/minecraft/class_7450;)V
+		ARG 1 command
+		ARG 2 time
+		ARG 3 argumentSignatures
+	METHOD <init> (Lnet/minecraft/class_2540;)V
+		ARG 1 buf
+	METHOD comp_809 time ()Ljava/time/Instant;
+	METHOD method_43895 isExpired (Ljava/time/Instant;)Z
+		COMMENT {@return whether the command execution is considered expired and should be discarded}
+		ARG 1 currentTime
+	METHOD method_43896 createArgumentsSigner (Ljava/util/UUID;)Lnet/minecraft/class_7448;
+		ARG 1 sender
+	METHOD method_43898 getExpiryTime ()Ljava/time/Instant;
+		COMMENT {@return when the command execution is considered expired and should be discarded}
