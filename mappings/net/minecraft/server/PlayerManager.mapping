@@ -100,6 +100,7 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 	METHOD method_14597 disconnectAllPlayers ()V
 	METHOD method_14599 reloadWhitelist ()V
 	METHOD method_14600 loadPlayerData (Lnet/minecraft/class_3222;)Lnet/minecraft/class_2487;
+		ARG 1 player
 	METHOD method_14601 updatePlayerLatency ()V
 	METHOD method_14602 getPlayer (Ljava/util/UUID;)Lnet/minecraft/class_3222;
 		ARG 1 uuid
@@ -127,6 +128,7 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		ARG 1 player
 	METHOD method_14613 createPlayer (Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_7428;)Lnet/minecraft/class_3222;
 		ARG 1 profile
+		ARG 2 publicKey
 	METHOD method_14614 isWhitelistEnabled ()Z
 	METHOD method_14617 saveAllPlayerData ()V
 	METHOD method_18241 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)Lnet/minecraft/class_1297;
@@ -143,8 +145,9 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT message can be sent to a different player.
 		COMMENT
 		COMMENT @see #broadcast(Text, RegistryKey)
-		COMMENT @see #broadcast(SignedChatMessage, ChatMessageSender, RegistryKey)
-		COMMENT @see #broadcast(SignedChatMessage, Function, ChatMessageSender, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, TextStream.Message, ServerPlayerEntity, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, MessageSender, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, Function, MessageSender, RegistryKey)
 		ARG 1 message
 		ARG 2 playerMessageFactory
 			COMMENT a function that takes the player to send the message to
@@ -170,7 +173,8 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT
 		COMMENT @see #broadcast(Text, RegistryKey)
 		COMMENT @see #broadcast(Text, Function, RegistryKey)
-		COMMENT @see #broadcast(SignedChatMessage, ChatMessageSender, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, TextStream.Message, ServerPlayerEntity, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, MessageSender, RegistryKey)
 		ARG 1 message
 		ARG 2 playerMessageFactory
 			COMMENT a function that takes the player to send the message to
@@ -185,10 +189,13 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT message or a join/leave message.
 		COMMENT
 		COMMENT @see #broadcast(Text, Function, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, TextStream.Message, ServerPlayerEntity, RegistryKey)
 		COMMENT @see #broadcast(SignedChatMessage, MessageSender, RegistryKey)
 		COMMENT @see #broadcast(SignedChatMessage, Function, MessageSender, RegistryKey)
 		ARG 1 message
 		ARG 2 typeKey
+	METHOD method_43670 (Lnet/minecraft/class_3222;Lnet/minecraft/server/MinecraftServer$class_7460;)V
+		ARG 1 properties
 	METHOD method_43671 (Lnet/minecraft/class_3222;Lnet/minecraft/class_7471;Lnet/minecraft/class_7471;Lnet/minecraft/class_3222;)Lnet/minecraft/class_7471;
 		ARG 3 player
 	METHOD method_43672 (Lnet/minecraft/class_7471;Lnet/minecraft/class_3222;)Lnet/minecraft/class_7471;
@@ -211,9 +218,10 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT
 		COMMENT @see #broadcast(Text, RegistryKey)
 		COMMENT @see #broadcast(Text, Function, RegistryKey)
-		COMMENT @see #broadcast(SignedChatMessage, ChatMessageSender, RegistryKey)
-		COMMENT @see #broadcast(SignedChatMessage, Function, ChatMessageSender, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, MessageSender, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, Function, MessageSender, RegistryKey)
 		ARG 1 message
+		ARG 2 filteredMessage
 		ARG 3 sender
 		ARG 4 typeKey
 	METHOD method_43674 broadcast (Lnet/minecraft/class_7471;Lnet/minecraft/class_7436;Lnet/minecraft/class_5321;)V
@@ -232,7 +240,17 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT
 		COMMENT @see #broadcast(Text, RegistryKey)
 		COMMENT @see #broadcast(Text, Function, RegistryKey)
-		COMMENT @see #broadcast(SignedChatMessage, Function, ChatMessageSender, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, TextStream.Message, ServerPlayerEntity, RegistryKey)
+		COMMENT @see #broadcast(SignedChatMessage, Function, MessageSender, RegistryKey)
 		ARG 1 message
 		ARG 2 sender
 		ARG 3 typeKey
+	METHOD method_43934 decorateIfFiltered (Lnet/minecraft/class_3222;Lnet/minecraft/class_7471;Lnet/minecraft/class_5513$class_5837;)Lnet/minecraft/class_7471;
+		COMMENT {@return the decorated message, or {@code null} if the filtered message exists but
+		COMMENT is empty}
+		COMMENT
+		COMMENT <p>This only decorates the message if it is filtered, because the passed
+		COMMENT {@code message} is already decorated by the caller.
+		ARG 1 player
+		ARG 2 message
+		ARG 3 filteredMessage

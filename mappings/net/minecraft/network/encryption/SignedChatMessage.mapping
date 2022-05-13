@@ -1,20 +1,36 @@
 CLASS net/minecraft/class_7471 net/minecraft/network/encryption/SignedChatMessage
-	FIELD comp_804 signedMessage Lnet/minecraft/class_2561;
-	FIELD comp_830 unsignedMessage Ljava/util/Optional;
-	METHOD comp_804 signedMessage ()Lnet/minecraft/class_2561;
-	METHOD comp_830 unsignedMessage ()Ljava/util/Optional;
+	COMMENT A signed chat message, consisting of the signature, the signed content,
+	COMMENT and the optional unsigned content supplied when the chat decorator produced
+	COMMENT unsigned message due to the chat preview being disabled on either side.
+	COMMENT
+	COMMENT <p>Note that the signature itself might not be valid.
 	METHOD method_43867 verify (Lnet/minecraft/class_7428;)Z
+		COMMENT {@return whether the message can be verified using the public key}
 		ARG 1 key
 	METHOD method_43868 verify (Ljava/security/Signature;)Z
+		COMMENT {@return whether the message can be verified using {@code signature}}
+		COMMENT
+		COMMENT @throws SignatureException when verifying fails
 		ARG 1 signature
-	METHOD method_44125 getMessage ()Lnet/minecraft/class_2561;
+	METHOD method_44125 getContent ()Lnet/minecraft/class_2561;
+		COMMENT {@return the content of the message}
+		COMMENT
+		COMMENT <p>This returns the unsigned content if present, and fallbacks to the signed content.
 	METHOD method_44126 of (Ljava/lang/String;Lnet/minecraft/class_7469;)Lnet/minecraft/class_7471;
-		ARG 0 signedMessage
+		COMMENT {@return a new signed chat message with {@code signedContent} and {@code signature}}
+		ARG 0 signedContent
 		ARG 1 signature
 	METHOD method_44127 of (Lnet/minecraft/class_2561;)Lnet/minecraft/class_7471;
-		ARG 0 message
+		COMMENT {@return a new signed chat message with {@code signedContent} and "none" signature}
+		ARG 0 content
 	METHOD method_44128 of (Lnet/minecraft/class_2561;Lnet/minecraft/class_7469;)Lnet/minecraft/class_7471;
-		ARG 0 signedMessage
+		COMMENT {@return a new signed chat message with {@code signedContent} and {@code signature}}
+		ARG 0 signedContent
 		ARG 1 signature
 	METHOD method_44129 withUnsigned (Lnet/minecraft/class_2561;)Lnet/minecraft/class_7471;
-		ARG 1 unsignedMessage
+		COMMENT {@return the new signed chat message with {@code unsignedContent} added}
+		COMMENT
+		COMMENT @apiNote This is used in vanilla when chat decorator decorates the message without
+		COMMENT the client previewing it. In this case, the undecorated content is signed but the
+		COMMENT decorated content is unsigned.
+		ARG 1 unsignedContent
