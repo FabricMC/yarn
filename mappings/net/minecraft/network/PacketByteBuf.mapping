@@ -42,6 +42,9 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@link ChunkSectionPos}</td><td>{@link #readChunkSectionPos()}</td><td>{@link #writeChunkSectionPos(ChunkSectionPos)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
+	COMMENT  <td>{@link GlobalPos}</td><td>{@link #readGlobalPos()}</td><td>{@link #writeGlobalPos(GlobalPos)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
 	COMMENT  <td>{@link Text}</td><td>{@link #readText()}</td><td>{@link #writeText(Text)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
@@ -75,7 +78,16 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@link Identifier}</td><td>{@link #readIdentifier()}</td><td>{@link #writeIdentifier(Identifier)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
+	COMMENT  <td>{@link RegistryKey}</td><td>{@link #readRegistryKey(RegistryKey)}</td><td>{@link #writeRegistryKey(RegistryKey)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
 	COMMENT  <td>{@link Date}</td><td>{@link #readDate()}</td><td>{@link #writeDate(Date)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link Instant}</td><td>{@link #readInstant()}</td><td>{@link #writeInstant(Instant)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link PublicKey}</td><td>{@link #readPublicKey()}</td><td>{@link #writePublicKey(PublicKey)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link BlockHitResult}</td><td>{@link #readBlockHitResult()}</td><td>{@link #writeBlockHitResult(BlockHitResult)}</td>
@@ -935,6 +947,60 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @return the read nullable value
 		COMMENT @see #writeNullable(Object, PacketByteBuf.PacketWriter)
 		ARG 1 reader
+	METHOD method_44112 readRegistryKey (Lnet/minecraft/class_5321;)Lnet/minecraft/class_5321;
+		COMMENT Reads a registry key from this buf. A registry key is represented by its
+		COMMENT {@linkplain #readIdentifier value as an identifier}.
+		COMMENT
+		COMMENT @return the read registry key
+		COMMENT @see #writeRegistryKey(RegistryKey)
+		ARG 1 registryRef
+			COMMENT the registry key of the registry the read registry key belongs to
+	METHOD method_44113 writeGlobalPos (Lnet/minecraft/class_4208;)V
+		COMMENT Writes a global position to this buf. A global position is represented by
+		COMMENT {@linkplain #writeRegistryKey the registry key} of the dimension followed by
+		COMMENT {@linkplain #writeBlockPos the block position}.
+		COMMENT
+		COMMENT @see #readGlobalPos()
+		ARG 1 pos
+	METHOD method_44114 writePublicKey (Ljava/security/PublicKey;)Lnet/minecraft/class_2540;
+		COMMENT Writes a public key to this buf. A public key is represented by a {@linkplain
+		COMMENT #writeByteArray byte array} of X.509-encoded payload.
+		COMMENT
+		COMMENT @return his buf, for chaining
+		COMMENT @see #readPublicKey()
+		ARG 1 publicKey
+	METHOD method_44115 writeInstant (Ljava/time/Instant;)V
+		COMMENT Writes an instant to this buf. An instance is represented by the milliseconds
+		COMMENT since the epoch.
+		COMMENT
+		COMMENT @see #readInstant()
+		ARG 1 instant
+	METHOD method_44116 writeRegistryKey (Lnet/minecraft/class_5321;)V
+		COMMENT Writes a registry key to this buf. A registry key is represented by its
+		COMMENT {@linkplain #writeIdentifier value as an identifier}.
+		COMMENT
+		COMMENT @see #readRegistryKey(RegistryKey)
+		ARG 1 key
+	METHOD method_44117 readGlobalPos ()Lnet/minecraft/class_4208;
+		COMMENT Reads a global position from this buf. A global position is represented by
+		COMMENT {@linkplain #readRegistryKey the registry key} of the dimension followed by
+		COMMENT {@linkplain #readBlockPos the block position}.
+		COMMENT
+		COMMENT @return the read global pos
+		COMMENT @see #writeGlobalPos(GlobalPos)
+	METHOD method_44118 readInstant ()Ljava/time/Instant;
+		COMMENT Reads an instant from this buf. An instance is represented by the milliseconds
+		COMMENT since the epoch.
+		COMMENT
+		COMMENT @return the read instant
+		COMMENT @see #writeInstant(Instant)
+	METHOD method_44119 readPublicKey ()Ljava/security/PublicKey;
+		COMMENT Reads a public key from this buf. A public key is represented by a {@linkplain
+		COMMENT #readByteArray byte array} of X.509-encoded payload.
+		COMMENT
+		COMMENT @return the read public key
+		COMMENT @throws o.netty.handler.codec.DecoderException if the public key is malformed
+		COMMENT @see #writePublicKey(PublicKey)
 	METHOD nioBuffer (II)Ljava/nio/ByteBuffer;
 		ARG 1 index
 		ARG 2 length
