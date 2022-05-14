@@ -4,12 +4,6 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 	COMMENT reopening it would create a new chat previewer.
 	COMMENT
 	COMMENT <p>A <strong>query</strong> is a request to the server to send the chat message preview.
-	COMMENT If the chat screen's input was previously empty, the next query sent is called
-	COMMENT "initial query", since there is no {@linkplain #lastQuery last query}. This is not
-	COMMENT the first query that the chat previewer sends, though, since the last query is cleared
-	COMMENT whenever the chat screen's input gets empty - for example, by the player pressing Delete.
-	COMMENT This distinction between the initial query and the subsequent query is important, because
-	COMMENT the initial query has a shorter delay.
 	COMMENT
 	COMMENT <p>The response to the query can be "consumed" by calling {@link #tryConsumeResponse}.
 	COMMENT If the response is still valid (i.e. the input has not changed since the query was sent),
@@ -18,16 +12,10 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 	COMMENT can only be consumed after the cooldown (by default, {@value #CONSUME_COOLDOWN} milliseconds)
 	COMMENT has passed. It is also possible to get the response text without consuming by calling
 	COMMENT {@link #getPreviewText}.
-	FIELD field_39326 INITIAL_QUERY_DELAY J
-		COMMENT How long the previewer should wait before sending the initial query in milliseconds
-		COMMENT since the last query was sent. Is {@value}.
+	FIELD field_39326 J
 		COMMENT
-		COMMENT @see #getInitialQueryTime
-	FIELD field_39327 QUERY_DELAY J
-		COMMENT How long the previewer should wait before sending the non-initial query in milliseconds
-		COMMENT since the last query was sent. Is {@value}.
+	FIELD field_39327 J
 		COMMENT
-		COMMENT @see #getQueryTime
 	FIELD field_39328 CONSUME_COOLDOWN J
 		COMMENT How long the previewer should wait before consuming the response since the response
 		COMMENT arrived at the client in milliseconds. Is {@value}.
@@ -39,9 +27,6 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 	FIELD field_39332 lastQuery Lnet/minecraft/class_7479$class_7480;
 	FIELD field_39333 queryTime J
 		COMMENT The last time a query was sent.
-		COMMENT
-		COMMENT @implNote This is {@code 0} by default and is set when the first query is sent. This
-		COMMENT causes {@link #getInitialQueryTime} to not respect the delay for the first query.
 	FIELD field_39334 lastResponse Lnet/minecraft/class_7479$class_7481;
 	METHOD <init> (Lnet/minecraft/class_310;)V
 		ARG 1 client
@@ -55,9 +40,6 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 		ARG 2 response
 	METHOD method_44033 shouldQuery (J)Z
 		COMMENT {@return whether the delay for querying has passed}
-		COMMENT
-		COMMENT @see #getInitialQueryTime
-		COMMENT @see #getQueryTime
 		ARG 1 currentTime
 	METHOD method_44034 query (Lnet/minecraft/class_7479$class_7480;J)V
 		COMMENT Sends {@code query} to the server.
@@ -95,18 +77,10 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 		COMMENT
 		COMMENT @implNote A preview should be rendered if there is a response, a pending query, or
 		COMMENT a query waiting for the response.
-	METHOD method_44041 getInitialQueryTime ()J
-		COMMENT {@return the next time the initial query should be sent, in milliseconds}
+	METHOD method_44041 ()J
 		COMMENT
-		COMMENT <p>In vanilla, this is {@value #INITIAL_QUERY_DELAY} milliseconds after the query time.
+	METHOD method_44042 ()J
 		COMMENT
-		COMMENT @implNote This must be smaller than {@link #getQueryTime}. Also, this is ignored for the
-		COMMENT first query sent after the chat screen was created. (See the implementation note for
-		COMMENT {@link #queryTime} for details.)
-	METHOD method_44042 getQueryTime ()J
-		COMMENT {@return the next time the non-initial query should be sent, in milliseconds}
-		COMMENT
-		COMMENT <p>In vanilla, this is {@value #QUERY_DELAY} milliseconds after the query time.
 	CLASS class_7480 Query
 		COMMENT A query, or a request, to the server to send the chat message preview.
 		FIELD comp_825 Ljava/lang/String;
