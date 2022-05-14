@@ -4,6 +4,9 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 	COMMENT reopening it would create a new chat previewer.
 	COMMENT
 	COMMENT <p>A <strong>query</strong> is a request to the server to send the chat message preview.
+	COMMENT The previewer only sends the query if there is no query that is waiting for the response,
+	COMMENT or if the last query took more than {@value #LATEST_NEXT_QUERY_DELAY} milliseconds to
+	COMMENT respond. A query can be sent at most every {@value #EARLIEST_NEXT_QUERY_DELAY} milliseconds.
 	COMMENT
 	COMMENT <p>The response to the query can be "consumed" by calling {@link #tryConsumeResponse}.
 	COMMENT If the response is still valid (i.e. the input has not changed since the query was sent),
@@ -12,10 +15,16 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 	COMMENT can only be consumed after the cooldown (by default, {@value #CONSUME_COOLDOWN} milliseconds)
 	COMMENT has passed. It is also possible to get the response text without consuming by calling
 	COMMENT {@link #getPreviewText}.
-	FIELD field_39326 J
+	FIELD field_39326 EARLIEST_NEXT_QUERY_DELAY J
+		COMMENT How long the previewer should wait at a minimum before sending the next
+		COMMENT query in milliseconds. Is {@value}.
 		COMMENT
-	FIELD field_39327 J
+		COMMENT @see #getEarliestNextQueryTime
+	FIELD field_39327 LATEST_NEXT_QUERY_DELAY J
+		COMMENT How long the previewer can wait for the response at most before sending the next
+		COMMENT query in milliseconds. Is {@value}.
 		COMMENT
+		COMMENT @see #getLatestNextQueryTime
 	FIELD field_39328 CONSUME_COOLDOWN J
 		COMMENT How long the previewer should wait before consuming the response since the response
 		COMMENT arrived at the client in milliseconds. Is {@value}.
@@ -23,10 +32,18 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 		COMMENT @see #tryConsumeResponse
 	FIELD field_39329 client Lnet/minecraft/class_310;
 	FIELD field_39330 idIncrementor Lnet/minecraft/class_7479$class_7482;
-	FIELD field_39331 pendingQuery Lnet/minecraft/class_7479$class_7480;
-	FIELD field_39332 lastQuery Lnet/minecraft/class_7479$class_7480;
+	FIELD field_39331 pendingRequestQuery Lnet/minecraft/class_7479$class_7480;
+		COMMENT The query that is waiting for the previewer to request (i.e. the next query to be sent).
+		COMMENT Can be {@code null} if there is no such query.
+	FIELD field_39332 pendingResponseQuery Lnet/minecraft/class_7479$class_7480;
+		COMMENT The query that is waiting for the server to respond (i.e. the last query).
+		COMMENT Can be {@code null} if there is no such query.
 	FIELD field_39333 queryTime J
 		COMMENT The last time a query was sent.
+		COMMENT
+		COMMENT <p>The next query will be sent after {@value #EARLIEST_NEXT_QUERY_DELAY} to
+		COMMENT {@value #LATEST_NEXT_QUERY_DELAY} milliseconds; the actual delay depends on
+		COMMENT when the server responds to the query.
 	FIELD field_39334 lastResponse Lnet/minecraft/class_7479$class_7481;
 	METHOD <init> (Lnet/minecraft/class_310;)V
 		ARG 1 client
@@ -35,11 +52,16 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 	METHOD method_44032 onResponse (ILnet/minecraft/class_2561;)V
 		COMMENT Called when the preview response was received.
 		COMMENT
-		COMMENT @implNote This sets the last response if the last query ID equals {@code id}.
+		COMMENT @implNote This sets the last response and clears {@link #pendingResponseQuery}
+		COMMENT if the pending query ID equals {@code id}
 		ARG 1 id
 		ARG 2 response
 	METHOD method_44033 shouldQuery (J)Z
 		COMMENT {@return whether the delay for querying has passed}
+		COMMENT
+		COMMENT <p>The previewer only sends the query if there is no query that is waiting for the response,
+		COMMENT or if the last query took more than {@value #LATEST_NEXT_QUERY_DELAY} milliseconds to
+		COMMENT respond. A query can be sent at most every {@value #EARLIEST_NEXT_QUERY_DELAY} milliseconds.
 		ARG 1 currentTime
 	METHOD method_44034 query (Lnet/minecraft/class_7479$class_7480;J)V
 		COMMENT Sends {@code query} to the server.
@@ -77,10 +99,14 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 		COMMENT
 		COMMENT @implNote A preview should be rendered if there is a response, a pending query, or
 		COMMENT a query waiting for the response.
-	METHOD method_44041 ()J
+	METHOD method_44041 getEarliestNextQueryTime ()J
+		COMMENT {@return the earliest time the next query can be sent}
 		COMMENT
-	METHOD method_44042 ()J
+		COMMENT @implNote This is {@value #EARLIEST_NEXT_QUERY_DELAY} milliseconds after the last query.
+	METHOD method_44042 getLatestNextQueryTime ()J
+		COMMENT {@return the latest time the next query should be sent}
 		COMMENT
+		COMMENT @implNote This is {@value #LATEST_NEXT_QUERY_DELAY} milliseconds after the last query.
 	CLASS class_7480 Query
 		COMMENT A query, or a request, to the server to send the chat message preview.
 		FIELD comp_825 Ljava/lang/String;
