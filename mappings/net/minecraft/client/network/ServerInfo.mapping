@@ -14,6 +14,8 @@ CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 	FIELD field_3761 address Ljava/lang/String;
 	FIELD field_3762 playerListSummary Ljava/util/List;
 	FIELD field_3763 local Z
+	FIELD field_39355 LOGGER Lorg/slf4j/Logger;
+	FIELD field_39356 chatPreview Lnet/minecraft/class_642$class_7484;
 	METHOD <init> (Ljava/lang/String;Ljava/lang/String;Z)V
 		ARG 1 name
 		ARG 2 address
@@ -35,6 +37,17 @@ CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 		ARG 1 resourcePackPolicy
 	METHOD method_2996 copyFrom (Lnet/minecraft/class_642;)V
 		ARG 1 serverInfo
+	METHOD method_44077 (Lnet/minecraft/class_642;Lnet/minecraft/class_642$class_7484;)V
+		ARG 1 chatPreview
+	METHOD method_44078 parseFavicon (Ljava/lang/String;)Ljava/lang/String;
+		ARG 0 favicon
+	METHOD method_44079 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
+		ARG 1 chatPreview
+	METHOD method_44080 setPreviewsChat (Z)V
+		COMMENT Sets whether the chat preview is enabled.
+		ARG 1 enabled
+	METHOD method_44081 getChatPreview ()Lnet/minecraft/class_642$class_7484;
+	METHOD method_44082 shouldPreviewChat ()Z
 	CLASS class_643 ResourcePackPolicy
 		COMMENT The policy of the client when this server sends a {@linkplain
 		COMMENT net.minecraft.network.packet.s2c.play.ResourcePackSendS2CPacket server
@@ -53,3 +66,23 @@ CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
 			ARG 3 name
 		METHOD method_2997 getName ()Lnet/minecraft/class_2561;
+	CLASS class_7484 ChatPreview
+		FIELD field_39357 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_39358 acknowledged Z
+		FIELD field_39359 toastShown Z
+		METHOD <init> (ZZ)V
+			ARG 1 acknowledged
+			ARG 2 toastShown
+		METHOD method_44083 setAcknowledged ()V
+		METHOD method_44084 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
+		METHOD method_44085 (Lnet/minecraft/class_642$class_7484;)Ljava/lang/Boolean;
+			ARG 0 chatPreview
+		METHOD method_44086 showToast ()Z
+			COMMENT If the chat preview toast is never shown, returns {@code true} and marks that the
+			COMMENT toast was shown; otherwise, returns {@code false}.
+		METHOD method_44087 (Lnet/minecraft/class_642$class_7484;)Ljava/lang/Boolean;
+			ARG 0 chatPreview
+		METHOD method_44088 isAcknowledged ()Z
+			COMMENT {@return whether the player acknowledged the chat preview warning}
+		METHOD method_44089 copy ()Lnet/minecraft/class_642$class_7484;
