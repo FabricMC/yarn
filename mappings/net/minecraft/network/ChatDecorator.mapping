@@ -1,0 +1,51 @@
+CLASS net/minecraft/class_7492 net/minecraft/network/ChatDecorator
+	COMMENT Chat decorator decorates the chat server-side. Currently, only one chat decorator
+	COMMENT can exist at a time. The chat decorator that is currently used can be obtained by
+	COMMENT {@link net.minecraft.server.MinecraftServer#getChatDecorator}.
+	COMMENT
+	COMMENT <p>For the chat decorator to produce a signed message, <strong>both the server
+	COMMENT and the sender's client need to have chat previews enabled</strong>, Otherwise, the decorated
+	COMMENT content is considered unsigned, and if the clients require chat messages to be signed
+	COMMENT via the {@linkplain net.minecraft.client.option.GameOptions#getOnlyShowSignedChat
+	COMMENT "Only Show Signed Chat" option}, they will see the undecorated message. Therefore,
+	COMMENT chat decorator is <strong>not recommended for censoring messages</strong>.
+	COMMENT
+	COMMENT <p>It is <strong>very important that the decorator return the same text when previewed
+	COMMENT and sent</strong>. If this is not followed correctly, the server detects that the client
+	COMMENT sent a forged text and discards the message. For example, a decorator that appends the
+	COMMENT time the decoration was applied would be likely to fail, since there is usually a delay
+	COMMENT between the previewing and the submission. One way to solve this issue is to make it
+	COMMENT cache the result on preview, so that when the sent message needs decorating, the cached
+	COMMENT value can be used.
+	FIELD field_39384 NOOP Lnet/minecraft/class_7492;
+		COMMENT An empty chat decorator that does not decorate anything.
+	METHOD decorate (Lnet/minecraft/class_3222;Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
+		COMMENT {@return the decorated {@code message}}
+		ARG 1 sender
+		ARG 2 message
+	METHOD decorate (Lnet/minecraft/class_3222;Lnet/minecraft/class_2561;Lnet/minecraft/class_7469;Z)Lnet/minecraft/class_7471;
+		COMMENT {@return the decorated signed chat message from undecorated {@code message}}
+		COMMENT
+		COMMENT <p>If {@code previewed} is false, the returned message will have the original
+		COMMENT content as signed and the decorated content as unsigned. This means that if the
+		COMMENT received player requires signed chat message, they will see the original content.
+		ARG 1 sender
+		ARG 2 message
+		ARG 3 signature
+		ARG 4 previewed
+			COMMENT whether the decoration was previewed by the sender's client
+	METHOD decorate (Lnet/minecraft/class_3222;Lnet/minecraft/class_7471;)Lnet/minecraft/class_7471;
+		COMMENT {@return the signed chat message with unsigned content set as decorated {@code message}}
+		COMMENT
+		COMMENT @apiNote This is used by various commands that send messages, such as {@link
+		COMMENT net.minecraft.server.command.MeCommand}.
+		COMMENT
+		COMMENT <p>If the received player requires signed chat message, they will see the original content.
+		ARG 1 sender
+		ARG 2 message
+	METHOD method_44120 (Lnet/minecraft/class_3222;Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
+		ARG 0 sender
+		ARG 1 message
+	METHOD method_44121 (Lnet/minecraft/class_3222;Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
+		ARG 0 sender
+		ARG 1 message
