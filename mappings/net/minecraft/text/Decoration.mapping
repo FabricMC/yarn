@@ -1,0 +1,64 @@
+CLASS net/minecraft/class_7463 net/minecraft/text/Decoration
+	COMMENT A decoration is a pre-defined set of styling and formatting rules for messages
+	COMMENT sent by the server. This consists of the translation key, the style, and the parameters
+	COMMENT usable in the translation. The actual text format needs to be supplied via custom
+	COMMENT language files in resource packs.
+	FIELD field_39219 CODEC Lcom/mojang/serialization/Codec;
+	METHOD method_43830 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 0 instance
+	METHOD method_43831 ofChat (Ljava/lang/String;)Lnet/minecraft/class_7463;
+		COMMENT {@return the decoration used in chat messages}
+		COMMENT
+		COMMENT @implNote This decoration allows use of the sender and the content parameters. It has no style.
+		ARG 0 translationKey
+	METHOD method_43832 apply (Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;)Lnet/minecraft/class_2561;
+		COMMENT {@return the text obtained by applying the passed values to the decoration}
+		ARG 1 content
+			COMMENT the value of the content parameter
+		ARG 2 sender
+			COMMENT the sender passed to parameters, or {@code null} if inapplicable
+	METHOD method_43833 ofDirectMessage (Ljava/lang/String;)Lnet/minecraft/class_7463;
+		COMMENT {@return the decoration used in {@link net.minecraft.server.command.MessageCommand}}
+		COMMENT
+		COMMENT @implNote This decoration allows use of the sender and the content parameters.
+		COMMENT The text is colored gray and is displayed in italic.
+		ARG 0 translationKey
+	METHOD method_43834 collectArguments (Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;)[Lnet/minecraft/class_2561;
+		COMMENT {@return the arguments passed to {@link Text#translatable(String, Object[])}}
+		COMMENT
+		COMMENT <p>This is collected by supplying {@code content} and {@code sender} to the
+		COMMENT parameters' {@link Decoration.Parameter#apply} method.
+		ARG 1 content
+		ARG 2 sender
+	METHOD method_43835 ofTeamMessage (Ljava/lang/String;)Lnet/minecraft/class_7463;
+		COMMENT {@return the decoration used in chat messages}
+		COMMENT
+		COMMENT @implNote This decoration allows use of the team name, the sender, and the
+		COMMENT content parameters. It has no style.
+		ARG 0 translationKey
+	CLASS class_7464 Parameter
+		COMMENT Represents a parameter that the decoration uses.
+		FIELD field_39223 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_39224 name Ljava/lang/String;
+		FIELD field_39225 selector Lnet/minecraft/class_7463$class_7464$class_7465;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;Lnet/minecraft/class_7463$class_7464$class_7465;)V
+			ARG 3 name
+			ARG 4 selector
+		METHOD method_43837 apply (Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;)Lnet/minecraft/class_2561;
+			COMMENT {@return the text obtained by applying the passed values to the parameter}
+			ARG 1 content
+			ARG 2 sender
+		METHOD method_43838 (Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;)Lnet/minecraft/class_2561;
+			ARG 0 content
+			ARG 1 sender
+		METHOD method_43839 (Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;)Lnet/minecraft/class_2561;
+			ARG 0 content
+			ARG 1 sender
+		METHOD method_43840 (Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;)Lnet/minecraft/class_2561;
+			ARG 0 content
+			ARG 1 sender
+		CLASS class_7465 Selector
+			COMMENT A functional interface that selects the text from the passed values.
+			METHOD select (Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;)Lnet/minecraft/class_2561;
+				ARG 1 content
+				ARG 2 sender
