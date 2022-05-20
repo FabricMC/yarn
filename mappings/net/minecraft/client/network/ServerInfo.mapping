@@ -21,7 +21,7 @@ CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 	FIELD field_3763 local Z
 	FIELD field_39355 LOGGER Lorg/slf4j/Logger;
 	FIELD field_39356 chatPreview Lnet/minecraft/class_642$class_7484;
-	FIELD field_39436 chatPreviewEnabledByServer Z
+	FIELD field_39436 temporaryChatPreviewState Z
 	METHOD <init> (Ljava/lang/String;Ljava/lang/String;Z)V
 		ARG 1 name
 		ARG 2 address
@@ -50,14 +50,17 @@ CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 	METHOD method_44079 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
 		ARG 1 chatPreview
 	METHOD method_44080 setPreviewsChat (Z)V
-		COMMENT Sets whether the chat preview is enabled.
+		COMMENT Sets whether the chat preview is enabled. This affects the saved server info;
+		COMMENT to disable the chat preview temporarily use {@link #setTemporaryChatPreviewState}.
 		ARG 1 enabled
 	METHOD method_44081 getChatPreview ()Lnet/minecraft/class_642$class_7484;
 	METHOD method_44082 shouldPreviewChat ()Z
 	METHOD method_44292 copyFrom (Lnet/minecraft/class_642;)V
 		ARG 1 serverInfo
-	METHOD method_44293 setChatPreviewEnabledByServer (Z)V
-		ARG 1 chatPreviewEnabledByServer
+	METHOD method_44293 setTemporaryChatPreviewState (Z)V
+		COMMENT Sets the temporary chat preview state. Unlike {@link #setPreviewsChat}, this
+		COMMENT does not affect the saved server info.
+		ARG 1 temporaryChatPreviewState
 	CLASS class_643 ResourcePackPolicy
 		COMMENT The policy of the client when this server sends a {@linkplain
 		COMMENT net.minecraft.network.packet.s2c.play.ResourcePackSendS2CPacket server
