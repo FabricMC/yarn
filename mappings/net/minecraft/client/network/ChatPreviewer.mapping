@@ -1,12 +1,8 @@
 CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 	COMMENT Chat previewer manages the chat preview. Chat previewer is created per
 	COMMENT {@link net.minecraft.client.gui.screen.ChatScreen}, so closing the chat screen and
-	COMMENT reopening it would create a new chat previewer.
-	COMMENT
-	COMMENT <p>A <strong>query</strong> is a request to the server to send the chat message preview.
-	COMMENT The previewer only sends the query if there is no query that is waiting for the response,
-	COMMENT or if the last query took more than {@value #LATEST_NEXT_QUERY_DELAY} milliseconds to
-	COMMENT respond. A query can be sent at most every {@value #EARLIEST_NEXT_QUERY_DELAY} milliseconds.
+	COMMENT reopening it would create a new chat previewer. {@link ChatPreviewRequester}
+	COMMENT handles the actual requesting.
 	COMMENT
 	COMMENT <p>The response to the query can be "consumed" by calling {@link #tryConsumeResponse}.
 	COMMENT If the response is still valid (i.e. the input has not changed since the query was sent),
@@ -21,19 +17,27 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 		COMMENT
 		COMMENT @see #tryConsumeResponse
 	FIELD field_39334 lastResponse Lnet/minecraft/class_7479$class_7481;
+	FIELD field_39429 shouldRenderPreview Z
+	FIELD field_39430 lastPreviewedMessage Ljava/lang/String;
+	FIELD field_39431 pendingRequestMessage Ljava/lang/String;
+		COMMENT The message that is waiting for the previewer to request (i.e. the next query to be sent).
+		COMMENT Can be {@code null} if there is no such query.
+		COMMENT
+		COMMENT @implNote If the message is sent instantly, this field is not set.
+	FIELD field_39432 requester Lnet/minecraft/class_7516;
 	METHOD <init> (Lnet/minecraft/class_310;)V
 		ARG 1 client
-	METHOD method_44031 tryQuery ()V
-		COMMENT Sends the pending query, if it exists and the delay has passed.
+	METHOD method_44031 tryRequestPending ()V
+		COMMENT Sends the message that was waiting for its request delay to pass, if it is able to.
 	METHOD method_44032 onResponse (ILnet/minecraft/class_2561;)V
 		COMMENT Called when the preview response was received.
 		COMMENT
-		COMMENT @implNote This sets the last response and clears {@link #pendingResponseQuery}
-		COMMENT if the pending query ID equals {@code id}
+		COMMENT @implNote This sets the last response if the requester {@linkplain
+		COMMENT ChatPreviewRequester#handleResponse successfully handled} the response.
 		ARG 1 id
 		ARG 2 response
 	METHOD method_44036 clear ()V
-		COMMENT Clears the last response and the queries (but not the query time).
+		COMMENT Clears the last response and the requester's state.
 	METHOD method_44037 tryConsumeResponse (Ljava/lang/String;)Lnet/minecraft/class_2561;
 		COMMENT {@return the consumed response text, or {@code null} if the server responded as such, or
 		COMMENT if the response could not be consumed}
@@ -58,6 +62,15 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 		COMMENT
 		COMMENT @implNote A preview should be rendered if there is a response, a pending query, or
 		COMMENT a query waiting for the response.
+	METHOD method_44274 tryRequest (Ljava/lang/String;)V
+		COMMENT Tries to send the request to preview {@code message}. If the delay has passed,
+		COMMENT it will send instantly; otherwise, it will set {@link #pendingRequestMessage} which
+		COMMENT can be requested by calling {@link #tryRequestPending()}.
+		ARG 1 message
+	METHOD method_44275 disablePreview ()V
+		COMMENT Sets {@link #shouldRenderPreview} to {@code false} and clears this previewer.
+	METHOD method_44276 tryRequestInternal (Ljava/lang/String;)V
+		ARG 1 message
 	CLASS class_7481 Response
 		COMMENT A response to the preview query.
 		FIELD comp_827 Ljava/lang/String;
