@@ -1,0 +1,64 @@
+CLASS net/minecraft/class_5819 net/minecraft/util/math/random/Random
+	COMMENT A reimplementation of {@link java.util.Random}.
+	COMMENT
+	COMMENT <p>There are four built-in implementations, three based on the classic Java algorithm
+	COMMENT and one using Xoroshiro128++ algorithm.
+	COMMENT
+	COMMENT <ul>
+	COMMENT <li>{@link LocalRandom}: Silently breaks when used concurrently. Based on
+	COMMENT {@link java.util.Random}.</li>
+	COMMENT <li>{@link CheckedRandom}: Throws when used concurrently. Based on
+	COMMENT {@link java.util.Random}.</li>
+	COMMENT <li>{@link ThreadSafeRandom}: Blocks the thread when used concurrently. Based on
+	COMMENT {@link java.util.Random}.</li>
+	COMMENT <li>{@link Xoroshiro128PlusPlusRandom}: Silently breaks when used concurrently.
+	COMMENT Implements the Xoroshiro128++ algorithm.</li>
+	COMMENT </ul>
+	COMMENT
+	COMMENT @implNote Note that due to MC-239059, this is not an exact reimplementation of
+	COMMENT the Java random number generator algorithm.
+	COMMENT
+	COMMENT @see java.util.random
+	METHOD method_33650 skip (I)V
+		ARG 1 count
+	METHOD method_38420 split ()Lnet/minecraft/class_5819;
+	METHOD method_38421 nextSplitter ()Lnet/minecraft/class_6574;
+	METHOD method_39332 nextBetween (II)I
+		ARG 1 min
+		ARG 2 max
+	METHOD method_43047 create ()Lnet/minecraft/class_5819;
+		COMMENT {@return a random} The returned random actively detects concurrent usage
+		COMMENT and fails on detection.
+	METHOD method_43048 nextInt (I)I
+		ARG 1 bound
+	METHOD method_43049 create (J)Lnet/minecraft/class_5819;
+		COMMENT {@return a random with the given {@code seed}} The returned random
+		COMMENT actively detects concurrent usage and fails on detection.
+		ARG 0 seed
+	METHOD method_43050 createThreadSafe ()Lnet/minecraft/class_5819;
+		COMMENT {@return a random, suitable for multithreaded scenarios}
+		COMMENT
+		COMMENT @deprecated This one is hard to ensure deterministic behavior compared
+		COMMENT to the non-thread-safe one.
+	METHOD method_43051 nextBetweenExclusive (II)I
+		ARG 1 min
+		ARG 2 max
+	METHOD method_43052 setSeed (J)V
+		ARG 1 seed
+	METHOD method_43053 createLocal ()Lnet/minecraft/class_5819;
+		COMMENT {@return a random split from the thread local random} Users must ensure
+		COMMENT this random is not used concurrently.
+	METHOD method_43054 nextInt ()I
+	METHOD method_43055 nextLong ()J
+	METHOD method_43056 nextBoolean ()Z
+	METHOD method_43057 nextFloat ()F
+	METHOD method_43058 nextDouble ()D
+	METHOD method_43059 nextGaussian ()D
+	METHOD method_43385 nextTriangular (DD)D
+		COMMENT {@return a random {@code double} between {@code mode - deviation} and
+		COMMENT {@code mode + deviation} (both inclusive) with mode {@code mode}}
+		COMMENT
+		COMMENT <p>Because the return value follows a symmetric triangular distribution,
+		COMMENT the distribution's mean and median are equal to {@code mode}.
+		ARG 1 mode
+		ARG 3 deviation
