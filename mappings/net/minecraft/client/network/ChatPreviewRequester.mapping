@@ -1,0 +1,69 @@
+CLASS net/minecraft/class_7516 net/minecraft/client/network/ChatPreviewRequester
+	COMMENT Chat preview requester requests the server to preview a message.
+	COMMENT
+	COMMENT <p>A <strong>query</strong> is a request to the server to send the chat message preview.
+	COMMENT The previewer only sends the query if there is no query that is waiting for the response,
+	COMMENT or if the last query took more than {@value #LATEST_NEXT_QUERY_DELAY} milliseconds to
+	COMMENT respond. A query can be sent at most every {@value #EARLIEST_NEXT_QUERY_DELAY} milliseconds.
+	COMMENT
+	COMMENT @see ChatPreviewer
+	FIELD field_39423 EARLIEST_NEXT_QUERY_DELAY J
+		COMMENT How long the previewer should wait at a minimum before sending the next
+		COMMENT query in milliseconds. Is {@value}.
+	FIELD field_39424 LATEST_NEXT_QUERY_DELAY J
+		COMMENT How long the previewer can wait for the response at most before sending the next
+		COMMENT query in milliseconds. Is {@value}.
+	FIELD field_39425 client Lnet/minecraft/class_310;
+	FIELD field_39426 idIncrementor Lnet/minecraft/class_7516$class_7482;
+	FIELD field_39427 pendingResponseQuery Lnet/minecraft/class_7516$class_7480;
+		COMMENT The query that is waiting for the server to respond (i.e. the last query).
+		COMMENT Can be {@code null} if there is no such query.
+	FIELD field_39428 queryTime J
+		COMMENT The last time a query was sent.
+		COMMENT
+		COMMENT <p>The next query will be sent after {@value #EARLIEST_NEXT_QUERY_DELAY} to
+		COMMENT {@value #LATEST_NEXT_QUERY_DELAY} milliseconds; the actual delay depends on
+		COMMENT when the server responds to the query.
+	METHOD <init> (Lnet/minecraft/class_310;)V
+		ARG 1 client
+	METHOD method_44269 clear ()V
+	METHOD method_44270 handleResponse (I)Ljava/lang/String;
+		COMMENT {@return the response's original queried message, or {@code null} if the response
+		COMMENT is not for {@linkplain #pendingResponseQuery the current pending request}}
+		COMMENT
+		COMMENT <p>If the response is valid, this will also clear {@link #pendingResponseQuery}.
+		ARG 1 id
+	METHOD method_44271 shouldRequest (J)Z
+		COMMENT {@return whether the delay for querying has passed}
+		COMMENT
+		COMMENT <p>The previewer only sends the query if there is no query that is waiting for the response,
+		COMMENT or if the last query took more than {@value #LATEST_NEXT_QUERY_DELAY} milliseconds to
+		COMMENT respond. A query can be sent at most every {@value #EARLIEST_NEXT_QUERY_DELAY} milliseconds.
+		ARG 1 currentTime
+	METHOD method_44272 tryRequest (Ljava/lang/String;J)Z
+		COMMENT Sends the request to preview {@code message}, if there isn't already one and
+		COMMENT if the delay has passed.
+		COMMENT
+		COMMENT @return {@code false} if the request could not be sent due to the delay, otherwise
+		COMMENT {@code true}
+		ARG 1 message
+		ARG 2 currentTime
+	METHOD method_44273 hasPendingResponseQuery ()Z
+		COMMENT {@return whether the requester has a query that is waiting for the server to respond}
+	CLASS class_7480 Query
+		COMMENT A query, or a request, to the server to send the chat message preview.
+		FIELD comp_825 message Ljava/lang/String;
+			COMMENT the queried message to preview
+		METHOD comp_825 message ()Ljava/lang/String;
+		METHOD method_44043 idEquals (I)Z
+			ARG 1 id
+		METHOD method_44044 messageEquals (Ljava/lang/String;)Z
+			COMMENT {@return whether the query's queried message equals {@code message}}
+			ARG 1 message
+	CLASS class_7482 IdIncrementor
+		COMMENT A utility class that increments the ID by a random number from 0 to 99.
+		FIELD field_39335 MAX_INCREMENT I
+		FIELD field_39336 random Lnet/minecraft/class_5819;
+		FIELD field_39337 current I
+		METHOD method_44046 next ()I
+			COMMENT {@return the next ID}
