@@ -1,7 +1,12 @@
 CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 	COMMENT The information of a server entry in the list of servers available in
-	COMMENT the multiplayer screen from the menu. The list of these servers is
-	COMMENT stored in the {@code servers.dat} file within the client game directory.
+	COMMENT the multiplayer screen, or that of the servers connected directly.
+	COMMENT The information for directly-connected servers are also saved (although
+	COMMENT hidden from the multiplayer screen) so that chat preview acknowledgements
+	COMMENT and other settings are saved. The list of these servers is stored in the
+	COMMENT {@code servers.dat} file within the client game directory.
+	COMMENT
+	COMMENT @see net.minecraft.client.option.ServerList
 	FIELD field_3752 name Ljava/lang/String;
 	FIELD field_3753 playerCountLabel Lnet/minecraft/class_2561;
 	FIELD field_3754 online Z
@@ -16,8 +21,9 @@ CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 	FIELD field_3763 local Z
 	FIELD field_39355 LOGGER Lorg/slf4j/Logger;
 	FIELD field_39356 chatPreview Lnet/minecraft/class_642$class_7484;
-	FIELD field_39436 chatPreviewEnabled Z
+	FIELD field_39436 temporaryChatPreviewState Z
 	METHOD <init> (Ljava/lang/String;Ljava/lang/String;Z)V
+		ARG 1 name
 		ARG 2 address
 		ARG 3 local
 	METHOD method_2989 setIcon (Ljava/lang/String;)V
@@ -35,7 +41,7 @@ CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 		COMMENT <p>This is called when a user has responded to the prompt on whether to
 		COMMENT accept server resource packs from this server in the future.
 		ARG 1 resourcePackPolicy
-	METHOD method_2996 copyFrom (Lnet/minecraft/class_642;)V
+	METHOD method_2996 copyWithSettingsFrom (Lnet/minecraft/class_642;)V
 		ARG 1 serverInfo
 	METHOD method_44077 (Lnet/minecraft/class_642;Lnet/minecraft/class_642$class_7484;)V
 		ARG 1 chatPreview
@@ -44,12 +50,17 @@ CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 	METHOD method_44079 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
 		ARG 1 chatPreview
 	METHOD method_44080 setPreviewsChat (Z)V
-		COMMENT Sets whether the chat preview is enabled.
+		COMMENT Sets whether the chat preview is enabled. This affects the saved server info;
+		COMMENT to disable the chat preview temporarily use {@link #setTemporaryChatPreviewState}.
 		ARG 1 enabled
 	METHOD method_44081 getChatPreview ()Lnet/minecraft/class_642$class_7484;
 	METHOD method_44082 shouldPreviewChat ()Z
-	METHOD method_44293 setChatPreviewEnabled (Z)V
-		ARG 1 enabled
+	METHOD method_44292 copyFrom (Lnet/minecraft/class_642;)V
+		ARG 1 serverInfo
+	METHOD method_44293 setTemporaryChatPreviewState (Z)V
+		COMMENT Sets the temporary chat preview state. Unlike {@link #setPreviewsChat}, this
+		COMMENT does not affect the saved server info.
+		ARG 1 temporaryChatPreviewState
 	CLASS class_643 ResourcePackPolicy
 		COMMENT The policy of the client when this server sends a {@linkplain
 		COMMENT net.minecraft.network.packet.s2c.play.ResourcePackSendS2CPacket server
