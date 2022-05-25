@@ -1,0 +1,43 @@
+CLASS net/minecraft/class_7510 net/minecraft/world/gen/feature/util/PlacedFeatureIndexer
+	COMMENT A class for indexing placed features with a feature order cycle detection.
+	COMMENT
+	COMMENT <p>Placed features have the {@link net.minecraft.world.gen.GenerationStep.Feature
+	COMMENT generation steps}, and they generate in that order. For example, if biome X registers
+	COMMENT the placed feature A in the {@link
+	COMMENT net.minecraft.world.gen.GenerationStep.Feature#UNDERGROUND_ORES} step and the
+	COMMENT placed feature B and C in the {@link
+	COMMENT net.minecraft.world.gen.GenerationStep.Feature#TOP_LAYER_MODIFICATION} step,
+	COMMENT then B and C generate after A. If, then, biome Y registers B in the {@link
+	COMMENT net.minecraft.world.gen.GenerationStep.Feature#LOCAL_MODIFICATIONS}, this will
+	COMMENT cause a <strong>"feature order cycle"</strong>, because B should generate after A
+	COMMENT according to the biome X, but A should generate after B according to biome Y. This
+	COMMENT is wrong and causes a crash.
+	COMMENT
+	COMMENT <p>In other words, "feature order cycle" occurs when <strong>placed features are
+	COMMENT registered in multiple generation steps</strong>, due to e.g. reusing vanilla features.
+	COMMENT To prevent this error, make sure to generate the feature in the same generation step
+	COMMENT as vanilla, and if that is not possible, create a new feature.
+	METHOD method_44208 (ILnet/minecraft/class_7510$class_6543;)Z
+		ARG 1 feature
+	METHOD method_44209 (Ljava/util/Comparator;Lnet/minecraft/class_7510$class_6543;)Ljava/util/Set;
+		ARG 1 feature
+	METHOD method_44210 collectIndexedFeatures (Ljava/util/List;Ljava/util/function/Function;Z)Ljava/util/List;
+		COMMENT {@return the indexed placed features collected after validating feature orders}
+		COMMENT
+		COMMENT @throws IllegalStateException when a feature order cycle is detected
+		COMMENT
+		COMMENT @apiNote Check the class documentation for what feature order cycle means.
+		ARG 0 biomes
+		ARG 1 biomesToPlacedFeaturesList
+			COMMENT a function that, given a biome, returns a list of placed features grouped
+			COMMENT by their generation steps
+		ARG 2 listInvolvedBiomesOnFailure
+			COMMENT whether to include involved biomes in the thrown exception
+	METHOD method_44211 (Lorg/apache/commons/lang3/mutable/MutableInt;Ljava/lang/Object;)I
+		ARG 1 feature
+	CLASS class_6543 IndexedFeature
+	CLASS class_6827 IndexedFeatures
+		METHOD <init> (Ljava/util/List;)V
+			ARG 1 features
+		METHOD method_44212 (I)Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+			ARG 0 size
