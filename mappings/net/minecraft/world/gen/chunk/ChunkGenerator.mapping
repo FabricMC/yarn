@@ -2,10 +2,7 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	COMMENT In charge of shaping, adding biome specific surface blocks, and carving chunks,
 	COMMENT as well as populating the generated chunks with {@linkplain net.minecraft.world.gen.feature.Feature features} and {@linkplain net.minecraft.entity.Entity entities}.
 	COMMENT Biome placement starts here, however all vanilla and most modded chunk generators delegate this to a {@linkplain net.minecraft.world.biome.source.BiomeSource biome source}.
-	FIELD field_12761 populationSource Lnet/minecraft/class_1966;
-		COMMENT Used to control the population step without replacing the actual biome that comes from the original {@link #biomeSource}.
-		COMMENT
-		COMMENT <p>This is used by {@link FlatChunkGenerator} to overwrite biome properties like whether lakes generate, while preserving the original biome ID.
+	FIELD field_12761 biomeSource Lnet/minecraft/class_1966;
 	FIELD field_24746 CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_36405 concentricRingPositions Ljava/util/Map;
 	FIELD field_37053 structureSetRegistry Lnet/minecraft/class_2378;
@@ -13,6 +10,8 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	FIELD field_37055 structurePlacements Ljava/util/Map;
 	FIELD field_37056 hasComputedStructurePlacements Z
 	FIELD field_37254 LOGGER Lorg/slf4j/Logger;
+	FIELD field_39412 indexedFeaturesListSupplier Ljava/util/function/Supplier;
+	FIELD field_39413 generationSettingsGetter Ljava/util/function/Function;
 	METHOD <init> (Lnet/minecraft/class_2378;Ljava/util/Optional;Lnet/minecraft/class_1966;)V
 		ARG 1 structureSetRegistry
 		ARG 2 structureOverrides
@@ -20,7 +19,8 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	METHOD <init> (Lnet/minecraft/class_2378;Ljava/util/Optional;Lnet/minecraft/class_1966;Ljava/util/function/Function;)V
 		ARG 1 structureSetRegistry
 		ARG 2 structureOverrides
-		ARG 3 populationSource
+		ARG 3 biomeSource
+		ARG 4 generationSettingsGetter
 	METHOD method_12088 populateNoise (Ljava/util/concurrent/Executor;Lnet/minecraft/class_6748;Lnet/minecraft/class_7138;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		COMMENT Generates the base shape of the chunk out of the basic block states as decided by this chunk generator's config.
 		ARG 1 executor
@@ -48,8 +48,9 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		ARG 3 center
 		ARG 4 radius
 			COMMENT the search radius in chunks around the chunk the given block position is in; a radius of 0 will only search in the given chunk
-		ARG 5 skipExistingChunks
-			COMMENT whether only structures that are not referenced by generated chunks (chunks past the STRUCTURE_STARTS stage) are returned, excluding strongholds
+		ARG 5 skipReferencedStructures
+			COMMENT whether to exclude structures that were previously located (has positive
+			COMMENT {@link StructureStart#references})
 	METHOD method_12104 getWorldHeight ()I
 	METHOD method_12107 populateEntities (Lnet/minecraft/class_3233;)V
 		ARG 1 region
@@ -124,8 +125,13 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		ARG 1 chunk
 		ARG 2 sectionPos
 		ARG 3 structure
+	METHOD method_38265 (Lnet/minecraft/class_5281;Lnet/minecraft/class_5138;Lnet/minecraft/class_2919;Lnet/minecraft/class_2791;Lnet/minecraft/class_1923;Lnet/minecraft/class_3449;)V
+		ARG 6 start
+	METHOD method_38268 (Lnet/minecraft/class_3195;)Ljava/lang/Integer;
+		ARG 0 structureType
 	METHOD method_38275 populateBiomes (Lnet/minecraft/class_2378;Ljava/util/concurrent/Executor;Lnet/minecraft/class_7138;Lnet/minecraft/class_6748;Lnet/minecraft/class_5138;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 biomeRegistry
+		ARG 2 executor
 		ARG 3 noiseConfig
 		ARG 4 blender
 		ARG 5 structureAccessor
@@ -133,15 +139,61 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 	METHOD method_39301 getCodecKey ()Ljava/util/Optional;
 	METHOD method_39462 getBlockBoxForChunk (Lnet/minecraft/class_2791;)Lnet/minecraft/class_3341;
 		ARG 0 chunk
+	METHOD method_39787 (Lnet/minecraft/class_5281;Ljava/util/Set;Lnet/minecraft/class_1923;)V
+		ARG 0 pos
+	METHOD method_39788 (Lit/unimi/dsi/fastutil/ints/IntSet;Lnet/minecraft/class_7510$class_6827;Lnet/minecraft/class_6796;)V
+		ARG 0 feature
+	METHOD method_40146 locateRandomSpreadStructure (Ljava/util/Set;Lnet/minecraft/class_4538;Lnet/minecraft/class_5138;IIIZJLnet/minecraft/class_6872;)Lcom/mojang/datafixers/util/Pair;
+		ARG 0 structures
+		ARG 1 world
+		ARG 2 structureAccessor
+		ARG 3 centerChunkX
+		ARG 4 centerChunkZ
+		ARG 5 radius
+		ARG 6 skipReferencedStructures
+		ARG 7 seed
+		ARG 9 placement
 	METHOD method_40147 getConcentricRingsStartChunks (Lnet/minecraft/class_6871;Lnet/minecraft/class_7138;)Ljava/util/List;
 		ARG 1 structurePlacement
+		ARG 2 noiseConfig
+	METHOD method_40148 locateConcentricRingsStructure (Ljava/util/Set;Lnet/minecraft/class_3218;Lnet/minecraft/class_5138;Lnet/minecraft/class_2338;ZLnet/minecraft/class_6871;)Lcom/mojang/datafixers/util/Pair;
+		ARG 1 structures
+		ARG 2 world
+		ARG 3 structureAccessor
+		ARG 4 center
+		ARG 5 skipReferencedStructures
+		ARG 6 placement
 	METHOD method_40450 getDebugHudText (Ljava/util/List;Lnet/minecraft/class_7138;Lnet/minecraft/class_2338;)V
 		ARG 1 text
 		ARG 2 noiseConfig
 		ARG 3 pos
 	METHOD method_41039 streamStructureSets ()Ljava/util/stream/Stream;
+	METHOD method_41040 (Lnet/minecraft/class_5138;Lnet/minecraft/class_2338;Lnet/minecraft/class_3449;)Z
+		ARG 2 start
+	METHOD method_41041 (Lnet/minecraft/class_5138;Lnet/minecraft/class_4076;Lnet/minecraft/class_2791;Lnet/minecraft/class_7138;JLnet/minecraft/class_1923;Lnet/minecraft/class_5455;Lnet/minecraft/class_3485;Lnet/minecraft/class_6880;)V
+		ARG 10 structureSet
 	METHOD method_41042 createStructureSetRegistryGetter (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/Products$P1;
 		ARG 0 instance
+	METHOD method_41043 (Lnet/minecraft/class_2794;)Lnet/minecraft/class_2378;
+		ARG 0 chunkGenerator
+	METHOD method_41044 trySetStructureStart (Lnet/minecraft/class_7059$class_7060;Lnet/minecraft/class_5138;Lnet/minecraft/class_5455;Lnet/minecraft/class_7138;Lnet/minecraft/class_3485;JLnet/minecraft/class_2791;Lnet/minecraft/class_1923;Lnet/minecraft/class_4076;)Z
+		ARG 1 weightedEntry
+		ARG 2 structureAccessor
+		ARG 3 dynamicRegistryManager
+		ARG 4 noiseConfig
+		ARG 5 structureManager
+		ARG 6 seed
+		ARG 8 chunk
+		ARG 9 pos
+		ARG 10 sectionPos
+	METHOD method_41045 (Lnet/minecraft/class_3449;Lnet/minecraft/class_2378;)Ljava/lang/String;
+		ARG 1 structureTypeRegistry
+	METHOD method_41046 (Lnet/minecraft/class_6874;)Ljava/util/Set;
+		ARG 0 placement
+	METHOD method_41047 (Lnet/minecraft/class_2338;Lnet/minecraft/class_3449;)Z
+		ARG 1 start
+	METHOD method_41052 (Lorg/apache/commons/lang3/mutable/MutableBoolean;Ljava/util/function/Predicate;Lnet/minecraft/class_3449;)V
+		ARG 2 start
 	METHOD method_41053 shouldStructureGenerateInRange (Lnet/minecraft/class_6880;Lnet/minecraft/class_7138;JIII)Z
 		ARG 1 structureSet
 		ARG 2 noiseConfig
@@ -149,7 +201,30 @@ CLASS net/minecraft/class_2794 net/minecraft/world/gen/chunk/ChunkGenerator
 		ARG 5 chunkX
 		ARG 6 chunkZ
 		ARG 7 chunkRange
+	METHOD method_41054 (Lnet/minecraft/class_3195;)Ljava/util/List;
+		ARG 0 structureType
+	METHOD method_41055 getStructurePlacement (Lnet/minecraft/class_6880;Lnet/minecraft/class_7138;)Ljava/util/List;
+		ARG 1 structureEntry
+		ARG 2 noiseConfig
 	METHOD method_41056 (Ljava/util/Set;Lnet/minecraft/class_7138;Lnet/minecraft/class_6880;)V
 		ARG 3 structureSet
 	METHOD method_41057 computeStructurePlacements (Lnet/minecraft/class_7138;)V
 		ARG 1 noiseConfig
+	METHOD method_41058 computeStructurePlacementsIfNeeded (Lnet/minecraft/class_7138;)V
+		ARG 1 noiseConfig
+	METHOD method_41521 checkNotReferenced (Lnet/minecraft/class_5138;Lnet/minecraft/class_3449;)Z
+		ARG 0 structureAccessor
+		ARG 1 start
+	METHOD method_41522 locateStructure (Ljava/util/Set;Lnet/minecraft/class_4538;Lnet/minecraft/class_5138;ZLnet/minecraft/class_6874;Lnet/minecraft/class_1923;)Lcom/mojang/datafixers/util/Pair;
+		ARG 0 structures
+		ARG 1 world
+		ARG 2 structureAccessor
+		ARG 3 skipReferencedStructures
+		ARG 4 placement
+		ARG 5 pos
+	METHOD method_44216 getGenerationSettings (Lnet/minecraft/class_6880;)Lnet/minecraft/class_5485;
+		ARG 1 biomeEntry
+	METHOD method_44217 (Ljava/util/function/Function;Lnet/minecraft/class_6880;)Ljava/util/List;
+		ARG 1 biomeEntry
+	METHOD method_44218 (Lnet/minecraft/class_6880;)Lnet/minecraft/class_5485;
+		ARG 0 biomeEntry
