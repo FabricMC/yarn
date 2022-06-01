@@ -20,7 +20,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT Intersection with {@link net.minecraft.entity.decoration.ArmorStandEntity} is checked if
 		COMMENT it is not a {@link net.minecraft.entity.decoration.ArmorStandEntity#isMarker marker}.
 	FIELD field_25599 submergedFluidTag Ljava/util/Set;
-	FIELD field_25750 trackedPosition Lnet/minecraft/class_243;
 	FIELD field_26994 lastChimeAge I
 	FIELD field_26995 removalReason Lnet/minecraft/class_1297$class_5529;
 	FIELD field_26996 changeListener Lnet/minecraft/class_5569;
@@ -34,6 +33,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT The factor by which an entity's speed is reduced every tick.
 		COMMENT <p>
 		COMMENT For example: {@code horizontalSpeed = velocity.horizontalSpeed() * FRICTION_RATE}
+	FIELD field_29974 MIN_RISING_BUBBLE_COLUMN_SPEED F
 	FIELD field_29975 SNEAKING_FLAG_INDEX I
 	FIELD field_29976 SPRINTING_FLAG_INDEX I
 	FIELD field_29977 SWIMMING_FLAG_INDEX I
@@ -65,6 +65,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_34927 collidedSoftly Z
 	FIELD field_35101 chunkPos Lnet/minecraft/class_1923;
 	FIELD field_35588 blockStateAtPos Lnet/minecraft/class_2680;
+	FIELD field_38931 trackedPosition Lnet/minecraft/class_7422;
 	FIELD field_5951 ridingCooldown I
 	FIELD field_5952 onGround Z
 	FIELD field_5953 firstUpdate Z
@@ -82,7 +83,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_5971 lastRenderY D
 	FIELD field_5972 netherPortalTime I
 	FIELD field_5973 horizontalSpeed F
-	FIELD field_5974 random Ljava/util/Random;
+	FIELD field_5974 random Lnet/minecraft/class_5819;
 	FIELD field_5975 NAME_VISIBLE Lnet/minecraft/class_2940;
 	FIELD field_5976 horizontalCollision Z
 	FIELD field_5978 CURRENT_ID Ljava/util/concurrent/atomic/AtomicInteger;
@@ -144,10 +145,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_17835 adjustMovementForCollisions (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
 		ARG 1 movement
 	METHOD method_18002 createSpawnPacket ()Lnet/minecraft/class_2596;
-	METHOD method_18003 updateTrackedPosition (DDD)V
-		ARG 1 x
-		ARG 3 y
-		ARG 5 z
 	METHOD method_18276 isInSneakingPose ()Z
 		COMMENT Returns whether the entity is in a crouching pose.
 		COMMENT
@@ -226,7 +223,15 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_22861 getTeamColorValue ()I
 	METHOD method_22862 resetPosition ()V
 	METHOD method_23311 refreshPosition ()V
-	METHOD method_23312 getLandingPos ()Lnet/minecraft/class_2338;
+	METHOD method_23312 getSteppingPos ()Lnet/minecraft/class_2338;
+		COMMENT {@return the stepping position}
+		COMMENT
+		COMMENT @implNote Stepping position is the entity's position, with {@code 1e-05} subtracted
+		COMMENT from the Y coordinate. This means that, for example, if a player is on a carpet on
+		COMMENT a soul soil, the carpet's position would be returned.
+		COMMENT
+		COMMENT @see #getLandingPos()
+		COMMENT @see #getSteppingBlockState()
 	METHOD method_23313 getJumpVelocityMultiplier ()F
 	METHOD method_23314 getVelocityAffectingPos ()Lnet/minecraft/class_2338;
 	METHOD method_23315 getDefaultName ()Lnet/minecraft/class_2561;
@@ -260,7 +265,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_24516 isInRange (Lnet/minecraft/class_1297;D)Z
 		COMMENT Checks if the distance between this entity and the {@code other} entity is less
 		COMMENT than {@code radius}.
-		ARG 1 other
+		ARG 1 entity
 		ARG 2 radius
 	METHOD method_24826 getPassengerDismountOffset (DDF)Lnet/minecraft/class_243;
 		ARG 0 vehicleWidth
@@ -271,7 +276,14 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 passenger
 	METHOD method_24830 setOnGround (Z)V
 		ARG 1 onGround
-	METHOD method_25936 getLandingBlockState ()Lnet/minecraft/class_2680;
+	METHOD method_25936 getSteppingBlockState ()Lnet/minecraft/class_2680;
+		COMMENT {@return the block state at the stepping position}
+		COMMENT
+		COMMENT @implNote Stepping position is the entity's position, with {@code 1e-05} subtracted
+		COMMENT from the Y coordinate. This means that, for example, if a player is on a carpet on
+		COMMENT a soul soil, the carpet's position would be returned.
+		COMMENT
+		COMMENT @see #getSteppingPos()
 	METHOD method_27298 shouldSpawnSprintingParticles ()Z
 	METHOD method_29239 dismountVehicle ()V
 		COMMENT Dismounts the vehicle if present.
@@ -300,9 +312,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_30022 (Lnet/minecraft/class_238;Lnet/minecraft/class_2338;)Z
 		ARG 2 pos
 	METHOD method_30076 removeFromDimension ()V
-	METHOD method_30227 getTrackedPosition ()Lnet/minecraft/class_243;
-	METHOD method_30228 updateTrackedPosition (Lnet/minecraft/class_243;)V
-		ARG 1 pos
 	METHOD method_30229 resetNetherPortalCooldown ()V
 	METHOD method_30230 hasNetherPortalCooldown ()Z
 	METHOD method_30329 getTeleportTarget (Lnet/minecraft/class_3218;)Lnet/minecraft/class_5454;
@@ -317,6 +326,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 4 worldBorder
 	METHOD method_30331 (Lnet/minecraft/class_3218;Lnet/minecraft/class_5459$class_5460;)Lnet/minecraft/class_5454;
 		ARG 2 rect
+	METHOD method_30332 (Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;)Z
+		ARG 2 pos
 	METHOD method_30632 collidesWithStateAtPos (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Z
 		ARG 1 pos
 		ARG 2 state
@@ -377,14 +388,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 2 entity
 	METHOD method_32876 emitGameEvent (Lnet/minecraft/class_5712;)V
 		ARG 1 event
-	METHOD method_32877 getGameEventHandler ()Lnet/minecraft/class_5715;
-		COMMENT Returns the game event handler for this entity.
-		COMMENT
-		COMMENT <p>Subclasses interested in listening to game events as an entity should return a
-		COMMENT handler so the {@link net.minecraft.world.event.listener.GameEventListener listener}
-		COMMENT used to receive game events can be registered to the correct dispatchers.
-		COMMENT
-		COMMENT @implNote The vanilla implementation always returns {@code null}.
 	METHOD method_33189 occludeVibrationSignals ()Z
 	METHOD method_33331 (Lnet/minecraft/class_4048;Lnet/minecraft/class_243;)V
 		ARG 2 pos
@@ -393,13 +396,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 destX
 		ARG 3 destY
 		ARG 5 destZ
-	METHOD method_33568 emitGameEvent (Lnet/minecraft/class_5712;Lnet/minecraft/class_1297;Lnet/minecraft/class_2338;)V
-		ARG 1 event
-		ARG 2 entity
-		ARG 3 pos
-	METHOD method_33569 emitGameEvent (Lnet/minecraft/class_5712;Lnet/minecraft/class_2338;)V
-		ARG 1 event
-		ARG 2 pos
 	METHOD method_33570 getMoveEffect ()Lnet/minecraft/class_1297$class_5799;
 		COMMENT Returns the possible effect(s) of an entity moving.
 		COMMENT
@@ -418,7 +414,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT any move effect}, from {@link #move(MovementType, Vec3d)}
 	METHOD method_33574 setPosition (Lnet/minecraft/class_243;)V
 		ARG 1 pos
-	METHOD method_33575 getCameraBlockPos ()Lnet/minecraft/class_2338;
 	METHOD method_33724 isRegionUnloaded ()Z
 		COMMENT Returns whether any part of this entity's bounding box is in an unloaded
 		COMMENT region of the world the entity is in.
@@ -454,13 +449,52 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_40071 shouldEscapePowderSnow ()Z
 	METHOD method_40123 getHandPosOffset (Lnet/minecraft/class_1792;)Lnet/minecraft/class_243;
 		ARG 1 item
+	METHOD method_41328 isInPose (Lnet/minecraft/class_4050;)Z
+		ARG 1 pose
+	METHOD method_42147 updateEventHandler (Ljava/util/function/BiConsumer;)V
+		ARG 1 callback
+	METHOD method_42148 hasPrimaryPassenger ()Z
+	METHOD method_43077 playSoundIfNotSilent (Lnet/minecraft/class_3414;)V
+		ARG 1 event
+	METHOD method_43078 getBodyYaw ()F
+	METHOD method_43258 getPosWithYOffset (F)Lnet/minecraft/class_2338;
+		ARG 1 offset
+	METHOD method_43259 isInRange (Lnet/minecraft/class_1297;DD)Z
+		ARG 1 entity
+		ARG 2 horizontalRadius
+		ARG 4 verticalRadius
+	METHOD method_43260 getLandingPos ()Lnet/minecraft/class_2338;
+		COMMENT {@return the landing position}
+		COMMENT
+		COMMENT @implNote Landing position is the entity's position, with {@code 0.2} subtracted
+		COMMENT from the Y coordinate. This means that, for example, if a player is on a carpet on
+		COMMENT a soul soil, the soul soil's position would be returned.
+		COMMENT
+		COMMENT @see #getSteppingPos()
+		COMMENT @see #getLandingBlockState()
+	METHOD method_43261 getLandingBlockState ()Lnet/minecraft/class_2680;
+		COMMENT {@return the block state at the landing position}
+		COMMENT
+		COMMENT @implNote Landing position is the entity's position, with {@code 0.2} subtracted
+		COMMENT from the Y coordinate. This means that, for example, if a player is on a carpet on
+		COMMENT a soul soil, the soul soil's position would be returned.
+		COMMENT
+		COMMENT @see #getLandingPos()
+	METHOD method_43389 getTrackedPosition ()Lnet/minecraft/class_7422;
+	METHOD method_43390 getSyncedPos ()Lnet/minecraft/class_243;
+	METHOD method_43391 updateTrackedPosition (DDD)V
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+	METHOD method_43688 asMessageSender ()Lnet/minecraft/class_7436;
+	METHOD method_44329 getEventSource ()Lnet/minecraft/class_1297;
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		ARG 1 state
 	METHOD method_5623 fall (DZLnet/minecraft/class_2680;Lnet/minecraft/class_2338;)V
 		ARG 1 heightDifference
 		ARG 3 onGround
-		ARG 4 landedState
+		ARG 4 state
 		ARG 5 landedPosition
 	METHOD method_5624 isSprinting ()Z
 	METHOD method_5625 getSplashSound ()Lnet/minecraft/class_3414;
@@ -912,7 +946,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5873 startRiding (Lnet/minecraft/class_1297;Z)Z
 		ARG 1 entity
 		ARG 2 force
-	METHOD method_5874 onKilledOther (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)V
+	METHOD method_5874 onKilledOther (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)Z
 		ARG 1 world
 		ARG 2 other
 	METHOD method_5875 setNoGravity (Z)V

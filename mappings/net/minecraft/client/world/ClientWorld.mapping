@@ -17,10 +17,13 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 	FIELD field_3727 networkHandler Lnet/minecraft/class_634;
 	FIELD field_3729 client Lnet/minecraft/class_310;
 	FIELD field_3733 scoreboard Lnet/minecraft/class_269;
+	FIELD field_37951 pendingUpdateManager Lnet/minecraft/class_7202;
+	FIELD field_37952 LOGGER Lorg/slf4j/Logger;
 	METHOD <init> (Lnet/minecraft/class_634;Lnet/minecraft/class_638$class_5271;Lnet/minecraft/class_5321;Lnet/minecraft/class_6880;IILjava/util/function/Supplier;Lnet/minecraft/class_761;ZJ)V
-		ARG 1 netHandler
+		ARG 1 networkHandler
 		ARG 2 properties
 		ARG 3 registryRef
+		ARG 4 dimensionTypeEntry
 		ARG 5 loadDistance
 		ARG 6 simulationDistance
 		ARG 7 profiler
@@ -71,7 +74,6 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 	METHOD method_27873 setSpawnPos (Lnet/minecraft/class_2338;F)V
 		ARG 1 pos
 		ARG 2 angle
-	METHOD method_27874 getSpawnPos ()Lnet/minecraft/class_2338;
 	METHOD method_28103 getDimensionEffects ()Lnet/minecraft/class_5294;
 	METHOD method_29089 setTime (J)V
 		ARG 1 time
@@ -83,9 +85,6 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 		ARG 7 maxZ
 		ARG 9 y
 		ARG 11 parameters
-	METHOD method_2937 setBlockStateWithoutNeighborUpdates (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
-		ARG 1 pos
-		ARG 2 state
 	METHOD method_2938 addParticle (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2394;Z)V
 		ARG 1 pos
 		ARG 2 state
@@ -97,7 +96,7 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 	METHOD method_2942 addEntity (ILnet/minecraft/class_1297;)V
 		ARG 1 id
 		ARG 2 entity
-	METHOD method_2943 randomBlockDisplayTick (IIIILjava/util/Random;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338$class_2339;)V
+	METHOD method_2943 randomBlockDisplayTick (IIIILnet/minecraft/class_5819;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338$class_2339;)V
 		ARG 1 centerX
 		ARG 2 centerY
 		ARG 3 centerZ
@@ -122,7 +121,6 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 		ARG 2 parameters
 		ARG 3 shape
 		ARG 4 y
-	METHOD method_30671 getSpawnAngle ()F
 	METHOD method_32121 (Lnet/minecraft/class_1923;Lnet/minecraft/class_6539;Lnet/minecraft/class_4700;)V
 		ARG 1 resolver
 		ARG 2 cache
@@ -152,6 +150,27 @@ CLASS net/minecraft/class_638 net/minecraft/client/world/ClientWorld
 	METHOD method_39849 markChunkRenderability (II)V
 		ARG 1 chunkX
 		ARG 2 chunkZ
+	METHOD method_41925 getPendingUpdateManager ()Lnet/minecraft/class_7202;
+	METHOD method_41926 processPendingUpdate (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_243;)V
+		ARG 1 pos
+		ARG 2 state
+		ARG 3 playerPos
+	METHOD method_41927 handlePlayerActionResponse (I)V
+		ARG 1 sequence
+	METHOD method_41928 handleBlockUpdate (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;I)V
+		ARG 1 pos
+		ARG 2 state
+		ARG 3 flags
+	METHOD method_43207 playSound (DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFZJ)V
+		ARG 1 x
+		ARG 3 y
+		ARG 5 z
+		ARG 7 event
+		ARG 8 category
+		ARG 9 volume
+		ARG 10 pitch
+		ARG 11 useDistance
+		ARG 12 seed
 	METHOD method_8435 setTimeOfDay (J)V
 		ARG 1 timeOfDay
 	METHOD method_8441 tick (Ljava/util/function/BooleanSupplier;)V

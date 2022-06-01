@@ -15,27 +15,32 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	FIELD field_30970 MAX_Y I
 	FIELD field_30971 MIN_Y I
 	FIELD field_35455 tickOrder J
+	FIELD field_36402 dimensionEntry Lnet/minecraft/class_6880;
+	FIELD field_38226 neighborUpdater Lnet/minecraft/class_7165;
+	FIELD field_38861 threadSafeRandom Lnet/minecraft/class_5819;
 	FIELD field_9223 border Lnet/minecraft/class_2784;
 	FIELD field_9226 ambientDarkness I
-	FIELD field_9229 random Ljava/util/Random;
+	FIELD field_9229 random Lnet/minecraft/class_5819;
 	FIELD field_9232 properties Lnet/minecraft/class_5269;
 	FIELD field_9233 DIRECTIONS [Lnet/minecraft/class_2350;
 	FIELD field_9234 thunderGradient F
 	FIELD field_9235 rainGradient F
 	FIELD field_9236 isClient Z
 	FIELD field_9238 lcgBlockSeedIncrement I
-	FIELD field_9247 dimension Lnet/minecraft/class_2874;
+	FIELD field_9247 dimension Lnet/minecraft/class_5321;
 	FIELD field_9249 iteratingTickingBlockEntities Z
 	FIELD field_9251 thunderGradientPrev F
 	FIELD field_9253 rainGradientPrev F
 	FIELD field_9256 lcgBlockSeed I
-	METHOD <init> (Lnet/minecraft/class_5269;Lnet/minecraft/class_5321;Lnet/minecraft/class_6880;Ljava/util/function/Supplier;ZZJ)V
+	METHOD <init> (Lnet/minecraft/class_5269;Lnet/minecraft/class_5321;Lnet/minecraft/class_6880;Ljava/util/function/Supplier;ZZJI)V
 		ARG 1 properties
 		ARG 2 registryRef
+		ARG 3 dimension
 		ARG 4 profiler
 		ARG 5 isClient
 		ARG 6 debugWorld
 		ARG 7 seed
+		ARG 9 maxChainedNeighborUpdates
 	METHOD method_16107 getProfiler ()Lnet/minecraft/class_3695;
 	METHOD method_16109 scheduleBlockRerenderIfNeeded (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)V
 		ARG 1 pos
@@ -126,16 +131,39 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 2 state
 	METHOD method_31596 (Ljava/util/function/Predicate;Ljava/util/List;Lnet/minecraft/class_5575;Lnet/minecraft/class_1297;)V
 		ARG 3 entity
-	METHOD method_32886 emitGameEvent (Lnet/minecraft/class_1297;Lnet/minecraft/class_5712;Lnet/minecraft/class_2338;I)V
-		ARG 1 entity
-		ARG 2 gameEvent
-		ARG 3 pos
-		ARG 4 range
 	METHOD method_38989 shouldUpdatePostDeath (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_39425 shouldTickBlocksInChunk (J)Z
 		COMMENT {@return whether the blocks in the specified chunk should get ticked}
 		ARG 1 chunkPos
+	METHOD method_40134 getDimensionEntry ()Lnet/minecraft/class_6880;
+	METHOD method_41410 updateNeighbor (Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338;Z)V
+		ARG 1 state
+		ARG 2 pos
+		ARG 3 sourceBlock
+		ARG 4 sourcePos
+		ARG 5 notify
+	METHOD method_41411 shouldTickBlockPos (Lnet/minecraft/class_2338;)Z
+		ARG 1 pos
+	METHOD method_43126 getSpawnPos ()Lnet/minecraft/class_2338;
+	METHOD method_43127 getSpawnAngle ()F
+	METHOD method_43128 playSound (Lnet/minecraft/class_1657;DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
+		ARG 1 player
+		ARG 2 x
+		ARG 4 y
+		ARG 6 z
+		ARG 8 sound
+		ARG 9 category
+		ARG 10 volume
+		ARG 11 pitch
+	METHOD method_43129 playSoundFromEntity (Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
+		ARG 1 player
+		ARG 2 entity
+		ARG 3 sound
+		ARG 4 category
+		ARG 5 volume
+		ARG 6 pitch
+	METHOD method_44013 getDimensionKey ()Lnet/minecraft/class_5321;
 	METHOD method_8413 updateListeners (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;I)V
 		ARG 1 pos
 		ARG 2 oldState
@@ -178,7 +206,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 blockEntity
 	METHOD method_8442 getSkyAngleRadians (F)F
 		ARG 1 tickDelta
-	METHOD method_8449 playSoundFromEntity (Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
+	METHOD method_8449 playSoundFromEntity (Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFJ)V
 		ARG 1 except
 			COMMENT the player that should not receive the sound, or {@code null}
 		ARG 2 entity
@@ -186,13 +214,14 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 4 category
 		ARG 5 volume
 		ARG 6 pitch
+		ARG 7 seed
 	METHOD method_8450 getGameRules ()Lnet/minecraft/class_1928;
 	METHOD method_8452 updateNeighborsAlways (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;)V
 		COMMENT Emits a neighbor update to all 6 neighboring blocks of {@code pos}.
 		COMMENT
 		COMMENT @see #updateNeighborsExcept(BlockPos, Block, Direction)
 		ARG 1 pos
-		ARG 2 block
+		ARG 2 sourceBlock
 	METHOD method_8454 createExplosion (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1927$class_4179;)Lnet/minecraft/class_1927;
 		COMMENT Creates an explosion.
 		ARG 1 entity
@@ -217,7 +246,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8459 isEmittingRedstonePower (Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Z
 		ARG 1 pos
 		ARG 2 direction
-	METHOD method_8465 playSound (Lnet/minecraft/class_1657;DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
+	METHOD method_8465 playSound (Lnet/minecraft/class_1657;DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFJ)V
 		ARG 1 except
 			COMMENT the player that should not receive the sound, or {@code null}
 		ARG 2 x
@@ -227,6 +256,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 9 category
 		ARG 10 volume
 		ARG 11 pitch
+		ARG 12 seed
 	METHOD method_8466 addParticle (Lnet/minecraft/class_2394;ZDDDDDD)V
 		ARG 1 parameters
 		ARG 2 alwaysSpawn
@@ -273,13 +303,13 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8488 getReceivedStrongRedstonePower (Lnet/minecraft/class_2338;)I
 		ARG 1 pos
 	METHOD method_8492 updateNeighbor (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338;)V
-		COMMENT Triggers a neighbor update originating from {@code pos} at
-		COMMENT {@code neighborPos}.
+		COMMENT Triggers a neighbor update originating from {@code sourcePos} at
+		COMMENT {@code pos}.
 		COMMENT
 		COMMENT @see #updateNeighborsAlways(BlockPos, Block)
 		ARG 1 pos
 		ARG 2 sourceBlock
-		ARG 3 neighborPos
+		ARG 3 sourcePos
 	METHOD method_8494 addImportantParticle (Lnet/minecraft/class_2394;DDDDDD)V
 		ARG 1 parameters
 		ARG 2 x

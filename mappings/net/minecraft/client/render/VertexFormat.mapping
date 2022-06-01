@@ -1,45 +1,46 @@
 CLASS net/minecraft/class_293 net/minecraft/client/render/VertexFormat
 	FIELD field_1597 offsets Lit/unimi/dsi/fastutil/ints/IntList;
-	FIELD field_1600 size I
+	FIELD field_1600 vertexSizeByte I
 	FIELD field_1602 elements Lcom/google/common/collect/ImmutableList;
 	FIELD field_29340 elementMap Lcom/google/common/collect/ImmutableMap;
-	FIELD field_29341 vertexArray I
-	FIELD field_29342 vertexBuffer I
-	FIELD field_29343 elementBuffer I
+	FIELD field_38984 buffer Lnet/minecraft/class_291;
 	METHOD <init> (Lcom/google/common/collect/ImmutableMap;)V
 		ARG 1 elementMap
 	METHOD equals (Ljava/lang/Object;)Z
 		ARG 1 o
 	METHOD method_1357 getElements ()Lcom/google/common/collect/ImmutableList;
 	METHOD method_1359 getVertexSizeInteger ()I
-	METHOD method_1362 getVertexSize ()I
-	METHOD method_22649 startDrawing ()V
-	METHOD method_22651 endDrawing ()V
-	METHOD method_34445 getShaderAttributes ()Lcom/google/common/collect/ImmutableList;
-	METHOD method_34446 getVertexArray ()I
-	METHOD method_34447 getVertexBuffer ()I
-	METHOD method_34448 getElementBuffer ()I
-	METHOD method_34449 innerStartDrawing ()V
-	METHOD method_34450 innerEndDrawing ()V
-	CLASS class_5595 IntType
-		FIELD field_27374 type I
+	METHOD method_1362 getVertexSizeByte ()I
+	METHOD method_22649 setupState ()V
+		COMMENT Specifies for OpenGL how the vertex data should be interpreted.
+	METHOD method_22651 clearState ()V
+	METHOD method_34445 getAttributeNames ()Lcom/google/common/collect/ImmutableList;
+	METHOD method_34449 setupStateInternal ()V
+	METHOD method_34450 clearStateInternal ()V
+	METHOD method_43446 getBuffer ()Lnet/minecraft/class_291;
+	CLASS class_5595 IndexType
+		FIELD field_27374 glType I
 		FIELD field_27375 size I
 		METHOD <init> (Ljava/lang/String;III)V
-			ARG 3 type
+			ARG 3 glType
 			ARG 4 size
-		METHOD method_31972 getSmallestTypeFor (I)Lnet/minecraft/class_293$class_5595;
-			COMMENT Gets the smallest type in which the given number fits.
-			COMMENT
-			COMMENT @return the smallest type
-			ARG 0 number
-				COMMENT a number from 8 to 32 bits of memory
+		METHOD method_31972 smallestFor (I)Lnet/minecraft/class_293$class_5595;
+			COMMENT {@return the smallest type in which {@code indexCount} fits}
+			ARG 0 indexCount
 	CLASS class_5596 DrawMode
-		FIELD field_27383 mode I
-		FIELD field_27384 vertexCount I
-		FIELD field_27385 size I
-		METHOD <init> (Ljava/lang/String;IIII)V
-			ARG 3 mode
-			ARG 4 vertexCount
-			ARG 5 size
-		METHOD method_31973 getSize (I)I
+		FIELD field_27383 glMode I
+		FIELD field_27384 firstVertexCount I
+			COMMENT The number of vertices needed to form a first shape.
+		FIELD field_27385 additionalVertexCount I
+			COMMENT The number of vertices needed to form an additional shape. In other
+			COMMENT words, it's {@code firstVertexCount - s} where {@code s} is the number
+			COMMENT of vertices shared with the previous shape.
+		FIELD field_38878 shareVertices Z
+			COMMENT Whether there are shared vertices in consecutive shapes.
+		METHOD <init> (Ljava/lang/String;IIIIZ)V
+			ARG 3 glMode
+			ARG 4 firstVertexCount
+			ARG 5 additionalVertexCount
+			ARG 6 shareVertices
+		METHOD method_31973 getIndexCount (I)I
 			ARG 1 vertexCount

@@ -9,13 +9,13 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 	FIELD field_2014 lastHealthValue I
 	FIELD field_2015 playerListHud Lnet/minecraft/class_355;
 	FIELD field_2016 title Lnet/minecraft/class_2561;
-	FIELD field_2017 titleRemainTicks I
+	FIELD field_2017 titleStayTicks I
 	FIELD field_2018 overlayMessage Lnet/minecraft/class_2561;
 	FIELD field_2019 PUMPKIN_BLUR Lnet/minecraft/class_2960;
 	FIELD field_2020 VIGNETTE_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_2021 chatHud Lnet/minecraft/class_338;
-	FIELD field_2022 listeners Ljava/util/Map;
-	FIELD field_2023 titleTotalTicks I
+	FIELD field_2022 listeners Ljava/util/List;
+	FIELD field_2023 titleRemainTicks I
 	FIELD field_2024 itemRenderer Lnet/minecraft/class_918;
 	FIELD field_2025 spectatorHud Lnet/minecraft/class_365;
 	FIELD field_2026 debugHud Lnet/minecraft/class_340;
@@ -26,7 +26,7 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 	FIELD field_2031 currentStack Lnet/minecraft/class_1799;
 	FIELD field_2032 heartJumpEndTick J
 	FIELD field_2033 renderHealthValue I
-	FIELD field_2034 random Ljava/util/Random;
+	FIELD field_2034 random Lnet/minecraft/class_5819;
 	FIELD field_2035 client Lnet/minecraft/class_310;
 	FIELD field_2036 titleFadeOutTicks I
 	FIELD field_2037 titleFadeInTicks I
@@ -43,8 +43,9 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 	FIELD field_35428 autosaveIndicatorAlpha F
 	FIELD field_35429 lastAutosaveIndicatorAlpha F
 	FIELD field_35430 SAVING_LEVEL_TEXT Lnet/minecraft/class_2561;
-	METHOD <init> (Lnet/minecraft/class_310;)V
+	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_918;)V
 		ARG 1 client
+		ARG 2 itemRenderer
 	METHOD method_1731 updateVignetteDarkness (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
 	METHOD method_1732 setRecordPlayingOverlay (Lnet/minecraft/class_2561;)V
@@ -87,10 +88,6 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 	METHOD method_1754 renderExperienceBar (Lnet/minecraft/class_4587;I)V
 		ARG 1 matrices
 		ARG 2 x
-	METHOD method_1755 addChatMessage (Lnet/minecraft/class_2556;Lnet/minecraft/class_2561;Ljava/util/UUID;)V
-		ARG 1 type
-		ARG 2 message
-		ARG 3 sender
 	METHOD method_1756 getTextRenderer ()Lnet/minecraft/class_327;
 	METHOD method_1757 renderScoreboardSidebar (Lnet/minecraft/class_4587;Lnet/minecraft/class_266;)V
 		ARG 1 matrices
@@ -130,7 +127,7 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 		ARG 1 scale
 	METHOD method_34001 setTitleTicks (III)V
 		ARG 1 fadeInTicks
-		ARG 2 remainTicks
+		ARG 2 stayTicks
 		ARG 3 fadeOutTicks
 	METHOD method_34002 setSubtitle (Lnet/minecraft/class_2561;)V
 		ARG 1 subtitle
@@ -162,6 +159,25 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 	METHOD method_39192 renderAutosaveIndicator (Lnet/minecraft/class_4587;)V
 		ARG 1 matrices
 	METHOD method_39193 tickAutosaveIndicator ()V
+	METHOD method_43591 onGameMessage (Lnet/minecraft/class_2556;Lnet/minecraft/class_2561;)V
+		COMMENT Handles a game message.
+		COMMENT
+		COMMENT @implNote This method discards the message if {@linkplain #extractSender the extracted
+		COMMENT sender} is blocked. Otherwise, it calls {@link ClientChatListener#onChatMessage}.
+		COMMENT
+		COMMENT @see net.minecraft.client.network.ClientPlayNetworkHandler#onGameMessage
+		ARG 1 type
+		ARG 2 message
+	METHOD method_43592 onChatMessage (Lnet/minecraft/class_2556;Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;)V
+		COMMENT Handles a chat message.
+		COMMENT
+		COMMENT @implNote This method discards the message if the sender is blocked.
+		COMMENT Otherwise, it calls {@link ClientChatListener#onChatMessage}.
+		COMMENT
+		COMMENT @see net.minecraft.client.network.ClientPlayNetworkHandler#onChatMessage
+		ARG 1 type
+		ARG 2 message
+		ARG 3 sender
 	CLASS class_6411 HeartType
 		FIELD field_33950 textureIndex I
 		FIELD field_33951 hasBlinkingTexture Z

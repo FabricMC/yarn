@@ -32,6 +32,10 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	FIELD field_14147 topmostRiddenEntity Lnet/minecraft/class_1297;
 	FIELD field_14148 server Lnet/minecraft/server/MinecraftServer;
 	FIELD field_29778 KEEP_ALIVE_INTERVAL I
+	FIELD field_37280 MAX_BREAK_SQUARED_DISTANCE D
+	FIELD field_37282 sequence I
+	FIELD field_39261 previewTaskRunner Lnet/minecraft/class_7493;
+	FIELD field_39394 lastMessageTimestamp Ljava/util/concurrent/atomic/AtomicReference;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_2535;Lnet/minecraft/class_3222;)V
 		ARG 1 server
 		ARG 2 connection
@@ -54,8 +58,6 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	METHOD method_14369 sendPacket (Lnet/minecraft/class_2596;Lio/netty/util/concurrent/GenericFutureListener;)V
 		ARG 1 packet
 		ARG 2 listener
-	METHOD method_14370 executeCommand (Ljava/lang/String;)V
-		ARG 1 input
 	METHOD method_14371 isMovementInvalid (DDDFF)Z
 		COMMENT {@return whether this movement is invalid}
 		COMMENT
@@ -69,6 +71,8 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 6 yaw
 		ARG 7 pitch
 	METHOD method_14372 syncWithPlayerPosition ()V
+	METHOD method_17820 (Lnet/minecraft/class_2840;Lnet/minecraft/class_1860;)V
+		ARG 2 recipe
 	METHOD method_18784 tick ()V
 	METHOD method_19507 isHost ()Z
 	METHOD method_20630 isPlayerNotCollidingWithBlocks (Lnet/minecraft/class_4538;Lnet/minecraft/class_238;)Z
@@ -82,11 +86,13 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 1 stack
 	METHOD method_29780 isEntityOnAir (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
+	METHOD method_31274 (ILjava/util/List;)V
+		ARG 2 texts
 	METHOD method_31275 filterText (Ljava/lang/Object;Ljava/util/function/Consumer;Ljava/util/function/BiFunction;)V
 		ARG 1 text
 		ARG 2 consumer
 		ARG 3 backingFilterer
-	METHOD method_31276 addBook (Lnet/minecraft/class_5513$class_5837;Ljava/util/List;I)V
+	METHOD method_31276 addBook (Lnet/minecraft/class_5837;Ljava/util/List;I)V
 		ARG 1 title
 		ARG 2 pages
 		ARG 3 slotId
@@ -102,8 +108,15 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	METHOD method_31282 onSignUpdate (Lnet/minecraft/class_2877;Ljava/util/List;)V
 		ARG 1 packet
 		ARG 2 signText
-	METHOD method_31286 handleMessage (Lnet/minecraft/class_5513$class_5837;)V
-		ARG 1 message
+	METHOD method_31283 (ILjava/util/List;)V
+		ARG 2 texts
+	METHOD method_31284 (Ljava/util/function/Consumer;Ljava/lang/Object;Ljava/lang/Object;)V
+		ARG 3 message
+	METHOD method_31285 (Lnet/minecraft/class_2877;Ljava/util/List;)V
+		ARG 2 texts
+	METHOD method_31286 handleMessage (Lnet/minecraft/class_2797;Lnet/minecraft/class_5837;)V
+		ARG 1 packet
+		ARG 2 message
 	METHOD method_33562 requestTeleportAndDismount (DDDFF)V
 		ARG 1 x
 		ARG 3 y
@@ -122,14 +135,54 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 1 messages
 		ARG 2 postProcessor
 		ARG 3 book
-	METHOD method_33797 (Ljava/util/function/UnaryOperator;Lnet/minecraft/class_5513$class_5837;)Lnet/minecraft/class_2519;
+	METHOD method_33797 (Ljava/util/function/UnaryOperator;Lnet/minecraft/class_5837;)Lnet/minecraft/class_2519;
 		ARG 1 message
-	METHOD method_33798 (Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;Lnet/minecraft/class_3222;)Lnet/minecraft/class_2561;
-		ARG 3 player
+	METHOD method_33799 (Ljava/lang/String;)Ljava/lang/String;
+		ARG 0 text
 	METHOD method_34882 clampHorizontal (D)D
 		ARG 0 d
 	METHOD method_34883 clampVertical (D)D
 		ARG 0 d
+	METHOD method_41255 updateSequence (I)V
+		ARG 1 sequence
+	METHOD method_43508 hasIllegalCharacter (Ljava/lang/String;)Z
+		COMMENT {@return whether {@code message} contains an illegal character}
+		COMMENT
+		COMMENT @see net.minecraft.SharedConstants#isValidChar(char)
+		ARG 0 message
+	METHOD method_43509 (Lnet/minecraft/class_2797;Lnet/minecraft/class_5837;)V
+		ARG 2 message
+	METHOD method_43668 checkChatEnabled ()Z
+	METHOD method_43669 checkForSpam ()V
+	METHOD method_44154 (ILnet/minecraft/class_2561;)V
+		ARG 2 decorated
+	METHOD method_44155 handleDecoratedMessage (Lnet/minecraft/class_5837;)V
+		ARG 1 message
+	METHOD method_44156 decorateCommand (Lcom/mojang/brigadier/context/CommandContextBuilder;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 builder
+	METHOD method_44157 isExpired (Ljava/time/Instant;)Z
+		COMMENT {@return whether the message sent at {@code timestamp} is expired}
+		COMMENT
+		COMMENT <p>If {@code true}, the message will be discarded.
+		COMMENT
+		COMMENT @see ChatMessageC2SPacket#TIME_TO_LIVE
+		ARG 1 timestamp
+	METHOD method_44158 (Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
+		ARG 1 decorated
+	METHOD method_44159 decorate (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 query
+	METHOD method_44160 isDisordered (Ljava/time/Instant;)Z
+		COMMENT {@return whether the message sent at {@code timestamp} is received with improper order}
+		COMMENT
+		COMMENT <p>If {@code true}, the message will be discarded.
+		ARG 1 timestamp
+	METHOD method_44161 decorateChat (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 query
+	METHOD method_44162 decorateCommand (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 query
+	METHOD method_44318 sendChatPreviewPacket (ILnet/minecraft/class_2561;)V
+		ARG 1 queryId
+		ARG 2 preview
 	CLASS 1
 		METHOD method_33897 processInteract (Lnet/minecraft/class_1268;Lnet/minecraft/class_3244$class_5860;)V
 			ARG 1 hand

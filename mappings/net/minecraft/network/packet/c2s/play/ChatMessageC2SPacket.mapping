@@ -1,21 +1,36 @@
 CLASS net/minecraft/class_2797 net/minecraft/network/packet/c2s/play/ChatMessageC2SPacket
 	COMMENT A packet used to send a chat message to the server.
 	COMMENT
-	COMMENT <p>This truncates the message to at most {@value #MAX_LENGTH} characters
-	COMMENT before sending to the server on the client. If the server receives the
-	COMMENT message longer than {@value #MAX_LENGTH} characters, it will reject
-	COMMENT the message and disconnect the client.
+	COMMENT <p>This truncates the message to at most 256 characters before sending to
+	COMMENT the server on the client. If the server receives the message longer than
+	COMMENT 256 characters, it will reject the message and disconnect the client.
 	COMMENT
 	COMMENT <p>If the message contains an invalid character (see {@link
 	COMMENT net.minecraft.SharedConstants#isValidChar isValidChar}), the server will
 	COMMENT reject the message and disconnect the client.
 	COMMENT
+	COMMENT <p>Messages that took more than {@link #TIME_TO_LIVE} to reach the server
+	COMMENT are considered expired and will be discarded. Messages can also be discarded
+	COMMENT if the server receives them with improper order.
+	COMMENT
 	COMMENT @see net.minecraft.client.network.ClientPlayerEntity#sendChatMessage
 	COMMENT @see net.minecraft.server.network.ServerPlayNetworkHandler#onChatMessage
 	FIELD field_12764 chatMessage Ljava/lang/String;
-	FIELD field_33359 MAX_LENGTH I
-	METHOD <init> (Ljava/lang/String;)V
+	FIELD field_39086 TIME_TO_LIVE Ljava/time/Duration;
+	FIELD field_39087 timestamp Ljava/time/Instant;
+	FIELD field_39088 signature Lnet/minecraft/class_3515$class_7425;
+	FIELD field_39390 previewed Z
+	METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_7469;Z)V
 		ARG 1 chatMessage
+		ARG 2 signature
+		ARG 3 previewed
 	METHOD <init> (Lnet/minecraft/class_2540;)V
 		ARG 1 buf
 	METHOD method_12114 getChatMessage ()Ljava/lang/String;
+	METHOD method_43899 createSignatureInstance (Ljava/util/UUID;)Lnet/minecraft/class_7469;
+		ARG 1 sender
+	METHOD method_44136 isPreviewed ()Z
+		COMMENT {@return whether the chat message was previewed before sending}
+		COMMENT
+		COMMENT @apiNote Chat decorators can produce signed decorated content only if it was previewed.
+	METHOD method_44315 getTimestamp ()Ljava/time/Instant;

@@ -11,7 +11,15 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_30064 USING_ITEM_FLAG I
 	FIELD field_30065 OFF_HAND_ACTIVE_FLAG I
 	FIELD field_30066 USING_RIPTIDE_FLAG I
+	FIELD field_30068 BABY_SCALE_FACTOR F
+	FIELD field_30071 EQUIPMENT_SLOT_ID I
+	FIELD field_30073 GLOWING_FLAG I
+	FIELD field_30076 GRAVITY D
+	FIELD field_30077 DEATH_TICKS I
+	FIELD field_30079 FALL_FLYING_FLAG I
 	FIELD field_30082 noDrag Z
+	FIELD field_33908 MAX_ENTITY_VIEWING_DISTANCE D
+	FIELD field_37421 experienceDroppingDisabled Z
 	FIELD field_6210 bodyTrackingIncrements I
 	FIELD field_6211 lastLimbDistance F
 	FIELD field_6212 sidewaysSpeed F
@@ -185,7 +193,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT
 		COMMENT <p>To control the details of experience dropping, consider overriding
 		COMMENT {@link #shouldAlwaysDropXp()}, {@link #shouldDropXp()}, and
-		COMMENT {@link #getXpToDrop(PlayerEntity)}.
+		COMMENT {@link #getXpToDrop()}.
 	METHOD method_24518 isHolding (Lnet/minecraft/class_1792;)Z
 		COMMENT Checks if this entity is holding a certain item.
 		COMMENT
@@ -220,10 +228,15 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 			COMMENT the source entity or {@code null} for non-entity sources
 	METHOD method_26084 (Lnet/minecraft/class_1309;)V
 		ARG 0 player
+	METHOD method_26317 applyFluidMovingSpeed (DZLnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 1 gravity
+		ARG 3 falling
+		ARG 4 motion
 	METHOD method_26318 applyMovementInput (Lnet/minecraft/class_243;F)Lnet/minecraft/class_243;
 		ARG 1 movementInput
 		ARG 2 slipperiness
 	METHOD method_26319 canWalkOnFluid (Lnet/minecraft/class_3610;)Z
+		ARG 1 state
 	METHOD method_26825 getAttributeValue (Lnet/minecraft/class_1320;)D
 		ARG 1 attribute
 	METHOD method_26826 getAttributeBaseValue (Lnet/minecraft/class_1320;)D
@@ -292,8 +305,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_32326 getPreferredEquipmentSlot (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1304;
 		ARG 0 stack
 	METHOD method_33190 canTakeDamage ()Z
-	METHOD method_33579 readFromPacket (Lnet/minecraft/class_2610;)V
-		ARG 1 packet
 	METHOD method_35053 hasNoDrag ()Z
 	METHOD method_35054 setNoDrag (Z)V
 		ARG 1 noDrag
@@ -320,6 +331,13 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 stack
 	METHOD method_37416 getJumpBoostVelocityModifier ()D
 	METHOD method_39760 getFallSounds ()Lnet/minecraft/class_1309$class_6823;
+	METHOD method_41329 disableExperienceDropping ()V
+	METHOD method_41330 isExperienceDroppingDisabled ()Z
+	METHOD method_42149 disablesShield ()Z
+	METHOD method_44201 isArmorSlot (Lnet/minecraft/class_1304;)Z
+		ARG 1 slot
+	METHOD method_44202 playEquipSound (Lnet/minecraft/class_1799;)V
+		ARG 1 stack
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
 	METHOD method_5989 getLootTable ()Lnet/minecraft/class_2960;
@@ -398,7 +416,15 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6035 tickRiptide (Lnet/minecraft/class_238;Lnet/minecraft/class_238;)V
 		ARG 1 a
 		ARG 2 b
-	METHOD method_6036 applyEnchantmentsToDamage (Lnet/minecraft/class_1282;F)F
+	METHOD method_6036 modifyAppliedDamage (Lnet/minecraft/class_1282;F)F
+		COMMENT {@return the modified damage value for the applied {@code damage}}
+		COMMENT
+		COMMENT @apiNote Subclasses should override this to make the entity take reduced damage.
+		COMMENT
+		COMMENT @implNote This applies various {@linkplain net.minecraft.enchantment.ProtectionEnchantment
+		COMMENT protection enchantments} and the resistance effect. {@link
+		COMMENT net.minecraft.entity.mob.WitchEntity} uses this to negate their own damage and reduce the
+		COMMENT applied status effect damage.
 		ARG 1 source
 		ARG 2 amount
 	METHOD method_6037 spawnItemParticles (Lnet/minecraft/class_1799;I)V
@@ -420,7 +446,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6049 canHaveStatusEffect (Lnet/minecraft/class_1293;)Z
 		ARG 1 effect
 	METHOD method_6050 tickStatusEffects ()V
-	METHOD method_6051 getRandom ()Ljava/util/Random;
+	METHOD method_6051 getRandom ()Lnet/minecraft/class_5819;
 	METHOD method_6052 getAttacking ()Lnet/minecraft/class_1309;
 	METHOD method_6053 tickFallFlying ()V
 	METHOD method_6054 shouldDropXp ()Z
@@ -433,7 +459,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT
 		COMMENT @see #dropXp()
 		COMMENT @see #shouldAlwaysDropXp()
-		COMMENT @see #getXpToDrop(PlayerEntity)
+		COMMENT @see #getXpToDrop()
 	METHOD method_6055 getHandSwingProgress (F)F
 		ARG 1 tickDelta
 	METHOD method_6056 damageShield (F)V
@@ -462,7 +488,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT other checks.
 		COMMENT
 		COMMENT @see #dropXp()
-		COMMENT @see #getXpToDrop(PlayerEntity)
+		COMMENT @see #getXpToDrop()
 	METHOD method_6072 updateLeaningPitch ()V
 	METHOD method_6073 setAbsorptionAmount (F)V
 		ARG 1 amount
@@ -475,7 +501,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 pos
 		ARG 2 state
 	METHOD method_6078 onDeath (Lnet/minecraft/class_1282;)V
-		ARG 1 source
+		ARG 1 damageSource
 	METHOD method_6079 getOffHandStack ()Lnet/minecraft/class_1799;
 	METHOD method_6081 getRecentDamageSource ()Lnet/minecraft/class_1282;
 	METHOD method_6082 teleport (DDDZ)Z
@@ -500,7 +526,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6091 travel (Lnet/minecraft/class_243;)V
 		COMMENT Allows you to do certain speed and velocity calculations. This is useful for custom vehicle behavior, or custom entity movement. This is not to be confused with AI.
 		COMMENT
-		COMMENT <p>See vanilla examples of {@linkplain net.minecraft.entity.passive.HorseBaseEntity#travel
+		COMMENT <p>See vanilla examples of {@linkplain net.minecraft.entity.passive.AbstractHorseEntity#travel
 		COMMENT custom horse vehicle} and {@linkplain net.minecraft.entity.mob.FlyingEntity#travel
 		COMMENT flying entities}.
 		ARG 1 movementInput
@@ -545,18 +571,13 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6107 getSoundVolume ()F
 	METHOD method_6108 updatePostDeath ()V
 	METHOD method_6109 isBaby ()Z
-	METHOD method_6110 getXpToDrop (Lnet/minecraft/class_1657;)I
+	METHOD method_6110 getXpToDrop ()I
 		COMMENT Called when this entity is killed and returns the amount of experience
 		COMMENT to drop.
-		COMMENT
-		COMMENT <p>{@code player} may be {@code null} if {@linkplain #shouldAlwaysDropXp
-		COMMENT shouldAlwaysDropXp()} returns {@code true}.
 		COMMENT
 		COMMENT @see #dropXp()
 		COMMENT @see #shouldAlwaysDropXp()
 		COMMENT @see #shouldDropXp()
-		ARG 1 player
-			COMMENT the attacking player
 	METHOD method_6111 removeStatusEffectInternal (Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;
 		COMMENT Removes a status effect from this entity without calling any listener.
 		COMMENT
@@ -571,8 +592,10 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6114 onAttacking (Lnet/minecraft/class_1297;)V
 		ARG 1 target
 	METHOD method_6115 isUsingItem ()Z
-	METHOD method_6116 onEquipStack (Lnet/minecraft/class_1799;)V
-		ARG 1 stack
+	METHOD method_6116 onEquipStack (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)V
+		ARG 1 slot
+		ARG 2 oldStack
+		ARG 3 newStack
 	METHOD method_6117 getLastAttackedTime ()I
 	METHOD method_6118 getEquippedStack (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
 		ARG 1 slot

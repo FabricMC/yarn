@@ -1,0 +1,48 @@
+CLASS net/minecraft/class_7469 net/minecraft/network/encryption/ChatMessageSignature
+	COMMENT A signature for chat messages, consisting of the sender, the timestamp, and the signature data.
+	FIELD comp_799 timestamp Ljava/time/Instant;
+	METHOD comp_799 timestamp ()Ljava/time/Instant;
+	METHOD method_43859 none ()Lnet/minecraft/class_7469;
+	METHOD method_43860 verify (Lnet/minecraft/class_7500;Ljava/lang/String;)Z
+		COMMENT {@return whether {@code message} can be verified with this signature}
+		COMMENT
+		COMMENT @throws SignatureException when verifying fails
+		ARG 1 verifier
+		ARG 2 message
+			COMMENT the message to verify
+	METHOD method_43861 verify (Lnet/minecraft/class_7500;Lnet/minecraft/class_2561;)Z
+		COMMENT {@return whether {@code message} can be verified with this signature}
+		ARG 1 verifier
+		ARG 2 message
+	METHOD method_43862 updateSignature (Lnet/minecraft/class_7498$class_7499;Lnet/minecraft/class_2561;Ljava/util/UUID;Ljava/time/Instant;J)V
+		COMMENT Updates {@code updater} with the passed parameters.
+		COMMENT
+		COMMENT @implNote The data to be signed is {@code salt}, followed by big-endian ordered
+		COMMENT {@code uuid}, followed by {@code time} as seconds from the UTC epoch, followed by
+		COMMENT UTF-8 encoded {@code message} bytes.
+		COMMENT
+		COMMENT @throws SignatureException when updating signature fails
+		COMMENT
+		COMMENT @see ChatMessageSigner#sign(net.minecraft.network.encryption.Signer, Text)
+		COMMENT @see #verify
+		ARG 0 updater
+		ARG 1 message
+		ARG 2 sender
+		ARG 3 time
+		ARG 4 salt
+	METHOD method_43863 toByteArray (Lnet/minecraft/class_2561;)[B
+		ARG 0 message
+	METHOD method_44124 canVerify ()Z
+		COMMENT {@return whether the signature can be verified}
+		COMMENT
+		COMMENT <p>Verifiable signature is not the same as verified signature. A signatures is verifiable
+		COMMENT if it has proper sender UUID and signature data. However, it can still fail to verify.
+	METHOD method_44308 (Lnet/minecraft/class_2561;Lnet/minecraft/class_7498$class_7499;)V
+		ARG 2 updater
+	METHOD method_44336 canVerifyFrom (Ljava/util/UUID;)Z
+		COMMENT {@return whether the message is from {@code expectedSender} and the signature
+		COMMENT can be verified}
+		COMMENT
+		COMMENT <p>Verifiable signature is not the same as verified signature. A signatures is verifiable
+		COMMENT if it has proper sender UUID and signature data. However, it can still fail to verify.
+		ARG 1 expectedSender

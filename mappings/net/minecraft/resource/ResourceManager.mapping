@@ -2,7 +2,7 @@ CLASS net/minecraft/class_3300 net/minecraft/resource/ResourceManager
 	COMMENT Provides resource loading capabilities to Minecraft.
 	METHOD method_14487 getAllNamespaces ()Ljava/util/Set;
 		COMMENT Gets a set of all namespaces offered by the resource packs loaded by this manager.
-	METHOD method_14488 findResources (Ljava/lang/String;Ljava/util/function/Predicate;)Ljava/util/Collection;
+	METHOD method_14488 findResources (Ljava/lang/String;Ljava/util/function/Predicate;)Ljava/util/Map;
 		COMMENT Returns a sorted list of identifiers matching a path predicate.
 		COMMENT
 		COMMENT <p>Scanning begins in {@code startingPath} and each candidate file present under that directory
@@ -14,7 +14,7 @@ CLASS net/minecraft/class_3300 net/minecraft/resource/ResourceManager
 		COMMENT @return the list matching identifiers
 		ARG 1 startingPath
 			COMMENT the starting path to begin scanning from
-		ARG 2 pathPredicate
+		ARG 2 allowedPathPredicate
 			COMMENT a predicate to determine whether a path should be included or not
 	METHOD method_14489 getAllResources (Lnet/minecraft/class_2960;)Ljava/util/List;
 		COMMENT Gets all of the available resources to the corresponding resource identifier.
@@ -23,18 +23,11 @@ CLASS net/minecraft/class_3300 net/minecraft/resource/ResourceManager
 		COMMENT list is what would be returned normally by {@link #getResource}
 		COMMENT
 		COMMENT <p>Each resource in this returned list must be closed to avoid resource leaks.
-		COMMENT
-		COMMENT @throws java.io.FileNotFoundException if no matching resources could be found (i.e. if the list would be empty)
-		COMMENT @throws IOException if resources were found, but any one of them could not be opened to be read.
-		ARG 1 id
-			COMMENT the resource identifier to search for
-	METHOD method_18234 containsResource (Lnet/minecraft/class_2960;)Z
-		COMMENT Checks whether any of the currently-loaded resource packs contain an entry for the given id.
-		COMMENT
-		COMMENT <p>Starts by querying the resource pack with the highest priority to lowest until it finds one that
-		COMMENT responds to the requested identifier.
 		ARG 1 id
 			COMMENT the resource identifier to search for
 	METHOD method_29213 streamResourcePacks ()Ljava/util/stream/Stream;
 		COMMENT Gets a stream of loaded resource packs in increasing order of priority.
+	METHOD method_41265 findAllResources (Ljava/lang/String;Ljava/util/function/Predicate;)Ljava/util/Map;
+		ARG 1 startingPath
+		ARG 2 allowedPathPredicate
 	CLASS class_5353 Empty

@@ -1,8 +1,9 @@
 CLASS net/minecraft/class_2170 net/minecraft/server/command/CommandManager
 	FIELD field_9832 dispatcher Lcom/mojang/brigadier/CommandDispatcher;
 	FIELD field_9833 LOGGER Lorg/slf4j/Logger;
-	METHOD <init> (Lnet/minecraft/class_2170$class_5364;)V
+	METHOD <init> (Lnet/minecraft/class_2170$class_5364;Lnet/minecraft/class_7157;)V
 		ARG 1 environment
+		ARG 2 commandRegistryAccess
 	METHOD method_23917 getException (Lcom/mojang/brigadier/ParseResults;)Lcom/mojang/brigadier/exceptions/CommandSyntaxException;
 		ARG 0 parse
 	METHOD method_30851 (Lcom/mojang/brigadier/arguments/ArgumentType;)Ljava/lang/String;
@@ -10,14 +11,19 @@ CLASS net/minecraft/class_2170 net/minecraft/server/command/CommandManager
 	METHOD method_30852 checkMissing ()V
 	METHOD method_30853 (Lcom/mojang/brigadier/arguments/ArgumentType;)Z
 		ARG 0 type
-	METHOD method_9235 getDispatcher ()Lcom/mojang/brigadier/CommandDispatcher;
-	METHOD method_9236 (Ljava/lang/String;Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
-		ARG 1 style
-	METHOD method_9237 (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/tree/CommandNode;Ljava/util/Collection;)V
+	METHOD method_41710 (Lcom/mojang/brigadier/CommandDispatcher;Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/tree/CommandNode;Ljava/util/Collection;)V
 		ARG 1 parent
 		ARG 2 child
 		ARG 3 sibling
 		ARG 4 inputs
+	METHOD method_44252 executeWithPrefix (Lnet/minecraft/class_2168;Ljava/lang/String;)I
+		COMMENT Executes {@code command}. Unlike {@link #execute} the command can be prefixed
+		COMMENT with a slash.
+		ARG 1 source
+		ARG 2 command
+	METHOD method_9235 getDispatcher ()Lcom/mojang/brigadier/CommandDispatcher;
+	METHOD method_9236 (Ljava/lang/String;Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
+		ARG 1 style
 	METHOD method_9238 getCommandValidator (Lnet/minecraft/class_2170$class_2171;)Ljava/util/function/Predicate;
 		ARG 0 parser
 	METHOD method_9239 makeTreeForSource (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/tree/CommandNode;Lnet/minecraft/class_2168;Ljava/util/Map;)V
@@ -45,6 +51,9 @@ CLASS net/minecraft/class_2170 net/minecraft/server/command/CommandManager
 		ARG 1 success
 		ARG 2 result
 	METHOD method_9249 execute (Lnet/minecraft/class_2168;Ljava/lang/String;)I
+		COMMENT Executes {@code command}. The command cannot be prefixed with a slash.
+		COMMENT
+		COMMENT @see #executeWithPrefix(ServerCommandSource, String)
 		ARG 1 commandSource
 		ARG 2 command
 	CLASS class_2171 CommandParser

@@ -1,0 +1,55 @@
+CLASS net/minecraft/class_7471 net/minecraft/network/encryption/SignedChatMessage
+	COMMENT A signed chat message, consisting of the signature, the signed content,
+	COMMENT and the optional unsigned content supplied when the chat decorator produced
+	COMMENT unsigned message due to the chat preview being disabled on either side.
+	COMMENT
+	COMMENT <p>Note that the signature itself might not be valid.
+	METHOD method_43867 verify (Lnet/minecraft/class_7428;)Z
+		COMMENT {@return whether the message can be verified using the public key}
+		ARG 1 key
+	METHOD method_44125 getContent ()Lnet/minecraft/class_2561;
+		COMMENT {@return the content of the message}
+		COMMENT
+		COMMENT <p>This returns the unsigned content if present, and fallbacks to the signed content.
+	METHOD method_44126 of (Ljava/lang/String;Lnet/minecraft/class_7469;)Lnet/minecraft/class_7471;
+		COMMENT {@return a new signed chat message with {@code signedContent} and {@code signature}}
+		ARG 0 signedContent
+		ARG 1 signature
+	METHOD method_44127 of (Lnet/minecraft/class_2561;)Lnet/minecraft/class_7471;
+		COMMENT {@return a new signed chat message with {@code signedContent} and "none" signature}
+		ARG 0 content
+	METHOD method_44128 of (Lnet/minecraft/class_2561;Lnet/minecraft/class_7469;)Lnet/minecraft/class_7471;
+		COMMENT {@return a new signed chat message with {@code signedContent} and {@code signature}}
+		ARG 0 signedContent
+		ARG 1 signature
+	METHOD method_44129 withUnsigned (Lnet/minecraft/class_2561;)Lnet/minecraft/class_7471;
+		COMMENT {@return the new signed chat message with {@code unsignedContent} added}
+		COMMENT
+		COMMENT @apiNote This is used in vanilla when chat decorator decorates the message without
+		COMMENT the client previewing it. In this case, the undecorated content is signed but the
+		COMMENT decorated content is unsigned.
+		ARG 1 unsignedContent
+	METHOD method_44310 verify (Lnet/minecraft/class_3222;)Z
+		COMMENT {@return whether the message can be verified using the public key <strong>or if the
+		COMMENT player does not have the key</strong>}
+		ARG 1 player
+	METHOD method_44311 toSignedMessage (Lnet/minecraft/class_5837;Lnet/minecraft/class_5837;Lnet/minecraft/class_7469;Z)Lnet/minecraft/class_5837;
+		ARG 0 original
+		ARG 1 decorated
+		ARG 2 signature
+		ARG 3 preview
+	METHOD method_44312 verify (Lnet/minecraft/class_2168;)Z
+		COMMENT {@return whether the message can be verified using the public key of the source
+		COMMENT <strong>or if the source does not have the key</strong>}
+		ARG 1 source
+	METHOD method_44313 of (Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;Lnet/minecraft/class_7469;Z)Lnet/minecraft/class_7471;
+		COMMENT {@return a new signed chat message from the content supplied by the chat decorator}
+		COMMENT
+		COMMENT @implNote If the decorated content is different from the original and is not
+		COMMENT previewed, this will create a signed chat message with the signed original content
+		COMMENT and the unsigned decorated content. Otherwise, this will create a signed chat message
+		COMMENT with the signed decorated content.
+		ARG 0 originalContent
+		ARG 1 decoratedContent
+		ARG 2 signature
+		ARG 3 previewed

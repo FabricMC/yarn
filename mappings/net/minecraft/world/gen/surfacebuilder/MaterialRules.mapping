@@ -55,17 +55,25 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 		ARG 1 addSurfaceDepth
 		ARG 2 secondaryDepthRange
 		ARG 3 verticalSurfaceType
+	METHOD method_42377 register (Lnet/minecraft/class_2378;Ljava/lang/String;Lnet/minecraft/class_7243;)Lcom/mojang/serialization/Codec;
+		ARG 0 registry
+		ARG 1 id
+		ARG 2 codecHolder
 	CLASS class_6687 TerracottaBandsMaterialRule
-		FIELD field_35226 RULE_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35226 CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 	CLASS class_6689 BiomeMaterialCondition
-		FIELD field_35228 CONDITION_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35228 CODEC Lnet/minecraft/class_7243;
+		FIELD field_36414 biomes Ljava/util/List;
+		FIELD field_36415 predicate Ljava/util/function/Predicate;
+		METHOD <init> (Ljava/util/List;)V
+			ARG 1 biomes
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 		CLASS class_6690 BiomePredicate
 	CLASS class_6691 BlockMaterialRule
-		FIELD field_35231 RULE_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35231 CODEC Lnet/minecraft/class_7243;
 		METHOD <init> (Lnet/minecraft/class_2680;)V
 			ARG 1 resultState
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
@@ -74,8 +82,9 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 		METHOD method_39069 get ()Z
 	CLASS class_6693 MaterialCondition
 		FIELD field_35232 CODEC Lcom/mojang/serialization/Codec;
-		METHOD method_39064 codec ()Lcom/mojang/serialization/Codec;
+		METHOD method_39064 codec ()Lnet/minecraft/class_7243;
 		METHOD method_39070 registerAndGetDefault (Lnet/minecraft/class_2378;)Lcom/mojang/serialization/Codec;
+			ARG 0 registry
 	CLASS class_6694 MaterialRuleContext
 		FIELD field_35233 surfaceBuilder Lnet/minecraft/class_6724;
 		FIELD field_35234 biomeTemperaturePredicate Lnet/minecraft/class_6686$class_6692;
@@ -98,13 +107,14 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 		FIELD field_35619 stoneDepthBelow I
 		FIELD field_35620 stoneDepthAbove I
 		FIELD field_35676 chunkNoiseSampler Lnet/minecraft/class_6568;
-		METHOD <init> (Lnet/minecraft/class_6724;Lnet/minecraft/class_2791;Lnet/minecraft/class_6568;Ljava/util/function/Function;Lnet/minecraft/class_2378;Lnet/minecraft/class_5868;)V
+		FIELD field_37703 noiseConfig Lnet/minecraft/class_7138;
+		METHOD <init> (Lnet/minecraft/class_6724;Lnet/minecraft/class_7138;Lnet/minecraft/class_2791;Lnet/minecraft/class_6568;Ljava/util/function/Function;Lnet/minecraft/class_2378;Lnet/minecraft/class_5868;)V
 			ARG 1 surfaceBuilder
-			ARG 2 chunk
-			ARG 3 chunkNoiseSampler
-			ARG 4 posToBiome
-			ARG 5 biomeRegistry
-			ARG 6 heightContext
+			ARG 2 noiseConfig
+			ARG 3 chunk
+			ARG 4 chunkNoiseSampler
+			ARG 5 posToBiome
+			ARG 7 heightContext
 		METHOD method_39072 initHorizontalContext (II)V
 			ARG 1 x
 			ARG 2 z
@@ -120,7 +130,7 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 		CLASS class_6771 SurfacePredicate
 		CLASS class_6772 BiomeTemperaturePredicate
 	CLASS class_6701 HoleMaterialCondition
-		FIELD field_35244 CONDITION_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35244 CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 	CLASS class_6702 LazyAbstractPredicate
@@ -136,34 +146,35 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 			COMMENT
 			COMMENT @return the unique value for this position
 	CLASS class_6703 NoiseThresholdMaterialCondition
-		FIELD field_35248 CONDITION_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35248 CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 		CLASS class_6704 NoiseThresholdPredicate
 	CLASS class_6706 InvertedBooleanSupplier
 	CLASS class_6707 NotMaterialCondition
-		FIELD field_35251 CONDITION_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35251 CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 	CLASS class_6708 MaterialRule
 		FIELD field_35252 CODEC Lcom/mojang/serialization/Codec;
-		METHOD method_39061 codec ()Lcom/mojang/serialization/Codec;
+		METHOD method_39061 codec ()Lnet/minecraft/class_7243;
 		METHOD method_39085 registerAndGetDefault (Lnet/minecraft/class_2378;)Lcom/mojang/serialization/Codec;
+			ARG 0 registry
 	CLASS class_6709 SequenceBlockStateRule
 		COMMENT Applies the given block state rules in sequence, and returns the first result that
 		COMMENT isn't {@code null}. Returns {@code null} if none of the passed rules match.
 	CLASS class_6710 SequenceMaterialRule
-		FIELD field_35253 RULE_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35253 CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 	CLASS class_6711 SimpleBlockStateRule
 		COMMENT Always returns the given {@link BlockState}.
 	CLASS class_6712 SteepMaterialCondition
-		FIELD field_35255 CONDITION_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35255 CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 	CLASS class_6713 StoneDepthMaterialCondition
-		FIELD field_35257 CONDITION_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35257 CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 		CLASS class_6714 StoneDepthPredicate
@@ -174,34 +185,34 @@ CLASS net/minecraft/class_6686 net/minecraft/world/gen/surfacebuilder/MaterialRu
 			ARG 2 y
 			ARG 3 z
 	CLASS class_6716 TemperatureMaterialCondition
-		FIELD field_35261 CONDITION_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35261 CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 	CLASS class_6717 ConditionalBlockStateRule
 		COMMENT Applies another block state rule if the given predicate matches, and returns
 		COMMENT {@code null} otherwise.
 	CLASS class_6718 ConditionMaterialRule
-		FIELD field_35263 RULE_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35263 CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 	CLASS class_6720 WaterMaterialCondition
-		FIELD field_35264 CONDITION_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35264 CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 		CLASS class_6721 WaterPredicate
 	CLASS class_6722 AboveYMaterialCondition
-		FIELD field_35266 CONDITION_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35266 CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 		CLASS class_6723 AboveYPredicate
 	CLASS class_6770 SurfaceMaterialCondition
-		FIELD field_35601 CONDITION_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35601 CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 	CLASS class_6773 HorizontalLazyAbstractPredicate
 	CLASS class_6774 FullLazyAbstractPredicate
 	CLASS class_6775 VerticalGradientMaterialCondition
-		FIELD field_35626 CONDITION_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_35626 CODEC Lnet/minecraft/class_7243;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 context
 		CLASS class_6776 VerticalGradientPredicate

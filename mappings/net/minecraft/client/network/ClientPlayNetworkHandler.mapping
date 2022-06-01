@@ -7,7 +7,7 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	FIELD field_26620 DISCONNECT_LOST_TEXT Lnet/minecraft/class_2561;
 	FIELD field_34963 telemetrySender Lnet/minecraft/class_6628;
 	FIELD field_35164 simulationDistance I
-	FIELD field_3687 random Ljava/util/Random;
+	FIELD field_3687 random Lnet/minecraft/class_5819;
 	FIELD field_3688 recipeManager Lnet/minecraft/class_1863;
 	FIELD field_3689 connection Lnet/minecraft/class_2535;
 	FIELD field_3690 client Lnet/minecraft/class_310;
@@ -58,8 +58,6 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	METHOD method_2885 feedbackAfterDownload (Ljava/util/concurrent/CompletableFuture;)V
 		ARG 1 downloadFuture
 	METHOD method_2886 getCommandDispatcher ()Lcom/mojang/brigadier/CommandDispatcher;
-	METHOD method_2888 validateResourcePackUrl (Ljava/lang/String;)Z
-		ARG 1 url
 	METHOD method_2890 getWorld ()Lnet/minecraft/class_638;
 	METHOD method_29091 getRegistryManager ()Lnet/minecraft/class_5455;
 	METHOD method_29356 getWorldKeys ()Ljava/util/Set;
@@ -67,6 +65,8 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	METHOD method_34007 (ILnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 2 pos
 		ARG 3 state
+	METHOD method_34008 (Lnet/minecraft/class_1297;Lcom/mojang/datafixers/util/Pair;)V
+		ARG 1 pair
 	METHOD method_34009 (Lnet/minecraft/class_1703;Lnet/minecraft/class_1860;)V
 		ARG 2 recipe
 	METHOD method_34010 (Lnet/minecraft/class_268;Lnet/minecraft/class_5900$class_5902;)V
@@ -75,7 +75,7 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 2 recipe
 	METHOD method_34012 (Lnet/minecraft/class_299;Lnet/minecraft/class_516;)V
 		ARG 1 recipeResultCollection
-	METHOD method_34014 (Ljava/lang/String;Ljava/lang/String;ZZ)V
+	METHOD method_34014 (Ljava/net/URL;Ljava/lang/String;ZZ)V
 		ARG 4 enabled
 	METHOD method_36322 getServerResourcePackPrompt (Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
 		ARG 0 defaultPrompt
@@ -102,6 +102,27 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 3 data
 	METHOD method_38544 unloadChunk (Lnet/minecraft/class_2666;)V
 		ARG 1 packet
+	METHOD method_40215 (Lnet/minecraft/class_5455$class_6892;)V
+		ARG 0 entry
 	METHOD method_40217 loadTags (Lnet/minecraft/class_5321;Lnet/minecraft/class_6864$class_5748;)V
 		ARG 1 registryKey
 		ARG 2 serialized
+	METHOD method_43209 playSpawnSound (Lnet/minecraft/class_1297;)V
+		ARG 1 entity
+	METHOD method_43331 resolveUrl (Ljava/lang/String;)Ljava/net/URL;
+		ARG 0 url
+	METHOD method_43597 isSignatureValid (Lnet/minecraft/class_7471;Lnet/minecraft/class_640;)Z
+		COMMENT {@return whether the chat message has a valid signature}
+		COMMENT
+		COMMENT <p>This returns {@code false} when the chat sender is unknown.
+		ARG 1 message
+		ARG 2 playerListEntry
+	METHOD method_44071 (Lnet/minecraft/class_642;Ljava/lang/String;)V
+		ARG 1 favicon
+	METHOD method_44072 (Lnet/minecraft/class_642;Lnet/minecraft/class_2561;)V
+		ARG 1 description
+	METHOD method_44073 handleMessage (Lnet/minecraft/class_2556;Lnet/minecraft/class_7471;Lnet/minecraft/class_7436;)V
+		COMMENT Handles an incoming chat message.
+		ARG 1 type
+		ARG 2 message
+		ARG 3 sender

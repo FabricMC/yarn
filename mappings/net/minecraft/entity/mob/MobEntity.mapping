@@ -27,6 +27,7 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		COMMENT
 		COMMENT @see MobEntity#initEquipment
 	FIELD field_34043 DEFAULT_DROP_CHANCE F
+	FIELD field_38386 ITEM_PICK_UP_RANGE_EXPANDER Lnet/minecraft/class_2382;
 	FIELD field_6184 lootTableSeed J
 	FIELD field_6185 targetSelector Lnet/minecraft/class_1355;
 		COMMENT Contains goals used to select this entity's target.
@@ -80,7 +81,7 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		COMMENT
 		COMMENT <p>The default return value is {@code 10}.
 	METHOD method_20417 updateGoalControls ()V
-	METHOD method_20636 canMobSpawn (Lnet/minecraft/class_1299;Lnet/minecraft/class_1936;Lnet/minecraft/class_3730;Lnet/minecraft/class_2338;Ljava/util/Random;)Z
+	METHOD method_20636 canMobSpawn (Lnet/minecraft/class_1299;Lnet/minecraft/class_1936;Lnet/minecraft/class_3730;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;)Z
 		ARG 0 type
 		ARG 1 world
 		ARG 2 spawnReason
@@ -107,6 +108,10 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	METHOD method_26320 prefersNewDamageableItem (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 1 newStack
 		ARG 2 oldStack
+	METHOD method_26321 (Ljava/lang/String;)Z
+		ARG 0 key
+	METHOD method_26322 (Ljava/lang/String;)Z
+		ARG 0 key
 	METHOD method_26323 movesIndependently ()Z
 		COMMENT When true, causes this entity to take over pathfinding for its controlling passenger.
 	METHOD method_26828 createMobAttributes ()Lnet/minecraft/class_5132$class_5133;
@@ -126,17 +131,29 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	METHOD method_29506 interactWithItem (Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
 		ARG 1 player
 		ARG 2 hand
-	METHOD method_30758 enchantEquipment (FLnet/minecraft/class_1304;)V
-		ARG 1 power
-		ARG 2 slot
-	METHOD method_30759 enchantMainHandItem (F)V
-		ARG 1 power
+	METHOD method_30758 enchantEquipment (Lnet/minecraft/class_5819;FLnet/minecraft/class_1304;)V
+		ARG 1 random
+		ARG 2 power
+		ARG 3 slot
+	METHOD method_30759 enchantMainHandItem (Lnet/minecraft/class_5819;F)V
+		ARG 1 random
+		ARG 2 power
 	METHOD method_33191 squaredAttackRange (Lnet/minecraft/class_1309;)D
 		ARG 1 target
 	METHOD method_35055 clearPositionTarget ()V
 	METHOD method_35056 clearGoalsAndTasks ()V
 	METHOD method_37341 (Lnet/minecraft/class_1799;)V
 		ARG 0 stack
+	METHOD method_42150 isInAttackRange (Lnet/minecraft/class_1309;)Z
+		ARG 1 entity
+	METHOD method_42646 getItemPickUpRangeExpander ()Lnet/minecraft/class_2382;
+	METHOD method_44330 getPotentialEscapePositions ()Ljava/lang/Iterable;
+		COMMENT {@return the list of positions that the entity should try to pathfind to when escaping}
+		COMMENT
+		COMMENT @implNote This is used when the current position's {@linkplain #getPathfindingPenalty
+		COMMENT pathfinding penalty} is negative (i.e. dangerous). Note that currently
+		COMMENT {@link net.minecraft.entity.ai.pathing.BirdPathNodeMaker} is the only node maker
+		COMMENT utilizing this method.
 	METHOD method_5929 getDropChance (Lnet/minecraft/class_1304;)F
 		ARG 1 slot
 	METHOD method_5930 setForwardSpeed (F)V
@@ -190,7 +207,6 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	METHOD method_5955 prefersNewEquipment (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 1 newStack
 		ARG 2 oldStack
-	METHOD method_5956 canBeControlledByRider ()Z
 	METHOD method_5957 canSpawn (Lnet/minecraft/class_4538;)Z
 		ARG 1 world
 	METHOD method_5958 mobTick ()V
@@ -206,8 +222,9 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	METHOD method_5961 isLeftHanded ()Z
 	METHOD method_5962 getMoveControl ()Lnet/minecraft/class_1335;
 	METHOD method_5963 createBodyControl ()Lnet/minecraft/class_1330;
-	METHOD method_5964 initEquipment (Lnet/minecraft/class_1266;)V
-		ARG 1 difficulty
+	METHOD method_5964 initEquipment (Lnet/minecraft/class_5819;Lnet/minecraft/class_1266;)V
+		ARG 1 random
+		ARG 2 localDifficulty
 	METHOD method_5965 createNavigation (Lnet/minecraft/class_1937;)Lnet/minecraft/class_1408;
 		ARG 1 world
 	METHOD method_5966 playAmbientSound ()V
@@ -238,8 +255,9 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	METHOD method_5980 setTarget (Lnet/minecraft/class_1309;)V
 		ARG 1 target
 	METHOD method_5983 onEatingGrass ()V
-	METHOD method_5984 updateEnchantments (Lnet/minecraft/class_1266;)V
-		ARG 1 difficulty
+	METHOD method_5984 updateEnchantments (Lnet/minecraft/class_5819;Lnet/minecraft/class_1266;)V
+		ARG 1 random
+		ARG 2 localDifficulty
 	METHOD method_5985 getVisibilityCache ()Lnet/minecraft/class_1413;
 	METHOD method_5986 getMaxHeadRotation ()I
 		COMMENT {@return the maximum degrees which the head yaw can differ from the body yaw}

@@ -23,11 +23,6 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_18839 debugRunnable (Ljava/lang/Runnable;Ljava/util/function/Supplier;)Ljava/lang/Runnable;
 		ARG 0 runnable
 		ARG 1 messageSupplier
-	METHOD method_18841 (Ljava/util/List;[Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;)V
-		ARG 3 future
-	METHOD method_18842 (Ljava/util/concurrent/CompletableFuture;Ljava/util/List;ILjava/lang/Object;Ljava/lang/Throwable;)V
-		ARG 3 object
-		ARG 4 throwable
 	METHOD method_19483 completeExceptionally (Ljava/lang/Throwable;)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 throwable
 	METHOD method_20793 getLast (Ljava/util/List;)Ljava/lang/Object;
@@ -38,10 +33,10 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 t
 	METHOD method_24155 throwUnchecked (Ljava/lang/Throwable;)V
 		ARG 0 t
-	METHOD method_27172 getRandom ([ILjava/util/Random;)I
+	METHOD method_27172 getRandom ([ILnet/minecraft/class_5819;)I
 		ARG 0 array
 		ARG 1 random
-	METHOD method_27173 getRandom ([Ljava/lang/Object;Ljava/util/Random;)Ljava/lang/Object;
+	METHOD method_27173 getRandom ([Ljava/lang/Object;Lnet/minecraft/class_5819;)Ljava/lang/Object;
 		ARG 0 array
 		ARG 1 random
 	METHOD method_27760 backupAndReplace (Ljava/io/File;Ljava/io/File;Ljava/io/File;)V
@@ -111,7 +106,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 path
 	METHOD method_30629 existenceCheckTask (Ljava/nio/file/Path;)Ljava/util/function/BooleanSupplier;
 		ARG 0 path
-	METHOD method_32309 getRandom (Ljava/util/List;Ljava/util/Random;)Ljava/lang/Object;
+	METHOD method_32309 getRandom (Ljava/util/List;Lnet/minecraft/class_5819;)Ljava/lang/Object;
 		ARG 0 list
 		ARG 1 random
 	METHOD method_33141 toArray (Ljava/util/List;I)Lcom/mojang/serialization/DataResult;
@@ -152,7 +147,9 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_39977 error (Ljava/lang/String;Ljava/lang/Throwable;)V
 		ARG 0 message
 		ARG 1 throwable
-	METHOD method_40083 getRandomOrEmpty (Ljava/util/List;Ljava/util/Random;)Ljava/util/Optional;
+	METHOD method_40082 (Ljava/util/List;Ljava/lang/Void;)Ljava/util/List;
+		ARG 1 void_
+	METHOD method_40083 getRandomOrEmpty (Ljava/util/List;Lnet/minecraft/class_5819;)Ljava/util/Optional;
 		ARG 0 list
 		ARG 1 random
 	METHOD method_41203 backupAndReplace (Ljava/io/File;Ljava/io/File;Ljava/io/File;Z)V
@@ -165,6 +162,101 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 1 newPath
 		ARG 2 backup
 		ARG 3 noRestoreOnFail
+	METHOD method_41238 debugSupplier (Ljava/util/function/Supplier;Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
+		ARG 0 supplier
+		ARG 1 messageSupplier
+	METHOD method_43027 copyShuffled (Lit/unimi/dsi/fastutil/objects/ObjectArrayList;Lnet/minecraft/class_5819;)Ljava/util/List;
+		ARG 0 list
+		ARG 1 random
+	METHOD method_43028 shuffle (Lit/unimi/dsi/fastutil/objects/ObjectArrayList;Lnet/minecraft/class_5819;)V
+		ARG 0 list
+		ARG 1 random
+	METHOD method_43251 shuffle (Ljava/util/stream/IntStream;Lnet/minecraft/class_5819;)Lit/unimi/dsi/fastutil/ints/IntArrayList;
+		ARG 0 stream
+		ARG 1 random
+	METHOD method_43252 copyShuffled (Ljava/util/stream/Stream;Lnet/minecraft/class_5819;)Ljava/util/List;
+		ARG 0 stream
+		ARG 1 random
+	METHOD method_43253 copyShuffled ([Ljava/lang/Object;Lnet/minecraft/class_5819;)Ljava/util/List;
+		ARG 0 array
+		ARG 1 random
+	METHOD method_43368 (Ljava/util/List;Ljava/lang/Void;)Ljava/util/List;
+		ARG 1 void_
+	METHOD method_43369 (Ljava/util/List;Ljava/util/concurrent/CompletableFuture;Ljava/lang/Throwable;)V
+		ARG 2 throwable
+	METHOD method_43370 combine (Ljava/util/List;Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 futures
+		ARG 1 exceptionHandler
+	METHOD method_43371 (Ljava/util/List;[Ljava/util/concurrent/CompletableFuture;Ljava/util/function/Consumer;Ljava/util/concurrent/CompletableFuture;)V
+		ARG 3 future
+	METHOD method_43372 (Ljava/util/function/Consumer;Ljava/util/List;ILjava/lang/Object;Ljava/lang/Throwable;)V
+		ARG 3 value
+		ARG 4 throwable
+	METHOD method_43373 combineCancellable (Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT Combines a list of {@code futures} into one future that holds a list
+		COMMENT of their results.
+		COMMENT
+		COMMENT <p>The returned future is fail-fast; if any of the input futures fails,
+		COMMENT this returned future will be immediately completed exceptionally than
+		COMMENT waiting for other input futures. Additionally, all other futures will
+		COMMENT be canceled.
+		COMMENT
+		COMMENT @return the combined future
+		COMMENT @see #combine(List)
+		COMMENT @see #combineSafe(List)
+		ARG 0 futures
+	METHOD method_43498 waitAndApply (Ljava/util/function/Function;Ljava/util/function/Predicate;)Ljava/lang/Object;
+		COMMENT Runs tasks using the prepare-apply model.
+		COMMENT
+		COMMENT @apiNote This method takes a function that supplies an executor to use in the
+		COMMENT apply stage. Inside the function, callers should run the preparation,
+		COMMENT and use the passed executor for applying.
+		ARG 0 resultFactory
+			COMMENT a function that takes the apply-stage executor and returns the preliminary result
+		ARG 1 donePredicate
+			COMMENT a predicate that, given the result, checks whether applying has finished
+	METHOD method_43499 waitAndApply (Ljava/util/function/Function;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT Runs tasks using the prepare-apply model, such as creation of a {@link
+		COMMENT net.minecraft.server.SaveLoader}.
+		COMMENT
+		COMMENT @apiNote This method takes a function that supplies an executor to use in the
+		COMMENT apply stage. Inside the function, callers should run the preparation,
+		COMMENT and use the passed executor for applying.
+		ARG 0 resultFactory
+			COMMENT a function that takes the apply-stage executor and returns the future
+	METHOD method_43658 lastIndexGetter (Ljava/util/List;)Ljava/util/function/ToIntFunction;
+		COMMENT {@return a function that, when given a value in {@code values}, returns the last
+		COMMENT index of the value in the list}
+		COMMENT
+		COMMENT @implNote Unlike {@link java.util.List#lastIndexOf}, the returned function will
+		COMMENT return {@code 0} when given values not in the passed list.
+		ARG 0 values
+	METHOD method_43926 map (Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+		COMMENT {@return the {@code value} with {@code mapper} applied if the value is not {@code null},
+		COMMENT otherwise {@code null}}
+		COMMENT
+		COMMENT <p>This is the nullable equivalent to {@link Optional#map}.
+		ARG 0 value
+		ARG 1 mapper
+	METHOD method_43927 mapOrElse (Ljava/lang/Object;Ljava/util/function/Function;Ljava/lang/Object;)Ljava/lang/Object;
+		COMMENT {@return the {@code value} with {@code mapper} applied if the value is not {@code null},
+		COMMENT otherwise {@code other}}
+		COMMENT
+		COMMENT <p>This is the nullable equivalent to {@link Optional#map} chained with
+		COMMENT {@link Optional#orElse}.
+		ARG 0 value
+		ARG 1 mapper
+		ARG 2 other
+	METHOD method_44146 lastIndexGetter (Ljava/util/List;Ljava/util/function/IntFunction;)Ljava/util/function/ToIntFunction;
+		COMMENT {@return a function that, when given a value in {@code values}, returns the last
+		COMMENT index of the value in the list}
+		COMMENT
+		COMMENT @implNote Unlike {@link java.util.List#lastIndexOf}, the returned function will
+		COMMENT return {@code 0} when given values not in the passed list.
+		ARG 0 values
+		ARG 1 mapCreator
+			COMMENT a function that, when given the size of {@code values},
+			COMMENT returns a map for storing the indices of the values
 	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
 		ARG 0 iterable
 		ARG 1 object
@@ -185,6 +277,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		COMMENT waiting for other input futures.
 		COMMENT
 		COMMENT @return the combined future
+		COMMENT @see #combineCancellable(List)
 		COMMENT @see #combineSafe(List)
 		ARG 0 futures
 			COMMENT the completable futures to combine
@@ -204,13 +297,25 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 runtimeArg
 	METHOD method_668 getOperatingSystem ()Lnet/minecraft/class_156$class_158;
 	CLASS 2
-		FIELD field_29657 cache Ljava/util/Map;
+		FIELD field_29655 cache Ljava/util/Map;
+		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
+			ARG 1 object
 	CLASS 3
+		FIELD field_29657 cache Ljava/util/Map;
+		METHOD apply (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+			ARG 1 a
+			ARG 2 b
+		METHOD method_34867 (Ljava/util/function/BiFunction;Lcom/mojang/datafixers/util/Pair;)Ljava/lang/Object;
+			ARG 1 pair
+	CLASS 4
 		METHOD onTermination (Ljava/lang/Throwable;)V
 			ARG 1 throwable
-	CLASS 9
-		FIELD field_29655 cache Ljava/util/Map;
 	CLASS class_157 IdentityHashStrategy
+		METHOD equals (Ljava/lang/Object;Ljava/lang/Object;)Z
+			ARG 1 o
+			ARG 2 o2
+		METHOD hashCode (Ljava/lang/Object;)I
+			ARG 1 o
 	CLASS class_158 OperatingSystem
 		FIELD field_34894 name Ljava/lang/String;
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V

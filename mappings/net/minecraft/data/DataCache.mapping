@@ -1,23 +1,61 @@
 CLASS net/minecraft/class_2408 net/minecraft/data/DataCache
-	FIELD field_11282 oldSha1 Ljava/util/Map;
-	FIELD field_11283 newSha1 Ljava/util/Map;
-	FIELD field_11284 unchanged I
 	FIELD field_11285 root Ljava/nio/file/Path;
-	FIELD field_11286 recordFile Ljava/nio/file/Path;
 	FIELD field_11287 LOGGER Lorg/slf4j/Logger;
-	FIELD field_16743 ignores Ljava/util/Set;
-	METHOD <init> (Ljava/nio/file/Path;Ljava/lang/String;)V
+	FIELD field_38912 HEADER Ljava/lang/String;
+	FIELD field_38913 cachePath Ljava/nio/file/Path;
+	FIELD field_38914 versionName Ljava/lang/String;
+	FIELD field_38915 cachedDatas Ljava/util/Map;
+	FIELD field_38916 dataWriters Ljava/util/Map;
+	FIELD field_38917 paths Ljava/util/Set;
+	FIELD field_38918 totalSize I
+	METHOD <init> (Ljava/nio/file/Path;Ljava/util/List;Lnet/minecraft/class_6489;)V
 		ARG 1 root
-		ARG 2 name
-	METHOD method_10323 getOldSha1 (Ljava/nio/file/Path;)Ljava/lang/String;
-		ARG 1 path
-	METHOD method_10325 updateSha1 (Ljava/nio/file/Path;Ljava/lang/String;)V
-		ARG 1 path
-		ARG 2 sha1
+		ARG 2 dataProviders
+		ARG 3 gameVersion
 	METHOD method_10326 write ()V
-	METHOD method_10328 files ()Ljava/util/stream/Stream;
-	METHOD method_10330 contains (Ljava/nio/file/Path;)Z
-		ARG 1 path
-	METHOD method_10331 deleteAll ()V
-	METHOD method_16674 ignore (Ljava/nio/file/Path;)V
-		ARG 1 path
+	METHOD method_43347 isVersionDifferent (Lnet/minecraft/class_2405;)Z
+		ARG 1 dataProvider
+	METHOD method_43348 parseOrCreateCache (Ljava/nio/file/Path;Ljava/nio/file/Path;)Lnet/minecraft/class_2408$class_7405;
+		ARG 0 root
+		ARG 1 dataProviderPath
+	METHOD method_43349 (Ljava/util/Set;Lnet/minecraft/class_2408$class_7405;)V
+		ARG 1 cachedData
+	METHOD method_43350 (Lorg/apache/commons/lang3/mutable/MutableInt;Lnet/minecraft/class_2405;Lnet/minecraft/class_2408$class_7404;)V
+		ARG 2 dataProvider
+		ARG 3 writer
+	METHOD method_43351 (Lorg/apache/commons/lang3/mutable/MutableInt;Ljava/util/Set;Lorg/apache/commons/lang3/mutable/MutableInt;Ljava/nio/file/Path;)V
+		ARG 4 path
+	METHOD method_43352 getOrCreateWriter (Lnet/minecraft/class_2405;)Lnet/minecraft/class_7403;
+		ARG 1 dataProvider
+	METHOD method_43353 getPath (Lnet/minecraft/class_2405;)Ljava/nio/file/Path;
+		ARG 1 dataProvider
+	METHOD method_43354 (Lnet/minecraft/class_2405;)Lnet/minecraft/class_2408$class_7404;
+		ARG 1 provider
+	CLASS class_7404 CachedDataWriter
+		FIELD field_38919 oldCache Lnet/minecraft/class_2408$class_7405;
+		FIELD field_38920 newCache Lnet/minecraft/class_2408$class_7405;
+		FIELD field_38921 cacheMissCount I
+		METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_2408$class_7405;)V
+			ARG 1 versionName
+			ARG 2 cachedData
+		METHOD method_43355 isCacheInvalid (Ljava/nio/file/Path;Lcom/google/common/hash/HashCode;)Z
+			ARG 1 path
+			ARG 2 hashCode
+	CLASS class_7405 CachedData
+		METHOD <init> (Ljava/lang/String;)V
+			ARG 1 version
+		METHOD method_43356 size ()I
+		METHOD method_43357 get (Ljava/nio/file/Path;)Lcom/google/common/hash/HashCode;
+			ARG 1 path
+		METHOD method_43358 put (Ljava/nio/file/Path;Lcom/google/common/hash/HashCode;)V
+			ARG 1 path
+			ARG 2 hashCode
+		METHOD method_43359 parseCache (Ljava/nio/file/Path;Ljava/nio/file/Path;)Lnet/minecraft/class_2408$class_7405;
+			ARG 0 root
+			ARG 1 dataProviderPath
+		METHOD method_43360 write (Ljava/nio/file/Path;Ljava/nio/file/Path;Ljava/lang/String;)V
+			ARG 1 root
+			ARG 2 dataProviderPath
+			ARG 3 description
+		METHOD method_43361 (Ljava/util/Map;Ljava/nio/file/Path;Ljava/lang/String;)V
+			ARG 2 line

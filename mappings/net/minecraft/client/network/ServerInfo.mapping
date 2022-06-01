@@ -1,7 +1,12 @@
 CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 	COMMENT The information of a server entry in the list of servers available in
-	COMMENT the multiplayer screen from the menu. The list of these servers is
-	COMMENT stored in the {@code servers.dat} file within the client game directory.
+	COMMENT the multiplayer screen, or that of the servers connected directly.
+	COMMENT The information for directly-connected servers are also saved (although
+	COMMENT hidden from the multiplayer screen) so that chat preview acknowledgements
+	COMMENT and other settings are saved. The list of these servers is stored in the
+	COMMENT {@code servers.dat} file within the client game directory.
+	COMMENT
+	COMMENT @see net.minecraft.client.option.ServerList
 	FIELD field_3752 name Ljava/lang/String;
 	FIELD field_3753 playerCountLabel Lnet/minecraft/class_2561;
 	FIELD field_3754 online Z
@@ -14,6 +19,9 @@ CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 	FIELD field_3761 address Ljava/lang/String;
 	FIELD field_3762 playerListSummary Ljava/util/List;
 	FIELD field_3763 local Z
+	FIELD field_39355 LOGGER Lorg/slf4j/Logger;
+	FIELD field_39356 chatPreview Lnet/minecraft/class_642$class_7484;
+	FIELD field_39436 temporaryChatPreviewState Z
 	METHOD <init> (Ljava/lang/String;Ljava/lang/String;Z)V
 		ARG 1 name
 		ARG 2 address
@@ -33,8 +41,26 @@ CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 		COMMENT <p>This is called when a user has responded to the prompt on whether to
 		COMMENT accept server resource packs from this server in the future.
 		ARG 1 resourcePackPolicy
-	METHOD method_2996 copyFrom (Lnet/minecraft/class_642;)V
+	METHOD method_2996 copyWithSettingsFrom (Lnet/minecraft/class_642;)V
 		ARG 1 serverInfo
+	METHOD method_44077 (Lnet/minecraft/class_642;Lnet/minecraft/class_642$class_7484;)V
+		ARG 1 chatPreview
+	METHOD method_44078 parseFavicon (Ljava/lang/String;)Ljava/lang/String;
+		ARG 0 favicon
+	METHOD method_44079 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
+		ARG 1 chatPreview
+	METHOD method_44080 setPreviewsChat (Z)V
+		COMMENT Sets whether the chat preview is enabled. This affects the saved server info;
+		COMMENT to disable the chat preview temporarily use {@link #setTemporaryChatPreviewState}.
+		ARG 1 enabled
+	METHOD method_44081 getChatPreview ()Lnet/minecraft/class_642$class_7484;
+	METHOD method_44082 shouldPreviewChat ()Z
+	METHOD method_44292 copyFrom (Lnet/minecraft/class_642;)V
+		ARG 1 serverInfo
+	METHOD method_44293 setTemporaryChatPreviewState (Z)V
+		COMMENT Sets the temporary chat preview state. Unlike {@link #setPreviewsChat}, this
+		COMMENT does not affect the saved server info.
+		ARG 1 temporaryChatPreviewState
 	CLASS class_643 ResourcePackPolicy
 		COMMENT The policy of the client when this server sends a {@linkplain
 		COMMENT net.minecraft.network.packet.s2c.play.ResourcePackSendS2CPacket server
@@ -53,3 +79,23 @@ CLASS net/minecraft/class_642 net/minecraft/client/network/ServerInfo
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
 			ARG 3 name
 		METHOD method_2997 getName ()Lnet/minecraft/class_2561;
+	CLASS class_7484 ChatPreview
+		FIELD field_39357 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_39358 acknowledged Z
+		FIELD field_39359 toastShown Z
+		METHOD <init> (ZZ)V
+			ARG 1 acknowledged
+			ARG 2 toastShown
+		METHOD method_44083 setAcknowledged ()V
+		METHOD method_44084 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
+		METHOD method_44085 (Lnet/minecraft/class_642$class_7484;)Ljava/lang/Boolean;
+			ARG 0 chatPreview
+		METHOD method_44086 showToast ()Z
+			COMMENT If the chat preview toast is never shown, returns {@code true} and marks that the
+			COMMENT toast was shown; otherwise, returns {@code false}.
+		METHOD method_44087 (Lnet/minecraft/class_642$class_7484;)Ljava/lang/Boolean;
+			ARG 0 chatPreview
+		METHOD method_44088 isAcknowledged ()Z
+			COMMENT {@return whether the player acknowledged the chat preview warning}
+		METHOD method_44089 copy ()Lnet/minecraft/class_642$class_7484;

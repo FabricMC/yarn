@@ -1,5 +1,19 @@
 CLASS net/minecraft/class_2487 net/minecraft/nbt/NbtCompound
-	COMMENT Represents an NBT compound object which holds unordered key-value pairs with distinct case-sensitive string keys.
+	COMMENT Represents an NBT compound object. This mutable object holds unordered key-value pairs
+	COMMENT with distinct case-sensitive string keys. This can effectively be used like a
+	COMMENT {@code HashMap<String, NbtElement>}. Note that this <strong>does not</strong> implement
+	COMMENT {@link java.util.Map}. Its type is {@value NbtElement#COMPOUND_TYPE}. To get the compound
+	COMMENT as a map, use {@link #toMap()}.
+	COMMENT
+	COMMENT <p>There are two ways to use this compound; one is to create NBT instances yourself and use
+	COMMENT {@link #get(String)} or {@link #put(String, NbtElement)}. Manual casting is required in
+	COMMENT this case. The other, easier way is to use methods with type names, such as
+	COMMENT {@link #getInt(String)} or {@link #putInt(String, int)}. Where applicable, these methods
+	COMMENT return and accept Java types (e.g. {@code int}, {@code long[]}) instead of {@link NbtElement}
+	COMMENT subclasses. Note that there is no {@code putCompound} method, since you can just use the
+	COMMENT put method. These getters also have the advantage of providing type safety, because if
+	COMMENT type mismatch occurs or there is no such element in the compound, it returns the default
+	COMMENT value for that type instead of throwing or returning {@code null}.
 	FIELD field_11515 entries Ljava/util/Map;
 	FIELD field_21029 TYPE Lnet/minecraft/class_4614;
 	FIELD field_25128 CODEC Lcom/mojang/serialization/Codec;
@@ -9,11 +23,26 @@ CLASS net/minecraft/class_2487 net/minecraft/nbt/NbtCompound
 	METHOD equals (Ljava/lang/Object;)Z
 		ARG 1 o
 	METHOD method_10537 getLong (Ljava/lang/String;)J
+		COMMENT {@return the {@code long} associated with {@code key}, or {@code 0L} if there is no number
+		COMMENT stored with the key}
+		COMMENT
+		COMMENT <p>If a non-long numeric value is stored, this will cast the value.
+		COMMENT
+		COMMENT @see #putLong(String, long)
+		COMMENT @see AbstractNbtNumber#longValue()
 		ARG 1 key
 	METHOD method_10538 putLongArray (Ljava/lang/String;Ljava/util/List;)V
+		COMMENT Puts a list of longs to this compound. This copies the list.
+		COMMENT
+		COMMENT @see #getLongArray(String)
+		COMMENT @see #putLongArray(String, long[])
 		ARG 1 key
 		ARG 2 value
 	METHOD method_10539 putIntArray (Ljava/lang/String;[I)V
+		COMMENT Puts an int array to this compound. This does not copy the array.
+		COMMENT
+		COMMENT @see #getIntArray(String)
+		COMMENT @see #putIntArray(String, List)
 		ARG 1 key
 		ARG 2 value
 	METHOD method_10540 getType (Ljava/lang/String;)B
@@ -22,12 +51,21 @@ CLASS net/minecraft/class_2487 net/minecraft/nbt/NbtCompound
 		COMMENT @return the element NBT type, or {@link NbtElement#END_TYPE} if it does not exist
 		ARG 1 key
 	METHOD method_10541 getKeys ()Ljava/util/Set;
+		COMMENT {@return the set of keys in this compound}
 	METHOD method_10542 readByte (Ljava/io/DataInput;Lnet/minecraft/class_2505;)B
 		ARG 0 input
 		ARG 1 tracker
 	METHOD method_10543 copyFrom (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
+		COMMENT Merges the entries of {@code source} to this compound. The passed compound will not
+		COMMENT be modified. If both compounds contain a compound with the same key, they will be
+		COMMENT merged; otherwise the values of this compound will be overwritten.
+		COMMENT
+		COMMENT @return this compound with entries merged
 		ARG 1 source
 	METHOD method_10544 putLong (Ljava/lang/String;J)V
+		COMMENT Puts a {@code long} to this compound.
+		COMMENT
+		COMMENT @see #getLong(String)
 		ARG 1 key
 		ARG 2 value
 	METHOD method_10545 contains (Ljava/lang/String;)Z
@@ -36,63 +74,152 @@ CLASS net/minecraft/class_2487 net/minecraft/nbt/NbtCompound
 		COMMENT @return {@code true} if the key exists, else {@code false}
 		ARG 1 key
 	METHOD method_10546 getSize ()I
+		COMMENT {@return the size of this compound}
 	METHOD method_10547 getByteArray (Ljava/lang/String;)[B
+		COMMENT {@return the byte array associated with {@code key}, or an empty byte array if there is no
+		COMMENT byte array stored with the key}
+		COMMENT
+		COMMENT @apiNote Modifying the returned array also modifies the NBT byte array.
+		COMMENT
+		COMMENT @see #putByteArray(String, byte[])
+		COMMENT @see NbtByteArray#getByteArray()
 		ARG 1 key
 	METHOD method_10548 putFloat (Ljava/lang/String;F)V
+		COMMENT Puts a {@code float} to this compound.
+		COMMENT
+		COMMENT @see #getFloat(String)
 		ARG 1 key
 		ARG 2 value
 	METHOD method_10549 putDouble (Ljava/lang/String;D)V
+		COMMENT Puts a {@code double} to this compound.
+		COMMENT
+		COMMENT @see #getDouble(String)
 		ARG 1 key
 		ARG 2 value
 	METHOD method_10550 getInt (Ljava/lang/String;)I
+		COMMENT {@return the {@code int} associated with {@code key}, or {@code 0} if there is no number
+		COMMENT stored with the key}
+		COMMENT
+		COMMENT <p>If a non-integer numeric value is stored, this will cast the value.
+		COMMENT
+		COMMENT @see #putInt(String, int)
+		COMMENT @see AbstractNbtNumber#intValue()
 		ARG 1 key
 	METHOD method_10551 remove (Ljava/lang/String;)V
+		COMMENT Removes the entry with the specified {@code key}. Does nothing if there is none.
 		ARG 1 key
 	METHOD method_10552 readString (Ljava/io/DataInput;Lnet/minecraft/class_2505;)Ljava/lang/String;
 		ARG 0 input
 		ARG 1 tracker
 	METHOD method_10554 getList (Ljava/lang/String;I)Lnet/minecraft/class_2499;
+		COMMENT {@return the list associated with {@code key}, or an empty list if there is no
+		COMMENT list stored with the key and the type}
+		COMMENT
+		COMMENT @see #put(String, NbtElement)
 		ARG 1 key
 		ARG 2 type
+			COMMENT the expected held type of the list
 	METHOD method_10555 write (Ljava/lang/String;Lnet/minecraft/class_2520;Ljava/io/DataOutput;)V
 		ARG 0 key
 		ARG 1 element
 		ARG 2 output
 	METHOD method_10556 putBoolean (Ljava/lang/String;Z)V
+		COMMENT Puts a {@code boolean} to this compound. The value is stored as {@link NbtByte}.
+		COMMENT
+		COMMENT @see #getBoolean(String)
 		ARG 1 key
 		ARG 2 value
 	METHOD method_10558 getString (Ljava/lang/String;)Ljava/lang/String;
+		COMMENT {@return the {@link String} associated with {@code key}, or an empty string if there is no
+		COMMENT string stored with the key}
+		COMMENT
+		COMMENT @see #putString(String, String)
+		COMMENT @see NbtElement#asString()
 		ARG 1 key
 	METHOD method_10559 createCrashReport (Ljava/lang/String;Lnet/minecraft/class_4614;Ljava/lang/ClassCastException;)Lnet/minecraft/class_128;
 		ARG 1 key
 		ARG 2 reader
 		ARG 3 exception
 	METHOD method_10561 getIntArray (Ljava/lang/String;)[I
+		COMMENT {@return the int array associated with {@code key}, or an empty int array if there is no
+		COMMENT int array stored with the key}
+		COMMENT
+		COMMENT @apiNote Modifying the returned array also modifies the NBT int array.
+		COMMENT
+		COMMENT @see #putIntArray(String, int[])
+		COMMENT @see NbtIntArray#getIntArray()
 		ARG 1 key
 	METHOD method_10562 getCompound (Ljava/lang/String;)Lnet/minecraft/class_2487;
+		COMMENT {@return the compound associated with {@code key}, or an empty compound if there is no
+		COMMENT compound stored with the key}
+		COMMENT
+		COMMENT @see #put(String, NbtElement)
 		ARG 1 key
 	METHOD method_10564 putLongArray (Ljava/lang/String;[J)V
+		COMMENT Puts a long array to this compound. This does not copy the array.
+		COMMENT
+		COMMENT @see #getLongArray(String)
+		COMMENT @see #putLongArray(String, List)
 		ARG 1 key
 		ARG 2 value
 	METHOD method_10565 getLongArray (Ljava/lang/String;)[J
+		COMMENT {@return the long array associated with {@code key}, or an empty long array if there is no
+		COMMENT long array stored with the key}
+		COMMENT
+		COMMENT @apiNote Modifying the returned array also modifies the NBT long array.
+		COMMENT
+		COMMENT @see #putLongArray(String, long[])
+		COMMENT @see NbtLongArray#getLongArray()
 		ARG 1 key
 	METHOD method_10566 put (Ljava/lang/String;Lnet/minecraft/class_2520;)Lnet/minecraft/class_2520;
+		COMMENT Puts an element to this compound.
+		COMMENT
+		COMMENT @return the previous value, or {@code null} if there was none
+		COMMENT @see #get(String)
 		ARG 1 key
 		ARG 2 element
 	METHOD method_10567 putByte (Ljava/lang/String;B)V
+		COMMENT Puts a {@code byte} to this compound.
+		COMMENT
+		COMMENT @see #getByte(String)
 		ARG 1 key
 		ARG 2 value
 	METHOD method_10568 getShort (Ljava/lang/String;)S
+		COMMENT {@return the {@code short} associated with {@code key}, or {@code 0} if there is no number
+		COMMENT stored with the key}
+		COMMENT
+		COMMENT <p>If a non-short numeric value is stored, this will cast the value.
+		COMMENT
+		COMMENT @see #putShort(String, short)
+		COMMENT @see AbstractNbtNumber#shortValue()
 		ARG 1 key
 	METHOD method_10569 putInt (Ljava/lang/String;I)V
+		COMMENT Puts an {@code int} to this compound.
+		COMMENT
+		COMMENT @see #getInt(String)
 		ARG 1 key
 		ARG 2 value
 	METHOD method_10570 putByteArray (Ljava/lang/String;[B)V
+		COMMENT Puts a byte array to this compound. This does not copy the array.
+		COMMENT
+		COMMENT @see #getByteArray(String)
+		COMMENT @see #putByteArray(String, List)
 		ARG 1 key
 		ARG 2 value
 	METHOD method_10571 getByte (Ljava/lang/String;)B
+		COMMENT {@return the {@code byte} associated with {@code key}, or {@code 0} if there is no number
+		COMMENT stored with the key}
+		COMMENT
+		COMMENT <p>If a non-byte numeric value is stored, this will cast the value.
+		COMMENT
+		COMMENT @see #putByte(String, byte)
+		COMMENT @see AbstractNbtNumber#byteValue()
 		ARG 1 key
 	METHOD method_10572 putIntArray (Ljava/lang/String;Ljava/util/List;)V
+		COMMENT Puts a list of integers to this compound. This copies the list.
+		COMMENT
+		COMMENT @see #getIntArray(String)
+		COMMENT @see #putIntArray(String, int[])
 		ARG 1 key
 		ARG 2 value
 	METHOD method_10573 contains (Ljava/lang/String;I)Z
@@ -104,13 +231,38 @@ CLASS net/minecraft/class_2487 net/minecraft/nbt/NbtCompound
 		ARG 1 key
 		ARG 2 type
 	METHOD method_10574 getDouble (Ljava/lang/String;)D
+		COMMENT {@return the {@code double} associated with {@code key}, or {@code 0.0} if there is
+		COMMENT no number stored with the key}
+		COMMENT
+		COMMENT <p>If a non-double numeric value is stored, this will cast the value.
+		COMMENT
+		COMMENT @see #putDouble(String, double)
+		COMMENT @see AbstractNbtNumber#doubleValue()
 		ARG 1 key
 	METHOD method_10575 putShort (Ljava/lang/String;S)V
+		COMMENT Puts a {@code short} to this compound.
+		COMMENT
+		COMMENT @see #getShort(String)
 		ARG 1 key
 		ARG 2 value
 	METHOD method_10577 getBoolean (Ljava/lang/String;)Z
+		COMMENT {@return the boolean value stored with the {@code key}}
+		COMMENT
+		COMMENT @implNote Since NBT does not have a boolean type, {@link NbtByte} is used instead. This
+		COMMENT method returns {@code true} for any values which, after casting to {@code byte} as
+		COMMENT described at {@link #getByte(String)}, is not {@code 0}. Since all non-numeric values
+		COMMENT become {@code 0} during casting to bytes, this method returns {@code false} for those
+		COMMENT as well. This includes values often considered truthy in other languages, such as a
+		COMMENT non-empty string or list.
 		ARG 1 key
 	METHOD method_10580 get (Ljava/lang/String;)Lnet/minecraft/class_2520;
+		COMMENT {@return the element associated with the key from this compound, or
+		COMMENT {@code null} if there is none}
+		COMMENT
+		COMMENT @apiNote This method does not provide type safety; if the type is known, it is
+		COMMENT recommended to use other type-specific methods instead.
+		COMMENT
+		COMMENT @see #put(String, NbtElement)
 		ARG 1 key
 	METHOD method_10581 read (Lnet/minecraft/class_4614;Ljava/lang/String;Ljava/io/DataInput;ILnet/minecraft/class_2505;)Lnet/minecraft/class_2520;
 		ARG 0 reader
@@ -119,15 +271,40 @@ CLASS net/minecraft/class_2487 net/minecraft/nbt/NbtCompound
 		ARG 3 depth
 		ARG 4 tracker
 	METHOD method_10582 putString (Ljava/lang/String;Ljava/lang/String;)V
+		COMMENT Puts a {@link String} to this compound.
+		COMMENT
+		COMMENT @see #getString(String)
 		ARG 1 key
 		ARG 2 value
 	METHOD method_10583 getFloat (Ljava/lang/String;)F
+		COMMENT {@return the {@code float} associated with {@code key}, or {@code 0.0f} if there is
+		COMMENT no number stored with the key}
+		COMMENT
+		COMMENT <p>If a non-float numeric value is stored, this will cast the value.
+		COMMENT
+		COMMENT @see #putFloat(String, float)
+		COMMENT @see AbstractNbtNumber#floatValue()
 		ARG 1 key
 	METHOD method_25926 getUuid (Ljava/lang/String;)Ljava/util/UUID;
-		COMMENT Reads a {@link UUID} from its NBT representation in this {@code NbtCompound}.
+		COMMENT {@return a {@link UUID} from its NBT representation in this compound}
+		COMMENT
+		COMMENT @apiNote Unlike other specialized getters, this method can throw unchecked exceptions.
+		COMMENT It is therefore recommended to call {@link #containsUuid(String)} before getting the
+		COMMENT UUID.
+		COMMENT
+		COMMENT @throws IllegalArgumentException if there is no value with the key or the value
+		COMMENT associated with the key is not a valid
+		COMMENT NBT representation of a UUID
+		COMMENT @see NbtHelper#toUuid(NbtIntArray)
+		COMMENT @see #containsUuid(String)
+		COMMENT @see #putUuid(String, UUID)
 		ARG 1 key
 	METHOD method_25927 putUuid (Ljava/lang/String;Ljava/util/UUID;)V
-		COMMENT Writes a {@link UUID} to its NBT representation in this {@code NbtCompound}.
+		COMMENT Puts a {@link UUID}'s NBT representation to this compound.
+		COMMENT
+		COMMENT @see NbtHelper#fromUuid(UUID)
+		COMMENT @see #containsUuid(String)
+		COMMENT @see #getUuid(String)
 		ARG 1 key
 		ARG 2 value
 	METHOD method_25928 containsUuid (Ljava/lang/String;)Z
@@ -137,7 +314,15 @@ CLASS net/minecraft/class_2487 net/minecraft/nbt/NbtCompound
 	METHOD method_29142 (Lnet/minecraft/class_2487;)Lcom/mojang/serialization/Dynamic;
 		ARG 0 nbt
 	METHOD method_29143 toMap ()Ljava/util/Map;
+		COMMENT {@return the compound as an unmodifiable map}
+		COMMENT
+		COMMENT <p>Changes to this compound will be propagated to the returned map.
 	METHOD method_33133 isEmpty ()Z
+		COMMENT {@return whether the compound has no entries}
 	METHOD method_36110 putByteArray (Ljava/lang/String;Ljava/util/List;)V
+		COMMENT Puts a list of bytes to this compound. This copies the list.
+		COMMENT
+		COMMENT @see #getByteArray(String)
+		COMMENT @see #putByteArray(String, byte[])
 		ARG 1 key
 		ARG 2 value

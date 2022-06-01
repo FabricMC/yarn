@@ -9,8 +9,8 @@ CLASS net/minecraft/class_2561 net/minecraft/text/Text
 	COMMENT refer to {@link MutableText}.
 	COMMENT
 	COMMENT @see MutableText
-	METHOD method_10851 asString ()Ljava/lang/String;
-		COMMENT Returns the string representation of this text itself, excluding siblings.
+	METHOD method_10851 getContent ()Lnet/minecraft/class_7417;
+		COMMENT {@return the content of the text}
 	METHOD method_10855 getSiblings ()Ljava/util/List;
 		COMMENT Returns the siblings of this text.
 	METHOD method_10858 asTruncatedString (I)Ljava/lang/String;
@@ -22,28 +22,12 @@ CLASS net/minecraft/class_2561 net/minecraft/text/Text
 		COMMENT Returns the style of this text.
 	METHOD method_27655 (ILjava/lang/StringBuilder;Ljava/lang/String;)Ljava/util/Optional;
 		ARG 2 string
-	METHOD method_27659 visitSelf (Lnet/minecraft/class_5348$class_5245;)Ljava/util/Optional;
-		COMMENT Visits the text itself.
-		COMMENT
-		COMMENT @see #visit(Visitor)
-		COMMENT @return the visitor's return value
-		ARG 1 visitor
-			COMMENT the visitor
-	METHOD method_27660 visitSelf (Lnet/minecraft/class_5348$class_5246;Lnet/minecraft/class_2583;)Ljava/util/Optional;
-		COMMENT Visits the text itself.
-		COMMENT
-		COMMENT @see #visit(StyledVisitor, Style)
-		COMMENT @return the visitor's return value
-		ARG 1 visitor
-			COMMENT the visitor
-		ARG 2 style
-			COMMENT the current style
-	METHOD method_27661 shallowCopy ()Lnet/minecraft/class_5250;
-		COMMENT Copies the text itself, the style, and the siblings.
+	METHOD method_27661 copy ()Lnet/minecraft/class_5250;
+		COMMENT Copies the text's content, the style, and the siblings.
 		COMMENT
 		COMMENT <p>A shallow copy is made for the siblings.
-	METHOD method_27662 copy ()Lnet/minecraft/class_5250;
-		COMMENT Copies the text itself, excluding the styles or siblings.
+	METHOD method_27662 copyContentOnly ()Lnet/minecraft/class_5250;
+		COMMENT Copies the text's content, excluding the styles or siblings.
 	METHOD method_30163 of (Ljava/lang/String;)Lnet/minecraft/class_2561;
 		COMMENT Creates a literal text with the given string as content.
 		ARG 0 string
@@ -53,6 +37,27 @@ CLASS net/minecraft/class_2561 net/minecraft/text/Text
 		ARG 2 text
 	METHOD method_36136 getWithStyle (Lnet/minecraft/class_2583;)Ljava/util/List;
 		ARG 1 style
+	METHOD method_43466 score (Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/class_5250;
+		ARG 0 name
+		ARG 1 objective
+	METHOD method_43467 selector (Ljava/lang/String;Ljava/util/Optional;)Lnet/minecraft/class_5250;
+		ARG 0 pattern
+		ARG 1 separator
+	METHOD method_43468 nbt (Ljava/lang/String;ZLjava/util/Optional;Lnet/minecraft/class_7419;)Lnet/minecraft/class_5250;
+		ARG 0 rawPath
+		ARG 1 interpret
+		ARG 2 separator
+		ARG 3 dataSource
+	METHOD method_43469 translatable (Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/class_5250;
+		ARG 0 key
+		ARG 1 args
+	METHOD method_43470 literal (Ljava/lang/String;)Lnet/minecraft/class_5250;
+		ARG 0 string
+	METHOD method_43471 translatable (Ljava/lang/String;)Lnet/minecraft/class_5250;
+		ARG 0 key
+	METHOD method_43472 keybind (Ljava/lang/String;)Lnet/minecraft/class_5250;
+		ARG 0 string
+	METHOD method_43473 empty ()Lnet/minecraft/class_5250;
 	CLASS class_2562 Serializer
 		COMMENT A JSON serializer for {@link Text}.
 		FIELD field_11752 JSON_READER_LINE_START Ljava/lang/reflect/Field;
@@ -90,6 +95,10 @@ CLASS net/minecraft/class_2561 net/minecraft/text/Text
 			ARG 1 type
 			ARG 2 context
 			ARG 3 json
+		METHOD method_43474 optimizeArgument (Ljava/lang/Object;)Ljava/lang/Object;
+			ARG 0 text
+		METHOD method_43858 toSortedJsonString (Lnet/minecraft/class_2561;)Ljava/lang/String;
+			ARG 0 text
 		METHOD serialize (Ljava/lang/Object;Ljava/lang/reflect/Type;Lcom/google/gson/JsonSerializationContext;)Lcom/google/gson/JsonElement;
 			ARG 1 text
 			ARG 2 type

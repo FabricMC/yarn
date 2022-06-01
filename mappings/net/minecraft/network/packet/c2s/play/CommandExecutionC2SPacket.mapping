@@ -1,0 +1,28 @@
+CLASS net/minecraft/class_7472 net/minecraft/network/packet/c2s/play/CommandExecutionC2SPacket
+	COMMENT A packet used to execute commands on the server.
+	COMMENT
+	COMMENT <p>This truncates the command to at most 256 characters before sending to the
+	COMMENT server on the client. If the server receives the command longer than 256 characters,
+	COMMENT it will reject the message and disconnect the client.
+	COMMENT
+	COMMENT <p>If the command contains an invalid character (see {@link
+	COMMENT net.minecraft.SharedConstants#isValidChar isValidChar}), the server will
+	COMMENT reject the command and disconnect the client.
+	COMMENT
+	COMMENT <p>Commands that took more than {@link ChatMessageC2SPacket#TIME_TO_LIVE} to reach
+	COMMENT the server are considered expired and will be discarded. Commands can also be discarded
+	COMMENT if the server receives them with improper order.
+	COMMENT
+	COMMENT @see net.minecraft.client.network.ClientPlayerEntity#sendCommand
+	COMMENT @see net.minecraft.server.network.ServerPlayNetworkHandler#onCommandExecution
+	FIELD comp_809 timestamp Ljava/time/Instant;
+	METHOD <init> (Ljava/lang/String;Ljava/time/Instant;Lnet/minecraft/class_7450;Z)V
+		ARG 1 command
+		ARG 2 timestamp
+		ARG 3 argumentSignatures
+		ARG 4 signedPreview
+	METHOD <init> (Lnet/minecraft/class_2540;)V
+		ARG 1 buf
+	METHOD comp_809 timestamp ()Ljava/time/Instant;
+	METHOD method_43896 createArgumentsSigner (Ljava/util/UUID;)Lnet/minecraft/class_7448;
+		ARG 1 sender

@@ -1,0 +1,51 @@
+CLASS net/minecraft/class_7434 net/minecraft/client/util/ProfileKeys
+	COMMENT A class to fetch, load, and save the player's public and private keys.
+	FIELD field_39074 LOGGER Lorg/slf4j/Logger;
+	FIELD field_39075 PROFILE_KEYS_PATH Ljava/nio/file/Path;
+	FIELD field_39076 jsonPath Ljava/nio/file/Path;
+	FIELD field_39434 publicKeyFuture Ljava/util/concurrent/CompletableFuture;
+	FIELD field_39435 signerFuture Ljava/util/concurrent/CompletableFuture;
+	METHOD <init> (Lcom/mojang/authlib/minecraft/UserApiService;Ljava/util/UUID;Ljava/nio/file/Path;)V
+		ARG 1 userApiService
+		ARG 2 uuid
+		ARG 3 root
+	METHOD method_43600 saveKeyPairToFile (Lnet/minecraft/class_7427;)V
+		COMMENT Saves the {@code keyPair} to the cache file.
+		ARG 1 keyPair
+	METHOD method_43601 (Lcom/google/gson/JsonElement;)V
+		ARG 1 json
+	METHOD method_43602 getKeyPair (Lcom/mojang/authlib/minecraft/UserApiService;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT Gets the key pair from the file cache, or if it is unavailable or expired,
+		COMMENT the Mojang server.
+		ARG 1 userApiService
+	METHOD method_43603 getPublicKey ()Ljava/util/Optional;
+		COMMENT {@return the public key, or {@code null} if there is no public key associated
+		COMMENT with the profile}
+	METHOD method_43604 (Lnet/minecraft/class_7427;)Z
+		ARG 0 keyPair
+	METHOD method_43605 fetchKeyPair (Lcom/mojang/authlib/minecraft/UserApiService;)Lnet/minecraft/class_7427;
+		COMMENT {@return the key pair fetched from Mojang's server}
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when the fetched key is malformed
+		COMMENT @throws IOException when fetching fails
+		ARG 1 userApiService
+	METHOD method_43606 loadKeyPairFromFile ()Ljava/util/Optional;
+		COMMENT {@return the profile keys from the local cache}
+		COMMENT
+		COMMENT <p>This can return expired keys.
+		COMMENT
+		COMMENT @implNote The cache file is stored at {@code .minecraft/profilekeys/<uuid>.json}.
+	METHOD method_43784 getPublicKeyData ()Ljava/util/Optional;
+	METHOD method_44076 decodeKeyPairResponse (Lcom/mojang/authlib/yggdrasil/response/KeyPairResponse;)Lnet/minecraft/class_7428$class_7443;
+		COMMENT {@return {@code keyPairResponse} decoded to {@link PlayerPublicKey.PublicKeyData}}
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when the response is malformed
+		ARG 0 keyPairResponse
+	METHOD method_44287 getSigner ()Lnet/minecraft/class_7501;
+		COMMENT {@return the signer, or {@code null} if there is no key pair associated with the profile}
+	METHOD method_44288 (Ljava/util/Optional;)Ljava/util/Optional;
+		ARG 0 optionalKeyPair
+	METHOD method_44289 (Ljava/util/Optional;)Ljava/util/Optional;
+		ARG 0 optionalKeyPair
+	METHOD method_44290 (Lnet/minecraft/class_7427;)Lnet/minecraft/class_7501;
+		ARG 0 keyPair
