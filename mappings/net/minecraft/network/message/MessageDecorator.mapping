@@ -1,0 +1,57 @@
+CLASS net/minecraft/class_7492 net/minecraft/network/message/MessageDecorator
+	COMMENT Message decorator decorates the chat messages and other messages server-side.
+	COMMENT Currently, only one message decorator can exist at a time. The message decorator
+	COMMENT that is currently used can be obtained by
+	COMMENT {@link net.minecraft.server.MinecraftServer#getMessageDecorator}.
+	COMMENT
+	COMMENT <p>For the message decorator to produce a signed message, <strong>both the server
+	COMMENT and the sender's client need to have chat previews enabled</strong>, Otherwise, the decorated
+	COMMENT content is considered unsigned, and if the clients require chat messages to be signed
+	COMMENT via the {@linkplain net.minecraft.client.option.GameOptions#getOnlyShowSecureChat
+	COMMENT "Only Show Secure Chat" option}, they will see the undecorated message. Therefore,
+	COMMENT message decorator is <strong>not recommended for censoring messages</strong>.
+	COMMENT
+	COMMENT <p>It is <strong>very important that the decorator be pure; i.e. return the
+	COMMENT same text when given the same text (and sender)</strong>. Otherwise, the server
+	COMMENT detects a mismatch between the preview and the actual message, and discards the message
+	COMMENT as it is now considered improperly signed. For example, a decorator that appends
+	COMMENT the time the decoration was applied would be likely to fail, since there is usually
+	COMMENT a delay between the previewing and the submission.
+	FIELD field_39384 NOOP Lnet/minecraft/class_7492;
+		COMMENT An empty message decorator that returns the original message.
+	METHOD decorate (Lnet/minecraft/class_3222;Lnet/minecraft/class_2561;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT {@return the decorated {@code message}}
+		ARG 1 sender
+			COMMENT the player who sent the message, or {@code null} if {@code message} was not
+			COMMENT sent by a player
+		ARG 2 message
+	METHOD decorateChat (Lnet/minecraft/class_3222;Lnet/minecraft/class_5837;Lnet/minecraft/class_7469;Z)Ljava/util/concurrent/CompletableFuture;
+		COMMENT {@return the decorated signed chat message from undecorated {@code message}}
+		COMMENT
+		COMMENT <p>If {@code previewed} is false, the returned message will have the original
+		COMMENT content as signed and the decorated content as unsigned. This means that if the
+		COMMENT received player requires signed chat message, they will see the original content.
+		COMMENT
+		COMMENT <p>This keeps the filtered status of the original message; i.e. fully censored messages
+		COMMENT will remain fully censored, and unfiltered messages will remain unfiltered. If the message
+		COMMENT is partially filtered, both the raw and the filtered message will be decorated.
+		ARG 1 sender
+		ARG 2 message
+		ARG 3 signature
+		ARG 4 previewed
+			COMMENT whether the decoration was previewed by the sender's client
+	METHOD decorateFiltered (Lnet/minecraft/class_3222;Lnet/minecraft/class_5837;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT {@return the decorated filtered message from undecorated {@code message}}
+		COMMENT
+		COMMENT <p>This keeps the filtered status of the original message; i.e. fully censored messages
+		COMMENT will remain fully censored, and unfiltered messages will remain unfiltered. If the message
+		COMMENT is partially filtered, both the raw and the filtered message will be decorated.
+		ARG 1 sender
+		ARG 2 message
+	METHOD method_44303 (Lnet/minecraft/class_3222;Lnet/minecraft/class_2561;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 sender
+		ARG 1 message
+	METHOD method_44304 (Lnet/minecraft/class_5837;Lnet/minecraft/class_7469;ZLnet/minecraft/class_5837;)Lnet/minecraft/class_5837;
+		ARG 3 decorated
+	METHOD method_44305 (Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;Ljava/lang/Void;)Lnet/minecraft/class_5837;
+		ARG 2 void_
