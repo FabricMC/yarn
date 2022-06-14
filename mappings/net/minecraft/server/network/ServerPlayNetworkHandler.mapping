@@ -163,7 +163,7 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	METHOD method_44157 isExpired (Ljava/time/Instant;)Z
 		COMMENT {@return whether the message sent at {@code timestamp} is expired}
 		COMMENT
-		COMMENT <p>If {@code true}, the message will be discarded.
+		COMMENT <p>If {@code true}, the server logs a warning, but the message will still be accepted.
 		COMMENT
 		COMMENT @see ChatMessageC2SPacket#TIME_TO_LIVE
 		ARG 1 timestamp
@@ -171,10 +171,10 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 1 decorated
 	METHOD method_44159 decorate (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 query
-	METHOD method_44160 isDisordered (Ljava/time/Instant;)Z
-		COMMENT {@return whether the message sent at {@code timestamp} is received with improper order}
+	METHOD method_44160 isInProperOrder (Ljava/time/Instant;)Z
+		COMMENT {@return whether the message sent at {@code timestamp} is received in proper order}
 		COMMENT
-		COMMENT <p>If {@code true}, the message will be discarded.
+		COMMENT <p>If {@code false}, the message will be discarded.
 		ARG 1 timestamp
 	METHOD method_44161 decorateChat (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 query
@@ -183,6 +183,15 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	METHOD method_44318 sendChatPreviewPacket (ILnet/minecraft/class_2561;)V
 		ARG 1 queryId
 		ARG 2 preview
+	METHOD method_44337 canAcceptMessage (Ljava/lang/String;Ljava/time/Instant;)Z
+		COMMENT {@return whether {@code message}, sent at {@code timestamp}, should be accepted}
+		COMMENT
+		COMMENT @implNote This returns {@code false} if the message arrives in {@linkplain
+		COMMENT #isInProperOrder improper order} or if {@linkplain #checkChatDisabled chat is disabled}.
+		COMMENT This also logs a warning when the message is {@linkplain #isExpired expired}, but
+		COMMENT the message is still accepted in this case.
+		ARG 1 message
+		ARG 2 timestamp
 	CLASS 1
 		METHOD method_33897 processInteract (Lnet/minecraft/class_1268;Lnet/minecraft/class_3244$class_5860;)V
 			ARG 1 hand
