@@ -1,13 +1,22 @@
 CLASS net/minecraft/class_7493 net/minecraft/util/PendingTaskRunner
-	COMMENT A runner for tasks that can hold one pending task.
+	COMMENT A runner for tasks that can hold only one pending task. It replaces the
+	COMMENT current pending task if a new one is queued, but does not halt already
+	COMMENT running tasks.
 	COMMENT
-	COMMENT <p>To queue a task for running, call {@link #queue}, and to run the task,
-	COMMENT call {@link #runPending}.
-	FIELD field_39442 reference Ljava/util/concurrent/atomic/AtomicReference;
-	FIELD field_39443 future Ljava/util/concurrent/CompletableFuture;
-	METHOD method_44122 runPending ()V
-		COMMENT Runs the pending task, if any, and marks the runner as not running.
+	COMMENT <p>The runner needs to be updated by {@link #tick}, which checks if
+	COMMENT the running task is done and polls the pending task. {@link #queue}
+	COMMENT sets the pending task for running.
+	FIELD field_39442 pending Ljava/util/concurrent/atomic/AtomicReference;
+	FIELD field_39443 running Ljava/util/concurrent/CompletableFuture;
+	METHOD method_44122 tick ()V
+		COMMENT Waits for the running task to finish and polls the pending task if there
+		COMMENT is no running task.
 	METHOD method_44306 queue (Lnet/minecraft/class_7493$class_7518;)V
+		COMMENT Queues a task for running, and replaces any existing pending task.
+		COMMENT
+		COMMENT @apiNote This method can be called asynchronously, such as from the
+		COMMENT netty event loop.
 		ARG 1 task
-	METHOD method_44307 runPendingInternal ()V
+	METHOD method_44307 poll ()V
 	CLASS class_7518 FutureRunnable
+		COMMENT A supplier of a running task.
