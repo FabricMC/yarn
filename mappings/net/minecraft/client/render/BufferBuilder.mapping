@@ -41,6 +41,10 @@ CLASS net/minecraft/class_287 net/minecraft/client/render/BufferBuilder
 	METHOD method_1335 grow (I)V
 		ARG 1 size
 	METHOD method_1343 clear ()V
+		COMMENT Clears batches in this builder. All built buffers are expected to have
+		COMMENT been released before calling this method.
+		COMMENT
+		COMMENT @see #reset()
 	METHOD method_16005 roundBufferSize (I)I
 		ARG 0 size
 	METHOD method_22625 ([FII)I
@@ -48,7 +52,13 @@ CLASS net/minecraft/class_287 net/minecraft/client/render/BufferBuilder
 		ARG 2 b
 	METHOD method_22892 grow ()V
 	METHOD method_22893 isBuilding ()Z
-	METHOD method_23477 discard ()V
+	METHOD method_23477 reset ()V
+		COMMENT Clears batches in this builder. If there should not be unreleased built
+		COMMENT buffers when calling this method, {@link #clear()} is preferred as it
+		COMMENT logs warning when it happens.
+		COMMENT
+		COMMENT <p>After calling this method, existing built buffers can no longer be
+		COMMENT used safely as their data can be overwritten in later building.
 	METHOD method_23918 setFormat (Lnet/minecraft/class_293;)V
 		ARG 1 format
 	METHOD method_31948 sortFrom (FFF)V
