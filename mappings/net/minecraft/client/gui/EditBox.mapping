@@ -1,26 +1,26 @@
 CLASS net/minecraft/class_7530 net/minecraft/client/gui/EditBox
-	COMMENT A multiline edit box with support for scrolling and basic keyboard shortcuts.
+	COMMENT A multiline edit box with support for basic keyboard shortcuts.
 	COMMENT This should not be used directly; {@link net.minecraft.client.gui.widget.EditBoxWidget}
-	COMMENT should be used instead.
+	COMMENT provides the GUI for the edit box.
 	FIELD field_39511 UNLIMITED_LENGTH I
 		COMMENT A constant denoting that the edit box accepts unlimited amount of text. Edit box
 		COMMENT widgets with such edit boxes do not show the current text length indicator.
 	FIELD field_39512 CURSOR_WIDTH I
 	FIELD field_39513 textRenderer Lnet/minecraft/class_327;
 	FIELD field_39514 lines Ljava/util/List;
-	FIELD field_39515 currentValue Ljava/lang/String;
+	FIELD field_39515 text Ljava/lang/String;
 	FIELD field_39516 cursor I
 	FIELD field_39517 selectionEnd I
 	FIELD field_39518 selecting Z
 	FIELD field_39519 maxLength I
 	FIELD field_39520 width I
-	FIELD field_39521 valueConsumer Ljava/util/function/Consumer;
+	FIELD field_39521 textConsumer Ljava/util/function/Consumer;
 	FIELD field_39522 cursorChangeCallback Ljava/lang/Runnable;
 	METHOD <init> (Lnet/minecraft/class_327;I)V
 		ARG 1 textRenderer
 		ARG 2 width
 	METHOD method_44409 getMaxLength ()I
-		COMMENT {@return the maximum length of the edit box value in characters}
+		COMMENT {@return the maximum length of the edit box text in characters}
 		COMMENT
 		COMMENT <p>If this equals {@link #UNLIMITED_LENGTH}, the edit box does not have a
 		COMMENT length limit. Edit box widgets with such edit boxes do not show the current
@@ -33,7 +33,7 @@ CLASS net/minecraft/class_7530 net/minecraft/client/gui/EditBox
 		ARG 1 x
 		ARG 3 y
 	METHOD method_44411 setMaxLength (I)V
-		COMMENT Sets the maximum length of the edit box value in characters.
+		COMMENT Sets the maximum length of the edit box text in characters.
 		COMMENT
 		COMMENT <p>If {@code maxLength} equals {@link #UNLIMITED_LENGTH}, the edit box does not
 		COMMENT have a length limit. Edit box widgets with such edit boxes do not show the current
@@ -52,13 +52,12 @@ CLASS net/minecraft/class_7530 net/minecraft/client/gui/EditBox
 	METHOD method_44413 setCursorChangeCallback (Ljava/lang/Runnable;)V
 		COMMENT Sets the change callback that is called every time the cursor position changes.
 		ARG 1 cursorChangeCallback
-	METHOD method_44414 setCurrentValue (Ljava/lang/String;)V
-		COMMENT Sets the current value of the edit box and moves the cursor to the end
-		COMMENT of the edit box.
-		ARG 1 currentValue
-	METHOD method_44415 setValueConsumer (Ljava/util/function/Consumer;)V
-		COMMENT Sets the value consumer that is called every time the value changes.
-		ARG 1 valueConsumer
+	METHOD method_44414 setText (Ljava/lang/String;)V
+		COMMENT Sets the text of the edit box and moves the cursor to the end of the edit box.
+		ARG 1 text
+	METHOD method_44415 setTextConsumer (Ljava/util/function/Consumer;)V
+		COMMENT Sets the text consumer that is called every time the text changes.
+		ARG 1 textConsumer
 	METHOD method_44416 (Lnet/minecraft/class_2583;II)V
 		ARG 1 style
 		ARG 2 start
@@ -87,8 +86,8 @@ CLASS net/minecraft/class_7530 net/minecraft/client/gui/EditBox
 		COMMENT {@link SharedConstants#isValidChar invalid characters} and truncates
 		COMMENT the passed string if necessary.
 		ARG 1 string
-	METHOD method_44421 getCurrentValue ()Ljava/lang/String;
-		COMMENT {@return the current value of the edit box}
+	METHOD method_44421 getText ()Ljava/lang/String;
+		COMMENT {@return the text of the edit box}
 	METHOD method_44422 getLine (I)Lnet/minecraft/class_7530$class_7531;
 		COMMENT {@return the line with index {@code index}}
 		ARG 1 index
@@ -104,8 +103,7 @@ CLASS net/minecraft/class_7530 net/minecraft/client/gui/EditBox
 		COMMENT relative position within the line the same. Does nothing if {@code offset} is zero.
 		ARG 1 offset
 	METHOD method_44426 truncate (Ljava/lang/String;)Ljava/lang/String;
-		COMMENT {@return {@code value} truncated to fit in the current value}
-		COMMENT
+		COMMENT {@return {@code value} truncated to fit in the current text}
 		COMMENT <p>For example, if the edit box with 100 characters limit currently
 		COMMENT has 90 characters, this method will return at most 10 characters.
 		COMMENT
@@ -117,7 +115,7 @@ CLASS net/minecraft/class_7530 net/minecraft/client/gui/EditBox
 		COMMENT Handles the special keys, such as copy, cut, linebreak, and cursor movements.
 		ARG 1 keyCode
 	METHOD method_44429 (Ljava/lang/String;)V
-		ARG 0 value
+		ARG 0 text
 	METHOD method_44430 getLineCount ()I
 		COMMENT {@return the number of total lines in the edit box}
 	METHOD method_44431 getOffsetLine (I)Lnet/minecraft/class_7530$class_7531;
@@ -133,10 +131,10 @@ CLASS net/minecraft/class_7530 net/minecraft/client/gui/EditBox
 		COMMENT whitespace since {@code startIndex}.
 		ARG 1 startIndex
 	METHOD method_44434 getLines ()Ljava/lang/Iterable;
-		COMMENT {@return the lines of the edit box's value}
+		COMMENT {@return the lines of the edit box's text}
 	METHOD method_44435 hasSelection ()Z
 		COMMENT {@return whether the edit box has a selected text}
-	METHOD method_44436 getSelectedValue ()Ljava/lang/String;
+	METHOD method_44436 getSelectedText ()Ljava/lang/String;
 		COMMENT {@return the text that is currently selected, or an empty string if there is no selection}
 	METHOD method_44437 getPreviousWordAtCursor ()Lnet/minecraft/class_7530$class_7531;
 		COMMENT {@return the substring of a word whose start position is before the cursor}
@@ -157,14 +155,14 @@ CLASS net/minecraft/class_7530 net/minecraft/client/gui/EditBox
 	METHOD method_44439 getCurrentLine ()Lnet/minecraft/class_7530$class_7531;
 		COMMENT {@return the line that the cursor is located at}
 	METHOD method_44440 onChange ()V
-		COMMENT Called when the value changes. This rewraps the value, calls
-		COMMENT {@link #valueConsumer}, then calls {@link #cursorChangeCallback}.
+		COMMENT Called when the text changes. This rewraps the text, calls
+		COMMENT {@link #textConsumer}, then calls {@link #cursorChangeCallback}.
 	METHOD method_44441 rewrap ()V
-		COMMENT Rewraps the value. This is called whenever the value changes.
+		COMMENT Rewraps the text. This is called whenever the text changes.
 	CLASS class_7531 Substring
-		COMMENT A substring of an edit box's value, specified using the indices of the
+		COMMENT A substring of an edit box's text, specified using the indices of the
 		COMMENT start and the end. This can indicate selections, lines, words, etc. This
-		COMMENT does not contain the string itself; to obtain the string, get the value
+		COMMENT does not contain the string itself; to obtain the string, get the text
 		COMMENT first, then call {@link String#substring}.
 		FIELD field_39524 EMPTY Lnet/minecraft/class_7530$class_7531;
 			COMMENT An empty substring.

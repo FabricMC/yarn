@@ -1,6 +1,7 @@
 CLASS net/minecraft/class_7529 net/minecraft/client/gui/widget/EditBoxWidget
 	COMMENT A widget of {@link EditBox}, a multiline edit box with support for
-	COMMENT scrolling and basic keyboard shortcuts.
+	COMMENT basic keyboard shortcuts. This class implements the rendering and scrolling
+	COMMENT for the edit box.
 	FIELD field_39502 CURSOR_PADDING I
 	FIELD field_39503 CURSOR_COLOR I
 	FIELD field_39504 UNDERSCORE Ljava/lang/String;
@@ -18,15 +19,14 @@ CLASS net/minecraft/class_7529 net/minecraft/client/gui/widget/EditBoxWidget
 		ARG 5 height
 		ARG 6 emptyText
 		ARG 7 message
-	METHOD method_44400 setCurrentValue (Ljava/lang/String;)V
-		COMMENT Sets the current value of the edit box and moves the cursor to the end
-		COMMENT of the edit box.
-		ARG 1 currentValue
-	METHOD method_44401 setValueConsumer (Ljava/util/function/Consumer;)V
-		COMMENT Sets the value consumer that is called every time the value changes.
-		ARG 1 valueConsumer
+	METHOD method_44400 setText (Ljava/lang/String;)V
+		COMMENT Sets the text of the edit box and moves the cursor to the end of the edit box.
+		ARG 1 text
+	METHOD method_44401 setTextConsumer (Ljava/util/function/Consumer;)V
+		COMMENT Sets the text consumer that is called every time the text changes.
+		ARG 1 textConsumer
 	METHOD method_44402 setMaxLength (I)V
-		COMMENT Sets the maximum length of the edit box value in characters.
+		COMMENT Sets the maximum length of the edit box text in characters.
 		COMMENT
 		COMMENT <p>If {@code maxLength} equals {@link EditBox#UNLIMITED_LENGTH}, the edit box does not
 		COMMENT have a length limit, and the widget does not show the current text length indicator.
@@ -43,8 +43,8 @@ CLASS net/minecraft/class_7529 net/minecraft/client/gui/widget/EditBoxWidget
 	METHOD method_44404 moveCursor (DD)V
 		ARG 1 mouseX
 		ARG 3 mouseY
-	METHOD method_44405 getCurrentValue ()Ljava/lang/String;
-		COMMENT {@return the current value of the edit box}
+	METHOD method_44405 getText ()Ljava/lang/String;
+		COMMENT {@return the current text of the edit box}
 	METHOD method_44406 tick ()V
 	METHOD method_44407 onCursorChange ()V
 	METHOD method_44408 getMaxLinesWithoutOverflow ()D
