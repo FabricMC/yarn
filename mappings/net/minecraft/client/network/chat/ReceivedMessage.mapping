@@ -1,0 +1,52 @@
+CLASS net/minecraft/class_7557 net/minecraft/client/network/chat/ReceivedMessage
+	COMMENT A message received by the client and stored in {@link ChatLog}.
+	COMMENT
+	COMMENT <p>This includes both {@linkplain net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket
+	COMMENT chat messages} and {@linkplain net.minecraft.network.packet.s2c.play.GameMessageS2CPacket
+	COMMENT game messages}.
+	METHOD method_44551 getContent ()Lnet/minecraft/class_2561;
+		COMMENT {@return the content of the message}
+		COMMENT
+		COMMENT @implNote If the message is a chat message and it contains an unsigned part, the unsigned
+		COMMENT part will be returned. Note that in vanilla, unsigned part is stripped prior to
+		COMMENT construction of the received message instance if the client requires secure chat.
+	METHOD method_44552 of (Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_2561;Lnet/minecraft/class_7471;)Lnet/minecraft/class_7557;
+		COMMENT {@return the received message constructed from a chat message's elements}
+		ARG 0 gameProfile
+			COMMENT the game profile of the message's sender
+		ARG 1 displayName
+			COMMENT the displayed name of the sender
+		ARG 2 message
+			COMMENT the message content
+	METHOD method_44553 isSentFrom (Ljava/util/UUID;)Z
+		COMMENT {@return whether the sender's UUID equals {@code uuid}}
+		ARG 1 uuid
+	METHOD method_44554 of (Lnet/minecraft/class_2561;Ljava/time/Instant;)Lnet/minecraft/class_7557;
+		COMMENT {@return the received message constructed from a game message's elements}
+		ARG 0 message
+			COMMENT the message content
+		ARG 1 timestamp
+			COMMENT the timestamp of the message
+	METHOD method_44555 getNarration ()Lnet/minecraft/class_2561;
+		COMMENT {@return the narration of the message (by default, the content)}
+	CLASS class_7558 ChatMessage
+		COMMENT A chat message received by the client.
+		FIELD field_39637 DATE_TIME_FORMATTER Ljava/time/format/DateTimeFormatter;
+		METHOD method_44556 getHeadingText ()Lnet/minecraft/class_2561;
+			COMMENT {@return the heading text used by Chat Selection screen}
+			COMMENT
+			COMMENT <p>The text contains the sender's display name and the formatted timestamp.
+		METHOD method_44557 getSenderUuid ()Ljava/util/UUID;
+			COMMENT {@return the UUID of the sender}
+		METHOD method_44558 getFormattedTimestamp ()Lnet/minecraft/class_2561;
+			COMMENT {@return the formatted timestamp text of this message}
+	CLASS class_7559 GameMessage
+		COMMENT A game message received by the client.
+		FIELD comp_872 timestamp Ljava/time/Instant;
+		METHOD comp_872 timestamp ()Ljava/time/Instant;
+	CLASS class_7560 IndexedMessage
+		COMMENT A pair of the message's index and the message itself.
+		COMMENT
+		COMMENT @see ChatLog
+		FIELD comp_873 index I
+		METHOD comp_873 index ()I
