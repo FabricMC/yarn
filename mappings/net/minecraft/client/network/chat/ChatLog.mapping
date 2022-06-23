@@ -1,0 +1,111 @@
+CLASS net/minecraft/class_7555 net/minecraft/client/network/chat/ChatLog
+	COMMENT A chat log holds received chat and game messages with sequential indices, where
+	COMMENT newer messages receive bigger indices. An implementation using fixed-size array
+	COMMENT is available at {@link ChatLogImpl}.
+	FIELD field_39629 MISSING_NEXT_INDEX I
+	METHOD method_44531 getMaxIndex ()I
+		COMMENT {@return the maximum index currently used within the log}
+		COMMENT
+		COMMENT <p>This value changes every time a new message gets added. The message
+		COMMENT associated with this index is the newest one in the log.
+	METHOD method_44532 get (I)Lnet/minecraft/class_7557;
+		COMMENT {@return the message with index {@code index}, or {@code null} if there is no
+		COMMENT such message in the log}
+		ARG 1 index
+	METHOD method_44533 getOffsetIndex (II)I
+		COMMENT {@return the index offset by {@code offset} if there is a message with that index, or
+		COMMENT {@value #MISSING_NEXT_INDEX} if there is no message with the offset index}
+		ARG 1 index
+		ARG 2 offset
+	METHOD method_44534 stream (ILjava/util/function/IntUnaryOperator;)Lnet/minecraft/class_7555$class_7556;
+		COMMENT {@return the streams starting from {@code startIndex}}
+		COMMENT
+		COMMENT @implNote If {@code startIndex} is not in the log, this returns {@link #emptyStreams}.
+		ARG 1 startIndex
+		ARG 2 nextIndexGetter
+			COMMENT a function that, when given an index, returns the next index
+			COMMENT or {@value #MISSING_NEXT_INDEX} to indicate the end of the stream
+	METHOD method_44535 add (Lnet/minecraft/class_7557;)V
+		COMMENT Adds {@code message} to the log.
+		ARG 1 message
+	METHOD method_44536 getMinIndex ()I
+		COMMENT {@return the minimum index currently used within the log}
+		COMMENT
+		COMMENT <p>This value can change every time a new message gets added. The message
+		COMMENT associated with this index is the oldest one in the log.
+	METHOD method_44537 getIndexed (I)Lnet/minecraft/class_7557$class_7560;
+		COMMENT {@return the indexed message with index {@code index}, or {@code null} if there is no
+		COMMENT such message in the log}
+		ARG 1 index
+	METHOD method_44538 clampWithOffset (II)I
+		COMMENT {@return the index offset by {@code offset} and clamped between the minimum
+		COMMENT and the maximum indices}
+		COMMENT
+		COMMENT @see #getMaxIndex
+		COMMENT @see #getMinIndex
+		ARG 1 index
+		ARG 2 offset
+	METHOD method_44539 streamForward ()Lnet/minecraft/class_7555$class_7556;
+		COMMENT {@return the streams starting from {@linkplain #getMinIndex the smallest index
+		COMMENT in the log} with entires ordered chronologically (in ascending order)}
+	METHOD method_44540 contains (I)Z
+		COMMENT {@return whether the log contains a message with index {@code index}}
+		ARG 1 index
+	METHOD method_44541 streamForward (II)Lnet/minecraft/class_7555$class_7556;
+		COMMENT {@return the streams starting from {@code startIndex} with entires ordered
+		COMMENT chronologically (in ascending order) up to and including {@code endIndex}}
+		COMMENT
+		COMMENT @implNote If either {@code startIndex} or {@code endIndex} is not in the log,
+		COMMENT this returns {@link #emptyStreams}.
+		ARG 1 startIndex
+		ARG 2 endIndex
+	METHOD method_44542 emptyStreams ()Lnet/minecraft/class_7555$class_7556;
+		COMMENT {@return the empty stream}
+	METHOD method_44543 getPreviousIndex (I)I
+		COMMENT {@return the index offset by {@code -1} if there is a message with that index, or
+		COMMENT {@value #MISSING_NEXT_INDEX} if there is no message with the offset index}
+		COMMENT
+		COMMENT @see #getOffsetIndex
+		ARG 1 index
+	METHOD method_44544 (II)I
+		ARG 2 currentIndex
+	METHOD method_44545 getNextIndex (I)I
+		COMMENT {@return the index offset by {@code 1} if there is a message with that index, or
+		COMMENT {@value #MISSING_NEXT_INDEX} if there is no message with the offset index}
+		COMMENT
+		COMMENT @see #getOffsetIndex
+		ARG 1 index
+	METHOD method_44546 streamForward (I)Lnet/minecraft/class_7555$class_7556;
+		COMMENT {@return the streams starting from {@code startIndex} with entires ordered
+		COMMENT chronologically (in ascending order)}
+		COMMENT
+		COMMENT @implNote If {@code startIndex} is not in the log, this returns {@link #emptyStreams}.
+		ARG 1 startIndex
+	METHOD method_44547 streamBackward (I)Lnet/minecraft/class_7555$class_7556;
+		COMMENT {@return the streams starting from {@code startIndex} with entires ordered
+		COMMENT antichronologically (in descending order)}
+		COMMENT
+		COMMENT @implNote If {@code startIndex} is not in the log, this returns {@link #emptyStreams}.
+		ARG 1 startIndex
+	CLASS 1
+		FIELD field_39633 nextIndex I
+	CLASS class_7556 Streams
+		COMMENT A set of streams of logged messages.
+		FIELD field_39634 CHARACTERISTICS I
+		FIELD field_39635 log Lnet/minecraft/class_7555;
+		FIELD field_39636 indicesIterator Ljava/util/PrimitiveIterator$OfInt;
+		METHOD <init> (Lnet/minecraft/class_7555;Ljava/util/PrimitiveIterator$OfInt;)V
+			ARG 1 log
+			ARG 2 indicesIterator
+		METHOD method_44548 streamIndices ()Ljava/util/stream/IntStream;
+			COMMENT {@return the stream of message indices}
+		METHOD method_44549 streamMessages ()Ljava/util/stream/Stream;
+			COMMENT {@return the stream of messages}
+			COMMENT
+			COMMENT <p>If for some reason the index is no longer present in the log, such messages are
+			COMMENT ignored.
+		METHOD method_44550 streamIndexedMessages ()Ljava/util/stream/Stream;
+			COMMENT {@return the stream of indexed messages}
+			COMMENT
+			COMMENT <p>If for some reason the index is no longer present in the log, such messages are
+			COMMENT ignored.
