@@ -1,7 +1,7 @@
 CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	COMMENT An abstract class that defines some logic for {@link Block blocks}.
 	COMMENT <strong>This class should not be extended directly. Extend {@link Block} instead.</strong>
-	COMMENT Custom block behaviors are specified either through {@link AbstractBlock$Settings
+	COMMENT Custom block behaviors are specified either through {@linkplain AbstractBlock.Settings
 	COMMENT block settings} or by overriding methods in this class.
 	COMMENT
 	COMMENT <p>Methods in this class may be executed during world generation if they take
@@ -33,7 +33,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	COMMENT         <th>Purpose</th>
 	COMMENT         <th>Player/dispenser</th>
 	COMMENT         <th>Falling block</th>
-	COMMENT         <th>{@link WorldAccess#setBlockState(BlockPos, BlockState) setBlockState} call</th>
+	COMMENT         <th>{@link World#setBlockState(BlockPos, BlockState) setBlockState} call</th>
 	COMMENT     </tr>
 	COMMENT </thead>
 	COMMENT <tbody>
@@ -119,7 +119,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	COMMENT         <th>Purpose</th>
 	COMMENT         <th>Player mining</th>
 	COMMENT         <th>Explosion</th>
-	COMMENT         <th>{@link WorldAccess#setBlockState(BlockPos, BlockState) setBlockState}/{@link net.minecraft.world.ModifiableWorld#removeBlock(BlockPos, boolean) removeBlock} call</th>
+	COMMENT         <th>{@link WorldAccess#setBlockState(BlockPos, BlockState) setBlockState} / {@link net.minecraft.world.ModifiableWorld#removeBlock(BlockPos, boolean) removeBlock} call</th>
 	COMMENT         <th>{@link net.minecraft.world.ModifiableWorld#breakBlock(BlockPos, boolean) breakBlock} call</th>
 	COMMENT     </tr>
 	COMMENT </thead>
@@ -355,7 +355,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT Only blocks within 128-block cylinder (i.e. ignoring Y coordinates) around players
 		COMMENT receive random ticks.
 		COMMENT
-		COMMENT <p>Blocks overriding this must use {@link AbstractBlock$Settings#ticksRandomly}
+		COMMENT <p>Blocks overriding this must use {@link AbstractBlock.Settings#ticksRandomly}
 		COMMENT block settings.
 		COMMENT
 		COMMENT <p>Here are some examples:
@@ -556,7 +556,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	METHOD method_9559 getStateForNeighborUpdate (Lnet/minecraft/class_2680;Lnet/minecraft/class_2350;Lnet/minecraft/class_2680;Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;
 		COMMENT {@return the state of the block after a neighboring block's state change}
 		COMMENT
-		COMMENT <p>Returning {@link Block.AIR} breaks the block. This is useful to implement supporting
+		COMMENT <p>Returning {@link Blocks#AIR} breaks the block. This is useful to implement supporting
 		COMMENT block requirement for blocks (if used along with {@link #canPlaceAt}.)
 		COMMENT
 		COMMENT <p>Side effects like activating a redstone component (but not scheduling a tick)
@@ -607,7 +607,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT needs an additional context, override this method and modify {@code builder} before
 		COMMENT calling {@code super.getDroppedStacks}. An example of this is {@link ShulkerBoxBlock}.
 		COMMENT Note that to prevent item duplication, when appending item stacks to the builder,
-		COMMENT {@link ItemStack#split()} should be called.
+		COMMENT {@link ItemStack#split} should be called.
 		COMMENT
 		COMMENT <p>This method should not be used for dropping inventory contents ({@link
 		COMMENT #onStateReplaced} should be used instead) or to drop experience orbs ({@link
@@ -617,8 +617,8 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT
 		COMMENT @see #onStateReplaced
 		COMMENT @see #onStacksDropped
-		COMMENT @see ItemStack#split()
-		COMMENT @see LootContextParameters
+		COMMENT @see ItemStack#split
+		COMMENT @see net.minecraft.loot.context.LootContextParameters
 		ARG 1 state
 		ARG 2 builder
 	METHOD method_9565 onStacksDropped (Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1799;Z)V
