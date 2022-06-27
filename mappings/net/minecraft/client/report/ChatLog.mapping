@@ -1,4 +1,4 @@
-CLASS net/minecraft/class_7555 net/minecraft/client/network/chat/ChatLog
+CLASS net/minecraft/class_7555 net/minecraft/client/report/ChatLog
 	COMMENT A chat log holds received chat and game messages with sequential indices, where
 	COMMENT newer messages receive bigger indices. An implementation using fixed-size array
 	COMMENT is available at {@link ChatLogImpl}.
@@ -87,6 +87,9 @@ CLASS net/minecraft/class_7555 net/minecraft/client/network/chat/ChatLog
 		COMMENT
 		COMMENT @implNote If {@code startIndex} is not in the log, this returns {@link #emptyStreams}.
 		ARG 1 startIndex
+	METHOD method_44702 streamBackward ()Lnet/minecraft/class_7555$class_7556;
+		COMMENT {@return the streams starting from {@linkplain #getMaxIndex the biggest index
+		COMMENT in the log} with entires ordered antichronologically (in descending order)}
 	CLASS 1
 		FIELD field_39633 nextIndex I
 	CLASS class_7556 Streams
@@ -109,3 +112,9 @@ CLASS net/minecraft/class_7555 net/minecraft/client/network/chat/ChatLog
 			COMMENT
 			COMMENT <p>If for some reason the index is no longer present in the log, such messages are
 			COMMENT ignored.
+		METHOD method_44703 (Lnet/minecraft/class_7557;)Lcom/mojang/authlib/GameProfile;
+			ARG 0 message
+		METHOD method_44704 collectSenderProfiles ()Ljava/util/Collection;
+			COMMENT {@return the collection of profiles of message senders}
+			COMMENT
+			COMMENT <p>This ignores game messages, and the returned collection has no duplicates.

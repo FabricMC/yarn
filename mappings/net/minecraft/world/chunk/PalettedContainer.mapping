@@ -62,6 +62,8 @@ CLASS net/minecraft/class_2841 net/minecraft/world/chunk/PalettedContainer
 		ARG 2 y
 		ARG 3 z
 		ARG 4 value
+	METHOD method_38296 (Lcom/mojang/serialization/Codec;Ljava/lang/Object;Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 2 instance
 	METHOD method_38297 getCompatibleData (Lnet/minecraft/class_2841$class_6561;I)Lnet/minecraft/class_2841$class_6561;
 		COMMENT {@return a compatible data object for the given entry {@code bits} size}
 		COMMENT This may return a new data object or return {@code previousData} if it
@@ -74,14 +76,58 @@ CLASS net/minecraft/class_2841 net/minecraft/world/chunk/PalettedContainer
 		COMMENT Creates a codec for a paletted container with a specific palette provider.
 		COMMENT
 		COMMENT @return the created codec
+		ARG 0 idList
 		ARG 1 entryCodec
 			COMMENT the codec for each entry in the palette
 		ARG 2 provider
 			COMMENT the palette provider that controls how the data are serialized and what
 			COMMENT types of palette are used for what entry bit sizes
+		ARG 3 defaultValue
+		ARG 4 reader
+	METHOD method_38302 (Lnet/minecraft/class_2359;Lnet/minecraft/class_2841$class_6563;Lnet/minecraft/class_7522;)Lnet/minecraft/class_7522$class_6562;
+		ARG 2 container
+	METHOD method_39793 (Ljava/util/function/Consumer;)V
+		COMMENT Executes an {@code action} on all values in the container's storage, sequentially.
 	METHOD method_39794 (Ljava/util/function/Consumer;Lnet/minecraft/class_2837;I)V
 		ARG 2 id
+	METHOD method_39894 applyEach ([ILjava/util/function/IntUnaryOperator;)V
+		COMMENT Applies {@code applier} to each value of {@code is}, modifying the array.
+		COMMENT
+		COMMENT @implNote This caches the last value to be applied and its result, so {@code applier}
+		COMMENT might not be called for all values. Note that this also causes the applier to
+		COMMENT not be applied for initial {@code -1}s.
+		ARG 0 is
+		ARG 1 applier
 	METHOD method_39957 copy ()Lnet/minecraft/class_2841;
+	METHOD method_44340 (Lnet/minecraft/class_2814;I)I
+		ARG 2 id
+	METHOD method_44341 (Lnet/minecraft/class_2841;)Lnet/minecraft/class_7522;
+		ARG 0 result
+	METHOD method_44342 (Lnet/minecraft/class_7522$class_7523;Lnet/minecraft/class_2359;Lnet/minecraft/class_2841$class_6563;Lnet/minecraft/class_7522$class_6562;)Lcom/mojang/serialization/DataResult;
+		ARG 3 serialized
+	METHOD method_44343 createPalettedContainerCodec (Lnet/minecraft/class_2359;Lcom/mojang/serialization/Codec;Lnet/minecraft/class_2841$class_6563;Ljava/lang/Object;)Lcom/mojang/serialization/Codec;
+		ARG 0 idList
+		ARG 1 entryCodec
+		ARG 2 paletteProvider
+		ARG 3 defaultValue
+	METHOD method_44344 (Lnet/minecraft/class_2359;Lnet/minecraft/class_2837;I)I
+		ARG 2 id
+	METHOD method_44346 read (Lnet/minecraft/class_2359;Lnet/minecraft/class_2841$class_6563;Lnet/minecraft/class_7522$class_6562;)Lcom/mojang/serialization/DataResult;
+		ARG 0 idList
+		ARG 1 paletteProvider
+		ARG 2 serialized
+	METHOD method_44347 createReadableContainerCodec (Lnet/minecraft/class_2359;Lcom/mojang/serialization/Codec;Lnet/minecraft/class_2841$class_6563;Ljava/lang/Object;)Lcom/mojang/serialization/Codec;
+		ARG 0 idList
+		ARG 1 entryCodec
+		ARG 2 paletteProvider
+		ARG 3 defaultValue
+	METHOD method_44348 (Lnet/minecraft/class_2359;Lnet/minecraft/class_2841$class_6563;Lnet/minecraft/class_7522$class_6562;)Lcom/mojang/serialization/DataResult;
+		ARG 0 idListx
+		ARG 1 paletteProviderx
+		ARG 2 serialized
+	METHOD method_44349 (ILjava/lang/Object;)I
+		ARG 0 id
+		ARG 1 value
 	CLASS class_4464 Counter
 		COMMENT A counter that receives a palette entry and its number of occurrences
 		COMMENT in the container.
