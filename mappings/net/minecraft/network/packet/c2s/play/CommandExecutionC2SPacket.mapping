@@ -6,12 +6,16 @@ CLASS net/minecraft/class_7472 net/minecraft/network/packet/c2s/play/CommandExec
 	COMMENT it will reject the message and disconnect the client.
 	COMMENT
 	COMMENT <p>If the command contains an invalid character (see {@link
-	COMMENT net.minecraft.SharedConstants#isValidChar isValidChar}), the server will
-	COMMENT reject the command and disconnect the client.
+	COMMENT net.minecraft.SharedConstants#isValidChar isValidChar}) or if the server receives
+	COMMENT the commands in improper order, the server will reject the command and disconnect
+	COMMENT the client.
 	COMMENT
-	COMMENT <p>Commands that took more than {@link ChatMessageC2SPacket#TIME_TO_LIVE} to reach
-	COMMENT the server are considered expired and log warnings on the server. Commands will be
-	COMMENT discarded if the server receives them in improper order.
+	COMMENT <p>Commands that took more than {@link SignedMessage#SERVERBOUND_TIME_TO_LIVE}
+	COMMENT to reach the server are considered expired and log warnings on the server
+	COMMENT if it contains signed message arguments. If the message takes more than
+	COMMENT {@link SignedMessage#CLIENTBOUND_TIME_TO_LIVE} to reach the clients (including
+	COMMENT the time it took to reach the server), the message is not considered secure
+	COMMENT anymore by the clients, and may be discarded depending on the clients' options.
 	COMMENT
 	COMMENT @see net.minecraft.client.network.ClientPlayerEntity#sendCommand
 	COMMENT @see net.minecraft.server.network.ServerPlayNetworkHandler#onCommandExecution
