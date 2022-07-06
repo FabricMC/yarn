@@ -1,12 +1,22 @@
 CLASS net/minecraft/class_7594 net/minecraft/client/network/message/MessageHandler
+	COMMENT Handles received messages, including chat messages and game messages.
 	FIELD field_39779 client Lnet/minecraft/class_310;
+	FIELD field_39796 delayedMessages Ljava/util/Deque;
+	FIELD field_39797 chatDelay J
+	FIELD field_39798 lastProcessTime J
+	METHOD <init> (Lnet/minecraft/class_310;)V
+		ARG 1 client
 	METHOD method_44731 getPlayerListEntry (Lnet/minecraft/class_7436;)Lnet/minecraft/class_640;
 		ARG 1 sender
 	METHOD method_44732 getStatus (Lnet/minecraft/class_7436;Lnet/minecraft/class_7471;Lnet/minecraft/class_2561;Lnet/minecraft/class_640;)Lnet/minecraft/class_7595;
+		ARG 1 sender
 		ARG 2 message
 		ARG 3 decorated
 		ARG 4 senderEntry
 	METHOD method_44733 onChatMessage (Lnet/minecraft/class_2556;Lnet/minecraft/class_7471;Lnet/minecraft/class_7436;)V
+		ARG 1 type
+		ARG 2 message
+		ARG 3 sender
 	METHOD method_44734 extractSender (Lnet/minecraft/class_2561;)Ljava/util/UUID;
 		ARG 1 text
 	METHOD method_44735 addToChatLog (Lnet/minecraft/class_2561;Ljava/time/Instant;)V
@@ -22,3 +32,42 @@ CLASS net/minecraft/class_7594 net/minecraft/client/network/message/MessageHandl
 		ARG 4 trustStatus
 	METHOD method_44738 isAlwaysTrusted (Lnet/minecraft/class_7436;)Z
 		ARG 1 sender
+	METHOD method_44765 processDelayedMessages ()V
+		COMMENT Processes all delayed messages until one of them fails to process if the delay
+		COMMENT has passed, and otherwise does nothing.
+	METHOD method_44766 setChatDelay (D)V
+		COMMENT Sets the chat delay to {@code chatDelay} seconds. If the chat delay was changed
+		COMMENT to {@code 0}, this also processes all queued messages.
+		ARG 1 chatDelay
+	METHOD method_44767 processProfilelessMessage (Lnet/minecraft/class_2556;Lnet/minecraft/class_7436;Lnet/minecraft/class_7471;Lnet/minecraft/class_2561;)Z
+		COMMENT Processes a chat message that lacks a sender profile ID. Chat messages with the
+		COMMENT ID are instead processed at {@link #processChatMessage}.
+		ARG 1 type
+		ARG 2 sender
+		ARG 3 message
+		ARG 4 decorated
+	METHOD method_44768 processChatMessage (Lnet/minecraft/class_2556;Lnet/minecraft/class_7436;Lnet/minecraft/class_7471;Lnet/minecraft/class_2561;Lnet/minecraft/class_640;Lnet/minecraft/class_7595;)Z
+		COMMENT Processes a chat message that has a sender profile ID. Chat messages without the
+		COMMENT ID are instead processed at {@link #processProfilelessMessage}.
+		COMMENT
+		COMMENT @implNote This can return {@code false} if the sender is blocked via Social Interactions
+		COMMENT screen.
+		COMMENT
+		COMMENT @return whether the message was successfully processed
+		ARG 1 type
+		ARG 2 sender
+		ARG 3 message
+		ARG 4 decorated
+		ARG 5 senderEntry
+		ARG 6 trustStatus
+	METHOD method_44769 process ()V
+		COMMENT Processes one delayed message from the queue's beginning.
+	METHOD method_44772 narrate (Lnet/minecraft/class_2556;Lnet/minecraft/class_7471;Lnet/minecraft/class_7436;)V
+		ARG 1 type
+		ARG 2 message
+		ARG 3 sender
+	METHOD method_44773 getDelayedMessages ()Ljava/util/Collection;
+	METHOD method_44775 shouldDelay ()Z
+		COMMENT {@return if the chat delay is set and the message should be delayed}
+	CLASS class_7596 DelayedMessageProcessor
+		COMMENT A functional interface that processes a message that has been delayed.
