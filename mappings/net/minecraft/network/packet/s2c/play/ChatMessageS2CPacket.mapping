@@ -5,19 +5,18 @@ CLASS net/minecraft/class_7438 net/minecraft/network/packet/s2c/play/ChatMessage
 	COMMENT raw message content is sent to the clients, and they will wrap it. To register
 	COMMENT custom wrapping behaviors, check {@link MessageType#register}.
 	COMMENT
-	COMMENT <p>Messages that took more than {@link #TIME_TO_LIVE} to reach the clients are
-	COMMENT considered expired. This is measured from the time the client sent the chat message
-	COMMENT to the server. Note that unlike {@link
-	COMMENT net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket} expired messages are not
-	COMMENT discarded by the clients; they instead log a warning.
-	COMMENT
 	COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
 	COMMENT {@link net.minecraft.network.message.MessageSignature#none} - to send a chat
 	COMMENT message; however if the signature is invalid (e.g. because the text's content differs
 	COMMENT from the one sent by the client, or because the passed signature is invalid) the client
-	COMMENT will log a warning. See {@link
+	COMMENT will show a warning and can discard it depending on the options. See {@link
 	COMMENT net.minecraft.network.message.MessageSignature#updateSignature} for how the
 	COMMENT message is signed.
+	COMMENT
+	COMMENT <p>If the message takes more than {@link SignedMessage#CLIENTBOUND_TIME_TO_LIVE}
+	COMMENT to reach the clients (including the time it originally took to reach the server),
+	COMMENT the message is not considered secure anymore by the clients, and may be discarded
+	COMMENT depending on the clients' options.
 	COMMENT
 	COMMENT @see net.minecraft.server.network.ServerPlayerEntity#sendChatMessage
 	COMMENT @see net.minecraft.client.network.ClientPlayNetworkHandler#onChatMessage

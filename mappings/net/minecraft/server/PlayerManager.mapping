@@ -144,7 +144,7 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT Broadcasts a message to all players and the server console. A different
 		COMMENT message can be sent to a different player.
 		COMMENT
-		COMMENT @see #broadcast(Text, RegistryKey)
+		COMMENT @see #broadcast(Text, boolean)
 		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, RegistryKey)
 		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, RegistryKey)
 		COMMENT @see #broadcast(SignedMessage, MessageSender, RegistryKey)
@@ -154,6 +154,7 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 			COMMENT a function that takes the player to send the message to
 			COMMENT and returns either the text to send to them or {@code null}
 			COMMENT to indicate the message should not be sent to them
+		ARG 3 overlay
 	METHOD method_43513 broadcast (Lnet/minecraft/class_7471;Ljava/util/function/Function;Lnet/minecraft/class_7436;Lnet/minecraft/class_5321;)V
 		COMMENT Broadcasts a chat message to all players and the server console. A different
 		COMMENT message can be sent to a different player.
@@ -162,7 +163,7 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT {@link net.minecraft.network.message.MessageSignature#none} - to send a chat
 		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
 		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
-		COMMENT will log a warning. See {@link
+		COMMENT will show a warning and can discard it depending on the client's options. See {@link
 		COMMENT net.minecraft.network.message.MessageSignature#updateSignature} for how the
 		COMMENT message is signed.
 		COMMENT
@@ -171,8 +172,8 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT as well as through commands like {@link net.minecraft.server.command.MeCommand} or
 		COMMENT {@link net.minecraft.server.command.SayCommand} .
 		COMMENT
-		COMMENT @see #broadcast(Text, RegistryKey)
-		COMMENT @see #broadcast(Text, Function, RegistryKey)
+		COMMENT @see #broadcast(Text, boolean)
+		COMMENT @see #broadcast(Text, Function, boolean)
 		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, RegistryKey)
 		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, RegistryKey)
 		COMMENT @see #broadcast(SignedMessage, MessageSender, RegistryKey)
@@ -189,12 +190,13 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT @apiNote This is used to send general messages such as a death
 		COMMENT message or a join/leave message.
 		COMMENT
-		COMMENT @see #broadcast(Text, Function, RegistryKey)
+		COMMENT @see #broadcast(Text, Function, boolean)
 		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, RegistryKey)
 		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, RegistryKey)
 		COMMENT @see #broadcast(SignedMessage, MessageSender, RegistryKey)
 		COMMENT @see #broadcast(SignedMessage, Function, MessageSender, RegistryKey)
 		ARG 1 message
+		ARG 2 overlay
 	METHOD method_43670 (Lnet/minecraft/class_3222;Lnet/minecraft/server/MinecraftServer$class_7460;)V
 		ARG 1 properties
 	METHOD method_43672 (Lnet/minecraft/class_7471;Lnet/minecraft/class_3222;)Lnet/minecraft/class_7471;
@@ -206,7 +208,7 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT {@link net.minecraft.network.message.MessageSignature#none} - to send a chat
 		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
 		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
-		COMMENT will log a warning. See {@link
+		COMMENT will show a warning and can discard it depending on the client's options.  See {@link
 		COMMENT net.minecraft.network.message.MessageSignature#updateSignature} for how the
 		COMMENT message is signed.
 		COMMENT
@@ -215,8 +217,8 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT as well as through commands like {@link net.minecraft.server.command.MeCommand} or
 		COMMENT {@link net.minecraft.server.command.SayCommand} .
 		COMMENT
-		COMMENT @see #broadcast(Text, RegistryKey)
-		COMMENT @see #broadcast(Text, Function, RegistryKey)
+		COMMENT @see #broadcast(Text, boolean)
+		COMMENT @see #broadcast(Text, Function, boolean)
 		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, RegistryKey)
 		COMMENT @see #broadcast(SignedMessage, MessageSender, RegistryKey)
 		COMMENT @see #broadcast(SignedMessage, Function, MessageSender, RegistryKey)
@@ -230,15 +232,15 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT {@link net.minecraft.network.message.MessageSignature#none} - to send a chat
 		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
 		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
-		COMMENT will log a warning. See {@link
+		COMMENT will show a warning and can discard it depending on the client's options. See {@link
 		COMMENT net.minecraft.network.message.MessageSignature#updateSignature} for how the
 		COMMENT message is signed.
 		COMMENT
 		COMMENT @apiNote This method is used to broadcast messages from commands like {@link
 		COMMENT net.minecraft.server.command.MeCommand} or {@link net.minecraft.server.command.SayCommand}.
 		COMMENT
-		COMMENT @see #broadcast(Text, RegistryKey)
-		COMMENT @see #broadcast(Text, Function, RegistryKey)
+		COMMENT @see #broadcast(Text, boolean)
+		COMMENT @see #broadcast(Text, Function, boolean)
 		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, RegistryKey)
 		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, RegistryKey)
 		COMMENT @see #broadcast(SignedMessage, Function, MessageSender, RegistryKey)
@@ -254,8 +256,8 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT {@link net.minecraft.server.command.MeCommand} or
 		COMMENT {@link net.minecraft.server.command.SayCommand} .
 		COMMENT
-		COMMENT @see #broadcast(Text, RegistryKey)
-		COMMENT @see #broadcast(Text, Function, RegistryKey)
+		COMMENT @see #broadcast(Text, boolean)
+		COMMENT @see #broadcast(Text, Function, boolean)
 		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, RegistryKey)
 		COMMENT @see #broadcast(SignedMessage, MessageSender, RegistryKey)
 		COMMENT @see #broadcast(SignedMessage, Function, MessageSender, RegistryKey)
