@@ -18,6 +18,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	COMMENT other blocks (e.g. {@link net.minecraft.block.StairsBlock#randomTick
 	COMMENT StairsBlock#randomTick} calls {@code randomTick} of its base block).
 	COMMENT
+	COMMENT <p>Many methods of this class are called on both the logical client and logical server,
+	COMMENT so take caution when using those method. The logical side can be checked using
+	COMMENT {@link World#isClient}.
+	COMMENT
 	COMMENT <h2 id=quick-view>Quick view</h2>
 	COMMENT <p><strong>Notes</strong>: "Tall or wide block" refers to a block that
 	COMMENT has multiple parts, such as doors, sunflowers, or beds. "Neighboring
@@ -246,6 +250,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT {@link net.minecraft.block.entity.LockableContainerBlockEntity#createScreenHandler}
 		COMMENT instead of this method.
 		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
 		COMMENT @deprecated Consider calling {@link AbstractBlockState#createScreenHandlerFactory} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		COMMENT
 		COMMENT @see net.minecraft.screen.SimpleNamedScreenHandlerFactory
@@ -255,6 +263,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 3 pos
 	METHOD method_19286 onProjectileHit (Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_3965;Lnet/minecraft/class_1676;)V
 		COMMENT Called when a {@link ProjectileEntity} hits a block.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		COMMENT
 		COMMENT <p>Here are some examples:
 		COMMENT <ul>
@@ -277,6 +289,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT
 		COMMENT <p>By default, this checks if the block's material allows replacing or is not solid.
 		COMMENT Blocks intended to be unbreakable should override this to implement additional checks.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		COMMENT
 		COMMENT @deprecated Consider calling {@link AbstractBlockState#canBucketPlace} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		COMMENT
@@ -346,7 +362,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT @see World#isEmittingRedstonePower
 		ARG 1 state
 	METHOD method_9514 randomTick (Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;)V
-		COMMENT Called when a block gets ticked randomly. This can be overridden to implement
+		COMMENT Called server-side when a block gets ticked randomly. This can be overridden to implement
 		COMMENT various logics, most commonly plant growth. Default implementation calls
 		COMMENT {@link #scheduledTick}. To control the rate of the action, use {@code random}.
 		COMMENT
@@ -389,6 +405,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT Called when the block state changes, before the {#linkplain #getStateForNeighborUpdate
 		COMMENT neighbor-triggered state update} on the original block, and after the
 		COMMENT neighbor-triggered state update on the replaced block.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		COMMENT
 		COMMENT @apiNote This is used by {@link RedstoneWireBlock} to update connected redstone wire.
 		COMMENT
@@ -483,10 +503,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 1 state
 		ARG 2 pos
 	METHOD method_9536 onStateReplaced (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Z)V
-		COMMENT Called on the old block when the block state is changed. This includes block removal.
-		COMMENT This is used to update neighboring blocks when an active redstone power source is removed,
-		COMMENT or to drop the contents of an inventory. The check {@code state.isOf(newState.getBlock())}
-		COMMENT can be used to see if the block was removed or not.
+		COMMENT Called server-side on the old block when the block state is changed. This includes block
+		COMMENT removal. This is used to update neighboring blocks when an active redstone power source
+		COMMENT is removed, or to drop the contents of an inventory. The check {@code
+		COMMENT state.isOf(newState.getBlock())} can be used to see if the block was removed or not.
 		COMMENT
 		COMMENT @deprecated Consider calling {@link AbstractBlockState#onStateReplaced} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		COMMENT
@@ -511,6 +531,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT Called when the entity's collision box intersects the block. Therefore,
 		COMMENT this method is not called for blocks with a collision; use {@link Block#onSteppedOn}
 		COMMENT for those blocks.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		COMMENT
 		COMMENT <p>Here are some examples:
 		COMMENT <ul>
@@ -547,6 +571,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT does not affect block state changes performed through {@link
 		COMMENT World#setBlockState(BlockPos, BlockState)} call.
 		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
 		COMMENT @deprecated Consider calling {@link AbstractBlockState#canPlaceAt} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		COMMENT
 		COMMENT @see #getStateForNeighborUpdate
@@ -564,7 +592,9 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT waterlogging and currently has water, this method should be overridden to tick the
 		COMMENT fluid at the block's position.
 		COMMENT
-		COMMENT <p>This is not called if {@link Block#FORCE_STATE} flag is set in the {@code
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}. This is not called if {@link Block#FORCE_STATE} flag is set in the {@code
 		COMMENT setBlockState} call.
 		COMMENT
 		COMMENT <p>This method can be used for multiple purposes. Here are some examples:
@@ -622,9 +652,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 1 state
 		ARG 2 builder
 	METHOD method_9565 onStacksDropped (Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1799;Z)V
-		COMMENT Called when the stacks are dropped by mining or explosion. This is mostly overridden to
-		COMMENT drop experience orbs. To change the dropped item stacks, use loot tables or {@link
-		COMMENT #getDroppedStacks}. To drop inventory contents, use {@link #onStateReplaced} instead.
+		COMMENT Called server-side when the stacks are dropped by mining or explosion. This is mostly
+		COMMENT overridden to drop experience orbs. To change the dropped item stacks, use loot tables
+		COMMENT or {@link #getDroppedStacks}. To drop inventory contents, use {@link #onStateReplaced}
+		COMMENT instead.
 		COMMENT
 		COMMENT <p>Experience orbs should only be dropped if {@code dropExperience} is {@code true}.
 		COMMENT {@link Block#dropExperienceWhenMined} can be used to drop experience orbs.
@@ -676,7 +707,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 2 world
 		ARG 3 pos
 	METHOD method_9588 scheduledTick (Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;)V
-		COMMENT Called when a block receives a scheduled tick. This can be used like a timer.
+		COMMENT Called server-side when a block receives a scheduled tick. This can be used like a timer.
 		COMMENT Scheduled ticks are added using {@link
 		COMMENT WorldAccess#createAndScheduleBlockTick(BlockPos, Block, int)}. Additionally, {@link
 		COMMENT #randomTick} by default calls this method; override {@link #randomTick} to disable this
@@ -761,6 +792,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	METHOD method_9606 onBlockBreakStart (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)V
 		COMMENT Called when a player starts breaking the block (including when instant-mining).
 		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
 		COMMENT @deprecated Consider calling {@link AbstractBlockState#onBlockBreakStart} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 world
@@ -775,6 +810,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT <p>To replace the state of the block itself, override {@link #getStateForNeighborUpdate}
 		COMMENT instead.
 		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
 		COMMENT @deprecated Consider calling {@link AbstractBlockState#neighborUpdate} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		COMMENT
 		COMMENT @see #getStateForNeighborUpdate
@@ -786,9 +825,9 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 5 sourcePos
 		ARG 6 notify
 	METHOD method_9615 onBlockAdded (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Z)V
-		COMMENT Called on the new block when the block state is changed. This includes block placement.
-		COMMENT When overriding this method, {@link #getStateForNeighborUpdate} or {@link #neighborUpdate}
-		COMMENT should also be overridden. The method is used in the following cases:
+		COMMENT Called server-side on the new block when the block state is changed. This includes block
+		COMMENT placement. When overriding this method, {@link #getStateForNeighborUpdate} or {@link
+		COMMENT #neighborUpdate} should also be overridden. The method is used in the following cases:
 		COMMENT
 		COMMENT <ul>
 		COMMENT <li>When activating a redstone component on placement (used along with {@link
@@ -812,6 +851,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT <p>By default, this checks if the block's material allows replacing and whether the
 		COMMENT item differs from the block's item. Items composed of multiple blocks, such as candles,
 		COMMENT vines, or snow layers, should override this to implement additional checks.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		COMMENT
 		COMMENT @deprecated Consider calling {@link AbstractBlockState#canReplace} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		COMMENT

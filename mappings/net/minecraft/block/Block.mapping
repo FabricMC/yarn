@@ -135,8 +135,12 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 	METHOD method_9502 onEntityLand (Lnet/minecraft/class_1922;Lnet/minecraft/class_1297;)V
 		COMMENT Called after the entity lands on the block.
 		COMMENT
-		COMMENT Default implementation resets the entity's vertical velocity. Blocks that cause
+		COMMENT <p>Default implementation resets the entity's vertical velocity. Blocks that cause
 		COMMENT entities to jump (such as {@link SlimeBlock}) should override this.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		ARG 1 world
 		ARG 2 entity
 	METHOD method_9503 getBlockFromItem (Lnet/minecraft/class_1792;)Lnet/minecraft/class_2248;
@@ -210,16 +214,20 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 	METHOD method_9554 onLandedUpon (Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_1297;F)V
 		COMMENT Called when the entity lands on the block.
 		COMMENT
-		COMMENT Default implementation deals fall damage to the entity. Blocks that increase or
+		COMMENT <p>Default implementation deals fall damage to the entity. Blocks that increase or
 		COMMENT reduce fall damage (like {@link HayBlock}) should override this. {@link FarmlandBlock}
 		COMMENT overrides this method to convert the block to dirt.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		ARG 1 world
 		ARG 2 state
 		ARG 3 pos
 		ARG 4 entity
 		ARG 5 fallDistance
 	METHOD method_9556 afterBreak (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2586;Lnet/minecraft/class_1799;)V
-		COMMENT Called when the block is broken by the player using correct tool.
+		COMMENT Called server-side when the block is broken by the player using correct tool.
 		COMMENT This is called after {@link #onBroken} but has the tool requirement.
 		COMMENT By default, this increments {@link net.minecraft.stat.Stats#MINED}, adds exhaustion
 		COMMENT to the player, and drops the block's item stacks.
@@ -251,6 +259,10 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		COMMENT <p>Tall or wide blocks (such as doors or beds) should override this to place
 		COMMENT the other half of the block. Blocks with block entities can use this to copy the
 		COMMENT data from the item stack, such as the custom name.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		COMMENT
 		COMMENT @see AbstractBlock#onBlockAdded
 		ARG 1 world
@@ -289,6 +301,10 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		COMMENT <p>In most cases, {@link AbstractBlock#onStateReplaced} or {@link
 		COMMENT AbstractBlock#onStacksDropped} should be used instead. Note that they are called
 		COMMENT when blocks are broken by explosions as well as players breaking them.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		COMMENT
 		COMMENT @see AbstractBlock#onStateReplaced
 		COMMENT @see AbstractBlock#onStacksDropped
@@ -342,6 +358,10 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		COMMENT AbstractBlock#onStacksDropped} should be used instead. Note that they are called
 		COMMENT when blocks are broken by explosions as well as players breaking them.
 		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
 		COMMENT @see AbstractBlock#onStateReplaced
 		COMMENT @see AbstractBlock#onStacksDropped
 		COMMENT @see #onBreak
@@ -350,6 +370,10 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		ARG 3 state
 	METHOD method_9586 onDestroyedByExplosion (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1927;)V
 		COMMENT Called when this block is destroyed by an explosion.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 explosion
@@ -362,6 +386,10 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		ARG 1 state
 	METHOD method_9591 onSteppedOn (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_1297;)V
 		COMMENT Called when an entity steps on this block.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 state
