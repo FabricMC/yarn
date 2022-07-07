@@ -245,7 +245,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT The created screen handler is usually passed to {@link PlayerEntity#openHandledScreen}.
 		COMMENT See {@link AnvilBlock#createScreenHandlerFactory} for basic usage. {@link BlockWithEntity}
 		COMMENT delegates this logic to the block entity implementing {@link
-		COMMENT net.minecraft.screen.NamedScreenHandlerFactory}. For example, any block whose block entity
+		COMMENT net.minecraft.screen.NamedScreenHandlerFactory}. For example, any {@link BlockWithEntity} whose block entity
 		COMMENT extends {@link net.minecraft.block.entity.LockableContainerBlockEntity} needs to override
 		COMMENT {@link net.minecraft.block.entity.LockableContainerBlockEntity#createScreenHandler}
 		COMMENT instead of this method.
@@ -367,7 +367,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT {@link #scheduledTick}. To control the rate of the action, use {@code random}.
 		COMMENT
 		COMMENT <p>Random tick speed is controlled by the game rule {@link
-		COMMENT net.minecraft.world.GameRules#RANDOM_TICK_SPEED} and can be disabled.
+		COMMENT net.minecraft.world.GameRules#RANDOM_TICK_SPEED randomTickSpeed} and can be disabled.
 		COMMENT Only blocks within 128-block cylinder (i.e. ignoring Y coordinates) around players
 		COMMENT receive random ticks.
 		COMMENT
@@ -435,7 +435,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT <p>Weak redstone power is a power that cannot power a redstone wire when a solid block
 		COMMENT is in between. For example, {@link RedstoneBlock} and {@link TargetBlock} emits weak
 		COMMENT redstone power only. {@link LeverBlock} and {@link AbstractButtonBlock} emits both
-		COMMENT weak and strong redstone power.
+		COMMENT weak and strong redstone power depending on the direction.
 		COMMENT
 		COMMENT @deprecated Consider calling {@link AbstractBlockState#getWeakRedstonePower} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		COMMENT
@@ -520,7 +520,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	METHOD method_9545 getFluidState (Lnet/minecraft/class_2680;)Lnet/minecraft/class_3610;
 		COMMENT {@return the state's associated fluid state}
 		COMMENT
-		COMMENT <p>Waterloggable blocks must override this to return {@code Fluids.WATER.getStill(false)}
+		COMMENT <p>{@linkplain Waterloggable Waterloggable blocks} must override this to return {@code Fluids.WATER.getStill(false)}
 		COMMENT when waterlogged.
 		COMMENT
 		COMMENT @deprecated Consider calling {@link AbstractBlockState#getFluidState} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
@@ -585,7 +585,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT {@return the state of the block after a neighboring block's state change}
 		COMMENT
 		COMMENT <p>Returning {@link Blocks#AIR} breaks the block. This is useful to implement supporting
-		COMMENT block requirement for blocks (if used along with {@link #canPlaceAt}.)
+		COMMENT block requirement for blocks (if used along with {@link #canPlaceAt}).
 		COMMENT
 		COMMENT <p>Side effects like activating a redstone component (but not scheduling a tick)
 		COMMENT should be performed in {@link #neighborUpdate} instead. If the block supports
