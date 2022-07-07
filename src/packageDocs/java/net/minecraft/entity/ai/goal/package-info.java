@@ -1,7 +1,3 @@
-/*
- * This file is free for everyone to use under the Creative Commons Zero license.
- */
-
 /**
  * The basic AI system for Minecraft living entities.
  *

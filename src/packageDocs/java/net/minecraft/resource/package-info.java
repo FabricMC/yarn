@@ -1,7 +1,3 @@
-/*
- * This file is free for everyone to use under the Creative Commons Zero license.
- */
-
 /**
  * Provides resources to Minecraft, including resource access, provision, and reloading.
  *
