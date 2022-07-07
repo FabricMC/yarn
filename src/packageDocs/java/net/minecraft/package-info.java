@@ -1,3 +1,7 @@
+/*
+ * This file is free for everyone to use under the Creative Commons Zero license.
+ */
+
 /**
  * The base package for all Minecraft classes. All Minecraft classes belong to this package
  * in their intermediary names.
