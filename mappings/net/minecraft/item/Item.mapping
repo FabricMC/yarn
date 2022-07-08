@@ -59,7 +59,11 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	METHOD method_24358 isFireproof ()Z
 		COMMENT {@return whether this item is immune to fire and lava damage}
 	METHOD method_31565 onStackClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;)Z
-		COMMENT Called on the server when the item at the cursor is clicked at {@code slot}.
+		COMMENT Called when the item at the cursor is clicked at {@code slot}.
+		COMMENT
+		COMMENT <p>While this method is usually called on the logical server, it can also be called on
+		COMMENT the logical client, so take caution when overriding this method. The logical side can be
+		COMMENT checked using {@link World#isClient}.
 		COMMENT
 		COMMENT <p>For example, this is called on {@link BundleItem} when the cursor holds
 		COMMENT a bundle and the player clicks on the slot.
@@ -72,8 +76,12 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 3 clickType
 		ARG 4 player
 	METHOD method_31566 onClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;Lnet/minecraft/class_5630;)Z
-		COMMENT Called on the server when the item at {@code slot} gets clicked by the cursor
+		COMMENT Called when the item at {@code slot} gets clicked by the cursor
 		COMMENT holding {@code otherStack}.
+		COMMENT
+		COMMENT <p>While this method is usually called on the logical server, it can also be called on
+		COMMENT the logical client, so take caution when overriding this method. The logical side can be
+		COMMENT checked using {@link World#isClient}.
 		COMMENT
 		COMMENT <p>For example, this is called on {@link BundleItem} when the cursor holds
 		COMMENT an item and the player clicks on the slot that has a bundle.
@@ -92,6 +100,9 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT {@return whether to show the item bar for {@code stack}}
 		COMMENT
 		COMMENT <p>Item bar is usually used to display durability of the stack.
+		COMMENT
+		COMMENT <p>When overriding this, {@link #getItemBarStep} and {@link #getItemBarColor} should
+		COMMENT also be overridden.
 		ARG 1 stack
 	METHOD method_31568 canBeNested ()Z
 		COMMENT @return true if the item can be placed inside of shulker boxes or bundles.
@@ -101,10 +112,16 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT
 		COMMENT <p>This is between {@code 0.0f} and {code 13.0f}. By default, this is
 		COMMENT {@code durability * 13.0f / maxDurability}.
+		COMMENT
+		COMMENT <p>When overriding this, {@link #isItemBarVisible} and {@link #getItemBarColor} should
+		COMMENT also be overridden.
 		ARG 1 stack
 	METHOD method_31570 getEquipSound ()Lnet/minecraft/class_3414;
 	METHOD method_31571 getItemBarColor (Lnet/minecraft/class_1799;)I
 		COMMENT {@return the RGB color of the item bar, usually used for durability display}
+		COMMENT
+		COMMENT <p>When overriding this, {@link #isItemBarVisible} and {@link #getItemBarStep} should
+		COMMENT also be overridden.
 		ARG 1 stack
 	METHOD method_32346 getTooltipData (Lnet/minecraft/class_1799;)Ljava/util/Optional;
 		ARG 1 stack
