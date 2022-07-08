@@ -1,8 +1,11 @@
 CLASS net/minecraft/class_7594 net/minecraft/client/network/message/MessageHandler
+	COMMENT Handles received messages, including chat messages and game messages.
 	FIELD field_39779 client Lnet/minecraft/class_310;
-	METHOD method_44731 getPlayerListEntry (Ljava/util/UUID;)Lnet/minecraft/class_640;
-	METHOD method_44732 getStatus (Lnet/minecraft/class_7471;Lnet/minecraft/class_2561;Lnet/minecraft/class_640;)Lnet/minecraft/class_7595;
-	METHOD method_44733 onChatMessage (Lnet/minecraft/class_7471;Lnet/minecraft/class_2556$class_7602;)V
+	FIELD field_39796 delayedMessages Ljava/util/Deque;
+	FIELD field_39797 chatDelay J
+	FIELD field_39798 lastProcessTime J
+	METHOD <init> (Lnet/minecraft/class_310;)V
+		ARG 1 client
 	METHOD method_44734 extractSender (Lnet/minecraft/class_2561;)Ljava/util/UUID;
 		ARG 1 text
 	METHOD method_44735 addToChatLog (Lnet/minecraft/class_2561;Ljava/time/Instant;)V
@@ -15,4 +18,15 @@ CLASS net/minecraft/class_7594 net/minecraft/client/network/message/MessageHandl
 		ARG 1 message
 		ARG 3 senderEntry
 		ARG 4 trustStatus
-	METHOD method_44738 isAlwaysTrusted (Ljava/util/UUID;)Z
+	METHOD method_44765 processDelayedMessages ()V
+		COMMENT Processes all delayed messages until one of them fails to process if the delay
+		COMMENT has passed, and otherwise does nothing.
+	METHOD method_44766 setChatDelay (D)V
+		COMMENT Sets the chat delay to {@code chatDelay} seconds. If the chat delay was changed
+		COMMENT to {@code 0}, this also processes all queued messages.
+		ARG 1 chatDelay
+	METHOD method_44769 process ()V
+		COMMENT Processes one delayed message from the queue's beginning.
+	METHOD method_44773 getDelayedMessages ()Ljava/util/Collection;
+	METHOD method_44775 shouldDelay ()Z
+		COMMENT {@return if the chat delay is set and the message should be delayed}
