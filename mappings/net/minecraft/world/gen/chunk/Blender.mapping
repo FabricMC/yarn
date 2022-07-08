@@ -6,9 +6,15 @@ CLASS net/minecraft/class_6748 net/minecraft/world/gen/chunk/Blender
 	METHOD <init> (Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap;Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap;)V
 		ARG 1 blendingData
 	METHOD method_39336 getNoBlending ()Lnet/minecraft/class_6748;
-	METHOD method_39338 (Lnet/minecraft/class_6910$class_6912;D)D
+	METHOD method_39338 applyBlendDensity (Lnet/minecraft/class_6910$class_6912;D)D
 		ARG 1 pos
-	METHOD method_39340 (II)Lnet/minecraft/class_6748$class_6956;
+		ARG 2 density
+	METHOD method_39339 (IIILorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableDouble;IIID)V
+		ARG 6 biomeX
+		ARG 7 halfSectionY
+		ARG 8 biomeZ
+		ARG 9 collidableBlockDensity
+	METHOD method_39340 calculate (II)Lnet/minecraft/class_6748$class_6956;
 		ARG 1 blockX
 		ARG 2 blockZ
 	METHOD method_39342 getBlender (Lnet/minecraft/class_3233;)Lnet/minecraft/class_6748;
@@ -20,10 +26,11 @@ CLASS net/minecraft/class_6748 net/minecraft/world/gen/chunk/Blender
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
-	METHOD method_39562 (IIILnet/minecraft/class_6748$class_6781;)D
+	METHOD method_39562 sampleClosest (IIILnet/minecraft/class_6748$class_6781;)D
 		ARG 1 biomeX
 		ARG 2 biomeY
 		ARG 3 biomeZ
+		ARG 4 sampler
 	METHOD method_39563 getBiomeSupplier (Lnet/minecraft/class_6780;)Lnet/minecraft/class_6780;
 		ARG 1 biomeSupplier
 	METHOD method_39564 (Lnet/minecraft/class_6780;IIILnet/minecraft/class_6544$class_6552;)Lnet/minecraft/class_6880;
@@ -31,7 +38,8 @@ CLASS net/minecraft/class_6748 net/minecraft/world/gen/chunk/Blender
 		ARG 3 y
 		ARG 4 z
 		ARG 5 noise
-	METHOD method_39565 (Lnet/minecraft/class_6748$class_6781;IIIII)D
+	METHOD method_39565 sample (Lnet/minecraft/class_6748$class_6781;IIIII)D
+		ARG 1 sampler
 		ARG 2 chunkX
 		ARG 3 chunkZ
 		ARG 4 biomeX
@@ -53,9 +61,10 @@ CLASS net/minecraft/class_6748 net/minecraft/world/gen/chunk/Blender
 	METHOD method_40027 (IILorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableDouble;Ljava/lang/Long;Lnet/minecraft/class_6749;)V
 		ARG 5 chunkPos
 		ARG 6 data
-	CLASS class_6781
-		METHOD get (Lnet/minecraft/class_6749;III)D
+	CLASS class_6781 BlendingSampler
+		METHOD get sample (Lnet/minecraft/class_6749;III)D
 			ARG 1 data
 			ARG 2 biomeX
 			ARG 3 biomeY
 			ARG 4 biomeZ
+	CLASS class_6956 BlendResult
