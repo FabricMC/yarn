@@ -6,12 +6,16 @@ CLASS net/minecraft/class_2797 net/minecraft/network/packet/c2s/play/ChatMessage
 	COMMENT 256 characters, it will reject the message and disconnect the client.
 	COMMENT
 	COMMENT <p>If the message contains an invalid character (see {@link
-	COMMENT net.minecraft.SharedConstants#isValidChar isValidChar}), the server will
+	COMMENT net.minecraft.SharedConstants#isValidChar isValidChar}) or if the server
+	COMMENT receives the messages in improper order. the server will
 	COMMENT reject the message and disconnect the client.
 	COMMENT
-	COMMENT <p>Messages that took more than {@link #TIME_TO_LIVE} to reach the server
-	COMMENT are considered expired and log warnings on the server. Messages will be
-	COMMENT discarded if the server receives them in improper order.
+	COMMENT <p>Messages that took more than {@link SignedMessage#SERVERBOUND_TIME_TO_LIVE}
+	COMMENT to reach the server are considered expired and log warnings on the server.
+	COMMENT If the message takes more than {@link SignedMessage#CLIENTBOUND_TIME_TO_LIVE}
+	COMMENT to reach the clients (including the time it took to reach the server), the
+	COMMENT message is not considered secure anymore by the clients, and may be discarded
+	COMMENT depending on the clients' options.
 	COMMENT
 	COMMENT @see net.minecraft.client.network.ClientPlayerEntity#sendChatMessage
 	COMMENT @see net.minecraft.server.network.ServerPlayNetworkHandler#onChatMessage

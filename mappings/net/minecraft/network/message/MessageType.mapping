@@ -1,27 +1,21 @@
 CLASS net/minecraft/class_2556 net/minecraft/network/message/MessageType
-	COMMENT A message type (also known as "chat type") controls whether to display or narrate
-	COMMENT the messages sent to the clients, and if so, how. Message types are registered
-	COMMENT at {@link net.minecraft.util.registry.BuiltinRegistries#MESSAGE_TYPE}. When
-	COMMENT sending a message, the registry key of the message type can be passed to indicate
+	COMMENT A message type (also known as "chat type") controls how to display or narrate
+	COMMENT the chat messages sent to the clients. Message types are registered at
+	COMMENT {@link net.minecraft.util.registry.BuiltinRegistries#MESSAGE_TYPE}. When
+	COMMENT sending a chat message, the registry key of the message type can be passed to indicate
 	COMMENT which message type should be used.
 	COMMENT
-	COMMENT <p>Message type has three fields, all of which are optional. If the field is empty,
-	COMMENT the message is not displayed or narrated there.
+	COMMENT <p>Message type has two fields.
 	COMMENT <ul>
 	COMMENT <li>{@link #chat} controls the content displayed in the {@linkplain
 	COMMENT net.minecraft.client.gui.hud.ChatHud chat hud}.</li>
-	COMMENT <li>{@link #overlay} controls the content displayed as the overlay (above the hotbar).</li>
 	COMMENT <li>{@link #narration} controls the narrated content.</li>
 	COMMENT </ul>
 	COMMENT
-	COMMENT <p>The display rules and the narration rule can optionally have a "decoration", which is an
-	COMMENT instance of {@link Decoration}. Decorations are pre-defined message formatting and
-	COMMENT styling rules, which can be {@linkplain Decoration#apply applied} to the message to
-	COMMENT produce the displayed or narrated text. If there is no decoration, the message is used
-	COMMENT without any extra processing. See the documentation for {@link MessageType.DisplayRule}
-	COMMENT and {@link MessageType.NarrationRule} for details.
-	COMMENT
-	COMMENT @see net.minecraft.server.PlayerManager#broadcast(Text, RegistryKey)
+	COMMENT <p>The fields are "decoration", which is an instance of {@link Decoration}.
+	COMMENT Decorations are pre-defined message formatting and styling rules, which can be
+	COMMENT {@linkplain Decoration#apply applied} to the message to produce the displayed or
+	COMMENT narrated text.
 	FIELD comp_792 Lnet/minecraft/class_7463;
 		COMMENT the display rule for the content displayed in the chat hud, or
 		COMMENT {@link Optional#empty()} if it should not be displayed in the chat hud
@@ -39,12 +33,6 @@ CLASS net/minecraft/class_2556 net/minecraft/network/message/MessageType
 		COMMENT net.minecraft.server.command.SayCommand /say}. The message content is
 		COMMENT {@linkplain Decoration#ofChat decorated} using the {@code chat.type.announcement}
 		COMMENT text.
-	FIELD field_39229 Lnet/minecraft/class_5321;
-		COMMENT The registry key for the message command message type, used by {@linkplain
-		COMMENT net.minecraft.server.command.MessageCommand /msg}. The message content is
-		COMMENT {@linkplain Decoration#ofDirectMessage decorated} using the
-		COMMENT {@code commands.message.display.incoming} text, and the text is italicized and colored
-		COMMENT gray.
 	FIELD field_39230 Lnet/minecraft/class_5321;
 		COMMENT The registry key for the team message command message type, used by {@linkplain
 		COMMENT net.minecraft.server.command.TeamMsgCommand /teammsg}. The message content is
@@ -55,6 +43,16 @@ CLASS net/minecraft/class_2556 net/minecraft/network/message/MessageType
 		COMMENT net.minecraft.server.command.MeCommand /me}. The message content is
 		COMMENT {@linkplain Decoration#ofChat decorated} using the {@code chat.type.emote} text.
 	FIELD field_39677 CHAT_TEXT_DECORATION Lnet/minecraft/class_7463;
+	FIELD field_39799 Lnet/minecraft/class_5321;
+		COMMENT The registry key for the msg command message type, used by {@linkplain
+		COMMENT net.minecraft.server.command.MessageCommand /msg} for incoming messages.
+		COMMENT The message content is {@linkplain Decoration#ofIncomingMessage decorated} using
+		COMMENT the {@code commands.message.display.incoming} text.
+	FIELD field_39800 Lnet/minecraft/class_5321;
+		COMMENT The registry key for the msg command message type, used by {@linkplain
+		COMMENT net.minecraft.server.command.MessageCommand /msg} for outgoing messages.
+		COMMENT The message content is {@linkplain Decoration#ofOutgoingMessage decorated} using
+		COMMENT the {@code commands.message.display.outgoing} text.
 	METHOD method_43843 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
 		ARG 0 instance
 	METHOD method_43844 initialize (Lnet/minecraft/class_2378;)Lnet/minecraft/class_6880;
