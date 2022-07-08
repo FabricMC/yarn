@@ -24,6 +24,8 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 	FIELD field_36584 blockStateSampler Lnet/minecraft/class_6568$class_6569;
 	FIELD field_36585 cachedBlendAlphaDensityFunction Lnet/minecraft/class_6568$class_6951;
 	FIELD field_36586 cachedBlendOffsetDensityFunction Lnet/minecraft/class_6568$class_6951;
+	FIELD field_36587 lastBlendingColumnPos J
+	FIELD field_36588 lastBlendingResult Lnet/minecraft/class_6748$class_6956;
 	FIELD field_36589 biomeHorizontalEnd I
 	FIELD field_36590 horizontalBlockSize I
 	FIELD field_36591 verticalBlockSize I
@@ -87,7 +89,7 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 		ARG 2 nextCellX
 	METHOD method_40533 getActualDensityFunctionImpl (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
 		ARG 1 densityFunction
-	METHOD method_40535 (II)Lnet/minecraft/class_6748$class_6956;
+	METHOD method_40535 caclculateBlendResult (II)Lnet/minecraft/class_6748$class_6956;
 		ARG 1 blockX
 		ARG 2 blockZ
 	METHOD method_40536 sampleBlockState ()Lnet/minecraft/class_2680;
@@ -135,15 +137,19 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 	CLASS class_6947 BlendOffsetDensityFunction
 	CLASS class_6948 Cache2D
 		FIELD field_36599 delegate Lnet/minecraft/class_6910;
+		FIELD field_36600 lastSamplingColumnPos J
+		FIELD field_36601 lastSamplingResult D
 		METHOD <init> (Lnet/minecraft/class_6910;)V
 			ARG 1 delegate
 	CLASS class_6949 CellCache
 		FIELD field_36603 delegate Lnet/minecraft/class_6910;
-		FIELD field_36604 buffer [D
+		FIELD field_36604 cache [D
 		METHOD <init> (Lnet/minecraft/class_6568;Lnet/minecraft/class_6910;)V
 			ARG 2 delegate
 	CLASS class_6950 CacheOnce
 		FIELD field_36606 delegate Lnet/minecraft/class_6910;
+		FIELD field_36609 lastSamplingResult D
+		FIELD field_36610 cache [D
 		METHOD <init> (Lnet/minecraft/class_6568;Lnet/minecraft/class_6910;)V
 			ARG 2 delegate
 	CLASS class_6951 FlatCacheDensityFunction
