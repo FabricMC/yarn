@@ -1,43 +1,104 @@
 CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
-	FIELD field_34598 height I
-	FIELD field_34599 horizontalSize I
-	FIELD field_34600 minimumY I
-	FIELD field_34601 x I
-	FIELD field_34602 z I
+	FIELD field_34598 cellHeight I
+	FIELD field_34599 horizontalCellCount I
+	FIELD field_34600 minimumCellY I
+	FIELD field_34601 startCellX I
+	FIELD field_34602 startCellZ I
 	FIELD field_34603 biomeX I
 	FIELD field_34604 biomeZ I
 	FIELD field_34605 interpolators Ljava/util/List;
 	FIELD field_34613 aquiferSampler Lnet/minecraft/class_6350;
 	FIELD field_35487 blender Lnet/minecraft/class_6748;
 	FIELD field_35674 generationShapeConfig Lnet/minecraft/class_5309;
+	FIELD field_36273 surfaceHeightEstimateCache Lit/unimi/dsi/fastutil/longs/Long2IntMap;
+	FIELD field_36572 startBlockY I
+	FIELD field_36573 startBlockZ I
+	FIELD field_36574 cellBlockX I
+	FIELD field_36575 cellBlockY I
+	FIELD field_36576 cellBlockZ I
+	FIELD field_36577 sampleUniqueIndex J
+	FIELD field_36578 cacheOnceUniqueIndex J
+	FIELD field_36579 index I
+	FIELD field_36580 eachApplier Lnet/minecraft/class_6910$class_6911;
+	FIELD field_36581 caches Ljava/util/List;
+	FIELD field_36582 actualDensityFunctionCache Ljava/util/Map;
+	FIELD field_36583 initialDensityWithoutJaggedness Lnet/minecraft/class_6910;
 	FIELD field_36584 blockStateSampler Lnet/minecraft/class_6568$class_6569;
+	FIELD field_36585 cachedBlendAlphaDensityFunction Lnet/minecraft/class_6568$class_6951;
+	FIELD field_36586 cachedBlendOffsetDensityFunction Lnet/minecraft/class_6568$class_6951;
+	FIELD field_36587 lastBlendingColumnPos J
+	FIELD field_36588 lastBlendingResult Lnet/minecraft/class_6748$class_6956;
+	FIELD field_36589 biomeHorizontalEnd I
 	FIELD field_36590 horizontalBlockSize I
 	FIELD field_36591 verticalBlockSize I
+	FIELD field_36592 isInInterpolationLoop Z
+	FIELD field_36593 isSamplingNoise Z
+	FIELD field_36594 startBlockX I
+	FIELD field_37113 beardifying Lnet/minecraft/class_6916$class_7050;
 	METHOD <init> (ILnet/minecraft/class_7138;IILnet/minecraft/class_5309;Lnet/minecraft/class_6916$class_7050;Lnet/minecraft/class_5284;Lnet/minecraft/class_6350$class_6565;Lnet/minecraft/class_6748;)V
-		ARG 1 horizontalSize
+		ARG 1 horizontalCellCount
+		ARG 2 noiseConfig
+		ARG 3 startX
+		ARG 4 startZ
+		ARG 5 generationShapeConfig
+		ARG 6 beardifying
+		ARG 7 chunkGeneratorSettings
+		ARG 8 fluidLevelSampler
+		ARG 9 blender
 	METHOD method_38336 sampleStartNoise ()V
 	METHOD method_38337 sampleNoiseY (ID)V
+		ARG 1 blockY
+		ARG 2 cellDeltaY
 	METHOD method_38338 (DLnet/minecraft/class_6568$class_5917;)V
 		ARG 2 interpolator
 	METHOD method_38339 sampleEndNoise (I)V
-		ARG 1 x
+		ARG 1 cellX
 	METHOD method_38342 (IILnet/minecraft/class_6568$class_5917;)V
 		ARG 2 interpolator
 	METHOD method_38348 swapBuffers ()V
 	METHOD method_38349 sampleNoiseX (ID)V
+		ARG 1 blockX
+		ARG 2 cellDeltaX
 	METHOD method_38350 (DLnet/minecraft/class_6568$class_5917;)V
 		ARG 2 interpolator
 	METHOD method_38354 getAquiferSampler ()Lnet/minecraft/class_6350;
 	METHOD method_38355 sampleNoiseZ (ID)V
+		ARG 1 blockZ
+		ARG 2 cellDeltaZ
 	METHOD method_38356 (DLnet/minecraft/class_6568$class_5917;)V
 		ARG 2 interpolator
 	METHOD method_38362 sampleNoiseCorners (II)V
-		ARG 1 noiseY
-		ARG 2 noiseZ
+		ARG 1 cellY
+		ARG 2 cellZ
 	METHOD method_39543 create (Lnet/minecraft/class_2791;Lnet/minecraft/class_7138;Lnet/minecraft/class_6916$class_7050;Lnet/minecraft/class_5284;Lnet/minecraft/class_6350$class_6565;Lnet/minecraft/class_6748;)Lnet/minecraft/class_6568;
 		ARG 0 chunk
+		ARG 1 noiseConfig
+		ARG 2 beardifying
+		ARG 3 chunkGeneratorSettings
+		ARG 4 fluidLevelSampler
+		ARG 5 blender
+	METHOD method_39899 calculateSurfaceHeightEstimate (J)I
+		ARG 1 columnPos
+	METHOD method_39900 estimateSurfaceHeight (II)I
+		ARG 1 blockX
+		ARG 2 blockZ
+	METHOD method_40529 getActualDensityFunction (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		ARG 1 densityFunction
+	METHOD method_40530 (Lnet/minecraft/class_6910;Lnet/minecraft/class_6910$class_6912;)Lnet/minecraft/class_2680;
+		ARG 2 pos
 	METHOD method_40531 createMultiNoiseSampler (Lnet/minecraft/class_6953;Ljava/util/List;)Lnet/minecraft/class_6544$class_6552;
+		ARG 1 noiseRouter
+		ARG 2 spawnTarget
+	METHOD method_40532 sampleNoise (ZI)V
+		ARG 1 start
+		ARG 2 nextCellX
+	METHOD method_40533 getActualDensityFunctionImpl (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		ARG 1 densityFunction
+	METHOD method_40535 caclculateBlendResult (II)Lnet/minecraft/class_6748$class_6956;
+		ARG 1 blockX
+		ARG 2 blockZ
 	METHOD method_40536 sampleBlockState ()Lnet/minecraft/class_2680;
+	METHOD method_40537 stopInterpolation ()V
 	METHOD method_42361 getHorizontalBlockSize ()I
 	METHOD method_42362 getVerticalBlockSize ()I
 	CLASS class_5917 NoiseInterpolator
@@ -77,4 +138,31 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 	CLASS class_6569 BlockStateSampler
 		METHOD calculate sample (Lnet/minecraft/class_6910$class_6912;)Lnet/minecraft/class_2680;
 			ARG 1 pos
+	CLASS class_6946 BlendAlphaDensityFunction
+	CLASS class_6947 BlendOffsetDensityFunction
+	CLASS class_6948 Cache2D
+		FIELD field_36599 delegate Lnet/minecraft/class_6910;
+		FIELD field_36600 lastSamplingColumnPos J
+		FIELD field_36601 lastSamplingResult D
+		METHOD <init> (Lnet/minecraft/class_6910;)V
+			ARG 1 delegate
+	CLASS class_6949 CellCache
+		FIELD field_36603 delegate Lnet/minecraft/class_6910;
+		FIELD field_36604 cache [D
+		METHOD <init> (Lnet/minecraft/class_6568;Lnet/minecraft/class_6910;)V
+			ARG 2 delegate
+	CLASS class_6950 CacheOnce
+		FIELD field_36606 delegate Lnet/minecraft/class_6910;
+		FIELD field_36607 sampleUniqueIndex J
+		FIELD field_36608 cacheOnceUniqueIndex J
+		FIELD field_36609 lastSamplingResult D
+		FIELD field_36610 cache [D
+		METHOD <init> (Lnet/minecraft/class_6568;Lnet/minecraft/class_6910;)V
+			ARG 2 delegate
+	CLASS class_6951 FlatCacheDensityFunction
+		FIELD field_36612 delegate Lnet/minecraft/class_6910;
+		FIELD field_36613 cache [[D
+		METHOD <init> (Lnet/minecraft/class_6568;Lnet/minecraft/class_6910;Z)V
+			ARG 2 delegate
+			ARG 3 sample
 	CLASS class_6952 ParentedNoiseType
