@@ -15,7 +15,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	COMMENT
 	COMMENT <div class="fabric">
 	COMMENT <table border=1>
-	COMMENT <caption>Creation & Spawning (at once)</caption>
+	COMMENT <caption>Creation &amp; Spawning (at once)</caption>
 	COMMENT <tr>
 	COMMENT \t<th>Method</th><th>Recommended usage</th><th>Additional note</th>
 	COMMENT </tr>
@@ -322,7 +322,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #isInSwimmingPose
 	METHOD method_20620 teleport (DDD)V
 		COMMENT Teleports the entity to the given position, loading the chunk with
-		COMMENT {@link ChunkTicketType#POST_TELEPORT}.
+		COMMENT {@link net.minecraft.server.world.ChunkTicketType#POST_TELEPORT}.
 		COMMENT
 		COMMENT @see #requestTeleportAndDismount
 		COMMENT @see #requestTeleport
@@ -528,7 +528,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_30633 positionInPortal (Lnet/minecraft/class_2350$class_2351;Lnet/minecraft/class_5459$class_5460;)Lnet/minecraft/class_243;
 		COMMENT {@return the entity's position in the portal after teleportation}
 		COMMENT
-		COMMENT @see AreaHelper#entityPosInPortal
+		COMMENT @see net.minecraft.world.dimension.AreaHelper#entityPosInPortal
 		ARG 1 portalAxis
 		ARG 2 portalRect
 	METHOD method_30634 updatePosition (DDD)V
@@ -668,9 +668,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT {@return whether the entity can freeze}
 		COMMENT
 		COMMENT @implNote Entities cannot be frozen if they are in the {@link
-		COMMENT EntityTypeTags#FREEZE_IMMUNE_ENTITY_TYPES} tag. In addition to this, {@link
+		COMMENT net.minecraft.tag.EntityTypeTags#FREEZE_IMMUNE_ENTITY_TYPES} tag. In addition to this, {@link
 		COMMENT LivingEntity} cannot be frozen if they are spectator or if they wear an
-		COMMENT item inside {@link ItemTag#FREEZE_IMMUNE_WEARABLES} tag.
+		COMMENT item inside {@link net.minecraft.tag.ItemTag#FREEZE_IMMUNE_WEARABLES} tag.
 	METHOD method_32317 setFrozenTicks (I)V
 		COMMENT Sets how long the entity is freezing in ticks.
 		COMMENT
@@ -803,7 +803,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 2 pos
 	METHOD method_36974 tryCheckBlockCollision ()V
 	METHOD method_36975 playExtinguishSound ()V
-		COMMENT Plays the {@link SoundEvents#ENTITY_GENERIC_EXTINGUISH_FIRE} sound.
+		COMMENT Plays the {@link
+		COMMENT net.minecraft.sound.SoundEvents#ENTITY_GENERIC_EXTINGUISH_FIRE} sound.
 	METHOD method_37215 playAmethystChimeSound (Lnet/minecraft/class_2680;)V
 		ARG 1 state
 	METHOD method_37216 (Lnet/minecraft/class_1297;)V
@@ -822,7 +823,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT if it can freeze.
 		COMMENT
 		COMMENT @see #canFreeze
-		COMMENT @see #isFreezing
+		COMMENT @see #isFrozen
 	METHOD method_40123 getHandPosOffset (Lnet/minecraft/class_1792;)Lnet/minecraft/class_243;
 		COMMENT {@return the offset of the hand that holds {@code item}}
 		COMMENT
@@ -850,7 +851,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT {@return whether there is a passenger in control of this entity}
 		COMMENT
 		COMMENT @see #getPrimaryPassenger
-		COMMENT @see #getPassengersList
+		COMMENT @see #getPassengerList
 		COMMENT @see #getFirstPassenger
 	METHOD method_43077 playSoundIfNotSilent (Lnet/minecraft/class_3414;)V
 		ARG 1 event
@@ -907,12 +908,12 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		COMMENT Called when this entity's collision box intersects {@code state}.
 		COMMENT
-		COMMENT @see AbstractBlock#onEntityCollision
+		COMMENT @see net.minecraft.block.AbstractBlock#onEntityCollision
 		ARG 1 state
 	METHOD method_5623 fall (DZLnet/minecraft/class_2680;Lnet/minecraft/class_2338;)V
 		COMMENT Called when the entity falls. Flying mobs should override this to do nothing.
 		COMMENT
-		COMMENT @implNote If on ground, this calls {@link Block#onLandedUpon}, which can add or
+		COMMENT @implNote If on ground, this calls {@link net.minecraft.block.Block#onLandedUpon}, which can add or
 		COMMENT reduce fall damage, emits {@link GameEvent#HIT_GROUND}, then calls {@link #onLanding}.
 		COMMENT Otherwise, if {@code heightDifference} is negative, it subtracts that value from
 		COMMENT {@link #fallDistance}.
@@ -988,9 +989,10 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT Sets the entity on fire for {@code seconds} seconds.
 		COMMENT
 		COMMENT @implNote The actual duration can be reduced using the
-		COMMENT {@link ProtectionEnchantment$Type#FIRE fire protection} enchantment.
+		COMMENT {@linkplain net.minecraft.enchantment.ProtectionEnchantment.Type#FIRE
+		COMMENT fire protection} enchantment.
 		COMMENT
-		COMMENT @see ProtectionEnchantment#transformFireDuration
+		COMMENT @see net.minecraft.enchantment.ProtectionEnchantment#transformFireDuration
 		ARG 1 seconds
 	METHOD method_5640 shouldRender (D)Z
 		ARG 1 distance
@@ -1007,7 +1009,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT usually {@code #getFirstPassenger}.
 		COMMENT
 		COMMENT @see #hasPrimaryPassenger
-		COMMENT @see #getPassengersList
+		COMMENT @see #getPassengerList
 		COMMENT @see #getFirstPassenger
 	METHOD method_5643 damage (Lnet/minecraft/class_1282;F)Z
 		COMMENT Applies a damage to this entity. The exact implementation differes between subclasses.
@@ -1074,7 +1076,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT fields, which are used for other operations instead of the NBT. The data is written
 		COMMENT back to NBT when saving the entity.
 		COMMENT
-		COMMENT @see #readCustomDataToNbt
+		COMMENT @see #readCustomDataFromNbt
 		ARG 1 nbt
 	METHOD method_5653 getSavedEntityId ()Ljava/lang/String;
 	METHOD method_5654 doesNotCollide (DDD)Z
@@ -1292,7 +1294,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT on the client
 		COMMENT
 		COMMENT @see #dropItem(ItemConvertible)
-		COMMENT @see #dropItem(ItemConvertible, float)
+		COMMENT @see #dropItem(ItemConvertible, int)
 		COMMENT @see #dropStack(ItemStack)
 		ARG 1 stack
 		ARG 2 yOffset
@@ -1331,7 +1333,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @return the spawned item entity, or {@code null} if called on the client
 		COMMENT
-		COMMENT @see #dropItem(ItemConvertible, float)
+		COMMENT @see #dropItem(ItemConvertible, int)
 		COMMENT @see #dropStack(ItemStack)
 		COMMENT @see #dropStack(ItemStack, float)
 		ARG 1 item
@@ -1409,7 +1411,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT Updates the entity's velocity to add a vector in the direction of the entity's yaw
 		COMMENT whose absolute value is {@code movementInput} normalized and multiplied by {@code speed}.
 		COMMENT
-		COMMENT <p>This is usually called inside overridden {@link Entity#travel} if the entity is
+		COMMENT <p>This is usually called inside overridden {@link LivingEntity#travel} if the entity is
 		COMMENT touching water; see {@link net.minecraft.entity.passive.FishEntity} for an example.
 		ARG 1 speed
 		ARG 2 movementInput
@@ -1572,7 +1574,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5753 isFireImmune ()Z
 		COMMENT {@return whether the entity is immune to {@linkplain DamageSource#setFire fire damage}}
 		COMMENT
-		COMMENT @see {@link EntityType.Builder#makeFireImmune}.
+		COMMENT @see EntityType.Builder#makeFireImmune
 	METHOD method_5755 getMovementDirection ()Lnet/minecraft/class_2350;
 	METHOD method_5756 isInvisibleTo (Lnet/minecraft/class_1657;)Z
 		COMMENT {@return whether the entity is invisible to {@code player}}
@@ -1655,7 +1657,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @implNote By default, this delegates all logics to {@link #baseTick}.
 		COMMENT
 		COMMENT @see LivingEntity#tickMovement
-		COMMENT @see MobEntity#mobTick
+		COMMENT @see net.minecraft.entity.mob.MobEntity#mobTick
 	METHOD method_5774 getEffectiveExplosionResistance (Lnet/minecraft/class_1927;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_3610;F)F
 		COMMENT {@return the blast resistance of {@code blockState} for an explosion caused
 		COMMENT by this entity}
@@ -1677,7 +1679,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT on the client
 		COMMENT
 		COMMENT @see #dropItem(ItemConvertible)
-		COMMENT @see #dropItem(ItemConvertible, float)
+		COMMENT @see #dropItem(ItemConvertible, int)
 		COMMENT @see #dropStack(ItemStack, float)
 		ARG 1 stack
 	METHOD method_5776 hasWings ()Z
@@ -1889,7 +1891,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #streamSelfAndPassengers
 		COMMENT @see #streamPassengersAndSelf
 		COMMENT @see #getPassengersDeep
-		COMMENT @see #hasPassengersDeep
+		COMMENT @see #hasPassengerDeep
 	METHOD method_5818 canAddPassenger (Lnet/minecraft/class_1297;)Z
 		COMMENT {@return whether {@code entity} <strong>can ride this entity</strong>}
 		COMMENT
@@ -1933,7 +1935,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT <p>{@link net.minecraft.entity.boss.dragon.EnderDragonEntity},
 		COMMENT {@link net.minecraft.entity.boss.WitherEntity}, and {@link
-		COMMENT net.minecraft.entity.projectile.FishinBobberEntity} cannot use portals.
+		COMMENT net.minecraft.entity.projectile.FishingBobberEntity} cannot use portals.
 	METHOD method_5824 getRenderDistanceMultiplier ()D
 		COMMENT {@return the entity render distance multiplier}
 		COMMENT
