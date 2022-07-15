@@ -6,16 +6,18 @@ CLASS net/minecraft/class_7472 net/minecraft/network/packet/c2s/play/CommandExec
 	COMMENT it will reject the message and disconnect the client.
 	COMMENT
 	COMMENT <p>If the command contains an invalid character (see {@link
-	COMMENT net.minecraft.SharedConstants#isValidChar isValidChar}) or if the server receives
+	COMMENT net.minecraft.SharedConstants#isValidChar}) or if the server receives
 	COMMENT the commands in improper order, the server will reject the command and disconnect
 	COMMENT the client.
 	COMMENT
-	COMMENT <p>Commands that took more than {@link SignedMessage#SERVERBOUND_TIME_TO_LIVE}
+	COMMENT <p>Commands that took more than {@link
+	COMMENT net.minecraft.network.message.SignedMessage#SERVERBOUND_TIME_TO_LIVE}
 	COMMENT to reach the server are considered expired and log warnings on the server
 	COMMENT if it contains signed message arguments. If the message takes more than
-	COMMENT {@link SignedMessage#CLIENTBOUND_TIME_TO_LIVE} to reach the clients (including
-	COMMENT the time it took to reach the server), the message is not considered secure
-	COMMENT anymore by the clients, and may be discarded depending on the clients' options.
+	COMMENT {@link net.minecraft.network.message.SignedMessage#CLIENTBOUND_TIME_TO_LIVE} to
+	COMMENT reach the clients (including the time it took to reach the server), the message
+	COMMENT is not considered secure anymore by the clients, and may be discarded depending
+	COMMENT on the clients' options.
 	COMMENT
 	COMMENT @see net.minecraft.client.network.ClientPlayerEntity#sendCommand
 	COMMENT @see net.minecraft.server.network.ServerPlayNetworkHandler#onCommandExecution
@@ -23,7 +25,11 @@ CLASS net/minecraft/class_7472 net/minecraft/network/packet/c2s/play/CommandExec
 	METHOD <init> (Ljava/lang/String;Ljava/time/Instant;JLnet/minecraft/class_7450;Z)V
 		ARG 1 command
 		ARG 2 timestamp
+		ARG 3 salt
+		ARG 5 argumentSignatures
+		ARG 6 signedPreview
 	METHOD <init> (Lnet/minecraft/class_2540;)V
 		ARG 1 buf
 	METHOD comp_809 timestamp ()Ljava/time/Instant;
-	METHOD method_43896 createArgumentsSigner (Lnet/minecraft/class_3222;)Lnet/minecraft/class_7448;
+	METHOD method_43896 createSignedArguments (Lnet/minecraft/class_3222;)Lnet/minecraft/class_7448;
+		ARG 1 player

@@ -97,15 +97,20 @@ CLASS net/minecraft/class_746 net/minecraft/client/network/ClientPlayerEntity
 	METHOD method_33689 init ()V
 	METHOD method_43609 signChatMessage (Lnet/minecraft/class_7470;Lnet/minecraft/class_2561;)Lnet/minecraft/class_7469;
 		COMMENT Signs the chat message. If the chat message cannot be signed, this will return
-		COMMENT {@link MessageSignature#none()}.
+		COMMENT {@link MessageSignatureData#EMPTY}.
+		ARG 1 metadata
+		ARG 2 preview
 	METHOD method_43786 signArguments (Lnet/minecraft/class_7470;Lcom/mojang/brigadier/ParseResults;Lnet/minecraft/class_2561;)Lnet/minecraft/class_7450;
 		COMMENT Signs the command arguments. If the arguments cannot be signed or if there is no
-		COMMENT arguments to sign, this will return {@link ArgumentSignatureDataMap#empty()}.
+		COMMENT arguments to sign, this will return {@link ArgumentSignatureDataMap#EMPTY}.
 		ARG 1 signer
+		ARG 2 parseResults
 		ARG 3 preview
 			COMMENT the previewed argument value; if supplied, will be used for all signed arguments
-	METHOD method_43787 sendCommand (Ljava/lang/String;Lnet/minecraft/class_2561;)V
+	METHOD method_43787 sendCommandInternal (Ljava/lang/String;Lnet/minecraft/class_2561;)V
 		COMMENT Signs and sends {@code command} to the server.
+		ARG 1 command
+		ARG 2 preview
 	METHOD method_44096 sendChatMessage (Ljava/lang/String;Lnet/minecraft/class_2561;)V
 		COMMENT Sends a chat message with the preview to the server. If the server could not
 		COMMENT reproduce the preview based on {@code message}, the server rejects the message.
@@ -114,7 +119,7 @@ CLASS net/minecraft/class_746 net/minecraft/client/network/ClientPlayerEntity
 		COMMENT sending to the server.
 		COMMENT
 		COMMENT <p>If the message contains an invalid character (see {@link
-		COMMENT net.minecraft.SharedConstants#isValidChar isValidChar}), the server will
+		COMMENT net.minecraft.SharedConstants#isValidChar}), the server will
 		COMMENT reject the message and disconnect the client.
 		COMMENT
 		COMMENT @apiNote This method is used to send a message typed in {@linkplain
@@ -122,12 +127,20 @@ CLASS net/minecraft/class_746 net/minecraft/client/network/ClientPlayerEntity
 		ARG 1 message
 		ARG 2 preview
 	METHOD method_44097 sendChatMessagePacket (Ljava/lang/String;Lnet/minecraft/class_2561;)V
+		ARG 1 content
+		ARG 2 preview
+	METHOD method_44098 sendCommand (Ljava/lang/String;Lnet/minecraft/class_2561;)V
+		COMMENT Signs and sends {@code command} to the server.
+		ARG 1 command
+			COMMENT the command (without the leading slash)
+		ARG 2 preview
 	METHOD method_44099 sendCommand (Ljava/lang/String;)V
 		COMMENT Sends an unsigned command to the server.
 		ARG 1 command
-			COMMENT the command (can have the leading slash)
+			COMMENT the command (without the leading slash)
 	METHOD method_44297 (Lnet/minecraft/class_2561;Lnet/minecraft/class_7501;Lnet/minecraft/class_7470;Ljava/lang/String;Lnet/minecraft/class_2561;)Lnet/minecraft/class_7469;
 		ARG 4 argumentName
 		ARG 5 value
+	METHOD method_44826 createMessageMetadata ()Lnet/minecraft/class_7470;
 	METHOD method_7290 dropSelectedItem (Z)Z
 		ARG 1 entireStack

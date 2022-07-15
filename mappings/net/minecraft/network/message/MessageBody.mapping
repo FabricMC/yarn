@@ -1,0 +1,39 @@
+CLASS net/minecraft/class_7608 net/minecraft/network/message/MessageBody
+	COMMENT A body of a message, including the content, timestamp, salt used for the digest
+	COMMENT (the hashed body), and the list of players' "last seen messages". Unlike {@link
+	COMMENT MessageHeader}, clients do not receive this if the message is censored; they receive
+	COMMENT the digest only.
+	FIELD comp_930 timestamp Ljava/time/Instant;
+	FIELD comp_932 lastSeenMessages Ljava/util/List;
+	FIELD field_39817 LAST_SEEN_SEPARATOR B
+	METHOD <init> (Lnet/minecraft/class_2540;)V
+		ARG 1 buf
+	METHOD comp_930 timestamp ()Ljava/time/Instant;
+	METHOD comp_932 lastSeenMessages ()Ljava/util/List;
+	METHOD method_44867 digest ()Lcom/google/common/hash/HashCode;
+		COMMENT {@return the digest of this body}
+		COMMENT
+		COMMENT @implNote This is a SHA-256 hash of the salt, the timestamp represented as the seconds
+		COMMENT since the Unix epoch, {@linkplain #toBytes(Text) the content}, and
+		COMMENT {@linkplain #toBytes(List) the list of each player's last seen message}.
+	METHOD method_44868 toBytes (Ljava/util/List;)[B
+		ARG 0 messages
+	METHOD method_44869 write (Lnet/minecraft/class_2540;)V
+		ARG 1 buf
+	METHOD method_44870 (Lnet/minecraft/class_2540;Lnet/minecraft/class_7608$class_7609;)V
+		ARG 0 buf2
+		ARG 1 lastSeenMessages
+	METHOD method_44871 toBytes (Lnet/minecraft/class_2561;)[B
+		COMMENT {@return {@code content} converted to a byte array}
+		COMMENT
+		COMMENT @implNote This returns the UTF-8 encoded string representing the
+		COMMENT JSON serialized version of {@code content}.
+		ARG 0 content
+	METHOD method_44872 (Lnet/minecraft/class_7608$class_7609;)I
+		ARG 0 lastSeenMessage
+	CLASS class_7609 LastSeenMessage
+		COMMENT A pair of a player's UUID and the signature of the last message they saw.
+		METHOD <init> (Lnet/minecraft/class_2540;)V
+			ARG 1 buf
+		METHOD method_44873 write (Lnet/minecraft/class_2540;)V
+			ARG 1 buf

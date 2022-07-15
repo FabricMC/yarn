@@ -6,6 +6,8 @@ CLASS net/minecraft/class_7471 net/minecraft/network/message/SignedMessage
 	COMMENT <p>Note that the signature itself might not be valid.
 	FIELD field_39786 SERVERBOUND_TIME_TO_LIVE Ljava/time/Duration;
 	FIELD field_39787 CLIENTBOUND_TIME_TO_LIVE Ljava/time/Duration;
+	METHOD <init> (Lnet/minecraft/class_2540;)V
+		ARG 1 buf
 	METHOD method_43867 verify (Lnet/minecraft/class_7428;)Z
 		COMMENT {@return whether the message can be verified using the public key}
 		ARG 1 key
@@ -16,6 +18,7 @@ CLASS net/minecraft/class_7471 net/minecraft/network/message/SignedMessage
 	METHOD method_44310 verify (Lnet/minecraft/class_7436;)Z
 		COMMENT {@return whether the message can be verified using the public key <strong>or if the
 		COMMENT player does not have the key</strong>}
+		ARG 1 profile
 	METHOD method_44607 withoutUnsigned ()Lnet/minecraft/class_7471;
 		COMMENT {@return the signed chat message with {@link #unsignedContent} removed if it exists}
 		COMMENT
@@ -24,3 +27,19 @@ CLASS net/minecraft/class_7471 net/minecraft/network/message/SignedMessage
 		ARG 1 currentTime
 	METHOD method_44748 isExpiredOnClient (Ljava/time/Instant;)Z
 		ARG 1 currentTime
+	METHOD method_44858 verify (Lnet/minecraft/class_7500;)Z
+		ARG 1 verifier
+	METHOD method_44859 write (Lnet/minecraft/class_2540;)V
+		ARG 1 buf
+	METHOD method_44860 withFilteredContent (Lnet/minecraft/class_2561;)Lnet/minecraft/class_5837;
+		ARG 1 filteredContent
+	METHOD method_44861 ofUnsigned (Lnet/minecraft/class_7470;Lnet/minecraft/class_2561;)Lnet/minecraft/class_7471;
+		COMMENT {@return a new signed message without valid signatures}
+		ARG 0 metadata
+		ARG 1 content
+	METHOD method_44862 getSignedContent ()Lnet/minecraft/class_2561;
+	METHOD method_44863 withUnsignedContent (Lnet/minecraft/class_2561;)Lnet/minecraft/class_7471;
+		ARG 1 unsignedContent
+	METHOD method_44864 getTimestamp ()Ljava/time/Instant;
+	METHOD method_44865 getSalt ()J
+	METHOD method_44866 createMetadata ()Lnet/minecraft/class_7470;

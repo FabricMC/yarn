@@ -6,13 +6,15 @@ CLASS net/minecraft/class_2797 net/minecraft/network/packet/c2s/play/ChatMessage
 	COMMENT 256 characters, it will reject the message and disconnect the client.
 	COMMENT
 	COMMENT <p>If the message contains an invalid character (see {@link
-	COMMENT net.minecraft.SharedConstants#isValidChar isValidChar}) or if the server
+	COMMENT net.minecraft.SharedConstants#isValidChar}) or if the server
 	COMMENT receives the messages in improper order. the server will
 	COMMENT reject the message and disconnect the client.
 	COMMENT
-	COMMENT <p>Messages that took more than {@link SignedMessage#SERVERBOUND_TIME_TO_LIVE}
+	COMMENT <p>Messages that took more than {@link
+	COMMENT net.minecraft.network.message.SignedMessage#SERVERBOUND_TIME_TO_LIVE}
 	COMMENT to reach the server are considered expired and log warnings on the server.
-	COMMENT If the message takes more than {@link SignedMessage#CLIENTBOUND_TIME_TO_LIVE}
+	COMMENT If the message takes more than {@link
+	COMMENT net.minecraft.network.message.SignedMessage#CLIENTBOUND_TIME_TO_LIVE}
 	COMMENT to reach the clients (including the time it took to reach the server), the
 	COMMENT message is not considered secure anymore by the clients, and may be discarded
 	COMMENT depending on the clients' options.
@@ -21,16 +23,15 @@ CLASS net/minecraft/class_2797 net/minecraft/network/packet/c2s/play/ChatMessage
 	COMMENT @see net.minecraft.server.network.ServerPlayNetworkHandler#onChatMessage
 	FIELD comp_945 chatMessage Ljava/lang/String;
 	FIELD comp_946 timestamp Ljava/time/Instant;
-	FIELD comp_948 createSignatureInstance Lnet/minecraft/class_7469;
-	FIELD comp_949 previewed Z
 	METHOD <init> (Ljava/lang/String;Ljava/time/Instant;JLnet/minecraft/class_7469;Z)V
 		ARG 1 chatMessage
+		ARG 2 timestamp
+		ARG 3 salt
+		ARG 5 signature
+		ARG 6 signedPreview
 	METHOD <init> (Lnet/minecraft/class_2540;)V
 		ARG 1 buf
 	METHOD comp_945 chatMessage ()Ljava/lang/String;
 	METHOD comp_946 timestamp ()Ljava/time/Instant;
-	METHOD comp_948 createSignatureInstance ()Lnet/minecraft/class_7469;
-	METHOD comp_949 previewed ()Z
-		COMMENT {@return whether the chat message was previewed before sending}
-		COMMENT
-		COMMENT @apiNote Chat decorators can produce signed decorated content only if it was previewed.
+	METHOD method_44892 getMetadata (Lnet/minecraft/class_3222;)Lnet/minecraft/class_7470;
+		ARG 1 sender

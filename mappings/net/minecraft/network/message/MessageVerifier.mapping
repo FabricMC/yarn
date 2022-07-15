@@ -1,0 +1,28 @@
+CLASS net/minecraft/class_7615 net/minecraft/network/message/MessageVerifier
+	COMMENT Verifies incoming messages' signature and the message chain.
+	COMMENT
+	COMMENT <p>Methods in this interface must be called in the order of the message's reception,
+	COMMENT as it affects the verification result.
+	FIELD field_39820 NOOP Lnet/minecraft/class_7615;
+	METHOD method_44885 create (Lnet/minecraft/class_7428;)Lnet/minecraft/class_7615;
+		ARG 0 publicKey
+	METHOD method_44886 verify (Lnet/minecraft/class_7471;)Z
+		ARG 1 message
+	METHOD method_44887 storeHeaderVerification (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;[B)V
+		COMMENT Stores the status of verifying the header.
+		COMMENT
+		COMMENT <p>Clients can receive only the message header instead of the whole message. This
+		COMMENT allows the chain to reference such messages. Since no actual content is received,
+		COMMENT this does not return the verification status.
+		ARG 1 header
+		ARG 2 signature
+		ARG 3 bodyDigest
+	CLASS class_7616 Impl
+		FIELD field_39821 lastMessageVerified Z
+		FIELD field_39822 signatureVerifier Lnet/minecraft/class_7500;
+		FIELD field_39823 precedingSignature Lnet/minecraft/class_7469;
+		METHOD <init> (Lnet/minecraft/class_7500;)V
+			ARG 1 signatureVerifier
+		METHOD method_44888 verifyChain (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;)Z
+			ARG 1 header
+			ARG 2 signature
