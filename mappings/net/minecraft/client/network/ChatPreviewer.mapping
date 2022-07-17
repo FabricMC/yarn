@@ -17,7 +17,6 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 		COMMENT
 		COMMENT @see #tryConsumeResponse
 	FIELD field_39334 lastResponse Lnet/minecraft/class_7479$class_7481;
-	FIELD field_39429 shouldRenderPreview Z
 	FIELD field_39430 lastPreviewedMessage Ljava/lang/String;
 	FIELD field_39431 pendingRequestMessage Ljava/lang/String;
 		COMMENT The message that is waiting for the previewer to request (i.e. the next query to be sent).
@@ -35,10 +34,9 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 		COMMENT @implNote This sets the last response if the requester {@linkplain
 		COMMENT ChatPreviewRequester#handleResponse successfully handled} the response.
 		ARG 1 id
-		ARG 2 response
 	METHOD method_44036 clear ()V
 		COMMENT Clears the last response and the requester's state.
-	METHOD method_44037 tryConsumeResponse (Ljava/lang/String;)Lnet/minecraft/class_2561;
+	METHOD method_44037 tryConsumeResponse (Ljava/lang/String;)Lnet/minecraft/class_7479$class_7481;
 		COMMENT {@return the consumed response text, or {@code null} if the server responded as such, or
 		COMMENT if the response could not be consumed}
 		COMMENT
@@ -49,7 +47,7 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 		COMMENT has passed. It is also possible to get the response text without consuming by calling
 		COMMENT {@link #getPreviewText}.
 		ARG 1 message
-	METHOD method_44038 getPreviewText ()Lnet/minecraft/class_2561;
+	METHOD method_44038 getPreviewText ()Lnet/minecraft/class_7479$class_7481;
 		COMMENT {@return the preview text (also known as the last response text), or {@code null}
 		COMMENT if the server responded as such}
 		COMMENT
@@ -57,11 +55,6 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 	METHOD method_44039 normalize (Ljava/lang/String;)Ljava/lang/String;
 		COMMENT {@return the {@code message} normalized by trimming it and then normalizing spaces}
 		ARG 0 message
-	METHOD method_44040 shouldRenderPreview ()Z
-		COMMENT {@return whether the preview should be rendered}
-		COMMENT
-		COMMENT @implNote A preview should be rendered if there is a response, a pending query, or
-		COMMENT a query waiting for the response.
 	METHOD method_44274 tryRequest (Ljava/lang/String;)V
 		COMMENT Tries to send the request to preview {@code message}. If the delay has passed,
 		COMMENT it will send instantly; otherwise, it will set {@link #pendingRequestMessage} which

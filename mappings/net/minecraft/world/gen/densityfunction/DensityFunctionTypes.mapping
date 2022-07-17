@@ -1,4 +1,5 @@
 CLASS net/minecraft/class_6916 net/minecraft/world/gen/densityfunction/DensityFunctionTypes
+	FIELD field_37060 MAX_CONSTANT_VALUE D
 	FIELD field_37061 CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_37062 DYNAMIC_RANGE Lcom/mojang/serialization/Codec;
 	FIELD field_37063 CONSTANT_RANGE Lcom/mojang/serialization/Codec;
@@ -6,15 +7,35 @@ CLASS net/minecraft/class_6916 net/minecraft/world/gen/densityfunction/DensityFu
 	METHOD method_40480 constant (D)Lnet/minecraft/class_6910;
 		ARG 0 density
 	METHOD method_40481 yClampedGradient (IIDD)Lnet/minecraft/class_6910;
+		ARG 0 fromY
+		ARG 1 toY
+		ARG 2 fromValue
+		ARG 4 toValue
 	METHOD method_40482 endIslands (J)Lnet/minecraft/class_6910;
 		ARG 0 seed
 	METHOD method_40483 interpolated (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
 		ARG 0 inputFunction
 	METHOD method_40485 rangeChoice (Lnet/minecraft/class_6910;DDLnet/minecraft/class_6910;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		ARG 0 input
+		ARG 1 minInclusive
+		ARG 3 maxExclusive
+		ARG 5 whenInRange
+		ARG 6 whenOutOfRange
 	METHOD method_40486 add (Lnet/minecraft/class_6910;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		ARG 0 a
+		ARG 1 b
 	METHOD method_40487 shiftedNoise (Lnet/minecraft/class_6910;Lnet/minecraft/class_6910;DLnet/minecraft/class_6880;)Lnet/minecraft/class_6910;
+		ARG 0 shiftX
+		ARG 1 shiftZ
+		ARG 2 xzScale
 		ARG 4 noiseParameters
+	METHOD method_40490 unary (Lnet/minecraft/class_6910;Lnet/minecraft/class_6916$class_6925$class_6926;)Lnet/minecraft/class_6910;
+		ARG 0 input
+		ARG 1 type
 	METHOD method_40491 weirdScaledSampler (Lnet/minecraft/class_6910;Lnet/minecraft/class_6880;Lnet/minecraft/class_6916$class_6944$class_7048;)Lnet/minecraft/class_6910;
+		ARG 0 input
+		ARG 1 parameters
+		ARG 2 mapper
 	METHOD method_40493 noise (Lnet/minecraft/class_6880;)Lnet/minecraft/class_6910;
 		ARG 0 noiseParameters
 	METHOD method_40494 noise (Lnet/minecraft/class_6880;D)Lnet/minecraft/class_6910;
@@ -33,6 +54,8 @@ CLASS net/minecraft/class_6916 net/minecraft/world/gen/densityfunction/DensityFu
 	METHOD method_40499 flatCache (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
 		ARG 0 inputFunction
 	METHOD method_40500 mul (Lnet/minecraft/class_6910;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		ARG 0 a
+		ARG 1 b
 	METHOD method_40501 shiftA (Lnet/minecraft/class_6880;)Lnet/minecraft/class_6910;
 		ARG 0 noiseParameters
 	METHOD method_40502 (Lnet/minecraft/class_6880;DD)Lnet/minecraft/class_6910;
@@ -43,93 +66,170 @@ CLASS net/minecraft/class_6916 net/minecraft/world/gen/densityfunction/DensityFu
 	METHOD method_40504 cache2d (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
 		ARG 0 inputFunction
 	METHOD method_40505 min (Lnet/minecraft/class_6910;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		ARG 0 a
+		ARG 1 b
 	METHOD method_40506 shiftB (Lnet/minecraft/class_6880;)Lnet/minecraft/class_6910;
 		ARG 0 noiseParameters
 	METHOD method_40507 cacheOnce (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
 		ARG 0 inputFunction
 	METHOD method_40508 max (Lnet/minecraft/class_6910;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		ARG 0 a
+		ARG 1 b
 	METHOD method_40509 shift (Lnet/minecraft/class_6880;)Lnet/minecraft/class_6910;
 		ARG 0 noiseParameters
 	METHOD method_40510 cacheAllInCell (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
 		ARG 0 inputFunction
 	METHOD method_40512 blendDensity (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		ARG 0 input
+	METHOD method_41063 (Lcom/mojang/datafixers/util/Either;)Lnet/minecraft/class_6910;
+		ARG 0 either
+	METHOD method_41064 holderOf (Lcom/mojang/serialization/Codec;Ljava/util/function/Function;Ljava/util/function/Function;)Lnet/minecraft/class_7243;
+		ARG 0 codec
+		ARG 1 creator
+		ARG 2 argumentGetter
+	METHOD method_41065 holderOf (Lcom/mojang/serialization/MapCodec;)Lnet/minecraft/class_7243;
+		ARG 0 mapCodec
 	METHOD method_41066 registerAndGetDefault (Lnet/minecraft/class_2378;)Lcom/mojang/serialization/Codec;
 		ARG 0 registry
 	METHOD method_41067 register (Lnet/minecraft/class_2378;Ljava/lang/String;Lnet/minecraft/class_7243;)Lcom/mojang/serialization/Codec;
 		ARG 0 registry
 		ARG 1 id
+		ARG 2 codecHolder
+	METHOD method_41068 holderOf (Ljava/util/function/BiFunction;Ljava/util/function/Function;Ljava/util/function/Function;)Lnet/minecraft/class_7243;
+		ARG 0 creator
+		ARG 1 argument1Getter
+		ARG 2 argument2Getter
+	METHOD method_41069 holderOf (Ljava/util/function/Function;Ljava/util/function/Function;)Lnet/minecraft/class_7243;
+		ARG 0 creator
+		ARG 1 argumentGetter
+	METHOD method_41070 (Ljava/util/function/Function;Ljava/util/function/Function;Ljava/util/function/BiFunction;Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 3 instance
+	METHOD method_41071 (Lnet/minecraft/class_6910;)Lcom/mojang/datafixers/util/Either;
+		ARG 0 densityFunction
 	METHOD method_41528 spline (Lnet/minecraft/class_6492;)Lnet/minecraft/class_6910;
 		ARG 0 spline
+	METHOD method_42360 (Lnet/minecraft/class_6910;)Lcom/mojang/serialization/Codec;
+		ARG 0 densityFunction
+	CLASS class_6917 BinaryOperation
 	CLASS class_6919 BlendAlpha
 		FIELD field_37079 CODEC Lnet/minecraft/class_7243;
 	CLASS class_6920 BlendDensity
-		FIELD field_37080 CODEC Lnet/minecraft/class_7243;
+		FIELD field_37080 CODEC_HOLDER Lnet/minecraft/class_7243;
 	CLASS class_6921 BlendOffset
 		FIELD field_37081 CODEC Lnet/minecraft/class_7243;
 	CLASS class_6922 Clamp
-		FIELD field_37082 CODEC Lnet/minecraft/class_7243;
+		FIELD field_37082 CODEC_HOLDER Lnet/minecraft/class_7243;
+		FIELD field_37083 CLAMP_CODEC Lcom/mojang/serialization/MapCodec;
+		METHOD method_41078 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
 	CLASS class_6923 Constant
 		FIELD field_36553 ZERO Lnet/minecraft/class_6916$class_6923;
-		FIELD field_37084 CODEC Lnet/minecraft/class_7243;
+		FIELD field_37084 CODEC_HOLDER Lnet/minecraft/class_7243;
 	CLASS class_6924 EndIslands
-		FIELD field_37085 CODEC Lnet/minecraft/class_7243;
+		FIELD field_36554 sampler Lnet/minecraft/class_3541;
+		FIELD field_37085 CODEC_HOLDER Lnet/minecraft/class_7243;
 		METHOD <init> (J)V
 			ARG 1 seed
-	CLASS class_6925
+		METHOD method_41529 sample (Lnet/minecraft/class_3541;II)F
+			ARG 0 sampler
+			ARG 1 x
+			ARG 2 z
+	CLASS class_6925 UnaryOperation
+		METHOD method_40521 apply (Lnet/minecraft/class_6916$class_6925$class_6926;D)D
+			ARG 0 type
+			ARG 1 density
+		METHOD method_41079 create (Lnet/minecraft/class_6916$class_6925$class_6926;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6916$class_6925;
+			ARG 0 type
+			ARG 1 input
 		CLASS class_6926 Type
 			FIELD field_37086 name Ljava/lang/String;
-			FIELD field_37087 codec Lnet/minecraft/class_7243;
+			FIELD field_37087 codecHolder Lnet/minecraft/class_7243;
 			METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
 				ARG 3 name
-	CLASS class_6927
+			METHOD method_41081 (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6916$class_6925;
+				ARG 1 input
+	CLASS class_6927 Wrapping
 		CLASS class_6928 Type
 			FIELD field_37088 name Ljava/lang/String;
 			FIELD field_37089 codec Lnet/minecraft/class_7243;
 			METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
 				ARG 3 name
-	CLASS class_6929
+	CLASS class_6929 LinearOperation
 		CLASS class_6930 SpecificType
 	CLASS class_6931 Noise
-		FIELD field_37091 CODEC Lnet/minecraft/class_7243;
-	CLASS class_6932
+		FIELD field_37090 NOISE_CODEC Lcom/mojang/serialization/MapCodec;
+		FIELD field_37091 CODEC_HOLDER Lnet/minecraft/class_7243;
+		METHOD method_41083 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
+	CLASS class_6932 Unary
 		METHOD method_40520 apply (D)D
 			ARG 1 density
 	CLASS class_6933 RangeChoice
-		FIELD field_37093 CODEC Lnet/minecraft/class_7243;
+		FIELD field_37092 RANGE_CHOICE_CODEC Lcom/mojang/serialization/MapCodec;
+		FIELD field_37093 CODEC_HOLDER Lnet/minecraft/class_7243;
+		METHOD method_41085 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
 	CLASS class_6934 Shift
-		FIELD field_37094 CODEC Lnet/minecraft/class_7243;
+		FIELD field_37094 CODEC_HOLDER Lnet/minecraft/class_7243;
 	CLASS class_6937 ShiftA
-		FIELD field_37095 CODEC Lnet/minecraft/class_7243;
+		FIELD field_37095 CODEC_HOLDER Lnet/minecraft/class_7243;
 	CLASS class_6938 ShiftB
-		FIELD field_37096 CODEC Lnet/minecraft/class_7243;
+		FIELD field_37096 CODEC_HOLDER Lnet/minecraft/class_7243;
+	CLASS class_6939 Offset
+		METHOD method_40525 sample (DDD)D
+			ARG 1 x
+			ARG 3 y
+			ARG 5 z
 	CLASS class_6940 ShiftedNoise
-		FIELD field_37097 CODEC Lnet/minecraft/class_7243;
+		FIELD field_37097 CODEC_HOLDER Lnet/minecraft/class_7243;
+		FIELD field_37098 SHIFTED_NOISE_CODEC Lcom/mojang/serialization/MapCodec;
+		METHOD method_41090 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
+	CLASS class_6943 Positional
+		METHOD method_40518 apply (Lnet/minecraft/class_6910$class_6912;D)D
+			ARG 1 pos
+			ARG 2 density
 	CLASS class_6944 WeirdScaledSampler
-		FIELD field_37064 CODEC Lnet/minecraft/class_7243;
+		FIELD field_37064 CODEC_HOLDER Lnet/minecraft/class_7243;
+		FIELD field_37065 WEIRD_SCALED_SAMPLER_CODEC Lcom/mojang/serialization/MapCodec;
+		METHOD method_41072 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
 		CLASS class_7048 RarityValueMapper
 			FIELD field_37068 CODEC Lcom/mojang/serialization/Codec;
 			FIELD field_37070 name Ljava/lang/String;
 			FIELD field_37071 scaleFunction Lit/unimi/dsi/fastutil/doubles/Double2DoubleFunction;
+			FIELD field_37072 maxValueMultiplier D
 			METHOD <init> (Ljava/lang/String;ILjava/lang/String;Lit/unimi/dsi/fastutil/doubles/Double2DoubleFunction;D)V
 				ARG 3 name
 				ARG 4 scaleFunction
+				ARG 5 maxValueMultiplier
 	CLASS class_6945 YClampedGradient
-		FIELD field_37074 CODEC Lnet/minecraft/class_7243;
+		FIELD field_37074 CODEC_HOLDER Lnet/minecraft/class_7243;
+		FIELD field_37075 Y_CLAMPED_GRADIENT_CODEC Lcom/mojang/serialization/MapCodec;
+		METHOD method_41076 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
 	CLASS class_7049 Beardifier
-	CLASS class_7050
-		FIELD field_37078 CODEC Lnet/minecraft/class_7243;
+	CLASS class_7050 Beardifying
+		FIELD field_37078 CODEC_HOLDER Lnet/minecraft/class_7243;
 	CLASS class_7051 RegistryEntryHolder
 	CLASS class_7052 Wrapper
-	CLASS class_7055 Operation
+	CLASS class_7055 BinaryOperationLike
 		FIELD field_37110 LOGGER Lorg/slf4j/Logger;
 		METHOD method_41097 create (Lnet/minecraft/class_6916$class_7055$class_6918;Lnet/minecraft/class_6910;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6916$class_7055;
 			ARG 0 type
 			ARG 1 argument1
 			ARG 2 argument2
 		CLASS class_6918 Type
-			FIELD field_37111 codec Lnet/minecraft/class_7243;
+			FIELD field_37111 codecHolder Lnet/minecraft/class_7243;
 			FIELD field_37112 name Ljava/lang/String;
 			METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
 				ARG 3 name
 	CLASS class_7076 Spline
-		FIELD field_37255 CODEC Lnet/minecraft/class_7243;
+		FIELD field_37255 CODEC_HOLDER Lnet/minecraft/class_7243;
+		FIELD field_37256 SPLINE_FUNCTION_CODEC Lcom/mojang/serialization/MapCodec;
+		FIELD field_37678 SPLINE_CODEC Lcom/mojang/serialization/Codec;
+		CLASS class_7135 DensityFunctionWrapper
+			FIELD field_37679 CODEC Lcom/mojang/serialization/Codec;
+			METHOD method_41530 apply (Lnet/minecraft/class_6910$class_6915;)Lnet/minecraft/class_6916$class_7076$class_7135;
+				ARG 1 visitor
+		CLASS class_7136 SplinePos

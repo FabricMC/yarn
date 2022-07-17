@@ -1,0 +1,59 @@
+CLASS net/minecraft/class_7610 net/minecraft/network/message/MessageChain
+	COMMENT A class for handling the "message chain".
+	COMMENT
+	COMMENT <p>{@link MessageHeader} includes the signature of the last message the client has seen.
+	COMMENT This can be used to verify the legitimacy of a chain of messages, since if the chain
+	COMMENT is valid, the last message's  "previous signature" should be able to verify the preceding
+	COMMENT message.
+	COMMENT
+	COMMENT <p>Clients signing a message with its preceding message's signature is called
+	COMMENT "packing", and the server creating a signed message with its preceding message's
+	COMMENT signature is called "unpacking". Unpacked messages can then be verified to check the
+	COMMENT chain's legitimacy.
+	FIELD field_39818 precedingSignature Lnet/minecraft/class_7469;
+	METHOD method_44874 getUnpacker ()Lnet/minecraft/class_7610$class_7611;
+	METHOD method_44875 pack (Lnet/minecraft/class_7501;Lnet/minecraft/class_7470;Lnet/minecraft/class_7634;Lnet/minecraft/class_7635;)Lnet/minecraft/class_7610$class_7613;
+		ARG 1 signer
+		ARG 2 metadata
+	METHOD method_44876 sign (Lnet/minecraft/class_7501;Lnet/minecraft/class_7470;Lnet/minecraft/class_7469;Lnet/minecraft/class_7634;Lnet/minecraft/class_7635;)Lnet/minecraft/class_7469;
+		ARG 0 signer
+		ARG 1 metadata
+		ARG 2 precedingSignature
+	METHOD method_44877 createMessage (Lnet/minecraft/class_7610$class_7613;Lnet/minecraft/class_7469;Lnet/minecraft/class_7470;Lnet/minecraft/class_7634;Lnet/minecraft/class_7635;)Lnet/minecraft/class_7471;
+		ARG 0 signature
+		ARG 1 precedingSignature
+		ARG 2 metadata
+	METHOD method_44878 unpack (Lnet/minecraft/class_7610$class_7613;Lnet/minecraft/class_7470;Lnet/minecraft/class_7634;Lnet/minecraft/class_7635;)Lnet/minecraft/class_7471;
+		ARG 1 signature
+		ARG 2 metadata
+	METHOD method_44879 (Lnet/minecraft/class_7614;[BLnet/minecraft/class_7498$class_7499;)V
+		ARG 2 updatable
+	METHOD method_44880 getPacker ()Lnet/minecraft/class_7610$class_7612;
+	CLASS class_7611 Unpacker
+		COMMENT Unpacker creates a signed message on the server with the server's preceding message
+		COMMENT signature when they receive a message. Unpacked messages can then be verified to check
+		COMMENT the message chain's legitimacy.
+		COMMENT
+		COMMENT <p>Messages must be unpacked in the order of the message's reception, as it affects
+		COMMENT the resulting signed message.
+		COMMENT
+		COMMENT @see MessageChain#getUnpacker
+		FIELD field_39819 UNSIGNED Lnet/minecraft/class_7610$class_7611;
+		METHOD method_44881 (Lnet/minecraft/class_7610$class_7613;Lnet/minecraft/class_7470;Lnet/minecraft/class_7634;Lnet/minecraft/class_7635;)Lnet/minecraft/class_7471;
+			ARG 0 signature
+			ARG 1 metadata
+		METHOD unpack (Lnet/minecraft/class_7610$class_7613;Lnet/minecraft/class_7470;Lnet/minecraft/class_5837;Lnet/minecraft/class_7635;)Lnet/minecraft/class_5837;
+			ARG 1 signature
+			ARG 2 metadata
+			ARG 3 content
+		METHOD unpack (Lnet/minecraft/class_7610$class_7613;Lnet/minecraft/class_7470;Lnet/minecraft/class_7634;Lnet/minecraft/class_7635;)Lnet/minecraft/class_7471;
+			ARG 1 signature
+			ARG 2 metadata
+	CLASS class_7612 Packer
+		COMMENT Packers sign a message on the client with its preceding message's signature.
+		COMMENT
+		COMMENT @see MessageChain#getPacker
+		METHOD pack (Lnet/minecraft/class_7501;Lnet/minecraft/class_7470;Lnet/minecraft/class_7634;Lnet/minecraft/class_7635;)Lnet/minecraft/class_7610$class_7613;
+			ARG 1 signer
+			ARG 2 metadata
+	CLASS class_7613 Signature

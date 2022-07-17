@@ -1,11 +1,46 @@
 CLASS net/minecraft/class_6748 net/minecraft/world/gen/chunk/Blender
 	FIELD field_35501 NO_BLENDING Lnet/minecraft/class_6748;
+	FIELD field_35502 BLENDING_BIOME_DISTANCE_THRESHOLD I
+	FIELD field_35503 BLENDING_CHUNK_DISTANCE_THRESHOLD I
+	FIELD field_35505 CLOSE_BLENDING_DISTANCE_THRESHOLD I
+	FIELD field_35681 OFFSET_NOISE Lnet/minecraft/class_5216;
+	FIELD field_36343 blendingData Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap;
+	FIELD field_36344 closeBlendingData Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap;
+	METHOD <init> (Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap;Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap;)V
+		ARG 1 blendingData
+		ARG 2 closeBlendingData
 	METHOD method_39336 getNoBlending ()Lnet/minecraft/class_6748;
+	METHOD method_39337 getBlendOffset (D)D
+		ARG 0 height
+	METHOD method_39338 applyBlendDensity (Lnet/minecraft/class_6910$class_6912;D)D
+		ARG 1 pos
+		ARG 2 density
+	METHOD method_39339 (IIILorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableDouble;IIID)V
+		ARG 6 biomeX
+		ARG 7 halfSectionY
+		ARG 8 biomeZ
+		ARG 9 collidableBlockDensity
+	METHOD method_39340 calculate (II)Lnet/minecraft/class_6748$class_6956;
+		ARG 1 blockX
+		ARG 2 blockZ
+	METHOD method_39341 (IILorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableDouble;IID)V
+		ARG 5 biomeX
+		ARG 6 biomeZ
+		ARG 7 height
 	METHOD method_39342 getBlender (Lnet/minecraft/class_3233;)Lnet/minecraft/class_6748;
 		ARG 0 chunkRegion
+	METHOD method_39560 (IIILorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableObject;Ljava/lang/Long;Lnet/minecraft/class_6749;)V
+		ARG 5 chunkPos
+		ARG 6 data
 	METHOD method_39561 blendBiome (III)Lnet/minecraft/class_6880;
 		ARG 1 x
 		ARG 2 y
+		ARG 3 z
+	METHOD method_39562 sampleClosest (IIILnet/minecraft/class_6748$class_6781;)D
+		ARG 1 biomeX
+		ARG 2 biomeY
+		ARG 3 biomeZ
+		ARG 4 sampler
 	METHOD method_39563 getBiomeSupplier (Lnet/minecraft/class_6780;)Lnet/minecraft/class_6780;
 		ARG 1 biomeSupplier
 	METHOD method_39564 (Lnet/minecraft/class_6780;IIILnet/minecraft/class_6544$class_6552;)Lnet/minecraft/class_6880;
@@ -13,9 +48,71 @@ CLASS net/minecraft/class_6748 net/minecraft/world/gen/chunk/Blender
 		ARG 3 y
 		ARG 4 z
 		ARG 5 noise
+	METHOD method_39565 sample (Lnet/minecraft/class_6748$class_6781;IIIII)D
+		ARG 1 sampler
+		ARG 2 chunkX
+		ARG 3 chunkZ
+		ARG 4 biomeX
+		ARG 5 biomeY
+		ARG 6 biomeZ
 	METHOD method_39772 tickLeavesAndFluids (Lnet/minecraft/class_3233;Lnet/minecraft/class_2791;)V
 		ARG 0 chunkRegion
 		ARG 1 chunk
 	METHOD method_39773 tickLeavesAndFluids (Lnet/minecraft/class_2791;Lnet/minecraft/class_2338;)V
 		ARG 0 chunk
 		ARG 1 pos
+	METHOD method_39807 (DDDDDDD)D
+		ARG 8 offsetX
+		ARG 10 y
+		ARG 12 offsetZ
+	METHOD method_39808 getDistance (DDDDDD)D
+		ARG 0 x1
+		ARG 2 y1
+		ARG 4 z1
+		ARG 6 x2
+		ARG 8 y2
+		ARG 10 z2
+	METHOD method_39809 createCarvingMasks (Lnet/minecraft/class_5281;Lnet/minecraft/class_2839;)V
+		ARG 0 world
+		ARG 1 chunk
+	METHOD method_39810 (Lnet/minecraft/class_6643$class_6828;Lnet/minecraft/class_6643;)V
+		ARG 1 mask
+	METHOD method_39811 (Lnet/minecraft/class_6748$class_6831;III)Z
+		ARG 1 offsetX
+		ARG 2 y
+		ARG 3 offsetZ
+	METHOD method_39812 createDistanceFunction (Lnet/minecraft/class_2355;Lnet/minecraft/class_6749;)Lnet/minecraft/class_6748$class_6831;
+		ARG 0 direction
+		ARG 1 data
+	METHOD method_39813 (Ljava/util/List;DDD)D
+		ARG 1 offsetX
+		ARG 3 y
+		ARG 5 offsetZ
+	METHOD method_39814 (Ljava/util/List;Lnet/minecraft/class_2355;Lnet/minecraft/class_6749;)V
+		ARG 1 direction
+		ARG 2 data
+	METHOD method_39815 createClosestDistanceFunction (Lnet/minecraft/class_6749;Ljava/util/Map;)Lnet/minecraft/class_6748$class_6831;
+		ARG 0 data
+		ARG 1 neighborData
+	METHOD method_40025 (IILorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableObject;IILnet/minecraft/class_6880;)V
+		ARG 4 biomeX
+		ARG 5 biomeZ
+		ARG 6 biome
+	METHOD method_40026 (IIILorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableDouble;Ljava/lang/Long;Lnet/minecraft/class_6749;)V
+		ARG 6 chunkPos
+		ARG 7 data
+	METHOD method_40027 (IILorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableDouble;Lorg/apache/commons/lang3/mutable/MutableDouble;Ljava/lang/Long;Lnet/minecraft/class_6749;)V
+		ARG 5 chunkPos
+		ARG 6 data
+	CLASS class_6781 BlendingSampler
+		METHOD get (Lnet/minecraft/class_6749;III)D
+			ARG 1 data
+			ARG 2 biomeX
+			ARG 3 biomeY
+			ARG 4 biomeZ
+	CLASS class_6831 DistanceFunction
+		METHOD getDistance (DDD)D
+			ARG 1 offsetX
+			ARG 3 y
+			ARG 5 offsetZ
+	CLASS class_6956 BlendResult

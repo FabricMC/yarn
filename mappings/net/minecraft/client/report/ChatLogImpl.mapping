@@ -1,0 +1,22 @@
+CLASS net/minecraft/class_7561 net/minecraft/client/report/ChatLogImpl
+	COMMENT An implementation of {@link ChatLog} using a fixed-size array and {@code 0} as the
+	COMMENT starting index. When adding a log, the index is incremented, and the message at the
+	COMMENT index is overwritten. If the index goes above the array size, the array index wraps
+	COMMENT around but the message index is still incremented.
+	COMMENT
+	COMMENT <p>For example, if the size is {@code 10}, after adding the 10th item, the next index is
+	COMMENT {@code 10} because the log is 0-indexed. However, the next message will be stored at
+	COMMENT {@code messages[0]}. Use {@link #wrapIndex} to calculate the wrapped index.
+	FIELD field_39638 messages [Lnet/minecraft/class_7629;
+	FIELD field_39639 maxIndex I
+	FIELD field_39640 minIndex I
+	METHOD <init> (I)V
+		ARG 1 maxMessages
+	METHOD method_44559 incrementIndex ()I
+		COMMENT {@return the incremented index}
+		COMMENT
+		COMMENT @implNote This always increments {@link #maxIndex}, and increments {@link #minIndex}
+		COMMENT only if the array is already full.
+	METHOD method_44560 wrapIndex (I)I
+		COMMENT {@return the message {@code index} wrapped for accessing the backing array}
+		ARG 1 index

@@ -1,0 +1,169 @@
+CLASS net/minecraft/class_7530 net/minecraft/client/gui/EditBox
+	COMMENT A multiline edit box with support for basic keyboard shortcuts.
+	COMMENT This should not be used directly; {@link net.minecraft.client.gui.widget.EditBoxWidget}
+	COMMENT provides the GUI for the edit box.
+	FIELD field_39511 UNLIMITED_LENGTH I
+		COMMENT A constant denoting that the edit box accepts unlimited amount of text. Edit box
+		COMMENT widgets with such edit boxes do not show the current text length indicator.
+	FIELD field_39512 CURSOR_WIDTH I
+	FIELD field_39513 textRenderer Lnet/minecraft/class_327;
+	FIELD field_39514 lines Ljava/util/List;
+	FIELD field_39515 text Ljava/lang/String;
+	FIELD field_39516 cursor I
+	FIELD field_39517 selectionEnd I
+	FIELD field_39518 selecting Z
+	FIELD field_39519 maxLength I
+	FIELD field_39520 width I
+	FIELD field_39521 changeListener Ljava/util/function/Consumer;
+	FIELD field_39522 cursorChangeListener Ljava/lang/Runnable;
+	METHOD <init> (Lnet/minecraft/class_327;I)V
+		ARG 1 textRenderer
+		ARG 2 width
+	METHOD method_44409 getMaxLength ()I
+		COMMENT {@return the maximum length of the edit box text in characters}
+		COMMENT
+		COMMENT <p>If this equals {@link #UNLIMITED_LENGTH}, the edit box does not have a
+		COMMENT length limit. Edit box widgets with such edit boxes do not show the current
+		COMMENT text length indicator.
+		COMMENT
+		COMMENT @see #setMaxLength
+		COMMENT @see #hasMaxLength
+	METHOD method_44410 moveCursor (DD)V
+		COMMENT Moves the cursor to the specified position relative to the edit box.
+		ARG 1 x
+		ARG 3 y
+	METHOD method_44411 setMaxLength (I)V
+		COMMENT Sets the maximum length of the edit box text in characters.
+		COMMENT
+		COMMENT <p>If {@code maxLength} equals {@link #UNLIMITED_LENGTH}, the edit box does not
+		COMMENT have a length limit. Edit box widgets with such edit boxes do not show the current
+		COMMENT text length indicator.
+		COMMENT
+		COMMENT @throws IllegalArgumentException if {@code maxLength} is negative
+		COMMENT @see #getMaxLength
+		COMMENT @see #hasMaxLength
+		ARG 1 maxLength
+	METHOD method_44412 moveCursor (Lnet/minecraft/class_7533;I)V
+		COMMENT Moves the cursor by {@code amount} characters.
+		COMMENT
+		COMMENT @apiNote See {@link CursorMovement} for the types of the movement.
+		ARG 1 movement
+		ARG 2 amount
+	METHOD method_44413 setCursorChangeListener (Ljava/lang/Runnable;)V
+		COMMENT Sets the cursor change listener that is called every time the cursor position changes.
+		ARG 1 cursorChangeListener
+	METHOD method_44414 setText (Ljava/lang/String;)V
+		COMMENT Sets the text of the edit box and moves the cursor to the end of the edit box.
+		ARG 1 text
+	METHOD method_44415 setChangeListener (Ljava/util/function/Consumer;)V
+		COMMENT Sets the change listener that is called every time the text changes.
+		ARG 1 changeListener
+			COMMENT the listener that takes the new text of the edit box
+	METHOD method_44416 (Lnet/minecraft/class_2583;II)V
+		ARG 1 style
+		ARG 2 start
+		ARG 3 end
+	METHOD method_44417 setSelecting (Z)V
+		COMMENT Sets whether the edit box is currently selecting.
+		COMMENT
+		COMMENT <p>If using the widget, this is done by dragging or holding down Shift and clicking.
+		ARG 1 selecting
+	METHOD method_44418 hasMaxLength ()Z
+		COMMENT {@return whether the edit box has a maximum length limit}
+		COMMENT
+		COMMENT <p>Edit box widgets with edit boxes without a length limit do not
+		COMMENT show the current text length indicator.
+		COMMENT
+		COMMENT @see #getMaxLength
+		COMMENT @see #setMaxLength
+	METHOD method_44419 delete (I)V
+		COMMENT Deletes the selected text, or {@code offset} characters of text from the cursor position
+		COMMENT if there is no selection. If the offset is negative, the characters before the cursor
+		COMMENT will be removed, and vice versa.
+		ARG 1 offset
+	METHOD method_44420 replaceSelection (Ljava/lang/String;)V
+		COMMENT Replaces the current selection with {@code string}. If there is no
+		COMMENT selection, this inserts the string at the cursor position. This removes
+		COMMENT {@linkplain net.minecraft.SharedConstants#isValidChar invalid characters} and truncates
+		COMMENT the passed string if necessary.
+		ARG 1 string
+	METHOD method_44421 getText ()Ljava/lang/String;
+		COMMENT {@return the text of the edit box}
+	METHOD method_44422 getLine (I)Lnet/minecraft/class_7530$class_7531;
+		COMMENT {@return the line with index {@code index}}
+		ARG 1 index
+	METHOD method_44423 truncateForReplacement (Ljava/lang/String;)Ljava/lang/String;
+		COMMENT {@return {@code value} truncated to at most {@link #maxLength} characters}
+		COMMENT
+		COMMENT @see #truncate
+		ARG 1 value
+	METHOD method_44424 getCursor ()I
+		COMMENT {@return the cursor position}
+	METHOD method_44425 moveCursorLine (I)V
+		COMMENT Moves the cursor by {@code offset} lines. This method attempts to keep the
+		COMMENT relative position within the line the same. Does nothing if {@code offset} is zero.
+		ARG 1 offset
+	METHOD method_44426 truncate (Ljava/lang/String;)Ljava/lang/String;
+		COMMENT {@return {@code value} truncated to fit in the current text}
+		COMMENT <p>For example, if the edit box with 100 characters limit currently
+		COMMENT has 90 characters, this method will return at most 10 characters.
+		COMMENT
+		COMMENT @see #truncateForReplacement
+		ARG 1 value
+	METHOD method_44427 getSelection ()Lnet/minecraft/class_7530$class_7531;
+		COMMENT {@return the current selection}
+	METHOD method_44428 handleSpecialKey (I)Z
+		COMMENT Handles the special keys, such as copy, cut, linebreak, and cursor movements.
+		ARG 1 keyCode
+	METHOD method_44429 (Ljava/lang/String;)V
+		ARG 0 text
+	METHOD method_44430 getLineCount ()I
+		COMMENT {@return the number of total lines in the edit box}
+	METHOD method_44431 getOffsetLine (I)Lnet/minecraft/class_7530$class_7531;
+		COMMENT {@return the line offset by {@code offsetFromCurrent} from the cursor's line}
+		ARG 1 offsetFromCurrent
+	METHOD method_44432 getCurrentLineIndex ()I
+		COMMENT {@return the line index that the cursor is located at}
+	METHOD method_44433 getWordEndIndex (I)I
+		COMMENT {@return the end index of the word starting at {@code startIndex}}
+		COMMENT
+		COMMENT <p>A word is a string consisting entirely of non-whitespace characters. Therefore,
+		COMMENT the end index is the index of the character whose succeeding character is the first
+		COMMENT whitespace since {@code startIndex}.
+		ARG 1 startIndex
+	METHOD method_44434 getLines ()Ljava/lang/Iterable;
+		COMMENT {@return the lines of the edit box's text}
+	METHOD method_44435 hasSelection ()Z
+		COMMENT {@return whether the edit box has a selected text}
+	METHOD method_44436 getSelectedText ()Ljava/lang/String;
+		COMMENT {@return the text that is currently selected, or an empty string if there is no selection}
+	METHOD method_44437 getPreviousWordAtCursor ()Lnet/minecraft/class_7530$class_7531;
+		COMMENT {@return the substring of a word whose start position is before the cursor}
+		COMMENT
+		COMMENT <p>A word is a string consisting entirely of non-whitespace characters. If the
+		COMMENT cursor is in the middle of a word, the start position is that of the word; if not,
+		COMMENT the start position is that of the first word before the cursor.
+		COMMENT
+		COMMENT @see #getNextWordAtCursor
+	METHOD method_44438 getNextWordAtCursor ()Lnet/minecraft/class_7530$class_7531;
+		COMMENT {@return the substring of a word whose start position is after the cursor}
+		COMMENT
+		COMMENT <p>A word is a string consisting entirely of non-whitespace characters. If the
+		COMMENT cursor is in the middle of a word, the start position is that of the first word
+		COMMENT after the cursor; if not, the start position is that of the next word.
+		COMMENT
+		COMMENT @see #getPreviousWordAtCursor
+	METHOD method_44439 getCurrentLine ()Lnet/minecraft/class_7530$class_7531;
+		COMMENT {@return the line that the cursor is located at}
+	METHOD method_44440 onChange ()V
+		COMMENT Called when the text changes. This rewraps the text, calls
+		COMMENT {@link #changeListener}, then calls {@link #cursorChangeListener}.
+	METHOD method_44441 rewrap ()V
+		COMMENT Rewraps the text. This is called whenever the text changes.
+	CLASS class_7531 Substring
+		COMMENT A substring of an edit box's text, specified using the indices of the
+		COMMENT start and the end. This can indicate selections, lines, words, etc. This
+		COMMENT does not contain the string itself; to obtain the string, get the text
+		COMMENT first, then call {@link String#substring}.
+		FIELD field_39524 EMPTY Lnet/minecraft/class_7530$class_7531;
+			COMMENT An empty substring.
