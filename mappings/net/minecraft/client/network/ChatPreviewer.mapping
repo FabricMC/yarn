@@ -34,6 +34,7 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 		COMMENT @implNote This sets the last response if the requester {@linkplain
 		COMMENT ChatPreviewRequester#handleResponse successfully handled} the response.
 		ARG 1 id
+		ARG 2 previewText
 	METHOD method_44036 clear ()V
 		COMMENT Clears the last response and the requester's state.
 	METHOD method_44037 tryConsumeResponse (Ljava/lang/String;)Lnet/minecraft/class_7479$class_7481;
@@ -61,14 +62,22 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 		COMMENT can be requested by calling {@link #tryRequestPending()}.
 		ARG 1 message
 	METHOD method_44275 disablePreview ()V
-		COMMENT Sets {@link #shouldRenderPreview} to {@code false} and clears this previewer.
+		COMMENT Clears this previewer.
 	METHOD method_44276 tryRequestInternal (Ljava/lang/String;)V
 		ARG 1 message
+	METHOD method_44927 equalsLastPreviewed (Ljava/lang/String;)Z
+		COMMENT {@return whether normalized {@code text} equals the last previewed text}
+		ARG 1 text
+	METHOD method_44928 cannotConsumePreview ()Z
+		COMMENT {@return whether the previewer cannot consume the preview (because the preview
+		COMMENT response hasn't arrived or because of the cooldown)}
 	CLASS class_7481 Response
 		COMMENT A response to the preview query.
+		FIELD comp_826 receptionTimestamp J
 		FIELD comp_827 Ljava/lang/String;
 			COMMENT the message that was queried to preview
 		FIELD comp_828 previewText Lnet/minecraft/class_2561;
+		METHOD comp_826 receptionTimestamp ()J
 		METHOD comp_828 previewText ()Lnet/minecraft/class_2561;
 		METHOD method_44045 canConsume (Ljava/lang/String;)Z
 			COMMENT {@return whether the response can be consumed for the {@code message}}
@@ -76,3 +85,11 @@ CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
 			COMMENT <p>This returns {@code true} if the {@code message} equals the queried message and
 			COMMENT the cooldown has passed.
 			ARG 1 message
+		METHOD method_44929 queryEquals (Ljava/lang/String;)Z
+			COMMENT {@return whether normalized {@code query} equals the response query}
+			ARG 1 query
+		METHOD method_44930 hasCooldownPassed ()Z
+			COMMENT {@return the cooldown for consuming the preview has passed}
+			COMMENT
+			COMMENT @see #canConsume
+			COMMENT @see ChatPreviewer#tryConsumeResponse

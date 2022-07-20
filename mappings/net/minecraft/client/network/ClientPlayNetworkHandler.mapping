@@ -21,7 +21,15 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	FIELD field_3700 advancementHandler Lnet/minecraft/class_632;
 	FIELD field_3701 loginScreen Lnet/minecraft/class_437;
 	FIELD field_39808 messagePacker Lnet/minecraft/class_7610$class_7612;
+	FIELD field_39857 MAX_PENDING_ACKNOWLEDGMENTS I
+	FIELD field_39858 lastSeenMessagesCollector Lnet/minecraft/class_7637;
+	FIELD field_39859 lastReceivedMessage Ljava/util/Optional;
+	FIELD field_39860 pendingAcknowledgments I
+		COMMENT The number of messages whose acknowledgments aren't sent to the server yet.
+		COMMENT They are sent when the count reaches {@value #MAX_PENDING_ACKNOWLEDGMENTS}
+		COMMENT or when the client sends a message, and this count is reset to zero in those cases.
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_437;Lnet/minecraft/class_2535;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_6628;)V
+		ARG 1 client
 		ARG 2 screen
 		ARG 3 connection
 		ARG 4 profile
@@ -116,3 +124,12 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	METHOD method_44072 (Lnet/minecraft/class_642;Lnet/minecraft/class_2561;)V
 		ARG 1 description
 	METHOD method_44816 getMessagePacker ()Lnet/minecraft/class_7610$class_7612;
+	METHOD method_44940 acknowledge (Lnet/minecraft/class_7471;Z)V
+		ARG 1 message
+		ARG 2 displayed
+	METHOD method_44941 consumeAcknowledgment ()Lnet/minecraft/class_7635$class_7636;
+		COMMENT {@return the consumed acknowledgment}
+		COMMENT
+		COMMENT <p>This resets {@link #pendingAcknowledgments} to {@code 0}.
+		COMMENT
+		COMMENT @see #pendingAcknowledgments
