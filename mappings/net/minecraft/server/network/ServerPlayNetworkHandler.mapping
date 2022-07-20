@@ -33,11 +33,16 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	FIELD field_14148 server Lnet/minecraft/server/MinecraftServer;
 	FIELD field_29778 KEEP_ALIVE_INTERVAL I
 	FIELD field_37280 MAX_BREAK_SQUARED_DISTANCE D
+	FIELD field_37281 DEFAULT_SEQUENCE I
 	FIELD field_37282 sequence I
 	FIELD field_39261 previewTaskRunner Lnet/minecraft/class_7493;
 	FIELD field_39394 lastMessageTimestamp Ljava/util/concurrent/atomic/AtomicReference;
 	FIELD field_39805 messageUnpacker Lnet/minecraft/class_7610$class_7611;
+	FIELD field_39825 acknowledgmentValidator Lnet/minecraft/class_7638;
+	FIELD field_39826 messageChainTaskQueue Lnet/minecraft/class_7619;
+	FIELD field_39827 MAX_PENDING_ACKNOWLEDGMENTS I
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_2535;Lnet/minecraft/class_3222;)V
+		ARG 1 server
 		ARG 2 connection
 		ARG 3 player
 	METHOD method_14360 requestTeleport (DDDFFLjava/util/Set;)V
@@ -89,6 +94,7 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 2 texts
 	METHOD method_31275 filterText (Ljava/lang/Object;Ljava/util/function/Function;Ljava/util/function/BiFunction;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 text
+		ARG 2 handler
 		ARG 3 backingFilterer
 	METHOD method_31276 addBook (Lnet/minecraft/class_5837;Ljava/util/List;I)V
 		ARG 1 title
@@ -96,6 +102,7 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 3 slotId
 	METHOD method_31277 filterText (Ljava/lang/String;Ljava/util/function/Function;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 text
+		ARG 2 handler
 	METHOD method_31278 updateBookContent (Ljava/util/List;I)V
 		ARG 1 pages
 		ARG 2 slotId
@@ -107,9 +114,13 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 2 signText
 	METHOD method_31283 (ILjava/util/List;)V
 		ARG 2 texts
+	METHOD method_31284 (Ljava/util/function/Function;Ljava/lang/Object;)Ljava/util/concurrent/CompletableFuture;
+		ARG 2 message
 	METHOD method_31285 (Lnet/minecraft/class_2877;Ljava/util/List;)V
 		ARG 2 texts
 	METHOD method_31286 handleMessage (Lnet/minecraft/class_2797;Lnet/minecraft/class_5837;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 packet
+		ARG 2 message
 	METHOD method_33562 requestTeleportAndDismount (DDDFF)V
 		ARG 1 x
 		ARG 3 y
@@ -163,6 +174,8 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 1 query
 	METHOD method_44162 decorateCommand (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 query
+	METHOD method_44317 (ILio/netty/util/concurrent/Future;)V
+		ARG 2 future
 	METHOD method_44318 sendChatPreviewPacket (ILnet/minecraft/class_2561;)V
 		ARG 1 queryId
 		ARG 2 preview
@@ -173,7 +186,25 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		COMMENT #isInProperOrder improper order} or if chat is disabled.
 		ARG 1 message
 		ARG 2 timestamp
+		ARG 3 acknowledgment
 	METHOD method_44790 getMessageUnpacker ()Lnet/minecraft/class_7610$class_7611;
+	METHOD method_44895 handleAcknowledgmentFailure (Ljava/util/Set;)V
+		ARG 1 reasons
+	METHOD method_44896 (Ljava/util/function/Consumer;Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 messages
+	METHOD method_44897 addPendingAcknowledgment (Lnet/minecraft/class_7471;)V
+		ARG 1 message
+	METHOD method_44899 (Lnet/minecraft/class_2797;Lnet/minecraft/class_5837;Lnet/minecraft/class_7610$class_7613;Lnet/minecraft/class_7470;Lnet/minecraft/class_7635;Lnet/minecraft/class_5837;)V
+		ARG 6 decorated
+	METHOD method_44901 (Lnet/minecraft/class_2797;Lnet/minecraft/class_5837;)Ljava/util/concurrent/CompletableFuture;
+		ARG 2 message
+	METHOD method_44902 shouldPreviewChat ()Z
+		COMMENT {@return whether to handle chat preview requests}
+		COMMENT
+		COMMENT <p>Dedicated servers can configure chat preview in {@code server.properties} file.
+		COMMENT Chat preview is always enabled for integrated servers.
+		COMMENT
+		COMMENT @see MinecraftServer#shouldPreviewChat
 	CLASS 1
 		METHOD method_33897 processInteract (Lnet/minecraft/class_1268;Lnet/minecraft/class_3244$class_5860;)V
 			ARG 1 hand
