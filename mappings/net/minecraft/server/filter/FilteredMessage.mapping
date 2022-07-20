@@ -34,3 +34,24 @@ CLASS net/minecraft/class_5837 net/minecraft/server/filter/FilteredMessage
 		COMMENT {@return {@link #filtered} if {@code filtered} is {@code true}, otherwise
 		COMMENT {@link #raw}}
 		ARG 1 filtered
+	METHOD method_44999 (Ljava/lang/Object;Ljava/lang/Object;)Lnet/minecraft/class_5837;
+		ARG 1 filtered
+	METHOD method_45000 map (Ljava/lang/Object;Ljava/util/function/Function;)Lnet/minecraft/class_5837;
+		COMMENT {@return a filtered message of {@code raw} if unfiltered, otherwise a filtered
+		COMMENT message with {@code raw} and this message's filtered part after applying {@code
+		COMMENT filteredMapper}}
+		COMMENT
+		COMMENT @see #mapAsync(Object, Function)
+		ARG 1 raw
+		ARG 2 filteredMapper
+	METHOD method_45001 mapAsync (Ljava/lang/Object;Ljava/util/function/Function;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT {@return the future of a filtered message of {@code raw} and {@link #filtered} with
+		COMMENT {@code filteredMapper} applied}
+		COMMENT
+		COMMENT <p>As a special case, if this is {@linkplain #isCensored censored}, the future is of
+		COMMENT a censored message of {@code raw}, and if this is {@linkplain #isFiltered not
+		COMMENT filtered at all}, the future is of a permitted message of {@code raw}.
+		COMMENT
+		COMMENT @see #map(Object, Function)
+		ARG 1 raw
+		ARG 2 filteredMapper
