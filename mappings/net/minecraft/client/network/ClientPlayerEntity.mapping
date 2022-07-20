@@ -99,6 +99,8 @@ CLASS net/minecraft/class_746 net/minecraft/client/network/ClientPlayerEntity
 		COMMENT Signs the chat message. If the chat message cannot be signed, this will return
 		COMMENT {@link MessageSignatureData#EMPTY}.
 		ARG 1 metadata
+		ARG 2 content
+		ARG 3 lastSeenMessages
 	METHOD method_43786 signArguments (Lnet/minecraft/class_7470;Lcom/mojang/brigadier/ParseResults;Lnet/minecraft/class_2561;Lnet/minecraft/class_7635;)Lnet/minecraft/class_7450;
 		COMMENT Signs the command arguments. If the arguments cannot be signed or if there is no
 		COMMENT arguments to sign, this will return {@link ArgumentSignatureDataMap#EMPTY}.
@@ -106,6 +108,7 @@ CLASS net/minecraft/class_746 net/minecraft/client/network/ClientPlayerEntity
 		ARG 2 parseResults
 		ARG 3 preview
 			COMMENT the previewed argument value; if supplied, will be used for all signed arguments
+		ARG 4 lastSeenMessages
 	METHOD method_43787 sendCommandInternal (Ljava/lang/String;Lnet/minecraft/class_2561;)V
 		COMMENT Signs and sends {@code command} to the server.
 		ARG 1 command
@@ -127,6 +130,7 @@ CLASS net/minecraft/class_746 net/minecraft/client/network/ClientPlayerEntity
 		ARG 2 preview
 	METHOD method_44097 sendChatMessagePacket (Ljava/lang/String;Lnet/minecraft/class_2561;)V
 		ARG 1 content
+		ARG 2 preview
 	METHOD method_44098 sendCommand (Ljava/lang/String;Lnet/minecraft/class_2561;)V
 		COMMENT Signs and sends {@code command} to the server.
 		ARG 1 command
@@ -136,6 +140,15 @@ CLASS net/minecraft/class_746 net/minecraft/client/network/ClientPlayerEntity
 		COMMENT Sends an unsigned command to the server.
 		ARG 1 command
 			COMMENT the command (without the leading slash)
+	METHOD method_44297 (Lnet/minecraft/class_2561;Lnet/minecraft/class_7501;Lnet/minecraft/class_7470;Lnet/minecraft/class_7635;Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/class_7469;
+		ARG 5 argumentName
+		ARG 6 value
 	METHOD method_44826 createMessageMetadata ()Lnet/minecraft/class_7470;
+	METHOD method_44970 shouldPreview (Ljava/lang/String;)Z
+		COMMENT {@return whether to preview {@code command}}
+		COMMENT
+		COMMENT @see ArgumentSignatureDataMap#shouldPreview
+		ARG 1 command
+			COMMENT the command (without the leading slash)
 	METHOD method_7290 dropSelectedItem (Z)Z
 		ARG 1 entireStack
