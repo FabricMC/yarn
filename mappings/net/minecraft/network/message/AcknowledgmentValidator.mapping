@@ -1,0 +1,42 @@
+CLASS net/minecraft/class_7638 net/minecraft/network/message/AcknowledgmentValidator
+	COMMENT A class that validates the clients' message acknowledgment.
+	COMMENT
+	COMMENT <p>When clients receive or send messages, they send "acknowledgments" to the server,
+	COMMENT containing messages they've last seen or received. If there are too many messages
+	COMMENT waiting for message acknowledgments (more than {@value
+	COMMENT net.minecraft.server.network.ServerPlayNetworkHandler#MAX_PENDING_ACKNOWLEDGMENTS}),
+	COMMENT or if the acknowledgment is incorrect, the client will be disconnected.
+	FIELD field_39888 UNKNOWN I
+	FIELD field_39889 prevValidated Lnet/minecraft/class_7635;
+	FIELD field_39890 pending Lit/unimi/dsi/fastutil/objects/ObjectList;
+	METHOD method_44987 getPendingCount ()I
+	METHOD method_44988 order (Ljava/util/List;[ILnet/minecraft/class_7635$class_7609;)I
+		COMMENT Orders {@code lastSeen}. {@code result} should be an array with the same size
+		COMMENT as {@code lastSeen}, and it will hold the order of each entry, where a larger
+		COMMENT integer corresponds to more recent message. If the integer is {@value #UNKNOWN},
+		COMMENT then the message is unknown (neither previously acknowledged nor is newly sent),
+		COMMENT which causes validation failure.
+		COMMENT
+		COMMENT @return the order of the last received message; if any messages have higher order
+		COMMENT than this, it is a validation failure.
+		ARG 1 lastSeen
+		ARG 2 result
+		ARG 3 lastReceived
+	METHOD method_44989 addPending (Lnet/minecraft/class_7635$class_7609;)V
+		ARG 1 entry
+	METHOD method_44990 validate (Lnet/minecraft/class_7635$class_7636;)Ljava/util/Set;
+		COMMENT Validates {@code acknowledgment}.
+		COMMENT
+		COMMENT @return reasons for acknowledgment validation failure, or an empty set if
+		COMMENT validation is successful
+		ARG 1 acknowledgment
+	METHOD method_44991 hasDuplicateProfiles (Lnet/minecraft/class_7635;)Z
+		COMMENT {@return whether {@code messages} have multiple entries with the same profile ID}
+		COMMENT
+		COMMENT <p>If {@code true}, validation fails.
+		ARG 1 messages
+	CLASS class_7639 FailureReason
+		FIELD field_39895 description Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
+			ARG 3 description
+		METHOD method_44992 getDescription ()Ljava/lang/String;
