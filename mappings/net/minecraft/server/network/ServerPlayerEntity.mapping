@@ -221,15 +221,15 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		COMMENT Sends a chat message to the player.
 		COMMENT
 		COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
-		COMMENT {@link net.minecraft.network.message.MessageSignature#none} - to send a chat
+		COMMENT {@link net.minecraft.network.message.SignedMessage#ofUnsigned} - to send a chat
 		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
 		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
-		COMMENT will show a warning and can discard it depending on the client's options. See {@link
-		COMMENT net.minecraft.network.message.MessageSignature#updateSignature} for how the
-		COMMENT message is signed.
+		COMMENT will show a warning and can discard it depending on the client's options.
 		COMMENT
 		COMMENT @see #sendMessage(Text)
 		COMMENT @see #sendMessage(Text, boolean)
+		ARG 1 message
+		ARG 2 params
 	METHOD method_43506 sendMessageDeliverError (Lnet/minecraft/class_2561;)V
 		ARG 1 message
 	METHOD method_43507 (Lnet/minecraft/class_2561;Lio/netty/util/concurrent/Future;)V
@@ -239,6 +239,15 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_44706 acceptsChatMessage ()Z
 	METHOD method_44707 acceptsMessage (Z)Z
 		ARG 1 overlay
+	METHOD method_44786 sendMessageHeader (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;[B)V
+		COMMENT Sends a message's header and other data required for verification to this player.
+		COMMENT
+		COMMENT <p>This is used to keep the integrity of the "message chain" when a message is censored
+		COMMENT or when the message is originally sent without metadata due to it being originated from
+		COMMENT entities.
+		ARG 1 header
+		ARG 2 headerSignature
+		ARG 3 bodyDigest
 	METHOD method_7336 changeGameMode (Lnet/minecraft/class_1934;)Z
 		ARG 1 gameMode
 	CLASS 1
