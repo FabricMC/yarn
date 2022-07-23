@@ -5,7 +5,14 @@ CLASS net/minecraft/class_6350 net/minecraft/world/gen/chunk/AquiferSampler
 	METHOD method_36382 aquifer (Lnet/minecraft/class_6568;Lnet/minecraft/class_1923;Lnet/minecraft/class_6953;Lnet/minecraft/class_6574;IILnet/minecraft/class_6350$class_6565;)Lnet/minecraft/class_6350;
 		ARG 0 chunkNoiseSampler
 		ARG 1 chunkPos
+		ARG 2 noiseRouter
+		ARG 3 randomSplitter
+		ARG 4 minimumY
+		ARG 5 height
+		ARG 6 fluidLevelSampler
 	METHOD method_38317 apply (Lnet/minecraft/class_6910$class_6912;D)Lnet/minecraft/class_2680;
+		ARG 1 pos
+		ARG 2 density
 	CLASS class_5832 Impl
 		FIELD field_28813 barrierNoise Lnet/minecraft/class_6910;
 		FIELD field_28816 waterLevels [Lnet/minecraft/class_6350$class_6351;
@@ -22,12 +29,21 @@ CLASS net/minecraft/class_6350 net/minecraft/world/gen/chunk/AquiferSampler
 		FIELD field_34580 fluidLevelSampler Lnet/minecraft/class_6350$class_6565;
 		FIELD field_35122 fluidLevelFloodednessNoise Lnet/minecraft/class_6910;
 		FIELD field_35123 fluidLevelSpreadNoise Lnet/minecraft/class_6910;
+		FIELD field_36221 NEEDS_FLUID_TICK_DISTANCE_THRESHOLD D
+		FIELD field_38246 erosionDensityFunction Lnet/minecraft/class_6910;
+		FIELD field_38247 depthDensityFunction Lnet/minecraft/class_6910;
 		METHOD <init> (Lnet/minecraft/class_6568;Lnet/minecraft/class_1923;Lnet/minecraft/class_6953;Lnet/minecraft/class_6574;IILnet/minecraft/class_6350$class_6565;)V
 			ARG 1 chunkNoiseSampler
 			ARG 2 chunkPos
+			ARG 3 noiseRouter
+			ARG 4 randomSplitter
+			ARG 5 minimumY
+			ARG 6 height
+			ARG 7 fluidLevelSampler
 		METHOD method_33734 getLocalX (I)I
 			ARG 1 x
 		METHOD method_33735 calculateDensity (Lnet/minecraft/class_6910$class_6912;Lorg/apache/commons/lang3/mutable/MutableDouble;Lnet/minecraft/class_6350$class_6351;Lnet/minecraft/class_6350$class_6351;)D
+			ARG 1 pos
 		METHOD method_33736 maxDistance (II)D
 			ARG 1 a
 		METHOD method_33738 getWaterLevel (J)Lnet/minecraft/class_6350$class_6351;
@@ -40,6 +56,16 @@ CLASS net/minecraft/class_6350 net/minecraft/world/gen/chunk/AquiferSampler
 			ARG 3 z
 		METHOD method_33743 getLocalZ (I)I
 			ARG 1 z
+		METHOD method_40463 (III)Lnet/minecraft/class_6350$class_6351;
+			ARG 1 blockX
+			ARG 2 blockY
+			ARG 3 blockZ
+		METHOD method_42354 (IIILnet/minecraft/class_6350$class_6351;IZ)I
+			ARG 1 blockX
+			ARG 2 blockY
+			ARG 3 blockZ
+			ARG 4 fluidLevel
+			ARG 5 surfaceHeightEstimate
 	CLASS class_6351 FluidLevel
 		FIELD field_33576 y I
 		FIELD field_33577 state Lnet/minecraft/class_2680;
