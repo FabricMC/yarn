@@ -1,9 +1,32 @@
 CLASS net/minecraft/class_6954 net/minecraft/world/gen/densityfunction/DensityFunctions
 	FIELD field_36618 TEN_FUNCTION Lnet/minecraft/class_6910;
 	FIELD field_36619 ZERO_FUNCTION Lnet/minecraft/class_6910;
+	METHOD method_40539 verticalRangeChoice (Lnet/minecraft/class_6910;Lnet/minecraft/class_6910;III)Lnet/minecraft/class_6910;
+		ARG 0 y
+		ARG 1 whenInRange
+		ARG 2 minInclusive
+		ARG 3 maxInclusive
+		ARG 4 whenOutOfRange
+	METHOD method_40540 createInitialDensityFunction (Lnet/minecraft/class_6910;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		ARG 0 factor
+		ARG 1 depth
+	METHOD method_40541 applyBlending (Lnet/minecraft/class_6910;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		ARG 0 function
+		ARG 1 blendOffset
 	METHOD method_41100 initAndGetDefault (Lnet/minecraft/class_2378;)Lnet/minecraft/class_6880;
 		ARG 0 registry
+	METHOD method_41101 createCavesFunction (Lnet/minecraft/class_2378;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		ARG 0 registry
+		ARG 1 slopedCheese
 	METHOD method_41103 createSurfaceNoiseRouter (Lnet/minecraft/class_2378;ZZ)Lnet/minecraft/class_6953;
+		COMMENT Creates the {@link NoiseRouter} for the overworld and the surface world type.
+		COMMENT
+		COMMENT @return the created {@code NoiseRouter}
+		ARG 0 registry
+		ARG 1 largeBiomes
+			COMMENT whether the large biomes world type is used
+		ARG 2 amplified
+			COMMENT whether the amplified world type is used
 	METHOD method_41109 of (Ljava/lang/String;)Lnet/minecraft/class_5321;
 		ARG 0 id
 	METHOD method_41111 getNoiseParametersEntry (Lnet/minecraft/class_5321;)Lnet/minecraft/class_6880;
@@ -19,22 +42,110 @@ CLASS net/minecraft/class_6954 net/minecraft/world/gen/densityfunction/DensityFu
 	METHOD method_41117 createCavesEntrancesOverworldFunction (Lnet/minecraft/class_2378;)Lnet/minecraft/class_6910;
 		ARG 0 registry
 	METHOD method_41118 createNetherNoiseRouter (Lnet/minecraft/class_2378;)Lnet/minecraft/class_6953;
+		COMMENT Creates the {@link NoiseRouter} for the nether.
+		COMMENT
+		COMMENT @return the created {@code NoiseRouter}
+		ARG 0 registry
 	METHOD method_41119 createCavesNoodleOverworldFunction (Lnet/minecraft/class_2378;)Lnet/minecraft/class_6910;
 		ARG 0 registry
 	METHOD method_41120 createEndNoiseRouter (Lnet/minecraft/class_2378;)Lnet/minecraft/class_6953;
+		COMMENT Creates the {@link NoiseRouter} for The End.
+		COMMENT
+		COMMENT @return the created {@code NoiseRouter}
+		ARG 0 registry
 	METHOD method_41121 createCavePillarsOverworldFunction ()Lnet/minecraft/class_6910;
 	METHOD method_41122 createCavesSpaghetti2dOverworldFunction (Lnet/minecraft/class_2378;)Lnet/minecraft/class_6910;
 		ARG 0 registry
+	METHOD method_41207 applyBlendDensity (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		ARG 0 density
+	METHOD method_41211 createMultiNoiseDependentNoiseRouter (Lnet/minecraft/class_2378;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6953;
+		ARG 0 registry
+		ARG 1 density
 	METHOD method_41546 getPeaksValleysNoise (F)F
 		ARG 0 weirdness
 	METHOD method_41547 createRidgesFoldedOverworldFunction (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
 		ARG 0 input
+	METHOD method_41548 registerSlopedCheeseFunction (Lnet/minecraft/class_2378;Lnet/minecraft/class_6910;Lnet/minecraft/class_6880;Lnet/minecraft/class_6880;Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;Z)V
+		COMMENT Creates and registers the {@code sloped_cheese} density function.
+		COMMENT This is used for the normal, large biomes and amplified world types.
+		ARG 0 registry
+		ARG 1 jaggedNoise
+		ARG 2 continents
+		ARG 3 erosion
+		ARG 4 offsetKey
+		ARG 5 factorKey
+		ARG 6 jaggednessKey
+		ARG 7 depthKey
+		ARG 8 slopedCheeseKey
+		ARG 9 amplified
 	METHOD method_41549 createCavesNoiseRouter (Lnet/minecraft/class_2378;)Lnet/minecraft/class_6953;
+		COMMENT Creates the {@link NoiseRouter} for the caves world type.
+		COMMENT
+		COMMENT @return the created {@code NoiseRouter}
+		ARG 0 registry
 	METHOD method_41551 registerAndGetHolder (Lnet/minecraft/class_2378;Lnet/minecraft/class_5321;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
 		ARG 0 registry
 		ARG 1 key
 		ARG 2 densityFunction
 	METHOD method_41552 createFloatingIslandsNoiseRouter (Lnet/minecraft/class_2378;)Lnet/minecraft/class_6953;
+		COMMENT Creates the {@link NoiseRouter} for the floating islands world type.
+		COMMENT
+		COMMENT @return the created {@code NoiseRouter}
+		ARG 0 registry
+	METHOD method_42363 applyCavesSlides (Lnet/minecraft/class_2378;II)Lnet/minecraft/class_6910;
+		COMMENT Applies the slides for the nether and the caves world type.
+		COMMENT
+		COMMENT @return the created density function
+		ARG 0 registry
+		ARG 1 minY
+			COMMENT the minimum block Y coordinate of the world
+		ARG 2 maxY
+			COMMENT the maximum block Y coordinate of the world
+	METHOD method_42364 applyFloatingIslandsSlides (Lnet/minecraft/class_6910;II)Lnet/minecraft/class_6910;
+		COMMENT Applies the slides for The End or the floating islands world type.
+		COMMENT
+		COMMENT @return the created density function
+		ARG 0 function
+		ARG 1 minY
+			COMMENT the minimum block Y coordinate of the world
+		ARG 2 maxY
+			COMMENT the maximum block Y coordinate of the world
+	METHOD method_42365 applySlides (Lnet/minecraft/class_6910;IIIIDIID)Lnet/minecraft/class_6910;
+		COMMENT Interpolates the density at the top and bottom of the world.
+		COMMENT
+		COMMENT @return the created density function
+		ARG 0 density
+			COMMENT the base density function
+		ARG 1 minY
+			COMMENT the minimum block Y coordinate of the world
+		ARG 2 maxY
+			COMMENT the maximum block Y coordinate of the world
+		ARG 3 topRelativeMinY
+			COMMENT the minimum block Y of the top slide, subtracted from the top height
+		ARG 4 topRelativeMaxY
+			COMMENT the maximum block Y of the top slide, subtracted from the top height
+		ARG 5 topDensity
+			COMMENT the density at the top of the world. For height levels between the top-relative minimum and maximum heights, this is interpolated with the actual density
+		ARG 7 bottomRelativeMinY
+			COMMENT the minimum block Y of the bottom slide, added to the bottom height
+		ARG 8 bottomRelativeMaxY
+			COMMENT the maximum block Y of the bottom slide, added to the bottom height
+		ARG 9 bottomDensity
+			COMMENT the density at the bottom of the world. For height levels between the bottom-relative minimum and maximum heights, this is interpolated with the actual density
+	METHOD method_42366 applySurfaceSlides (ZLnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		COMMENT Applies the slides for the overworld and the surface world type.
+		COMMENT
+		COMMENT @return the created density function
+		ARG 0 amplified
+			COMMENT whether the amplified world type is used
+		ARG 1 density
+			COMMENT the base density function
+	METHOD method_42367 applyEndSlides (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		COMMENT Applies the slides for The End.
+		COMMENT
+		COMMENT @return the created density function
+		ARG 0 slopedCheese
+			COMMENT the base density function
 	METHOD method_44324 createMissingNoiseRouter ()Lnet/minecraft/class_6953;
 	CLASS class_5841 CaveScaler
 		METHOD method_33835 scaleCaves (D)D
