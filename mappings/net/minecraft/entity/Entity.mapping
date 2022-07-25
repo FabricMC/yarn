@@ -49,8 +49,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_29987 MAX_RIDING_COOLDOWN I
 		COMMENT @see Entity#removePassenger
 	FIELD field_29988 DEFAULT_PORTAL_COOLDOWN I
-		COMMENT @see Entity#getDefaultNetherPortalCooldown
-		COMMENT @see Entity#getMaxAir
+		COMMENT @see Entity#getDefaultPortalCooldown
 	FIELD field_29989 MAX_SCOREBOARD_TAGS I
 		COMMENT @see Entity#addScoreboardTag
 		COMMENT @see Entity#readNbt
@@ -122,7 +121,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_6013 stepHeight F
 	FIELD field_6014 prevX D
 	FIELD field_6017 fallDistance F
-	FIELD field_6018 netherPortalCooldown I
+	FIELD field_6018 portalCooldown I
 	FIELD field_6021 uuid Ljava/util/UUID;
 	FIELD field_6025 NULL_BOX Lnet/minecraft/class_238;
 	FIELD field_6027 CUSTOM_NAME Lnet/minecraft/class_2940;
@@ -162,7 +161,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_18378 getEyeHeight (Lnet/minecraft/class_4050;Lnet/minecraft/class_4048;)F
 		ARG 1 pose
 		ARG 2 dimensions
-	METHOD method_18379 tickNetherPortal ()V
+	METHOD method_18379 tickPortal ()V
 	METHOD method_18380 setPose (Lnet/minecraft/class_4050;)V
 		ARG 1 pose
 	METHOD method_18381 getEyeHeight (Lnet/minecraft/class_4050;)F
@@ -198,7 +197,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 pose
 	METHOD method_20343 calculateBoundsForPose (Lnet/minecraft/class_4050;)Lnet/minecraft/class_238;
 		ARG 1 pos
-	METHOD method_20448 shouldLeaveSwimmingPose ()Z
+	METHOD method_20448 isCrawling ()Z
 	METHOD method_20620 teleport (DDD)V
 		ARG 1 destX
 		ARG 3 destY
@@ -312,8 +311,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_30022 (Lnet/minecraft/class_238;Lnet/minecraft/class_2338;)Z
 		ARG 2 pos
 	METHOD method_30076 removeFromDimension ()V
-	METHOD method_30229 resetNetherPortalCooldown ()V
-	METHOD method_30230 hasNetherPortalCooldown ()Z
+	METHOD method_30229 resetPortalCooldown ()V
+	METHOD method_30230 hasPortalCooldown ()Z
 	METHOD method_30329 getTeleportTarget (Lnet/minecraft/class_3218;)Lnet/minecraft/class_5454;
 		COMMENT Determines a {@link TeleportTarget} for the entity
 		COMMENT based on its current and destination worlds, plus
@@ -632,7 +631,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5702 lookAt (Lnet/minecraft/class_2183$class_2184;Lnet/minecraft/class_243;)V
 		ARG 1 anchorPoint
 		ARG 2 target
-	METHOD method_5703 hasPassengerType (Ljava/util/function/Predicate;)Z
+	METHOD method_5703 hasPassenger (Ljava/util/function/Predicate;)Z
 		ARG 1 predicate
 	METHOD method_5705 getYaw (F)F
 		ARG 1 tickDelta
@@ -752,7 +751,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 8 pitch
 		ARG 9 interpolationSteps
 		ARG 10 interpolate
-	METHOD method_5760 tickNetherPortalCooldown ()V
+	METHOD method_5760 tickPortalCooldown ()V
 	METHOD method_5762 addVelocity (DDD)V
 		ARG 1 deltaX
 		ARG 3 deltaY
@@ -833,7 +832,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5804 startRiding (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_5805 isAlive ()Z
-	METHOD method_5806 getDefaultNetherPortalCooldown ()I
+	METHOD method_5806 getDefaultPortalCooldown ()I
 	METHOD method_5807 isCustomNameVisible ()Z
 	METHOD method_5808 refreshPositionAndAngles (DDDFF)V
 		ARG 1 x
@@ -928,7 +927,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5861 getFluidHeight (Lnet/minecraft/class_6862;)D
 		ARG 1 fluid
 	METHOD method_5862 doesRenderOnFire ()Z
-	METHOD method_5863 collides ()Z
+	METHOD method_5863 canHit ()Z
 	METHOD method_5864 getType ()Lnet/minecraft/class_1299;
 	METHOD method_5865 updatePassengerPosition (Lnet/minecraft/class_1297;)V
 		ARG 1 passenger
@@ -951,7 +950,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5875 setNoGravity (Z)V
 		ARG 1 noGravity
 	METHOD method_5876 updateWaterState ()Z
-	METHOD method_5877 getItemsHand ()Ljava/lang/Iterable;
+	METHOD method_5877 getHandItems ()Ljava/lang/Iterable;
 	METHOD method_5878 copyFrom (Lnet/minecraft/class_1297;)V
 		ARG 1 original
 	METHOD method_5879 animateDamage ()V
