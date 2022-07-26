@@ -15,6 +15,17 @@ CLASS net/minecraft/class_6916 net/minecraft/world/gen/densityfunction/DensityFu
 		ARG 0 seed
 	METHOD method_40483 interpolated (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
 		ARG 0 inputFunction
+	METHOD method_40484 mapRange (Lnet/minecraft/class_6910;DD)Lnet/minecraft/class_6910;
+		COMMENT Creates a new density function based on {@code function}, but with a different range.
+		COMMENT {@code function} is assumed to be in the range {@code -1.0} to {@code 1.0},
+		COMMENT while the new function will be in the range {@code min} to {@code max}.
+		COMMENT
+		COMMENT @return the created density function
+		ARG 0 function
+		ARG 1 min
+			COMMENT the new minimum value
+		ARG 3 max
+			COMMENT the new maximum value
 	METHOD method_40485 rangeChoice (Lnet/minecraft/class_6910;DDLnet/minecraft/class_6910;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
 		ARG 0 input
 		ARG 1 minInclusive
@@ -29,6 +40,17 @@ CLASS net/minecraft/class_6916 net/minecraft/world/gen/densityfunction/DensityFu
 		ARG 1 shiftZ
 		ARG 2 xzScale
 		ARG 4 noiseParameters
+	METHOD method_40488 lerp (Lnet/minecraft/class_6910;Lnet/minecraft/class_6910;Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		COMMENT Creates a new density function which interpolates between the values of
+		COMMENT {@code start} and {@code end}, based on {@code delta}.
+		COMMENT
+		COMMENT @return the created density function
+		ARG 0 delta
+			COMMENT the function used for the delta value
+		ARG 1 start
+			COMMENT the function used for the start value, for the {@code delta} value {@code 0.0}
+		ARG 2 end
+			COMMENT the function used for the end value, for the {@code delta} value {@code 1.0}
 	METHOD method_40490 unary (Lnet/minecraft/class_6910;Lnet/minecraft/class_6916$class_6925$class_6926;)Lnet/minecraft/class_6910;
 		ARG 0 input
 		ARG 1 type
@@ -40,16 +62,22 @@ CLASS net/minecraft/class_6916 net/minecraft/world/gen/densityfunction/DensityFu
 		ARG 0 noiseParameters
 	METHOD method_40494 noise (Lnet/minecraft/class_6880;D)Lnet/minecraft/class_6910;
 		ARG 0 noiseParameters
-		ARG 1 yScale
-	METHOD method_40495 noise (Lnet/minecraft/class_6880;DD)Lnet/minecraft/class_6910;
+		ARG 1 scaleY
+	METHOD method_40495 noiseInRange (Lnet/minecraft/class_6880;DD)Lnet/minecraft/class_6910;
 		ARG 0 noiseParameters
-	METHOD method_40496 noise (Lnet/minecraft/class_6880;DDDD)Lnet/minecraft/class_6910;
+		ARG 1 min
+		ARG 3 max
+	METHOD method_40496 noiseInRange (Lnet/minecraft/class_6880;DDDD)Lnet/minecraft/class_6910;
 		ARG 0 noiseParameters
-		ARG 1 xzScale
-		ARG 3 yScale
-	METHOD method_40497 noise (Lnet/minecraft/class_6880;DDD)Lnet/minecraft/class_6910;
+		ARG 1 scaleXz
+		ARG 3 scaleY
+		ARG 5 min
+		ARG 7 max
+	METHOD method_40497 noiseInRange (Lnet/minecraft/class_6880;DDD)Lnet/minecraft/class_6910;
 		ARG 0 noiseParameters
-		ARG 1 yScale
+		ARG 1 scaleY
+		ARG 3 min
+		ARG 5 max
 	METHOD method_40498 blendAlpha ()Lnet/minecraft/class_6910;
 	METHOD method_40499 flatCache (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
 		ARG 0 inputFunction
@@ -58,10 +86,10 @@ CLASS net/minecraft/class_6916 net/minecraft/world/gen/densityfunction/DensityFu
 		ARG 1 b
 	METHOD method_40501 shiftA (Lnet/minecraft/class_6880;)Lnet/minecraft/class_6910;
 		ARG 0 noiseParameters
-	METHOD method_40502 (Lnet/minecraft/class_6880;DD)Lnet/minecraft/class_6910;
+	METHOD method_40502 noise (Lnet/minecraft/class_6880;DD)Lnet/minecraft/class_6910;
 		ARG 0 noiseParameters
-		ARG 1 xzScale
-		ARG 3 yScale
+		ARG 1 scaleXz
+		ARG 3 scaleY
 	METHOD method_40503 blendOffset ()Lnet/minecraft/class_6910;
 	METHOD method_40504 cache2d (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
 		ARG 0 inputFunction
@@ -108,6 +136,16 @@ CLASS net/minecraft/class_6916 net/minecraft/world/gen/densityfunction/DensityFu
 		ARG 0 densityFunction
 	METHOD method_41528 spline (Lnet/minecraft/class_6492;)Lnet/minecraft/class_6910;
 		ARG 0 spline
+	METHOD method_42359 lerp (Lnet/minecraft/class_6910;DLnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
+		COMMENT Creates a new density function which interpolates between the values of
+		COMMENT {@code start} and {@code end}, based on {@code delta}.
+		COMMENT
+		COMMENT @return the created density function
+		ARG 0 delta
+		ARG 1 start
+			COMMENT the start value, for the {@code delta} value {@code 0.0}
+		ARG 3 end
+			COMMENT the function used for the end value, for the {@code delta} value {@code 1.0}
 	METHOD method_42360 (Lnet/minecraft/class_6910;)Lcom/mojang/serialization/Codec;
 		ARG 0 densityFunction
 	CLASS class_6917 BinaryOperation
@@ -228,6 +266,8 @@ CLASS net/minecraft/class_6916 net/minecraft/world/gen/densityfunction/DensityFu
 		FIELD field_37255 CODEC_HOLDER Lnet/minecraft/class_7243;
 		FIELD field_37256 SPLINE_FUNCTION_CODEC Lcom/mojang/serialization/MapCodec;
 		FIELD field_37678 SPLINE_CODEC Lcom/mojang/serialization/Codec;
+		METHOD method_41197 (Lnet/minecraft/class_6910$class_6915;Lnet/minecraft/class_6916$class_7076$class_7135;)Lnet/minecraft/class_6916$class_7076$class_7135;
+			ARG 1 densityFunctionWrapper
 		CLASS class_7135 DensityFunctionWrapper
 			FIELD field_37679 CODEC Lcom/mojang/serialization/Codec;
 			METHOD method_41530 apply (Lnet/minecraft/class_6910$class_6915;)Lnet/minecraft/class_6916$class_7076$class_7135;

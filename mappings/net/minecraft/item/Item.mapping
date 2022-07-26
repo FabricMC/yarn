@@ -1,4 +1,28 @@
 CLASS net/minecraft/class_1792 net/minecraft/item/Item
+	COMMENT An item usable by players and other entities.
+	COMMENT
+	COMMENT <p>Like {@link Block}, this class handles logics for a type of item, and does not
+	COMMENT hold any data. Any data about a particular stack of item in a world, such as item count,
+	COMMENT is held by an {@link ItemStack} which represents a stack of specific item. Therefore,
+	COMMENT there is one - and only one - instance of Item for one item (like apples, oak planks, etc),
+	COMMENT while there can be infinite amounts of {@link ItemStack} instances. This also means that
+	COMMENT items themselves cannot hold NBT data. To append item stacks with NBT data to the
+	COMMENT creative inventory, override {@link #appendStacks}.
+	COMMENT
+	COMMENT <p>Items with no custom behavior, like diamonds, can call the constructor of Item
+	COMMENT directly. If a custom behavior is needed, this should be subclassed. Items also have
+	COMMENT to be registered in the {@link net.minecraft.util.registry.Registry#ITEM} registry.
+	COMMENT
+	COMMENT <p>Many methods of this class are called on both the logical client and logical server,
+	COMMENT so take caution when using those methods. The logical side can be checked using
+	COMMENT {@link World#isClient}. See also <a href="https://fabricmc.net/wiki/tutorial:side">
+	COMMENT the Fabric Wiki article</a>. It is also important that methods that take {@link LivingEntity}
+	COMMENT as an argument can be called by non-players (such as foxes eating food), which causes
+	COMMENT a crash if the code performs unchecked casting.
+	COMMENT
+	COMMENT @see BlockItem
+	COMMENT @see ItemStack
+	COMMENT @see net.minecraft.inventory.Inventory
 	FIELD field_18672 foodComponent Lnet/minecraft/class_4174;
 	FIELD field_21979 fireproof Z
 	FIELD field_27017 LOGGER Lorg/slf4j/Logger;
@@ -16,46 +40,113 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	METHOD <init> (Lnet/minecraft/class_1792$class_1793;)V
 		ARG 1 settings
 	METHOD method_16698 isNetworkSynced ()Z
+		COMMENT {@return whether the item needs to sync additional data to clients}
+		COMMENT
+		COMMENT <p>Items should ideally store all necessary information on the stack's NBT.
+		COMMENT However, this is not always possible for things like maps. In those cases,
+		COMMENT items can send a packet to the player holding it that syncs additional data.
+		COMMENT Such items must subclass {@link NetworkSyncedItem}.
+		COMMENT
+		COMMENT @see NetworkSyncedItem
 	METHOD method_19263 isFood ()Z
 		COMMENT Checks if this item is food and therefore is edible.
 	METHOD method_19264 getFoodComponent ()Lnet/minecraft/class_4174;
 		COMMENT {@return this item's {@link #foodComponent FoodComponent}, or {@code null} if none was set}
 	METHOD method_21830 getEatSound ()Lnet/minecraft/class_3414;
+		COMMENT {@return the sound for eating the item}
 	METHOD method_21831 getDrinkSound ()Lnet/minecraft/class_3414;
+		COMMENT {@return the sound for drinking the item}
 	METHOD method_24357 damage (Lnet/minecraft/class_1282;)Z
 		COMMENT {@return whether this item can be damaged by the given {@link DamageSource source}}
 		ARG 1 source
 	METHOD method_24358 isFireproof ()Z
 		COMMENT {@return whether this item is immune to fire and lava damage}
 	METHOD method_31565 onStackClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;)Z
+		COMMENT Called when the item at the cursor is clicked at {@code slot}.
+		COMMENT
+		COMMENT <p>While this method is usually called on the logical server, it can also be called on
+		COMMENT the logical client, so take caution when overriding this method. The logical side can be
+		COMMENT checked using {@link World#isClient}.
+		COMMENT
+		COMMENT <p>For example, this is called on {@link BundleItem} when the cursor holds
+		COMMENT a bundle and the player clicks on the slot.
+		COMMENT
+		COMMENT @return whether the action was successful
 		ARG 1 stack
+			COMMENT the stack the cursor holds
 		ARG 2 slot
+			COMMENT the clicked slot
 		ARG 3 clickType
 		ARG 4 player
 	METHOD method_31566 onClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;Lnet/minecraft/class_5630;)Z
+		COMMENT Called when the item at {@code slot} gets clicked by the cursor
+		COMMENT holding {@code otherStack}.
+		COMMENT
+		COMMENT <p>While this method is usually called on the logical server, it can also be called on
+		COMMENT the logical client, so take caution when overriding this method. The logical side can be
+		COMMENT checked using {@link World#isClient}.
+		COMMENT
+		COMMENT <p>For example, this is called on {@link BundleItem} when the cursor holds
+		COMMENT an item and the player clicks on the slot that has a bundle.
+		COMMENT
+		COMMENT @return whether the action was successful
 		ARG 1 stack
+			COMMENT the slot's stack
 		ARG 2 otherStack
+			COMMENT the stack the cursor holds
 		ARG 3 slot
+			COMMENT the clicked slot
 		ARG 4 clickType
 		ARG 5 player
 		ARG 6 cursorStackReference
 	METHOD method_31567 isItemBarVisible (Lnet/minecraft/class_1799;)Z
+		COMMENT {@return whether to show the item bar for {@code stack}}
+		COMMENT
+		COMMENT <p>Item bar is usually used to display durability of the stack.
+		COMMENT
+		COMMENT <p>When overriding this, {@link #getItemBarStep} and {@link #getItemBarColor} should
+		COMMENT also be overridden.
 		ARG 1 stack
 	METHOD method_31568 canBeNested ()Z
 		COMMENT @return true if the item can be placed inside of shulker boxes or bundles.
 	METHOD method_31569 getItemBarStep (Lnet/minecraft/class_1799;)I
+		COMMENT {@return the step, or the length of the colored area of the item bar, for
+		COMMENT {@code stack}}
+		COMMENT
+		COMMENT <p>This is between {@code 0.0f} and {code 13.0f}. By default, this is
+		COMMENT {@code durability * 13.0f / maxDurability}.
+		COMMENT
+		COMMENT <p>When overriding this, {@link #isItemBarVisible} and {@link #getItemBarColor} should
+		COMMENT also be overridden.
 		ARG 1 stack
 	METHOD method_31570 getEquipSound ()Lnet/minecraft/class_3414;
+		COMMENT {@return the sound for equipping the item, or {@code null} if no sound is played}
 	METHOD method_31571 getItemBarColor (Lnet/minecraft/class_1799;)I
+		COMMENT {@return the RGB color of the item bar, usually used for durability display}
+		COMMENT
+		COMMENT <p>When overriding this, {@link #isItemBarVisible} and {@link #getItemBarStep} should
+		COMMENT also be overridden.
 		ARG 1 stack
 	METHOD method_32346 getTooltipData (Lnet/minecraft/class_1799;)Ljava/util/Optional;
 		ARG 1 stack
 	METHOD method_33261 onItemEntityDestroyed (Lnet/minecraft/class_1542;)V
+		COMMENT Called on the server when an {@link ItemEntity} holding this item gets destroyed.
+		COMMENT This can happen due to fire, lava, cactus, explosion, etc. Items that can hold
+		COMMENT other items should override this to drop its contents.
+		COMMENT
+		COMMENT @see ItemUsage#spawnItemContents
 		ARG 1 entity
 	METHOD method_40131 getRegistryEntry ()Lnet/minecraft/class_6880$class_6883;
 	METHOD method_7836 use (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1271;
-		COMMENT Called when an item is used by a player.
+		COMMENT Called when the player uses (or starts using) the item.
 		COMMENT The use action, by default, is bound to the right mouse button.
+		COMMENT This method checks the player's hunger when the item is a food, and will
+		COMMENT {@linkplain TypedActionResult#pass pass} in all other cases by default.
+		COMMENT
+		COMMENT <p>If the item {@linkplain #getMaxUseTime can be used for multiple ticks}, then
+		COMMENT this will only be called when the player starts using it. After that,
+		COMMENT {@link #usageTick} is called every tick until the player {@linkplain #finishUsing
+		COMMENT finishes using the item}.
 		COMMENT
 		COMMENT <p>This method is called on both the logical client and logical server, so take caution when overriding this method.
 		COMMENT The logical side can be checked using {@link net.minecraft.world.World#isClient() world.isClient()}.
@@ -77,6 +168,16 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	METHOD method_7838 isUsedOnRelease (Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
 	METHOD method_7840 onStoppedUsing (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;I)V
+		COMMENT Called on both the client and the server when an entity stops using an item
+		COMMENT before reaching the {@linkplain #getMaxUseTime maximum use time}. If the time was
+		COMMENT reached, {@link #finishUsing} is called instead.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT <p>{@code user} might not be a player in some cases. For example, this occurs when
+		COMMENT an entity uses a crossbow.
 		ARG 1 stack
 		ARG 2 world
 		ARG 3 user
@@ -89,10 +190,23 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 2 world
 		ARG 3 player
 	METHOD method_7844 getAttributeModifiers (Lnet/minecraft/class_1304;)Lcom/google/common/collect/Multimap;
+		COMMENT {@return the attribute modifiers the item provides}
+		COMMENT
+		COMMENT <p>Tools and armor should override this to specify the attack damage or armor points.
 		ARG 1 slot
 	METHOD method_7846 isDamageable ()Z
 		COMMENT {@return whether this item can lose durability}
 	METHOD method_7847 useOnEntity (Lnet/minecraft/class_1799;Lnet/minecraft/class_1657;Lnet/minecraft/class_1309;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
+		COMMENT Called on both the client and the server when a player uses the item on an entity.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT <p>This should be used if the item can be used on multiple types of entities,
+		COMMENT such as name tags or saddles.
+		COMMENT
+		COMMENT @return the action result
 		ARG 1 stack
 		ARG 2 user
 		ARG 3 entity
@@ -101,22 +215,41 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	METHOD method_7850 appendStacks (Lnet/minecraft/class_1761;Lnet/minecraft/class_2371;)V
 		COMMENT Appends the stacks of this item shown in the item group to the list.
 		COMMENT
+		COMMENT <p>This can be overridden to append item stacks with custom NBT data to the
+		COMMENT creative inventory.
+		COMMENT
 		COMMENT @see #isIn(ItemGroup)
 		ARG 1 group
 		ARG 2 stacks
 	METHOD method_7851 appendTooltip (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Ljava/util/List;Lnet/minecraft/class_1836;)V
+		COMMENT Called by the client to append tooltips to an item. Subclasses can override
+		COMMENT this and add custom tooltips to {@code tooltip} list.
 		ARG 1 stack
 		ARG 2 world
 		ARG 3 tooltip
+			COMMENT the list of tooltips to show
 		ARG 4 context
 	METHOD method_7852 usageTick (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;Lnet/minecraft/class_1799;I)V
+		COMMENT Called on both the server and the client every tick while an entity uses
+		COMMENT the item. Currently used by {@link CrossbowItem} to charge the crossbow.
+		COMMENT If this is overridden, {@link #getMaxUseTime} should also be overridden to
+		COMMENT return a positive value.
+		COMMENT
+		COMMENT @see #finishUsing
+		COMMENT @see #use
 		ARG 1 world
 		ARG 2 user
 		ARG 3 stack
 		ARG 4 remainingUseTicks
+			COMMENT how long it's left until the entity finishes using the item, in ticks
 	METHOD method_7853 getUseAction (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1839;
+		COMMENT {@return the use action the item should perform}
 		ARG 1 stack
 	METHOD method_7854 getDefaultStack ()Lnet/minecraft/class_1799;
+		COMMENT {@return the default stack for this item}
+		COMMENT
+		COMMENT <p>Items that expect certain NBT data in the item stack should override
+		COMMENT this method to return the stack with the NBT data.
 	METHOD method_7856 isSuitableFor (Lnet/minecraft/class_2680;)Z
 		COMMENT Determines whether this item can be used as a suitable tool for mining the specified block.
 		COMMENT Depending on block implementation, when combined together, the correct item and block may achieve a better mining speed and yield
@@ -132,8 +265,22 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT Gets the remainder item that should be left behind when this item is used as a crafting ingredient.
 	METHOD method_7859 getGroup ()Lnet/minecraft/class_1761;
 	METHOD method_7860 postProcessNbt (Lnet/minecraft/class_2487;)V
+		COMMENT Processes the NBT applied to an item stack of this item.
+		COMMENT
+		COMMENT <p>This is only used in vanilla to process player head NBT data.
 		ARG 1 nbt
 	METHOD method_7861 finishUsing (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)Lnet/minecraft/class_1799;
+		COMMENT Called when an entity finishes using the item, such as eating food or drinking a potion.
+		COMMENT This method handles eating food by default.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT <p>{@code user} might not be a player in some cases. For example, this occurs when a fox
+		COMMENT eats food or when a wandering trader drinks milk.
+		COMMENT
+		COMMENT @return the new item stack after using the item
 		ARG 1 stack
 		ARG 2 world
 		ARG 3 user
@@ -149,6 +296,14 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	METHOD method_7864 getName (Lnet/minecraft/class_1799;)Lnet/minecraft/class_2561;
 		ARG 1 stack
 	METHOD method_7865 getMiningSpeedMultiplier (Lnet/minecraft/class_1799;Lnet/minecraft/class_2680;)F
+		COMMENT {@return the multiplier applied to the mining speed of {@code stack} when mining
+		COMMENT {@code state}}
+		COMMENT
+		COMMENT <p>The default value is {@code 1.0f}. Returning larger integer will cause the block
+		COMMENT to be mined faster. Enchantments, status effects, and other effects that affect
+		COMMENT mining speed are instead handled in {@link PlayerEntity#getBlockBreakingSpeed}.
+		COMMENT
+		COMMENT @see MiningToolItem
 		ARG 1 stack
 		ARG 2 state
 	METHOD method_7866 getTranslationKey (Lnet/minecraft/class_1799;)Ljava/lang/String;
@@ -168,10 +323,17 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 1 player
 		ARG 2 fluidHandling
 	METHOD method_7873 postHit (Lnet/minecraft/class_1799;Lnet/minecraft/class_1309;Lnet/minecraft/class_1309;)Z
+		COMMENT Called on the server when the item is used to hit an entity.
+		COMMENT
+		COMMENT <p>Tools and melee weapons should override this to damage the stack.
+		COMMENT
+		COMMENT @return whether the item's use stat should be incremented
+		COMMENT @see ItemStack#damage(int, LivingEntity, java.util.function.Consumer)
 		ARG 1 stack
 		ARG 2 target
 		ARG 3 attacker
 	METHOD method_7875 byRawId (I)Lnet/minecraft/class_1792;
+		COMMENT {@return the item from its raw ID}
 		ARG 0 id
 	METHOD method_7876 getTranslationKey ()Ljava/lang/String;
 		COMMENT Gets the translation key of this item.
@@ -181,15 +343,28 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT @return true if the item is in the specified item group or the item group is {@link net.minecraft.item.ItemGroup#SEARCH}.
 		ARG 1 group
 	METHOD method_7878 canRepair (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+		COMMENT {@return whether {@code stack} can be repaired using {@code ingredient}}
+		COMMENT
+		COMMENT <p>This only handles repairing using the ingredient such as diamonds, and does
+		COMMENT not handle combining tools or armor.
 		ARG 1 stack
 		ARG 2 ingredient
 	METHOD method_7879 postMine (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_1309;)Z
+		COMMENT Called on the server when the item is used to break a block.
+		COMMENT
+		COMMENT <p>Tools and melee weapons should override this to damage the stack, after
+		COMMENT checking if the block's hardness is larger than {@code 0.0f}.
+		COMMENT
+		COMMENT @return whether the item's use stat should be incremented
+		COMMENT @see net.minecraft.block.AbstractBlock.AbstractBlockState#getHardness
+		COMMENT @see ItemStack#damage(int, LivingEntity, java.util.function.Consumer)
 		ARG 1 stack
 		ARG 2 world
 		ARG 3 state
 		ARG 4 pos
 		ARG 5 miner
 	METHOD method_7880 getRawId (Lnet/minecraft/class_1792;)I
+		COMMENT {@return the raw ID of {@code item}, or 0 if passed {@code null}}
 		ARG 0 item
 	METHOD method_7881 getMaxUseTime (Lnet/minecraft/class_1799;)I
 		COMMENT {@return the maximum use (right-click) time of this item, in ticks}
@@ -207,7 +382,12 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 1 context
 			COMMENT the usage context
 	METHOD method_7885 canMine (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)Z
-		COMMENT Checks if a player can break a block while holding the item.
+		COMMENT {@return whether a player can break a block while holding the item}
+		COMMENT
+		COMMENT <p>This is to check whether the player can start breaking the block in the
+		COMMENT first place; this does not check if the item is a correct tool to mine the block.
+		COMMENT Melee weapons should override this to return {@code false}, unless it is also
+		COMMENT intended to be used as a tool.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
@@ -222,12 +402,22 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT
 		COMMENT <p>If an item is damageable, this method is ignored and data is always synced to client.
 	METHOD method_7888 inventoryTick (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;IZ)V
+		COMMENT Called on both the client and the server every tick if the item is in the player's inventory.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		ARG 1 stack
 		ARG 2 world
 		ARG 3 entity
+			COMMENT the entity holding the item; usually a player
 		ARG 4 slot
 		ARG 5 selected
+			COMMENT whether the item is in the selected hotbar slot
 	CLASS class_1793 Settings
+		COMMENT Item settings configure behaviors common to all items, such as the stack's max
+		COMMENT count and the item group. An instance of this must be passed to the constructor
+		COMMENT of {@link Item} (or most of its subclasses).
 		FIELD field_18673 foodComponent Lnet/minecraft/class_4174;
 		FIELD field_21980 fireproof Z
 		FIELD field_8016 rarity Lnet/minecraft/class_1814;

@@ -132,8 +132,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_29987 MAX_RIDING_COOLDOWN I
 		COMMENT @see Entity#removePassenger
 	FIELD field_29988 DEFAULT_PORTAL_COOLDOWN I
-		COMMENT @see Entity#getDefaultNetherPortalCooldown
-		COMMENT @see Entity#getMaxAir
+		COMMENT @see Entity#getDefaultPortalCooldown
 	FIELD field_29989 MAX_SCOREBOARD_TAGS I
 		COMMENT @see Entity#addScoreboardTag
 		COMMENT @see Entity#readNbt
@@ -205,7 +204,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_6013 stepHeight F
 	FIELD field_6014 prevX D
 	FIELD field_6017 fallDistance F
-	FIELD field_6018 netherPortalCooldown I
+	FIELD field_6018 portalCooldown I
 	FIELD field_6021 uuid Ljava/util/UUID;
 	FIELD field_6025 NULL_BOX Lnet/minecraft/class_238;
 	FIELD field_6027 CUSTOM_NAME Lnet/minecraft/class_2940;
@@ -257,7 +256,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_18378 getEyeHeight (Lnet/minecraft/class_4050;Lnet/minecraft/class_4048;)F
 		ARG 1 pose
 		ARG 2 dimensions
-	METHOD method_18379 tickNetherPortal ()V
+	METHOD method_18379 tickPortal ()V
 	METHOD method_18380 setPose (Lnet/minecraft/class_4050;)V
 		ARG 1 pose
 	METHOD method_18381 getEyeHeight (Lnet/minecraft/class_4050;)F
@@ -305,14 +304,14 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT Players start crawling if they would otherwise collide with blocks (for example,
 		COMMENT when the player is in a 1 block tall tunnel).
 		COMMENT
-		COMMENT @see #shouldLeaveSwimmingPose
+		COMMENT @see #isCrawling
 	METHOD method_20233 wouldPoseNotCollide (Lnet/minecraft/class_4050;)Z
 		COMMENT {@return {@code true} if the entity would not collide with blocks if the pose is
 		COMMENT {@code pose}}
 		ARG 1 pose
 	METHOD method_20343 calculateBoundsForPose (Lnet/minecraft/class_4050;)Lnet/minecraft/class_238;
 		ARG 1 pos
-	METHOD method_20448 shouldLeaveSwimmingPose ()Z
+	METHOD method_20448 isCrawling ()Z
 		COMMENT {@return whether the entity is crawling}
 		COMMENT
 		COMMENT <p>An entity is crawling if it is in swimming pose, but is not touching water.
@@ -499,11 +498,11 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT to zero.
 		COMMENT
 		COMMENT @see #moveToWorld
-	METHOD method_30229 resetNetherPortalCooldown ()V
+	METHOD method_30229 resetPortalCooldown ()V
 		COMMENT Resets the entity's portal cooldown to the default.
 		COMMENT
-		COMMENT @see #getDefaultNetherPortalCooldown
-	METHOD method_30230 hasNetherPortalCooldown ()Z
+		COMMENT @see #getDefaultPortalCooldown
+	METHOD method_30230 hasPortalCooldownn ()Z
 		COMMENT {@return whether the entity's portal cooldown is in effect}
 	METHOD method_30329 getTeleportTarget (Lnet/minecraft/class_3218;)Lnet/minecraft/class_5454;
 		COMMENT {@return a {@link TeleportTarget} for the entity based on its current and
@@ -931,7 +930,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #streamSelfAndPassengers
 		COMMENT @see #streamPassengersAndSelf
 		COMMENT @see #getPassengersDeep
-		COMMENT @see #hasPassengerType
+		COMMENT @see #hasPassenger(Predicate)
 		ARG 1 passenger
 	METHOD method_5627 addPassenger (Lnet/minecraft/class_1297;)V
 		COMMENT Adds {@code passenger} as a passenger. <strong>This should not be called
@@ -1113,7 +1112,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5661 getArmorItems ()Ljava/lang/Iterable;
 		COMMENT {@return an iterable of item stacks equipped as armor}
 		COMMENT
-		COMMENT @see #getItemsHand
+		COMMENT @see #getHandItems
 		COMMENT @see #getItemsEquipped
 	METHOD method_5662 saveNbt (Lnet/minecraft/class_2487;)Z
 		ARG 1 nbt
@@ -1311,7 +1310,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT Changes this entity's pitch and yaw to look at {@code target}.
 		ARG 1 anchorPoint
 		ARG 2 target
-	METHOD method_5703 hasPassengerType (Ljava/util/function/Predicate;)Z
+	METHOD method_5703 hasPassenger (Ljava/util/function/Predicate;)Z
 		COMMENT {@return whether there is a passenger of this entity matching {@code predicate}}
 		COMMENT
 		COMMENT @see #getPassengerList
@@ -1319,7 +1318,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #streamSelfAndPassengers
 		COMMENT @see #streamPassengersAndSelf
 		COMMENT @see #getPassengersDeep
-		COMMENT @see #hasPassenger
+		COMMENT @see #hasPassenger(Entity)
 		ARG 1 predicate
 	METHOD method_5705 getYaw (F)F
 		ARG 1 tickDelta
@@ -1508,7 +1507,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5743 getItemsEquipped ()Ljava/lang/Iterable;
 		COMMENT {@return an iterable of item stacks held in the hands or equpipped as armor}
 		COMMENT
-		COMMENT @see #getItemsHand
+		COMMENT @see #getHandItems
 		COMMENT @see #getArmorItems
 	METHOD method_5745 raycast (DFZ)Lnet/minecraft/class_239;
 		ARG 1 maxDistance
@@ -1595,7 +1594,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 8 pitch
 		ARG 9 interpolationSteps
 		ARG 10 interpolate
-	METHOD method_5760 tickNetherPortalCooldown ()V
+	METHOD method_5760 tickPortalCooldown ()V
 	METHOD method_5762 addVelocity (DDD)V
 		ARG 1 deltaX
 		ARG 3 deltaY
@@ -1826,12 +1825,12 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT <p>For non-{@link LivingEntity}, this is the same as negating {@link #isRemoved}.
 		COMMENT {@link LivingEntity} checks the entity's health in addition to the removal.
-	METHOD method_5806 getDefaultNetherPortalCooldown ()I
+	METHOD method_5806 getDefaultPortalCooldown ()I
 		COMMENT {@return the entity's default portal cooldown}
 		COMMENT
 		COMMENT <p>This is 300 ticks by default, or 10 ticks for players.
 		COMMENT
-		COMMENT @see #resetNetherPortalCooldown
+		COMMENT @see #resetPortalCooldown
 	METHOD method_5807 isCustomNameVisible ()Z
 		COMMENT {@return whether the custom name should be shown}
 		COMMENT
@@ -2113,7 +2112,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT is not a spectator.
 		COMMENT
 		COMMENT @see #isOnFire
-	METHOD method_5863 collides ()Z
+	METHOD method_5863 canHit ()Z
 		COMMENT {@return whether the entity can be hit with a projectile or be targetted by
 		COMMENT the player crosshair}
 	METHOD method_5864 getType ()Lnet/minecraft/class_1299;
@@ -2180,7 +2179,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT no gravity. This is saved under the {@code NoGravity} NBT key.
 		ARG 1 noGravity
 	METHOD method_5876 updateWaterState ()Z
-	METHOD method_5877 getItemsHand ()Ljava/lang/Iterable;
+	METHOD method_5877 getHandItems ()Ljava/lang/Iterable;
 		COMMENT {@return an iterable of item stacks held in the hands}
 		COMMENT
 		COMMENT @see #getArmorItems
