@@ -11,12 +11,10 @@ CLASS net/minecraft/class_7492 net/minecraft/network/message/MessageDecorator
 	COMMENT "Only Show Secure Chat" option}, they will see the undecorated message. Therefore,
 	COMMENT message decorator is <strong>not recommended for censoring messages</strong>.
 	COMMENT
-	COMMENT <p>It is <strong>very important that the decorator be pure; i.e. return the
-	COMMENT same text when given the same text (and sender)</strong>. Otherwise, the server
-	COMMENT detects a mismatch between the preview and the actual message, and discards the message
-	COMMENT as it is now considered improperly signed. For example, a decorator that appends
-	COMMENT the time the decoration was applied would be likely to fail, since there is usually
-	COMMENT a delay between the previewing and the submission.
+	COMMENT <p>Message decorator results are {@linkplain CachedDecoratorResult cached}, allowing
+	COMMENT non-pure decorators (i.e. ones affected by externally controlled variables) without
+	COMMENT affecting the signature verification process. Note that the decorator can still
+	COMMENT run during message submission to decorate filtered parts of the message.
 	FIELD field_39384 NOOP Lnet/minecraft/class_7492;
 		COMMENT An empty message decorator that returns the original message.
 	METHOD decorate (Lnet/minecraft/class_3222;Lnet/minecraft/class_2561;)Ljava/util/concurrent/CompletableFuture;

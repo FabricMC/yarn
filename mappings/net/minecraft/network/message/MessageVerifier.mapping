@@ -6,13 +6,13 @@ CLASS net/minecraft/class_7615 net/minecraft/network/message/MessageVerifier
 	METHOD method_44885 create (Lnet/minecraft/class_7428;Z)Lnet/minecraft/class_7615;
 		ARG 0 publicKey
 	METHOD method_44886 verify (Lnet/minecraft/class_7471;)Lnet/minecraft/class_7615$class_7646;
+		COMMENT {@return the status of verifying the message}
 		ARG 1 message
-	METHOD method_44887 storeHeaderVerification (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;[B)Lnet/minecraft/class_7615$class_7646;
-		COMMENT Stores the status of verifying the header.
+	METHOD method_44887 verify (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;[B)Lnet/minecraft/class_7615$class_7646;
+		COMMENT {@return the status of verifying the header}
 		COMMENT
 		COMMENT <p>Clients can receive only the message header instead of the whole message. This
-		COMMENT allows the chain to reference such messages. Since no actual content is received,
-		COMMENT this does not return the verification status.
+		COMMENT allows the verification of such messages.
 		ARG 1 header
 		ARG 2 signature
 		ARG 3 bodyDigest
@@ -24,5 +24,18 @@ CLASS net/minecraft/class_7615 net/minecraft/network/message/MessageVerifier
 			ARG 1 signatureVerifier
 		METHOD method_44996 verifyPrecedingSignature (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;Z)Z
 			ARG 1 header
-		METHOD method_44997 verify (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;[BZ)Z
+		METHOD method_44997 verifyInternal (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;[BZ)Z
+			ARG 1 header
 			ARG 3 bodyDigest
+		METHOD method_45048 getStatus (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;[BZ)Lnet/minecraft/class_7615$class_7646;
+			ARG 1 header
+			ARG 2 signature
+			ARG 3 bodyDigest
+	CLASS class_7646 Status
+		COMMENT The verification status of a message.
+		FIELD field_39910 Lnet/minecraft/class_7615$class_7646;
+			COMMENT The message is verified.
+		FIELD field_39911 Lnet/minecraft/class_7615$class_7646;
+			COMMENT The message cannot be verified.
+		FIELD field_39912 Lnet/minecraft/class_7615$class_7646;
+			COMMENT The message cannot be verified due to the last message not being verified.

@@ -4,6 +4,7 @@ CLASS net/minecraft/class_7594 net/minecraft/client/network/message/MessageHandl
 	FIELD field_39796 delayedMessages Ljava/util/Deque;
 	FIELD field_39797 chatDelay J
 	FIELD field_39798 lastProcessTime J
+	FIELD field_39904 CHAT_VALIDATION_FAILED_DISCONNECT_REASON Lnet/minecraft/class_2561;
 	METHOD <init> (Lnet/minecraft/class_310;)V
 		ARG 1 client
 	METHOD method_44731 getPlayerListEntry (Ljava/util/UUID;)Lnet/minecraft/class_640;
@@ -122,9 +123,12 @@ CLASS net/minecraft/class_7594 net/minecraft/client/network/message/MessageHandl
 		COMMENT or when the message is originally sent without metadata due to it being originated from
 		COMMENT entities. This is to keep the integrity of the "message chain".
 		COMMENT
-		COMMENT <p>This stores the header verification result and adds it to the chat log.
+		COMMENT <p>If the header cannot be verified due to a broken chain, this disconnects
+		COMMENT the client from the server.
 		COMMENT
-		COMMENT @see net.minecraft.network.message.MessageVerifier#storeHeaderVerification
+		COMMENT <p>This adds the header to the chat log.
+		ARG 1 header
+		ARG 2 signature
 		ARG 3 bodyDigest
 	METHOD method_44822 addToChatLog (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;[B)V
 		ARG 1 header
@@ -134,6 +138,9 @@ CLASS net/minecraft/class_7594 net/minecraft/client/network/message/MessageHandl
 		ARG 0 message
 	METHOD method_44943 processChatMessageInternal (Lnet/minecraft/class_2556$class_7602;Lnet/minecraft/class_7471;Lnet/minecraft/class_2561;Lnet/minecraft/class_640;ZLjava/time/Instant;)Z
 		COMMENT Processes a chat message.
+		COMMENT
+		COMMENT <p>If the message cannot be verified due to a broken chain, this disconnects
+		COMMENT the client from the server.
 		COMMENT
 		COMMENT <p>The message can still end up not being displayed if the verification
 		COMMENT fails and {@code onlyShowSecureChat} is {@code true} or if the sender is
@@ -154,6 +161,8 @@ CLASS net/minecraft/class_7594 net/minecraft/client/network/message/MessageHandl
 		COMMENT {@return the number of delayed messages that are not processed yet}
 	METHOD method_44945 processAll ()V
 		COMMENT Processes all delayed messages from the queue.
+	METHOD method_45031 disconnect ()V
+		COMMENT Disconnects from the server with reason {@link #CHAT_VALIDATION_FAILED_DISCONNECT_REASON}.
 	CLASS 1
 		FIELD field_39868 processed Z
 	CLASS class_7627 ProcessableMessage

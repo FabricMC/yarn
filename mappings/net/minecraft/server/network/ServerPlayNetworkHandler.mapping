@@ -41,6 +41,7 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	FIELD field_39825 acknowledgmentValidator Lnet/minecraft/class_7638;
 	FIELD field_39826 messageChainTaskQueue Lnet/minecraft/class_7619;
 	FIELD field_39827 MAX_PENDING_ACKNOWLEDGMENTS I
+	FIELD field_39899 cachedDecoratorResult Lnet/minecraft/class_7642;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_2535;Lnet/minecraft/class_3222;)V
 		ARG 1 server
 		ARG 2 connection
@@ -149,6 +150,8 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 2 decorated
 	METHOD method_44155 handleDecoratedMessage (Lnet/minecraft/class_7471;)V
 	METHOD method_44156 decorateCommand (Lnet/minecraft/class_2168;Lnet/minecraft/class_7644;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 source
+		ARG 2 arguments
 	METHOD method_44158 (Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
 		ARG 1 decorated
 	METHOD method_44159 decorate (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
@@ -168,8 +171,12 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	METHOD method_44337 canAcceptMessage (Ljava/lang/String;Ljava/time/Instant;Lnet/minecraft/class_7635$class_7636;)Z
 		COMMENT {@return whether {@code message}, sent at {@code timestamp}, should be accepted}
 		COMMENT
-		COMMENT @implNote This returns {@code false} if the message arrives in {@linkplain
-		COMMENT #isInProperOrder improper order} or if chat is disabled.
+		COMMENT <p>This returns {@code false} if the message arrives in {@linkplain
+		COMMENT #isInProperOrder improper order}, if chat is disabled, or if {@linkplain
+		COMMENT AcknowledgmentValidator#validate acknowledgment validation fails}.
+		COMMENT Note that the signatures are verified in {@link #canAcceptMessage(SignedMessage)}.
+		COMMENT
+		COMMENT @see #canAcceptMessage(SignedMessage)
 		ARG 1 message
 		ARG 2 timestamp
 		ARG 3 acknowledgment
@@ -185,6 +192,42 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		COMMENT Chat preview is always enabled for integrated servers.
 		COMMENT
 		COMMENT @see MinecraftServer#shouldPreviewChat
+	METHOD method_45002 (Lnet/minecraft/class_7448;Lnet/minecraft/class_2168;)Lnet/minecraft/class_2168;
+		ARG 1 source
+	METHOD method_45003 parse (Ljava/lang/String;)Lcom/mojang/brigadier/ParseResults;
+		COMMENT {@return the result of parsing {@code command}}
+		ARG 1 command
+			COMMENT the command to parse (without the leading slash)
+	METHOD method_45004 (Ljava/lang/String;Lnet/minecraft/class_2561;)V
+		ARG 2 decorated
+	METHOD method_45006 collectArgumentMessages (Lnet/minecraft/class_7472;Lnet/minecraft/class_7644;)Ljava/util/Map;
+		COMMENT {@return a map of argument name and value as signed messages}
+		ARG 1 packet
+		ARG 2 arguments
+	METHOD method_45008 (Ljava/lang/String;Lnet/minecraft/class_2561;)V
+		ARG 2 decorated
+	METHOD method_45009 canAcceptMessage (Lnet/minecraft/class_7471;)Z
+		COMMENT {@return whether {@code message} can be accepted}
+		COMMENT
+		COMMENT <p>This verifies the message's signature and disconnects the client if it cannot
+		COMMENT be verified. Additionally, this logs a warning (without disconnection or
+		COMMENT rejection of messages) for expired messages.
+		COMMENT
+		COMMENT @see #canAcceptMessage(String, Instant, LastSeenMessageList.Acknowledgment)
+		ARG 1 message
+	METHOD method_45010 handleCommandExecution (Lnet/minecraft/class_7472;)V
+		ARG 1 packet
+	METHOD method_45011 getSignedMessage (Lnet/minecraft/class_2797;)Lnet/minecraft/class_7471;
+		ARG 1 packet
+	METHOD method_45013 getDecoratedContents (Lnet/minecraft/class_2797;)Lnet/minecraft/class_7634;
+		COMMENT {@return the decorated contents for {@code packet}}
+		COMMENT
+		COMMENT @implNote This returns the {@linkplain CachedDecoratorResult#tryConsume consumed
+		COMMENT cached result} if it exists, and otherwise returns a new {@link DecoratedContents}
+		COMMENT without message decorators applied. This method does not execute message decorators;
+		COMMENT they are executed in {@link #onRequestChatPreview} (for normal messages) or {@link
+		COMMENT #handleMessage(SignedMessage, FilteredMessage)} (for filtered parts of messages).
+		ARG 1 packet
 	CLASS 1
 		METHOD method_33897 processInteract (Lnet/minecraft/class_1268;Lnet/minecraft/class_3244$class_5860;)V
 			ARG 1 hand
