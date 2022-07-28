@@ -1,6 +1,7 @@
 CLASS net/minecraft/class_6554 net/minecraft/world/biome/source/util/VanillaBiomeParameters
 	FIELD field_34500 MAX_VALLEY_WEIRDNESS F
 	FIELD field_34502 MAX_HIGH_WEIRDNESS F
+	FIELD field_34503 MAX_PEAK_WEIRDNESS F
 	FIELD field_34504 defaultParameter Lnet/minecraft/class_6544$class_6546;
 	FIELD field_34505 temperatureParameters [Lnet/minecraft/class_6544$class_6546;
 	FIELD field_34506 humidityParameters [Lnet/minecraft/class_6544$class_6546;
@@ -22,6 +23,7 @@ CLASS net/minecraft/class_6554 net/minecraft/world/biome/source/util/VanillaBiom
 	FIELD field_34522 specialNearMountainBiomes [[Lnet/minecraft/class_5321;
 	FIELD field_35041 MAX_MID_WEIRDNESS F
 	FIELD field_35047 MAX_LOW_WEIRDNESS F
+	FIELD field_35048 MAX_SECOND_HIGH_WEIRDNESS F
 	FIELD field_36339 windsweptBiomes [[Lnet/minecraft/class_5321;
 	METHOD method_38179 getPeaksValleysDescription (D)Ljava/lang/String;
 		ARG 0 weirdness
@@ -29,22 +31,38 @@ CLASS net/minecraft/class_6554 net/minecraft/world/biome/source/util/VanillaBiom
 		ARG 0 noisePoint
 		ARG 2 noiseRanges
 	METHOD method_38181 getShoreBiome (II)Lnet/minecraft/class_5321;
+		COMMENT {@return an appropriate shore biome for the given temperature and humidity}.
 		ARG 1 temperature
 		ARG 2 humidity
 	METHOD method_38182 getRegularBiome (IILnet/minecraft/class_6544$class_6546;)Lnet/minecraft/class_5321;
+		COMMENT {@return a regular biome.} This can be a {@linkplain #commonBiomes common} or {@linkplain #uncommonBiomes uncommon} biome, depending on
+		COMMENT temperature and humidity.
+		COMMENT
+		COMMENT Note that for negative weirdness values, only common biomes can get picked by this
+		COMMENT method.
 		ARG 1 temperature
 		ARG 2 humidity
 		ARG 3 weirdness
-	METHOD method_38183 getBiomeOrWindsweptSavanna (IILnet/minecraft/class_6544$class_6546;)Lnet/minecraft/class_5321;
+	METHOD method_38183 getWindsweptOrRegularBiome (IILnet/minecraft/class_6544$class_6546;)Lnet/minecraft/class_5321;
+		COMMENT {@return a windswept or regular biome, depending on temperature and humidity}.
+		COMMENT
+		COMMENT @see #getRegularBiome()
 		ARG 1 temperature
 		ARG 2 humidity
 		ARG 3 weirdness
 	METHOD method_38184 getBadlandsBiome (ILnet/minecraft/class_6544$class_6546;)Lnet/minecraft/class_5321;
+		COMMENT {@return a badlands for the given humidity and weirdness}.
 		ARG 1 humidity
 		ARG 2 weirdness
-	METHOD method_38185 writeVanillaBiomeParameters (Ljava/util/function/Consumer;)V
+	METHOD method_38185 writeOverworldBiomeParameters (Ljava/util/function/Consumer;)V
+		COMMENT Writes all biome parameters for the overworld to the passed parameter consumer.
 		ARG 1 parameters
-	METHOD method_38186 writeMountainousBiomes (Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;)V
+	METHOD method_38186 writePeakBiomes (Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;)V
+		COMMENT Writes biome parameters for the "peak" weirdness range.
+		COMMENT
+		COMMENT These can be regular biomes for higher erosion values or near the coast,
+		COMMENT biomes that are usually near mountains (like plateaus or mountain slopes), or,
+		COMMENT for lower erosion values, peak biomes like jagged, frozen or stony peaks.
 		ARG 1 parameters
 		ARG 2 weirdness
 	METHOD method_38187 writeBiomeParameters (Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;FLnet/minecraft/class_5321;)V
@@ -59,12 +77,22 @@ CLASS net/minecraft/class_6554 net/minecraft/world/biome/source/util/VanillaBiom
 	METHOD method_38188 getContinentalnessDescription (D)Ljava/lang/String;
 		ARG 1 continentalness
 	METHOD method_38189 getBadlandsOrRegularBiome (IILnet/minecraft/class_6544$class_6546;)Lnet/minecraft/class_5321;
+		COMMENT {@return badlands if {@code temperature} is {@code 4}, otherwise a regular biome}.
+		COMMENT
+		COMMENT @see #getRegularBiome()
 		ARG 1 temperature
 		ARG 2 humidity
 		ARG 3 weirdness
 	METHOD method_38190 writeOceanBiomes (Ljava/util/function/Consumer;)V
+		COMMENT Writes all parameters for ocean biomes.
+		COMMENT This includes oceans, deep oceans and mushroom fields.
 		ARG 1 parameters
-	METHOD method_38191 writePlainBiomes (Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;)V
+	METHOD method_38191 writeHighBiomes (Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;)V
+		COMMENT Writes biome parameters for the "high" weirdness range.
+		COMMENT
+		COMMENT These can be regular biomes for higher erosion values or near the coast,
+		COMMENT biomes that usually appear near mountains, like meadows or slopes,
+		COMMENT or, rarely (for very low erosion and high continentalness values), peak biomes.
 		ARG 1 parameters
 		ARG 2 weirdness
 	METHOD method_38192 writeCaveBiomeParameters (Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_6544$class_6546;FLnet/minecraft/class_5321;)V
@@ -79,44 +107,97 @@ CLASS net/minecraft/class_6554 net/minecraft/world/biome/source/util/VanillaBiom
 	METHOD method_38193 getErosionDescription (D)Ljava/lang/String;
 		ARG 1 erosion
 	METHOD method_38194 getMountainStartBiome (IILnet/minecraft/class_6544$class_6546;)Lnet/minecraft/class_5321;
+		COMMENT {@return a slope biome if {@code temperature} is {@code 0}, otherwise a regular biome}.
+		COMMENT
+		COMMENT @see #getMountainSlopeBiome()
+		COMMENT @see getBadlandsOrRegularBiome()
 		ARG 1 temperature
 		ARG 2 humidity
 		ARG 3 weirdness
 	METHOD method_38195 writeLandBiomes (Ljava/util/function/Consumer;)V
+		COMMENT Writes all parameters for land biomes.
+		COMMENT This means that {@code continentalness} is greater than about {@code -0.16} for them.
 		ARG 1 parameters
-	METHOD method_38196 writeMixedBiomes (Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;)V
+	METHOD method_38196 writeMidBiomes (Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;)V
+		COMMENT Writes biome parameters for the "mid" weirdness range.
+		COMMENT
+		COMMENT These will be regular biomes in most cases, but can also be shore biomes near the coast,
+		COMMENT or the start of a mountain biome for very low erosion.
 		ARG 1 parameters
 		ARG 2 weirdness
 	METHOD method_38197 getTemperatureDescription (D)Ljava/lang/String;
 		ARG 1 temperature
-	METHOD method_38198 getFlatShoreBiome (IILnet/minecraft/class_6544$class_6546;)Lnet/minecraft/class_5321;
+	METHOD method_38198 getErodedShoreBiome (IILnet/minecraft/class_6544$class_6546;)Lnet/minecraft/class_5321;
+		COMMENT {@return a shore biome for high erosion values}.
+		COMMENT
+		COMMENT If {@code weirdness} is positive, this will be a regular biome.
+		COMMENT For some specific conditions, this can also be a windswept savanna.
+		COMMENT
+		COMMENT @see #getShoreBiome()
+		COMMENT @see #getRegularBiome()
+		COMMENT @see #getBiomeOrWindsweptSavanna()
 		ARG 1 temperature
 		ARG 2 humidity
 		ARG 3 weirdness
 	METHOD method_38199 writeCaveBiomes (Ljava/util/function/Consumer;)V
+		COMMENT Writes biome parameters for all cave biomes.
+		COMMENT Currently, this only consists of dripstone caves, lush caves, and the deep dark.
+		COMMENT
+		COMMENT Dripstone caves can generate anywhere where there are high high continentalness values.
+		COMMENT Lush caves can generate anywhere at high humidity values.
+		COMMENT
+		COMMENT The deep dark can generate anywhere at low erosion values, which usually means
+		COMMENT it will be near mountains.
 		ARG 1 parameters
-	METHOD method_38200 writeBiomesNearRivers (Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;)V
+	METHOD method_38200 writeLowBiomes (Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;)V
+		COMMENT Writes biome parameters for the "low" weirdness range.
+		COMMENT
+		COMMENT These will be regular biomes in most cases,
+		COMMENT but can also be shore biomes near the coast,
+		COMMENT or swamps for very high erosion.
 		ARG 1 parameters
 		ARG 2 weirdness
 	METHOD method_38201 getHumidityDescription (D)Ljava/lang/String;
 		ARG 1 humidity
 	METHOD method_38202 getNearMountainBiome (IILnet/minecraft/class_6544$class_6546;)Lnet/minecraft/class_5321;
+		COMMENT {@return a biome to generate near mountains.}
+		COMMENT This can be a {@linkplain #nearMountainBiomes normal} or
+		COMMENT {@linkplain #specialNearMountainBiomes special} biome, depending on
+		COMMENT temperature and humidity.
+		COMMENT
+		COMMENT Note that for negative weirdness values, no special biomes can get picked by this method.
 		ARG 1 temperature
 		ARG 2 humidity
 		ARG 3 weirdness
-	METHOD method_38203 writeRiverBiomes (Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;)V
+	METHOD method_38203 writeValleyBiomes (Ljava/util/function/Consumer;Lnet/minecraft/class_6544$class_6546;)V
+		COMMENT Writes biome parameters for the "valley" weirdness range.
+		COMMENT
+		COMMENT In most cases, a valley will be a river. In low temperatures, a river can also be frozen.
+		COMMENT Valleys that go through a swamp will remain a swamp biome.
+		COMMENT
+		COMMENT Mountain ranges can also sometimes have valleys that are not a river,
+		COMMENT in which case this method will pick a regular or badlands biome.
 		ARG 1 parameters
 		ARG 2 weirdness
 	METHOD method_38204 getPeakBiome (IILnet/minecraft/class_6544$class_6546;)Lnet/minecraft/class_5321;
+		COMMENT {@return a peak biome for the given temperature, humidity and weirdness}.
 		ARG 1 temperature
 		ARG 2 humidity
 		ARG 3 weirdness
 	METHOD method_38205 getMountainSlopeBiome (IILnet/minecraft/class_6544$class_6546;)Lnet/minecraft/class_5321;
+		COMMENT {@return a mountain slope biome for the given temperature, humidity and weirdness.
+		COMMENT
+		COMMENT @see #getNearMountainBiome()
 		ARG 1 temperature
 		ARG 2 humidity
 		ARG 3 weirdness
 	METHOD method_39168 getSpawnSuitabilityNoises ()Ljava/util/List;
 	METHOD method_40009 getBiomeOrWindsweptSavanna (IILnet/minecraft/class_6544$class_6546;Lnet/minecraft/class_5321;)Lnet/minecraft/class_5321;
+		COMMENT {@return a windswept savanna for specific conditions, otherwise the given biome}.
+		COMMENT
+		COMMENT For a windswept savanna being returned by this method, {@code temperature} must be
+		COMMENT greater than {@code 1}, {@code humidity} must be less than {@code 4} and
+		COMMENT {@code weirdness} must be positive.
 		ARG 1 temperature
 		ARG 2 humidity
 		ARG 3 weirdness
@@ -135,3 +216,6 @@ CLASS net/minecraft/class_6554 net/minecraft/world/biome/source/util/VanillaBiom
 		ARG 6 weirdness
 		ARG 7 offset
 		ARG 8 biome
+	METHOD method_43718 (DD)Z
+		ARG 0 erosion
+		ARG 2 depth
