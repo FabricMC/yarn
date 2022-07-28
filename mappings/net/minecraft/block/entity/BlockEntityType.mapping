@@ -1,4 +1,19 @@
 CLASS net/minecraft/class_2591 net/minecraft/block/entity/BlockEntityType
+	COMMENT Represents a type of {@linkplain BlockEntity block entities}.
+	COMMENT There is one instance of block entity for each placed block entity; this class
+	COMMENT represents the type of the placed block entities, like chests or furnaces.
+	COMMENT
+	COMMENT <p>Block entity types are pre-defined and registered in {@link
+	COMMENT Registry#BLOCK_ENTITY_TYPE}. To create a block entity type, the {@linkplain
+	COMMENT BlockEntityType.Builder#create builder} should be used.
+	COMMENT
+	COMMENT <p>Blocks that have corresponding block entities must implement {@link
+	COMMENT net.minecraft.block.BlockEntityProvider} and list it in the builder of the block
+	COMMENT entity type. Multiple blocks or block states can be associated with a single block
+	COMMENT entity type.
+	COMMENT
+	COMMENT @see BlockEntity
+	COMMENT @see net.minecraft.block.BlockEntityProvider
 	FIELD field_11892 factory Lnet/minecraft/class_2591$class_5559;
 	FIELD field_11893 LOGGER Lorg/slf4j/Logger;
 	FIELD field_11909 type Lcom/mojang/datafixers/types/Type;
@@ -11,27 +26,51 @@ CLASS net/minecraft/class_2591 net/minecraft/block/entity/BlockEntityType
 		ARG 0 id
 		ARG 1 builder
 	METHOD method_11032 instantiate (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Lnet/minecraft/class_2586;
+		COMMENT {@return a new instance of the block entity}
+		COMMENT
+		COMMENT @see BlockEntityType.BlockEntityFactory
 		ARG 1 pos
 		ARG 2 state
 	METHOD method_11033 getId (Lnet/minecraft/class_2591;)Lnet/minecraft/class_2960;
+		COMMENT {@return the block entity type's ID, or {@code null} if it is unregistered}
+		COMMENT
+		COMMENT <p>This should never return {@code null} under normal circumstances.
 		ARG 0 type
 	METHOD method_20526 supports (Lnet/minecraft/class_2680;)Z
+		COMMENT {@return whether the block entity type supports {@code state}}
+		COMMENT
+		COMMENT <p>The block, not the block state, determines the corresponding block entity type;
+		COMMENT therefore, for states of the same block, the return value is the same.
 		ARG 1 state
 	METHOD method_24182 get (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_2586;
+		COMMENT {@return the block entity instance of this type at {@code pos}, or {@code null} if
+		COMMENT no such block entity exists}
+		COMMENT
+		COMMENT @see BlockView#getBlockEntity
 		ARG 1 world
 		ARG 2 pos
 	CLASS class_2592 Builder
+		COMMENT Builder for {@link BlockEntityType}.
 		FIELD field_11915 factory Lnet/minecraft/class_2591$class_5559;
 		FIELD field_19316 blocks Ljava/util/Set;
 		METHOD <init> (Lnet/minecraft/class_2591$class_5559;Ljava/util/Set;)V
 			ARG 1 factory
 			ARG 2 blocks
 		METHOD method_11034 build (Lcom/mojang/datafixers/types/Type;)Lnet/minecraft/class_2591;
+			COMMENT Builds the block entity type.
+			COMMENT
+			COMMENT @return the built block entity type
 			ARG 1 type
+				COMMENT the datafixer type of the block entity, or {@code null} if there is none
 		METHOD method_20528 create (Lnet/minecraft/class_2591$class_5559;[Lnet/minecraft/class_2248;)Lnet/minecraft/class_2591$class_2592;
+			COMMENT {@return a new builder of a block entity type that supports {@code blocks}}
 			ARG 0 factory
 			ARG 1 blocks
 	CLASS class_5559 BlockEntityFactory
+		COMMENT A functional interface for a factory that creates a new block entity
+		COMMENT instance. This is usually not implemented directly; the block entity class's
+		COMMENT constructor (such as {@code MyBlockEntity::MyBlockEntity}) can be used as the
+		COMMENT implementation.
 		METHOD create (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Lnet/minecraft/class_2586;
 			ARG 1 pos
 			ARG 2 state
