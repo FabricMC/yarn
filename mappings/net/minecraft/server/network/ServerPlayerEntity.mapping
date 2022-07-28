@@ -56,7 +56,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14203 copyFrom (Lnet/minecraft/class_3222;Z)V
 		ARG 1 oldPlayer
 		ARG 2 alive
-	METHOD method_14205 sendInitialChunkPackets (Lnet/minecraft/class_1923;Lnet/minecraft/class_2596;)V
+	METHOD method_14205 sendChunkPacket (Lnet/minecraft/class_1923;Lnet/minecraft/class_2596;)V
 		ARG 1 chunkPos
 		ARG 2 chunkDataPacket
 	METHOD method_14206 getPlayerListName ()Lnet/minecraft/class_2561;
@@ -203,8 +203,6 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_32749 writeGameModeNbt (Lnet/minecraft/class_2487;)V
 		ARG 1 nbt
 	METHOD method_33793 shouldFilterText ()Z
-	METHOD method_33794 acceptsMessage (Lnet/minecraft/class_5321;)Z
-		ARG 1 typeKey
 	METHOD method_33795 shouldFilterMessagesSentTo (Lnet/minecraft/class_3222;)Z
 		ARG 1 player
 	METHOD method_34225 onSpawn ()V
@@ -216,38 +214,35 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_38786 tickFallStartPos ()V
 	METHOD method_38787 tickVehicleInLavaRiding ()V
 	METHOD method_39426 allowsServerListing ()Z
-	METHOD method_43502 sendMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_5321;)V
-		COMMENT Sends a message to the player.
-		COMMENT
-		COMMENT @see #sendMessage(Text)
-		COMMENT @see #sendChatMessage(SignedMessage, ChatMessageSender, RegistryKey)
+	METHOD method_43502 sendMessageToClient (Lnet/minecraft/class_2561;Z)V
 		ARG 1 message
-		ARG 2 typeKey
-	METHOD method_43505 sendChatMessage (Lnet/minecraft/class_7471;Lnet/minecraft/class_7436;Lnet/minecraft/class_5321;)V
+		ARG 2 overlay
+	METHOD method_43505 sendChatMessage (Lnet/minecraft/class_7604;ZLnet/minecraft/class_2556$class_7602;)V
 		COMMENT Sends a chat message to the player.
 		COMMENT
 		COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
-		COMMENT {@link net.minecraft.network.message.MessageSignature#none} - to send a chat
+		COMMENT {@link net.minecraft.network.message.SignedMessage#ofUnsigned} - to send a chat
 		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
 		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
-		COMMENT will log a warning. See {@link
-		COMMENT net.minecraft.network.message.MessageSignature#updateSignature} for how the
-		COMMENT message is signed.
+		COMMENT will show a warning and can discard it depending on the client's options.
 		COMMENT
 		COMMENT @see #sendMessage(Text)
-		COMMENT @see #sendMessage(Text, RegistryKey)
+		COMMENT @see #sendMessage(Text, boolean)
 		ARG 1 message
-		ARG 2 sender
-		ARG 3 typeKey
-	METHOD method_43506 sendMessageDeliverError (Lnet/minecraft/class_2561;Lnet/minecraft/class_5321;)V
-		ARG 1 message
-		ARG 2 typeKey
-	METHOD method_43507 (Lnet/minecraft/class_2561;Lnet/minecraft/class_5321;Lio/netty/util/concurrent/Future;)V
-		ARG 3 future
-	METHOD method_43666 getMessageTypeId (Lnet/minecraft/class_5321;)I
-		ARG 1 typeKey
 	METHOD method_43930 sendServerMetadata (Lnet/minecraft/class_2926;)V
 		ARG 1 metadata
+	METHOD method_44706 acceptsChatMessage ()Z
+	METHOD method_44707 acceptsMessage (Z)Z
+		ARG 1 overlay
+	METHOD method_44786 sendMessageHeader (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;[B)V
+		COMMENT Sends a message's header and other data required for verification to this player.
+		COMMENT
+		COMMENT <p>This is used to keep the integrity of the "message chain" when a message is censored
+		COMMENT or when the message is originally sent without metadata due to it being originated from
+		COMMENT entities.
+		ARG 1 header
+		ARG 2 headerSignature
+		ARG 3 bodyDigest
 	METHOD method_7336 changeGameMode (Lnet/minecraft/class_1934;)Z
 		ARG 1 gameMode
 	CLASS 1

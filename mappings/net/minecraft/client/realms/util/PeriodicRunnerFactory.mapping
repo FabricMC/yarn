@@ -1,0 +1,57 @@
+CLASS net/minecraft/class_7581 net/minecraft/client/realms/util/PeriodicRunnerFactory
+	FIELD field_39696 LOGGER Lorg/slf4j/Logger;
+	FIELD field_39697 executor Ljava/util/concurrent/Executor;
+	FIELD field_39698 timeUnit Ljava/util/concurrent/TimeUnit;
+	FIELD field_39699 timeSupplier Lnet/minecraft/class_7576;
+	METHOD <init> (Ljava/util/concurrent/Executor;Ljava/util/concurrent/TimeUnit;Lnet/minecraft/class_7576;)V
+		ARG 1 executor
+		ARG 2 timeUnit
+		ARG 3 timeSupplier
+	METHOD method_44628 create ()Lnet/minecraft/class_7581$class_7584;
+	METHOD method_44629 create (Ljava/lang/String;Ljava/util/concurrent/Callable;Ljava/time/Duration;Lnet/minecraft/class_7587;)Lnet/minecraft/class_7581$class_7586;
+		ARG 1 name
+		ARG 2 task
+		ARG 3 cycle
+		ARG 4 backoff
+	CLASS class_7582 TimedErrableResult
+	CLASS class_7583 ResultListenableRunner
+		FIELD field_39701 runner Lnet/minecraft/class_7581$class_7586;
+		FIELD field_39702 resultListener Ljava/util/function/Consumer;
+		FIELD field_39703 lastRunTime J
+		METHOD <init> (Lnet/minecraft/class_7581;Lnet/minecraft/class_7581$class_7586;Ljava/util/function/Consumer;)V
+			ARG 2 runner
+			ARG 3 resultListener
+		METHOD method_44630 runListener ()V
+		METHOD method_44631 run (J)V
+			ARG 1 currentTime
+		METHOD method_44632 forceRunListener ()V
+		METHOD method_44633 reset ()V
+	CLASS class_7584 RunnersManager
+		FIELD field_39705 runners Ljava/util/List;
+		METHOD method_44634 forceRunListeners ()V
+		METHOD method_44635 add (Lnet/minecraft/class_7581$class_7586;Ljava/util/function/Consumer;)V
+			ARG 1 runner
+			ARG 2 resultListener
+		METHOD method_44636 runAll ()V
+		METHOD method_44637 resetAll ()V
+	CLASS class_7585 TimedResult
+	CLASS class_7586 PeriodicRunner
+		FIELD field_39707 name Ljava/lang/String;
+		FIELD field_39708 task Ljava/util/concurrent/Callable;
+		FIELD field_39709 unitDuration J
+		FIELD field_39710 backoff Lnet/minecraft/class_7587;
+		FIELD field_39711 resultFuture Ljava/util/concurrent/CompletableFuture;
+		FIELD field_39712 lastResult Lnet/minecraft/class_7581$class_7585;
+		FIELD field_39713 nextTime J
+		METHOD <init> (Lnet/minecraft/class_7581;Ljava/lang/String;Ljava/util/concurrent/Callable;JLnet/minecraft/class_7587;)V
+			ARG 2 name
+			ARG 3 task
+			ARG 4 unitDuration
+			ARG 6 backoff
+		METHOD method_44638 reset ()V
+		METHOD method_44639 run (J)V
+			ARG 1 currentTime
+		METHOD method_44640 (JLjava/lang/Exception;)V
+			ARG 3 exception
+		METHOD method_44641 (JLjava/lang/Object;)V
+			ARG 3 value

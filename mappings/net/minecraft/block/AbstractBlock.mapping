@@ -1,14 +1,229 @@
 CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	COMMENT An abstract class that defines some logic for {@link Block blocks}.
+	COMMENT <strong>This class should not be extended directly. Extend {@link Block} instead.</strong>
+	COMMENT Custom block behaviors are specified either through {@linkplain AbstractBlock.Settings
+	COMMENT block settings} or by overriding methods in this class.
+	COMMENT
+	COMMENT <p>Methods in this class may be executed during world generation if they take
+	COMMENT {@link WorldAccess} as a parameter. In this case, a {@link net.minecraft.world.ChunkRegion}
+	COMMENT is passed to the parameter, which is not a subclass of {@link World}.
 	COMMENT
 	COMMENT <p id="deprecated-methods">Deprecated methods in this class mean they
 	COMMENT should only be called from the corresponding method in {@link
-	COMMENT AbstractBlockState} or subclasses of this class. In vanilla subclasses,
-	COMMENT these methods are called either to do the default behavior (e.g.
-	COMMENT {@code super.onUse(...)}) or to delegate logic to other blocks (e.g.
-	COMMENT {@link net.minecraft.block.StairsBlock#randomTick
+	COMMENT AbstractBlockState} or subclasses of this class. <strong>Overriding the
+	COMMENT methods is an expected usage and is not deprecated in any way.</strong>
+	COMMENT
+	COMMENT @apiNote In vanilla subclasses, these methods are called either to do the
+	COMMENT default behavior (e.g. {@code super.onUse(...)}) or to delegate logic to
+	COMMENT other blocks (e.g. {@link net.minecraft.block.StairsBlock#randomTick
 	COMMENT StairsBlock#randomTick} calls {@code randomTick} of its base block).
-	COMMENT It's fine to override them, as they are overridden by vanilla blocks.
+	COMMENT
+	COMMENT <p>Many methods of this class are called on both the logical client and logical server,
+	COMMENT so take caution when using those methods. The logical side can be checked using
+	COMMENT {@link World#isClient}.
+	COMMENT
+	COMMENT <h2 id=quick-view>Quick view</h2>
+	COMMENT <p><strong>Notes</strong>: "Tall or wide block" refers to a block that
+	COMMENT has multiple parts, such as doors, sunflowers, or beds. "Neighboring
+	COMMENT block" refers to blocks adjacent to a block on all 6 sides (but not
+	COMMENT diagonally.)
+	COMMENT
+	COMMENT <h3 id=placement>Placement related methods</h3>
+	COMMENT <table>
+	COMMENT <caption>Block placement related methods (sorted by execution order)</caption>
+	COMMENT <thead>
+	COMMENT     <tr>
+	COMMENT         <th>Method</th>
+	COMMENT         <th>Purpose</th>
+	COMMENT         <th>Player/dispenser</th>
+	COMMENT         <th>Falling block</th>
+	COMMENT         <th>{@link World#setBlockState(BlockPos, BlockState) setBlockState} call</th>
+	COMMENT     </tr>
+	COMMENT </thead>
+	COMMENT <tbody>
+	COMMENT     <tr>
+	COMMENT         <td>oldState.{@link #canReplace canReplace}</td>
+	COMMENT         <td>Checking if the current block can be replaced</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>No</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>newBlock.{@link Block#getPlacementState getPlacementState}</td>
+	COMMENT         <td>Getting the placed state</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>No</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>newState.{@link #canPlaceAt canPlaceAt}</td>
+	COMMENT         <td>Checking the block's placement restriction</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>No</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>oldState.{@link #onStateReplaced onStateReplaced}</td>
+	COMMENT         <td>Dropping inventory, updating redstone circuit, etc</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>newState.{@link #onBlockAdded onBlockAdded}</td>
+	COMMENT         <td>Activating redstone component, etc</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>neighborState.{@link #neighborUpdate neighborUpdate}</td>
+	COMMENT         <td>Activating neighboring redstone component, etc</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>oldState.{@link #prepare prepare}</td>
+	COMMENT         <td>Updating redstone wire connection</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>neighborState.{@link #getStateForNeighborUpdate getStateForNeighborUpdate}</td>
+	COMMENT         <td>Checking the neighboring block's placement restriction, updating connection, etc</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>newState.{@link #prepare prepare}</td>
+	COMMENT         <td>Updating redstone wire connection</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>newBlock.{@link Block#onPlaced onPlaced}</td>
+	COMMENT         <td>Placing the other half of tall or wide block, setting block entity's custom name, etc</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>No</td>
+	COMMENT         <td>No</td>
+	COMMENT     </tr>
+	COMMENT </tbody>
+	COMMENT </table>
+	COMMENT
+	COMMENT <h3 id=breaking>Breaking related methods</h3>
+	COMMENT <table>
+	COMMENT <caption>Block breaking related methods (sorted by execution order)</caption>
+	COMMENT <thead>
+	COMMENT     <tr>
+	COMMENT         <th>Method</th>
+	COMMENT         <th>Purpose</th>
+	COMMENT         <th>Player mining</th>
+	COMMENT         <th>Explosion</th>
+	COMMENT         <th>{@link World#setBlockState(BlockPos, BlockState) setBlockState} / {@link net.minecraft.world.ModifiableWorld#removeBlock(BlockPos, boolean) removeBlock} call</th>
+	COMMENT         <th>{@link net.minecraft.world.ModifiableWorld#breakBlock(BlockPos, boolean) breakBlock} call</th>
+	COMMENT     </tr>
+	COMMENT </thead>
+	COMMENT <tbody>
+	COMMENT     <tr>
+	COMMENT         <td>state.{@link #onBlockBreakStart onBlockBreakStart}</td>
+	COMMENT         <td>Doing something when player starts breaking a block</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>No</td>
+	COMMENT         <td>No</td>
+	COMMENT         <td>No</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>state.{@link #calcBlockBreakingDelta calcBlockBreakingDelta}</td>
+	COMMENT         <td>Calculating the player's mining speed</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>No</td>
+	COMMENT         <td>No</td>
+	COMMENT         <td>No</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>block.{@link Block#onBreak onBreak}</td>
+	COMMENT         <td>Spawning particles, breaking the other half of tall or wide block, etc</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>No</td>
+	COMMENT         <td>No</td>
+	COMMENT         <td>No</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>state.{@link #onStateReplaced onStateReplaced}</td>
+	COMMENT         <td>Dropping inventory, updating redstone circuit, etc</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>neighborState.{@link #neighborUpdate neighborUpdate}</td>
+	COMMENT         <td>Activating neighboring redstone component, etc</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>state.{@link #prepare prepare}</td>
+	COMMENT         <td>Updating redstone wire connection</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>neighborState.{@link #getStateForNeighborUpdate getStateForNeighborUpdate}</td>
+	COMMENT         <td>Checking the neighboring block's placement restriction, updating connection, etc</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>block.{@link Block#onBroken onBroken}</td>
+	COMMENT         <td>Unused in most cases</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>No</td>
+	COMMENT         <td>No</td>
+	COMMENT         <td>No</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>block.{@link Block#afterBreak afterBreak}</td>
+	COMMENT         <td>Dropping stacks, replacing the broken block with another block, etc</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>No</td>
+	COMMENT         <td>No</td>
+	COMMENT         <td>No</td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>state.{@link #getDroppedStacks getDroppedStacks}</td>
+	COMMENT         <td>Supplying information to loot context builder</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes<sup>1</sup></td>
+	COMMENT     </tr>
+	COMMENT     <tr>
+	COMMENT         <td>state.{@link #onStacksDropped onStacksDropped}</td>
+	COMMENT         <td>Dropping experience orbs</td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes<sup>2</sup></td>
+	COMMENT         <td>Yes</td>
+	COMMENT         <td>Yes<sup>1</sup></td>
+	COMMENT     </tr>
+	COMMENT </tbody>
+	COMMENT </table>
+	COMMENT
+	COMMENT <p>Notes:
+	COMMENT <ol>
+	COMMENT <li>Called before {@link #onStateReplaced onStateReplaced} in this case.</li>
+	COMMENT <li>Called before {@link #getDroppedStacks getDroppedStacks} in this case.</li>
+	COMMENT </ol>
 	FIELD field_23154 dynamicBounds Z
 	FIELD field_23155 settings Lnet/minecraft/class_4970$class_2251;
 	FIELD field_23156 lootTableId Lnet/minecraft/class_2960;
@@ -24,39 +239,89 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	METHOD <init> (Lnet/minecraft/class_4970$class_2251;)V
 		ARG 1 settings
 	METHOD method_17454 createScreenHandlerFactory (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)Lnet/minecraft/class_3908;
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#createScreenHandlerFactory} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return the screen handler factory or {@code null} if screen handler cannot be created}
+		COMMENT
+		COMMENT <p>This method should be overridden for blocks with screen handlers, such as anvils.
+		COMMENT The created screen handler is usually passed to {@link PlayerEntity#openHandledScreen}.
+		COMMENT See {@link AnvilBlock#createScreenHandlerFactory} for basic usage. {@link BlockWithEntity}
+		COMMENT delegates this logic to the block entity implementing {@link
+		COMMENT net.minecraft.screen.NamedScreenHandlerFactory}. For example, any {@link BlockWithEntity} whose block entity
+		COMMENT extends {@link net.minecraft.block.entity.LockableContainerBlockEntity} needs to override
+		COMMENT {@link net.minecraft.block.entity.LockableContainerBlockEntity#createScreenHandler}
+		COMMENT instead of this method.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#createScreenHandlerFactory} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see net.minecraft.screen.SimpleNamedScreenHandlerFactory
+		COMMENT @see net.minecraft.block.entity.LockableContainerBlockEntity
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 	METHOD method_19286 onProjectileHit (Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_3965;Lnet/minecraft/class_1676;)V
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#onProjectileHit} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT Called when a {@link ProjectileEntity} hits a block.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT <p>Here are some examples:
+		COMMENT <ul>
+		COMMENT <li>{@link TargetBlock} activates.</li>
+		COMMENT <li>{@link BellBlock} rings.</li>
+		COMMENT <li>{@link LightningRodBlock} spawns a lightning.</li>
+		COMMENT <li>{@link AbstractCandleBlock} lights on fire when hit by a projectile on fire.</li>
+		COMMENT </ul>
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#onProjectileHit} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see ProjectileEntity#onBlockHit
+		COMMENT @see #onEntityCollision
 		ARG 1 world
 		ARG 2 state
 		ARG 3 hit
 		ARG 4 projectile
 	METHOD method_22358 canBucketPlace (Lnet/minecraft/class_2680;Lnet/minecraft/class_3611;)Z
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#canBucketPlace} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return whether a bucket can replace the block with the fluid}
+		COMMENT
+		COMMENT <p>By default, this checks if the block's material allows replacing or is not solid.
+		COMMENT Blocks intended to be unbreakable should override this to implement additional checks.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#canBucketPlace} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see #canReplace
+		COMMENT @see Material#isReplaceable
 		ARG 1 state
 		ARG 2 fluid
 	METHOD method_25959 getSidesShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getSidesShape} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getSidesShape} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 	METHOD method_26159 getCameraCollisionShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getCameraCollisionShape} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getCameraCollisionShape} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 context
 	METHOD method_26160 asBlock ()Lnet/minecraft/class_2248;
+		COMMENT {@return the block as {@link Block}}
+		COMMENT
+		COMMENT <p>This is used for casting purposes.
 	METHOD method_26162 getLootTableId ()Lnet/minecraft/class_2960;
 	METHOD method_26403 getDefaultMapColor ()Lnet/minecraft/class_3620;
 	METHOD method_32913 getMaxHorizontalModelOffset ()F
 	METHOD method_36555 getHardness ()F
 	METHOD method_37247 getVerticalModelOffsetMultiplier ()F
 	METHOD method_37403 isShapeFullCube (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#isFullCube} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#isFullCube} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
@@ -65,55 +330,147 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 2 world
 		ARG 3 pos
 	METHOD method_8389 asItem ()Lnet/minecraft/class_1792;
+		COMMENT {@return the block's corresponding item}
+		COMMENT
+		COMMENT <p>This is not affected by loot tables. Blocks without corresponding items,
+		COMMENT such as piston head, will return {@link net.minecraft.item.Items#AIR}.
+		COMMENT
+		COMMENT @see net.minecraft.item.BlockItem
 	METHOD method_9498 hasComparatorOutput (Lnet/minecraft/class_2680;)Z
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#hasComparatorOutput} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return whether the block can have a comparator output}
+		COMMENT
+		COMMENT <p>This does not check the current comparator output of the block.
+		COMMENT Use {@link #getComparatorOutput} in that case.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#hasComparatorOutput} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see #getComparatorOutput
 		ARG 1 state
 	METHOD method_9505 getOpacity (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)I
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getOpacity} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getOpacity} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 	METHOD method_9506 emitsRedstonePower (Lnet/minecraft/class_2680;)Z
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#emitsRedstonePower} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return whether the block is capable of emitting redstone power}
+		COMMENT
+		COMMENT <p>This does not return whether the block is currently emitting redstone power.
+		COMMENT Use {@link World#isEmittingRedstonePower} in that case.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#emitsRedstonePower} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see World#isEmittingRedstonePower
 		ARG 1 state
 	METHOD method_9514 randomTick (Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;)V
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#randomTick} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT Called server-side when a block gets ticked randomly. This can be overridden to implement
+		COMMENT various logics, most commonly plant growth. Default implementation calls
+		COMMENT {@link #scheduledTick}. To control the rate of the action, use {@code random}.
+		COMMENT
+		COMMENT <p>Random tick speed is controlled by the game rule {@link
+		COMMENT net.minecraft.world.GameRules#RANDOM_TICK_SPEED randomTickSpeed} and can be disabled.
+		COMMENT Only blocks within 128-block cylinder (i.e. ignoring Y coordinates) around players
+		COMMENT receive random ticks.
+		COMMENT
+		COMMENT <p>Blocks overriding this must use {@link AbstractBlock.Settings#ticksRandomly}
+		COMMENT block settings.
+		COMMENT
+		COMMENT <p>Here are some examples:
+		COMMENT <ul>
+		COMMENT <li>{@link SugarCaneBlock} uses this to grow sugar cane.</li>
+		COMMENT <li>{@link OxidizableBlock} uses this to oxidize.</li>
+		COMMENT <li>{@link NetherPortalBlock} uses this to spawn zombified piglins.</li>
+		COMMENT <li>{@link LeavesBlock} uses this to decay when far from logs.</li>
+		COMMENT </ul>
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#randomTick} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see CropBlock
+		COMMENT @see #scheduledTick
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 random
 	METHOD method_9516 canPathfindThrough (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_10;)Z
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#canPathfindThrough} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return if an entity using navigation type {@code type} can navigate through this block}
+		COMMENT
+		COMMENT @apiNote Subclasses may override this to prevent or restrict pathfinding through the
+		COMMENT block. For example, {@link DoorBlock} restricts it to open doors only.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#canPathfindThrough} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 type
 	METHOD method_9517 prepare (Lnet/minecraft/class_2680;Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;II)V
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#prepare(WorldAccess, BlockPos, int, int)} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT Called when the block state changes, before the {#linkplain #getStateForNeighborUpdate
+		COMMENT neighbor-triggered state update} on the original block, and after the
+		COMMENT neighbor-triggered state update on the replaced block.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT @apiNote This is used by {@link RedstoneWireBlock} to update connected redstone wire.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#prepare(WorldAccess, BlockPos, int, int)} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see #getStateForNeighborUpdate
+		COMMENT @see #neighborUpdate
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 flags
 		ARG 5 maxUpdateDepth
 	METHOD method_9522 isSideInvisible (Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;Lnet/minecraft/class_2350;)Z
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#isSideInvisible} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#isSideInvisible} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 stateFrom
 		ARG 3 direction
 	METHOD method_9524 getWeakRedstonePower (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)I
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getWeakRedstonePower} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return the weak redstone power emitted from the block}
+		COMMENT
+		COMMENT <p>When overriding this, make sure to also override {@link #emitsRedstonePower} to
+		COMMENT return {@code true}.
+		COMMENT
+		COMMENT <p>Weak redstone power is a power that cannot power a redstone wire when a solid block
+		COMMENT is in between. For example, {@link RedstoneBlock} and {@link TargetBlock} emits weak
+		COMMENT redstone power only. {@link LeverBlock} and {@link AbstractButtonBlock} emits both
+		COMMENT weak and strong redstone power depending on the direction.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getWeakRedstonePower} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see #emitsRedstonePower
+		COMMENT @see #getStrongRedstonePower
+		COMMENT @see World#isReceivingRedstonePower
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 direction
 	METHOD method_9526 hasSidedTransparency (Lnet/minecraft/class_2680;)Z
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#hasSidedTransparency} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return whether the block's transparency depends on the side of the block, like slabs}
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#hasSidedTransparency} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 	METHOD method_9527 getPistonBehavior (Lnet/minecraft/class_2680;)Lnet/minecraft/class_3619;
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getPistonBehavior} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return how the piston should handle the block}
+		COMMENT
+		COMMENT <p>Notes on piston behavior:
+		COMMENT <ul>
+		COMMENT <li>{@link PistonBehavior#IGNORE} is ignored for blocks.</li>
+		COMMENT <li>{@link PistonBehavior#DESTROY} and {@link PistonBehavior#PUSH_ONLY} causes pistons to
+		COMMENT ignore the block entity restriction.</li>
+		COMMENT <li>If the {@linkplain #getHardness hardness} equals {@code -1.0f} like bedrock, it blocks
+		COMMENT the piston regardless of the return value.</li>
+		COMMENT <li>Behavior of several unpushable blocks are hardcoded at {@link PistonBlock#isMovable}
+		COMMENT instead.</li>
+		COMMENT </ul>
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getPistonBehavior} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see PistonBlock#isMovable
 		ARG 1 state
 	METHOD method_9530 getOutlineShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getOutlineShape(BlockView, BlockPos, ShapeContext)} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getOutlineShape(BlockView, BlockPos, ShapeContext)} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
@@ -129,7 +486,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT
 		COMMENT @return an action result that specifies if using the block was successful.
 		COMMENT
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#onUse} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#onUse} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
@@ -137,44 +494,129 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 5 hand
 		ARG 6 hit
 	METHOD method_9535 getRenderingSeed (Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;)J
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getRenderingSeed} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return the seed value for rendering}
+		COMMENT
+		COMMENT <p>This is usually the hash code of {@code pos}. Tall or wide blocks (such as doors or
+		COMMENT beds) should override this to make sure both parts of the block have the same seed.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getRenderingSeed} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 pos
 	METHOD method_9536 onStateReplaced (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Z)V
-		COMMENT Called in {@link net.minecraft.world.chunk.WorldChunk#setBlockState(BlockPos, BlockState, boolean)} if {@code newState} is different from {@code state}. Vanilla blocks perform removal cleanups here.
+		COMMENT Called server-side on the old block when the block state is changed. This includes block
+		COMMENT removal. This is used to update neighboring blocks when an active redstone power source
+		COMMENT is removed, or to drop the contents of an inventory. The check {@code
+		COMMENT state.isOf(newState.getBlock())} can be used to see if the block was removed or not.
 		COMMENT
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#onStateReplaced} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#onStateReplaced} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see net.minecraft.util.ItemScatterer#spawn(World, BlockPos, net.minecraft.inventory.Inventory)
+		COMMENT @see #onBlockAdded
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 newState
 		ARG 5 moved
 	METHOD method_9545 getFluidState (Lnet/minecraft/class_2680;)Lnet/minecraft/class_3610;
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getFluidState} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return the state's associated fluid state}
+		COMMENT
+		COMMENT <p>{@linkplain Waterloggable Waterloggable blocks} must override this to return {@code Fluids.WATER.getStill(false)}
+		COMMENT when waterlogged.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getFluidState} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see net.minecraft.fluid.Fluids#WATER
 		ARG 1 state
 	METHOD method_9548 onEntityCollision (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1297;)V
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#onEntityCollision} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT Called when the entity's collision box intersects the block. Therefore,
+		COMMENT this method is not called for blocks with a collision; use {@link Block#onSteppedOn}
+		COMMENT for those blocks.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT <p>Here are some examples:
+		COMMENT <ul>
+		COMMENT <li>{@link CactusBlock} damages the entity.</li>
+		COMMENT <li>{@link AbstractPressurePlateBlock} triggers.</li>
+		COMMENT <li>{@link CobwebBlock} slows the entity.</li>
+		COMMENT <li>{@link EndPortalBlock} teleports the entity.</li>
+		COMMENT <li>{@link HopperBlock} collects the item entity.</li>
+		COMMENT </ul>
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#onEntityCollision} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see Block#onSteppedOn
+		COMMENT @see #onProjectileHit
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 entity
 	METHOD method_9549 getCollisionShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getCollisionShape(BlockView, BlockPos, ShapeContext)} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getCollisionShape(BlockView, BlockPos, ShapeContext)} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 context
 	METHOD method_9558 canPlaceAt (Lnet/minecraft/class_2680;Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#canPlaceAt} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return whether the block can be placed at {@code pos}}
+		COMMENT
+		COMMENT <p>Blocks with supporting block requirements should override this method. Note that
+		COMMENT this should also be checked manually during {@link #getStateForNeighborUpdate}
+		COMMENT in order to break the block that lost its supporting block.
+		COMMENT
+		COMMENT <p>This is only checked during {@linkplain net.minecraft.item.BlockItem#canPlace the
+		COMMENT use of block items} or by endermen, falling blocks, etc that can place blocks. This
+		COMMENT does not affect block state changes performed through {@link
+		COMMENT World#setBlockState(BlockPos, BlockState)} call.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#canPlaceAt} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see #getStateForNeighborUpdate
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 	METHOD method_9559 getStateForNeighborUpdate (Lnet/minecraft/class_2680;Lnet/minecraft/class_2350;Lnet/minecraft/class_2680;Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;
-		COMMENT Gets the possibly updated block state of this block when a neighboring block is updated.
+		COMMENT {@return the state of the block after a neighboring block's state change}
 		COMMENT
-		COMMENT @return the new state of this block
+		COMMENT <p>Returning {@link Blocks#AIR} breaks the block. This is useful to implement supporting
+		COMMENT block requirement for blocks (if used along with {@link #canPlaceAt}).
 		COMMENT
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getStateForNeighborUpdate} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT <p>Side effects like activating a redstone component (but not scheduling a tick)
+		COMMENT should be performed in {@link #neighborUpdate} instead. If the block supports
+		COMMENT waterlogging and currently has water, this method should be overridden to tick the
+		COMMENT fluid at the block's position.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}. This is not called if {@link Block#FORCE_STATE} flag is set in the {@code
+		COMMENT setBlockState} call.
+		COMMENT
+		COMMENT <p>This method can be used for multiple purposes. Here are some examples:
+		COMMENT <ul>
+		COMMENT <li>{@link FenceBlock} uses it to update the fence's connection when a horizontally
+		COMMENT neighboring block's state is changed.</li>
+		COMMENT <li>{@link PlantBlock} uses it to break the plant if the state change causes it to
+		COMMENT lose its supporting block.</li>
+		COMMENT <li>{@link DoorBlock} uses it to copy the state of the other half of the door.</li>
+		COMMENT <li>{@link SlabBlock} uses it to schedule the fluid to tick if waterlogged.</li>
+		COMMENT <li>{@link SoulSandBlock} uses it to schedule the water block above to tick
+		COMMENT so that it becomes a bubble column.</li>
+		COMMENT <li>{@link FallingBlock} uses it to schedule the block to tick so that it can
+		COMMENT fall if needed.</li>
+		COMMENT </ul>
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getStateForNeighborUpdate} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see #neighborUpdate
+		COMMENT @see #prepare
+		COMMENT @see #canPlaceAt
+		COMMENT @see Block#FORCE_STATE
 		ARG 1 state
 			COMMENT the state of this block
 		ARG 2 direction
@@ -188,86 +630,194 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 6 neighborPos
 			COMMENT the position of the neighbor block
 	METHOD method_9560 getDroppedStacks (Lnet/minecraft/class_2680;Lnet/minecraft/class_47$class_48;)Ljava/util/List;
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getDroppedStacks} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return the block's dropped item stacks}
+		COMMENT
+		COMMENT <p>The default implementation uses loot tables. Blocks with custom drops <strong>should
+		COMMENT not hardcode the drops</strong>; instead, make a new loot table. If the loot table
+		COMMENT needs an additional context, override this method and modify {@code builder} before
+		COMMENT calling {@code super.getDroppedStacks}. An example of this is {@link ShulkerBoxBlock}.
+		COMMENT Note that to prevent item duplication, when appending item stacks to the builder,
+		COMMENT {@link ItemStack#split} should be called.
+		COMMENT
+		COMMENT <p>This method should not be used for dropping inventory contents ({@link
+		COMMENT #onStateReplaced} should be used instead) or to drop experience orbs ({@link
+		COMMENT #onStacksDropped} should be used instead).
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getDroppedStacks} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see #onStateReplaced
+		COMMENT @see #onStacksDropped
+		COMMENT @see ItemStack#split
+		COMMENT @see net.minecraft.loot.context.LootContextParameters
 		ARG 1 state
 		ARG 2 builder
 	METHOD method_9565 onStacksDropped (Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1799;Z)V
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#onStacksDropped} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT Called server-side when the stacks are dropped by mining or explosion. This is mostly
+		COMMENT overridden to drop experience orbs. To change the dropped item stacks, use loot tables
+		COMMENT or {@link #getDroppedStacks}. To drop inventory contents, use {@link #onStateReplaced}
+		COMMENT instead.
+		COMMENT
+		COMMENT <p>Experience orbs should only be dropped if {@code dropExperience} is {@code true}.
+		COMMENT {@link Block#dropExperienceWhenMined} can be used to drop experience orbs.
+		COMMENT {@link OreBlock} provides the implementation for experience-dropping blocks.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#onStacksDropped} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see OreBlock
+		COMMENT @see Block#dropExperienceWhenMined
+		COMMENT @see #getDroppedStacks
+		COMMENT @see #onStateReplaced
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 stack
 		ARG 5 dropExperience
 	METHOD method_9569 mirror (Lnet/minecraft/class_2680;Lnet/minecraft/class_2415;)Lnet/minecraft/class_2680;
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#mirror} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return {@code state} mirrored by {@code mirror}}
+		COMMENT
+		COMMENT <p>By default, this returns the provided block state.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#mirror} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 mirror
 	METHOD method_9571 getCullingShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getCullingShape} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getCullingShape} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 	METHOD method_9572 getComparatorOutput (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)I
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getComparatorOutput} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return the comparator output of the block, from {@code 0} to {@code 15}}
+		COMMENT
+		COMMENT <p>When overriding this, {@link #hasComparatorOutput} must also be overridden.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getComparatorOutput} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see #hasComparatorOutput
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 	METHOD method_9575 getAmbientOcclusionLightLevel (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)F
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getAmbientOcclusionLightLevel} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getAmbientOcclusionLightLevel} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 	METHOD method_9584 getRaycastShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getRaycastShape} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getRaycastShape} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 	METHOD method_9588 scheduledTick (Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;)V
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#scheduledTick} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT Called server-side when a block receives a scheduled tick. This can be used like a timer.
+		COMMENT Scheduled ticks are added using {@link
+		COMMENT WorldAccess#createAndScheduleBlockTick(BlockPos, Block, int)}. Additionally, {@link
+		COMMENT #randomTick} by default calls this method; override {@link #randomTick} to disable this
+		COMMENT behavior.
+		COMMENT
+		COMMENT <p>Scheduled ticks are often used inside {@link #getStateForNeighborUpdate}.
+		COMMENT
+		COMMENT <p>Here are some examples:
+		COMMENT <ul>
+		COMMENT <li>{@link SugarCaneBlock} checks the placement requirement.</li>
+		COMMENT <li>{@link DispenserBlock} dispenses its content.</li>
+		COMMENT <li>{@link CommandBlock} executes its command.</li>
+		COMMENT <li>{@link FrogspawnBlock} spawns a tadpole.</li>
+		COMMENT <li>{@link SoulSandBlock} updates a bubble column.</li>
+		COMMENT <li>{@link FallingBlock} tries to fall.</li>
+		COMMENT </ul>
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#scheduledTick} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see WorldAccess#createAndScheduleBlockTick(BlockPos, Block, int)
+		COMMENT @see #getStateForNeighborUpdate
+		COMMENT @see #randomTick
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 random
 	METHOD method_9592 onSyncedBlockEvent (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;II)Z
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#onSyncedBlockEvent} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT Handles the block event, which is an event specific to a block with an integer ID and data.
+		COMMENT
+		COMMENT @return whether the event was handled successfully
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#onSyncedBlockEvent} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see World#addSyncedBlockEvent
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 type
 		ARG 5 data
 	METHOD method_9594 calcBlockBreakingDelta (Lnet/minecraft/class_2680;Lnet/minecraft/class_1657;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)F
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#calcBlockBreakingDelta} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#calcBlockBreakingDelta} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 player
 		ARG 3 world
 		ARG 4 pos
 	METHOD method_9598 rotate (Lnet/minecraft/class_2680;Lnet/minecraft/class_2470;)Lnet/minecraft/class_2680;
-		COMMENT Applies a block rotation to a block state.
+		COMMENT {@return {@code state} rotated by {@code rotation}}
 		COMMENT
 		COMMENT <p>By default, this returns the provided block state.
 		COMMENT
-		COMMENT @return the rotated block state
-		COMMENT
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#rotate} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#rotate} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 rotation
 	METHOD method_9603 getStrongRedstonePower (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)I
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getStrongRedstonePower} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return the strong redstone power emitted from the block}
+		COMMENT
+		COMMENT <p>When overriding this, make sure to also override {@link #emitsRedstonePower} to
+		COMMENT return {@code true}. {@link #getWeakRedstonePower} might also need to be overridden.
+		COMMENT
+		COMMENT <p>Strong redstone power is a power that can power a redstone wire when a solid block
+		COMMENT is in between. For example, {@link RedstoneBlock} and {@link TargetBlock} emits weak
+		COMMENT redstone power only. {@link LeverBlock} and {@link AbstractButtonBlock} emits both
+		COMMENT weak and strong redstone power.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getStrongRedstonePower} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see #emitsRedstonePower
+		COMMENT @see #getWeakRedstonePower
+		COMMENT @see World#isReceivingRedstonePower
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 direction
 	METHOD method_9604 getRenderType (Lnet/minecraft/class_2680;)Lnet/minecraft/class_2464;
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#getRenderType} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return the block's render type (invisible, animated, model)}
+		COMMENT
+		COMMENT @apiNote {@link BlockWithEntity} overrides this to return {@link BlockRenderType#INVISIBLE};
+		COMMENT therefore, custom blocks extending that class must override it again to render the block.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#getRenderType} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 	METHOD method_9606 onBlockBreakStart (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)V
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#onBlockBreakStart} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT Called when a player starts breaking the block (including when instant-mining).
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#onBlockBreakStart} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 player
 	METHOD method_9612 neighborUpdate (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338;Z)V
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#neighborUpdate} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT Called when a neighboring block is updated. This method should be overridden
+		COMMENT to perform an action with a side effect, most notably an activation of a redstone
+		COMMENT component. This can also be used to perform an action changing block states of
+		COMMENT other blocks, such as {@link SpongeBlock} which absorbs water.
+		COMMENT
+		COMMENT <p>To replace the state of the block itself, override {@link #getStateForNeighborUpdate}
+		COMMENT instead.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#neighborUpdate} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see #getStateForNeighborUpdate
+		COMMENT @see World#isReceivingRedstonePower
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
@@ -275,14 +825,41 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 5 sourcePos
 		ARG 6 notify
 	METHOD method_9615 onBlockAdded (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Z)V
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#onBlockAdded} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT Called server-side on the new block when the block state is changed. This includes block
+		COMMENT placement. When overriding this method, {@link #getStateForNeighborUpdate} or {@link
+		COMMENT #neighborUpdate} should also be overridden. The method is used in the following cases:
+		COMMENT
+		COMMENT <ul>
+		COMMENT <li>When activating a redstone component on placement (used along with {@link
+		COMMENT #neighborUpdate}</li>
+		COMMENT <li>When resetting a position-dependent state (see {@link TargetBlock})</li>
+		COMMENT <li>When converting a block on placement (see {@link WetSpongeBlock})</li>
+		COMMENT <li>When {@linkplain AbstractFireBlock fire} lights a portal</li>
+		COMMENT </ul>
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#onBlockAdded} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see #onStateReplaced
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 oldState
 		ARG 5 notify
 	METHOD method_9616 canReplace (Lnet/minecraft/class_2680;Lnet/minecraft/class_1750;)Z
-		COMMENT @deprecated Consider calling {@link AbstractBlockState#canReplace} instead. See <a href="#deprecated-methods">the class javadoc</a>.
+		COMMENT {@return whether the item can replace the block}
+		COMMENT
+		COMMENT <p>By default, this checks if the block's material allows replacing and whether the
+		COMMENT item differs from the block's item. Items composed of multiple blocks, such as candles,
+		COMMENT vines, or snow layers, should override this to implement additional checks.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT @deprecated Consider calling {@link AbstractBlockState#canReplace} instead. See <a href="#deprecated-methods">why these methods are deprecated</a>.
+		COMMENT
+		COMMENT @see #canBucketPlace
+		COMMENT @see Material#isReplaceable
 		ARG 1 state
 		ARG 2 context
 	CLASS class_2250 OffsetType

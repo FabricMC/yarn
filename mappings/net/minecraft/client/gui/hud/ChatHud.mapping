@@ -10,25 +10,19 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 	FIELD field_2065 LOGGER Lorg/slf4j/Logger;
 	FIELD field_2066 scrolledLines I
 	FIELD field_2067 hasUnreadNewMessages Z
-	FIELD field_23934 messageQueue Ljava/util/Deque;
-	FIELD field_23935 lastMessageAddedTime J
 	FIELD field_32180 MAX_MESSAGES I
+	FIELD field_39771 MISSING_MESSAGE_INDEX I
 	METHOD <init> (Lnet/minecraft/class_310;)V
 		ARG 1 client
 	METHOD method_1802 scroll (I)V
 		ARG 1 scroll
 	METHOD method_1803 addToMessageHistory (Ljava/lang/String;)V
 		ARG 1 message
-	METHOD method_1804 addMessage (Lnet/minecraft/class_2561;I)V
-		ARG 1 message
-		ARG 2 messageId
 	METHOD method_1805 render (Lnet/minecraft/class_4587;I)V
 		ARG 1 matrices
-		ARG 2 tickDelta
+		ARG 2 currentTick
 	METHOD method_1806 getWidth (D)I
 		ARG 0 widthOption
-	METHOD method_1807 removeMessage (I)V
-		ARG 1 messageId
 	METHOD method_1808 clear (Z)V
 		ARG 1 clearHistory
 	METHOD method_1809 getMessageHistory ()Ljava/util/List;
@@ -38,11 +32,12 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 		ARG 1 message
 	METHOD method_1813 getVisibleLineCount ()I
 	METHOD method_1814 getChatScale ()D
-	METHOD method_1815 addMessage (Lnet/minecraft/class_2561;IIZ)V
+	METHOD method_1815 addMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_7469;ILnet/minecraft/class_7591;Z)V
 		ARG 1 message
-		ARG 2 messageId
-		ARG 3 timestamp
-		ARG 4 refresh
+		ARG 2 signature
+		ARG 3 ticks
+		ARG 4 indicator
+		ARG 5 refresh
 	METHOD method_1816 getTextStyleAt (DD)Lnet/minecraft/class_2583;
 		ARG 1 x
 		ARG 3 y
@@ -57,13 +52,36 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 	METHOD method_27146 mouseClicked (DD)Z
 		ARG 1 mouseX
 		ARG 3 mouseY
-	METHOD method_27147 queueMessage (Lnet/minecraft/class_2561;)V
-		ARG 1 message
-	METHOD method_27148 getChatDelayMillis ()J
-	METHOD method_27149 processMessageQueue ()V
-	METHOD method_30884 (ILnet/minecraft/class_303;)Z
-		ARG 1 message
-	METHOD method_30885 (ILnet/minecraft/class_303;)Z
-		ARG 1 message
 	METHOD method_41831 getDefaultUnfocusedHeight ()D
 	METHOD method_44047 getChatScreen ()Lnet/minecraft/class_408;
+	METHOD method_44718 isXInsideIndicatorIcon (DLnet/minecraft/class_303$class_7590;Lnet/minecraft/class_7591;)Z
+		ARG 1 x
+		ARG 3 line
+		ARG 4 indicator
+	METHOD method_44719 drawIndicatorIcon (Lnet/minecraft/class_4587;IILnet/minecraft/class_7591$class_7592;)V
+		ARG 1 matrices
+		ARG 2 x
+		ARG 3 y
+		ARG 4 icon
+	METHOD method_44720 getIndicatorX (Lnet/minecraft/class_303$class_7590;)I
+		ARG 1 line
+	METHOD method_44722 toChatLineX (D)D
+		ARG 1 x
+	METHOD method_44723 getIndicatorAt (DD)Lnet/minecraft/class_7591;
+		ARG 1 mouseX
+		ARG 3 mouseY
+	METHOD method_44724 toChatLineY (D)D
+		ARG 1 y
+	METHOD method_44725 getMessageIndex (D)I
+		ARG 1 y
+	METHOD method_44752 getLineHeight ()I
+	METHOD method_44811 addMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_7469;Lnet/minecraft/class_7591;)V
+		ARG 1 message
+		ARG 2 signature
+		ARG 3 indicator
+	METHOD method_44812 hideMessage (Lnet/minecraft/class_7469;)V
+		ARG 1 signature
+	METHOD method_44813 refresh ()V
+	METHOD method_45027 logChatMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_7591;)V
+		ARG 1 message
+		ARG 2 indicator

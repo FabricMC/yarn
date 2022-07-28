@@ -1,22 +1,135 @@
 CLASS net/minecraft/class_6749 net/minecraft/world/gen/chunk/BlendingData
-	FIELD field_35515 OLD_HEIGHT_LIMIT Lnet/minecraft/class_5539;
+	FIELD field_35515 oldHeightLimit Lnet/minecraft/class_5539;
+	FIELD field_35518 HORIZONTAL_BIOME_COUNT I
 	FIELD field_35519 SURFACE_BLOCKS Ljava/util/List;
 	FIELD field_35682 CODEC Lcom/mojang/serialization/Codec;
-	FIELD field_35692 heights [D
-	METHOD method_39347 (ILnet/minecraft/class_2791;II)V
+	FIELD field_35683 BIOMES_PER_CHUNK I
+	FIELD field_35684 LAST_CHUNK_BIOME_INDEX I
+	FIELD field_35685 CHUNK_BIOME_END_INDEX I
+	FIELD field_35686 NORTH_WEST_END_INDEX I
+	FIELD field_35687 SOUTH_EAST_END_INDEX_PART I
+	FIELD field_35690 initializedBlendingData Z
+	FIELD field_35692 surfaceHeights [D
+	FIELD field_35693 collidableBlockDensities [[D
+	FIELD field_35695 DOUBLE_ARRAY_CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_36345 biomes Ljava/util/List;
+	METHOD <init> (IILjava/util/Optional;)V
+		ARG 1 oldBottomSectionY
+		ARG 2 oldTopSectionY
+		ARG 3 heights
+	METHOD method_39343 getX (I)I
+		ARG 0 index
+	METHOD method_39344 getHeight (III)D
+		ARG 1 biomeX
+		ARG 2 biomeY
+		ARG 3 biomeZ
+	METHOD method_39345 getCollidableBlockDensity (III)D
+		ARG 1 chunkBiomeX
+		ARG 2 halfSectionY
+		ARG 3 chunkBiomeZ
+	METHOD method_39346 acceptCollidableBlockDensities (IIIILnet/minecraft/class_6749$class_6750;)V
+		ARG 1 biomeX
+		ARG 2 biomeZ
+		ARG 3 minHalfSectionY
+		ARG 4 maxHalfSectionY
+		ARG 5 consumer
+	METHOD method_39347 initBlockColumn (ILnet/minecraft/class_2791;II)V
 		ARG 1 index
-		ARG 3 x
-		ARG 4 z
-	METHOD method_39349 getSurfaceHeight (Lnet/minecraft/class_2791;II)I
+		ARG 2 chunk
+		ARG 3 chunkBlockX
+		ARG 4 chunkBlockZ
+	METHOD method_39349 getSurfaceBlockY (Lnet/minecraft/class_2791;II)I
+		ARG 1 chunk
+		ARG 2 blockX
+		ARG 3 blockZ
 	METHOD method_39350 isCollidableAndNotTreeAt (Lnet/minecraft/class_2791;Lnet/minecraft/class_2338;)Z
 		ARG 0 chunk
 		ARG 1 pos
+	METHOD method_39351 acceptHeights (IILnet/minecraft/class_6749$class_6751;)V
+		ARG 1 biomeX
+		ARG 2 biomeZ
+		ARG 3 consumer
+	METHOD method_39352 getZ (I)I
+		ARG 0 index
+	METHOD method_39354 calculateCollidableBlockDensityColumn (Lnet/minecraft/class_2791;III)[D
+		ARG 1 chunk
+		ARG 2 chunkBlockX
+		ARG 3 chunkBlockZ
+		ARG 4 surfaceHeight
 	METHOD method_39570 getBlendingData (Lnet/minecraft/class_3233;II)Lnet/minecraft/class_6749;
 		ARG 0 chunkRegion
 		ARG 1 chunkX
 		ARG 2 chunkZ
+	METHOD method_39572 initChunkBlendingData (Lnet/minecraft/class_2791;Ljava/util/Set;)V
+		ARG 1 chunk
+		ARG 2 newNoiseChunkDirections
+	METHOD method_39573 validate (Lnet/minecraft/class_6749;)Lcom/mojang/serialization/DataResult;
+		ARG 0 data
+	METHOD method_39575 getCollidableBlockDensity ([DI)D
+		ARG 1 collidableBlockDensityColumn
+		ARG 2 halfSectionY
+	METHOD method_39576 getVerticalHalfSectionCount ()I
+	METHOD method_39578 getNorthWestIndex (II)I
+		COMMENT Gets the north east index for the given chunk-local biome coordinates.
+		COMMENT At least one of these coordinates must be {@code 0} for this method to work properly.
+		COMMENT
+		COMMENT @return the north west index
+		ARG 0 chunkBiomeX
+			COMMENT the chunk-local biome X coordinate
+		ARG 1 chunkBiomeZ
+			COMMENT the chunk-local biome Z coordinate
 	METHOD method_39579 getAdjacentChunksWithNoise (Lnet/minecraft/class_5281;IIZ)Ljava/util/Set;
 		ARG 0 access
 		ARG 1 chunkX
 		ARG 2 chunkZ
-		ARG 3 newNoise
+		ARG 3 oldNoise
+	METHOD method_39581 getOneAboveBottomHalfSectionY ()I
+	METHOD method_39582 getSouthEastIndex (II)I
+		COMMENT Gets the south east index for the given chunk-local biome coordinates.
+		COMMENT At least one of these coordinates must be {@code CHUNK_BIOME_END_INDEX} ({@code 4})
+		COMMENT for this method to work properly.
+		COMMENT
+		COMMENT @return the south east index
+		ARG 0 chunkBiomeX
+			COMMENT the chunk-local biome X coordinate
+		ARG 1 chunkBiomeZ
+			COMMENT the chunk-local biome Z coordinate
+	METHOD method_39583 getBottomHalfSectionY ()I
+	METHOD method_39905 getAboveCollidableBlockValue (Lnet/minecraft/class_2791;Lnet/minecraft/class_2338$class_2339;)D
+		COMMENT {@return {@code 1.0} if there is a collidable block below, otherwise {@code -1}.}
+		ARG 0 chunk
+		ARG 1 mutablePos
+			COMMENT will be moved down by one block by this method
+	METHOD method_39906 getCollidableBlockDensityBelow (Lnet/minecraft/class_2791;Lnet/minecraft/class_2338$class_2339;)D
+		ARG 0 chunk
+		ARG 1 mutablePos
+			COMMENT will be moved down by seven blocks by this method
+	METHOD method_40028 acceptBiomes (IIILnet/minecraft/class_6749$class_6853;)V
+		ARG 1 biomeX
+		ARG 2 biomeY
+		ARG 3 biomeZ
+		ARG 4 consumer
+	METHOD method_41564 getOldHeightLimit ()Lnet/minecraft/class_5539;
+	METHOD method_41565 getHalfSectionHeight (I)I
+		ARG 1 halfSectionY
+	METHOD method_41566 getVerticalBiomeSections (Lnet/minecraft/class_2791;II)Ljava/util/List;
+		ARG 1 chunk
+		ARG 2 chunkBlockX
+		ARG 3 chunkBlockZ
+	METHOD method_41567 getVerticalBiomeCount ()I
+	CLASS class_6750 CollidableBlockDensityConsumer
+		METHOD consume (IIID)V
+			ARG 1 biomeX
+			ARG 2 halfSectionY
+			ARG 3 biomeZ
+			ARG 4 collidableBlockDensity
+	CLASS class_6751 HeightConsumer
+		METHOD consume (IID)V
+			ARG 1 biomeX
+			ARG 2 biomeZ
+			ARG 3 height
+	CLASS class_6853 BiomeConsumer
+		METHOD consume (IILnet/minecraft/class_6880;)V
+			ARG 1 biomeX
+			ARG 2 biomeZ
+			ARG 3 biome

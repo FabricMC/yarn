@@ -1,0 +1,29 @@
+CLASS net/minecraft/class_7604 net/minecraft/network/message/SentMessage
+	COMMENT A class wrapping {@link SignedMessage} on the server to allow custom behavior for
+	COMMENT sending messages.
+	METHOD method_44856 afterPacketsSent (Lnet/minecraft/class_3324;)V
+		COMMENT Called after sending the message to applicable clients.
+		COMMENT
+		COMMENT @apiNote This is used to send the message header to clients that didn't receive
+		COMMENT the message due to text filtering.
+		COMMENT
+		COMMENT @see PlayerManager#sendMessageHeader
+		ARG 1 playerManager
+	METHOD method_44857 of (Lnet/minecraft/class_7471;)Lnet/minecraft/class_7604;
+		COMMENT {@return the wrapped {@code message}}
+		ARG 0 message
+	METHOD method_45039 getContent ()Lnet/minecraft/class_2561;
+	CLASS class_7606 Profileless
+		COMMENT The wrapper used for messages without associated source profile.
+		FIELD field_39814 message Lnet/minecraft/class_7471;
+		METHOD <init> (Lnet/minecraft/class_7471;)V
+			ARG 1 message
+	CLASS class_7607 Chat
+		COMMENT The wrapper used for normal chat messages.
+		COMMENT
+		COMMENT <p>Text filtering can cause some players to not receive this kind of message.
+		COMMENT Message header is sent separately to those players.
+		FIELD field_39815 message Lnet/minecraft/class_7471;
+		FIELD field_39816 recipients Ljava/util/Set;
+		METHOD <init> (Lnet/minecraft/class_7471;)V
+			ARG 1 message

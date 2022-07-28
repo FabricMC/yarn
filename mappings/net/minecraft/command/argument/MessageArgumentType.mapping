@@ -47,23 +47,15 @@ CLASS net/minecraft/class_2196 net/minecraft/command/argument/MessageArgumentTyp
 		METHOD method_9345 format (Lnet/minecraft/class_2168;)Lnet/minecraft/class_2561;
 			ARG 1 source
 	CLASS class_7515 SignedMessage
-		METHOD method_44262 decorate (Lnet/minecraft/class_2168;)Ljava/util/concurrent/CompletableFuture;
+		METHOD method_44262 decorate (Lnet/minecraft/class_2168;Ljava/util/function/Consumer;)V
 			ARG 1 source
-		METHOD method_44263 logInvalidSignatureWarning (Lnet/minecraft/class_2168;Lnet/minecraft/class_7471;)V
-			ARG 1 source
-			ARG 2 message
-		METHOD method_44264 filter (Lnet/minecraft/class_2168;Lnet/minecraft/class_2561;)Ljava/util/concurrent/CompletableFuture;
-			ARG 1 source
-			ARG 2 message
-		METHOD method_44265 (Lnet/minecraft/class_2168;Lnet/minecraft/class_5837;)Lnet/minecraft/class_5837;
-			ARG 2 decorated
-		METHOD method_44266 (Lnet/minecraft/class_2168;Lnet/minecraft/class_5837;)Ljava/util/concurrent/CompletionStage;
-			ARG 2 filtered
-		METHOD method_44334 getVerifiable (Lnet/minecraft/class_5837;)Lnet/minecraft/class_7471;
-			COMMENT {@return the verifiable part of {@code message}, or {@code null} when there is none}
+			ARG 2 callback
+		METHOD method_44806 sendHeader (Lnet/minecraft/class_2168;)V
+			COMMENT Sends the message's header to all players.
 			COMMENT
-			COMMENT @implNote If the preview is signed, the decorated message will be returned, and
-			COMMENT if it's unsigned or unpreviewed but {@linkplain MessageSignature#canVerify
-			COMMENT verifiable}, the plain, undecorated message will be returned. If neither is true,
-			COMMENT this returns {@code null}, since the message cannot be verified in any way.
-			ARG 1 decorated
+			COMMENT <p>This should be called if the message could not be sent due to an exception.
+			COMMENT See {@link net.minecraft.server.command.MessageCommand} for an example.
+			ARG 1 source
+		METHOD method_44808 filterText (Lnet/minecraft/class_2168;Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 source
+			ARG 2 text
