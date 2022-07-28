@@ -1,0 +1,27 @@
+CLASS net/minecraft/class_7642 net/minecraft/network/message/CachedDecoratorResult
+	COMMENT The cached result of {@link MessageDecorator}'s decorated message.
+	COMMENT
+	COMMENT <p>The result is cached per player, and is consumed when the message is actually
+	COMMENT sent. Caching allows the decorator's result to be not pure (e.g. uses externally
+	COMMENT controlled variables), as decorators that produce different results on the second
+	COMMENT execution at submission time do not affect the verification.
+	FIELD field_39909 cachedResult Lnet/minecraft/class_7642$class_7643;
+	METHOD method_45035 tryConsume (Ljava/lang/String;)Lnet/minecraft/class_2561;
+		COMMENT Consumes the cached result if possible.
+		COMMENT
+		COMMENT <p>The result can only be consumed if it exists and the cached query equals
+		COMMENT {@code query}. After consuming, the cached result is set to {@code null}.
+		COMMENT
+		COMMENT @return the cached result, or {@code null} if it cannot be consumed
+		ARG 1 query
+	METHOD method_45036 setCachedResult (Ljava/lang/String;Lnet/minecraft/class_2561;)V
+		COMMENT Sets the cached result to {@code preview} for {@code query}.
+		COMMENT
+		COMMENT @see CachedDecoratorResult.Cache
+		ARG 1 query
+		ARG 2 preview
+	CLASS class_7643 Cache
+		COMMENT The cached result.
+		METHOD method_45037 queryEquals (Ljava/lang/String;)Z
+			COMMENT {@return whether the cached query equals {@code query}}
+			ARG 1 query

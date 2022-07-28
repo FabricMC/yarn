@@ -1,0 +1,49 @@
+CLASS net/minecraft/class_7471 net/minecraft/network/message/SignedMessage
+	COMMENT A signed message, consisting of the signature, the signed content,
+	COMMENT and the optional unsigned content supplied when the chat decorator produced
+	COMMENT unsigned message due to the chat preview being disabled on either side.
+	COMMENT
+	COMMENT <p>Note that the signature itself might not be valid.
+	FIELD field_39786 SERVERBOUND_TIME_TO_LIVE Ljava/time/Duration;
+	FIELD field_39787 CLIENTBOUND_TIME_TO_LIVE Ljava/time/Duration;
+	METHOD <init> (Lnet/minecraft/class_2540;)V
+		ARG 1 buf
+	METHOD method_43867 verify (Lnet/minecraft/class_7428;)Z
+		COMMENT {@return whether the message can be verified using the public key}
+		ARG 1 key
+	METHOD method_44125 getContent ()Lnet/minecraft/class_2561;
+		COMMENT {@return the content of the message}
+		COMMENT
+		COMMENT <p>This returns the unsigned content if present, and fallbacks to the signed content.
+	METHOD method_44310 verify (Lnet/minecraft/class_7436;)Z
+		COMMENT {@return whether the message can be verified using the public key <strong>or if the
+		COMMENT player does not have the key</strong>}
+		ARG 1 profile
+	METHOD method_44607 withoutUnsigned ()Lnet/minecraft/class_7471;
+		COMMENT {@return the signed chat message with {@link #unsignedContent} removed if it exists}
+		COMMENT
+		COMMENT @implNote This returns itself if the message does not have an unsigned content.
+	METHOD method_44747 isExpiredOnServer (Ljava/time/Instant;)Z
+		ARG 1 currentTime
+	METHOD method_44748 isExpiredOnClient (Ljava/time/Instant;)Z
+		ARG 1 currentTime
+	METHOD method_44858 verify (Lnet/minecraft/class_7500;)Z
+		ARG 1 verifier
+	METHOD method_44859 write (Lnet/minecraft/class_2540;)V
+		ARG 1 buf
+	METHOD method_44862 getSignedContent ()Lnet/minecraft/class_7634;
+	METHOD method_44863 withUnsignedContent (Lnet/minecraft/class_2561;)Lnet/minecraft/class_7471;
+		ARG 1 unsignedContent
+	METHOD method_44864 getTimestamp ()Ljava/time/Instant;
+	METHOD method_44865 getSalt ()J
+	METHOD method_44866 createMetadata ()Lnet/minecraft/class_7470;
+	METHOD method_44995 toLastSeenMessageEntry ()Lnet/minecraft/class_7635$class_7609;
+	METHOD method_45040 canVerifyFrom (Ljava/util/UUID;)Z
+		COMMENT {@return whether the message can be verified as from {@code sender}}
+		COMMENT
+		COMMENT <p>This does not actually verify that the message is, in fact, from {@code sender}.
+		COMMENT Rather, this returns whether it's possible to verify that {@code sender} sent this
+		COMMENT message.
+	METHOD method_45041 ofUnsigned (Lnet/minecraft/class_7634;)Lnet/minecraft/class_7471;
+		COMMENT {@return a new signed message with empty signature}
+		ARG 0 content

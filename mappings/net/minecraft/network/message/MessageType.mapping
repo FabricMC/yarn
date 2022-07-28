@@ -1,0 +1,119 @@
+CLASS net/minecraft/class_2556 net/minecraft/network/message/MessageType
+	COMMENT A message type (also known as "chat type") controls how to display or narrate
+	COMMENT the chat messages sent to the clients. Message types are registered at
+	COMMENT {@link net.minecraft.util.registry.BuiltinRegistries#MESSAGE_TYPE}. When
+	COMMENT sending a chat message, the registry key of the message type can be passed to indicate
+	COMMENT which message type should be used.
+	COMMENT
+	COMMENT <p>Message type has two fields.
+	COMMENT <ul>
+	COMMENT <li>{@link #chat} controls the content displayed in the {@linkplain
+	COMMENT net.minecraft.client.gui.hud.ChatHud chat hud}.</li>
+	COMMENT <li>{@link #narration} controls the narrated content.</li>
+	COMMENT </ul>
+	COMMENT
+	COMMENT <p>The fields are "decoration", which is an instance of {@link Decoration}.
+	COMMENT Decorations are pre-defined message formatting and styling rules, which can be
+	COMMENT {@linkplain Decoration#apply applied} to the message to produce the displayed or
+	COMMENT narrated text.
+	FIELD comp_792 Lnet/minecraft/class_7463;
+		COMMENT the display rule for the content displayed in the chat hud
+	FIELD comp_794 Lnet/minecraft/class_7463;
+		COMMENT the narration rule for the content
+	FIELD field_11737 Lnet/minecraft/class_5321;
+		COMMENT The registry key for the message type used by {@link
+		COMMENT net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket chat messages}.
+		COMMENT The message content is {@linkplain Decoration#ofChat decorated} using the
+		COMMENT {@code chat.type.text} text.
+	FIELD field_39227 CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_39228 Lnet/minecraft/class_5321;
+		COMMENT The registry key for the say command message type, used by {@linkplain
+		COMMENT net.minecraft.server.command.SayCommand /say}. The message content is
+		COMMENT {@linkplain Decoration#ofChat decorated} using the {@code chat.type.announcement}
+		COMMENT text.
+	FIELD field_39231 Lnet/minecraft/class_5321;
+		COMMENT The registry key for the emote command message type, used by {@linkplain
+		COMMENT net.minecraft.server.command.MeCommand /me}. The message content is
+		COMMENT {@linkplain Decoration#ofChat decorated} using the {@code chat.type.emote} text.
+	FIELD field_39677 CHAT_TEXT_DECORATION Lnet/minecraft/class_7463;
+	FIELD field_39799 Lnet/minecraft/class_5321;
+		COMMENT The registry key for the incoming message command message type, used by {@linkplain
+		COMMENT net.minecraft.server.command.MessageCommand /msg}. The message content is
+		COMMENT {@linkplain Decoration#ofIncomingMessage decorated} using the {@code
+		COMMENT commands.message.display.incoming} text.
+		COMMENT
+		COMMENT <p>An incoming message is a private message received from the sender.
+	FIELD field_39800 Lnet/minecraft/class_5321;
+		COMMENT The registry key for the outgoing message command message type, used by {@linkplain
+		COMMENT net.minecraft.server.command.MessageCommand /msg}. The message content is
+		COMMENT {@linkplain Decoration#ofOutgoingMessage decorated} using the {@code
+		COMMENT commands.message.display.outgoing} text.
+		COMMENT
+		COMMENT <p>An outgoing message is a message that the private message's sender sees in the chat.
+	FIELD field_39881 Lnet/minecraft/class_5321;
+		COMMENT The registry key for the incoming team message command message type, used by
+		COMMENT {@linkplain net.minecraft.server.command.TeamMsgCommand /teammsg}. The message
+		COMMENT content is {@linkplain Decoration#ofTeamMessage decorated} using the {@code
+		COMMENT chat.type.team.text} text.
+		COMMENT
+		COMMENT <p>An incoming message is a team message received from the sender.
+	FIELD field_39882 Lnet/minecraft/class_5321;
+		COMMENT The registry key for the outgoing team message command message type, used by
+		COMMENT {@linkplain net.minecraft.server.command.TeamMsgCommand /teammsg}. The message
+		COMMENT content is {@linkplain Decoration#ofTeamMessage decorated} using the {@code
+		COMMENT chat.type.team.sent} text.
+		COMMENT
+		COMMENT <p>An outgoing message is a message that the team message's sender sees in the chat.
+	METHOD method_43843 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 0 instance
+	METHOD method_43844 initialize (Lnet/minecraft/class_2378;)Lnet/minecraft/class_6880;
+		ARG 0 registry
+	METHOD method_43845 register (Ljava/lang/String;)Lnet/minecraft/class_5321;
+		ARG 0 id
+	METHOD method_44832 params (Lnet/minecraft/class_5321;Lnet/minecraft/class_1297;)Lnet/minecraft/class_2556$class_7602;
+		ARG 0 typeKey
+		ARG 1 entity
+	METHOD method_44833 params (Lnet/minecraft/class_5321;Lnet/minecraft/class_2168;)Lnet/minecraft/class_2556$class_7602;
+		ARG 0 typeKey
+		ARG 1 source
+	METHOD method_44834 params (Lnet/minecraft/class_5321;Lnet/minecraft/class_5455;Lnet/minecraft/class_2561;)Lnet/minecraft/class_2556$class_7602;
+		ARG 0 typeKey
+		ARG 1 registryManager
+		ARG 2 name
+	METHOD method_44835 params (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2556$class_7602;
+		ARG 1 name
+	CLASS class_7602 Parameters
+		COMMENT A record holding the message type and the decoration parameters.
+		FIELD comp_919 type Lnet/minecraft/class_2556;
+		METHOD <init> (Lnet/minecraft/class_2556;Lnet/minecraft/class_2561;)V
+			ARG 1 type
+			ARG 2 name
+		METHOD comp_919 type ()Lnet/minecraft/class_2556;
+		METHOD method_44836 toSerialized (Lnet/minecraft/class_5455;)Lnet/minecraft/class_2556$class_7603;
+			COMMENT {@return a serialized version of this instance used in packets}
+			ARG 1 registryManager
+		METHOD method_44837 applyChatDecoration (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
+			ARG 1 content
+		METHOD method_44838 applyNarrationDecoration (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
+			ARG 1 content
+		METHOD method_44839 withTargetName (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2556$class_7602;
+			COMMENT {@return a new instance with the given target name}
+			COMMENT
+			COMMENT <p>Target name is used as the team name in {@link
+			COMMENT net.minecraft.server.command.TeamMsgCommand} and as the recipient name in {@link
+			COMMENT net.minecraft.server.command.MessageCommand}.
+			ARG 1 targetName
+	CLASS class_7603 Serialized
+		COMMENT The serialized version of {@link MessageType.Parameters} that is used in packets.
+		FIELD comp_922 typeId I
+		METHOD <init> (Lnet/minecraft/class_2540;)V
+			ARG 1 buf
+		METHOD comp_922 typeId ()I
+		METHOD method_44840 toParameters (Lnet/minecraft/class_5455;)Ljava/util/Optional;
+			COMMENT {@return a deserialized version of this instance, or {@link Optional#empty} if
+			COMMENT {@link #typeId} is unknown to the client}
+			ARG 1 registryManager
+		METHOD method_44841 write (Lnet/minecraft/class_2540;)V
+			ARG 1 buf
+		METHOD method_45038 (Lnet/minecraft/class_2556;)Lnet/minecraft/class_2556$class_7602;
+			ARG 1 type
