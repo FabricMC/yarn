@@ -1,6 +1,8 @@
 CLASS net/minecraft/class_2248 net/minecraft/block/Block
 	COMMENT A block is a voxel in a {@linkplain World world}. {@link AbstractBlock},
 	COMMENT this class, and its subclasses define all logic for those voxels.
+	COMMENT See the documentation on {@link AbstractBlock} for instructions on overriding
+	COMMENT methods.
 	COMMENT
 	COMMENT <p>There is exactly one instance for every type of block. Every stone
 	COMMENT block for example in a world shares the same block instance. Each block
@@ -103,11 +105,21 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		ARG 2 stack
 	METHOD method_40142 getRegistryEntry ()Lnet/minecraft/class_6880$class_6883;
 	METHOD method_41420 dropExperienceWhenMined (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1799;Lnet/minecraft/class_6017;)V
+		COMMENT Drops experience orbs. This should be called inside {@link AbstractBlock#onStacksDropped}
+		COMMENT after {@code dropExperience} check. This does not drop experience orbs if {@code tool}
+		COMMENT is enchanted with silk touch or if {@link net.minecraft.world.GameRules#DO_TILE_DROPS doTileDrops}
+		COMMENT is turned off.
+		COMMENT
+		COMMENT @see AbstractBlock#onStacksDropped
+		COMMENT @see #dropExperience
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 tool
+			COMMENT the tool used to break the block, or {@link ItemStack#EMPTY} for explosions
 		ARG 4 experience
 	METHOD method_9496 randomDisplayTick (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;)V
+		COMMENT Called randomly on the client. Blocks may override this to spawn particles.
+		COMMENT Unlike {@link AbstractBlock#randomTick} this is not affected by a game rule.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
@@ -121,15 +133,33 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		ARG 0 shape
 		ARG 1 side
 	METHOD method_9502 onEntityLand (Lnet/minecraft/class_1922;Lnet/minecraft/class_1297;)V
+		COMMENT Called after the entity lands on the block.
+		COMMENT
+		COMMENT <p>Default implementation resets the entity's vertical velocity. Blocks that cause
+		COMMENT entities to jump (such as {@link SlimeBlock}) should override this.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		ARG 1 world
 		ARG 2 entity
 	METHOD method_9503 getBlockFromItem (Lnet/minecraft/class_1792;)Lnet/minecraft/class_2248;
 		ARG 0 item
 	METHOD method_9504 precipitationTick (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1959$class_1963;)V
+		COMMENT Called randomly server-side on blocks with unobstructed sky access when it is
+		COMMENT raining or snowing. Like random ticks, only blocks within 128-block cylinder
+		COMMENT (i.e. ignoring Y coordinates) around players receive precipitation ticks. However,
+		COMMENT precipitation ticks are unaffected by the {@link
+		COMMENT net.minecraft.world.GameRules#RANDOM_TICK_SPEED randomTickSpeed} game rule, and {@link
+		COMMENT AbstractBlock.Settings#ticksRandomly} block setting is not required.
+		COMMENT
+		COMMENT <p>{@link LeveledCauldronBlock} uses this to fill the cauldron.
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 precipitation
+			COMMENT the precipitation (snow or rain), including snow
+			COMMENT observable on high altitude
 	METHOD method_9507 getRawIdFromState (Lnet/minecraft/class_2680;)I
 		ARG 0 state
 	METHOD method_9510 postProcessState (Lnet/minecraft/class_2680;Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;
@@ -144,12 +174,22 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		ARG 4 entity
 		ARG 5 stack
 	METHOD method_9515 appendProperties (Lnet/minecraft/class_2689$class_2690;)V
+		COMMENT Appends block state properties to this block. To use this, override and call {@link
+		COMMENT StateManager.Builder#add} inside the method. See {@link
+		COMMENT net.minecraft.state.property.Properties} for the list of pre-defined properties.
 		ARG 1 builder
 	METHOD method_9518 getName ()Lnet/minecraft/class_5250;
 	METHOD method_9520 getBlastResistance ()F
 	METHOD method_9531 getStateFromRawId (I)Lnet/minecraft/class_2680;
 		ARG 0 stateId
 	METHOD method_9533 shouldDropItemsOnExplosion (Lnet/minecraft/class_1927;)Z
+		COMMENT {@return whether an explosion can drop the block as an item}
+		COMMENT
+		COMMENT <p>This should be overridden if an explosion affects the block in other ways,
+		COMMENT like {@link TntBlock} that triggers the chain reaction. This should not consider
+		COMMENT the randomness, since it is defined in the loot table.
+		COMMENT
+		COMMENT @see net.minecraft.loot.condition.SurvivesExplosionLootCondition
 		ARG 1 explosion
 	METHOD method_9538 canMobSpawnInside ()Z
 	METHOD method_9539 getTranslationKey ()Ljava/lang/String;
@@ -172,12 +212,35 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 	METHOD method_9544 (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1799;)V
 		ARG 2 stack
 	METHOD method_9554 onLandedUpon (Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_1297;F)V
+		COMMENT Called when the entity lands on the block.
+		COMMENT
+		COMMENT <p>Default implementation deals fall damage to the entity. Blocks that increase or
+		COMMENT reduce fall damage (like {@link HayBlock}) should override this. {@link FarmlandBlock}
+		COMMENT overrides this method to convert the block to dirt.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		ARG 1 world
 		ARG 2 state
 		ARG 3 pos
 		ARG 4 entity
 		ARG 5 fallDistance
 	METHOD method_9556 afterBreak (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2586;Lnet/minecraft/class_1799;)V
+		COMMENT Called server-side when the block is broken by the player using correct tool.
+		COMMENT This is called after {@link #onBroken} but has the tool requirement.
+		COMMENT By default, this increments {@link net.minecraft.stat.Stats#MINED}, adds exhaustion
+		COMMENT to the player, and drops the block's item stacks.
+		COMMENT
+		COMMENT <p>Subclasses should override this if breaking the block causes another block to
+		COMMENT be placed (like {@link IceBlock}) or if the block can break multiple times
+		COMMENT (like {@link TurtleEggBlock}). {@link BeehiveBlock} uses this to anger the bees if
+		COMMENT the hive is mined without silk touch.
+		COMMENT
+		COMMENT @see #onBreak
+		COMMENT @see #onBroken
+		COMMENT @see AbstractBlock#onStacksDropped
+		COMMENT @see AbstractBlock#onStateReplaced
 		ARG 1 world
 		ARG 2 player
 		ARG 3 pos
@@ -191,12 +254,27 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		ARG 3 blockEntity
 	METHOD method_9564 getDefaultState ()Lnet/minecraft/class_2680;
 	METHOD method_9567 onPlaced (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_1309;Lnet/minecraft/class_1799;)V
+		COMMENT Called when the player placed the block.
+		COMMENT
+		COMMENT <p>Tall or wide blocks (such as doors or beds) should override this to place
+		COMMENT the other half of the block. Blocks with block entities can use this to copy the
+		COMMENT data from the item stack, such as the custom name.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT @see AbstractBlock#onBlockAdded
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 state
 		ARG 4 placer
 		ARG 5 itemStack
 	METHOD method_9568 appendTooltip (Lnet/minecraft/class_1799;Lnet/minecraft/class_1922;Ljava/util/List;Lnet/minecraft/class_1836;)V
+		COMMENT Appends tooltips to a stack of this block's corresponding {@linkplain
+		COMMENT net.minecraft.item.BlockItem block item}. Used by shulker boxes.
+		COMMENT
+		COMMENT @see Item#appendTooltip
 		ARG 1 stack
 		ARG 2 world
 		ARG 3 tooltip
@@ -204,10 +282,33 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 	METHOD method_9573 getSoundGroup (Lnet/minecraft/class_2680;)Lnet/minecraft/class_2498;
 		ARG 1 state
 	METHOD method_9574 getPickStack (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Lnet/minecraft/class_1799;
+		COMMENT {@return the new item stack when using pick block functionality}
+		COMMENT
+		COMMENT <p>Pick block is available via middle-clicking by default. Blocks without the
+		COMMENT corresponding {@link net.minecraft.item.BlockItem}, such as crops, should
+		COMMENT override this method to return the correct item stack.
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 state
 	METHOD method_9576 onBreak (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_1657;)V
+		COMMENT Called when a player breaks a block before the block is removed from the world.
+		COMMENT Explosions do not trigger this.
+		COMMENT
+		COMMENT <p>Default implementation spawns block breaking particles, angers piglins, and
+		COMMENT emits game events. Tall or wide blocks such as doors or beds should override this
+		COMMENT to break the other part (along with {@link AbstractBlock#getStateForNeighborUpdate}.)
+		COMMENT
+		COMMENT <p>In most cases, {@link AbstractBlock#onStateReplaced} or {@link
+		COMMENT AbstractBlock#onStacksDropped} should be used instead. Note that they are called
+		COMMENT when blocks are broken by explosions as well as players breaking them.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT @see AbstractBlock#onStateReplaced
+		COMMENT @see AbstractBlock#onStacksDropped
+		COMMENT @see #onBroken
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 state
@@ -229,29 +330,67 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 	METHOD method_9581 cannotConnect (Lnet/minecraft/class_2680;)Z
 		ARG 0 state
 	METHOD method_9582 pushEntitiesUpBeforeBlockChange (Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;
+		COMMENT Pushes entities standing on a block up before changing the block to taller ones.
+		COMMENT Without calling this, entities can fall through the block. This only needs to be called
+		COMMENT if the original block's height is smaller than 1 block.
+		COMMENT
+		COMMENT @return the passed new block state
 		ARG 0 from
 		ARG 1 to
 		ARG 2 world
 		ARG 3 pos
 	METHOD method_9583 dropExperience (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;I)V
+		COMMENT Drops experience orbs. This should be called inside {@link AbstractBlock#onStacksDropped}
+		COMMENT after {@code dropExperience} check. This does not drop experience orbs if {@link
+		COMMENT net.minecraft.world.GameRules#DO_TILE_DROPS doTileDrops} is turned off. For blocks that do
+		COMMENT not drop experience when mined with Silk Touch, consider calling {@link
+		COMMENT #dropExperienceWhenMined} instead.
+		COMMENT
+		COMMENT @see AbstractBlock#onStacksDropped
+		COMMENT @see #dropExperienceWhenMined
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 size
 	METHOD method_9585 onBroken (Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
+		COMMENT Called after a player breaks a block and the block is removed from the world.
+		COMMENT Explosions do not trigger this.
+		COMMENT
+		COMMENT <p>In most cases, {@link AbstractBlock#onStateReplaced} or {@link
+		COMMENT AbstractBlock#onStacksDropped} should be used instead. Note that they are called
+		COMMENT when blocks are broken by explosions as well as players breaking them.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
+		COMMENT
+		COMMENT @see AbstractBlock#onStateReplaced
+		COMMENT @see AbstractBlock#onStacksDropped
+		COMMENT @see #onBreak
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 state
 	METHOD method_9586 onDestroyedByExplosion (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1927;)V
 		COMMENT Called when this block is destroyed by an explosion.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 explosion
 	METHOD method_9587 (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1799;)V
 		ARG 2 stack
 	METHOD method_9590 setDefaultState (Lnet/minecraft/class_2680;)V
+		COMMENT Sets the default state of the block. This should be called inside
+		COMMENT the block's constructor to override the default state chosen by the
+		COMMENT state manager.
 		ARG 1 state
 	METHOD method_9591 onSteppedOn (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_1297;)V
 		COMMENT Called when an entity steps on this block.
+		COMMENT
+		COMMENT <p>This method is called on both the logical client and logical server, so take caution
+		COMMENT when overriding this method. The logical side can be checked using {@link
+		COMMENT World#isClient}.
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 state

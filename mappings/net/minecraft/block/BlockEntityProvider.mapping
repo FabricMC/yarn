@@ -1,11 +1,62 @@
 CLASS net/minecraft/class_2343 net/minecraft/block/BlockEntityProvider
+	COMMENT A block with a {@link BlockEntity}. If a block has a corresponding block entity,
+	COMMENT it must implement this interface. Multiple blocks can share a block entity type.
+	COMMENT
+	COMMENT <p>The {@link #createBlockEntity} method is responsible for creating an instance
+	COMMENT of your block entity; no other code should instantiate it.
+	COMMENT
+	COMMENT <p>See the documentation of {@link BlockEntity} for more information on what a
+	COMMENT block entity is. See the documentation of {@link
+	COMMENT net.minecraft.block.entity.BlockEntityType} for how to create a block entity type.
+	COMMENT
+	COMMENT @see BlockEntity
+	COMMENT @see BlockWithEntity
 	METHOD method_10123 createBlockEntity (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Lnet/minecraft/class_2586;
+		COMMENT {@return a new block entity instance}
+		COMMENT
+		COMMENT <p>For example:
+		COMMENT <pre>{@code
+		COMMENT @Override
+		COMMENT public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+		COMMENT   return new MyBlockEntity(pos, state);
+		COMMENT }
+		COMMENT }</pre>
+		COMMENT
+		COMMENT @implNote While this is marked as nullable, in practice this should never return
+		COMMENT {@code null}. {@link PistonExtensionBlock} is the only block in vanilla that
+		COMMENT returns {@code null} inside the implementation.
 		ARG 1 pos
 		ARG 2 state
 	METHOD method_31645 getTicker (Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_2591;)Lnet/minecraft/class_5558;
+		COMMENT {@return the "ticker" for the block's block entity, or {@code null} if
+		COMMENT the block entity does not need to be ticked}
+		COMMENT
+		COMMENT <p>Ticker is a functional interface called every tick to tick the block entity
+		COMMENT on both the client and the server.
+		COMMENT
+		COMMENT <p>Tickers should validate that the passed {@code type} is the one this block expects,
+		COMMENT and return {@code null} if it isn't. This is to prevent crashes in rare cases where a
+		COMMENT mismatch occurs between the position's block and block entity. {@link
+		COMMENT BlockWithEntity#checkType} can be used to implement the check.
+		COMMENT
+		COMMENT <p>Example:
+		COMMENT
+		COMMENT <pre>{@code
+		COMMENT public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+		COMMENT   if (type != YourMod.MY_BLOCK_ENTITY_TYPE) return null;
+		COMMENT   // This should be a static method usable as a BlockEntityTicker.
+		COMMENT   return YourBlockEntity::tick;
+		COMMENT }
+		COMMENT }</pre>
 		ARG 1 world
 		ARG 2 state
 		ARG 3 type
 	METHOD method_32896 getGameEventListener (Lnet/minecraft/class_3218;Lnet/minecraft/class_2586;)Lnet/minecraft/class_5714;
+		COMMENT {@return the game event listener for the block's block entity,
+		COMMENT or {@code null} if the block entity does not listen to game events}
+		COMMENT
+		COMMENT <p>Listeners should validate that the passed {@code blockEntity} is the block entity
+		COMMENT for this block, and return {@code null} if it isn't. This is to prevent crashes in
+		COMMENT rare cases where a mismatch occurs between the position's block and block entity.
 		ARG 1 world
 		ARG 2 blockEntity
