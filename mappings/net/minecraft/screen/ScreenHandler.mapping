@@ -53,15 +53,15 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	COMMENT between the screen handler and other parts of the world; see above for more description.
 	COMMENT
 	COMMENT <p>The constructor should {@linkplain #addSlot add slots}, {@link #addProperties
-	COMMENT add properties from the delegate}, and store the property delegate and screen handler
-	COMMENT context in the instance field.
+	COMMENT add properties from delegates}, and store the property delegates and screen handler
+	COMMENT context in the instance fields.
 	COMMENT
 	COMMENT <p>The other constructor is for the client. There, the only parameters allowed are the
 	COMMENT {@code syncId} and the player inventory. This is because all other things are
 	COMMENT unavailable at creation time and synced later. This constructor should call the
 	COMMENT other constructor with {@linkplain net.minecraft.inventory.SimpleInventory
-	COMMENT a new inventory of sufficient size}, {@linkplain ArrayPropertyDelegate
-	COMMENT a new property delegate}, and {@linkplain ScreenHandlerContext#EMPTY
+	COMMENT a new simple inventory of sufficient size}, {@linkplain ArrayPropertyDelegate
+	COMMENT a new array property delegate}, and {@linkplain ScreenHandlerContext#EMPTY
 	COMMENT an empty screen handler context}. Synced data then fills the inventory and property
 	COMMENT delegate.
 	COMMENT
@@ -88,7 +88,7 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	COMMENT
 	COMMENT <h3 id="interaction">Interaction</h3>
 	COMMENT <p>Screen handler interaction mainly involves "slot clicks" and "button clicks".
-	COMMENT {@linkplain #onSlotClick Slot click} is, as mentioned before, an action manipulating
+	COMMENT A {@linkplain #onSlotClick slot click} is, as mentioned before, an action manipulating
 	COMMENT the slots' held item stacks. Slot clicks are implemented in this class and
 	COMMENT {@link #transferSlot}. To manipulate the stacks, get the slot via {@link #getSlot}
 	COMMENT and call methods of it. Screen handlers also provide methods for common operations,
@@ -351,7 +351,7 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		COMMENT Called when a slot's content has changed.
 		COMMENT
 		COMMENT <p>This is not called by default; subclasses that override this method
-		COMMENT should also use a custom {@link Inventory}  whose {@code markDirty} method is
+		COMMENT should also use a custom {@link Inventory} whose {@link Inventory#markDirty markDirty} method is
 		COMMENT overridden to call this method as a backing inventory of the slot.
 		COMMENT
 		COMMENT <p>This can be used to update the output slot when input changes.
