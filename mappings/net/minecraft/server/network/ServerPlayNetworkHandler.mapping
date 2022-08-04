@@ -59,10 +59,13 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 5 z
 		ARG 7 yaw
 		ARG 8 pitch
+	METHOD method_14365 (Lnet/minecraft/class_2805;Lcom/mojang/brigadier/suggestion/Suggestions;)V
+		ARG 2 suggestions
 	METHOD method_14367 disconnect (Lnet/minecraft/class_2561;)V
 		ARG 1 reason
 	METHOD method_14369 sendPacket (Lnet/minecraft/class_2596;Lnet/minecraft/class_7648;)V
 		ARG 1 packet
+		ARG 2 callbacks
 	METHOD method_14371 isMovementInvalid (DDDFF)Z
 		COMMENT {@return whether this movement is invalid}
 		COMMENT
@@ -94,6 +97,7 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 2 texts
 	METHOD method_31275 filterText (Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 text
+		ARG 2 filterer
 	METHOD method_31276 addBook (Lnet/minecraft/class_5837;Ljava/util/List;I)V
 		ARG 1 title
 		ARG 2 pages
@@ -110,6 +114,8 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 2 signText
 	METHOD method_31283 (ILjava/util/List;)V
 		ARG 2 texts
+	METHOD method_31284 (Ljava/lang/Object;)Ljava/lang/Object;
+		ARG 1 filtered
 	METHOD method_31285 (Lnet/minecraft/class_2877;Ljava/util/List;)V
 		ARG 2 texts
 	METHOD method_33562 requestTeleportAndDismount (DDDFF)V
@@ -149,6 +155,7 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	METHOD method_44154 (ILnet/minecraft/class_2561;)V
 		ARG 2 decorated
 	METHOD method_44155 handleDecoratedMessage (Lnet/minecraft/class_7471;)V
+		ARG 1 message
 	METHOD method_44156 decorateCommand (Lnet/minecraft/class_2168;Lnet/minecraft/class_7644;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 source
 		ARG 2 arguments
@@ -225,9 +232,11 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		COMMENT @implNote This returns the {@linkplain CachedDecoratorResult#tryConsume consumed
 		COMMENT cached result} if it exists, and otherwise returns a new {@link DecoratedContents}
 		COMMENT without message decorators applied. This method does not execute message decorators;
-		COMMENT they are executed in {@link #onRequestChatPreview} (for normal messages) or {@link
-		COMMENT #handleMessage(SignedMessage, FilteredMessage)} (for filtered parts of messages).
+		COMMENT they are executed in {@link #onRequestChatPreview} (for previewed messages) or {@link
+		COMMENT #onChatMessage} (for unpreviewed messages).
 		ARG 1 packet
+	METHOD method_45064 (Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;Ljava/lang/Void;)V
+		ARG 3 void_
 	CLASS 1
 		METHOD method_33897 processInteract (Lnet/minecraft/class_1268;Lnet/minecraft/class_3244$class_5860;)V
 			ARG 1 hand
