@@ -18,7 +18,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@link Collection}</td><td>{@link #readCollection(IntFunction, PacketByteBuf.PacketReader)}</td><td>{@link #writeCollection(Collection, PacketByteBuf.PacketWriter)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>{@link IntList}</td><td>{@link #readIntList()}</td><td>{@link #writeIntList(IntList)}</td>
+	COMMENT  <td>{@link IntList}</td><td>{@link #readVarIntList()}</td><td>{@link #writeVarIntList(IntList)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link Map}</td><td>{@link #readMap(IntFunction, PacketByteBuf.PacketReader, PacketByteBuf.PacketReader)}</td><td>{@link #writeMap(Map, PacketByteBuf.PacketWriter, PacketByteBuf.PacketWriter)}</td>
@@ -27,7 +27,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@code byte[]}</td><td>{@link #readByteArray()}</td><td>{@link #writeByteArray(byte[])}</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>{@code int[]}</td><td>{@link #readIntArray()}</td><td>{@link #writeIntArray(int[])}</td>
+	COMMENT  <td>{@code int[]}</td><td>{@link #readVarIntArray()}</td><td>{@link #writeVarIntArray(int[])}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@code long[]}</td><td>{@link #readLongArray()}</td><td>{@link #writeLongArray(long[])}</td>
@@ -264,16 +264,16 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 size
 	METHOD isWritable (I)Z
 		ARG 1 size
-	METHOD method_10787 readIntArray ()[I
+	METHOD method_10787 readVarIntArray ()[I
 		COMMENT Reads an array of primitive ints from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the var int entries. The array
 		COMMENT does not have a length limit.
 		COMMENT
 		COMMENT @implNote An int array has the same format as a list of ints.
 		COMMENT
-		COMMENT @see #readIntArray(int)
-		COMMENT @see #writeIntArray(int[])
-		COMMENT @see #readIntList()
+		COMMENT @see #readVarIntArray(int)
+		COMMENT @see #writeVarIntArray(int[])
+		COMMENT @see #readVarIntList()
 		COMMENT @return the read byte array
 	METHOD method_10788 writeString (Ljava/lang/String;I)Lnet/minecraft/class_2540;
 		COMMENT Writes a string to this buf. A string is represented by a byte array of
@@ -381,15 +381,15 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readUnlimitedNbt()
 		COMMENT @see #readNbt(NbtTagSizeTracker)
 		COMMENT @see #MAX_READ_NBT_SIZE
-	METHOD method_10799 readIntArray (I)[I
+	METHOD method_10799 readVarIntArray (I)[I
 		COMMENT Reads an array of primitive ints from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the var int entries. The array
 		COMMENT has a length limit given by {@code maxSize}.
 		COMMENT
 		COMMENT @implNote An int array has the same format as a list of ints.
 		COMMENT
-		COMMENT @see #readIntArray()
-		COMMENT @see #writeIntArray(int[])
+		COMMENT @see #readVarIntArray()
+		COMMENT @see #writeVarIntArray(int[])
 		COMMENT @return the read byte array
 		COMMENT @throws io.netty.handler.codec.DecoderException if the read array has a
 		COMMENT length over {@code maxSize}
@@ -464,15 +464,15 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #MAX_TEXT_LENGTH
 		ARG 1 text
 			COMMENT the text to write
-	METHOD method_10806 writeIntArray ([I)Lnet/minecraft/class_2540;
+	METHOD method_10806 writeVarIntArray ([I)Lnet/minecraft/class_2540;
 		COMMENT Writes an array of primitive ints to this buf. The array first has a
 		COMMENT var int indicating its length, followed by the var int entries.
 		COMMENT
 		COMMENT @implNote An int array has the same format as a list of ints.
 		COMMENT
-		COMMENT @see #readIntArray(int)
-		COMMENT @see #writeIntArray(int[])
-		COMMENT @see #writeIntList(IntList)
+		COMMENT @see #readVarIntArray(int)
+		COMMENT @see #writeVarIntArray(int[])
+		COMMENT @see #writeVarIntList(IntList)
 		COMMENT @return this buf, for chaining
 		ARG 1 array
 			COMMENT the array to write
@@ -696,26 +696,26 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return the read bit set
 		COMMENT @see #writeBitSet(BitSet)
-	METHOD method_34059 readIntList ()Lit/unimi/dsi/fastutil/ints/IntList;
+	METHOD method_34059 readVarIntList ()Lit/unimi/dsi/fastutil/ints/IntList;
 		COMMENT Reads a list of primitive ints from this buf. The ints are stored as var
 		COMMENT ints, with an extra var int in the beginning indicating the size.
 		COMMENT
 		COMMENT @apiNote To limit the length of the list or array read, use
-		COMMENT {@link #readIntArray(int)}.
+		COMMENT {@link #readVarIntArray(int)}.
 		COMMENT
 		COMMENT @implNote A list of ints has the same format as an int array.
 		COMMENT
 		COMMENT @return the read list
-		COMMENT @see #writeIntList(IntList)
-		COMMENT @see #readIntArray()
-	METHOD method_34060 writeIntList (Lit/unimi/dsi/fastutil/ints/IntList;)V
+		COMMENT @see #writeVarIntList(IntList)
+		COMMENT @see #readVarIntArray()
+	METHOD method_34060 writeVarIntList (Lit/unimi/dsi/fastutil/ints/IntList;)V
 		COMMENT Writes a list of primitive ints from this buf. The ints are stored as var
 		COMMENT ints, with an extra var int in the beginning indicating the size.
 		COMMENT
 		COMMENT @implNote A list of ints has the same format as an int array.
 		COMMENT
-		COMMENT @see #readIntList()
-		COMMENT @see #writeIntArray(int[])
+		COMMENT @see #readVarIntList()
+		COMMENT @see #writeVarIntArray(int[])
 		ARG 1 list
 			COMMENT the list to write
 	METHOD method_34061 (Ljava/lang/Object;Lcom/mojang/serialization/DataResult$PartialResult;)V
