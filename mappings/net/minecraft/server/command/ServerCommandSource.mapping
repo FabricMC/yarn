@@ -56,12 +56,25 @@ CLASS net/minecraft/class_2168 net/minecraft/server/command/ServerCommandSource
 	METHOD method_44023 getPlayer ()Lnet/minecraft/class_3222;
 		COMMENT {@return the player from this command source, or {@code null} if the source is not a player}
 	METHOD method_44749 sendChatMessage (Lnet/minecraft/class_7604;ZLnet/minecraft/class_2556$class_7602;)V
-		COMMENT Sends {@code message} as the feedback to the command's executor, or to the server's log
+		COMMENT Sends {@code message} as a chat message to the command's executor, or to the server's log
 		COMMENT if the command is not executed by a player.
 		ARG 1 message
+		ARG 2 filterMaskEnabled
+		ARG 3 params
 	METHOD method_44908 withMessageChainTaskQueue (Lnet/minecraft/class_7620;)Lnet/minecraft/class_2168;
 		ARG 1 messageChainTaskQueue
 	METHOD method_44909 getMessageChainTaskQueue ()Lnet/minecraft/class_7620;
+	METHOD method_45067 shouldFilterText (Lnet/minecraft/class_3222;)Z
+		COMMENT {@return whether to filter text sent to {@code recipient}}
+		COMMENT
+		COMMENT <p>This returns {@code true} if either of the command executor or the recipient
+		COMMENT requires text filtering, unless {@code recipient} executed the command, where
+		COMMENT {@code false} is always returned.
+		ARG 1 recipient
+	METHOD method_45068 sendMessage (Lnet/minecraft/class_2561;)V
+		COMMENT Sends {@code message} as the feedback to the command's executor, or to the server's log
+		COMMENT if the command is not executed by a player.
+		ARG 1 message
 	METHOD method_9206 withLevel (I)Lnet/minecraft/class_2168;
 		ARG 1 level
 	METHOD method_9207 getPlayerOrThrow ()Lnet/minecraft/class_3222;
