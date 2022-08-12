@@ -23,6 +23,7 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 	FIELD field_24626 registryManager Lnet/minecraft/class_5455$class_6890;
 	FIELD field_29790 LATENCY_UPDATE_INTERVAL I
 	FIELD field_34895 simulationDistance I
+	FIELD field_39921 FILTERED_FULL_TEXT Lnet/minecraft/class_2561;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_5455$class_6890;Lnet/minecraft/class_29;I)V
 		ARG 1 server
 		ARG 2 registryManager
@@ -145,10 +146,8 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT message can be sent to a different player.
 		COMMENT
 		COMMENT @see #broadcast(Text, boolean)
-		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, MessageType.Parameters)
-		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, MessageType.Parameters)
-		COMMENT @see #broadcast(SignedMessage, MessageSourceProfile, MessageType.Parameters)
-		COMMENT @see #broadcast(FilteredMessage, Predicate, MessageSourceProfile, MessageType.Parameters)
+		COMMENT @see #broadcast(SignedMessage, ServerCommandSource, MessageType.Parameters)
+		COMMENT @see #broadcast(SignedMessage, ServerPlayerEntity, MessageType.Parameters)
 		ARG 1 message
 		ARG 2 playerMessageFactory
 			COMMENT a function that takes the player to send the message to
@@ -162,10 +161,8 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT message or a join/leave message.
 		COMMENT
 		COMMENT @see #broadcast(Text, Function, boolean)
-		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, MessageType.Parameters)
-		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, MessageType.Parameters)
-		COMMENT @see #broadcast(SignedMessage, MessageSourceProfile, MessageType.Parameters)
-		COMMENT @see #broadcast(FilteredMessage, Predicate, MessageSourceProfile, MessageType.Parameters)
+		COMMENT @see #broadcast(SignedMessage, ServerCommandSource, MessageType.Parameters)
+		COMMENT @see #broadcast(SignedMessage, ServerPlayerEntity, MessageType.Parameters)
 		ARG 1 message
 		ARG 2 overlay
 	METHOD method_43670 (Lnet/minecraft/class_3222;Lnet/minecraft/server/MinecraftServer$class_7460;)V
@@ -186,9 +183,8 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT
 		COMMENT @see #broadcast(Text, boolean)
 		COMMENT @see #broadcast(Text, Function, boolean)
-		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, MessageType.Parameters)
-		COMMENT @see #broadcast(SignedMessage, MessageSourceProfile, MessageType.Parameters)
-		COMMENT @see #broadcast(FilteredMessage, Predicate, MessageSourceProfile, MessageType.Parameters)
+		COMMENT @see #broadcast(SignedMessage, ServerCommandSource, MessageType.Parameters)
+		ARG 1 message
 		ARG 2 sender
 		ARG 3 params
 	METHOD method_44166 broadcast (Lnet/minecraft/class_7471;Lnet/minecraft/class_2168;Lnet/minecraft/class_2556$class_7602;)V
@@ -200,9 +196,9 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT
 		COMMENT @see #broadcast(Text, boolean)
 		COMMENT @see #broadcast(Text, Function, boolean)
-		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, MessageType.Parameters)
-		COMMENT @see #broadcast(SignedMessage, MessageSourceProfile, MessageType.Parameters)
-		COMMENT @see #broadcast(FilteredMessage, Predicate, MessageSourceProfile, MessageType.Parameters)
+		COMMENT @see #broadcast(SignedMessage, ServerPlayerEntity, MessageType.Parameters)
+		ARG 1 message
+		ARG 2 source
 		ARG 3 params
 	METHOD method_44791 broadcast (Lnet/minecraft/class_7471;Ljava/util/function/Predicate;Lnet/minecraft/class_3222;Lnet/minecraft/class_7436;Lnet/minecraft/class_2556$class_7602;)V
 		COMMENT Broadcasts a chat message to all players and the server console.
@@ -215,11 +211,14 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		COMMENT
 		COMMENT @see #broadcast(Text, boolean)
 		COMMENT @see #broadcast(Text, Function, boolean)
-		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, MessageType.Parameters)
-		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, MessageType.Parameters)
-		COMMENT @see #broadcast(SignedMessage, MessageSourceProfile, MessageType.Parameters)
+		COMMENT @see #broadcast(SignedMessage, ServerCommandSource, MessageType.Parameters)
+		COMMENT @see #broadcast(SignedMessage, ServerPlayerEntity, MessageType.Parameters)
+		ARG 1 message
 		ARG 2 shouldSendFiltered
 			COMMENT predicate that determines whether to send the filtered message for the given player
+		ARG 3 sender
+		ARG 4 sourceProfile
+		ARG 5 params
 	METHOD method_44792 sendMessageHeader (Lnet/minecraft/class_7471;Ljava/util/Set;)V
 		COMMENT Sends {@code message}'s headers (only) to all players except {@code except}.
 		COMMENT
