@@ -1,4 +1,16 @@
 CLASS net/minecraft/class_3917 net/minecraft/screen/ScreenHandlerType
+	COMMENT Screen handler type is used to create screen handlers on the client.
+	COMMENT It is a holder object holding a factory (usually a reference to the constructor).
+	COMMENT They are registered in the registry under {@link Registry#SCREEN_HANDLER}.
+	COMMENT
+	COMMENT <p>Technically speaking, screen handlers do not have to register screen handler
+	COMMENT types. However, such screen handlers are practically useless as they cannot be
+	COMMENT opened server-side using conventional methods.
+	COMMENT
+	COMMENT @apiNote Screen handler types should not be used to create a new screen handler
+	COMMENT on the server. See {@link ScreenHandlerFactory} for server-side creation.
+	COMMENT
+	COMMENT @see ScreenHandler
 	FIELD field_17344 factory Lnet/minecraft/class_3917$class_3918;
 	METHOD <init> (Lnet/minecraft/class_3917$class_3918;)V
 		ARG 1 factory
@@ -12,6 +24,10 @@ CLASS net/minecraft/class_3917 net/minecraft/screen/ScreenHandlerType
 		ARG 0 syncId
 		ARG 1 playerInventory
 	CLASS class_3918 Factory
+		COMMENT A functional interface that creates a screen handler instance on the client.
+		COMMENT
+		COMMENT <p>Screen handlers usually have a constructor that can be used as an implementation.
+		COMMENT See the note on {@link ScreenHandler}.
 		METHOD create (ILnet/minecraft/class_1661;)Lnet/minecraft/class_1703;
 			ARG 1 syncId
 			ARG 2 playerInventory

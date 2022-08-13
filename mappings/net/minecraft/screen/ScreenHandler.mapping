@@ -1,4 +1,128 @@
 CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
+	COMMENT Manages lists of item stacks and properties between the server and the client for use
+	COMMENT in a screen. They are usually used for synchronizing the screens of container blocks
+	COMMENT such as chests and furnaces.
+	COMMENT
+	COMMENT <p>On the client, screen handlers are coupled with a {@link
+	COMMENT net.minecraft.client.gui.screen.ingame.HandledScreen}. Handled screens have a
+	COMMENT reference to a client-sided screen handler that is exposed through the
+	COMMENT {@link net.minecraft.client.gui.screen.ingame.ScreenHandlerProvider} interface.
+	COMMENT
+	COMMENT <h2 id="models">Models</h3>
+	COMMENT <p>Screen handlers hold slots, properties, property delegates, and screen handler
+	COMMENT contexts. This allows easy synchronization of states between the client and the
+	COMMENT server, and prevents running code on the wrong side.
+	COMMENT
+	COMMENT <p>{@link Slot} holds one item stack. The slots are usually controlled by the server,
+	COMMENT and the changes to slots on the server are automatically synchronized to the client.
+	COMMENT Slots can be backed by an inventory, allowing the changes to be reflected to the
+	COMMENT persistent storage (like block entities) on the server. Clients manipulate the
+	COMMENT slots by issuing a "slot click" packet. "Clicking" a slot includes actions like
+	COMMENT picking up crafting result, shift-clicking stacks, swapping stacks between the
+	COMMENT inventory and the hotbar, or dropping stacks.
+	COMMENT
+	COMMENT <p>Screen handlers also contain a list of {@linkplain Property properties}
+	COMMENT that are used for syncing integers (e.g. progress bars) from the server to the client.
+	COMMENT Properties can also be used to sync an integer from the client to the server, although
+	COMMENT it has to be manually performed. If a property relies on other objects, like
+	COMMENT a value from a block entity instance, then the property can delegate its operations
+	COMMENT using {@link PropertyDelegate}. The delegate is passed when creating the screen handler.
+	COMMENT On the server, access to the property's value is delegated to the delegate (which in
+	COMMENT turn delegates to another object like a block entity instance).
+	COMMENT On the client, access to the property's value still uses the synced value.
+	COMMENT
+	COMMENT <p>{@link ScreenHandlerContext} allows running code on the server side only. Screen
+	COMMENT handlers are designed to be used on both sides; any action modifying the world has
+	COMMENT to be wrapped in a call to the context. Like with the property delegate, a context
+	COMMENT with the world is passed to the screen handler on creation on the server. On the
+	COMMENT server, the context executes the function with the world and the position. On the
+	COMMENT client, the context does nothing.
+	COMMENT
+	COMMENT <h2 id="usage">How to use screen handlers</h2>
+	COMMENT <h3 id="creation">Creation</h3>
+	COMMENT <p>To create a new screen handler, subclass {@link ScreenHandler}, create and register
+	COMMENT a new {@linkplain ScreenHandlerType screen handler type}, and associate it with
+	COMMENT a handled screen.
+	COMMENT
+	COMMENT <p>A subclass should have two constructors. One is for the server, and should take
+	COMMENT the {@code syncId} and inventories, property delegates, or contexts that are used.
+	COMMENT The {@link #syncId} is shared between the two sides. It is used to verify that a player
+	COMMENT has a specific screen (handler) open so that they can move items, for example.
+	COMMENT The inventories are used to back a slot so that any changes to a slot is reflected
+	COMMENT on the backing inventory, and vice versa. Property delegates and contexts bridge
+	COMMENT between the screen handler and other parts of the world; see above for more description.
+	COMMENT
+	COMMENT <p>The constructor should {@linkplain #addSlot add slots}, {@link #addProperties
+	COMMENT add properties from delegates}, and store the property delegates and screen handler
+	COMMENT context in the instance fields.
+	COMMENT
+	COMMENT <p>The other constructor is for the client. There, the only parameters allowed are the
+	COMMENT {@code syncId} and the player inventory. This is because all other things are
+	COMMENT unavailable at creation time and synced later. This constructor should call the
+	COMMENT other constructor with {@linkplain net.minecraft.inventory.SimpleInventory
+	COMMENT a new simple inventory of sufficient size}, {@linkplain ArrayPropertyDelegate
+	COMMENT a new array property delegate}, and {@linkplain ScreenHandlerContext#EMPTY
+	COMMENT an empty screen handler context}. Synced data then fills the inventory and property
+	COMMENT delegate.
+	COMMENT
+	COMMENT <p>The screen handler then has to be registered in a registry. Create a new instance of
+	COMMENT {@link ScreenHandlerType} with the screen handler type factory (which can be a reference
+	COMMENT to the client-side constructor; i.e. {@code MyScreenHandler::MyScreenHandler})
+	COMMENT and register it to {@link net.minecraft.util.registry.Registry#SCREEN_HANDLER}.
+	COMMENT
+	COMMENT <h3 id="opening">Opening</h3>
+	COMMENT <p>Most of the screen handlers are associated with a block and opened by using the block.
+	COMMENT Screen handlers are opened on the server and synced to the client. To open a
+	COMMENT screen handler, use {@link PlayerEntity#openHandledScreen}. This takes a
+	COMMENT {@link NamedScreenHandlerFactory}, which creates a screen handler. In vanilla,
+	COMMENT block entity instances implement the interface, allowing them to be passed.
+	COMMENT {@link SimpleNamedScreenHandlerFactory} is a screen handler factory implementation
+	COMMENT for use cases that do not involve a block entity.
+	COMMENT
+	COMMENT <p>The factory should create a new instance of a screen handler with the server-side
+	COMMENT constructor (one that takes inventories, etc). If the screen handler requires
+	COMMENT a property delegate or a context, create an instance and pass it here.
+	COMMENT
+	COMMENT <p>As long as the screen handler only uses the slots and properties, there should not
+	COMMENT be any need for external synchronization.
+	COMMENT
+	COMMENT <h3 id="interaction">Interaction</h3>
+	COMMENT <p>Screen handler interaction mainly involves "slot clicks" and "button clicks".
+	COMMENT A {@linkplain #onSlotClick slot click} is, as mentioned before, an action manipulating
+	COMMENT the slots' held item stacks. Slot clicks are implemented in this class and
+	COMMENT {@link #transferSlot}. To manipulate the stacks, get the slot via {@link #getSlot}
+	COMMENT and call methods of it. Screen handlers also provide methods for common operations,
+	COMMENT such as {@link #insertItem} that inserts a stack to the screen handler's available slots.
+	COMMENT
+	COMMENT <p>The "cursor stack" is an item stack held by the cursor. When moving item stacks
+	COMMENT between slots, the cursor stack can hold the stack temporarily. The cursor stack
+	COMMENT is not held by any slots. When the screen handler is closed, the stack will be
+	COMMENT inserted to the player inventory or dropped as an item entity.
+	COMMENT
+	COMMENT <p>Some screen handlers also handle {@linkplain #onButtonClick button clicks}.
+	COMMENT This is used to execute an action on the server as a response to clients sending a
+	COMMENT button click packet. In most cases, this is triggered by a button in the screen
+	COMMENT rendered by the client, hence the name. Inside screen handlers, buttons are identified
+	COMMENT with an integer.
+	COMMENT
+	COMMENT <p>Subclasses must implement two methods: {@link #canUse(PlayerEntity)} and {@link
+	COMMENT #transferSlot}. See the documentation of each method for more details.
+	COMMENT
+	COMMENT <h3 id="closing">Closing</h3>
+	COMMENT <p>Since a screen handler handles the client's screen, the screen must be closed at the
+	COMMENT same time. To close the screen handler and the screen, call {@link
+	COMMENT PlayerEntity#closeHandledScreen} on the server.
+	COMMENT
+	COMMENT <p>Screen handlers should override {@link #close}. In there, it should {@linkplain
+	COMMENT #dropInventory drop contents} of all slots not backed by an inventory and call
+	COMMENT {@link Inventory#onClose} on the backing inventory. See the documentation of
+	COMMENT the method for more details.
+	COMMENT
+	COMMENT @see ScreenHandlerType
+	COMMENT @see ScreenHandlerFactory
+	COMMENT @see Slot
+	COMMENT @see Inventory
+	COMMENT @see net.minecraft.client.gui.screen.ingame.HandledScreen
 	FIELD field_17285 properties Ljava/util/List;
 	FIELD field_17493 type Lnet/minecraft/class_3917;
 	FIELD field_29205 cursorStack Lnet/minecraft/class_1799;
@@ -24,6 +148,11 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		ARG 1 type
 		ARG 2 syncId
 	METHOD method_17358 getType ()Lnet/minecraft/class_3917;
+		COMMENT {@return the screen handler type}
+		COMMENT
+		COMMENT <p>A screen handler must have associated screen handler type to open it.
+		COMMENT
+		COMMENT @throws UnsupportedOperationException if the type is not passed in the constructor
 	METHOD method_17359 checkSize (Lnet/minecraft/class_1263;I)V
 		COMMENT Checks that the size of the provided inventory is at least as large as the {@code expectedSize}.
 		COMMENT
@@ -31,6 +160,10 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		ARG 0 inventory
 		ARG 1 expectedSize
 	METHOD method_17360 addProperties (Lnet/minecraft/class_3913;)V
+		COMMENT Adds properties of {@code propertyDelegate} to this screen handler.
+		COMMENT This must be called inside the subclass's constructor.
+		COMMENT
+		COMMENT @see #addProperty
 		ARG 1 propertyDelegate
 	METHOD method_17361 checkDataCount (Lnet/minecraft/class_3913;I)V
 		COMMENT Checks that the size of the {@code data} is at least as large as the {@code expectedCount}.
@@ -39,8 +172,25 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		ARG 0 data
 		ARG 1 expectedCount
 	METHOD method_17362 addProperty (Lnet/minecraft/class_3915;)Lnet/minecraft/class_3915;
+		COMMENT Adds {@code property} to this screen handler. This must be called inside the
+		COMMENT subclass's constructor.
+		COMMENT
+		COMMENT <p>If the property relies on external objects (such as a block entity instance),
+		COMMENT it should instead use property delegates and {@link #addProperties}.
+		COMMENT
+		COMMENT @return the added property
+		COMMENT
+		COMMENT @see #addProperties
 		ARG 1 property
 	METHOD method_17695 canUse (Lnet/minecraft/class_3914;Lnet/minecraft/class_1657;Lnet/minecraft/class_2248;)Z
+		COMMENT {@return whether the screen handler can be used}
+		COMMENT
+		COMMENT @apiNote This should be called inside {@link #canUse(PlayerEntity)}.
+		COMMENT
+		COMMENT @implNote On the server, this checks that the block at the position is
+		COMMENT {@code block} and the player is within 8 blocks from the block's center.
+		COMMENT
+		COMMENT @see #canUse(PlayerEntity)
 		ARG 0 context
 		ARG 1 player
 		ARG 2 block
@@ -84,6 +234,7 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	METHOD method_34257 enableSyncing ()V
 	METHOD method_34258 checkCursorStackUpdates ()V
 	METHOD method_34259 getCursorStackReference ()Lnet/minecraft/class_5630;
+		COMMENT {@return a reference to the cursor's stack}
 	METHOD method_34715 checkPropertyUpdates (II)V
 		ARG 1 id
 		ARG 2 value
@@ -100,6 +251,10 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		ARG 1 slot
 		ARG 2 stack
 	METHOD method_40442 isValid (I)Z
+		COMMENT {@return whether the given slot index is valid}
+		COMMENT
+		COMMENT <p>This returns {@code true} for all added slots, {@value #EMPTY_SPACE_SLOT_INDEX},
+		COMMENT and {@code -1}.
 		ARG 1 slot
 	METHOD method_7591 packQuickCraftData (II)I
 		ARG 0 quickCraftStage
@@ -118,25 +273,73 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	METHOD method_7594 unpackQuickCraftStage (I)I
 		ARG 0 quickCraftData
 	METHOD method_7595 close (Lnet/minecraft/class_1657;)V
+		COMMENT Closes this screen handler.
+		COMMENT
+		COMMENT <p>To close a screen handler, call {@link PlayerEntity#closeHandledScreen}
+		COMMENT on the server instead of this method.
+		COMMENT
+		COMMENT <p>This drops the cursor stack by default. Subclasses that have slots not backed
+		COMMENT by a persistent inventory should call {@link #dropInventory} to drop the stacks.
 		ARG 1 player
 	METHOD method_7596 addListener (Lnet/minecraft/class_1712;)V
+		COMMENT Adds {@code listener} to the screen handler.
+		COMMENT
+		COMMENT <p>Listeners are often used to listen to slot or property changes on the
+		COMMENT client's screen.
 		ARG 1 listener
 	METHOD method_7597 canUse (Lnet/minecraft/class_1657;)Z
+		COMMENT {@return whether the screen handler can be used}
+		COMMENT
+		COMMENT <p>Subclasses should call #canUse(ScreenHandlerContext, PlayerEntity, Block)}
+		COMMENT or implement the check itself. The implementation should check that the
+		COMMENT player is near the screen handler's source position (e.g. block position) and
+		COMMENT that the source (e.g. block) is not destroyed.
 		ARG 1 player
 	METHOD method_7600 shouldQuickCraftContinue (ILnet/minecraft/class_1657;)Z
 		ARG 0 stage
 		ARG 1 player
 	METHOD method_7601 transferSlot (Lnet/minecraft/class_1657;I)Lnet/minecraft/class_1799;
+		COMMENT Transfers (or "quick-moves") the stack at slot {@code index} to other
+		COMMENT slots of the screen handler that belong to a different inventory.
+		COMMENT
+		COMMENT <p>Subclasses should call {@link #insertItem}, and if the insertion was successful,
+		COMMENT clear the slot (if the stack is exhausted) or mark it as dirty. See the vanilla
+		COMMENT subclasses for basic implementation.
+		COMMENT
+		COMMENT @return {@link ItemStack#EMPTY} when no stack can be transferred, otherwise
+		COMMENT the original stack
+		COMMENT
+		COMMENT @see #insertItem
 		ARG 1 player
 		ARG 2 index
 	METHOD method_7602 getStacks ()Lnet/minecraft/class_2371;
+		COMMENT {@return a list of all stacks of the screen handler's slot}
+		COMMENT
+		COMMENT <p>This should not be used in most cases, and modifying the returned list
+		COMMENT has no effect to the screen handler.
 	METHOD method_7603 removeListener (Lnet/minecraft/class_1712;)V
+		COMMENT Removes {@code listener} from this screen handler.
 		ARG 1 listener
 	METHOD method_7604 onButtonClick (Lnet/minecraft/class_1657;I)Z
+		COMMENT Called when {@code player} clicks a button with {@code id}.
+		COMMENT
+		COMMENT <p>"Button click" is an abstract concept; it does not have to be triggered by a
+		COMMENT button. Examples of button clicks include selecting a recipe for a stonecutter,
+		COMMENT turning a page of a lectern's book, or selecting an enchantment on an enchanting table.
+		COMMENT Buttons are identified by an integer.
+		COMMENT
+		COMMENT @implNote This is normally only called by the server; however, screens that use buttons
+		COMMENT can call this on the client.
+		COMMENT
+		COMMENT @return whether the button click is handled successfully
 		ARG 1 player
 		ARG 2 id
 	METHOD method_7605 endQuickCraft ()V
 	METHOD method_7606 setProperty (II)V
+		COMMENT Sets the property with ID {@code id} to {@code value}.
+		COMMENT
+		COMMENT <p>Subclasses can call {@link #sendContentUpdates} to manually sync the change
+		COMMENT to the client.
 		ARG 1 id
 		ARG 2 value
 	METHOD method_7607 dropInventory (Lnet/minecraft/class_1657;Lnet/minecraft/class_1263;)V
@@ -145,19 +348,38 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	METHOD method_7608 calculateComparatorOutput (Lnet/minecraft/class_2586;)I
 		ARG 0 entity
 	METHOD method_7609 onContentChanged (Lnet/minecraft/class_1263;)V
+		COMMENT Called when a slot's content has changed.
+		COMMENT
+		COMMENT <p>This is not called by default; subclasses that override this method
+		COMMENT should also use a custom {@link Inventory} whose {@link Inventory#markDirty markDirty} method is
+		COMMENT overridden to call this method as a backing inventory of the slot.
+		COMMENT
+		COMMENT <p>This can be used to update the output slot when input changes.
 		ARG 1 inventory
 	METHOD method_7610 updateSlotStacks (ILjava/util/List;Lnet/minecraft/class_1799;)V
 		ARG 1 revision
 		ARG 2 stacks
 		ARG 3 cursorStack
 	METHOD method_7611 getSlot (I)Lnet/minecraft/class_1735;
+		COMMENT {@return the slot with index {@code index}}
 		ARG 1 index
 	METHOD method_7613 canInsertIntoSlot (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;)Z
+		COMMENT {@return whether {@code stack} can be inserted to {@code slot}}
+		COMMENT
+		COMMENT <p>Subclasses should override this to return {@code false} if the slot is
+		COMMENT used for output.
 		ARG 1 stack
 		ARG 2 slot
 	METHOD method_7615 canInsertIntoSlot (Lnet/minecraft/class_1735;)Z
 		ARG 1 slot
 	METHOD method_7616 insertItem (Lnet/minecraft/class_1799;IIZ)Z
+		COMMENT Tries to consume {@code stack} by inserting to slots from {@code startIndex}
+		COMMENT to {@code endIndex - 1} (both inclusive) until the entire stack is used.
+		COMMENT
+		COMMENT <p>If {@code fromLast} is {@code true}, this attempts the insertion in reverse
+		COMMENT order; i.e. {@code endIndex - 1} to {@code startIndex} (both inclusive).
+		COMMENT
+		COMMENT @return whether {@code stack} was decremented
 		ARG 1 stack
 		ARG 2 startIndex
 		ARG 3 endIndex
@@ -176,6 +398,10 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	METHOD method_7620 unpackQuickCraftButton (I)I
 		ARG 0 quickCraftData
 	METHOD method_7621 addSlot (Lnet/minecraft/class_1735;)Lnet/minecraft/class_1735;
+		COMMENT Adds {@code slot} to this screen handler. This must be called inside
+		COMMENT the subclass's constructor.
+		COMMENT
+		COMMENT @return the added slot
 		ARG 1 slot
 	METHOD method_7623 sendContentUpdates ()V
 		COMMENT Sends updates to listeners if any properties or slot stacks have changed.
