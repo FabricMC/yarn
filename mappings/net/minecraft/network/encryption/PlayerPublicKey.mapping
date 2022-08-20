@@ -7,11 +7,15 @@ CLASS net/minecraft/class_7428 net/minecraft/network/encryption/PlayerPublicKey
 	COMMENT @see net.minecraft.client.util.ProfileKeys
 	COMMENT @see PlayerKeyPair
 	FIELD field_39050 CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_39953 MISSING_PUBLIC_KEY_TEXT Lnet/minecraft/class_2561;
+	FIELD field_39954 EXPIRED_PUBLIC_KEY_TEXT Lnet/minecraft/class_2561;
+	FIELD field_39955 EXPIRATION_GRACE_PERIOD Ljava/time/Duration;
+	FIELD field_39956 INVALID_PUBLIC_KEY_SIGNATURE_TEXT Lnet/minecraft/class_2561;
 	METHOD method_43550 verifyAndDecode (Lnet/minecraft/class_7500;Ljava/util/UUID;Lnet/minecraft/class_7428$class_7443;Ljava/time/Duration;)Lnet/minecraft/class_7428;
 		COMMENT Verifies the public key and decodes it.
 		COMMENT
 		COMMENT <p>The checks whether the public key is present, signed with the Mojang's private key,
-		COMMENT and not expired.
+		COMMENT and not expired (taking into account the provided grace period).
 		COMMENT
 		COMMENT @throws InsecurePublicKeyException.MissingException when the key is missing or empty
 		COMMENT @throws InsecurePublicKeyException.InvalidException when the key does not belong to the profile, is unsigned, or expired
@@ -19,6 +23,7 @@ CLASS net/minecraft/class_7428 net/minecraft/network/encryption/PlayerPublicKey
 		ARG 0 servicesSignatureVerifier
 		ARG 1 playerUuid
 		ARG 2 publicKeyData
+		ARG 3 gracePeriod
 	METHOD method_43697 createSignatureInstance ()Lnet/minecraft/class_7500;
 	CLASS class_7443 PublicKeyData
 		FIELD field_39119 CODEC Lcom/mojang/serialization/Codec;
@@ -35,3 +40,7 @@ CLASS net/minecraft/class_7428 net/minecraft/network/encryption/PlayerPublicKey
 		METHOD method_44205 verifyKey (Lnet/minecraft/class_7500;Ljava/util/UUID;)Z
 			ARG 1 servicesSignatureVerifier
 			ARG 2 playerUuid
+		METHOD method_45103 isExpired (Ljava/time/Duration;)Z
+			COMMENT {@return whether the key is expired, with the provided grace period taken into account}
+			ARG 1 gracePeriod
+	CLASS class_7652 PublicKeyException
