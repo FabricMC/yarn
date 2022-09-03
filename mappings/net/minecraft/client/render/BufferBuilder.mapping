@@ -1,4 +1,18 @@
 CLASS net/minecraft/class_287 net/minecraft/client/render/BufferBuilder
+	COMMENT Builds a buffer of primitives and optionally sorts them by the distance
+	COMMENT from the camera.
+	COMMENT
+	COMMENT <p>This builder can sort quad primitives. It sorts them by the distance
+	COMMENT between the camera position and the center of the quad. Sorting is
+	COMMENT required when drawing translucent objects because they have to be drawn
+	COMMENT in back-to-front order. See
+	COMMENT <a href="https://www.khronos.org/opengl/wiki/Transparency_Sorting">
+	COMMENT Transparency Sorting - OpenGL Wiki</a>.
+	COMMENT
+	COMMENT <p>For {@link VertexFormat.DrawMode#LINES LINES} and {@link
+	COMMENT VertexFormat.DrawMode#LINE_STRIP LINE_STRIP} draw modes, this builder
+	COMMENT duplicates every vertex in a line to produce a quad with zero area. See
+	COMMENT {@link GameRenderer#getRenderTypeLinesShader}.
 	FIELD field_1553 currentElementId I
 	FIELD field_1554 vertexCount I
 	FIELD field_1555 buffer Ljava/nio/ByteBuffer;
@@ -104,7 +118,9 @@ CLASS net/minecraft/class_287 net/minecraft/client/render/BufferBuilder
 			ARG 5 cameraY
 			ARG 6 cameraZ
 	CLASS class_7433 BuiltBuffer
-		COMMENT A pair of a vertex buffer and an index buffer ready to be uploaded.
+		COMMENT An output of {@link BufferBuilder}. It contains a {@link ByteBuffer} of
+		COMMENT vertices, a {@code ByteBuffer} of indices if sorting has been done, and
+		COMMENT some information necessary to draw these data.
 		FIELD field_39064 batchOffset I
 		FIELD field_39065 parameters Lnet/minecraft/class_287$class_4574;
 		FIELD field_39066 released Z
