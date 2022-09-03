@@ -13,8 +13,11 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 	FIELD field_29847 RADIANS_PER_DEGREE F
 	FIELD field_29848 DEGREES_PER_RADIAN F
 	FIELD field_29849 EPSILON F
+	FIELD field_29850 FLOOR_DOWNSHIFT I
+	FIELD field_29851 FLOOR_UPSHIFT F
 	FIELD field_29853 HALF_PI_RADIANS_SINE_TABLE_INDEX J
 	FIELD field_29856 DEGREES_TO_SINE_TABLE_INDEX F
+	FIELD field_29859 SINE_TABLE_SIZE I
 	METHOD method_15338 wrapDegrees (D)D
 		COMMENT Wraps an angle in degrees to the interval {@code [-180, 180)}.
 		ARG 0 degrees
@@ -360,6 +363,31 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 		ARG 0 value
 		ARG 1 min
 		ARG 2 max
+	METHOD method_34940 generateInverseExponents (DDDDDDII)[D
+		ARG 0 scale1
+		ARG 2 normalization1
+		ARG 4 exponent1
+		ARG 6 scale2
+		ARG 8 normalization2
+		ARG 10 exponent2
+		ARG 12 startIndex
+		ARG 13 endIndex
+	METHOD method_34941 generateInverseExponents (DDDII)[D
+		ARG 0 scale
+		ARG 2 normalization
+		ARG 4 exponent
+		ARG 6 startIndex
+		ARG 7 endIndex
+	METHOD method_34942 generateLogs (DDII)[D
+		COMMENT Batch-generates an array of log(n) values from a n=start to n=end.
+		ARG 0 scale
+			COMMENT The Y scale factor used to dilate or compress the function
+		ARG 2 offset
+			COMMENT The X offset used to shift the function left or right
+		ARG 4 start
+			COMMENT The starting X value for the log function
+		ARG 5 end
+			COMMENT The ending X value for the log function
 	METHOD method_34943 multiplyColors (IFFF)I
 		ARG 0 color
 		ARG 1 r
@@ -388,6 +416,12 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 			COMMENT the fallback for unparsable {@code string}
 		ARG 2 min
 			COMMENT the minimum if the parsed value is too small
+	METHOD method_34950 getRandomIndex (Lnet/minecraft/class_5819;[D)I
+		COMMENT Picks a random value from a list
+		COMMENT
+		COMMENT @return The index of the random pick.
+		ARG 0 random
+		ARG 1 values
 	METHOD method_34951 getCumulativeDistribution ([D)[D
 		ARG 0 values
 	METHOD method_34952 multiplyColors (II)I
@@ -399,6 +433,11 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 		ARG 0 n
 	METHOD method_34956 perlinFadeDerivative (D)D
 		ARG 0 value
+	METHOD method_34957 deviate (D)D
+		COMMENT Creates a random small, positive deviation from the passed in value.
+		COMMENT
+		COMMENT @return The passed in value + some random amount < 0.01
+		ARG 0 initialValue
 	METHOD method_37166 clampedLerp (FFF)F
 		ARG 0 start
 		ARG 1 end
@@ -460,6 +499,15 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 		ARG 0 a
 		ARG 2 b
 		ARG 4 c
+	METHOD method_41303 ease (FFFFF)F
+		COMMENT Performs an easing interpolation between a start and end value
+		COMMENT allows for a smooth transition to a state before and after the
+		COMMENT transition's start and end values.
+		ARG 0 delta
+		ARG 1 before
+		ARG 2 start
+		ARG 3 end
+		ARG 4 after
 	METHOD method_42117 stream (IIII)Ljava/util/stream/IntStream;
 		ARG 0 seed
 		ARG 1 lowerBound
