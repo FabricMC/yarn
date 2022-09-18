@@ -4,8 +4,8 @@ jobs:
   build:
     strategy:
       matrix:
-        java: [17-jdk, 18-jdk]
-    runs-on: ubuntu-20.04
+        java: [17-jdk, 19-jdk]
+    runs-on: ubuntu-22.04
     container:
       image: openjdk:${{ matrix.java }}
       options: --user root
@@ -14,9 +14,19 @@ jobs:
       - uses: gradle/wrapper-validation-action@v1
       - run: ./gradlew build javadocJar checkMappings --stacktrace --warning-mode fail
       - name: Build artifacts
-        if: ${{ matrix.java == '18-jdk' }}
+        if: ${{ matrix.java == '19-jdk' }}
         continue-on-error: true
         uses: actions/upload-artifact@v2
         with:
           name: Artifacts
           path: build/libs/
+
+  test-build-logic:
+    runs-on: ubuntu-22.04
+    container:
+      image: openjdk:19-jdk
+      options: --user root
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
+      - run: ./gradlew :build-logic:test
