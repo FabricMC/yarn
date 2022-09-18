@@ -5,9 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.IOException;
 
-import net.fabricmc.yarn.gradle.util.FileUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import net.fabricmc.yarn.gradle.util.FileUtil;
 
 class FileUtilTest {
 	@TempDir

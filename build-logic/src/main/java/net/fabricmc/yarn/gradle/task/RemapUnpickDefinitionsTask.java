@@ -1,17 +1,21 @@
 package net.fabricmc.yarn.gradle.task;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import daomephsta.unpick.constantmappers.datadriven.parser.FieldKey;
 import daomephsta.unpick.constantmappers.datadriven.parser.MethodKey;
 import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Reader;
 import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Remapper;
 import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Writer;
-import net.fabricmc.yarn.gradle.util.FileUtil;
-import net.fabricmc.yarn.gradle.util.UnpickUtil;
-import net.fabricmc.mapping.tree.ClassDef;
-import net.fabricmc.mapping.tree.FieldDef;
-import net.fabricmc.mapping.tree.MethodDef;
-import net.fabricmc.mapping.tree.TinyMappingFactory;
-import net.fabricmc.mapping.tree.TinyTree;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.Property;
@@ -24,15 +28,13 @@ import org.gradle.workers.WorkParameters;
 import org.gradle.workers.WorkQueue;
 import org.gradle.workers.WorkerExecutor;
 
-import javax.inject.Inject;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.HashMap;
-import java.util.Map;
+import net.fabricmc.mapping.tree.ClassDef;
+import net.fabricmc.mapping.tree.FieldDef;
+import net.fabricmc.mapping.tree.MethodDef;
+import net.fabricmc.mapping.tree.TinyMappingFactory;
+import net.fabricmc.mapping.tree.TinyTree;
+import net.fabricmc.yarn.gradle.util.FileUtil;
+import net.fabricmc.yarn.gradle.util.UnpickUtil;
 
 public abstract class RemapUnpickDefinitionsTask extends DefaultTask {
 	@InputFile

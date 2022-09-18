@@ -1,11 +1,12 @@
 package net.fabricmc.yarn.gradle;
 
+import org.gradle.api.Plugin;
+import org.gradle.api.Project;
+
 import net.fabricmc.yarn.gradle.task.CombineUnpickDefinitionsTask;
 import net.fabricmc.yarn.gradle.task.GeneratePackageInfoMappingsTask;
 import net.fabricmc.yarn.gradle.task.JavadocLintTask;
 import net.fabricmc.yarn.gradle.task.RemapUnpickDefinitionsTask;
-import org.gradle.api.Plugin;
-import org.gradle.api.Project;
 
 public final class YarnGradlePlugin implements Plugin<Project> {
 	@Override

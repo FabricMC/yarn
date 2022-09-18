@@ -1,6 +1,14 @@
 package net.fabricmc.yarn.gradle.task;
 
-import net.fabricmc.yarn.gradle.util.FileUtil;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.RegularFileProperty;
@@ -13,14 +21,7 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import net.fabricmc.yarn.gradle.util.FileUtil;
 
 public class GeneratePackageInfoMappingsTask extends DefaultTask {
 	private final RegularFileProperty inputJar = getProject().getObjects().fileProperty();

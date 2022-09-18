@@ -1,5 +1,13 @@
 package net.fabricmc.yarn.gradle.task;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import javax.inject.Inject;
+
 import cuchaz.enigma.ProgressListener;
 import cuchaz.enigma.translation.mapping.EntryMapping;
 import cuchaz.enigma.translation.mapping.serde.MappingParseException;
@@ -8,7 +16,6 @@ import cuchaz.enigma.translation.mapping.tree.EntryTree;
 import cuchaz.enigma.translation.representation.entry.Entry;
 import cuchaz.enigma.translation.representation.entry.LocalVariableEntry;
 import cuchaz.enigma.translation.representation.entry.MethodEntry;
-import net.fabricmc.yarn.gradle.util.FileUtil;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
 import org.gradle.api.file.ConfigurableFileCollection;
@@ -27,12 +34,7 @@ import org.gradle.workers.WorkParameters;
 import org.gradle.workers.WorkQueue;
 import org.gradle.workers.WorkerExecutor;
 
-import javax.inject.Inject;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
+import net.fabricmc.yarn.gradle.util.FileUtil;
 
 public abstract class JavadocLintTask extends DefaultTask {
 	private static final Pattern PARAM_DOC_LINE = Pattern.compile("^@param\\s+[^<].*$");

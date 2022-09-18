@@ -1,9 +1,17 @@
 package net.fabricmc.yarn.gradle.task;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Reader;
 import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Writer;
-import net.fabricmc.yarn.gradle.util.FileUtil;
-import net.fabricmc.yarn.gradle.util.UnpickUtil;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.RegularFileProperty;
@@ -15,14 +23,8 @@ import org.gradle.workers.WorkParameters;
 import org.gradle.workers.WorkQueue;
 import org.gradle.workers.WorkerExecutor;
 
-import javax.inject.Inject;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import net.fabricmc.yarn.gradle.util.FileUtil;
+import net.fabricmc.yarn.gradle.util.UnpickUtil;
 
 public abstract class CombineUnpickDefinitionsTask extends DefaultTask {
 	@InputDirectory
