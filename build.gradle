@@ -12,7 +12,6 @@ buildscript {
 		classpath "net.fabricmc:stitch:${project.stitch_version}"
 		classpath "commons-io:commons-io:2.11.0"
 		classpath "de.undercouch:gradle-download-task:4.1.1"
-		classpath "net.fabricmc:tiny-remapper:${project.tiny_remapper_version}"
 		classpath "net.fabricmc.unpick:unpick:${project.unpick_version}"
 		classpath "net.fabricmc.unpick:unpick-format-utils:${project.unpick_version}"
 		classpath "net.fabricmc:name-proposal:${project.name_proposal_version}"
@@ -119,22 +118,16 @@ import cuchaz.enigma.command.CheckMappingsCommand
 import cuchaz.enigma.command.ComposeMappingsCommand
 import cuchaz.enigma.command.ConvertMappingsCommand
 import cuchaz.enigma.command.MapSpecializedMethodsCommand
-import groovy.io.FileType
 import groovy.json.JsonSlurper
+import net.fabricmc.filament.task.MapJarTask
 import net.fabricmc.stitch.commands.CommandMergeTiny
 import net.fabricmc.stitch.commands.CommandReorderTiny
 import net.fabricmc.stitch.commands.CommandRewriteIntermediary
 import net.fabricmc.stitch.commands.tinyv2.CommandMergeTinyV2
 import net.fabricmc.stitch.commands.tinyv2.CommandReorderTinyV2
 import net.fabricmc.stitch.merge.JarMerger
-import net.fabricmc.tinyremapper.OutputConsumerPath
-import net.fabricmc.tinyremapper.TinyRemapper
-import net.fabricmc.tinyremapper.TinyUtils
 import net.fabricmc.nameproposal.MappingNameCompleter
 import org.apache.commons.io.FileUtils
-import org.objectweb.asm.ClassVisitor
-import org.objectweb.asm.FieldVisitor
-import org.objectweb.asm.Opcodes;
 
 import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPOutputStream
@@ -417,34 +410,24 @@ task patchIntermediary(dependsOn: [mergeJars, downloadIntermediary]) {
 	}
 }
 
-task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJars]) {
+task mapIntermediaryJar(type: MapJarTask, dependsOn: [downloadMcLibs, downloadIntermediary, mergeJars]) {
 	group = mapJarGroup
-	inputs.files downloadMcLibs.outputs.files.files
-	outputs.file(intermediaryJar)
-
-	//Force the task to always run
-	outputs.upToDateWhen { false }
-
-	doLast {
-		logger.lifecycle(":mapping minecraft to intermediary")
-		def tinyInput = downloadIntermediary.dest
-		mapJar(intermediaryJar, mergedFile, tinyInput, libraries, "official", "intermediary")
-	}
+	output = intermediaryJar
+	input = mergedFile
+	mappings = downloadIntermediary.dest
+	libraryDir = libraries
+	from = 'official'
+	to = 'intermediary'
 }
 
-task mapServerIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, extractServerJar]) {
+task mapServerIntermediaryJar(type: MapJarTask, dependsOn: [downloadMcLibs, downloadIntermediary, extractServerJar]) {
 	group = mapJarGroup
-	inputs.files downloadMcLibs.outputs.files.files
-	outputs.file(serverIntermediaryJar)
-
-	//Force the task to always run
-	outputs.upToDateWhen { false }
-
-	doLast {
-		logger.lifecycle(":mapping minecraft server to intermediary")
-		def tinyInput = downloadIntermediary.dest
-		mapJar(serverIntermediaryJar, serverJar, tinyInput, libraries, "official", "intermediary")
-	}
+	output = serverIntermediaryJar
+	input = serverJar
+	mappings = downloadIntermediary.dest
+	libraryDir = libraries
+	from = 'official'
+	to = 'intermediary'
 }
 
 task yarnUnpicked(dependsOn: "unpickIntermediaryJar", type: EnigmaTask) {
@@ -636,33 +619,6 @@ task importMappingsOfficial(dependsOn: invertIntermediary) {
 	}
 }
 
-task mapNamedJar(dependsOn: ["mergeV2", "unpickIntermediaryJar"]) {
-	group = mapJarGroup
-	inputs.files downloadMcLibs.outputs.files.files
-	outputs.file(namedJar)
-
-	//Force the task to always run
-	outputs.upToDateWhen { false }
-
-	def jsrToJetbrains = [
-		"javax/annotation/Nullable": "org/jetbrains/annotations/Nullable",
-		"javax/annotation/Nonnull": "org/jetbrains/annotations/NotNull",
-		"javax/annotation/concurrent/Immutable": "org/jetbrains/annotations/Unmodifiable"
-	]
-
-	doLast {
-		logger.lifecycle(":mapping minecraft to named")
-
-		mapJar(namedJar, unpickedJar, mergeV2.output, libraries, "intermediary", "named") {
-			it.withMappings { out ->
-				jsrToJetbrains.each { e ->
-					out.acceptClass e.key, e.value
-				}
-			}
-		}
-	}
-}
-
 combineUnpickDefinitions {
 	group = 'unpick'
 	input = file('unpick-definitions')
@@ -819,6 +775,21 @@ task v2MergedYarnJar(dependsOn: ["mergeV2"], type: Jar) {
 	manifest {
 		attributes("Minecraft-Version-Id": minecraft_version)
 	}
+}
+
+task mapNamedJar(type: MapJarTask, dependsOn: ["mergeV2", "unpickIntermediaryJar"]) {
+	group = mapJarGroup
+	output = namedJar
+	input = unpickedJar
+	mappings = mergeV2.output
+	libraryDir = libraries
+	from = 'intermediary'
+	to = 'named'
+	classMappings = [
+			"javax/annotation/Nullable": "org/jetbrains/annotations/Nullable",
+			"javax/annotation/Nonnull": "org/jetbrains/annotations/NotNull",
+			"javax/annotation/concurrent/Immutable": "org/jetbrains/annotations/Unmodifiable"
+	]
 }
 
 def fakeSourceDir = file(".gradle/temp/fakeSource")
@@ -1002,42 +973,6 @@ task checkVersion {
 }
 
 publish.mustRunAfter checkVersion
-
-void mapJar(File output, File input, File mappings, File libraries, String from, String to,
-		Action<TinyRemapper.Builder> action = { }) {
-	if (output.exists()) {
-		output.delete()
-	}
-
-	def remapperBuilder = TinyRemapper.newRemapper()
-			.withMappings(TinyUtils.createTinyMappingProvider(mappings.toPath(), from, to))
-			.renameInvalidLocals(true)
-			.rebuildSourceFilenames(true)
-			.invalidLvNamePattern(~/\$\$\d+/)
-			.inferNameFromSameLvIndex(true)
-
-	action.execute(remapperBuilder)
-	def remapper = remapperBuilder
-			.build()
-
-	try {
-		def outputConsumerBuilder = new OutputConsumerPath.Builder(output.toPath())
-		// expose output consumer builder to function if there is need in the future
-		def outputConsumer = outputConsumerBuilder.build()
-		outputConsumer.addNonClassFiles(input.toPath())
-		remapper.readInputs(input.toPath())
-
-		libraries.eachFileRecurse(FileType.FILES) { file ->
-			remapper.readClassPath(file.toPath())
-		}
-		remapper.apply(outputConsumer)
-		outputConsumer.close()
-		remapper.finish()
-	} catch (Exception e) {
-		remapper.finish()
-		throw new RuntimeException("Failed to remap jar", e)
-	}
-}
 
 class FileOutput extends DefaultTask {
 	@OutputFile
