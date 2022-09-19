@@ -1,19 +1,18 @@
 package net.fabricmc.filament.task;
 
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
 import org.gradle.api.DefaultTask;
-import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.FileSystemLocation;
+import org.gradle.api.file.FileVisitDetails;
+import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.MapProperty;
 import org.gradle.api.provider.Property;
@@ -43,7 +42,7 @@ public abstract class MapJarTask extends DefaultTask {
 	public abstract RegularFileProperty getOutput();
 
 	@Classpath
-	public abstract DirectoryProperty getLibraryDir();
+	public abstract ConfigurableFileCollection getClasspath();
 
 	@Input
 	public abstract Property<String> getFrom();
@@ -70,7 +69,7 @@ public abstract class MapJarTask extends DefaultTask {
 			parameters.getInput().set(getInput());
 			parameters.getMappings().set(getMappings());
 			parameters.getOutput().set(getOutput());
-			parameters.getLibraryDir().set(getLibraryDir());
+			parameters.getClasspath().setFrom(getClasspath());
 			parameters.getFrom().set(getFrom());
 			parameters.getTo().set(getTo());
 			parameters.getClassMappings().set(getClassMappings());
@@ -88,7 +87,7 @@ public abstract class MapJarTask extends DefaultTask {
 		RegularFileProperty getOutput();
 
 		@Classpath
-		DirectoryProperty getLibraryDir();
+		ConfigurableFileCollection getClasspath();
 
 		@Input
 		Property<String> getFrom();
@@ -137,11 +136,15 @@ public abstract class MapJarTask extends DefaultTask {
 				outputConsumer.addNonClassFiles(input);
 				remapper.readInputs(input);
 
-				Files.walkFileTree(getPath(params.getLibraryDir()), new SimpleFileVisitor<>() {
+				params.getClasspath().getAsFileTree().visit(new FileVisitor() {
 					@Override
-					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-						remapper.readClassPath(file);
-						return FileVisitResult.CONTINUE;
+					public void visitDir(FileVisitDetails dirDetails) {
+						// ignore
+					}
+
+					@Override
+					public void visitFile(FileVisitDetails fileDetails) {
+						remapper.readClassPath(fileDetails.getFile().toPath());
 					}
 				});
 

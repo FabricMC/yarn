@@ -415,7 +415,7 @@ task mapIntermediaryJar(type: MapJarTask, dependsOn: [downloadMcLibs, downloadIn
 	output = intermediaryJar
 	input = mergedFile
 	mappings = downloadIntermediary.dest
-	libraryDir = libraries
+	classpath.from fileTree(libraries)
 	from = 'official'
 	to = 'intermediary'
 }
@@ -425,7 +425,7 @@ task mapServerIntermediaryJar(type: MapJarTask, dependsOn: [downloadMcLibs, down
 	output = serverIntermediaryJar
 	input = serverJar
 	mappings = downloadIntermediary.dest
-	libraryDir = libraries
+	classpath.from fileTree(libraries)
 	from = 'official'
 	to = 'intermediary'
 }
@@ -782,7 +782,7 @@ task mapNamedJar(type: MapJarTask, dependsOn: ["mergeV2", "unpickIntermediaryJar
 	output = namedJar
 	input = unpickedJar
 	mappings = mergeV2.output
-	libraryDir = libraries
+	classpath.from fileTree(libraries)
 	from = 'intermediary'
 	to = 'named'
 	classMappings = [
