@@ -17,6 +17,8 @@ repositories {
 		url 'https://maven.fabricmc.net'
 	}
 	mavenCentral()
+
+	mavenLocal()
 }
 
 dependencies {
@@ -26,6 +28,16 @@ dependencies {
 	implementation "net.fabricmc.unpick:unpick:$properties.unpick_version"
 	implementation "net.fabricmc.unpick:unpick-format-utils:$properties.unpick_version"
 	implementation "net.fabricmc:tiny-mappings-parser:$properties.tiny_mappings_parser_version"
+	implementation "com.fasterxml.jackson.core:jackson-databind:2.13.3"
+
+	// Contains a number of useful utilities we can re-use.
+	implementation ("net.fabricmc:fabric-loom:1.0.local") {
+		transitive = true
+	}
+
+	implementation ('net.fabricmc:stitch:0.6.2') {
+		exclude module: 'enigma'
+	}
 
 	testImplementation platform("org.junit:junit-bom:$properties.junit_version")
 	testImplementation 'org.junit.jupiter:junit-jupiter'

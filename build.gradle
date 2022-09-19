@@ -29,6 +29,10 @@ plugins {
 
 def minecraft_version = "1.19.2"
 
+filament {
+	minecraftVersion = minecraft_version
+}
+
 def ENV = System.getenv()
 // Fetch build number from Github Actions
 def build_number = ENV.BUILD_NUMBER ?: "local"
@@ -100,18 +104,10 @@ def mapJarGroup = "jar mapping"
 def mappingsDir = file("mappings")
 def cacheFilesMinecraft = file(".gradle/minecraft")
 def tempDir = file(".gradle/temp")
-def mergedFile = file("${minecraft_version}-merged.jar")
 def intermediaryJar = file("${minecraft_version}-intermediary.jar")
 def unpickedJar = file("${minecraft_version}-intermediary-unpicked.jar")
 def namedJar = file("${minecraft_version}-named.jar")
-def versionFile = new File(cacheFilesMinecraft, "${minecraft_version}.json")
-def clientJar = new File(cacheFilesMinecraft, "${minecraft_version}-client.jar")
-// The vanilla server bootstrap jar (Contains the real server jar)
-def serverBootstrapJar = new File(cacheFilesMinecraft, "${minecraft_version}-serverboostrap.jar")
-// The real server jar, expected from the bootstrap
-def serverJar = new File(cacheFilesMinecraft, "${minecraft_version}-server.jar")
 def serverIntermediaryJar = file("${minecraft_version}-server-intermediary.jar")
-def libraries = new File(cacheFilesMinecraft, "libraries")
 def libs = new File("build/libs/")
 
 import com.google.common.hash.Hashing
@@ -151,85 +147,6 @@ boolean validateChecksum(File file, String checksum) {
 	return false
 }
 
-task downloadVersionsManifest {
-	group = setupGroup
-	//inputs.property "mc_ver", minecraft_version
-	inputs.property "currenttime", new Date()
-	def manifestFile = new File(cacheFilesMinecraft, "version_manifest_v2.json")
-	outputs.file(manifestFile)
-	doLast {
-		logger.lifecycle(":downloading minecraft versions manifest")
-		FileUtils.copyURLToFile(new URL("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"), manifestFile)
-	}
-}
-
-def getManifestVersion(File manifestFile, String minecraft_version) {
-	def manifest = manifestFile.exists() ? new JsonSlurper().parseText(FileUtils.readFileToString(manifestFile)) : null
-	return manifest != null ? manifest.versions.stream().filter({
-		it.id.equals(minecraft_version)
-	}).findFirst() : java.util.Optional.empty()
-}
-
-task downloadWantedVersionManifest(dependsOn: downloadVersionsManifest) {
-	group = setupGroup
-	def manifestFile = downloadVersionsManifest.outputs.files.singleFile
-	def manifestVersion = getManifestVersion(manifestFile, minecraft_version)
-
-	//have to grab the release time as there's a current timestamp on each element?!
-	inputs.property "releaseTime", manifestVersion.isPresent() ? manifestVersion.get().releaseTime : -1
-
-	outputs.file versionFile
-
-	doLast {
-		manifestVersion = getManifestVersion(manifestFile, minecraft_version)
-		//nb need to re-read here in case it didn't exist before
-		if (manifestVersion.isPresent() || versionFile.exists()) {
-
-			if (manifestVersion.isPresent()) {
-				FileUtils.copyURLToFile(new URL(manifestVersion.get().url), versionFile)
-			}
-		} else {
-			throw new RuntimeException("No version data for Minecraft version ${minecraft_version}")
-		}
-	}
-
-}
-
-task downloadMcJars(dependsOn: downloadWantedVersionManifest) {
-	group = setupGroup
-	inputs.files versionFile
-
-	outputs.files(clientJar, serverBootstrapJar)
-
-	outputs.upToDateWhen {
-		def version = new JsonSlurper().parseText(FileUtils.readFileToString(versionFile))
-		return clientJar.exists() && serverBootstrapJar.exists() && validateChecksum(clientJar, version.downloads.client.sha1) && validateChecksum(serverBootstrapJar, version.downloads.server.sha1)
-	}
-
-	doLast {
-		if (!versionFile.exists()) {
-			throw new RuntimeException("Can't download the jars without the ${versionFile.name} file!")
-		}
-
-		//reload in case it changed
-		def version = new JsonSlurper().parseText(FileUtils.readFileToString(versionFile))
-
-		logger.lifecycle(":downloading minecraft jars")
-
-		download {
-			src new URL(version.downloads.client.url)
-			dest clientJar
-			overwrite false
-		}
-
-		download {
-			src new URL(version.downloads.server.url)
-			dest serverBootstrapJar
-			overwrite false
-		}
-	}
-}
-
 task downloadIntermediary(type: Download) {
 	group = buildMappingGroup
 	def url = "https://github.com/FabricMC/intermediary/raw/master/mappings/${minecraft_version}.tiny"
@@ -254,99 +171,6 @@ task downloadIntermediaryV2(type: Download) {
 			}
 
 			into output.parentFile
-		}
-	}
-}
-
-import java.util.zip.ZipFile
-
-// Extracts the real server jar from the boostrap jar
-task extractServerJar(dependsOn: downloadMcJars) {
-	group = setupGroup
-	inputs.file serverBootstrapJar
-	outputs.file serverJar
-
-	doLast {
-		new ZipFile(serverBootstrapJar as File).withCloseable { zip ->
-			def serverVersionsEntry = zip.getEntry("META-INF/versions.list")
-
-			if (!serverVersionsEntry) {
-				throw new RuntimeException("Could not find versions.list")
-			}
-
-			def jarPath = null
-
-			zip.getInputStream(serverVersionsEntry).withCloseable { is ->
-				def versions = is.text.split("\t")
-				assert versions.length == 3
-				jarPath = versions[2]
-			}
-
-			def serverJarEntry = zip.getEntry("META-INF/versions/${jarPath}")
-
-			if (!serverJarEntry) {
-				throw new RuntimeException("Failed to find server jar entry ${jarPath}")
-			}
-
-			zip.getInputStream(serverJarEntry).withCloseable { is ->
-				serverJar.bytes = is.readAllBytes()
-			}
-		}
-	}
-}
-
-task mergeJars(dependsOn: extractServerJar) {
-	group = setupGroup
-	inputs.files (serverJar, clientJar)
-	outputs.file(mergedFile)
-
-	doLast {
-		logger.lifecycle(":merging jars")
-
-		if (mergedFile.exists()) {
-			return
-		}
-
-		def jarMerger = new JarMerger(clientJar, serverJar, mergedFile)
-		jarMerger.merge()
-		jarMerger.close()
-	}
-
-}
-
-task downloadMcLibs(dependsOn: downloadWantedVersionManifest) {
-	group = setupGroup
-	inputs.files versionFile
-
-	outputs.dir(libraries)
-
-	outputs.upToDateWhen { false }
-
-	doLast {
-		if (!versionFile.exists()) {
-			throw new RuntimeException("Can't download the jars without the ${versionFile.name} file!")
-		}
-
-		def version = new JsonSlurper().parseText(FileUtils.readFileToString(versionFile, StandardCharsets.UTF_8))
-
-		logger.lifecycle(":downloading minecraft libraries")
-
-		if (!libraries.exists()) {
-			libraries.mkdirs()
-		}
-
-		version.libraries.each {
-			if (it.downloads.artifact == null) return // TODO: happens for downloads.classifiers - implement properly?
-
-			def downloadUrl = it.downloads.artifact.url
-
-			download {
-				src downloadUrl
-				dest new File(libraries, downloadUrl.substring(downloadUrl.lastIndexOf("/") + 1))
-				overwrite false
-			}
-
-			project.dependencies.add("decompileClasspath", it.name)
 		}
 	}
 }
@@ -395,7 +219,7 @@ task invertIntermediaryv2(dependsOn: downloadIntermediaryV2, type: FileOutput) {
 	}
 }
 
-task patchIntermediary(dependsOn: [mergeJars, downloadIntermediary]) {
+task patchIntermediary(dependsOn: [mergeMinecraftJars, downloadIntermediary]) {
 	group = buildMappingGroup
 	def intermediaryTinyInput = downloadIntermediary.outputs.files.singleFile
 
@@ -407,7 +231,7 @@ task patchIntermediary(dependsOn: [mergeJars, downloadIntermediary]) {
 	doLast {
 		logger.lifecycle(":patching intermediary")
 		String[] args = [
-				mergedFile.getAbsolutePath(),
+				mergeMinecraftJars.output.getAbsolutePath(),
 				intermediaryTinyInput.getAbsolutePath(),
 				outputFile.getAbsolutePath(),
 				"--writeAll"
@@ -417,9 +241,9 @@ task patchIntermediary(dependsOn: [mergeJars, downloadIntermediary]) {
 	}
 }
 
-task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJars]) {
+task mapIntermediaryJar(dependsOn: [minecraftLibraries, downloadIntermediary, mergeMinecraftJars]) {
 	group = mapJarGroup
-	inputs.files downloadMcLibs.outputs.files.files
+	inputs.files minecraftLibraries.libraries
 	outputs.file(intermediaryJar)
 
 	//Force the task to always run
@@ -428,13 +252,13 @@ task mapIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, mergeJ
 	doLast {
 		logger.lifecycle(":mapping minecraft to intermediary")
 		def tinyInput = downloadIntermediary.dest
-		mapJar(intermediaryJar, mergedFile, tinyInput, libraries, "official", "intermediary")
+		mapJar(intermediaryJar, mergeMinecraftJars.output.getAbsolutePath(), tinyInput, libraries, "official", "intermediary")
 	}
 }
 
-task mapServerIntermediaryJar(dependsOn: [downloadMcLibs, downloadIntermediary, extractServerJar]) {
+task mapServerIntermediaryJar(dependsOn: [downloadIntermediary, extractBundledServer]) {
 	group = mapJarGroup
-	inputs.files downloadMcLibs.outputs.files.files
+	inputs.files minecraftLibraries.libraries, extractBundledServer.outputFile
 	outputs.file(serverIntermediaryJar)
 
 	//Force the task to always run
@@ -638,7 +462,7 @@ task importMappingsOfficial(dependsOn: invertIntermediary) {
 
 task mapNamedJar(dependsOn: ["mergeV2", "unpickIntermediaryJar"]) {
 	group = mapJarGroup
-	inputs.files downloadMcLibs.outputs.files.files
+	inputs.files minecraftLibraries.libraries
 	outputs.file(namedJar)
 
 	//Force the task to always run
@@ -821,15 +645,20 @@ task v2MergedYarnJar(dependsOn: ["mergeV2"], type: Jar) {
 	}
 }
 
+task syncDependencies(type: Sync) {
+	from minecraftLibraries.outputs.files
+	into '.gradle/temp/mclibs'
+}
+
 def fakeSourceDir = file(".gradle/temp/fakeSource")
-task genFakeSource(type: JavaExec, dependsOn: ["mergeV2", "mapNamedJar"]) {
+task genFakeSource(type: JavaExec, dependsOn: ["mergeV2", "mapNamedJar", syncDependencies]) {
 	group = "javadoc generation"
 	outputs.upToDateWhen { false }
 
 	mainClass = "net.fabricmc.mappingpoet.Main"
 	classpath configurations.mappingPoet
 	// use merged v2 so we have all namespaces in jd
-	args mergeV2.output.getAbsolutePath(), namedJar.getAbsolutePath(), fakeSourceDir.getAbsolutePath(), libraries.getAbsolutePath()
+	args mergeV2.output.getAbsolutePath(), namedJar.getAbsolutePath(), fakeSourceDir.getAbsolutePath(), file('.gradle/temp/mclibs').getAbsolutePath()
 
 	doLast {
 		logger.lifecycle ":Fake source generated"
@@ -849,7 +678,6 @@ task decompileCFR(type: JavaExec, dependsOn: [mapNamedJar]) {
 
 javadoc {
 	dependsOn genFakeSource
-	dependsOn downloadMcLibs
 	group = "javadoc generation"
 	outputs.upToDateWhen { false }
 
@@ -907,7 +735,7 @@ javadoc {
 		addBooleanOption 'Xdoclint:accessibility', true
 	}
 	source fileTree(fakeSourceDir) + sourceSets.constants.allJava + sourceSets.packageDocs.allJava
-	classpath = configurations.javadocClasspath.plus downloadMcLibs.outputs.files.asFileTree
+	classpath = configurations.javadocClasspath.plus minecraftLibraries.libraries
 
 	doLast {
 		project.copy {
