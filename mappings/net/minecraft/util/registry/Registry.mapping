@@ -1,4 +1,76 @@
 CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
+	COMMENT A registry is used to register various in-game components. Almost all parts of the
+	COMMENT game - from blocks, items, and entity types, to cat types, goat horn instruments,
+	COMMENT and structure pools - are registred in registries. Registry system allows the game
+	COMMENT to enumerate all known types of something, and to assign a unique identifier to each
+	COMMENT of those. Therefore, registering an object in the registry plays a very important
+	COMMENT role, and failure to register new instances of registerable object usually results
+	COMMENT in a bug or even a crash.
+	COMMENT
+	COMMENT <h2 id="terms">Terminologies</h2>
+	COMMENT <p>A <strong>registry</strong> is an object that holds the mapping between three things:
+	COMMENT the string ID, the numeric ID, and the registered value. There are many registries
+	COMMENT for different types of registerable objects, and a registry's type parameter indicates
+	COMMENT the accepted type. For example, you register your {@link Block} to {@code
+	COMMENT Registry<Block>}. It's important to note that registries themselves are registered
+	COMMENT in a "registry of registries", {@link #ROOT}.
+	COMMENT
+	COMMENT <p>The <strong>string ID</strong>, usually just called "ID", is a human-readable
+	COMMENT {@link Identifier} that uniquely identifies the registered value in a registry.
+	COMMENT This should stay the same between two game versions, and is usually used for disk
+	COMMENT storage.
+	COMMENT
+	COMMENT <p>The <strong>numeric ID</strong> or <strong>raw ID</strong> is an integer
+	COMMENT assigned automatically by the registry to each registered value. This is not
+	COMMENT guaranteed to stay the same between two game versions, and is usually used for
+	COMMENT networking purposes.
+	COMMENT
+	COMMENT <p>The <strong>registered value</strong>, often just called "value" in the code,
+	COMMENT is the value added to the registry. The registry's type parameter determines
+	COMMENT the type of the registered value.
+	COMMENT
+	COMMENT <p>Each registred value can also be identified with a <strong>{@linkplain RegistryKey
+	COMMENT registry key}</strong>. A registry key is a combination of the registry's ID and
+	COMMENT the registered value's ID. Using a registry key makes the type of the ID's
+	COMMENT associated value clear, as the type parameter contains the type.
+	COMMENT
+	COMMENT <p>A <strong>{@linkplain RegistryEntry registry entry}</strong> is an object
+	COMMENT holding a value that can be registered in a registry. In most cases, the
+	COMMENT value is already registered in a registry ("reference entry"), hence the name;
+	COMMENT however, it is possible to create a registry entry by direct reference
+	COMMENT ("direct entry"). This is useful for data packs, as they can define
+	COMMENT one-time use values directly without having to register them every time.
+	COMMENT
+	COMMENT <p>A <strong>{@link RegistryEntryList registry entry list}</strong> is a list
+	COMMENT of registry entries. This, is either a direct reference to each item, or
+	COMMENT a reference to a tag. A <strong>tag</strong> is a way to dynamically
+	COMMENT define a list of registered values. Anything registered in a registry
+	COMMENT can be tagged, and each registry hold a list of tags it recognizes.
+	COMMENT
+	COMMENT <h2 id="static-and-dynamic-registries">Static and dynamic registries</h2>
+	COMMENT <p>There are two kinds of registries.
+	COMMENT <ul>
+	COMMENT <li>A <strong>static registry</strong> is a registry whose values are hard-coded
+	COMMENT in the game and cannot be added modified through data packs. Most registries
+	COMMENT are static. Since they cannot be modified (without mods), it is a singleton,
+	COMMENT and exists in this class. During the game bootstrap, vanilla objects are
+	COMMENT registered, after which the registry gets frozen to prohibit further changes.</li>
+	COMMENT <li>A <strong>dynamic registry</strong> is a registry whose values can be
+	COMMENT added or replaced through data packs. Vanilla values are registered in
+	COMMENT {@link BuiltinRegistries}. When a server starts, {@link DynamicRegistryManager}
+	COMMENT (also known as "DRM") creates a copy of the vanilla registries, and loads the
+	COMMENT registry value definitions in all enabled data packs. Therefore, a dynamic
+	COMMENT registry is bound to a server, and multiple registries for the same type of
+	COMMENT registerable object can exist during the lifetime of the game. When a player
+	COMMENT joins, the server sends the contents of the dynamic registry manager to
+	COMMENT the client, but only "network serializable" registries are sent.
+	COMMENT To access the dynamic registry, first get an instance of the dynamic registry
+	COMMENT manager, then call the {@link DynamicRegistryManager#get} method. The
+	COMMENT dynamic registry manager can be obtained {@linkplain
+	COMMENT net.minecraft.server.MinecraftServer#getRegistryManager from the server} or
+	COMMENT {@linkplain net.minecraft.client.network.ClientPlayNetworkHandler#getRegistryManager
+	COMMENT from the client network handler}.</li>
+	COMMENT </ul>
 	FIELD field_11137 BLOCK_ENTITY_TYPE Lnet/minecraft/class_2378;
 	FIELD field_11138 FEATURE Lnet/minecraft/class_2378;
 	FIELD field_11139 LOGGER Lorg/slf4j/Logger;
