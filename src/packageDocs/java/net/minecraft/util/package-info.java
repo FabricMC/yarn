@@ -7,5 +7,4 @@
  * miscellaneous classes. {@link net.minecraft.util.Util} contains most of
  * the utility methods.
  */
-
 package net.minecraft.util;
