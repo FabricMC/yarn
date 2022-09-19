@@ -32,26 +32,13 @@ import net.fabricmc.tinyremapper.TinyRemapper;
 import net.fabricmc.tinyremapper.TinyUtils;
 
 public abstract class MapJarTask extends DefaultTask {
-	@InputFile
-	public abstract RegularFileProperty getInput();
-
-	@InputFile
-	public abstract RegularFileProperty getMappings();
-
-	@OutputFile
-	public abstract RegularFileProperty getOutput();
-
-	@Classpath
-	public abstract ConfigurableFileCollection getClasspath();
-
-	@Input
-	public abstract Property<String> getFrom();
-
-	@Input
-	public abstract Property<String> getTo();
-
-	@Input
-	public abstract MapProperty<String, String> getClassMappings();
+	@InputFile public abstract RegularFileProperty getInput();
+	@InputFile public abstract RegularFileProperty getMappings();
+	@OutputFile public abstract RegularFileProperty getOutput();
+	@Classpath public abstract ConfigurableFileCollection getClasspath();
+	@Input public abstract Property<String> getFrom();
+	@Input public abstract Property<String> getTo();
+	@Input public abstract MapProperty<String, String> getClassMappings();
 
 	@Inject
 	protected abstract WorkerExecutor getWorkerExecutor();
@@ -77,26 +64,13 @@ public abstract class MapJarTask extends DefaultTask {
 	}
 
 	public interface RemapParameters extends WorkParameters {
-		@InputFile
-		RegularFileProperty getInput();
-
-		@InputFile
-		RegularFileProperty getMappings();
-
-		@OutputFile
-		RegularFileProperty getOutput();
-
-		@Classpath
-		ConfigurableFileCollection getClasspath();
-
-		@Input
-		Property<String> getFrom();
-
-		@Input
-		Property<String> getTo();
-
-		@Input
-		MapProperty<String, String> getClassMappings();
+		@InputFile RegularFileProperty getInput();
+		@InputFile RegularFileProperty getMappings();
+		@OutputFile RegularFileProperty getOutput();
+		@Classpath ConfigurableFileCollection getClasspath();
+		@Input Property<String> getFrom();
+		@Input Property<String> getTo();
+		@Input MapProperty<String, String> getClassMappings();
 	}
 
 	public abstract static class RemapAction implements WorkAction<RemapParameters> {
