@@ -1,4 +1,7 @@
 CLASS net/minecraft/class_6396 net/minecraft/util/SystemDetails
+	COMMENT Fetches the hardware and software information to populate crash reports
+	COMMENT and debug profiles. A custom section can be added by calling {@link
+	COMMENT #addSection(String, String)}.
 	FIELD field_33852 MEBI J
 	FIELD field_33853 GIGA J
 	FIELD field_33854 LOGGER Lorg/slf4j/Logger;
@@ -7,16 +10,26 @@ CLASS net/minecraft/class_6396 net/minecraft/util/SystemDetails
 	FIELD field_33857 JVM_VERSION Ljava/lang/String;
 	FIELD field_33858 sections Ljava/util/Map;
 	METHOD method_37120 collect ()Ljava/lang/String;
+		COMMENT {@return a string representation of the system details}
+		COMMENT
+		COMMENT <p>Sections are separated by newlines, and each section consists of the name, a colon,
+		COMMENT a space, and the value. No indent is added by this method.
 	METHOD method_37121 tryAddGroup (Ljava/lang/String;Ljava/lang/Runnable;)V
 		ARG 1 name
 		ARG 2 adder
 	METHOD method_37122 addSection (Ljava/lang/String;Ljava/lang/String;)V
+		COMMENT Adds a section with the given {@code name} and {@code value}.
 		ARG 1 name
 		ARG 2 value
 	METHOD method_37123 addSection (Ljava/lang/String;Ljava/util/function/Supplier;)V
+		COMMENT Adds a section with the given {@code name} and the value supplied by
+		COMMENT {@code valueSupplier}. If an exception is thrown while calling the supplier,
+		COMMENT {@code ERR} is used as the value.
 		ARG 1 name
 		ARG 2 valueSupplier
 	METHOD method_37124 writeTo (Ljava/lang/StringBuilder;)V
+		COMMENT Writes the system details to {@code stringBuilder}.
+		COMMENT This writes the header and the sections (indented by one tab).
 		ARG 1 stringBuilder
 	METHOD method_37125 (Ljava/lang/StringBuilder;Ljava/lang/String;Ljava/lang/String;)V
 		ARG 1 name
