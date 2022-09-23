@@ -234,22 +234,22 @@ task patchIntermediary(dependsOn: [mergeMinecraftJars, downloadIntermediary]) {
 	}
 }
 
-task mapIntermediaryJar(type: MapJarTask, dependsOn: [downloadMcLibs, downloadIntermediary, mergeJars]) {
+task mapIntermediaryJar(type: MapJarTask, dependsOn: [downloadIntermediary, mergeMinecraftJars]) {
 	group = mapJarGroup
 	output = intermediaryJar
-	input = mergedFile
+	input = mergeMinecraftJars.outputFile
 	mappings = downloadIntermediary.dest
-	classpath.from fileTree(libraries)
+	classpath.from configurations.minecraftLibraries
 	from = 'official'
 	to = 'intermediary'
 }
 
-task mapServerIntermediaryJar(type: MapJarTask, dependsOn: [downloadMcLibs, downloadIntermediary, extractServerJar]) {
+task mapServerIntermediaryJar(type: MapJarTask, dependsOn: [downloadIntermediary, extractBundledServer]) {
 	group = mapJarGroup
 	output = serverIntermediaryJar
-	input = serverJar
+	input = extractBundledServer.outputFile
 	mappings = downloadIntermediary.dest
-	classpath.from fileTree(libraries)
+	classpath.from configurations.minecraftLibraries
 	from = 'official'
 	to = 'intermediary'
 }
@@ -467,7 +467,7 @@ task unpickIntermediaryJar(type: JavaExec, dependsOn: [mapIntermediaryJar, "cons
 	doFirst {
 		args intermediaryJar.absolutePath, unpickedJar.absolutePath, remapUnpickDefinitionsIntermediary.output.get().asFile.absolutePath, constantsJar.archiveFile.get().asFile.absolutePath
 
-		configurations.decompileClasspath.files.each {
+		configurations.minecraftLibraries.files.forEach {
 			args it.absolutePath
 		}
 	}
@@ -606,7 +606,7 @@ task mapNamedJar(type: MapJarTask, dependsOn: ["mergeV2", "unpickIntermediaryJar
 	output = namedJar
 	input = unpickedJar
 	mappings = mergeV2.output
-	classpath.from fileTree(libraries)
+	classpath.from configurations.minecraftLibraries
 	from = 'intermediary'
 	to = 'named'
 	classMappings = [
@@ -617,7 +617,7 @@ task mapNamedJar(type: MapJarTask, dependsOn: ["mergeV2", "unpickIntermediaryJar
 }
 
 task syncDependencies(type: Sync) {
-	from minecraftLibraries.outputs.files
+	from configurations.minecraftLibraries
 	into '.gradle/temp/mclibs'
 }
 
@@ -643,7 +643,8 @@ task decompileCFR(type: JavaExec, dependsOn: [mapNamedJar]) {
 
 	doFirst {
 		file("namedSrc").deleteDir()
-		classpath = configurations.decompileClasspath
+		classpath.from configurations.decompileClasspath
+		classpath.from configurations.minecraftLibraries
 	}
 }
 
@@ -706,7 +707,7 @@ javadoc {
 		addBooleanOption 'Xdoclint:accessibility', true
 	}
 	source fileTree(fakeSourceDir) + sourceSets.constants.allJava + sourceSets.packageDocs.allJava
-	classpath = configurations.javadocClasspath.plus minecraftLibraries.libraries
+	classpath = configurations.javadocClasspath.plus configurations.minecraftLibraries
 
 	doLast {
 		project.copy {

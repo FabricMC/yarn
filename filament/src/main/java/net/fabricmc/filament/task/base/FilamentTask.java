@@ -1,11 +1,11 @@
 package net.fabricmc.filament.task.base;
 
-import net.fabricmc.filament.FilamentExtension;
+import javax.inject.Inject;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Internal;
 
-import javax.inject.Inject;
+import net.fabricmc.filament.FilamentExtension;
 
 public abstract class FilamentTask extends DefaultTask {
 	@Inject
