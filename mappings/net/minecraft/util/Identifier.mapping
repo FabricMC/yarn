@@ -1,5 +1,89 @@
 CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
-	COMMENT The namespace and path must contain only lowercase letters ([a-z]), digits ([0-9]), or the characters '_', '.', and '-'. The path can also contain the standard path separator '/'.
+	COMMENT An identifier used to identify things. This is also known as "resource location",
+	COMMENT "namespaced ID", "location", or just "ID". This is a non-typed immutable object,
+	COMMENT and identifies things using a combination of namespace and path. Identifiers should
+	COMMENT always be compared using {@link #equals} method, not {@code ==}.
+	COMMENT
+	COMMENT <h2 id="format">Format</h2>
+	COMMENT <p>Identifiers are formatted as {@code <namespace>:<path>}. If the namespace and colon
+	COMMENT are omitted, the namespace defaults to {@value #DEFAULT_NAMESPACE}.
+	COMMENT
+	COMMENT <p><strong>The namespace and path must contain only ASCII lowercase letters ({@code
+	COMMENT [a-z]}), ASCII digits ({@code [0-9]}), or the characters {@code _}, {@code .}, and
+	COMMENT {@code -}. </strong> The path can also contain the standard path separator {@code
+	COMMENT /}. Uppercase letters cannot be used. {@link #isValid} can be used to check whether a
+	COMMENT string is a valid identifier. When handling externally provided identifiers, it should
+	COMMENT either validate or use {@link #tryParse} instead of the constructor. Another common
+	COMMENT mistake is using a formatted string with {@code %d} or {@code %f} to construct an
+	COMMENT identifier without specifying the locate explicitly, as they are not guaranteed to be
+	COMMENT ASCII digits in certain locales. Use {@link String#format(Locale, String, Object[])}
+	COMMENT with {@link java.util.Locale#ROOT} instead of {@link String#formatted}.
+	COMMENT
+	COMMENT <h3 id="namespace">Namespace</h3>
+	COMMENT <p>The <strong>namespace</strong> of an identifier identifies the origin of the thing.
+	COMMENT For example, two mods to the game could both add an item with the ID "orange";
+	COMMENT the namespace is used to differentiate the two. (The convention is to use the ID
+	COMMENT assigned to the mod as the namespace.)
+	COMMENT
+	COMMENT <p>A namespace only determines the source of an identifier, and does not determine its purpose; so long as
+	COMMENT two identifiers are used for different purposes, they can share the namespace and path.
+	COMMENT For example, the identifier {@code minecraft:dirt} is shared by blocks and items.
+	COMMENT There is no need to change the identifier to, say, {@code minecraft_block:dirt} or
+	COMMENT {@code minecraft_item:dirt}.
+	COMMENT
+	COMMENT <p>Several namespaces are reserved for vanilla use. While those identifiers can be used for
+	COMMENT referencing and overwriting vanilla things, it is highly discouraged to use them to
+	COMMENT identify your own, new things. For example, a modded block or a new biome added by
+	COMMENT data packs should not use the reserved namespaces, but it's fine to use them when
+	COMMENT modifying an existing biome under that namespace. The reserved namespaces are
+	COMMENT {@value #DEFAULT_NAMESPACE}, {@code brigadier}, and {@value #REALMS_NAMESPACE}.
+	COMMENT {@value #DEFAULT_NAMESPACE} is also the default namespace used when no namespace is
+	COMMENT provided.
+	COMMENT
+	COMMENT <h3 id="path">Path</h3>
+	COMMENT <p>The path of the identifier identifies the thing within the namespace, such as
+	COMMENT between different items from the same mod. Additionally, this is sometimes used to
+	COMMENT refer to a file path, such as in textures.
+	COMMENT
+	COMMENT <h2 id="Creation">Creation</h2>
+	COMMENT <p>There are many ways to create a new identifier:
+	COMMENT
+	COMMENT <ul>
+	COMMENT <li>{@link Identifier(String)} creates an identifier from a string in
+	COMMENT {@code <namespace>:<path>} format. If the colon is missing, the created identifier
+	COMMENT has the namespace {@value #DEFAULT_NAMESPACE} and the argument is used as the path.
+	COMMENT When passed an invalid value, this throws {@link InvalidIdentifierException}.</li>
+	COMMENT <li>{@link Identifier(String, String)} creates an identifier from namespace and path.
+	COMMENT When passed an invalid value, this throws {@link InvalidIdentifierException}.</li>
+	COMMENT <li>{@link #tryParse} creates an identifier from a string in
+	COMMENT {@code <namespace>:<path>} format. If the colon is missing, the created identifier
+	COMMENT has the namespace {@value #DEFAULT_NAMESPACE} and the argument is used as the path.
+	COMMENT When passed an invalid value, this returns {@code null}.</li>
+	COMMENT <li>{@link #of} creates an identifier from namespace and path.
+	COMMENT When passed an invalid value, this returns {@code null}.</li>
+	COMMENT <li>{@link #fromCommandInput} reads an identifier from command input reader.
+	COMMENT When an invalid value is read, this throws {@link #COMMAND_EXCEPTION}.</li>
+	COMMENT <li>{@link Identifier.Serializer} is a serializer for Gson.</li>
+	COMMENT <li>{@link #CODEC} can be used to serialize and deserialize an identifier using
+	COMMENT DataFixerUpper.</li>
+	COMMENT </ul>
+	COMMENT
+	COMMENT <h2 id="using">Using Identifier</h2>
+	COMMENT <p>Identifiers identify several objects in the game. {@link
+	COMMENT net.minecraft.util.registry.Registry} holds objects, such as blocks and items, that are
+	COMMENT identified by an identifier. Textures are also identified using an identifier; such
+	COMMENT an identifier is represented as a file path with an extension, such as {@code
+	COMMENT minecraft:textures/entity/pig/pig.png}.
+	COMMENT
+	COMMENT <p>The string representation of the identifier ({@code <namespace>:<path>}) can be
+	COMMENT obtained by calling {@link #toString}. This always includes the namespace. An identifier
+	COMMENT can be converted to a translation key using {@link #toTranslationKey(String)} method.
+	COMMENT
+	COMMENT <h3 id="registrykey">RegistryKey</h3>
+	COMMENT <p>Identifier is not type-aware; {@code minecraft:tnt} could refer to a TNT block, a TNT
+	COMMENT item, or a TNT entity. To identify a registered object uniquely, {@link
+	COMMENT net.minecraft.util.registry.RegistryKey} can be used. A registry key is a combination
+	COMMENT of the registry's identifier and the object's identifier.
 	FIELD field_13353 namespace Ljava/lang/String;
 	FIELD field_13354 COMMAND_EXCEPTION Lcom/mojang/brigadier/exceptions/SimpleCommandExceptionType;
 	FIELD field_13355 path Ljava/lang/String;
@@ -23,10 +107,9 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 	METHOD equals (Ljava/lang/Object;)Z
 		ARG 1 o
 	METHOD method_12829 tryParse (Ljava/lang/String;)Lnet/minecraft/class_2960;
-		COMMENT <p>Parses a string into an {@code Identifier}.
-		COMMENT Takes a string of the form {@code <namespace>:<path>}, for example {@code minecraft:iron_ingot}.
-		COMMENT @return resulting identifier, or {@code null} if the string couldn't be parsed as an identifier
-		COMMENT @see #of(String, String)
+		COMMENT {@return {@code id} parsed as an identifier, or {@code null} if it cannot be parsed}
+		COMMENT
+		COMMENT @see #of
 		ARG 0 id
 	METHOD method_12830 split (Ljava/lang/String;C)[Ljava/lang/String;
 		ARG 0 id
@@ -34,32 +117,47 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 	METHOD method_12831 isCharValid (C)Z
 		ARG 0 c
 	METHOD method_12832 getPath ()Ljava/lang/String;
+		COMMENT {@return the path of the identifier}
 	METHOD method_12835 fromCommandInput (Lcom/mojang/brigadier/StringReader;)Lnet/minecraft/class_2960;
 		ARG 0 reader
 	METHOD method_12836 getNamespace ()Ljava/lang/String;
+		COMMENT {@return the namespace of the identifier}
+		COMMENT
+		COMMENT <p>This returns {@value #DEFAULT_NAMESPACE} for identifiers created without a namespace.
 	METHOD method_12838 splitOn (Ljava/lang/String;C)Lnet/minecraft/class_2960;
 		ARG 0 id
 		ARG 1 delimiter
 	METHOD method_20207 isValid (Ljava/lang/String;)Z
+		COMMENT {@return whether {@code id} can be parsed as an identifier}
 		ARG 0 id
 	METHOD method_20208 isPathValid (Ljava/lang/String;)Z
+		COMMENT {@return whether {@code path} can be used as an identifier's path}
 		ARG 0 path
 	METHOD method_20209 isNamespaceValid (Ljava/lang/String;)Z
+		COMMENT {@return whether {@code namespace} can be used as an identifier's namespace}
 		ARG 0 namespace
 	METHOD method_29184 isPathCharacterValid (C)Z
+		COMMENT {@return whether {@code character} is valid for use in identifier paths}
 		ARG 0 character
 	METHOD method_29185 isNamespaceCharacterValid (C)Z
+		COMMENT {@return whether {@code character} is valid for use in identifier namespaces}
 		ARG 0 character
 	METHOD method_29186 validate (Ljava/lang/String;)Lcom/mojang/serialization/DataResult;
 		ARG 0 id
 	METHOD method_36181 toUnderscoreSeparatedString ()Ljava/lang/String;
+		COMMENT {@return the string representation of the identifier with slashes and colons replaced
+		COMMENT with underscores}
 	METHOD method_42093 toTranslationKey (Ljava/lang/String;)Ljava/lang/String;
+		COMMENT {@return the {@linkplain #toTranslationKey() long translation key} prefixed with
+		COMMENT {@code prefix} and a dot}
 		ARG 1 prefix
 	METHOD method_42094 toTranslationKey ()Ljava/lang/String;
+		COMMENT {@return the long translation key, without omitting the default namespace}
 	METHOD method_43902 of (Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/class_2960;
-		COMMENT {@return the identifier from the name and path, or {@code null} if the passed values
-		COMMENT do not form a valid identifier}
-		COMMENT @see #tryParse(String)
+		COMMENT {@return an identifier from the provided {@code namespace} and {@code path}, or
+		COMMENT {@code null} if either argument is invalid}
+		COMMENT
+		COMMENT @see #tryParse
 		ARG 0 namespace
 		ARG 1 path
 	METHOD method_43903 toShortTranslationKey ()Ljava/lang/String;

@@ -1,4 +1,5 @@
 CLASS net/minecraft/class_156 net/minecraft/util/Util
+	COMMENT A class holding various utility methods.
 	FIELD field_1128 nanoTimeSupplier Lnet/minecraft/class_7576$class_7577;
 	FIELD field_1129 LOGGER Lorg/slf4j/Logger;
 	FIELD field_18034 NEXT_WORKER_ID Ljava/util/concurrent/atomic/AtomicInteger;
@@ -6,13 +7,21 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	FIELD field_24477 IO_WORKER_EXECUTOR Ljava/util/concurrent/ExecutorService;
 	FIELD field_24622 BOOTSTRAP_EXECUTOR Ljava/util/concurrent/ExecutorService;
 	FIELD field_25140 NIL_UUID Ljava/util/UUID;
+		COMMENT The "nil UUID" that represents lack of a UUID.
 	FIELD field_33859 JAR_FILE_SYSTEM_PROVIDER Ljava/nio/file/spi/FileSystemProvider;
+		COMMENT The file system provider for handling jar and zip files.
 	FIELD field_34891 MAX_PARALLELISM I
 	FIELD field_34892 MAX_BG_THREADS_PROPERTY Ljava/lang/String;
 	FIELD field_34893 missingBreakpointHandler Ljava/util/function/Consumer;
 	FIELD field_37250 TICKER Lcom/google/common/base/Ticker;
 	FIELD field_39824 DATE_TIME_FORMATTER Ljava/time/format/DateTimeFormatter;
+		COMMENT A locale-independent datetime formatter that uses {@code yyyy-MM-dd_HH.mm.ss}
+		COMMENT as the format string. Example: {@code 2022-01-01_00.00.00}
 	METHOD method_17974 ifPresentOrElse (Ljava/util/Optional;Ljava/util/function/Consumer;Ljava/lang/Runnable;)Ljava/util/Optional;
+		COMMENT If {@code optional} has value, calls {@code presentAction} with the value,
+		COMMENT otherwise calls {@code elseAction}.
+		COMMENT
+		COMMENT @return the passed {@code optional}
 		ARG 0 optional
 		ARG 1 presentAction
 		ARG 2 elseAction
@@ -20,27 +29,43 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 thread
 		ARG 1 t
 	METHOD method_18349 getMainWorkerExecutor ()Ljava/util/concurrent/ExecutorService;
+		COMMENT {@return the main worker executor for miscellaneous asynchronous tasks}
 	METHOD method_18350 shutdownExecutors ()V
 	METHOD method_18839 debugRunnable (Ljava/lang/Runnable;Ljava/util/function/Supplier;)Ljava/lang/Runnable;
 		ARG 0 runnable
 		ARG 1 messageSupplier
 	METHOD method_19483 completeExceptionally (Ljava/lang/Throwable;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT {@return a future that is already completed exceptionally with {@code throwable}}
 		ARG 0 throwable
 	METHOD method_20793 getLast (Ljava/util/List;)Ljava/lang/Object;
+		COMMENT {@return the last item of {@code list}}
+		COMMENT
+		COMMENT @throws IndexOutOfBoundsException if {@code list} is empty
 		ARG 0 list
 	METHOD method_22320 throwOrPause (Ljava/lang/Throwable;)Ljava/lang/Throwable;
 		ARG 0 t
 	METHOD method_22321 getInnermostMessage (Ljava/lang/Throwable;)Ljava/lang/String;
 		ARG 0 t
 	METHOD method_24155 throwUnchecked (Ljava/lang/Throwable;)V
+		COMMENT Throws {@code t} if it's a {@link RuntimeException} (or any of its subclass), otherwise
+		COMMENT {@code t} wrapped in a RuntimeException.
+		COMMENT
+		COMMENT <p>{@link Error} is wrapped as well, despite being unchecked.
 		ARG 0 t
 	METHOD method_27172 getRandom ([ILnet/minecraft/class_5819;)I
+		COMMENT {@return a random integer from {@code array}}
+		COMMENT
+		COMMENT @throws IllegalArgumentException if {@code array} is empty
 		ARG 0 array
 		ARG 1 random
 	METHOD method_27173 getRandom ([Ljava/lang/Object;Lnet/minecraft/class_5819;)Ljava/lang/Object;
+		COMMENT {@return a random item from {@code array}}
+		COMMENT
+		COMMENT @throws IllegalArgumentException if {@code array} is empty
 		ARG 0 array
 		ARG 1 random
 	METHOD method_27760 backupAndReplace (Ljava/io/File;Ljava/io/File;Ljava/io/File;)V
+		COMMENT Copies {@code current} to {@code backup} and then replaces {@code current} with {@code newPath}.
 		ARG 0 current
 		ARG 1 newFile
 		ARG 2 backup
@@ -55,16 +80,26 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_27957 attemptShutdown (Ljava/util/concurrent/ExecutorService;)V
 		ARG 0 service
 	METHOD method_27958 getIoWorkerExecutor ()Ljava/util/concurrent/ExecutorService;
+		COMMENT {@return the executor for disk or network IO tasks}
 	METHOD method_27959 createIoWorker ()Ljava/util/concurrent/ExecutorService;
 	METHOD method_28122 createWorker (Ljava/lang/String;)Ljava/util/concurrent/ExecutorService;
 		ARG 0 name
 	METHOD method_28123 (Ljava/lang/String;Ljava/util/concurrent/ForkJoinPool;)Ljava/util/concurrent/ForkJoinWorkerThread;
 		ARG 1 forkJoinPool
 	METHOD method_28124 getBootstrapExecutor ()Ljava/util/concurrent/ExecutorService;
+		COMMENT {@return the executor for asynchronous bootstrapping}
+		COMMENT
+		COMMENT <p>This is used by DataFixerUpper to build schemas.
 	METHOD method_29187 getChoiceType (Lcom/mojang/datafixers/DSL$TypeReference;Ljava/lang/String;)Lcom/mojang/datafixers/types/Type;
 		ARG 0 typeReference
 		ARG 1 id
 	METHOD method_29188 addPrefix (Ljava/lang/String;Ljava/util/function/Consumer;)Ljava/util/function/Consumer;
+		COMMENT {@return a consumer that first prepends {@code prefix} to its input
+		COMMENT string and passes the result to {@code consumer}}
+		COMMENT
+		COMMENT @apiNote This is useful in codec-based deserialization when passing the
+		COMMENT error consumer to some methods, e.g. {@code
+		COMMENT Util.addPrefix("Could not parse Example", LOGGER::error)}.
 		ARG 0 prefix
 		ARG 1 consumer
 	METHOD method_29189 (Ljava/util/function/Consumer;Ljava/lang/String;Ljava/lang/String;)V
@@ -97,7 +132,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 src
 		ARG 1 dest
 	METHOD method_30626 backupAndReplace (Ljava/nio/file/Path;Ljava/nio/file/Path;Ljava/nio/file/Path;)V
-		COMMENT Copies {@code current} to {@code backup} and then replaces {@code current} with {@code newPath}
+		COMMENT Copies {@code current} to {@code backup} and then replaces {@code current} with {@code newPath}.
 		ARG 0 current
 		ARG 1 newPath
 		ARG 2 backup
@@ -108,6 +143,11 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_30629 existenceCheckTask (Ljava/nio/file/Path;)Ljava/util/function/BooleanSupplier;
 		ARG 0 path
 	METHOD method_32309 getRandom (Ljava/util/List;Lnet/minecraft/class_5819;)Ljava/lang/Object;
+		COMMENT {@return a random item from {@code list}}
+		COMMENT
+		COMMENT @throws IllegalArgumentException if {@code list} is empty
+		COMMENT
+		COMMENT @see #getRandomOrEmpty
 		ARG 0 list
 		ARG 1 random
 	METHOD method_33141 toArray (Ljava/util/List;I)Lcom/mojang/serialization/DataResult;
@@ -151,34 +191,47 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_40082 (Ljava/util/List;Ljava/lang/Void;)Ljava/util/List;
 		ARG 1 void_
 	METHOD method_40083 getRandomOrEmpty (Ljava/util/List;Lnet/minecraft/class_5819;)Ljava/util/Optional;
+		COMMENT {@return an {@link Optional} of a random item from {@code list}, or an empty optional
+		COMMENT if the list is empty}
+		COMMENT
+		COMMENT @see #getRandom(List, Random)
 		ARG 0 list
 		ARG 1 random
 	METHOD method_41203 backupAndReplace (Ljava/io/File;Ljava/io/File;Ljava/io/File;Z)V
+		COMMENT Copies {@code current} to {@code backup} and then replaces {@code current} with {@code newPath}.
 		ARG 0 current
 		ARG 1 newPath
 		ARG 2 backup
 		ARG 3 noRestoreOnFail
+			COMMENT if {@code true}, does not restore the current file when replacing fails
 	METHOD method_41204 backupAndReplace (Ljava/nio/file/Path;Ljava/nio/file/Path;Ljava/nio/file/Path;Z)V
+		COMMENT Copies {@code current} to {@code backup} and then replaces {@code current} with {@code newPath}.
 		ARG 0 current
 		ARG 1 newPath
 		ARG 2 backup
 		ARG 3 noRestoreOnFail
+			COMMENT if {@code true}, does not restore the current file when replacing fails
 	METHOD method_41238 debugSupplier (Ljava/util/function/Supplier;Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
 		ARG 0 supplier
 		ARG 1 messageSupplier
 	METHOD method_43027 copyShuffled (Lit/unimi/dsi/fastutil/objects/ObjectArrayList;Lnet/minecraft/class_5819;)Ljava/util/List;
+		COMMENT {@return the contents of {@code stream} copied to a list and then shuffled}
 		ARG 0 list
 		ARG 1 random
 	METHOD method_43028 shuffle (Lit/unimi/dsi/fastutil/objects/ObjectArrayList;Lnet/minecraft/class_5819;)V
+		COMMENT Shuffles {@code list}, modifying the passed list in place.
 		ARG 0 list
 		ARG 1 random
 	METHOD method_43251 shuffle (Ljava/util/stream/IntStream;Lnet/minecraft/class_5819;)Lit/unimi/dsi/fastutil/ints/IntArrayList;
+		COMMENT {@return the contents of {@code stream} copied to a list and then shuffled}
 		ARG 0 stream
 		ARG 1 random
 	METHOD method_43252 copyShuffled (Ljava/util/stream/Stream;Lnet/minecraft/class_5819;)Ljava/util/List;
+		COMMENT {@return the contents of {@code stream} copied to a list and then shuffled}
 		ARG 0 stream
 		ARG 1 random
 	METHOD method_43253 copyShuffled ([Ljava/lang/Object;Lnet/minecraft/class_5819;)Ljava/util/List;
+		COMMENT {@return the contents of {@code array} copied to a list and then shuffled}
 		ARG 0 array
 		ARG 1 random
 	METHOD method_43368 (Ljava/util/List;Ljava/lang/Void;)Ljava/util/List;
@@ -259,17 +312,37 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 			COMMENT a function that, when given the size of {@code values},
 			COMMENT returns a map for storing the indices of the values
 	METHOD method_44893 getFormattedCurrentTime ()Ljava/lang/String;
+		COMMENT {@return the current time formatted using {@link #DATE_TIME_FORMATTER}}
 	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
+		COMMENT {@return the item preceding {@code object} in {@code iterable}}
+		COMMENT
+		COMMENT <p>If {@code object} is not in {@code iterable}, this returns the last item of the iterable.
+		COMMENT {@code object} is compared using the {@code ==} operator.
 		ARG 0 iterable
 		ARG 1 object
 	METHOD method_646 createTranslationKey (Ljava/lang/String;Lnet/minecraft/class_2960;)Ljava/lang/String;
+		COMMENT {@return the translation key constructed from {@code type} and {@code id}}
+		COMMENT
+		COMMENT <p>If {@code id} is {@code null}, {@code unregistered_sadface} is used as the ID.
+		COMMENT
+		COMMENT @see Identifier#toTranslationKey(String)
 		ARG 0 type
 		ARG 1 id
 	METHOD method_648 getMeasuringTimeNano ()J
+		COMMENT {@return the current time in nanoseconds, to be used for measuring a duration}
+		COMMENT
+		COMMENT <p>This is not the Unix epoch time, and can only be used to determine the duration
+		COMMENT between two calls of this method.
+		COMMENT
+		COMMENT @see #getMeasuringTimeMs
+		COMMENT @see #getEpochTimeMs
 	METHOD method_650 getValueAsString (Lnet/minecraft/class_2769;Ljava/lang/Object;)Ljava/lang/String;
 		ARG 0 property
 		ARG 1 value
 	METHOD method_651 getJVMFlags ()Ljava/util/stream/Stream;
+		COMMENT {@return a stream of JVM flags passed when launching}
+		COMMENT
+		COMMENT <p>The streamed strings include the {@code -X} prefix.
 	METHOD method_652 combine (Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
 		COMMENT Combines a list of {@code futures} into one future that holds a list
 		COMMENT of their results.
@@ -284,20 +357,64 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 futures
 			COMMENT the completable futures to combine
 	METHOD method_654 make (Ljava/lang/Object;Ljava/util/function/Consumer;)Ljava/lang/Object;
+		COMMENT {@return {@code object} initialized with {@code initializer}}
+		COMMENT
+		COMMENT <p>This is useful when initializing static fields:
+		COMMENT <pre>{@code
+		COMMENT private static final Map<String, String> MAP = Util.make(new HashMap<>(), (map) -> {
+		COMMENT     map.put("example", "hello");
+		COMMENT });
+		COMMENT }</pre>
 		ARG 0 object
 		ARG 1 initializer
 	METHOD method_655 identityHashStrategy ()Lit/unimi/dsi/fastutil/Hash$Strategy;
+		COMMENT {@return the {@link Hash.Strategy} that uses identity comparison}
+		COMMENT
+		COMMENT <p>fastutil's "reference" object types should be used instead in most cases.
 	METHOD method_656 make (Ljava/util/function/Supplier;)Ljava/lang/Object;
+		COMMENT {@return the value supplied from {@code factory}}
+		COMMENT
+		COMMENT <p>This is useful when initializing static fields:
+		COMMENT <pre>{@code
+		COMMENT private static final Map<String, String> MAP = Util.make(() -> {
+		COMMENT     Map<String, String> map = new HashMap<>();
+		COMMENT     map.put("example", "hello");
+		COMMENT     return map;
+		COMMENT });
+		COMMENT }</pre>
 		ARG 0 factory
 	METHOD method_658 getMeasuringTimeMs ()J
+		COMMENT {@return the current time in milliseconds, to be used for measuring a duration}
+		COMMENT
+		COMMENT <p>This is not the Unix epoch time, and can only be used to determine the duration
+		COMMENT between two calls of this method.
+		COMMENT
+		COMMENT @see #getMeasuringTimeNano
+		COMMENT @see #getEpochTimeMs
 	METHOD method_659 getEpochTimeMs ()J
+		COMMENT {@return the milliseconds passed since the Unix epoch}
+		COMMENT
+		COMMENT <p>This should be used to display or store the current time. {@link #getMeasuringTimeMs}
+		COMMENT should be used for determining the duration between two calls.
+		COMMENT
+		COMMENT @see #getMeasuringTimeMs
+		COMMENT @see #getMeasuringTimeNano
 	METHOD method_660 next (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
+		COMMENT {@return the item succeeding {@code object} in {@code iterable}}
+		COMMENT
+		COMMENT @implNote If {@code object} is {@code null}, this returns the first item of the iterable.
+		COMMENT If {@code object} is not in {@code iterable}, this enters into an infinite loop.
+		COMMENT {@code object} is compared using the {@code ==} operator.
 		ARG 0 iterable
 		ARG 1 object
 	METHOD method_664 toMap ()Ljava/util/stream/Collector;
 	METHOD method_666 (Ljava/lang/String;)Z
 		ARG 0 runtimeArg
 	METHOD method_668 getOperatingSystem ()Lnet/minecraft/class_156$class_158;
+		COMMENT {@return the operating system instance for the current platform}
+		COMMENT
+		COMMENT @implNote This uses the {@code os.name} system property to determine the operating system.
+		COMMENT @apiNote This is used for opening links.
 	CLASS 2
 		FIELD field_29655 cache Ljava/util/Map;
 		METHOD apply (Ljava/lang/Object;)Ljava/lang/Object;
@@ -319,17 +436,39 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		METHOD hashCode (Ljava/lang/Object;)I
 			ARG 1 o
 	CLASS class_158 OperatingSystem
+		COMMENT An enum representing the operating system of the current platform.
+		COMMENT This defines the behavior for opening links.
+		COMMENT The current one can be obtained via {@link Util#getOperatingSystem}.
 		FIELD field_34894 name Ljava/lang/String;
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
 			ARG 3 name
 		METHOD method_38649 getName ()Ljava/lang/String;
 		METHOD method_669 open (Ljava/net/URL;)V
+			COMMENT Opens {@code url}. If this points to an HTTP(S) URL, it is usually opened using
+			COMMENT the system's default browser. Otherwise, it is opened directly.
+			COMMENT
+			COMMENT <p><strong>Always validate the passed URL's schema</strong> as some values can
+			COMMENT execute code.
 			ARG 1 url
 		METHOD method_670 open (Ljava/lang/String;)V
+			COMMENT Opens {@code uri}. If this points to an HTTP(S) URI, it is usually opened using
+			COMMENT the system's default browser. Otherwise, it is opened directly.
+			COMMENT
+			COMMENT <p><strong>Always validate the passed URI's schema</strong> as some values can
+			COMMENT execute code.
 			ARG 1 uri
 		METHOD method_672 open (Ljava/io/File;)V
+			COMMENT Opens {@code file}.
+			COMMENT
+			COMMENT <p><strong>Do not pass untrusted file to this method</strong> as some values can
+			COMMENT execute code.
 			ARG 1 file
 		METHOD method_673 open (Ljava/net/URI;)V
+			COMMENT Opens {@code uri}. If this points to an HTTP(S) URI, it is usually opened using
+			COMMENT the system's default browser. Otherwise, it is opened directly.
+			COMMENT
+			COMMENT <p><strong>Always validate the passed URI's schema</strong> as some values can
+			COMMENT execute code.
 			ARG 1 uri
 		METHOD method_674 getURLOpenCommand (Ljava/net/URL;)[Ljava/lang/String;
 			ARG 1 url

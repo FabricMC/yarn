@@ -1,12 +1,25 @@
 CLASS net/minecraft/class_6385 net/minecraft/client/gui/screen/narration/ScreenNarrator
+	COMMENT Manages narration messages and combines them into a narrated string.
 	FIELD field_33796 currentMessageIndex I
 	FIELD field_33797 narrations Ljava/util/Map;
 	METHOD method_37043 (Lnet/minecraft/class_6385$class_6386;)Ljava/lang/Integer;
 		ARG 0 partIndex
 	METHOD method_37044 buildNarrations (Ljava/util/function/Consumer;)V
+		COMMENT Creates the narration messages for the next narration using a
+		COMMENT {@link NarrationMessageBuilder}.
 		ARG 1 builderConsumer
+			COMMENT a consumer that adds the narrations to a {@link NarrationMessageBuilder}
 	METHOD method_37045 buildNarratorText (Z)Ljava/lang/String;
-		ARG 1 forceTransform
+		COMMENT Builds a text representation of the narrations produced by the last call to
+		COMMENT {@link #buildNarrations buildNarrations}.
+		COMMENT
+		COMMENT @implNote Contains all sentences in the narrations of the current narration
+		COMMENT message separated by {@code ". "}, ordered as described in
+		COMMENT {@link NarrationMessageBuilder}.
+		COMMENT @return the created narrator text
+		ARG 1 includeUnchanged
+			COMMENT if {@code true}, the text will include unchanged messages that have
+			COMMENT already been included in the output of this method previously
 	METHOD method_37046 (ZLjava/util/function/Consumer;Lnet/minecraft/class_6385$class_6386;Lnet/minecraft/class_6385$class_6387;)V
 		ARG 3 partIndex
 		ARG 4 message
@@ -18,20 +31,20 @@ CLASS net/minecraft/class_6385 net/minecraft/client/gui/screen/narration/ScreenN
 			ARG 1 sentence
 	CLASS class_6386 PartIndex
 		FIELD field_33801 part Lnet/minecraft/class_6381;
-		FIELD field_33802 messageIndex I
+		FIELD field_33802 depth I
 		METHOD <init> (Lnet/minecraft/class_6381;I)V
 			ARG 1 part
-			ARG 2 messageIndex
+			ARG 2 depth
 	CLASS class_6387 Message
 		FIELD field_33803 narration Lnet/minecraft/class_6384;
 		FIELD field_33804 index I
-		FIELD field_33805 transformed Z
+		FIELD field_33805 used Z
 		METHOD method_37049 setNarration (ILnet/minecraft/class_6384;)Lnet/minecraft/class_6385$class_6387;
 			ARG 1 index
 			ARG 2 narration
 	CLASS class_6388 MessageBuilder
-		FIELD field_33807 messageIndex I
+		FIELD field_33807 depth I
 		METHOD <init> (Lnet/minecraft/class_6385;I)V
-			ARG 2 startIndex
+			ARG 2 depth
 		METHOD method_37050 (Lnet/minecraft/class_6385$class_6386;)Lnet/minecraft/class_6385$class_6387;
 			ARG 0 partIndex

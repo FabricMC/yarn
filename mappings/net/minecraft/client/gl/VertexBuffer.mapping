@@ -1,4 +1,13 @@
 CLASS net/minecraft/class_291 net/minecraft/client/gl/VertexBuffer
+	COMMENT Stores vertex data on GPU.
+	COMMENT
+	COMMENT <p>If you don't need to change the geometry, you can upload data once
+	COMMENT and reuse it every frame. For example, {@linkplain
+	COMMENT net.minecraft.client.render.WorldRenderer#renderStars star rendering}
+	COMMENT uses this technique to save bandwidth.
+	COMMENT
+	COMMENT @implNote This is mostly a wrapper around vertex buffer object (VBO),
+	COMMENT element buffer object (EBO), and vertex array object (VAO).
 	FIELD field_1593 vertexCount I
 	FIELD field_1594 vertexBufferId I
 	FIELD field_27366 indexBufferId I
@@ -8,10 +17,22 @@ CLASS net/minecraft/class_291 net/minecraft/client/gl/VertexBuffer
 	FIELD field_29339 vertexFormat Lnet/minecraft/class_293;
 	FIELD field_38983 indexBuffer Lcom/mojang/blaze3d/systems/RenderSystem$class_5590;
 	METHOD method_1352 upload (Lnet/minecraft/class_287$class_7433;)V
+		COMMENT Uploads the contents of {@code buffer} to GPU, discarding previously
+		COMMENT uploaded data.
+		COMMENT
+		COMMENT <p>The caller of this method must {@linkplain #bind bind} this vertex
+		COMMENT buffer before calling this method.
 		ARG 1 buffer
 	METHOD method_1353 bind ()V
+		COMMENT Sets this vertex buffer as the current one.
+		COMMENT
+		COMMENT <p>This method must be called before uploading or drawing data.
 	METHOD method_1354 unbind ()V
 	METHOD method_34427 draw (Lnet/minecraft/class_1159;Lnet/minecraft/class_1159;Lnet/minecraft/class_5944;)V
+		COMMENT Draws the contents in this vertex buffer with {@code shader}.
+		COMMENT
+		COMMENT <p>The caller of this method must {@linkplain #bind bind} this vertex
+		COMMENT buffer before calling this method.
 		ARG 1 viewMatrix
 		ARG 2 projectionMatrix
 		ARG 3 shader
@@ -21,6 +42,13 @@ CLASS net/minecraft/class_291 net/minecraft/client/gl/VertexBuffer
 		ARG 3 shader
 	METHOD method_34435 getVertexFormat ()Lnet/minecraft/class_293;
 	METHOD method_35665 drawElements ()V
+		COMMENT Draws the contents in this vertex buffer.
+		COMMENT
+		COMMENT <p>The caller of this method must {@linkplain #bind bind} this vertex
+		COMMENT buffer before calling this method.
+		COMMENT
+		COMMENT <p>Unlike {@link #draw(Matrix4f, Matrix4f, Shader)}, the caller of this
+		COMMENT method must manually bind a shader before calling this method.
 	METHOD method_43442 configureVertexFormat (Lnet/minecraft/class_287$class_4574;Ljava/nio/ByteBuffer;)Lnet/minecraft/class_293;
 		ARG 1 parameters
 		ARG 2 data

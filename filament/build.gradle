@@ -1,0 +1,57 @@
+plugins {
+	id 'java-library'
+	id 'java-gradle-plugin'
+	id 'checkstyle'
+}
+
+group = 'net.fabricmc'
+
+def properties = new Properties()
+file('../gradle.properties').newInputStream().withCloseable {
+	properties.load(it)
+}
+
+repositories {
+	maven {
+		name "Fabric Repository"
+		url 'https://maven.fabricmc.net'
+	}
+	mavenCentral()
+}
+
+dependencies {
+	implementation "org.ow2.asm:asm:${properties.asm_version}"
+	implementation "org.ow2.asm:asm-tree:${properties.asm_version}"
+	implementation "cuchaz:enigma:$properties.enigma_version"
+	implementation "net.fabricmc.unpick:unpick:$properties.unpick_version"
+	implementation "net.fabricmc.unpick:unpick-format-utils:$properties.unpick_version"
+	implementation "net.fabricmc:tiny-mappings-parser:$properties.tiny_mappings_parser_version"
+	implementation "net.fabricmc:tiny-remapper:$properties.tiny_remapper_version"
+
+	testImplementation platform("org.junit:junit-bom:$properties.junit_version")
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testImplementation "org.assertj:assertj-core:$properties.assertj_version"
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+	options.release = 17
+}
+
+test {
+	useJUnitPlatform()
+}
+
+checkstyle {
+	configFile = file('checkstyle.xml')
+	toolVersion = '10.3.3'
+}
+
+gradlePlugin {
+	plugins {
+		filament {
+			id = 'net.fabricmc.filament'
+			implementationClass = 'net.fabricmc.filament.FilamentGradlePlugin'
+		}
+	}
+}
