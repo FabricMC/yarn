@@ -14,7 +14,6 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 	FIELD field_2019 PUMPKIN_BLUR Lnet/minecraft/class_2960;
 	FIELD field_2020 VIGNETTE_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_2021 chatHud Lnet/minecraft/class_338;
-	FIELD field_2022 listeners Ljava/util/List;
 	FIELD field_2023 titleRemainTicks I
 	FIELD field_2024 itemRenderer Lnet/minecraft/class_918;
 	FIELD field_2025 spectatorHud Lnet/minecraft/class_365;
@@ -40,9 +39,11 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 	FIELD field_27959 spyglassScale F
 	FIELD field_27960 POWDER_SNOW_OUTLINE Lnet/minecraft/class_2960;
 	FIELD field_32167 WHITE I
+	FIELD field_32171 SCOREBOARD_JOINER Ljava/lang/String;
 	FIELD field_35428 autosaveIndicatorAlpha F
 	FIELD field_35429 lastAutosaveIndicatorAlpha F
 	FIELD field_35430 SAVING_LEVEL_TEXT Lnet/minecraft/class_2561;
+	FIELD field_39458 canShowChatDisabledScreen Z
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_918;)V
 		ARG 1 client
 		ARG 2 itemRenderer
@@ -118,8 +119,6 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 		ARG 3 yOffset
 		ARG 4 width
 		ARG 5 color
-	METHOD method_31406 extractSender (Lnet/minecraft/class_2561;)Ljava/util/UUID;
-		ARG 1 message
 	METHOD method_31977 renderOverlay (Lnet/minecraft/class_2960;F)V
 		ARG 1 texture
 		ARG 2 opacity
@@ -159,25 +158,9 @@ CLASS net/minecraft/class_329 net/minecraft/client/gui/hud/InGameHud
 	METHOD method_39192 renderAutosaveIndicator (Lnet/minecraft/class_4587;)V
 		ARG 1 matrices
 	METHOD method_39193 tickAutosaveIndicator ()V
-	METHOD method_43591 onGameMessage (Lnet/minecraft/class_2556;Lnet/minecraft/class_2561;)V
-		COMMENT Handles a game message.
-		COMMENT
-		COMMENT @implNote This method discards the message if {@linkplain #extractSender the extracted
-		COMMENT sender} is blocked. Otherwise, it calls {@link ClientChatListener#onChatMessage}.
-		COMMENT
-		COMMENT @see net.minecraft.client.network.ClientPlayNetworkHandler#onGameMessage
-		ARG 1 type
-		ARG 2 message
-	METHOD method_43592 onChatMessage (Lnet/minecraft/class_2556;Lnet/minecraft/class_2561;Lnet/minecraft/class_7436;)V
-		COMMENT Handles a chat message.
-		COMMENT
-		COMMENT @implNote This method discards the message if the sender is blocked.
-		COMMENT Otherwise, it calls {@link ClientChatListener#onChatMessage}.
-		COMMENT
-		COMMENT @see net.minecraft.client.network.ClientPlayNetworkHandler#onChatMessage
-		ARG 1 type
-		ARG 2 message
-		ARG 3 sender
+	METHOD method_44353 shouldShowChatDisabledScreen ()Z
+	METHOD method_44354 setCanShowChatDisabledScreen (Z)V
+		ARG 1 canShowChatDisabledScreen
 	CLASS class_6411 HeartType
 		FIELD field_33950 textureIndex I
 		FIELD field_33951 hasBlinkingTexture Z
