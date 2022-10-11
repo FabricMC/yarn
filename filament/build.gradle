@@ -1,10 +1,12 @@
 plugins {
 	id 'java-library'
 	id 'java-gradle-plugin'
+	id 'maven-publish'
 	id 'checkstyle'
 }
 
 group = 'net.fabricmc'
+version = '0.4.0'
 
 def properties = new Properties()
 file('../gradle.properties').newInputStream().withCloseable {
@@ -52,6 +54,21 @@ gradlePlugin {
 		filament {
 			id = 'net.fabricmc.filament'
 			implementationClass = 'net.fabricmc.filament.FilamentGradlePlugin'
+		}
+	}
+}
+
+publishing {
+	repositories {
+		if (ENV.MAVEN_URL) {
+			repositories.maven {
+				name "fabric"
+				url ENV.MAVEN_URL
+				credentials {
+					username ENV.MAVEN_USERNAME
+					password ENV.MAVEN_PASSWORD
+				}
+			}
 		}
 	}
 }
