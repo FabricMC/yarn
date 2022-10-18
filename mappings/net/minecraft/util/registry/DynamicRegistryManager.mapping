@@ -9,6 +9,14 @@ CLASS net/minecraft/class_5455 net/minecraft/util/registry/DynamicRegistryManage
 	COMMENT <p>The {@link DynamicRegistryManager.ImmutableImpl}
 	COMMENT class serves as an immutable implementation of any particular collection
 	COMMENT or configuration of dynamic registries.
+	COMMENT
+	COMMENT <p>To create a new instance, call {@link #createAndLoad}, then (optionally)
+	COMMENT load the data pack-defined values via {@link
+	COMMENT net.minecraft.util.dynamic.RegistryOps#ofLoaded(DynamicOps, DynamicRegistryManager.Mutable, net.minecraft.resource.ResourceManager)}.
+	COMMENT Values registered in {@link BuiltinRegistries} are always available.
+	COMMENT
+	COMMENT @see net.minecraft.server.MinecraftServer#getRegistryManager()
+	COMMENT @see net.minecraft.client.network.ClientPlayNetworkHandler#getRegistryManager()
 	FIELD field_25918 LOGGER Lorg/slf4j/Logger;
 	FIELD field_25919 INFOS Ljava/util/Map;
 	FIELD field_26733 BUILTIN Ljava/util/function/Supplier;
@@ -86,6 +94,11 @@ CLASS net/minecraft/class_5455 net/minecraft/util/registry/DynamicRegistryManage
 		ARG 0 entry
 	METHOD method_40313 streamSyncedRegistries ()Ljava/util/stream/Stream;
 	METHOD method_40314 createAndLoad ()Lnet/minecraft/class_5455$class_6893;
+		COMMENT {@return a new dynamic registry manager instance with all built-in registries loaded}
+		COMMENT
+		COMMENT <p>The registries do not contain values from data packs.
+		COMMENT Call {@link net.minecraft.util.dynamic.RegistryOps#ofLoaded(DynamicOps, DynamicRegistryManager.Mutable, net.minecraft.resource.ResourceManager)}
+		COMMENT to load those values.
 	METHOD method_40316 toImmutable ()Lnet/minecraft/class_5455$class_6890;
 	METHOD method_40317 createSimpleRegistry (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2385;
 		ARG 0 registryRef
