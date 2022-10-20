@@ -11,35 +11,27 @@ CLASS net/minecraft/class_3288 net/minecraft/resource/ResourcePackProfile
 	FIELD field_14270 pinned Z
 	FIELD field_14271 alwaysEnabled Z
 	FIELD field_14272 name Ljava/lang/String;
-	FIELD field_14273 packFactory Ljava/util/function/Supplier;
+	FIELD field_14273 packFactory Lnet/minecraft/class_3288$class_7680;
 	FIELD field_14274 displayName Lnet/minecraft/class_2561;
 	FIELD field_14275 description Lnet/minecraft/class_2561;
 	FIELD field_14277 position Lnet/minecraft/class_3288$class_3289;
 	FIELD field_14278 compatibility Lnet/minecraft/class_3281;
 	FIELD field_14279 LOGGER Lorg/slf4j/Logger;
 	FIELD field_25346 source Lnet/minecraft/class_5352;
-	METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_2561;ZLjava/util/function/Supplier;Lnet/minecraft/class_3272;Lnet/minecraft/class_3264;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)V
-		ARG 1 name
-		ARG 2 displayName
-		ARG 3 alwaysEnabled
-		ARG 4 packFactory
-		ARG 5 metadata
-		ARG 6 type
-		ARG 7 direction
-		ARG 8 source
-	METHOD <init> (Ljava/lang/String;ZLjava/util/function/Supplier;Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;Lnet/minecraft/class_3281;Lnet/minecraft/class_3288$class_3289;ZLnet/minecraft/class_5352;)V
+	FIELD field_40046 requestedFeatures Lnet/minecraft/class_7699;
+	METHOD <init> (Ljava/lang/String;ZLnet/minecraft/class_3288$class_7680;Lnet/minecraft/class_2561;Lnet/minecraft/class_3288$class_7679;Lnet/minecraft/class_3281;Lnet/minecraft/class_3288$class_3289;ZLnet/minecraft/class_5352;)V
 		ARG 1 name
 		ARG 2 alwaysEnabled
 		ARG 3 packFactory
 		ARG 4 displayName
-		ARG 5 description
+		ARG 5 metadata
 		ARG 6 compatibility
-		ARG 7 direction
+		ARG 7 position
 		ARG 8 pinned
 		ARG 9 source
 	METHOD equals (Ljava/lang/Object;)Z
 		ARG 1 o
-	METHOD method_14456 of (Ljava/lang/String;ZLjava/util/function/Supplier;Lnet/minecraft/class_3288$class_5351;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)Lnet/minecraft/class_3288;
+	METHOD method_14456 of (Ljava/lang/String;Lnet/minecraft/class_2561;ZLnet/minecraft/class_3288$class_7680;Lnet/minecraft/class_3288$class_7679;Lnet/minecraft/class_3264;Lnet/minecraft/class_3288$class_3289;ZLnet/minecraft/class_5352;)Lnet/minecraft/class_3288;
 		COMMENT Creates a resource pack profile from the given parameters.
 		COMMENT
 		COMMENT <p>Compared to calling the factory directly, this utility method obtains the
@@ -49,11 +41,14 @@ CLASS net/minecraft/class_3288 net/minecraft/resource/ResourcePackProfile
 		COMMENT
 		COMMENT @return the created profile, or {@code null} if missing metadata
 		ARG 0 name
-		ARG 1 alwaysEnabled
-		ARG 2 packFactory
-		ARG 3 profileFactory
-		ARG 4 insertionPosition
-		ARG 5 packSource
+		ARG 1 displayName
+		ARG 2 alwaysEnabled
+		ARG 3 packFactory
+		ARG 4 metadata
+		ARG 5 type
+		ARG 6 position
+		ARG 7 pinned
+		ARG 8 source
 	METHOD method_14457 getDisplayName ()Lnet/minecraft/class_2561;
 	METHOD method_14458 createResourcePack ()Lnet/minecraft/class_3262;
 	METHOD method_14459 getDescription ()Lnet/minecraft/class_2561;
@@ -67,6 +62,18 @@ CLASS net/minecraft/class_3288 net/minecraft/resource/ResourcePackProfile
 	METHOD method_14465 isPinned ()Z
 	METHOD method_14466 getInitialPosition ()Lnet/minecraft/class_3288$class_3289;
 	METHOD method_29483 getSource ()Lnet/minecraft/class_5352;
+	METHOD method_45274 loadMetadata (Ljava/lang/String;Lnet/minecraft/class_3288$class_7680;)Lnet/minecraft/class_3288$class_7679;
+		ARG 0 name
+		ARG 1 packFactory
+	METHOD method_45275 create (Ljava/lang/String;Lnet/minecraft/class_2561;ZLnet/minecraft/class_3288$class_7680;Lnet/minecraft/class_3264;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)Lnet/minecraft/class_3288;
+		ARG 0 name
+		ARG 1 displayName
+		ARG 2 alwaysEnabled
+		ARG 3 packFactory
+		ARG 4 type
+		ARG 5 position
+		ARG 6 source
+	METHOD method_45276 getRequestedFeatures ()Lnet/minecraft/class_7699;
 	CLASS class_3289 InsertionPosition
 		METHOD method_14467 inverse ()Lnet/minecraft/class_3288$class_3289;
 		METHOD method_14468 insert (Ljava/util/List;Ljava/lang/Object;Ljava/util/function/Function;Z)I
@@ -74,19 +81,9 @@ CLASS net/minecraft/class_3288 net/minecraft/resource/ResourcePackProfile
 			ARG 2 item
 			ARG 3 profileGetter
 			ARG 4 listInverted
-	CLASS class_5351 Factory
-		COMMENT A factory for resource pack profiles, somewhat resembling the constructor
-		COMMENT of {@link ResourcePackProfile} but allowing more customization.
-		METHOD create (Ljava/lang/String;Lnet/minecraft/class_2561;ZLjava/util/function/Supplier;Lnet/minecraft/class_3272;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)Lnet/minecraft/class_3288;
-			COMMENT Creates a proper resource pack profile from the given parameters.
-			COMMENT
-			COMMENT @apiNote Instead of calling this method, users usually call {@link
-			COMMENT ResourcePackProfile#of}, which fills some of the parameters for a call to this
-			COMMENT method.
+	CLASS class_7679 Metadata
+		METHOD method_45277 getCompatibility (Lnet/minecraft/class_3264;)Lnet/minecraft/class_3281;
+			ARG 1 type
+	CLASS class_7680 PackFactory
+		METHOD open (Ljava/lang/String;)Lnet/minecraft/class_3262;
 			ARG 1 name
-			ARG 2 displayName
-			ARG 3 alwaysEnabled
-			ARG 4 packFactory
-			ARG 5 metadata
-			ARG 6 initialPosition
-			ARG 7 source
