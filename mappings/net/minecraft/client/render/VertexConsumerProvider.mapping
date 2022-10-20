@@ -1,12 +1,40 @@
 CLASS net/minecraft/class_4597 net/minecraft/client/render/VertexConsumerProvider
+	COMMENT Manages rendering with multiple {@linkplain RenderLayer render layers}.
 	METHOD getBuffer (Lnet/minecraft/class_1921;)Lnet/minecraft/class_4588;
+		COMMENT Starts building a buffer that will be drawn with {@code layer}.
+		COMMENT
+		COMMENT <p>The returned vertex consumer can only be safely used until this
+		COMMENT method is called with a different render layer.
+		COMMENT
+		COMMENT <p>Note that the user of this method cannot modify states controlled
+		COMMENT by the render layer. Those states will be overridden by the render layer
+		COMMENT before drawing them. If you need to set states yourself, consider using
+		COMMENT {@link Tessellator} or making a custom render layer.
 		ARG 1 layer
 	METHOD method_22991 immediate (Lnet/minecraft/class_287;)Lnet/minecraft/class_4597$class_4598;
+		COMMENT {@return a vertex consumer provider that immediately draws the current
+		COMMENT buffer builder when a different render layer is requested}.
 		ARG 0 buffer
 	METHOD method_22992 immediate (Ljava/util/Map;Lnet/minecraft/class_287;)Lnet/minecraft/class_4597$class_4598;
+		COMMENT {@return a vertex consumer provider that immediately draws the current
+		COMMENT buffer builder when a different render layer is requested except {@code
+		COMMENT layerBuffers}}.
+		COMMENT
+		COMMENT <p>{@code layerBuffers} will not be drawn immediately after switching
+		COMMENT the current render layer. The caller of this method can control when to
+		COMMENT draw these render layers. For example, {@linkplain
+		COMMENT RenderLayer#TRANSLUCENT the translucent render layer} should be drawn in
+		COMMENT a later stage so the other things behind translucent objects are
+		COMMENT visible.
 		ARG 0 layerBuffers
 		ARG 1 fallbackBuffer
 	CLASS class_4598 Immediate
+		COMMENT A vertex consumer provider that immediately draws the current buffer
+		COMMENT builder when a different render layer is requested except for render
+		COMMENT layers specified in the constructor.
+		COMMENT
+		COMMENT @see VertexConsumerProvider#immediate(BufferBuilder)
+		COMMENT @see VertexConsumerProvider#immediate(Map, BufferBuilder)
 		FIELD field_20952 fallbackBuffer Lnet/minecraft/class_287;
 		FIELD field_20953 layerBuffers Ljava/util/Map;
 		FIELD field_20954 currentLayer Ljava/util/Optional;
@@ -15,10 +43,15 @@ CLASS net/minecraft/class_4597 net/minecraft/client/render/VertexConsumerProvide
 			ARG 1 fallbackBuffer
 			ARG 2 layerBuffers
 		METHOD method_22993 draw ()V
+			COMMENT Draws all remaining render layers including {@code layerBuffers}
+			COMMENT specified in the constructor.
 		METHOD method_22994 draw (Lnet/minecraft/class_1921;)V
+			COMMENT Draws the contents in the {@code layer}'s buffer.
 			ARG 1 layer
 		METHOD method_22995 getBufferInternal (Lnet/minecraft/class_1921;)Lnet/minecraft/class_287;
 			ARG 1 layer
 		METHOD method_24213 (Lnet/minecraft/class_1921;)V
 			ARG 1 layer
 		METHOD method_37104 drawCurrentLayer ()V
+			COMMENT Draws the current render layer if it's not in {@code layerBuffers}
+			COMMENT specified in the constructor.

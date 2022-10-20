@@ -3,6 +3,8 @@ CLASS net/minecraft/class_4136 net/minecraft/village/VillagerGossips
 	METHOD method_19059 max (II)I
 		ARG 0 left
 		ARG 1 right
+	METHOD method_19060 (Lnet/minecraft/class_4136$class_4138;)V
+		ARG 1 entry
 	METHOD method_19061 shareGossipFrom (Lnet/minecraft/class_4136;Lnet/minecraft/class_5819;I)V
 		ARG 1 from
 		ARG 2 random
@@ -15,7 +17,11 @@ CLASS net/minecraft/class_4136 net/minecraft/village/VillagerGossips
 		ARG 2 left
 		ARG 3 right
 	METHOD method_19066 deserialize (Lcom/mojang/serialization/Dynamic;)V
+		ARG 1 dynamic
 	METHOD method_19067 serialize (Lcom/mojang/serialization/DynamicOps;)Lcom/mojang/serialization/Dynamic;
+		ARG 1 ops
+	METHOD method_19069 (Ljava/util/Map$Entry;)Ljava/util/stream/Stream;
+		ARG 0 entry
 	METHOD method_19070 pickGossips (Lnet/minecraft/class_5819;I)Ljava/util/Collection;
 		ARG 1 random
 		ARG 2 count
@@ -34,6 +40,10 @@ CLASS net/minecraft/class_4136 net/minecraft/village/VillagerGossips
 	METHOD method_19076 (Ljava/util/UUID;)Lnet/minecraft/class_4136$class_4137;
 		ARG 0 uuid
 	METHOD method_20651 decay ()V
+	METHOD method_28350 (Lcom/mojang/serialization/DataResult;)Ljava/util/stream/Stream;
+		ARG 0 result
+	METHOD method_28351 (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_4136$class_4138;)Lcom/mojang/serialization/Dynamic;
+		ARG 1 entry
 	METHOD method_35120 getEntityReputationAssociatedGossips ()Ljava/util/Map;
 	METHOD method_35121 remove (Lnet/minecraft/class_4139;)V
 		ARG 1 type
@@ -45,16 +55,24 @@ CLASS net/minecraft/class_4136 net/minecraft/village/VillagerGossips
 	METHOD method_35124 remove (Ljava/util/UUID;Lnet/minecraft/class_4139;)V
 		ARG 1 target
 		ARG 2 type
+	METHOD method_35125 (Ljava/util/function/DoublePredicate;Lnet/minecraft/class_4139;Lnet/minecraft/class_4136$class_4137;)Z
+		ARG 2 reputation
 	METHOD method_35126 removeGossip (Ljava/util/UUID;Lnet/minecraft/class_4139;I)V
 		ARG 1 target
 		ARG 2 type
 		ARG 3 value
 	CLASS class_4137 Reputation
 		FIELD field_18420 associatedGossip Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+		METHOD method_19078 (Lit/unimi/dsi/fastutil/objects/Object2IntMap$Entry;)I
+			ARG 0 entry
 		METHOD method_19079 entriesFor (Ljava/util/UUID;)Ljava/util/stream/Stream;
 			ARG 1 target
+		METHOD method_19080 (Ljava/util/UUID;Lit/unimi/dsi/fastutil/objects/Object2IntMap$Entry;)Lnet/minecraft/class_4136$class_4138;
+			ARG 1 entry
 		METHOD method_19081 getValueFor (Ljava/util/function/Predicate;)I
 			ARG 1 gossipTypeFilter
+		METHOD method_19082 (Ljava/util/function/Predicate;Lit/unimi/dsi/fastutil/objects/Object2IntMap$Entry;)Z
+			ARG 1 entry
 		METHOD method_20652 decay ()V
 		METHOD method_20653 clamp (Lnet/minecraft/class_4139;)V
 			ARG 1 gossipType
@@ -74,4 +92,6 @@ CLASS net/minecraft/class_4136 net/minecraft/village/VillagerGossips
 			ARG 3 value
 		METHOD method_19083 getValue ()I
 		METHOD method_19084 deserialize (Lcom/mojang/serialization/Dynamic;)Lcom/mojang/serialization/DataResult;
+			ARG 0 dynamic
 		METHOD method_19087 serialize (Lcom/mojang/serialization/DynamicOps;)Lcom/mojang/serialization/Dynamic;
+			ARG 1 ops

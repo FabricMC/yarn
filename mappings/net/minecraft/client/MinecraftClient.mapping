@@ -56,7 +56,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_1697 runDirectory Ljava/io/File;
 		COMMENT The directory that stores options, worlds, resource packs, logs, etc.
 	FIELD field_1698 running Z
-	FIELD field_1699 currentServerEntry Lnet/minecraft/class_642;
 	FIELD field_1700 instance Lnet/minecraft/class_310;
 	FIELD field_1701 openProfilerSection Ljava/lang/String;
 	FIELD field_1702 toastManager Lnet/minecraft/class_374;
@@ -75,7 +74,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_1719 cameraEntity Lnet/minecraft/class_1297;
 	FIELD field_1720 versionType Ljava/lang/String;
 	FIELD field_1721 isDemo Z
-	FIELD field_1722 builtinPackProvider Lnet/minecraft/class_1066;
 	FIELD field_1723 sessionService Lcom/mojang/authlib/minecraft/MinecraftSessionService;
 	FIELD field_1724 player Lnet/minecraft/class_746;
 		COMMENT Represents the client's own player.
@@ -119,7 +117,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		COMMENT
 		COMMENT @see MinecraftClient#setScreen(Screen)
 	FIELD field_1756 blockRenderManager Lnet/minecraft/class_776;
-	FIELD field_1757 resourcePackDir Ljava/io/File;
+	FIELD field_1757 resourcePackDir Ljava/nio/file/Path;
 	FIELD field_1758 tutorialManager Lnet/minecraft/class_1156;
 	FIELD field_1759 integratedServerRunning Z
 	FIELD field_1760 itemColors Lnet/minecraft/class_325;
@@ -179,11 +177,14 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_39718 realmsPeriodicCheckers Lnet/minecraft/class_7578;
 	FIELD field_39769 narratorManager Lnet/minecraft/class_333;
 	FIELD field_39770 messageHandler Lnet/minecraft/class_7594;
+	FIELD field_39924 advanceValidatingTextRenderer Lnet/minecraft/class_327;
+	FIELD field_40380 defaultResourcePack Lnet/minecraft/class_3268;
+	FIELD field_40381 serverResourcePackProvider Lnet/minecraft/class_1066;
 	METHOD <init> (Lnet/minecraft/class_542;)V
 		ARG 1 args
 	METHOD method_1476 checkIs64Bit ()Z
 	METHOD method_1478 getResourceManager ()Lnet/minecraft/class_3300;
-	METHOD method_1479 getResourcePackDir ()Ljava/io/File;
+	METHOD method_1479 getResourcePackDir ()Ljava/nio/file/Path;
 	METHOD method_1480 getItemRenderer ()Lnet/minecraft/class_918;
 	METHOD method_1481 joinWorld (Lnet/minecraft/class_638;)V
 		ARG 1 world
@@ -235,7 +236,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_1513 reloadResourcesConcurrently ()Ljava/util/concurrent/CompletableFuture;
 	METHOD method_1514 run ()V
 	METHOD method_1515 getGameVersion ()Ljava/lang/String;
-	METHOD method_1516 getResourcePackProvider ()Lnet/minecraft/class_1066;
+	METHOD method_1516 getServerResourcePackProvider ()Lnet/minecraft/class_1066;
 	METHOD method_1517 isFancyGraphicsOrBetter ()Z
 	METHOD method_1519 cleanUpAfterCrash ()V
 	METHOD method_1520 getResourcePackManager ()Lnet/minecraft/class_3283;
@@ -294,14 +295,13 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 0 tooltip
 	METHOD method_1582 getSkinProvider ()Lnet/minecraft/class_1071;
 	METHOD method_1583 doItemUse ()V
-	METHOD method_1584 setCurrentServerEntry (Lnet/minecraft/class_642;)V
-		ARG 1 serverEntry
 	METHOD method_1586 getLevelStorage ()Lnet/minecraft/class_32;
 	METHOD method_1587 addDetailsToCrashReport (Lnet/minecraft/class_128;)Lnet/minecraft/class_128;
 		ARG 1 report
 	METHOD method_1588 isAmbientOcclusionEnabled ()Z
 	METHOD method_1589 isConnectedToRealms ()Z
 	METHOD method_1590 handleBlockBreaking (Z)V
+		ARG 1 breaking
 	METHOD method_1591 (Lnet/minecraft/class_1860;)Ljava/util/stream/Stream;
 		ARG 0 recipe
 	METHOD method_1592 scheduleStop ()V
@@ -338,22 +338,10 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 4 report
 	METHOD method_22683 getWindow ()Lnet/minecraft/class_1041;
 	METHOD method_22940 getBufferBuilders ()Lnet/minecraft/class_4599;
-	METHOD method_24038 createResourcePackProfile (Ljava/lang/String;Lnet/minecraft/class_2561;ZLjava/util/function/Supplier;Lnet/minecraft/class_3272;Lnet/minecraft/class_3288$class_3289;Lnet/minecraft/class_5352;)Lnet/minecraft/class_3288;
-		ARG 0 name
-		ARG 1 displayName
-		ARG 2 alwaysEnabled
-		ARG 3 packFactory
-		ARG 4 metadata
-		ARG 5 insertionPosition
-		ARG 6 source
 	METHOD method_24040 (Ljava/util/Optional;)V
 		ARG 1 throwable
 	METHOD method_24041 setMipmapLevels (I)V
 		ARG 1 mipmapLevels
-	METHOD method_24042 createV3ResourcePackFactory (Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
-		ARG 0 packFactory
-	METHOD method_24043 createV4ResourcePackFactory (Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
-		ARG 0 packFactory
 	METHOD method_24226 handleResourceReloadException (Ljava/lang/Throwable;)V
 		ARG 1 throwable
 	METHOD method_24228 (Ljava/util/concurrent/CompletableFuture;Ljava/util/Optional;)V
@@ -432,6 +420,8 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 5 height
 	METHOD method_35700 (Ljava/io/File;Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
 		ARG 1 style
+	METHOD method_35701 (Lnet/minecraft/class_2561;)V
+		ARG 0 message
 	METHOD method_35703 getWorldGenerationProgressTracker ()Lnet/minecraft/class_3953;
 	METHOD method_35704 (Ljava/io/File;Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
 		ARG 1 style
@@ -493,9 +483,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_44256 getServicesSignatureVerifier ()Lnet/minecraft/class_7500;
 	METHOD method_44352 (Z)V
 		ARG 1 confirmed
-	METHOD method_44375 setCurrentServerEntry (Lnet/minecraft/class_4877;Ljava/lang/String;)V
-		ARG 1 server
-		ARG 2 address
 	METHOD method_44376 ensureAbuseReportContext (Lnet/minecraft/class_7569;)V
 		COMMENT Recreates and resets {@link #abuseReportContext} if {@code environment} has
 		COMMENT changed.
@@ -508,6 +495,9 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_44649 isMultiplayerBanned ()Z
 	METHOD method_44713 getNarratorManager ()Lnet/minecraft/class_333;
 	METHOD method_44714 getMessageHandler ()Lnet/minecraft/class_7594;
+	METHOD method_45573 getDefaultResourcePack ()Lnet/minecraft/class_3268;
+	METHOD method_45574 getDefaultResourceSupplier ([Ljava/lang/String;)Lnet/minecraft/class_7367;
+		ARG 1 segments
 	CLASS class_5859 ChatRestriction
 		COMMENT Represents the restrictions on chat on a Minecraft client.
 		COMMENT
