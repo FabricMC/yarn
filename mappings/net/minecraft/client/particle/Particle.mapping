@@ -1,4 +1,12 @@
 CLASS net/minecraft/class_703 net/minecraft/client/particle/Particle
+	COMMENT {@link Particle} is a client-side visual effect with position, velocity, collision, and additional render properties.
+	COMMENT
+	COMMENT <p>
+	COMMENT Each {@code Particle} is typically rendered as a camera-facing texture quad.
+	COMMENT {@link net.minecraft.client.particle.SpriteBillboardParticle} provides this behavior, and most vanilla particles inherit from it.
+	COMMENT
+	COMMENT <p>
+	COMMENT If you would like a {@link Particle} with no direct rendering effects, inherit from {@link net.minecraft.client.particle.NoRenderParticle}.
 	FIELD field_28786 velocityMultiplier F
 	FIELD field_36193 MAX_SQUARED_COLLISION_CHECK_DISTANCE D
 	FIELD field_3838 prevPosY D
@@ -42,43 +50,99 @@ CLASS net/minecraft/class_703 net/minecraft/client/particle/Particle
 		ARG 10 velocityY
 		ARG 12 velocityZ
 	METHOD method_18122 getType ()Lnet/minecraft/class_3999;
+		COMMENT Returns the rendering category this {@link Particle} is rendered under.
+		COMMENT
+		COMMENT <p>
+		COMMENT For more information on the properties and types available to each {@code Particle}, visit {@link ParticleTextureSheet}.
+		COMMENT
+		COMMENT @return the {@link ParticleTextureSheet} any {@link Particle} of this type will render through
 	METHOD method_3063 setPos (DDD)V
+		COMMENT Updates the position and bounding box of this {@link Particle} to the target {@code x}, {@code y}, {@code z} position.
 		ARG 1 x
+			COMMENT the x position to move this particle to
 		ARG 3 y
+			COMMENT the y position to move this particle to
 		ARG 5 z
+			COMMENT the z position to move this particle to
 	METHOD method_3064 getBoundingBox ()Lnet/minecraft/class_238;
+		COMMENT Returns the bounding {@link Box} of this particle, which is used for collision and movement logic.
+		COMMENT
+		COMMENT <p>
+		COMMENT By default, this bounding box is automatically repositioned when a particle moves in {@link Particle#tick()}.
+		COMMENT To adjust the size of the returned box, visit {@link Particle#setBoundingBoxSpacing(float, float)}.
+		COMMENT To directly update the current bounding box, visit {@link Particle#setBoundingBox(Box)};
+		COMMENT
+		COMMENT @return the bounding {@link Box} of this particle, used for collision and movement
 	METHOD method_3067 setBoundingBox (Lnet/minecraft/class_238;)V
 		ARG 1 boundingBox
 	METHOD method_3068 getBrightness (F)I
+		COMMENT @return the packed light level this particle should render at
+		COMMENT @see net.minecraft.client.render.LightmapTextureManager
 		ARG 1 tint
 	METHOD method_3069 move (DDD)V
+		COMMENT Moves this {@link Particle} by the specified delta amounts, re-positioning bounding boxes and adjusting movement for collision with the world.
 		ARG 1 dx
+			COMMENT the delta x to move this particle by
 		ARG 3 dy
+			COMMENT the delta y to move this particle by
 		ARG 5 dz
+			COMMENT the delta z to move this particle by
 	METHOD method_3070 tick ()V
+		COMMENT This method is called each game tick (20 times per second), and should be used to do core {@link Particle} logic, such as movement and collision.
 	METHOD method_3072 repositionFromBoundingBox ()V
 	METHOD method_3074 buildGeometry (Lnet/minecraft/class_4588;Lnet/minecraft/class_4184;F)V
+		COMMENT Renders this {@link Particle} to the given {@link VertexConsumer} buffer.
 		ARG 1 vertexConsumer
+			COMMENT the buffer to render to
 		ARG 2 camera
+			COMMENT the current active game {@link Camera}
 		ARG 3 tickDelta
+			COMMENT frame tick delta amount
 	METHOD method_3075 move (F)Lnet/minecraft/class_703;
+		COMMENT Multiplies this {@link Particle}'s current velocity by the target {@code speed} amount.
 		ARG 1 speed
+			COMMENT the velocity multiplier to apply to this {@link Particle}
 	METHOD method_3077 setMaxAge (I)V
+		COMMENT Sets the maximum age, in ticks, that this particle can exist for.
 		ARG 1 maxAge
+			COMMENT the new maximum age of this {@link Particle}, in ticks
 	METHOD method_3080 setBoundingBoxSpacing (FF)V
 		ARG 1 spacingXZ
 		ARG 2 spacingY
 	METHOD method_3082 getMaxAge ()I
+		COMMENT Returns the maximum age, in ticks, of this particle. If this particle's age exceeds this value, it will be removed from the world.
+		COMMENT
+		COMMENT @return this particle's maximum age, in ticks
 	METHOD method_3083 setAlpha (F)V
+		COMMENT Updates the alpha value of this {@link Particle} to use while rendering.
+		COMMENT
+		COMMENT <p>
+		COMMENT Note that a {@link Particle} cannot render with transparency unless {@link Particle#getType()} is
+		COMMENT {@link ParticleTextureSheet#PARTICLE_SHEET_TRANSLUCENT}, or another sheet that supports transparency.
+		COMMENT
+		COMMENT <p>
+		COMMENT Also note that the default particle shader (core/particle.fsh) will discard all transparent pixels below 0.1 alpha.
 		ARG 1 alpha
+			COMMENT the new alpha value of this particle
 	METHOD method_3084 setColor (FFF)V
+		COMMENT Updates the rendering color of this particle.
+		COMMENT Each value should be between 0.0 (no channel color) and 1.0 (full channel color).
 		ARG 1 red
+			COMMENT the target red color to use while rendering
 		ARG 2 green
+			COMMENT the target green color to use while rendering
 		ARG 3 blue
+			COMMENT the target blue color to use while rendering
 	METHOD method_3085 markDead ()V
+		COMMENT Marks this {@link Particle} as ready to be removed from the containing {@link ClientWorld}.
 	METHOD method_3086 isAlive ()Z
+		COMMENT @return {@code false} if this particle is finished & should be removed from the parent {@link ParticleManager}, otherwise {@code true} if the particle is still alive
 	METHOD method_3087 scale (F)Lnet/minecraft/class_703;
+		COMMENT Scales the size of this particle by the given {@code scale} amount.
+		COMMENT
+		COMMENT @return this {@link Particle}
 		ARG 1 scale
+			COMMENT the amount to scale this particle's size by
 	METHOD method_34019 getGroup ()Ljava/util/Optional;
 		COMMENT {@return the optional group that this particle belongs to}
 		COMMENT
@@ -86,6 +150,10 @@ CLASS net/minecraft/class_703 net/minecraft/client/particle/Particle
 		COMMENT can be rendered in a client world. If the particle does not have a group,
 		COMMENT it is not restricted.
 	METHOD method_34753 setVelocity (DDD)V
+		COMMENT Updates this {@link Particle}'s velocity to the target X, Y, and Z values.
 		ARG 1 velocityX
+			COMMENT the new x-velocity of this {@link Particle}
 		ARG 3 velocityY
+			COMMENT the new y-velocity of this {@link Particle}
 		ARG 5 velocityZ
+			COMMENT the new z-velocity of this {@link Particle}
