@@ -5,7 +5,7 @@ jobs:
     strategy:
       matrix:
         java: [17-jdk, 18-jdk]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: openjdk:${{ matrix.java }}
       options: --user root
@@ -20,3 +20,13 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
+
+  test-build-logic:
+    runs-on: ubuntu-22.04
+    container:
+      image: openjdk:18-jdk
+      options: --user root
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
+      - run: ./gradlew :filament:build
