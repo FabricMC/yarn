@@ -30,7 +30,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_24370 structureTemplateManager Lnet/minecraft/class_3485;
 	FIELD field_24371 saveHandler Lnet/minecraft/class_29;
 	FIELD field_24372 saveProperties Lnet/minecraft/class_5219;
-	FIELD field_25132 registryManager Lnet/minecraft/class_7780;
+	FIELD field_25132 combinedDynamicRegistries Lnet/minecraft/class_7780;
 	FIELD field_25318 resourceManagerHolder Lnet/minecraft/server/MinecraftServer$class_6897;
 	FIELD field_33205 MILLISECONDS_PER_TICK J
 	FIELD field_33210 START_TICKET_CHUNK_RADIUS I
@@ -157,6 +157,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 0 resourcePackManager
 		ARG 1 dataPackSettings
 		ARG 2 safeMode
+		ARG 3 enabledFeatures
 	METHOD method_29738 (Ljava/util/Collection;Ljava/lang/String;)Z
 		ARG 1 name
 	METHOD method_29740 startServer (Ljava/util/function/Function;)Lnet/minecraft/server/MinecraftServer;
@@ -246,6 +247,13 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3745 setFlightEnabled (Z)V
 		ARG 1 flightEnabled
 	METHOD method_3747 stop (Z)V
+		COMMENT Stops this server.
+		COMMENT
+		COMMENT @apiNote Pass {@code true} to {@code waitForShutdown} to wait until the server shuts
+		COMMENT down. Note that this must be {@code false} if called from the server thread,
+		COMMENT otherwise it deadlocks.
+		ARG 1 waitForShutdown
+			COMMENT whether to wait for server shutdown, if called outside the server thread
 	METHOD method_37475 (Lnet/minecraft/class_2926;Ljava/io/File;)V
 		ARG 1 file
 	METHOD method_3748 tick (Ljava/util/function/BooleanSupplier;)V
@@ -419,6 +427,7 @@ CLASS net/minecraft/server/MinecraftServer
 		COMMENT
 		COMMENT @see MessageDecorator
 	METHOD method_44301 getServicesSignatureVerifier ()Lnet/minecraft/class_7500;
+	METHOD method_46221 getCombinedDynamicRegistries ()Lnet/minecraft/class_7780;
 	METHOD method_5387 isMainThread ()Z
 	CLASS class_6414 DebugStart
 		FIELD field_33980 time J
