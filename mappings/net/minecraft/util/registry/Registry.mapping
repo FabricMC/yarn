@@ -58,20 +58,12 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 	COMMENT registered, after which the registry gets frozen to prohibit further changes.</li>
 	COMMENT
 	COMMENT <li>A <strong>dynamic registry</strong> is a registry whose values can be
-	COMMENT added or replaced through data packs. Vanilla values are registered in
-	COMMENT {@link BuiltinRegistries}. When a server starts, {@link DynamicRegistryManager}
-	COMMENT (also known as "DRM") creates a copy of the vanilla registries, and loads the
-	COMMENT registry value definitions in all enabled data packs. Therefore, a dynamic
-	COMMENT registry is bound to a server, and multiple registries for the same type of
-	COMMENT registerable object can exist during the lifetime of the game. When a player
-	COMMENT joins, the server sends the contents of the dynamic registry manager to
-	COMMENT the client, but only "network serializable" registries are sent.
-	COMMENT To access a dynamic registry, first get an instance of the dynamic registry
-	COMMENT manager, then call the {@link DynamicRegistryManager#get} method. The
-	COMMENT dynamic registry manager can be obtained {@linkplain
-	COMMENT net.minecraft.server.MinecraftServer#getRegistryManager from the server} or
-	COMMENT {@linkplain net.minecraft.client.network.ClientPlayNetworkHandler#getRegistryManager
-	COMMENT from the client network handler}.</li>
+	COMMENT added or replaced through data packs. A dynamic registry is bound to a server,
+	COMMENT and multiple registries for the same type of registerable object can exist during
+	COMMENT the lifetime of the game. When a player joins, the server sends the contents of
+	COMMENT the dynamic registry manager to the client, but only "network serializable"
+	COMMENT registries are sent. To access a dynamic registry, first get an instance of the
+	COMMENT dynamic registry manager, then call the {@link DynamicRegistryManager#get} method.</li>
 	COMMENT </ul>
 	COMMENT
 	COMMENT <h2 id="using">Using Registry</h2>
@@ -101,11 +93,7 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 	COMMENT the registry. Attempting to register a value after freezing causes a crash, such as
 	COMMENT "Registry is already frozen". Modding APIs usually provide a way to bypass this restriction.
 	COMMENT
-	COMMENT <p>To register a value to a dynamic registry, register to a registry found in {@link
-	COMMENT BuiltinRegistries}. Values registered in those registries are available in all worlds.
-	COMMENT
-	COMMENT <p>In both cases, use {@link #register(Registry, Identifier, Object)} for registering
-	COMMENT a value to a registry.
+	COMMENT <p>Use {@link #register(Registry, Identifier, Object)} for registering a value to a registry.
 	COMMENT
 	COMMENT <h3 id="intrusive-holders">Intrusive holders</h3>
 	COMMENT <p>For historical reasons, there are two types of reference registry entries.
@@ -557,6 +545,15 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 	METHOD method_40278 clearTags ()V
 	METHOD method_40279 (Lnet/minecraft/class_6880;)Lcom/mojang/serialization/Lifecycle;
 		ARG 1 entry
+	METHOD method_40282 createIntrusive (Lnet/minecraft/class_5321;Ljava/lang/String;Lcom/mojang/serialization/Lifecycle;Lnet/minecraft/class_2378$class_6889;)Lnet/minecraft/class_2348;
+		ARG 0 key
+		ARG 1 defaultId
+		ARG 2 lifecycle
+		ARG 3 defaultEntryGetter
+	METHOD method_40283 createIntrusive (Lnet/minecraft/class_5321;Ljava/lang/String;Lnet/minecraft/class_2378$class_6889;)Lnet/minecraft/class_2348;
+		ARG 0 key
+		ARG 1 defaultId
+		ARG 2 defaultEntryGetter
 	METHOD method_40284 (Lnet/minecraft/class_6880;)Lcom/mojang/serialization/Lifecycle;
 		ARG 1 entry
 	METHOD method_40285 (Lnet/minecraft/class_6880;)Lcom/mojang/serialization/DataResult;
@@ -592,6 +589,10 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 		ARG 0 registry
 	METHOD method_44298 getOrCreateEntry (Lnet/minecraft/class_5321;)Lnet/minecraft/class_6880$class_6883;
 		ARG 1 key
+	METHOD method_45940 createWorldKey (Lnet/minecraft/class_5321;)Lnet/minecraft/class_5321;
+		ARG 0 dimensionOptionsKey
+	METHOD method_45941 createDimensionOptionsKey (Lnet/minecraft/class_5321;)Lnet/minecraft/class_5321;
+		ARG 0 worldKey
 	CLASS 1
 		METHOD method_40296 (Lnet/minecraft/class_6880$class_6883;)Lnet/minecraft/class_6880;
 			ARG 0 entry
