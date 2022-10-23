@@ -14,7 +14,7 @@ public abstract class FilamentTask extends DefaultTask {
 	}
 
 	@Internal
-	public FilamentExtension getExtension() {
+	protected FilamentExtension getExtension() {
 		return FilamentExtension.get(getProject());
 	}
 }

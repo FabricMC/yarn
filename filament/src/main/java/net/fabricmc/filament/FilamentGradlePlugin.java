@@ -19,8 +19,9 @@ import net.fabricmc.filament.task.RemapUnpickDefinitionsTask;
 import net.fabricmc.filament.task.base.FileOutputTask;
 import net.fabricmc.filament.task.minecraft.ExtractBundledServerTask;
 import net.fabricmc.filament.task.minecraft.MergeMinecraftTask;
+import net.fabricmc.filament.task.minecraft.MinecraftLibrariesTask;
+import net.fabricmc.filament.task.minecraft.MinecraftVersionMetaTask;
 import net.fabricmc.loom.configuration.providers.minecraft.MinecraftVersionMeta;
-import net.fabricmc.loom.util.gradle.GradleUtils;
 
 public final class FilamentGradlePlugin implements Plugin<Project> {
 	public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -30,23 +31,24 @@ public final class FilamentGradlePlugin implements Plugin<Project> {
 		final FilamentExtension extension = project.getExtensions().create("filament", FilamentExtension.class);
 		final TaskContainer tasks = project.getTasks();
 
-		Provider<MinecraftVersionMeta> metaProvider = project.provider(() -> extension.getMinecraftVersionMeta().get());
+		var minecraftMetaTask = tasks.register("downloadMinecraftMeta", MinecraftVersionMetaTask.class);
+		var metaProvider = MinecraftVersionMetaTask.readMetadata(minecraftMetaTask);
 
-		TaskProvider<DownloadTask> minecraftClient = tasks.register("downloadMinecraftClientJar", DownloadTask.class, task -> {
+		var minecraftClient = tasks.register("downloadMinecraftClientJar", DownloadTask.class, task -> {
 			Provider<MinecraftVersionMeta.Download> downloadProvider = metaProvider.map(meta -> meta.download("client"));
 			task.getUrl().set(downloadProvider.map(MinecraftVersionMeta.Download::url));
 			task.getSha1().set(downloadProvider.map(MinecraftVersionMeta.Download::sha1));
 
 			task.getOutputFile().set(new File(extension.getMinecraftDirectory(), "client.jar"));
 		});
-		TaskProvider<DownloadTask> minecraftServer = tasks.register("downloadMinecraftServerJar", DownloadTask.class, task -> {
+		var minecraftServer = tasks.register("downloadMinecraftServerJar", DownloadTask.class, task -> {
 			Provider<MinecraftVersionMeta.Download> downloadProvider = metaProvider.map(meta -> meta.download("server"));
 			task.getUrl().set(downloadProvider.map(MinecraftVersionMeta.Download::url));
 			task.getSha1().set(downloadProvider.map(MinecraftVersionMeta.Download::sha1));
 
 			task.getOutputFile().set(new File(extension.getMinecraftDirectory(), "server_bundle.jar"));
 		});
-		TaskProvider<ExtractBundledServerTask> extractBundledServer = tasks.register("extractBundledServer", ExtractBundledServerTask.class, task -> {
+		var extractBundledServer = tasks.register("extractBundledServer", ExtractBundledServerTask.class, task -> {
 			task.dependsOn(minecraftServer);
 			task.getServerJar().set(getOutput(minecraftServer));
 			task.getOutputFile().set(new File(extension.getMinecraftDirectory(), "server.jar"));
@@ -60,7 +62,7 @@ public final class FilamentGradlePlugin implements Plugin<Project> {
 		tasks.register("generatePackageInfoMappings", GeneratePackageInfoMappingsTask.class);
 		tasks.register("javadocLint", JavadocLintTask.class);
 
-		TaskProvider<CombineUnpickDefinitionsTask> combineUnpickDefinitions = tasks.register("combineUnpickDefinitions", CombineUnpickDefinitionsTask.class);
+		var combineUnpickDefinitions = tasks.register("combineUnpickDefinitions", CombineUnpickDefinitionsTask.class);
 		tasks.register("remapUnpickDefinitionsIntermediary", RemapUnpickDefinitionsTask.class, task -> {
 			task.dependsOn(combineUnpickDefinitions);
 			task.getInput().set(combineUnpickDefinitions.flatMap(CombineUnpickDefinitionsTask::getOutput));
@@ -68,17 +70,14 @@ public final class FilamentGradlePlugin implements Plugin<Project> {
 			task.getTargetNamespace().set("intermediary");
 		});
 
-		project.getConfigurations().register("minecraftLibraries", configuration -> configuration.setTransitive(false));
+		tasks.register("minecraftLibraries", MinecraftLibrariesTask.class, task -> {
+			task.dependsOn(minecraftMetaTask);
 
-		GradleUtils.afterSuccessfulEvaluation(project, () -> afterEvaluate(project));
-	}
-
-	private void afterEvaluate(Project project) {
-		try {
-			MinecraftMetadata.setup(project);
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to setup", e);
-		}
+			var files = MinecraftVersionMetaTask.readMetadata(minecraftMetaTask)
+					.map(meta -> MinecraftLibrariesTask.getDependencies(project, meta))
+					.map(dependencies -> project.getConfigurations().detachedConfiguration(dependencies).resolve());
+			task.getFiles().from(files);
+		});
 	}
 
 	private Provider<RegularFile> getOutput(TaskProvider<? extends FileOutputTask> taskProvider) {

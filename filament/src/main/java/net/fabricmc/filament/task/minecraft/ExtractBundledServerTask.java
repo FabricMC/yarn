@@ -5,8 +5,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
-import javax.inject.Inject;
-
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.TaskAction;
@@ -17,11 +15,6 @@ import net.fabricmc.loom.util.FileSystemUtil;
 public abstract class ExtractBundledServerTask extends FileOutputTask {
 	@InputFile
 	public abstract RegularFileProperty getServerJar();
-
-	@Inject
-	public ExtractBundledServerTask() {
-		getServerJar().finalizeValueOnRead();
-	}
 
 	@TaskAction
 	public void run() throws IOException {

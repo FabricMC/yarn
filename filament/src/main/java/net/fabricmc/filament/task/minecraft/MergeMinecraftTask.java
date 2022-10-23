@@ -2,8 +2,6 @@ package net.fabricmc.filament.task.minecraft;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.TaskAction;
@@ -17,12 +15,6 @@ public abstract class MergeMinecraftTask extends FileOutputTask {
 
 	@InputFile
 	public abstract RegularFileProperty getServerJar();
-
-	@Inject
-	public MergeMinecraftTask() {
-		getClientJar().finalizeValueOnRead();
-		getServerJar().finalizeValueOnRead();
-	}
 
 	@TaskAction
 	public void run() throws IOException {

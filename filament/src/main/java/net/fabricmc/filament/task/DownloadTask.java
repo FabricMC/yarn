@@ -26,12 +26,6 @@ public abstract class DownloadTask extends FileOutputTask {
 	@Inject
 	protected abstract WorkerExecutor getWorkerExecutor();
 
-	@Inject
-	public DownloadTask() {
-		getUrl().finalizeValueOnRead();
-		getSha1().finalizeValueOnRead();
-	}
-
 	@TaskAction
 	public void run() {
 		WorkQueue workQueue = getWorkerExecutor().noIsolation();
