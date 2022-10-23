@@ -1,11 +1,12 @@
 CLASS net/minecraft/class_7471 net/minecraft/network/message/SignedMessage
 	COMMENT A signed message, consisting of the signature, the signed content,
-	COMMENT and the optional unsigned content supplied when the chat decorator produced
-	COMMENT unsigned message due to the chat preview being disabled on either side.
+	COMMENT the message body, the link to its preceding message, and the optional
+	COMMENT unsigned content supplied when the message decorator modified the message.
 	COMMENT
 	COMMENT <p>Note that the signature itself might not be valid.
 	FIELD field_39786 SERVERBOUND_TIME_TO_LIVE Ljava/time/Duration;
 	FIELD field_39787 CLIENTBOUND_TIME_TO_LIVE Ljava/time/Duration;
+	FIELD field_40688 NIL_UUID Ljava/util/UUID;
 	METHOD method_44607 withoutUnsigned ()Lnet/minecraft/class_7471;
 		COMMENT {@return the signed chat message with {@link #unsignedContent} removed if it exists}
 		COMMENT
@@ -30,13 +31,26 @@ CLASS net/minecraft/class_7471 net/minecraft/network/message/SignedMessage
 		ARG 1 sender
 	METHOD method_45041 ofUnsigned (Ljava/lang/String;)Lnet/minecraft/class_7471;
 		COMMENT {@return a new signed message with empty signature}
+		ARG 0 content
 	METHOD method_45097 withFilterMask (Lnet/minecraft/class_7649;)Lnet/minecraft/class_7471;
 		COMMENT {@return the signed chat message with {@code filterMask} added}
 		ARG 1 filterMask
 	METHOD method_45098 ofUnsigned (Ljava/util/UUID;Ljava/lang/String;)Lnet/minecraft/class_7471;
-		COMMENT {@return a new signed message with given metadata and empty signature}
+		COMMENT {@return a new signed message with given sender UUID and empty signature}
+		ARG 0 sender
+		ARG 1 content
 	METHOD method_45099 withFilterMaskEnabled (Z)Lnet/minecraft/class_7471;
 		COMMENT {@return this signed chat message if {@code enabled} is {@code true},
 		COMMENT otherwise a new signed chat message without filtered parts}
 		ARG 1 enabled
 	METHOD method_45100 isFullyFiltered ()Z
+	METHOD method_46289 (Lnet/minecraft/class_7498$class_7499;)V
+		ARG 1 updater
+	METHOD method_46290 update (Lnet/minecraft/class_7498$class_7499;Lnet/minecraft/class_7826;Lnet/minecraft/class_7608;)V
+		ARG 0 updater
+		ARG 1 link
+		ARG 2 body
+	METHOD method_46291 getContent ()Lnet/minecraft/class_2561;
+	METHOD method_46292 getSender ()Ljava/util/UUID;
+	METHOD method_46293 isSenderMissing ()Z
+	METHOD method_46294 hasSignature ()Z

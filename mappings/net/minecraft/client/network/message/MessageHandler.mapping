@@ -16,6 +16,7 @@ CLASS net/minecraft/class_7594 net/minecraft/client/network/message/MessageHandl
 		COMMENT @see MessageTrustStatus#getStatus
 		ARG 1 message
 		ARG 2 decorated
+		ARG 3 receptionTimestamp
 	METHOD method_44734 extractSender (Lnet/minecraft/class_2561;)Ljava/util/UUID;
 		ARG 1 text
 	METHOD method_44735 addToChatLog (Lnet/minecraft/class_2561;Ljava/time/Instant;)V
@@ -30,6 +31,7 @@ CLASS net/minecraft/class_7594 net/minecraft/client/network/message/MessageHandl
 	METHOD method_44737 addToChatLog (Lnet/minecraft/class_7471;Lnet/minecraft/class_2556$class_7602;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_7595;)V
 		ARG 1 message
 		ARG 2 params
+		ARG 3 sender
 		ARG 4 trustStatus
 	METHOD method_44738 isAlwaysTrusted (Ljava/util/UUID;)Z
 		COMMENT {@return whether messages from {@code sender} are always trusted}
@@ -56,6 +58,8 @@ CLASS net/minecraft/class_7594 net/minecraft/client/network/message/MessageHandl
 	METHOD method_44818 process (Lnet/minecraft/class_7469;Ljava/util/function/BooleanSupplier;)V
 		COMMENT Queues {@code processor} during {@linkplain #shouldDelay the chat delay},
 		COMMENT otherwise runs the processor.
+		ARG 1 signature
+		ARG 2 processor
 	METHOD method_44819 removeDelayedMessage (Lnet/minecraft/class_7469;)Z
 		COMMENT Removes a delayed message whose signature matches {@code signature}.
 		COMMENT If this returns {@code false}, either the message is not received or it it
@@ -80,6 +84,7 @@ CLASS net/minecraft/class_7594 net/minecraft/client/network/message/MessageHandl
 		ARG 1 params
 		ARG 2 message
 		ARG 3 decorated
+		ARG 4 sender
 		ARG 5 onlyShowSecureChat
 		ARG 6 receptionTimestamp
 			COMMENT the timestamp when the message was received by this client
@@ -87,6 +92,15 @@ CLASS net/minecraft/class_7594 net/minecraft/client/network/message/MessageHandl
 		COMMENT {@return the number of delayed messages that are not processed yet}
 	METHOD method_44945 processAll ()V
 		COMMENT Processes all delayed messages from the queue.
+	METHOD method_45746 onProfilelessMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_2556$class_7602;)V
+		ARG 1 content
+		ARG 2 params
+	METHOD method_45747 (Lnet/minecraft/class_7469;Lnet/minecraft/class_7594$class_7627;)Z
+		ARG 1 message
+	METHOD method_45748 onChatMessage (Lnet/minecraft/class_7471;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_2556$class_7602;)V
+		ARG 1 message
+		ARG 2 sender
+		ARG 3 params
 	CLASS class_7627 ProcessableMessage
 		COMMENT A message to be processed. An instance is created for each received message.
 		METHOD method_45750 accept ()Z

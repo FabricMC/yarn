@@ -4,21 +4,15 @@ CLASS net/minecraft/class_7492 net/minecraft/network/message/MessageDecorator
 	COMMENT that is currently used can be obtained by
 	COMMENT {@link net.minecraft.server.MinecraftServer#getMessageDecorator}.
 	COMMENT
-	COMMENT <p>For the message decorator to produce a signed message, <strong>both the server
-	COMMENT and the sender's client need to have chat previews enabled</strong>, Otherwise, the decorated
-	COMMENT content is considered unsigned, and if the clients require chat messages to be signed
-	COMMENT via the {@linkplain net.minecraft.client.option.GameOptions#getOnlyShowSecureChat
-	COMMENT "Only Show Secure Chat" option}, they will see the undecorated message. Therefore,
-	COMMENT message decorator is <strong>not recommended for censoring messages</strong>.
-	COMMENT
-	COMMENT <p>Message decorator results are {@linkplain CachedDecoratorResult cached}, allowing
-	COMMENT non-pure decorators (i.e. ones affected by externally controlled variables) without
-	COMMENT affecting the signature verification process. Note that the decorator can still
-	COMMENT run during message submission to decorate filtered parts of the message.
+	COMMENT <p>Messages decorated using message decorator are still marked as verifiable
+	COMMENT if there is no change in its text or used fonts. If they change, the message cannot
+	COMMENT be verified. Before 1.19.2, chat previews allowed signing of such message; however
+	COMMENT that feature was removed in 1.19.3.
 	FIELD field_39384 NOOP Lnet/minecraft/class_7492;
 		COMMENT An empty message decorator that returns the original message.
 	METHOD decorate (Lnet/minecraft/class_3222;Lnet/minecraft/class_2561;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 sender
+		ARG 2 message
 	METHOD method_44303 (Lnet/minecraft/class_3222;Lnet/minecraft/class_2561;)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 sender
 		ARG 1 message
