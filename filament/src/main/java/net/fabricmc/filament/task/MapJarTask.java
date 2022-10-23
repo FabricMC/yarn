@@ -1,5 +1,6 @@
 package net.fabricmc.filament.task;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,8 +12,6 @@ import javax.inject.Inject;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.FileSystemLocation;
-import org.gradle.api.file.FileVisitDetails;
-import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.MapProperty;
 import org.gradle.api.provider.Property;
@@ -108,19 +107,11 @@ public abstract class MapJarTask extends DefaultTask {
 			try (OutputConsumerPath outputConsumer = new OutputConsumerPath.Builder(output).build()) {
 				Path input = getPath(params.getInput());
 				outputConsumer.addNonClassFiles(input);
-				remapper.readInputs(input);
+				remapper.readInputsAsync(input);
 
-				params.getClasspath().getAsFileTree().visit(new FileVisitor() {
-					@Override
-					public void visitDir(FileVisitDetails dirDetails) {
-						// ignore
-					}
-
-					@Override
-					public void visitFile(FileVisitDetails fileDetails) {
-						remapper.readClassPath(fileDetails.getFile().toPath());
-					}
-				});
+				for (File file : params.getClasspath().getFiles()) {
+					remapper.readClassPathAsync(file.toPath());
+				}
 
 				remapper.apply(outputConsumer);
 			} finally {
