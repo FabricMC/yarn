@@ -4,10 +4,15 @@ plugins {
 	id 'java-library'
 	id 'java-gradle-plugin'
 	id 'checkstyle'
+	id 'maven-publish'
 }
 
 group = 'net.fabricmc'
+version = project.filament_version
 
+def ENV = System.getenv()
+
+// Needed to read the main projects properties
 def properties = new Properties()
 file('../gradle.properties').newInputStream().withCloseable {
 	properties.load(it)
@@ -29,7 +34,7 @@ dependencies {
 	implementation "net.fabricmc.unpick:unpick-format-utils:$properties.unpick_version"
 	implementation "net.fabricmc:tiny-mappings-parser:$properties.tiny_mappings_parser_version"
 	implementation "net.fabricmc:tiny-remapper:$properties.tiny_remapper_version"
-	implementation "com.fasterxml.jackson.core:jackson-databind:2.13.3"
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
 
 	// Contains a number of useful utilities we can re-use.
 	implementation ("net.fabricmc:fabric-loom:1.0.7") {
@@ -64,6 +69,21 @@ gradlePlugin {
 		filament {
 			id = 'net.fabricmc.filament'
 			implementationClass = 'net.fabricmc.filament.FilamentGradlePlugin'
+		}
+	}
+}
+
+publishing {
+	repositories {
+		if (ENV.MAVEN_URL) {
+			repositories.maven {
+				name "fabric"
+				url ENV.MAVEN_URL
+				credentials {
+					username ENV.MAVEN_USERNAME
+					password ENV.MAVEN_PASSWORD
+				}
+			}
 		}
 	}
 }
