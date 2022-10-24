@@ -18,7 +18,9 @@ CLASS net/minecraft/class_2509 net/minecraft/nbt/NbtOps
 		COMMENT with an ordered list of values in serialization). In fact, since
 		COMMENT Minecraft NBT lists can only contain elements of the same type, this op
 		COMMENT cannot compress maps.
+	FIELD field_40667 MARKER_KEY Ljava/lang/String;
 	METHOD convertTo (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Ljava/lang/Object;
+		ARG 1 ops
 		ARG 2 element
 	METHOD createBoolean (Z)Ljava/lang/Object;
 		ARG 1 value
@@ -97,10 +99,14 @@ CLASS net/minecraft/class_2509 net/minecraft/nbt/NbtOps
 		ARG 1 entry
 	METHOD method_29153 (Lnet/minecraft/class_2487;Ljava/util/function/BiConsumer;)V
 		ARG 2 entryConsumer
-	METHOD method_29159 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2487;Ljava/lang/String;)V
-		ARG 0 key
 	METHOD method_29161 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2487;Ljava/lang/String;)V
 		ARG 2 key
+	METHOD method_46230 (Ljava/util/List;Lnet/minecraft/class_2509$class_7813;)Lcom/mojang/serialization/DataResult;
+		ARG 1 merger
+	METHOD method_46234 (Lnet/minecraft/class_2520;Lnet/minecraft/class_2509$class_7813;)Lcom/mojang/serialization/DataResult;
+		ARG 1 merger
+	METHOD method_46235 createMerger (Lnet/minecraft/class_2520;)Ljava/util/Optional;
+		ARG 0 nbt
 	METHOD remove (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
 		ARG 1 element
 		ARG 2 key
@@ -119,3 +125,59 @@ CLASS net/minecraft/class_2509 net/minecraft/nbt/NbtOps
 		METHOD build (Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
 			ARG 1 nbt
 			ARG 2 mergedValue
+	CLASS class_7808 ByteArrayMerger
+		FIELD field_40668 list Lit/unimi/dsi/fastutil/bytes/ByteArrayList;
+		METHOD <init> (B)V
+			ARG 1 value
+		METHOD <init> ([B)V
+			ARG 1 values
+	CLASS class_7809 CompoundListMerger
+		FIELD field_40669 list Lnet/minecraft/class_2499;
+		METHOD <init> (Lit/unimi/dsi/fastutil/bytes/ByteArrayList;)V
+			ARG 1 list
+		METHOD <init> (Lit/unimi/dsi/fastutil/ints/IntArrayList;)V
+			ARG 1 list
+		METHOD <init> (Lit/unimi/dsi/fastutil/longs/LongArrayList;)V
+			ARG 1 list
+		METHOD <init> (Ljava/util/Collection;)V
+			ARG 1 nbts
+		METHOD method_46241 (B)V
+			ARG 1 value
+		METHOD method_46242 (I)V
+			ARG 1 value
+		METHOD method_46243 (J)V
+			ARG 1 value
+		METHOD method_46244 isMarker (Lnet/minecraft/class_2487;)Z
+			ARG 0 nbt
+		METHOD method_46245 makeMarker (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2520;
+			ARG 0 value
+		METHOD method_46246 createMarkerNbt (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2487;
+			ARG 0 value
+	CLASS class_7810 ListMerger
+		FIELD field_40670 list Lnet/minecraft/class_2499;
+		METHOD <init> (Lnet/minecraft/class_2499;)V
+			ARG 1 nbt
+		METHOD <init> (Lnet/minecraft/class_2520;)V
+			ARG 1 nbt
+	CLASS class_7811 BasicMerger
+		FIELD field_40671 EMPTY Lnet/minecraft/class_2509$class_7811;
+	CLASS class_7812 IntArrayMerger
+		FIELD field_40672 list Lit/unimi/dsi/fastutil/ints/IntArrayList;
+		METHOD <init> (I)V
+			ARG 1 value
+		METHOD <init> ([I)V
+			ARG 1 values
+	CLASS class_7813 Merger
+		METHOD method_46239 getResult ()Lnet/minecraft/class_2520;
+		METHOD method_46240 merge (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2509$class_7813;
+			ARG 1 nbt
+		METHOD method_46247 merge (Ljava/lang/Iterable;)Lnet/minecraft/class_2509$class_7813;
+			ARG 1 nbts
+		METHOD method_46248 merge (Ljava/util/stream/Stream;)Lnet/minecraft/class_2509$class_7813;
+			ARG 1 nbts
+	CLASS class_7814 LongArrayMerger
+		FIELD field_40673 list Lit/unimi/dsi/fastutil/longs/LongArrayList;
+		METHOD <init> (J)V
+			ARG 1 value
+		METHOD <init> ([J)V
+			ARG 1 values
