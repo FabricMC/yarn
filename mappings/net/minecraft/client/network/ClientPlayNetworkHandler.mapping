@@ -2,7 +2,7 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	FIELD field_16771 sessionId Ljava/util/UUID;
 	FIELD field_19144 chunkLoadDistance I
 	FIELD field_24321 worldProperties Lnet/minecraft/class_638$class_5271;
-	FIELD field_25063 registryManager Lnet/minecraft/class_7780;
+	FIELD field_25063 combinedDynamicRegistries Lnet/minecraft/class_7780;
 	FIELD field_25273 worldKeys Ljava/util/Set;
 	FIELD field_26620 DISCONNECT_LOST_TEXT Lnet/minecraft/class_2561;
 	FIELD field_34963 telemetrySender Lnet/minecraft/class_6628;
@@ -24,9 +24,21 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	FIELD field_39858 lastSeenMessagesCollector Lnet/minecraft/class_7637;
 	FIELD field_39916 UNSECURE_SERVER_TOAST_TITLE Lnet/minecraft/class_2561;
 	FIELD field_39917 UNSECURE_SERVER_TOAST_TEXT Lnet/minecraft/class_2561;
+	FIELD field_40482 featureSet Lnet/minecraft/class_7699;
+	FIELD field_40483 signatureStorage Lnet/minecraft/class_7561;
+	FIELD field_40484 unpacker Lnet/minecraft/class_7469$class_7821;
+	FIELD field_40485 INVALID_PACKET_TEXT Lnet/minecraft/class_2561;
+	FIELD field_40486 CHAT_VALIDATION_FAILED_TEXT Lnet/minecraft/class_2561;
+	FIELD field_40488 serverInfo Lnet/minecraft/class_642;
+	FIELD field_40489 listedPlayerListEntries Lnet/minecraft/class_4706;
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_437;Lnet/minecraft/class_2535;Lnet/minecraft/class_7818;Lnet/minecraft/class_642;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_6628;)V
+		ARG 1 client
 		ARG 2 screen
 		ARG 3 connection
+		ARG 4 session
+		ARG 5 serverInfo
+		ARG 6 profile
+		ARG 7 telemetrySender
 	METHOD method_16690 getSessionId ()Ljava/util/UUID;
 	METHOD method_19691 getActiveTotemOfUndying (Lnet/minecraft/class_1657;)Lnet/minecraft/class_1799;
 		ARG 0 player
@@ -119,3 +131,32 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	METHOD method_44940 acknowledge (Lnet/minecraft/class_7471;Z)V
 		ARG 1 message
 		ARG 2 displayed
+	METHOD method_45720 hasFeature (Lnet/minecraft/class_7699;)Z
+		ARG 1 feature
+	METHOD method_45721 (Lnet/minecraft/class_640;)Ljava/lang/String;
+		ARG 0 entry
+	METHOD method_45722 (Ljava/time/Instant;JLnet/minecraft/class_7637$class_7816;Ljava/lang/String;)Lnet/minecraft/class_7469;
+		ARG 5 value
+	METHOD method_45723 toSession (Lnet/minecraft/class_7822$class_7823;Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/class_7822;
+		ARG 1 serialized
+		ARG 2 profile
+	METHOD method_45726 handlePlayerListAction (Lnet/minecraft/class_2703$class_5893;Lnet/minecraft/class_2703$class_2705;Lnet/minecraft/class_640;)V
+		ARG 1 action
+		ARG 2 receivedEntry
+		ARG 3 currentEntry
+	METHOD method_45727 setPublicSession (Lnet/minecraft/class_2703$class_2705;Lnet/minecraft/class_640;)V
+		ARG 1 receivedEntry
+		ARG 2 currentEntry
+	METHOD method_45729 sendChatMessage (Ljava/lang/String;)V
+		ARG 1 content
+	METHOD method_45730 sendChatCommand (Ljava/lang/String;)V
+		ARG 1 command
+	METHOD method_45731 sendCommand (Ljava/lang/String;)Z
+		ARG 1 command
+	METHOD method_45732 getListedPlayerListEntries ()Ljava/util/Collection;
+	METHOD method_45733 parse (Ljava/lang/String;)Lcom/mojang/brigadier/ParseResults;
+		ARG 1 command
+	METHOD method_45734 getServerInfo ()Lnet/minecraft/class_642;
+	METHOD method_45735 getFeatureSet ()Lnet/minecraft/class_7699;
+	METHOD method_45736 refreshItemGroups ()V
+	METHOD method_45737 sendAcknowledgment ()V

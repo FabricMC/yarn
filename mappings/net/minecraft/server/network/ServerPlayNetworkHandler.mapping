@@ -39,9 +39,14 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	FIELD field_39805 messageUnpacker Lnet/minecraft/class_7610$class_7611;
 	FIELD field_39825 acknowledgmentValidator Lnet/minecraft/class_7638;
 	FIELD field_39826 messageChainTaskQueue Lnet/minecraft/class_7619;
+	FIELD field_39987 signatureStorage Lnet/minecraft/class_7561;
+	FIELD field_39988 messagePacker Lnet/minecraft/class_7469$class_7820;
+	FIELD field_39989 MAX_PENDING_ACKNOWLEDGMENTS I
+	FIELD field_39990 CHAT_VALIDATION_FAILED_TEXT Lnet/minecraft/class_2561;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_2535;Lnet/minecraft/class_3222;)V
 		ARG 1 server
 		ARG 2 connection
+		ARG 3 player
 	METHOD method_14360 requestTeleport (DDDFFLjava/util/Set;)V
 		ARG 1 x
 		ARG 3 y
@@ -155,15 +160,12 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		COMMENT
 		COMMENT <p>If {@code false}, the message will be discarded.
 		ARG 1 timestamp
-	METHOD method_44337 canAcceptMessage (Ljava/lang/String;Ljava/time/Instant;Lnet/minecraft/class_7635$class_7636;)Ljava/util/Optional;
-		COMMENT {@return whether {@code message}, sent at {@code timestamp}, should be accepted}
+	METHOD method_44337 validateMessage (Ljava/lang/String;Ljava/time/Instant;Lnet/minecraft/class_7635$class_7636;)Ljava/util/Optional;
+		COMMENT {@return the validated acknowledgment if the message is valid, or an empty optional
+		COMMENT if it is not}
 		COMMENT
-		COMMENT <p>This returns {@code false} if the message arrives in {@linkplain
-		COMMENT #isInProperOrder improper order}, if chat is disabled, or if {@linkplain
-		COMMENT AcknowledgmentValidator#validate acknowledgment validation fails}.
-		COMMENT Note that the signatures are verified in {@link #canAcceptMessage(SignedMessage)}.
-		COMMENT
-		COMMENT @see #canAcceptMessage(SignedMessage)
+		COMMENT <p>This disconnects the player if the message arrives in {@linkplain
+		COMMENT #isInProperOrder improper order} or if chat is disabled.
 		ARG 1 message
 		ARG 2 timestamp
 		ARG 3 acknowledgment
@@ -179,10 +181,27 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		COMMENT {@return a map of argument name and value as signed messages}
 		ARG 1 packet
 		ARG 2 arguments
+		ARG 3 lastSeenMessages
 	METHOD method_45010 handleCommandExecution (Lnet/minecraft/class_7472;Lnet/minecraft/class_7635;)V
 		ARG 1 packet
+		ARG 2 lastSeenMessages
 	METHOD method_45011 getSignedMessage (Lnet/minecraft/class_2797;Lnet/minecraft/class_7635;)Lnet/minecraft/class_7471;
 		ARG 1 packet
+		ARG 2 lastSeenMessages
+	METHOD method_45064 (Lnet/minecraft/class_7471;Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;Ljava/lang/Void;)V
+		ARG 4 void_
+	METHOD method_45167 (Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;Lnet/minecraft/class_7471;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+		ARG 4 executor
+	METHOD method_45168 sendProfilelessChatMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_2556$class_7602;)V
+		ARG 1 message
+		ARG 2 params
+	METHOD method_45169 validateAcknowledgment (Lnet/minecraft/class_7635$class_7636;)Ljava/util/Optional;
+		ARG 1 acknowledgment
+	METHOD method_45170 sendChatMessage (Lnet/minecraft/class_7471;Lnet/minecraft/class_2556$class_7602;)V
+		ARG 1 message
+		ARG 2 params
+	METHOD method_45171 handleMessageChainException (Lnet/minecraft/class_7610$class_7825;)V
+		ARG 1 exception
 	CLASS 1
 		METHOD method_33897 processInteract (Lnet/minecraft/class_1268;Lnet/minecraft/class_3244$class_5860;)V
 			ARG 1 hand

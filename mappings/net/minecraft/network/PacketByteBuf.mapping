@@ -24,6 +24,9 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@link Map}</td><td>{@link #readMap(IntFunction, PacketByteBuf.PacketReader, PacketByteBuf.PacketReader)}</td><td>{@link #writeMap(Map, PacketByteBuf.PacketWriter, PacketByteBuf.PacketWriter)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
+	COMMENT  <td>{@link EnumSet}</td><td>{@link #readEnumSet(Class)}</td><td>{@link #writeEnumSet(EnumSet, Class)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
 	COMMENT  <td>{@code byte[]}</td><td>{@link #readByteArray()}</td><td>{@link #writeByteArray(byte[])}</td>
 	COMMENT </tr>
 	COMMENT <tr>
@@ -64,6 +67,9 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@index Property}</td><td>{@link #readProperty()}</td><td>{@link #writeProperty(Property)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@index PropertyMap}</td><td>{@link #readPropertyMap()}</td><td>{@link #writePropertyMap(PropertyMap)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link NbtCompound}</td><td>{@link #readNbt()}</td><td>{@link #writeNbt(NbtCompound)}</td>
@@ -1001,6 +1007,51 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #writePublicKey(PublicKey)
 	METHOD method_44302 toEncodedStringLength (I)I
 		ARG 0 decodedLength
+	METHOD method_46249 writePropertyMap (Lcom/mojang/authlib/properties/PropertyMap;)V
+		COMMENT Writes an authlib property map to this buf. A property map is represented as a
+		COMMENT collection of properties.
+		COMMENT
+		COMMENT @see #readPropertyMap
+		ARG 1 propertyMap
+	METHOD method_46250 (Lcom/mojang/authlib/properties/PropertyMap;Lnet/minecraft/class_2540;)V
+		ARG 2 buf
+	METHOD method_46251 readEnumSet (Ljava/lang/Class;)Ljava/util/EnumSet;
+		COMMENT Reads an enum set from this buf. An enum set is represented by a bit set that indicates
+		COMMENT whether each element is in the set.
+		COMMENT
+		COMMENT @see #writeEnumSet
+		ARG 1 type
+			COMMENT the type of the enum
+	METHOD method_46252 writeBitSet (Ljava/util/BitSet;I)V
+		COMMENT Writes a bit set to this buf. A bit set is represented using its byte array representation.
+		COMMENT
+		COMMENT @throws io.netty.handler.codec.EncoderException if the bit set's length is above {@code size}
+		COMMENT
+		COMMENT @see BitSet#toByteArray
+		COMMENT @see #readBitSet
+		ARG 1 bitSet
+		ARG 2 size
+			COMMENT the maximum size of the bit set
+	METHOD method_46253 writeEnumSet (Ljava/util/EnumSet;Ljava/lang/Class;)V
+		COMMENT Writes an enum set to this buf. An enum set is represented by a bit set that indicates
+		COMMENT whether each element is in the set.
+		COMMENT
+		COMMENT @see #readEnumSet
+		ARG 1 enumSet
+		ARG 2 type
+			COMMENT the type of the enum
+	METHOD method_46254 readBitSet (I)Ljava/util/BitSet;
+		COMMENT Reads a bit set from this buf. A bit set is represented using its byte array representation.
+		COMMENT
+		COMMENT @see BitSet#valueOf
+		COMMENT @see #writeBitSet
+		ARG 1 size
+			COMMENT the maximum size of the bit set
+	METHOD method_46255 readPropertyMap ()Lcom/mojang/authlib/properties/PropertyMap;
+		COMMENT Reads an authlib property map from this buf. A property map is represented as a
+		COMMENT collection of properties.
+		COMMENT
+		COMMENT @see #writePropertyMap
 	METHOD nioBuffer (II)Ljava/nio/ByteBuffer;
 		ARG 1 index
 		ARG 2 length
