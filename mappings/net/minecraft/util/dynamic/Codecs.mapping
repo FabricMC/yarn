@@ -13,6 +13,13 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 	FIELD field_39274 TAG_ENTRY_ID Lcom/mojang/serialization/Codec;
 	FIELD field_39395 OPTIONAL_OF_LONG_TO_OPTIONAL_LONG Ljava/util/function/Function;
 	FIELD field_39396 OPTIONAL_LONG_TO_OPTIONAL_OF_LONG Ljava/util/function/Function;
+	FIELD field_40721 JSON_ELEMENT Lcom/mojang/serialization/Codec;
+	FIELD field_40722 TEXT Lcom/mojang/serialization/Codec;
+	FIELD field_40723 VECTOR_3F Lcom/mojang/serialization/Codec;
+	FIELD field_40724 BIT_SET Lcom/mojang/serialization/Codec;
+	FIELD field_40725 GAME_PROFILE_PROPERTY_MAP Lcom/mojang/serialization/Codec;
+	FIELD field_40726 GAME_PROFILE Lcom/mojang/serialization/Codec;
+	FIELD field_40727 GAME_PROFILE_PROPERTY Lcom/mojang/serialization/Codec;
 	METHOD method_33817 xor (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
 		COMMENT Returns an exclusive-or codec for {@link Either} instances.
 		COMMENT
@@ -154,6 +161,59 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		ARG 0 optional
 	METHOD method_44169 (Ljava/util/OptionalLong;)Ljava/util/Optional;
 		ARG 0 optionalLong
+	METHOD method_46368 (Lcom/google/gson/JsonElement;)Lcom/mojang/serialization/DataResult;
+		ARG 0 element
+	METHOD method_46369 createPairFromGameProfile (Lcom/mojang/authlib/GameProfile;)Lcom/mojang/serialization/DataResult;
+		ARG 0 profile
+	METHOD method_46370 (Lcom/mojang/authlib/GameProfile;Lcom/mojang/authlib/properties/PropertyMap;)Lcom/mojang/authlib/GameProfile;
+		ARG 0 profile
+		ARG 1 properties
+	METHOD method_46371 (Lcom/mojang/authlib/GameProfile;Ljava/lang/String;Lcom/mojang/authlib/properties/Property;)V
+		ARG 1 key
+		ARG 2 property
+	METHOD method_46372 (Lcom/mojang/authlib/properties/Property;)Ljava/util/Optional;
+		ARG 0 property
+	METHOD method_46373 (Lcom/mojang/authlib/properties/PropertyMap;)Lcom/mojang/datafixers/util/Either;
+		ARG 0 properties
+	METHOD method_46374 (Lcom/mojang/authlib/properties/PropertyMap;Ljava/lang/String;Ljava/util/List;)V
+		ARG 1 key
+		ARG 2 values
+	METHOD method_46375 (Lcom/mojang/authlib/properties/PropertyMap;Ljava/util/List;)V
+		ARG 1 properties
+	METHOD method_46376 (Lcom/mojang/authlib/properties/PropertyMap;Ljava/util/Map;)V
+		ARG 1 map
+	METHOD method_46377 (Lcom/mojang/datafixers/util/Either;)Lcom/mojang/authlib/properties/PropertyMap;
+		ARG 0 either
+	METHOD method_46378 createGameProfileFromPair (Lcom/mojang/datafixers/util/Pair;)Lcom/mojang/serialization/DataResult;
+		ARG 0 pair
+	METHOD method_46379 (Lcom/mojang/serialization/Dynamic;)Lcom/google/gson/JsonElement;
+		ARG 0 dynamic
+	METHOD method_46380 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 0 instance
+	METHOD method_46381 (Ljava/lang/String;Ljava/lang/String;Ljava/util/Optional;)Lcom/mojang/authlib/properties/Property;
+		ARG 0 key
+		ARG 1 value
+		ARG 2 signature
+	METHOD method_46382 (Ljava/util/BitSet;)Ljava/util/stream/LongStream;
+		ARG 0 set
+	METHOD method_46383 (Ljava/util/Optional;)Ljava/lang/String;
+		ARG 0 optional
+	METHOD method_46384 (Ljava/util/stream/LongStream;)Ljava/util/BitSet;
+		ARG 0 stream
+	METHOD method_46385 (Lorg/joml/Vector3f;)Ljava/util/List;
+		ARG 0 vec3f
+	METHOD method_46386 (Lnet/minecraft/class_2561;)Lcom/mojang/serialization/DataResult;
+		ARG 0 text
+	METHOD method_46387 (Lcom/google/gson/JsonElement;)Lcom/mojang/serialization/Dynamic;
+		ARG 0 element
+	METHOD method_46388 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 0 instance
+	METHOD method_46389 (Ljava/util/List;)Lcom/mojang/serialization/DataResult;
+		ARG 0 list
+	METHOD method_46390 (Ljava/util/Optional;)Ljava/util/UUID;
+		ARG 0 optional
+	METHOD method_46391 (Ljava/util/List;)Lorg/joml/Vector3f;
+		ARG 0 list
 	CLASS 1
 		METHOD apply (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
 			ARG 1 ops
@@ -249,6 +309,7 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 			ARG 2 ops
 			ARG 3 prefix
 	CLASS class_6866 ContextRetrievalCodec
+		FIELD field_36397 retriever Ljava/util/function/Function;
 		METHOD <init> (Ljava/util/function/Function;)V
 			ARG 1 retriever
 		METHOD decode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/MapLike;)Lcom/mojang/serialization/DataResult;
