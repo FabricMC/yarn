@@ -3,6 +3,8 @@ CLASS net/minecraft/class_1092 net/minecraft/client/render/model/BakedModelManag
 	FIELD field_20278 stateLookup Lit/unimi/dsi/fastutil/objects/Object2IntMap;
 	FIELD field_21775 atlasManager Lnet/minecraft/class_4724;
 	FIELD field_21777 mipmapLevels I
+	FIELD field_40573 LOGGER Lorg/slf4j/Logger;
+	FIELD field_40574 LAYERS_TO_LOADERS Ljava/util/Map;
 	FIELD field_5407 missingModel Lnet/minecraft/class_1087;
 	FIELD field_5408 models Ljava/util/Map;
 	FIELD field_5410 blockModelCache Lnet/minecraft/class_773;
@@ -10,6 +12,9 @@ CLASS net/minecraft/class_1092 net/minecraft/client/render/model/BakedModelManag
 		ARG 1 textureManager
 		ARG 2 colorMap
 		ARG 3 mipmap
+	METHOD method_18179 upload (Lnet/minecraft/class_1092$class_7779;Lnet/minecraft/class_3695;)V
+		ARG 1 bakingResult
+		ARG 2 profiler
 	METHOD method_21611 shouldRerender (Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)Z
 		ARG 1 from
 		ARG 2 to
@@ -17,7 +22,56 @@ CLASS net/minecraft/class_1092 net/minecraft/client/render/model/BakedModelManag
 		ARG 1 mipmapLevels
 	METHOD method_24153 getAtlas (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1059;
 		ARG 1 id
+	METHOD method_45879 (Lnet/minecraft/class_2960;Ljava/util/Collection;)V
+		ARG 0 modelId
+		ARG 1 spriteIds
+	METHOD method_45881 reloadModels (Lnet/minecraft/class_3300;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 resourceManager
+		ARG 1 executor
+	METHOD method_45883 bake (Lnet/minecraft/class_3695;Ljava/util/Map;Lnet/minecraft/class_1088;)Lnet/minecraft/class_1092$class_7779;
+		ARG 1 profiler
+		ARG 2 preparations
+		ARG 3 modelLoader
+	METHOD method_45885 (Lnet/minecraft/class_3695;Ljava/util/Map;Ljava/util/concurrent/CompletableFuture;Ljava/lang/Void;)Lnet/minecraft/class_1092$class_7779;
+		ARG 1 void_
+	METHOD method_45888 (Lnet/minecraft/class_1092$class_7779;Ljava/lang/Void;)Lnet/minecraft/class_1092$class_7779;
+		ARG 1 void_
+	METHOD method_45889 (Ljava/util/List;)Ljava/util/Map;
+		ARG 0 blockStates
+	METHOD method_45891 (Ljava/util/Map;Lcom/google/common/collect/Multimap;Lnet/minecraft/class_2960;Lnet/minecraft/class_4730;)Lnet/minecraft/class_1058;
+		ARG 2 id
+		ARG 3 spriteId
+	METHOD method_45892 (Ljava/util/Map;Lnet/minecraft/class_1087;Ljava/util/Map;Lnet/minecraft/class_2680;)V
+		ARG 3 state
+	METHOD method_45893 (Ljava/util/concurrent/Executor;Ljava/util/Map;)Ljava/util/concurrent/CompletionStage;
+		ARG 1 blockStates
+	METHOD method_45896 reloadBlockStates (Lnet/minecraft/class_3300;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 resourceManager
+		ARG 1 executor
+	METHOD method_45897 (Ljava/util/List;)Ljava/util/Map;
+		ARG 0 models
+	METHOD method_45899 (Ljava/util/concurrent/Executor;Ljava/util/Map;)Ljava/util/concurrent/CompletionStage;
+		ARG 1 models
+	METHOD method_45901 (Lnet/minecraft/class_3300;)Ljava/util/Map;
+		ARG 0 resourceManager
+	METHOD method_45903 (Lnet/minecraft/class_3300;)Ljava/util/Map;
+		ARG 0 resourceManager
+	METHOD method_45904 (Lnet/minecraft/class_3300;)Ljava/util/Map;
+		ARG 0 resourceManager
+	METHOD method_45905 (Lnet/minecraft/class_3300;)Ljava/util/Map;
+		ARG 0 resourceManager
+	METHOD method_45906 (Lnet/minecraft/class_3300;)Ljava/util/Map;
+		ARG 0 resourceManager
+	METHOD method_45907 (Lnet/minecraft/class_3300;)Ljava/util/Map;
+		ARG 0 resourceManager
+	METHOD method_45908 (Lnet/minecraft/class_3300;)Ljava/util/Map;
+		ARG 0 resourceManager
+	METHOD method_45909 (Lnet/minecraft/class_3300;)Ljava/util/Map;
+		ARG 0 resourceManager
 	METHOD method_4742 getModel (Lnet/minecraft/class_1091;)Lnet/minecraft/class_1087;
 		ARG 1 id
 	METHOD method_4743 getBlockModels ()Lnet/minecraft/class_773;
 	METHOD method_4744 getMissingModel ()Lnet/minecraft/class_1087;
+	CLASS class_7779 BakingResult
+		FIELD comp_1058 modelLoader Lnet/minecraft/class_1088;
+		METHOD comp_1058 modelLoader ()Lnet/minecraft/class_1088;
