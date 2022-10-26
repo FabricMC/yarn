@@ -151,10 +151,10 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		ARG 1 debugSync
 	METHOD lambda$static$0 (Lit/unimi/dsi/fastutil/ints/IntConsumer;I)V
 		ARG 0 indexConsumer
-		ARG 1 vertexCount
+		ARG 1 firstVertexIndex
 	METHOD lambda$static$1 (Lit/unimi/dsi/fastutil/ints/IntConsumer;I)V
 		ARG 0 indexConsumer
-		ARG 1 vertexCount
+		ARG 1 firstVertexIndex
 	METHOD limitDisplayFPS (I)V
 		ARG 0 fps
 	METHOD lineWidth (F)V
@@ -252,31 +252,50 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		ARG 1 y
 		ARG 2 width
 		ARG 3 height
-	CLASS class_5590 IndexBuffer
-		FIELD field_27332 sizeMultiplier I
-		FIELD field_27333 increment I
-		FIELD field_27334 indexMapper Lcom/mojang/blaze3d/systems/RenderSystem$class_5590$class_5591;
+	CLASS class_5590 ShapeIndexBuffer
+		COMMENT An index buffer that holds a pre-made indices for a specific shape. If
+		COMMENT this buffer is not large enough for the required number of indices when
+		COMMENT this buffer is bound, it automatically grows and fills indices using a
+		COMMENT given {@code triangulator}.
+		FIELD field_27332 vertexCountInShape I
+		FIELD field_27333 vertexCountInTriangulated I
+		FIELD field_27334 triangulator Lcom/mojang/blaze3d/systems/RenderSystem$class_5590$class_5591;
 		FIELD field_27335 id I
 		FIELD field_27336 indexType Lnet/minecraft/class_293$class_5595;
 		FIELD field_27337 size I
 		METHOD <init> (IILcom/mojang/blaze3d/systems/RenderSystem$class_5590$class_5591;)V
-			ARG 1 sizeMultiplier
-			ARG 2 increment
-			ARG 3 indexMapper
+			ARG 1 vertexCountInShape
+				COMMENT the number of vertices in a shape
+			ARG 2 vertexCountInTriangulated
+				COMMENT the number of vertices in the triangles decomposed from the shape
+			ARG 3 triangulator
+				COMMENT a function that decomposes a shape into triangles
 		METHOD method_31920 grow (I)V
-			ARG 1 newSize
+			ARG 1 requiredSize
 		METHOD method_31922 getIndexConsumer (Ljava/nio/ByteBuffer;)Lit/unimi/dsi/fastutil/ints/IntConsumer;
-			ARG 1 indicesBuffer
+			ARG 1 indexBuffer
 		METHOD method_31923 (Ljava/nio/ByteBuffer;I)V
 			ARG 1 index
 		METHOD method_31924 getIndexType ()Lnet/minecraft/class_293$class_5595;
 		METHOD method_31925 (Ljava/nio/ByteBuffer;I)V
 			ARG 1 index
-		METHOD method_43409 isSizeLessThanOrEqual (I)Z
-			ARG 1 size
+		METHOD method_43409 isLargeEnough (I)Z
+			ARG 1 requiredSize
 		METHOD method_43410 bindAndGrow (I)V
-			ARG 1 newSize
-		CLASS class_5591 IndexMapper
+			COMMENT Binds this buffer as a current index buffer. If necessary, it grows this
+			COMMENT buffer in size and uploads indices to the corresponding buffer in GPU.
+			ARG 1 requiredSize
+		CLASS class_5591 Triangulator
+			COMMENT A functional interface that decomposes a shape into triangles.
+			COMMENT
+			COMMENT <p>The input shape is represented by the index of the first vertex in
+			COMMENT the shape. An output triangle is represented by the indices of the
+			COMMENT vertices in the triangle.
+			COMMENT
+			COMMENT @see <a href="https://en.wikipedia.org/wiki/Polygon_triangulation">Polygon triangulation - Wikipedia</a>
 			METHOD accept (Lit/unimi/dsi/fastutil/ints/IntConsumer;I)V
+				COMMENT Decomposes a shape into triangles.
 				ARG 1 indexConsumer
-				ARG 2 vertexCount
+					COMMENT the consumer that accepts triangles
+				ARG 2 firstVertexIndex
+					COMMENT the index of the first vertex in the input shape

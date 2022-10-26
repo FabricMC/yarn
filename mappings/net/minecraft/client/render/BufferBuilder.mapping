@@ -22,19 +22,24 @@ CLASS net/minecraft/class_287 net/minecraft/client/render/BufferBuilder
 	FIELD field_1565 format Lnet/minecraft/class_293;
 	FIELD field_1567 drawMode Lnet/minecraft/class_293$class_5596;
 	FIELD field_20884 elementOffset I
-	FIELD field_21594 textured Z
+	FIELD field_21594 canSkipElementChecks Z
+		COMMENT Whether this builder is aware of the vertex format and can skip checks
+		COMMENT for the current target element while building a vertex in {@link
+		COMMENT #vertex(float, float, float, float, float, float, float, float, float, int, int, float, float, float)}.
 	FIELD field_21595 hasOverlay Z
 	FIELD field_27348 sortingPrimitiveCenters [Lorg/joml/Vector3f;
 	FIELD field_27349 sortingCameraX F
 	FIELD field_27350 sortingCameraY F
 	FIELD field_27351 sortingCameraZ F
 	FIELD field_27352 hasNoVertexBuffer Z
-	FIELD field_32050 MAX_BUFFER_SIZE I
+	FIELD field_32050 ROUND_SIZE_CHANGE I
+		COMMENT An integer a size change of a buffer must be a
+		COMMENT multiple of
 	FIELD field_39061 builtBufferCount I
 	FIELD field_39062 batchOffset I
 	METHOD <init> (I)V
 		ARG 1 initialCapacity
-	METHOD method_1324 restoreState (Lnet/minecraft/class_287$class_5594;)V
+	METHOD method_1324 beginSortedIndexBuffer (Lnet/minecraft/class_287$class_5594;)V
 		ARG 1 state
 	METHOD method_1326 end ()Lnet/minecraft/class_287$class_7433;
 		COMMENT Builds a buffer from the current batch and resets the building state.
@@ -48,7 +53,7 @@ CLASS net/minecraft/class_287 net/minecraft/client/render/BufferBuilder
 	METHOD method_1328 begin (Lnet/minecraft/class_293$class_5596;Lnet/minecraft/class_293;)V
 		ARG 1 drawMode
 		ARG 2 format
-	METHOD method_1334 popState ()Lnet/minecraft/class_287$class_5594;
+	METHOD method_1334 getSortingData ()Lnet/minecraft/class_287$class_5594;
 	METHOD method_1335 grow (I)V
 		ARG 1 size
 	METHOD method_1343 clear ()V
@@ -66,7 +71,7 @@ CLASS net/minecraft/class_287 net/minecraft/client/render/BufferBuilder
 		ARG 1 cameraX
 		ARG 2 cameraY
 		ARG 3 cameraZ
-	METHOD method_31949 createIndexWriter (ILnet/minecraft/class_293$class_5595;)Lit/unimi/dsi/fastutil/ints/IntConsumer;
+	METHOD method_31949 getIndexConsumer (ILnet/minecraft/class_293$class_5595;)Lit/unimi/dsi/fastutil/ints/IntConsumer;
 		ARG 1 offset
 		ARG 2 indexType
 	METHOD method_31950 writeSortedIndices (Lnet/minecraft/class_293$class_5595;)V
@@ -95,25 +100,27 @@ CLASS net/minecraft/class_287 net/minecraft/client/render/BufferBuilder
 	METHOD method_43578 build ()Lnet/minecraft/class_287$class_7433;
 	METHOD method_43579 resetBuilding ()V
 	METHOD method_43580 releaseBuiltBuffer ()V
-	CLASS class_4574 DrawArrayParameters
-		METHOD method_31957 getIndexBufferStart ()I
-		METHOD method_31958 getIndexBufferEnd ()I
-		METHOD method_31961 getIndexBufferLength ()I
-		METHOD method_43429 getVertexBufferPosition ()I
-		METHOD method_43430 getVertexBufferLimit ()I
-		METHOD method_43431 getIndexBufferPosition ()I
-		METHOD method_43432 getIndexBufferLimit ()I
-	CLASS class_5594 State
+	CLASS class_4574 DrawParameters
+		METHOD method_31957 getVertexBufferSize ()I
+		METHOD method_31958 getBufferSize ()I
+			COMMENT {@return the total size of the index buffer and the vertex buffer
+			COMMENT combined}
+		METHOD method_31961 getIndexBufferSize ()I
+		METHOD method_43429 getVertexBufferStart ()I
+		METHOD method_43430 getVertexBufferEnd ()I
+		METHOD method_43431 getIndexBufferStart ()I
+		METHOD method_43432 getIndexBufferEnd ()I
+	CLASS class_5594 TransparentSortingData
 		FIELD field_27358 drawMode Lnet/minecraft/class_293$class_5596;
 		FIELD field_27359 vertexCount I
-		FIELD field_27360 sortingPrimitiveCenters [Lorg/joml/Vector3f;
-		FIELD field_27361 sortingCameraX F
-		FIELD field_27362 sortingCameraY F
-		FIELD field_27363 sortingCameraZ F
+		FIELD field_27360 primitiveCenters [Lorg/joml/Vector3f;
+		FIELD field_27361 cameraX F
+		FIELD field_27362 cameraY F
+		FIELD field_27363 cameraZ F
 		METHOD <init> (Lnet/minecraft/class_293$class_5596;I[Lorg/joml/Vector3f;FFF)V
 			ARG 1 drawMode
 			ARG 2 vertexCount
-			ARG 3 currentParameters
+			ARG 3 primitiveCenters
 			ARG 4 cameraX
 			ARG 5 cameraY
 			ARG 6 cameraZ
