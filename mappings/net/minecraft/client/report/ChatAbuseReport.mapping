@@ -1,7 +1,12 @@
 CLASS net/minecraft/class_7566 net/minecraft/client/report/ChatAbuseReport
 	FIELD field_39651 limits Lcom/mojang/authlib/minecraft/report/AbuseReportLimits;
+	FIELD field_40811 draft Lnet/minecraft/class_7566$class_7855;
 	METHOD <init> (Ljava/util/UUID;Lcom/mojang/authlib/minecraft/report/AbuseReportLimits;)V
 		ARG 1 reportedPlayerUuid
+		ARG 2 limits
+	METHOD <init> (Lnet/minecraft/class_7566$class_7855;Lcom/mojang/authlib/minecraft/report/AbuseReportLimits;)V
+		ARG 1 draft
+		ARG 2 limits
 	METHOD method_44568 getReportedPlayerUuid ()Ljava/util/UUID;
 	METHOD method_44569 toggleMessageSelection (I)V
 		ARG 1 index
@@ -26,9 +31,28 @@ CLASS net/minecraft/class_7566 net/minecraft/client/report/ChatAbuseReport
 	METHOD method_44962 (Ljava/util/List;ILnet/minecraft/class_7557$class_7558;)V
 		ARG 2 index
 		ARG 3 message
+	METHOD method_46545 getDraft ()Lnet/minecraft/class_7566$class_7855;
+	METHOD method_46546 hasContents ()Z
 	CLASS class_7567 ValidationError
 		FIELD field_39655 NO_REASON Lnet/minecraft/class_7566$class_7567;
 		FIELD field_39656 NO_REPORTED_MESSAGES Lnet/minecraft/class_7566$class_7567;
 		FIELD field_39657 TOO_MANY_MESSAGES Lnet/minecraft/class_7566$class_7567;
 		FIELD field_39658 COMMENTS_TOO_LONG Lnet/minecraft/class_7566$class_7567;
 	CLASS class_7568 ReportWithId
+	CLASS class_7855 Draft
+		FIELD field_40813 reportId Ljava/util/UUID;
+		FIELD field_40814 currentTime Ljava/time/Instant;
+		FIELD field_40815 reportedPlayerUuid Ljava/util/UUID;
+		FIELD field_40816 selections Lit/unimi/dsi/fastutil/ints/IntSet;
+		FIELD field_40817 opinionComments Ljava/lang/String;
+		FIELD field_40818 reason Lnet/minecraft/class_7573;
+		METHOD <init> (Lnet/minecraft/class_7566;Ljava/util/UUID;Ljava/time/Instant;Ljava/util/UUID;)V
+			ARG 2 reportId
+			ARG 3 currentTime
+			ARG 4 reportedPlayerUuid
+		METHOD method_46547 copy ()Lnet/minecraft/class_7566$class_7855;
+		METHOD method_46548 toggleMessageSelection (ILcom/mojang/authlib/minecraft/report/AbuseReportLimits;)V
+			ARG 1 index
+			ARG 2 limits
+		METHOD method_46549 playerUuidEquals (Ljava/util/UUID;)Z
+			ARG 1 uuid
