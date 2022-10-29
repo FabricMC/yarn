@@ -7,24 +7,46 @@ CLASS net/minecraft/class_2408 net/minecraft/data/DataCache
 	FIELD field_38916 dataWriters Ljava/util/Set;
 	FIELD field_38917 paths Ljava/util/Set;
 	FIELD field_38918 totalSize I
+	FIELD field_40832 cachedDatas Ljava/util/Map;
+	FIELD field_40833 totalCacheMissCount I
 	METHOD <init> (Ljava/nio/file/Path;Ljava/util/Collection;Lnet/minecraft/class_6489;)V
 		ARG 1 root
+		ARG 2 providerNames
 		ARG 3 gameVersion
 	METHOD method_10326 write ()V
 	METHOD method_43347 isVersionDifferent (Ljava/lang/String;)Z
+		ARG 1 providerName
 	METHOD method_43348 parseOrCreateCache (Ljava/nio/file/Path;Ljava/nio/file/Path;)Lnet/minecraft/class_2408$class_7405;
 		ARG 0 root
 		ARG 1 dataProviderPath
 	METHOD method_43351 (Lorg/apache/commons/lang3/mutable/MutableInt;Ljava/util/Set;Lorg/apache/commons/lang3/mutable/MutableInt;Ljava/nio/file/Path;)V
 		ARG 4 path
 	METHOD method_43353 getPath (Ljava/lang/String;)Ljava/nio/file/Path;
+		ARG 1 providerName
+	METHOD method_46568 (Lnet/minecraft/class_2408$class_7404;Ljava/lang/Object;)Lnet/minecraft/class_2408$class_7860;
+		ARG 1 void_
+	METHOD method_46569 store (Lnet/minecraft/class_2408$class_7860;)V
+		ARG 1 runResult
+	METHOD method_46570 run (Ljava/lang/String;Lnet/minecraft/class_2408$class_7859;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 providerName
+		ARG 2 runner
+	METHOD method_46571 (Ljava/util/Set;Ljava/lang/String;Lnet/minecraft/class_2408$class_7405;)V
+		ARG 2 providerName
+		ARG 3 cachedData
 	CLASS class_7404 CachedDataWriter
 		FIELD field_38919 oldCache Lnet/minecraft/class_2408$class_7405;
 		FIELD field_38920 newCache Lnet/minecraft/class_2408$class_7858;
 		FIELD field_38921 cacheMissCount Ljava/util/concurrent/atomic/AtomicInteger;
+		FIELD field_40835 providerName Ljava/lang/String;
+		FIELD field_40836 closed Z
+		METHOD <init> (Lnet/minecraft/class_2408;Ljava/lang/String;Ljava/lang/String;Lnet/minecraft/class_2408$class_7405;)V
+			ARG 2 providerName
+			ARG 3 version
+			ARG 4 oldCache
 		METHOD method_43355 isCacheInvalid (Ljava/nio/file/Path;Lcom/google/common/hash/HashCode;)Z
 			ARG 1 path
 			ARG 2 hashCode
+		METHOD method_46572 finish ()Lnet/minecraft/class_2408$class_7860;
 	CLASS class_7405 CachedData
 		METHOD method_43356 size ()I
 		METHOD method_43357 get (Ljava/nio/file/Path;)Lcom/google/common/hash/HashCode;
@@ -38,3 +60,18 @@ CLASS net/minecraft/class_2408 net/minecraft/data/DataCache
 			ARG 3 description
 		METHOD method_43361 (Lcom/google/common/collect/ImmutableMap$Builder;Ljava/nio/file/Path;Ljava/lang/String;)V
 			ARG 2 line
+	CLASS class_7858 IntermediaryCache
+		METHOD <init> (Ljava/lang/String;)V
+			ARG 1 version
+		METHOD method_46573 toCachedData ()Lnet/minecraft/class_2408$class_7405;
+		METHOD method_46574 put (Ljava/nio/file/Path;Lcom/google/common/hash/HashCode;)V
+			ARG 1 path
+			ARG 2 hashCode
+	CLASS class_7859 Runner
+		METHOD update (Lnet/minecraft/class_7403;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 writer
+	CLASS class_7860 RunResult
+		FIELD comp_1124 providerName Ljava/lang/String;
+		FIELD comp_1126 cacheMissCount I
+		METHOD comp_1124 providerName ()Ljava/lang/String;
+		METHOD comp_1126 cacheMissCount ()I
