@@ -1,0 +1,28 @@
+CLASS net/minecraft/class_7836 net/minecraft/util/math/GridBlockLengthIterator
+	COMMENT An integer iterator that returns how an object should be split up in a grid. A grid is
+	COMMENT composed of one or more blocks, A block is either a row or a column. This iterator
+	COMMENT calculates the length of a side of a block, given the number of occupied blocks and
+	COMMENT the total length of the object. This tries to make the blocks' length roughly equal.
+	COMMENT
+	COMMENT <p>Example: suppose we have an object with length {@code 160} and {@code 16} available
+	COMMENT blocks. Since {@code 160} is divisible by {@code 16}, this iterator outputs {@code 160 / 16}
+	COMMENT - that is, {@code 16} - {@code 16} times.
+	COMMENT If there are {@code 14} available blocks, the block length is either {@code 11} ({@code
+	COMMENT 160 / 14}) or {@code 12} ({@code 160 / 14 + 1}). There are {@code 6} ({@code 160 - 11 * 14})
+	COMMENT blocks with length {@code 12} and {@code 8} ({@code 14 - 6}) blocks with length {@code 11}.
+	COMMENT
+	COMMENT @implNote The exact implementation is as follows: each time the next length is requested,
+	COMMENT it accumulates the remainder length, and when the accumulated value is equal to or above
+	COMMENT the number of occupied blocks, it subtracts that number from the accumulated value and
+	COMMENT returns {@code normalBlockLength + 1}. It otherwise returns {@link #normalBlockLength}.
+	FIELD field_40738 availableBlocks I
+	FIELD field_40739 normalBlockLength I
+	FIELD field_40740 blockRemainder I
+	FIELD field_40741 blockIndex I
+	FIELD field_40742 accumulatedRemainders I
+	METHOD <init> (II)V
+		ARG 1 length
+		ARG 2 availableBlocks
+	METHOD method_46402 iterable (II)Ljava/lang/Iterable;
+		ARG 0 length
+		ARG 1 occupiedBlocks
