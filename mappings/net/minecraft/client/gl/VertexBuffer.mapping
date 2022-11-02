@@ -8,14 +8,14 @@ CLASS net/minecraft/class_291 net/minecraft/client/gl/VertexBuffer
 	COMMENT
 	COMMENT @implNote This is mostly a wrapper around vertex buffer object (VBO),
 	COMMENT element buffer object (EBO), and vertex array object (VAO).
-	FIELD field_1593 vertexCount I
+	FIELD field_1593 indexCount I
 	FIELD field_1594 vertexBufferId I
 	FIELD field_27366 indexBufferId I
 	FIELD field_27367 indexType Lnet/minecraft/class_293$class_5595;
 	FIELD field_27368 drawMode Lnet/minecraft/class_293$class_5596;
 	FIELD field_29338 vertexArrayId I
 	FIELD field_29339 vertexFormat Lnet/minecraft/class_293;
-	FIELD field_38983 indexBuffer Lcom/mojang/blaze3d/systems/RenderSystem$class_5590;
+	FIELD field_38983 sharedSequentialIndexBuffer Lcom/mojang/blaze3d/systems/RenderSystem$class_5590;
 	METHOD method_1352 upload (Lnet/minecraft/class_287$class_7433;)V
 		COMMENT Uploads the contents of {@code buffer} to GPU, discarding previously
 		COMMENT uploaded data.
@@ -41,7 +41,7 @@ CLASS net/minecraft/class_291 net/minecraft/client/gl/VertexBuffer
 		ARG 2 projectionMatrix
 		ARG 3 shader
 	METHOD method_34435 getVertexFormat ()Lnet/minecraft/class_293;
-	METHOD method_35665 drawElements ()V
+	METHOD method_35665 draw ()V
 		COMMENT Draws the contents in this vertex buffer.
 		COMMENT
 		COMMENT <p>The caller of this method must {@linkplain #bind bind} this vertex
@@ -49,11 +49,11 @@ CLASS net/minecraft/class_291 net/minecraft/client/gl/VertexBuffer
 		COMMENT
 		COMMENT <p>Unlike {@link #draw(Matrix4f, Matrix4f, Shader)}, the caller of this
 		COMMENT method must manually bind a shader before calling this method.
-	METHOD method_43442 configureVertexFormat (Lnet/minecraft/class_287$class_4574;Ljava/nio/ByteBuffer;)Lnet/minecraft/class_293;
+	METHOD method_43442 uploadVertexBuffer (Lnet/minecraft/class_287$class_4574;Ljava/nio/ByteBuffer;)Lnet/minecraft/class_293;
 		ARG 1 parameters
-		ARG 2 data
-	METHOD method_43443 configureIndexBuffer (Lnet/minecraft/class_287$class_4574;Ljava/nio/ByteBuffer;)Lcom/mojang/blaze3d/systems/RenderSystem$class_5590;
+		ARG 2 vertexBuffer
+	METHOD method_43443 uploadIndexBuffer (Lnet/minecraft/class_287$class_4574;Ljava/nio/ByteBuffer;)Lcom/mojang/blaze3d/systems/RenderSystem$class_5590;
 		ARG 1 parameters
-		ARG 2 data
+		ARG 2 indexBuffer
 	METHOD method_43444 isClosed ()Z
 	METHOD method_43445 getIndexType ()Lnet/minecraft/class_293$class_5595;
