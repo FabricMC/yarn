@@ -2,16 +2,29 @@ CLASS net/minecraft/class_2474 net/minecraft/data/server/tag/AbstractTagProvider
 	FIELD field_11479 LOGGER Lorg/slf4j/Logger;
 	FIELD field_11481 tagBuilders Ljava/util/Map;
 	FIELD field_39380 pathResolver Lnet/minecraft/class_7784$class_7489;
+	FIELD field_40956 registryLookupFuture Ljava/util/concurrent/CompletableFuture;
+	FIELD field_40957 registryRef Lnet/minecraft/class_5321;
 	METHOD <init> (Lnet/minecraft/class_7784;Lnet/minecraft/class_5321;Ljava/util/concurrent/CompletableFuture;)V
-		ARG 1 root
+		ARG 1 output
+		ARG 2 registryRef
+		ARG 3 registryLookupFuture
 	METHOD method_10512 getOrCreateTagBuilder (Lnet/minecraft/class_6862;)Lnet/minecraft/class_2474$class_5124;
 		ARG 1 tag
 	METHOD method_10514 configure (Lnet/minecraft/class_7225$class_7874;)V
+		ARG 1 lookup
+	METHOD method_27046 (Ljava/util/function/Predicate;Lnet/minecraft/class_7403;Ljava/util/Map$Entry;)Ljava/util/concurrent/CompletableFuture;
+		ARG 3 entry
 	METHOD method_27169 getTagBuilder (Lnet/minecraft/class_6862;)Lnet/minecraft/class_3495;
 		ARG 1 tag
 	METHOD method_27170 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_3495;
 		ARG 0 id
-	CLASS class_5124 ObjectBuilder
+	METHOD method_46832 (Lnet/minecraft/class_7225$class_7226;Lnet/minecraft/class_2960;)Z
+		ARG 2 id
+	METHOD method_46833 (Lnet/minecraft/class_7403;Lnet/minecraft/class_7225$class_7874;)Ljava/util/concurrent/CompletionStage;
+		ARG 2 lookup
+	METHOD method_46834 (Ljava/util/function/Predicate;Lnet/minecraft/class_3497;)Z
+		ARG 2 tagEntry
+	CLASS class_5124 ProvidedTagBuilder
 		FIELD field_23960 builder Lnet/minecraft/class_3495;
 		METHOD <init> (Lnet/minecraft/class_3495;)V
 			ARG 1 builder
@@ -23,3 +36,5 @@ CLASS net/minecraft/class_2474 net/minecraft/data/server/tag/AbstractTagProvider
 			ARG 1 id
 		METHOD method_40565 add ([Lnet/minecraft/class_5321;)Lnet/minecraft/class_2474$class_5124;
 			ARG 1 keys
+		METHOD method_46835 add (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2474$class_5124;
+			ARG 1 key
