@@ -295,7 +295,9 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 	FIELD field_39208 BANNER_PATTERN Lnet/minecraft/class_2378;
 	FIELD field_39209 INSTRUMENT_KEY Lnet/minecraft/class_5321;
 	FIELD field_39210 INSTRUMENT Lnet/minecraft/class_2378;
+	FIELD field_40938 wrapper Lnet/minecraft/class_7225$class_7226;
 	METHOD <init> (Lnet/minecraft/class_5321;Lcom/mojang/serialization/Lifecycle;)V
+		ARG 1 registryKey
 		ARG 2 lifecycle
 	METHOD keys (Lcom/mojang/serialization/DynamicOps;)Ljava/util/stream/Stream;
 		ARG 1 ops
@@ -586,7 +588,21 @@ CLASS net/minecraft/class_2378 net/minecraft/util/registry/Registry
 		ARG 0 dimensionOptionsKey
 	METHOD method_45941 createDimensionOptionsKey (Lnet/minecraft/class_5321;)Lnet/minecraft/class_5321;
 		ARG 0 worldKey
+	METHOD method_46770 getEntryOwner ()Lnet/minecraft/class_7876;
+	METHOD method_46771 getReadOnlyWrapper ()Lnet/minecraft/class_7225$class_7226;
+		COMMENT {@return a registry wrapper that does not mutate the backing registry under
+		COMMENT any circumstances}
+		COMMENT
+		COMMENT @see net.minecraft.command.CommandRegistryAccess.EntryListCreationPolicy#FAIL
+	METHOD method_46772 getTagCreatingWrapper ()Lnet/minecraft/class_7225$class_7226;
+		COMMENT {@return a registry wrapper that creates and stores a new registry entry list
+		COMMENT when handling an unknown tag key}
+		COMMENT
+		COMMENT @see net.minecraft.command.CommandRegistryAccess.EntryListCreationPolicy#CREATE_NEW
 	CLASS 1
+	CLASS 2
+		METHOD method_46773 (Lnet/minecraft/class_6880$class_6883;)Lnet/minecraft/class_6880;
+			ARG 0 entry
 	CLASS class_6889 DefaultEntryGetter
 		METHOD run (Lnet/minecraft/class_2378;)Ljava/lang/Object;
 			ARG 1 registry
