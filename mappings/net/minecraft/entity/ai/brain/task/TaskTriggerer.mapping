@@ -1,4 +1,66 @@
 CLASS net/minecraft/class_7898 net/minecraft/entity/ai/brain/task/TaskTriggerer
+	COMMENT A lambda-based alternative to subclassing {@link Task}.
+	COMMENT
+	COMMENT <p>To use this,
+	COMMENT <ol>
+	COMMENT <li>Make a static method with all configurable parameters (such as speed, range, etc).</li>
+	COMMENT <li>If there is a value that needs to be tracked between ticks (such as cooldown),
+	COMMENT declare a mutable variable (such as {@link org.apache.commons.lang3.mutable.MutableInt}).</li>
+	COMMENT <li>Return the result of {@link #task}. This method creates a new {@link SingleTickTask}.</li>
+	COMMENT </ol>
+	COMMENT
+	COMMENT <p>A lambda is passed to the {@code task} method. This takes a {@link TaskTriggerer.Context}.
+	COMMENT You can either call {@link TaskTriggerer.Context#point} to set the actual task function,
+	COMMENT or declare a dependency on memory queries. The task function is a function that takes
+	COMMENT the server world, entity, and the current time, and returns a boolean indicating whether
+	COMMENT a task successfully ran.
+	COMMENT
+	COMMENT <h2>Example of memory-independent task</h2>
+	COMMENT <pre>{@code
+	COMMENT public static Task<LivingEntity> createHealTask() {
+	COMMENT     return TaskTriggerer.task(context -> context.point((world, entity, time) -> {
+	COMMENT         entity.heal(1.0f);
+	COMMENT         return true;
+	COMMENT     }));
+	COMMENT }
+	COMMENT }</pre>
+	COMMENT
+	COMMENT <h2>Memory-dependent task</h2>
+	COMMENT <p>Memory-dependent tasks (i.e. one that queries, remembers, or forgets a memory) first
+	COMMENT should call {@code Context.group} with results of {@code Context.queryMemory} methods
+	COMMENT for all the dependent memories. Then, call {@code apply} with {@code context} and a
+	COMMENT lambda function taking the results of the query. This function returns the task function
+	COMMENT seen earlier.
+	COMMENT
+	COMMENT <p>If any of the query is not successful (e.g. because a value was not present), the task will
+	COMMENT not run. If all succeed, then the task runs, and the query result can be obtained via
+	COMMENT {@link TaskTriggerer.Context#getValue}.
+	COMMENT
+	COMMENT <p>There are three query types:
+	COMMENT
+	COMMENT <ul>
+	COMMENT <li>{@link TaskTriggerer.Context#queryMemoryAbsent} that succeeds if a value is
+	COMMENT <strong>not</strong> present in the memory.</li>
+	COMMENT <li>{@link TaskTriggerer.Context#queryMemoryValue} that succeeds if a value is
+	COMMENT present in the memory. The result is the queried value.</li>
+	COMMENT <li>{@link TaskTriggerer.Context#queryMemoryOptional} that always succeeds. The value
+	COMMENT is an optional that contains the value if it is present in the memory.</li>
+	COMMENT </ul>
+	COMMENT
+	COMMENT <p>For example, the following code queries {@link
+	COMMENT MemoryModuleType#MEETING_POINT} and forgets it:
+	COMMENT
+	COMMENT <pre>{@code
+	COMMENT public static Task<LivingEntity> createForgetMeetingPoint() {
+	COMMENT     return TaskTriggerer.task(context -> context.group(context.queryMemoryValue(MemoryModuleType.MEETING_POINT)).apply(context, meetingPoint -> (world, entity, time) -> {
+	COMMENT         GlobalPos pos = (GlobalPos)context.getValue(meetingPoint);
+	COMMENT         // Do something with pos
+	COMMENT         // For example, forget the meeting point:
+	COMMENT         meetingPoint.forget();
+	COMMENT         return true;
+	COMMENT     }));
+	COMMENT }
+	COMMENT }</pre>
 	FIELD field_40998 function Lnet/minecraft/class_7898$class_7904;
 	METHOD <init> (Lnet/minecraft/class_7898$class_7904;)V
 		ARG 1 function
