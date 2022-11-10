@@ -13,7 +13,7 @@ CLASS net/minecraft/class_2378 net/minecraft/registry/Registry
 	COMMENT for different types of registerable objects, and a registry's type parameter indicates
 	COMMENT the accepted type. For example, you register your {@link Block} to {@code
 	COMMENT Registry<Block>}. It's important to note that registries themselves are registered
-	COMMENT in a "registry of registries", {@link #ROOT}.
+	COMMENT in a "registry of registries", {@link Registries#ROOT}.
 	COMMENT
 	COMMENT <p>The <strong>string ID</strong>, usually just called "ID", is a human-readable
 	COMMENT {@link Identifier} that uniquely identifies the registered value in a registry.
@@ -69,7 +69,7 @@ CLASS net/minecraft/class_2378 net/minecraft/registry/Registry
 	COMMENT <h2 id="using">Using Registry</h2>
 	COMMENT <h3 id="reading">Reading Registry</h3>
 	COMMENT <p>A registry is also an {@link IndexedIterable}. Therefore, registries can be
-	COMMENT iterated using, e.g. {@code for (Block block : Registry.BLOCK)}.
+	COMMENT iterated using, e.g. {@code for (Block block : Registries.BLOCK)}.
 	COMMENT
 	COMMENT <p>There are several other methods used for reading the contents of the registry:
 	COMMENT <ul>
@@ -88,7 +88,7 @@ CLASS net/minecraft/class_2378 net/minecraft/registry/Registry
 	COMMENT or dynamic. For dynamic registries, data packs can usually be used to register a new
 	COMMENT value or replace one. For static registries, the game's code must be modified.
 	COMMENT
-	COMMENT <p>Static registries are defined in this class, and unlike the dynamic registries, it
+	COMMENT <p>Static registries are defined in {@link Registries}, and unlike the dynamic registries, it
 	COMMENT cannot be changed after the game initialization. The game enforces this by "freezing"
 	COMMENT the registry. Attempting to register a value after freezing causes a crash, such as
 	COMMENT "Registry is already frozen". Modding APIs usually provide a way to bypass this restriction.
@@ -103,22 +103,22 @@ CLASS net/minecraft/class_2378 net/minecraft/registry/Registry
 	COMMENT <li><strong>Intrusive holders</strong> are registry entries tied to a specific
 	COMMENT registerable object at instantiation time. When instantiating those, it promises
 	COMMENT that the object is later registered - which, if broken, will result in a crash.
-	COMMENT This is used for {@link #BLOCK}, {@link #ITEM}, {@link #FLUID}, {@link #ENTITY_TYPE},
-	COMMENT and {@link #GAME_EVENT} registries.</li>
+	COMMENT This is used for {@link Registries#BLOCK}, {@link Registries#ITEM}, {@link Registries#FLUID},
+	COMMENT {@link Registries#ENTITY_TYPE}, and {@link Registries#GAME_EVENT} registries.</li>
 	COMMENT <li><strong>Standalone holders</strong> are registry entries that are not intrusive.
 	COMMENT There is no restriction on instantiation.</li>
 	COMMENT </ul>
 	COMMENT
 	COMMENT <p>When a class whose instances are registered as intrusive holders, such as
-	COMMENT {@link Block} or {@link Item}, are instantiated without registering, the game
-	COMMENT crashes with "Some intrusive holders were not added to registry" error message.
-	COMMENT <strong>This includes conditional registration</strong>. For example, the code
-	COMMENT below can cause a crash:
+	COMMENT {@link net.minecraft.block.Block} or {@link net.minecraft.item.Item}, are instantiated
+	COMMENT without registering, the game crashes with "Some intrusive holders were not added to
+	COMMENT registry" error message. <strong>This includes conditional registration</strong>.
+	COMMENT For example, the code below can cause a crash:
 	COMMENT
 	COMMENT <pre>{@code
 	COMMENT Item myItem = new Item(new Item.Settings());
 	COMMENT if (condition) {
-	COMMENT     Registry.register(Registry.ITEM, new Identifier("example", "bad"), myItem);
+	COMMENT     Registry.register(Registries.ITEM, new Identifier("example", "bad"), myItem);
 	COMMENT }
 	COMMENT }</pre>
 	COMMENT
@@ -127,7 +127,7 @@ CLASS net/minecraft/class_2378 net/minecraft/registry/Registry
 	COMMENT <pre>{@code
 	COMMENT if (condition) {
 	COMMENT     Item myItem = new Item(new Item.Settings());
-	COMMENT     Registry.register(Registry.ITEM, new Identifier("example", "bad"), myItem);
+	COMMENT     Registry.register(Registries.ITEM, new Identifier("example", "bad"), myItem);
 	COMMENT }
 	COMMENT }</pre>
 	METHOD keys (Lcom/mojang/serialization/DynamicOps;)Ljava/util/stream/Stream;
