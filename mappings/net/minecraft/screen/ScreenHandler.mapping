@@ -90,7 +90,7 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	COMMENT <p>Screen handler interaction mainly involves "slot clicks" and "button clicks".
 	COMMENT A {@linkplain #onSlotClick slot click} is, as mentioned before, an action manipulating
 	COMMENT the slots' held item stacks. Slot clicks are implemented in this class and
-	COMMENT {@link #transferSlot}. To manipulate the stacks, get the slot via {@link #getSlot}
+	COMMENT {@link #quickMove}. To manipulate the stacks, get the slot via {@link #getSlot}
 	COMMENT and call methods of it. Screen handlers also provide methods for common operations,
 	COMMENT such as {@link #insertItem} that inserts a stack to the screen handler's available slots.
 	COMMENT
@@ -106,7 +106,7 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	COMMENT with an integer.
 	COMMENT
 	COMMENT <p>Subclasses must implement two methods: {@link #canUse(PlayerEntity)} and {@link
-	COMMENT #transferSlot}. See the documentation of each method for more details.
+	COMMENT #quickMove}. See the documentation of each method for more details.
 	COMMENT
 	COMMENT <h3 id="closing">Closing</h3>
 	COMMENT <p>Since a screen handler handles the client's screen, the screen must be closed at the
@@ -304,20 +304,27 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	METHOD method_7600 shouldQuickCraftContinue (ILnet/minecraft/class_1657;)Z
 		ARG 0 stage
 		ARG 1 player
-	METHOD method_7601 transferSlot (Lnet/minecraft/class_1657;I)Lnet/minecraft/class_1799;
-		COMMENT Transfers (or "quick-moves") the stack at slot {@code index} to other
-		COMMENT slots of the screen handler that belong to a different inventory.
+	METHOD method_7601 quickMove (Lnet/minecraft/class_1657;I)Lnet/minecraft/class_1799;
+		COMMENT Quick-moves the stack at {@code slot} to other
+		COMMENT slots of the screen handler that belong to a different inventory or
+		COMMENT another section of the same inventory. For example, items can be quick-moved
+		COMMENT between a chest's slots and the player inventory or between the main player inventory
+		COMMENT and the hotbar.
 		COMMENT
 		COMMENT <p>Subclasses should call {@link #insertItem}, and if the insertion was successful,
 		COMMENT clear the slot (if the stack is exhausted) or mark it as dirty. See the vanilla
 		COMMENT subclasses for basic implementation.
+		COMMENT
+		COMMENT <p>Quick-moving is also known as "shift-clicking" since it's usually triggered
+		COMMENT using <kbd>Shift</kbd>+<kbd>left click</kbd>.
 		COMMENT
 		COMMENT @return {@link ItemStack#EMPTY} when no stack can be transferred, otherwise
 		COMMENT the original stack
 		COMMENT
 		COMMENT @see #insertItem
 		ARG 1 player
-		ARG 2 index
+		ARG 2 slot
+			COMMENT the index of the slot to quick-move from
 	METHOD method_7602 getStacks ()Lnet/minecraft/class_2371;
 		COMMENT {@return a list of all stacks of the screen handler's slot}
 		COMMENT
