@@ -9,8 +9,8 @@ CLASS net/minecraft/class_7898 net/minecraft/entity/ai/brain/task/TaskTriggerer
 	COMMENT <li>Return the result of {@link #task}. This method creates a new {@link SingleTickTask}.</li>
 	COMMENT </ol>
 	COMMENT
-	COMMENT <p>A lambda is passed to the {@code task} method. This takes a {@link TaskTriggerer.Context}.
-	COMMENT You can either call {@link TaskTriggerer.Context#point} to set the actual task function,
+	COMMENT <p>A lambda is passed to the {@code task} method. This takes a {@link TaskTriggerer.TaskContext}.
+	COMMENT You can either call {@link TaskTriggerer.TaskContext#point} to set the actual task function,
 	COMMENT or declare a dependency on memory queries. The task function is a function that takes
 	COMMENT the server world, entity, and the current time, and returns a boolean indicating whether
 	COMMENT a task successfully ran.
@@ -27,23 +27,23 @@ CLASS net/minecraft/class_7898 net/minecraft/entity/ai/brain/task/TaskTriggerer
 	COMMENT
 	COMMENT <h2>Memory-dependent task</h2>
 	COMMENT <p>Memory-dependent tasks (i.e. one that queries, remembers, or forgets a memory) first
-	COMMENT should call {@code Context.group} with results of {@code Context.queryMemory} methods
+	COMMENT should call {@code TaskContext.group} with results of {@code Context.queryMemory} methods
 	COMMENT for all the dependent memories. Then, call {@code apply} with {@code context} and a
 	COMMENT lambda function taking the results of the query. This function returns the task function
 	COMMENT seen earlier.
 	COMMENT
 	COMMENT <p>If any of the query is not successful (e.g. because a value was not present), the task will
 	COMMENT not run. If all succeed, then the task runs, and the query result can be obtained via
-	COMMENT {@link TaskTriggerer.Context#getValue}.
+	COMMENT {@link TaskTriggerer.TaskContext#getValue}.
 	COMMENT
 	COMMENT <p>There are three query types:
 	COMMENT
 	COMMENT <ul>
-	COMMENT <li>{@link TaskTriggerer.Context#queryMemoryAbsent} that succeeds if a value is
+	COMMENT <li>{@link TaskTriggerer.TaskContext#queryMemoryAbsent} that succeeds if a value is
 	COMMENT <strong>not</strong> present in the memory.</li>
-	COMMENT <li>{@link TaskTriggerer.Context#queryMemoryValue} that succeeds if a value is
+	COMMENT <li>{@link TaskTriggerer.TaskContext#queryMemoryValue} that succeeds if a value is
 	COMMENT present in the memory. The result is the queried value.</li>
-	COMMENT <li>{@link TaskTriggerer.Context#queryMemoryOptional} that always succeeds. The value
+	COMMENT <li>{@link TaskTriggerer.TaskContext#queryMemoryOptional} that always succeeds. The value
 	COMMENT is an optional that contains the value if it is present in the memory.</li>
 	COMMENT </ul>
 	COMMENT
