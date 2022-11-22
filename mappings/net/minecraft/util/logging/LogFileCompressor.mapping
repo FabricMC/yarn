@@ -1,0 +1,47 @@
+CLASS net/minecraft/class_7929 net/minecraft/util/logging/LogFileCompressor
+	FIELD field_41288 LOGGER Lorg/slf4j/Logger;
+	FIELD field_41289 COMPRESSION_BUFFER_SIZE I
+	FIELD field_41290 GZ_EXTENSION Ljava/lang/String;
+	FIELD field_41291 directory Ljava/nio/file/Path;
+	FIELD field_41292 extension Ljava/lang/String;
+	METHOD <init> (Ljava/nio/file/Path;Ljava/lang/String;)V
+		ARG 1 directory
+		ARG 2 extension
+	METHOD method_47549 getAll ()Lnet/minecraft/class_7929$class_7933;
+	METHOD method_47550 compress (Ljava/nio/channels/ReadableByteChannel;Ljava/nio/file/Path;)V
+		ARG 0 source
+		ARG 1 outputPath
+	METHOD method_47551 get (Ljava/nio/file/Path;)Lnet/minecraft/class_7929$class_7931;
+		ARG 1 path
+	METHOD method_47552 create (Ljava/nio/file/Path;Ljava/lang/String;)Lnet/minecraft/class_7929;
+		ARG 0 directory
+		ARG 1 extension
+	METHOD method_47553 compress (Ljava/nio/file/Path;Ljava/nio/file/Path;)V
+		ARG 0 from
+		ARG 1 to
+	METHOD method_47554 createLogFile (Ljava/time/LocalDate;)Lnet/minecraft/class_7929$class_7934;
+		ARG 1 date
+	CLASS class_7930 Compressed
+	CLASS class_7931 LogFile
+		METHOD method_47556 getReader ()Ljava/io/Reader;
+		METHOD method_47557 compress ()Lnet/minecraft/class_7929$class_7930;
+	CLASS class_7932 LogId
+		FIELD field_41293 DATE_TIME_FORMATTER Ljava/time/format/DateTimeFormatter;
+		METHOD method_47558 fromFileName (Ljava/lang/String;)Lnet/minecraft/class_7929$class_7932;
+			ARG 0 fileName
+		METHOD method_47559 getFileName (Ljava/lang/String;)Ljava/lang/String;
+			ARG 1 extension
+	CLASS class_7933 LogFileIterable
+		FIELD field_41294 logs Ljava/util/List;
+		METHOD <init> (Ljava/util/List;)V
+			ARG 1 logs
+		METHOD method_47560 compressAll ()Lnet/minecraft/class_7929$class_7933;
+		METHOD method_47561 (ILjava/time/LocalDate;Lnet/minecraft/class_7929$class_7931;)Z
+			ARG 2 log
+		METHOD method_47562 removeExpired (Ljava/time/LocalDate;I)Lnet/minecraft/class_7929$class_7933;
+			ARG 1 currentDate
+			ARG 2 retentionDays
+		METHOD method_47563 stream ()Ljava/util/stream/Stream;
+		METHOD method_47564 toIdSet ()Ljava/util/Set;
+	CLASS class_7934 Uncompressed
+		METHOD method_47565 open ()Ljava/nio/channels/FileChannel;
