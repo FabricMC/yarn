@@ -1,0 +1,15 @@
+name: Release Filament
+on: [workflow_dispatch] # Manual trigger
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    container:
+      image: eclipse-temurin:18-jdk
+      options: --user root
+    steps:
+      - uses: actions/checkout@v3
+      - run: ./gradlew :filament:build :filament:publish --stacktrace
+        env:
+          MAVEN_URL: ${{ secrets.MAVEN_URL }}
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}

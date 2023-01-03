@@ -104,7 +104,7 @@ public abstract class JavadocLintTask extends DefaultTask {
 		@Override
 		public void execute() {
 			try {
-				var files = FileUtil.toPaths(getParameters().getMappingFiles().getFiles()).toArray(new Path[0]);
+				Path[] files = FileUtil.toPaths(getParameters().getMappingFiles().getFiles()).toArray(new Path[0]);
 				EntryTree<EntryMapping> mappings = EnigmaMappingsReader.readFiles(ProgressListener.none(), files);
 				List<String> errors = new ArrayList<>();
 

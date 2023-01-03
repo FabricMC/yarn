@@ -1,11 +1,18 @@
+import org.gradle.util.GradleVersion
+
 plugins {
 	id 'java-library'
 	id 'java-gradle-plugin'
 	id 'checkstyle'
+	id 'maven-publish'
 }
 
 group = 'net.fabricmc'
+version = project.filament_version
 
+def ENV = System.getenv()
+
+// Needed to read the main projects properties
 def properties = new Properties()
 file('../gradle.properties').newInputStream().withCloseable {
 	properties.load(it)
@@ -27,6 +34,16 @@ dependencies {
 	implementation "net.fabricmc.unpick:unpick-format-utils:$properties.unpick_version"
 	implementation "net.fabricmc:tiny-mappings-parser:$properties.tiny_mappings_parser_version"
 	implementation "net.fabricmc:tiny-remapper:$properties.tiny_remapper_version"
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
+
+	// Contains a number of useful utilities we can re-use.
+	implementation ("net.fabricmc:fabric-loom:1.0.7") {
+		transitive = true
+	}
+
+	implementation ('net.fabricmc:stitch:0.6.2') {
+		exclude module: 'enigma'
+	}
 
 	testImplementation platform("org.junit:junit-bom:$properties.junit_version")
 	testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -53,5 +70,41 @@ gradlePlugin {
 			id = 'net.fabricmc.filament'
 			implementationClass = 'net.fabricmc.filament.FilamentGradlePlugin'
 		}
+	}
+}
+
+publishing {
+	repositories {
+		if (ENV.MAVEN_URL) {
+			repositories.maven {
+				name "fabric"
+				url ENV.MAVEN_URL
+				credentials {
+					username ENV.MAVEN_USERNAME
+					password ENV.MAVEN_PASSWORD
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Run this task to download the gradle sources next to the api jar, you may need to manually attach the sources jar
+ */
+task downloadGradleSources() {
+	doLast {
+		// Awful hack to find the gradle api location
+		def gradleApiFile = project.configurations.detachedConfiguration(dependencies.gradleApi()).files.stream()
+			.filter {
+				it.name.startsWith("gradle-api")
+			}.findFirst().orElseThrow()
+
+		def gradleApiSources = new File(gradleApiFile.absolutePath.replace(".jar", "-sources.jar"))
+		def url = "https://services.gradle.org/distributions/gradle-${GradleVersion.current().getVersion()}-src.zip"
+
+		gradleApiSources.delete()
+
+		println("Downloading (${url}) to (${gradleApiSources})")
+		gradleApiSources << new URL(url).newInputStream()
 	}
 }

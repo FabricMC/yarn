@@ -129,8 +129,6 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_31595 addBlockBreakParticles (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 1 pos
 		ARG 2 state
-	METHOD method_31596 (Ljava/util/function/Predicate;Ljava/util/List;Lnet/minecraft/class_5575;Lnet/minecraft/class_1297;)V
-		ARG 3 entity
 	METHOD method_38989 shouldUpdatePostDeath (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_39425 shouldTickBlocksInChunk (J)Z
@@ -148,7 +146,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_43126 getSpawnPos ()Lnet/minecraft/class_2338;
 	METHOD method_43127 getSpawnAngle ()F
 	METHOD method_43128 playSound (Lnet/minecraft/class_1657;DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
-		ARG 1 player
+		ARG 1 except
 		ARG 2 x
 		ARG 4 y
 		ARG 6 z
@@ -157,13 +155,78 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 10 volume
 		ARG 11 pitch
 	METHOD method_43129 playSoundFromEntity (Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
-		ARG 1 player
+		ARG 1 except
 		ARG 2 entity
 		ARG 3 sound
 		ARG 4 category
 		ARG 5 volume
 		ARG 6 pitch
 	METHOD method_44013 getDimensionKey ()Lnet/minecraft/class_5321;
+	METHOD method_45445 playSound (Lnet/minecraft/class_1297;Lnet/minecraft/class_2338;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
+		ARG 1 except
+		ARG 2 pos
+		ARG 3 sound
+		ARG 4 category
+		ARG 5 volume
+		ARG 6 pitch
+	METHOD method_45446 playSoundAtBlockCenter (Lnet/minecraft/class_2338;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFZ)V
+		ARG 1 pos
+		ARG 2 sound
+		ARG 3 category
+		ARG 4 volume
+		ARG 5 pitch
+		ARG 6 useDistance
+	METHOD method_46407 createExplosion (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;Lnet/minecraft/class_243;FZLnet/minecraft/class_1937$class_7867;)Lnet/minecraft/class_1927;
+		COMMENT Creates an explosion.
+		COMMENT
+		COMMENT @see #createExplosion(Entity, DamageSource, ExplosionBehavior, double, double, double, float, boolean, World.ExplosionSourceType)
+		ARG 1 entity
+		ARG 2 damageSource
+		ARG 3 behavior
+		ARG 4 pos
+		ARG 5 power
+		ARG 6 createFire
+		ARG 7 explosionSourceType
+	METHOD method_46668 createExplosion (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1937$class_7867;Z)Lnet/minecraft/class_1927;
+		ARG 1 entity
+		ARG 2 damageSource
+		ARG 3 behavior
+		ARG 4 x
+		ARG 6 y
+		ARG 8 z
+		ARG 10 power
+		ARG 11 createFire
+		ARG 12 explosionSourceType
+		ARG 13 particles
+	METHOD method_46669 getDestructionType (Lnet/minecraft/class_1928$class_4313;)Lnet/minecraft/class_1927$class_4179;
+		ARG 1 gameRuleKey
+	METHOD method_47574 collectEntitiesByType (Lnet/minecraft/class_5575;Lnet/minecraft/class_238;Ljava/util/function/Predicate;Ljava/util/List;)V
+		ARG 1 filter
+		ARG 2 box
+		ARG 3 predicate
+		ARG 4 result
+	METHOD method_47575 collectEntitiesByType (Lnet/minecraft/class_5575;Lnet/minecraft/class_238;Ljava/util/function/Predicate;Ljava/util/List;I)V
+		COMMENT Collects entities of the given type in {@code box}, up to {@code limit}. Using this can
+		COMMENT improve performance, especially if {@code limit} is small.
+		COMMENT
+		COMMENT @see #getEntitiesByType
+		ARG 1 filter
+		ARG 2 box
+		ARG 3 predicate
+		ARG 4 result
+		ARG 5 limit
+	METHOD method_47576 (Ljava/util/function/Predicate;Ljava/util/List;ILnet/minecraft/class_5575;Lnet/minecraft/class_1297;)Lnet/minecraft/class_7927$class_7928;
+		ARG 4 entity
+	METHOD method_47967 playSound (Lnet/minecraft/class_1657;DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFJ)V
+		ARG 1 except
+		ARG 2 x
+		ARG 4 y
+		ARG 6 z
+		ARG 8 sound
+		ARG 9 category
+		ARG 10 volume
+		ARG 11 pitch
+		ARG 12 seed
 	METHOD method_8413 updateListeners (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;I)V
 		ARG 1 pos
 		ARG 2 oldState
@@ -192,21 +255,21 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8430 getRainGradient (F)F
 		ARG 1 delta
 	METHOD method_8433 getRecipeManager ()Lnet/minecraft/class_1863;
-	METHOD method_8437 createExplosion (Lnet/minecraft/class_1297;DDDFLnet/minecraft/class_1927$class_4179;)Lnet/minecraft/class_1927;
+	METHOD method_8437 createExplosion (Lnet/minecraft/class_1297;DDDFLnet/minecraft/class_1937$class_7867;)Lnet/minecraft/class_1927;
 		COMMENT Creates an explosion without creating fire.
 		COMMENT
-		COMMENT @see #createExplosion(Entity, DamageSource, ExplosionBehavior, double, double, double, float, boolean, Explosion.DestructionType)
+		COMMENT @see #createExplosion(Entity, DamageSource, ExplosionBehavior, double, double, double, float, boolean, World.ExplosionSourceType)
 		ARG 1 entity
 		ARG 2 x
 		ARG 4 y
 		ARG 6 z
 		ARG 8 power
-		ARG 9 destructionType
+		ARG 9 explosionSourceType
 	METHOD method_8438 addBlockEntity (Lnet/minecraft/class_2586;)V
 		ARG 1 blockEntity
 	METHOD method_8442 getSkyAngleRadians (F)F
 		ARG 1 tickDelta
-	METHOD method_8449 playSoundFromEntity (Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFJ)V
+	METHOD method_8449 playSoundFromEntity (Lnet/minecraft/class_1657;Lnet/minecraft/class_1297;Lnet/minecraft/class_6880;Lnet/minecraft/class_3419;FFJ)V
 		ARG 1 except
 			COMMENT the player that should not receive the sound, or {@code null}
 		ARG 2 entity
@@ -222,7 +285,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		COMMENT @see #updateNeighborsExcept(BlockPos, Block, Direction)
 		ARG 1 pos
 		ARG 2 sourceBlock
-	METHOD method_8454 createExplosion (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1927$class_4179;)Lnet/minecraft/class_1927;
+	METHOD method_8454 createExplosion (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;Lnet/minecraft/class_5362;DDDFZLnet/minecraft/class_1937$class_7867;)Lnet/minecraft/class_1927;
 		COMMENT Creates an explosion.
 		ARG 1 entity
 			COMMENT the entity that exploded (like TNT) or {@code null} to indicate no entity exploded
@@ -237,8 +300,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 10 power
 		ARG 11 createFire
 			COMMENT whether the explosion should create fire
-		ARG 12 destructionType
-			COMMENT the destruction type of the explosion
+		ARG 12 explosionSourceType
 	METHOD method_8455 updateComparators (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;)V
 		ARG 1 pos
 		ARG 2 block
@@ -246,7 +308,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8459 isEmittingRedstonePower (Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Z
 		ARG 1 pos
 		ARG 2 direction
-	METHOD method_8465 playSound (Lnet/minecraft/class_1657;DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFJ)V
+	METHOD method_8465 playSound (Lnet/minecraft/class_1657;DDDLnet/minecraft/class_6880;Lnet/minecraft/class_3419;FFJ)V
 		ARG 1 except
 			COMMENT the player that should not receive the sound, or {@code null}
 		ARG 2 x
@@ -393,17 +455,17 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
-	METHOD method_8537 createExplosion (Lnet/minecraft/class_1297;DDDFZLnet/minecraft/class_1927$class_4179;)Lnet/minecraft/class_1927;
+	METHOD method_8537 createExplosion (Lnet/minecraft/class_1297;DDDFZLnet/minecraft/class_1937$class_7867;)Lnet/minecraft/class_1927;
 		COMMENT Creates an explosion.
 		COMMENT
-		COMMENT @see #createExplosion(Entity, DamageSource, ExplosionBehavior, double, double, double, float, boolean, Explosion.DestructionType)
+		COMMENT @see #createExplosion(Entity, DamageSource, ExplosionBehavior, double, double, double, float, boolean, World.ExplosionSourceType)
 		ARG 1 entity
 		ARG 2 x
 		ARG 4 y
 		ARG 6 z
 		ARG 8 power
 		ARG 9 createFire
-		ARG 10 destructionType
+		ARG 10 explosionSourceType
 	METHOD method_8538 addDetailsToCrashReport (Lnet/minecraft/class_128;)Lnet/minecraft/class_129;
 		ARG 1 report
 	METHOD method_8543 initWeatherGradients ()V
@@ -420,3 +482,4 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 13 nbt
 	METHOD method_8558 isValidHorizontally (Lnet/minecraft/class_2338;)Z
 		ARG 0 pos
+	CLASS class_7867 ExplosionSourceType

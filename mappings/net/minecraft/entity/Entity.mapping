@@ -527,7 +527,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_30633 positionInPortal (Lnet/minecraft/class_2350$class_2351;Lnet/minecraft/class_5459$class_5460;)Lnet/minecraft/class_243;
 		COMMENT {@return the entity's position in the portal after teleportation}
 		COMMENT
-		COMMENT @see net.minecraft.world.dimension.AreaHelper#entityPosInPortal
+		COMMENT @see net.minecraft.world.dimension.NetherPortal#entityPosInPortal
 		ARG 1 portalAxis
 		ARG 2 portalRect
 	METHOD method_30634 updatePosition (DDD)V
@@ -581,6 +581,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT Calls {@link #tickInVoid()} when the entity is 64 blocks below the world's {@linkplain net.minecraft.world.HeightLimitView#getBottomY() minimum Y position}.
 	METHOD method_31474 (Lnet/minecraft/class_1297;)V
 		ARG 0 entity
+	METHOD method_31475 (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;)Z
+		ARG 1 entity
 	METHOD method_31476 getChunkPos ()Lnet/minecraft/class_1923;
 		COMMENT {@return the chunk position of the entity}
 	METHOD method_31477 getBlockX ()I
@@ -667,9 +669,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT {@return whether the entity can freeze}
 		COMMENT
 		COMMENT @implNote Entities cannot be frozen if they are in the {@link
-		COMMENT net.minecraft.tag.EntityTypeTags#FREEZE_IMMUNE_ENTITY_TYPES} tag. In addition to this, {@link
+		COMMENT net.minecraft.registry.tag.EntityTypeTags#FREEZE_IMMUNE_ENTITY_TYPES} tag. In addition to this, {@link
 		COMMENT LivingEntity} cannot be frozen if they are spectator or if they wear an
-		COMMENT item inside {@link net.minecraft.tag.ItemTags#FREEZE_IMMUNE_WEARABLES} tag.
+		COMMENT item inside {@link net.minecraft.registry.tag.ItemTags#FREEZE_IMMUNE_WEARABLES} tag.
 	METHOD method_32317 setFrozenTicks (I)V
 		COMMENT Sets how long the entity is freezing in ticks.
 		COMMENT
@@ -897,8 +899,30 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
+	METHOD method_45166 requestTeleportOffset (DDD)V
+		COMMENT Requests the entity to teleport to the current position offset by the given amount.
+		COMMENT
+		COMMENT <p>For players, this sends the teleport packet. For other entities,
+		COMMENT this just sets the position of the entity and its passengers.
+		COMMENT
+		COMMENT @see #teleport
+		COMMENT @see #requestTeleport(double, double, double)
+		COMMENT @see #requestTeleportAndDismount
+		COMMENT @see #refreshPositionAndAngles(double, double, double, float, float)
+		ARG 1 offsetX
+		ARG 3 offsetY
+		ARG 5 offsetZ
+	METHOD method_45318 limitFallDistance ()V
+		COMMENT Called when this entity is fall flying or on a lead.
+		COMMENT
+		COMMENT <p>Limits this entity's {@code fallDistance} if its downward velocity isn't fast enough
+		COMMENT in order to prevent unwarranted fall damage.
 	METHOD method_45319 addVelocity (Lnet/minecraft/class_243;)V
 		ARG 1 velocity
+	METHOD method_45321 getLeashOffset (F)Lnet/minecraft/class_243;
+		ARG 1 tickDelta
+	METHOD method_46395 extinguishWithSound ()V
+	METHOD method_46396 reinitDimensions ()V
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		COMMENT Called when this entity's collision box intersects {@code state}.
@@ -1677,10 +1701,10 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #dropItem(ItemConvertible, int)
 		COMMENT @see #dropStack(ItemStack, float)
 		ARG 1 stack
-	METHOD method_5776 hasWings ()Z
-		COMMENT {@return whether the entity has wings}
+	METHOD method_5776 isFlappingWings ()Z
+		COMMENT {@return whether the entity is flapping their wings}
 		COMMENT
-		COMMENT <p>Entities with wings will call {@link #addFlapEffects} inside
+		COMMENT <p>Entities flapping their wings will call {@link #addFlapEffects} inside
 		COMMENT {@link #addAirTravelEffects}.
 	METHOD method_5777 isSubmergedIn (Lnet/minecraft/class_6862;)Z
 		COMMENT {@return whether the entity is submerged in a fluid in {@code fluidTag}}
@@ -1792,7 +1816,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT <p>The actual flapping logic should be done in {@link #tick()} instead.
 		COMMENT
-		COMMENT <p>This is only called when the entity {@linkplain #hasWings() has wings}
+		COMMENT <p>This is only called when the entity {@linkplain #isFlappingWings() is flapping wings}
 		COMMENT and the entity {@linkplain #getMoveEffect() has any move effect}, from
 		COMMENT {@link #addAirTravelEffects()}.
 	METHOD method_5802 getRotationClient ()Lnet/minecraft/class_241;
@@ -2082,6 +2106,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT this just sets the position of the entity and its passengers.
 		COMMENT
 		COMMENT @see #teleport
+		COMMENT @see #requestTeleportOffset(double, double, double)
 		COMMENT @see #requestTeleportAndDismount
 		COMMENT @see #refreshPositionAndAngles(double, double, double, float, float)
 		ARG 1 destX

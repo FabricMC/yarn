@@ -104,6 +104,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	FIELD field_30902 HIDE_FLAGS_KEY Ljava/lang/String;
 	FIELD field_34453 destroyChecker Lnet/minecraft/class_6538;
 	FIELD field_34454 placeChecker Lnet/minecraft/class_6538;
+	FIELD field_40211 DISABLED_TEXT Lnet/minecraft/class_2561;
 	FIELD field_8029 MODIFIER_FORMAT Ljava/text/DecimalFormat;
 	FIELD field_8030 bobbingAnimationTime I
 	FIELD field_8031 count I
@@ -232,6 +233,10 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT @see #isOf(Item)
 		ARG 1 predicate
 	METHOD method_41409 getRegistryEntry ()Lnet/minecraft/class_6880;
+	METHOD method_45435 isItemEnabled (Lnet/minecraft/class_7699;)Z
+		ARG 1 enabledFeatures
+	METHOD method_46651 copyWithCount (I)Lnet/minecraft/class_1799;
+		ARG 1 count
 	METHOD method_7909 getItem ()Lnet/minecraft/class_1792;
 		COMMENT {@return the item of this stack}
 		COMMENT
@@ -328,9 +333,6 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT {@return the stack's repair cost used in anvils}
 		COMMENT
 		COMMENT <p>This is the the value of the {@value #REPAIR_COST_KEY} key in NBT.
-	METHOD method_7929 isItemEqual (Lnet/minecraft/class_1799;)Z
-		COMMENT {@return whether this stack and {@code stack} hold the same item}
-		ARG 1 stack
 	METHOD method_7930 onStoppedUsing (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;I)V
 		ARG 1 world
 		ARG 2 user
@@ -468,7 +470,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT @see #setHolder
 		COMMENT @see #getFrame
 		COMMENT @see #getHolder
-	METHOD method_7962 isItemEqualIgnoreDamage (Lnet/minecraft/class_1799;)Z
+	METHOD method_7962 isItemEqual (Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
 	METHOD method_7963 isDamageable ()Z
 		COMMENT {@return whether the item can be damaged (lose durability)}
@@ -593,7 +595,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT
 		COMMENT @see <a href="#nbt-operations">Item Stack NBT Operations</a>
 		ARG 1 key
-	METHOD method_7984 areItemsEqualIgnoreDamage (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+	METHOD method_7984 areItemsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 0 left
 		ARG 1 right
 	METHOD method_7985 hasNbt ()Z
@@ -605,13 +607,6 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT
 		COMMENT @see #isDamageable
 		COMMENT @see #getDamage
-	METHOD method_7987 areItemsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
-		COMMENT {@return whether the given item stacks' items are equal}
-		COMMENT
-		COMMENT @see #areEqual
-		COMMENT @see #canCombine
-		ARG 0 left
-		ARG 1 right
 	CLASS class_5422 TooltipSection
 		FIELD field_25775 flag I
 		METHOD method_30269 getFlag ()I

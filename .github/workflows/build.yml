@@ -7,16 +7,15 @@ jobs:
         java: [17-jdk, 18-jdk]
     runs-on: ubuntu-22.04
     container:
-      image: openjdk:${{ matrix.java }}
+      image: eclipse-temurin:${{ matrix.java }}
       options: --user root
     steps:
-      - uses: actions/checkout@v2
-      - uses: gradle/wrapper-validation-action@v1
+      - uses: actions/checkout@v3
       - run: ./gradlew build javadocJar checkMappings --stacktrace --warning-mode fail
       - name: Build artifacts
         if: ${{ matrix.java == '18-jdk' }}
         continue-on-error: true
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Artifacts
           path: build/libs/
@@ -24,9 +23,9 @@ jobs:
   test-build-logic:
     runs-on: ubuntu-22.04
     container:
-      image: openjdk:18-jdk
+      image: eclipse-temurin:18-jdk
       options: --user root
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: gradle/wrapper-validation-action@v1
       - run: ./gradlew :filament:build

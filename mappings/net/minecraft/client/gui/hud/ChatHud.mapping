@@ -12,6 +12,10 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 	FIELD field_2067 hasUnreadNewMessages Z
 	FIELD field_32180 MAX_MESSAGES I
 	FIELD field_39771 MISSING_MESSAGE_INDEX I
+	FIELD field_40391 DELETED_MARKER_TEXT Lnet/minecraft/class_2561;
+	FIELD field_40392 removalQueue Ljava/util/List;
+	METHOD <init> (Lnet/minecraft/class_310;)V
+		ARG 1 client
 	METHOD method_1802 scroll (I)V
 		ARG 1 scroll
 	METHOD method_1803 addToMessageHistory (Ljava/lang/String;)V
@@ -19,6 +23,8 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 	METHOD method_1805 render (Lnet/minecraft/class_4587;III)V
 		ARG 1 matrices
 		ARG 2 currentTick
+		ARG 3 mouseX
+		ARG 4 mouseY
 	METHOD method_1806 getWidth (D)I
 		ARG 0 widthOption
 	METHOD method_1808 clear (Z)V
@@ -69,14 +75,29 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 		ARG 3 mouseY
 	METHOD method_44724 toChatLineY (D)D
 		ARG 1 y
-	METHOD method_44725 getMessageIndex (DD)I
+	METHOD method_44725 getMessageLineIndex (DD)I
+		ARG 1 chatLineX
+		ARG 3 chatLineY
 	METHOD method_44752 getLineHeight ()I
 	METHOD method_44811 addMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_7469;Lnet/minecraft/class_7591;)V
 		ARG 1 message
+		ARG 2 signature
 		ARG 3 indicator
-	METHOD method_44812 hideMessage (Lnet/minecraft/class_7469;)V
+	METHOD method_44812 removeMessage (Lnet/minecraft/class_7469;)V
 		ARG 1 signature
 	METHOD method_44813 refresh ()V
 	METHOD method_45027 logChatMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_7591;)V
 		ARG 1 message
 		ARG 2 indicator
+	METHOD method_45584 tickRemovalQueueIfExists ()V
+	METHOD method_45585 (ILnet/minecraft/class_338$class_7731;)Z
+		ARG 2 message
+	METHOD method_45586 createRemovalMarker (Lnet/minecraft/class_303;)Lnet/minecraft/class_303;
+		ARG 1 original
+	METHOD method_45587 queueForRemoval (Lnet/minecraft/class_7469;)Lnet/minecraft/class_338$class_7731;
+		ARG 1 signature
+	METHOD method_45588 getMessageIndex (DD)I
+		ARG 1 chatLineX
+		ARG 3 chatLineY
+	METHOD method_45589 tickRemovalQueue ()V
+	CLASS class_7731 RemovalQueuedMessage

@@ -1,0 +1,285 @@
+CLASS net/minecraft/class_2378 net/minecraft/registry/Registry
+	COMMENT A registry is used to register various in-game components. Almost all parts of the
+	COMMENT game - from blocks, items, and entity types, to cat types, goat horn instruments,
+	COMMENT and structure pools - are registered in registries. Registry system allows the game
+	COMMENT to enumerate all known types of something, and to assign a unique identifier to each
+	COMMENT of those. Therefore, registering an object in the registry plays a very important
+	COMMENT role, and failure to register new instances of registerable object usually results
+	COMMENT in a bug or even a crash.
+	COMMENT
+	COMMENT <h2 id="terms">Terminologies</h2>
+	COMMENT <p>A <strong>registry</strong> is an object that holds the mapping between three things:
+	COMMENT the string ID, the numeric ID, and the registered value. There are many registries
+	COMMENT for different types of registerable objects, and a registry's type parameter indicates
+	COMMENT the accepted type. For example, you register your {@link net.minecraft.block.Block} to {@code
+	COMMENT Registry<Block>}. It's important to note that registries themselves are registered
+	COMMENT in a "registry of registries", {@link Registries#ROOT}.
+	COMMENT
+	COMMENT <p>The <strong>string ID</strong>, usually just called "ID", is a human-readable
+	COMMENT {@link Identifier} that uniquely identifies the registered value in a registry.
+	COMMENT This should stay the same between two game versions, and is usually used for disk
+	COMMENT storage.
+	COMMENT
+	COMMENT <p>The <strong>numeric ID</strong> or <strong>raw ID</strong> is an integer
+	COMMENT assigned automatically by the registry to each registered value. This is not
+	COMMENT guaranteed to stay the same between two game versions, and is usually used for
+	COMMENT networking purposes.
+	COMMENT
+	COMMENT <p>The <strong>registered value</strong>, often just called "value" in the code,
+	COMMENT is the value added to the registry. The registry's type parameter determines
+	COMMENT the type of the registered value.
+	COMMENT
+	COMMENT <p>Each registered value can also be identified with a <strong>{@linkplain RegistryKey
+	COMMENT registry key}</strong>. A registry key is a combination of the registry's ID and
+	COMMENT the registered value's ID. Using a registry key makes the type of the ID's
+	COMMENT associated value clear, as the type parameter contains the type.
+	COMMENT
+	COMMENT <p>A <strong>{@linkplain RegistryEntry registry entry}</strong> is an object
+	COMMENT holding a value that can be registered in a registry. In most cases, the
+	COMMENT value is already registered in a registry ("reference entry"), hence the name;
+	COMMENT however, it is possible to create a registry entry by direct reference
+	COMMENT ("direct entry"). This is useful for data packs, as they can define
+	COMMENT one-time use values directly without having to register them every time.
+	COMMENT
+	COMMENT <p>A <strong>{@link RegistryEntryList registry entry list}</strong> is a list
+	COMMENT of registry entries. This, is either a direct reference to each item, or
+	COMMENT a reference to a tag. A <strong>tag</strong> is a way to dynamically
+	COMMENT define a list of registered values. Anything registered in a registry
+	COMMENT can be tagged, and each registry holds a list of tags it recognizes.
+	COMMENT
+	COMMENT <h2 id="static-and-dynamic-registries">Static and dynamic registries</h2>
+	COMMENT <p>There are two kinds of registries: static and dynamic.
+	COMMENT
+	COMMENT <ul>
+	COMMENT <li>A <strong>static registry</strong> is a registry whose values are hard-coded
+	COMMENT in the game and cannot be added or modified through data packs. Most registries
+	COMMENT are static. Since they cannot be modified (without mods), it is a singleton,
+	COMMENT and exists in this class. During the game bootstrap, vanilla objects are
+	COMMENT registered, after which the registry gets frozen to prohibit further changes.</li>
+	COMMENT
+	COMMENT <li>A <strong>dynamic registry</strong> is a registry whose values can be
+	COMMENT added or replaced through data packs. A dynamic registry is bound to a server,
+	COMMENT and multiple registries for the same type of registerable object can exist during
+	COMMENT the lifetime of the game. When a player joins, the server sends the contents of
+	COMMENT the dynamic registry manager to the client, but only "network serializable"
+	COMMENT registries are sent. To access a dynamic registry, first get an instance of the
+	COMMENT dynamic registry manager, then call the {@link DynamicRegistryManager#get} method.</li>
+	COMMENT </ul>
+	COMMENT
+	COMMENT <h2 id="using">Using Registry</h2>
+	COMMENT <h3 id="reading">Reading Registry</h3>
+	COMMENT <p>A registry is also an {@link IndexedIterable}. Therefore, registries can be
+	COMMENT iterated using, e.g. {@code for (Block block : Registries.BLOCK)}.
+	COMMENT
+	COMMENT <p>There are several other methods used for reading the contents of the registry:
+	COMMENT <ul>
+	COMMENT <li>{@link #entryOf} or {@link #getEntry(RegistryKey)} for getting the registry entry
+	COMMENT from the key.</li>
+	COMMENT <li>{@link #get(Identifier)} or {@link #get(RegistryKey)} for getting the registered
+	COMMENT value from the ID or the registry key.</li>
+	COMMENT <li>{@link #getId(Object)} for getting the ID of a registered value.</li>
+	COMMENT <li>{@link #getEntry(int)} for getting the registry entry from the raw ID.</li>
+	COMMENT <li>{@link #getEntryList} and {@link #iterateEntries} for getting the contents of a tag,</li>
+	COMMENT <li>{@link #streamTags} for streaming all tags of a registry.</li>
+	COMMENT </ul>
+	COMMENT
+	COMMENT <h3 id="registering">Registering something to Registry</h3>
+	COMMENT <p>The steps for registration are different, depending on whether the registry is static
+	COMMENT or dynamic. For dynamic registries, data packs can usually be used to register a new
+	COMMENT value or replace one. For static registries, the game's code must be modified.
+	COMMENT
+	COMMENT <p>Static registries are defined in {@link Registries}, and unlike the dynamic registries, it
+	COMMENT cannot be changed after the game initialization. The game enforces this by "freezing"
+	COMMENT the registry. Attempting to register a value after freezing causes a crash, such as
+	COMMENT "Registry is already frozen". Modding APIs usually provide a way to bypass this restriction.
+	COMMENT
+	COMMENT <p>Use {@link #register(Registry, Identifier, Object)} for registering a value to a registry.
+	COMMENT
+	COMMENT <h3 id="intrusive-holders">Intrusive holders</h3>
+	COMMENT <p>For historical reasons, there are two types of reference registry entries.
+	COMMENT (This is different from the "direct" and "reference" registry entry types.)
+	COMMENT
+	COMMENT <ul>
+	COMMENT <li><strong>Intrusive holders</strong> are registry entries tied to a specific
+	COMMENT registerable object at instantiation time. When instantiating those, it promises
+	COMMENT that the object is later registered - which, if broken, will result in a crash.
+	COMMENT This is used for {@link Registries#BLOCK}, {@link Registries#ITEM}, {@link Registries#FLUID},
+	COMMENT {@link Registries#ENTITY_TYPE}, and {@link Registries#GAME_EVENT} registries.</li>
+	COMMENT <li><strong>Standalone holders</strong> are registry entries that are not intrusive.
+	COMMENT There is no restriction on instantiation.</li>
+	COMMENT </ul>
+	COMMENT
+	COMMENT <p>When a class whose instances are registered as intrusive holders, such as
+	COMMENT {@link net.minecraft.block.Block} or {@link net.minecraft.item.Item}, are instantiated
+	COMMENT without registering, the game crashes with "Some intrusive holders were not added to
+	COMMENT registry" error message. <strong>This includes conditional registration</strong>.
+	COMMENT For example, the code below can cause a crash:
+	COMMENT
+	COMMENT <pre>{@code
+	COMMENT Item myItem = new Item(new Item.Settings());
+	COMMENT if (condition) {
+	COMMENT     Registry.register(Registries.ITEM, new Identifier("example", "bad"), myItem);
+	COMMENT }
+	COMMENT }</pre>
+	COMMENT
+	COMMENT <p>The correct way is to make the instantiation conditional as well:
+	COMMENT
+	COMMENT <pre>{@code
+	COMMENT if (condition) {
+	COMMENT     Item myItem = new Item(new Item.Settings());
+	COMMENT     Registry.register(Registries.ITEM, new Identifier("example", "bad"), myItem);
+	COMMENT }
+	COMMENT }</pre>
+	METHOD keys (Lcom/mojang/serialization/DynamicOps;)Ljava/util/stream/Stream;
+		ARG 1 ops
+	METHOD method_10220 stream ()Ljava/util/stream/Stream;
+		COMMENT {@return a stream of all values of this registry}
+	METHOD method_10221 getId (Ljava/lang/Object;)Lnet/minecraft/class_2960;
+		COMMENT {@return the ID assigned to {@code value}, or {@code null} if it is not registered}
+		ARG 1 value
+	METHOD method_10223 get (Lnet/minecraft/class_2960;)Ljava/lang/Object;
+		COMMENT {@return the value that is assigned {@code id}, or {@code null} if there is none}
+		ARG 1 id
+	METHOD method_10226 register (Lnet/minecraft/class_2378;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;
+		ARG 0 registry
+		ARG 1 id
+		ARG 2 entry
+	METHOD method_10230 register (Lnet/minecraft/class_2378;Lnet/minecraft/class_2960;Ljava/lang/Object;)Ljava/lang/Object;
+		COMMENT Registers {@code entry} to {@code registry} under {@code id}.
+		COMMENT
+		COMMENT @return the passed {@code entry}
+		ARG 0 registry
+		ARG 1 id
+		ARG 2 entry
+	METHOD method_10231 register (Lnet/minecraft/class_2378;ILjava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;
+		ARG 0 registry
+		ARG 1 rawId
+		ARG 2 id
+		ARG 3 entry
+	METHOD method_10235 getIds ()Ljava/util/Set;
+		COMMENT {@return the set of all IDs registered in a registry}
+	METHOD method_10240 getRandom (Lnet/minecraft/class_5819;)Ljava/util/Optional;
+		COMMENT {@return a random registry entry from this registry, or an empty optional if the
+		COMMENT registry is empty}
+		ARG 1 random
+	METHOD method_10250 containsId (Lnet/minecraft/class_2960;)Z
+		COMMENT {@return whether {@code id} is registered in this registry}
+		ARG 1 id
+	METHOD method_17966 getOrEmpty (Lnet/minecraft/class_2960;)Ljava/util/Optional;
+		COMMENT {@return the value that is assigned {@code id}, or an empty optional if there is none}
+		ARG 1 id
+	METHOD method_29107 get (Lnet/minecraft/class_5321;)Ljava/lang/Object;
+		COMMENT {@return the value that is assigned {@code key}, or {@code null} if there is none}
+		ARG 1 key
+	METHOD method_29113 getKey (Ljava/lang/Object;)Ljava/util/Optional;
+		COMMENT {@return the registry key of {@code value}, or an empty optional if it is not registered}
+		ARG 1 entry
+	METHOD method_29722 getEntrySet ()Ljava/util/Set;
+		COMMENT {@return the set containing {@link Map.Entry} of the registry keys and values registered
+		COMMENT in this registry}
+	METHOD method_30517 getKey ()Lnet/minecraft/class_5321;
+		COMMENT {@return the registry key that identifies this registry}
+	METHOD method_31138 getLifecycle ()Lcom/mojang/serialization/Lifecycle;
+	METHOD method_31139 getEntryLifecycle (Ljava/lang/Object;)Lcom/mojang/serialization/Lifecycle;
+		COMMENT Gets the lifecycle of a registry entry.
+		ARG 1 entry
+	METHOD method_31140 getOrThrow (Lnet/minecraft/class_5321;)Ljava/lang/Object;
+		COMMENT {@return the value that is assigned {@code key}}
+		COMMENT
+		COMMENT @throws IllegalStateException if there is no value with {@code key} in the registry
+		ARG 1 key
+	METHOD method_31189 getOrEmpty (Lnet/minecraft/class_5321;)Ljava/util/Optional;
+		COMMENT {@return the value that is assigned {@code key}, or an empty optional if there is none}
+		ARG 1 key
+	METHOD method_34028 (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_2960;)Ljava/lang/Object;
+		ARG 1 id
+	METHOD method_35842 contains (Lnet/minecraft/class_5321;)Z
+		COMMENT {@return whether {@code key} is registered in this registry}
+		ARG 1 key
+	METHOD method_39197 register (Lnet/minecraft/class_2378;Lnet/minecraft/class_5321;Ljava/lang/Object;)Ljava/lang/Object;
+		COMMENT Registers {@code entry} to {@code registry} under {@code key}.
+		COMMENT
+		COMMENT @return the passed {@code entry}
+		ARG 0 registry
+		ARG 1 key
+		ARG 2 entry
+	METHOD method_39667 (Lnet/minecraft/class_2960;)Lcom/mojang/serialization/DataResult;
+		ARG 1 id
+	METHOD method_39670 (Ljava/lang/Object;)I
+		ARG 1 value
+	METHOD method_39671 (Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+		ARG 1 value
+	METHOD method_39673 getCodec ()Lcom/mojang/serialization/Codec;
+		COMMENT {@return the codec for serializing {@code T}}
+		COMMENT
+		COMMENT @implNote This serializes a value using the ID or (if compressed) the raw ID.
+	METHOD method_40257 populateTags (Ljava/util/Map;)V
+		ARG 1 tagEntries
+	METHOD method_40260 getOrCreateEntryList (Lnet/minecraft/class_6862;)Lnet/minecraft/class_6885$class_6888;
+		ARG 1 tag
+	METHOD method_40264 getEntry (Lnet/minecraft/class_5321;)Ljava/util/Optional;
+		COMMENT {@return the reference registry entry for the value assigned {@code key}, or an
+		COMMENT empty optional if there is no such value}
+		COMMENT
+		COMMENT @see #entryOf
+		ARG 1 key
+	METHOD method_40265 getEntry (I)Ljava/util/Optional;
+		COMMENT {@return the reference registry entry for the value assigned {@code rawId}, or an
+		COMMENT empty optional if there is no such value}
+		ARG 1 rawId
+	METHOD method_40266 getEntryList (Lnet/minecraft/class_6862;)Ljava/util/Optional;
+		COMMENT {@return the registry entry list of values that are assigned {@code tag}, or an empty
+		COMMENT optional if the tag is not known to the registry}
+		ARG 1 tag
+	METHOD method_40269 createEntry (Ljava/lang/Object;)Lnet/minecraft/class_6880$class_6883;
+		ARG 1 value
+	METHOD method_40270 streamEntries ()Ljava/util/stream/Stream;
+		COMMENT {@return a stream of reference registry entries of this registry}
+	METHOD method_40272 streamTagsAndEntries ()Ljava/util/stream/Stream;
+	METHOD method_40273 streamTags ()Ljava/util/stream/Stream;
+		COMMENT {@return a stream of all tag keys known to this registry}
+	METHOD method_40276 freeze ()Lnet/minecraft/class_2378;
+	METHOD method_40278 clearTags ()V
+	METHOD method_40285 (Lnet/minecraft/class_6880;)Lcom/mojang/serialization/DataResult;
+		ARG 1 entry
+	METHOD method_40286 iterateEntries (Lnet/minecraft/class_6862;)Ljava/lang/Iterable;
+		COMMENT {@return an iterable of values that are assigned {@code tag}, or an empty iterable
+		COMMENT if the tag is not known to the registry}
+		ARG 1 tag
+	METHOD method_40290 entryOf (Lnet/minecraft/class_5321;)Lnet/minecraft/class_6880$class_6883;
+		COMMENT {@return the reference registry entry for the value assigned {@code key}}
+		COMMENT
+		COMMENT @throws IllegalStateException if there is no value that is assigned {@code key}
+		COMMENT
+		COMMENT @see #getEntry(RegistryKey)
+		ARG 1 key
+	METHOD method_40294 createEntryCodec ()Lcom/mojang/serialization/Codec;
+		COMMENT {@return the codec for serializing the registry entry of {@code T}}
+		COMMENT
+		COMMENT @implNote This serializes a registry entry using the ID.
+	METHOD method_40295 getIndexedEntries ()Lnet/minecraft/class_2359;
+	METHOD method_42021 getKeys ()Ljava/util/Set;
+		COMMENT {@return the set of all registry keys registered in a registry}
+	METHOD method_46770 getEntryOwner ()Lnet/minecraft/class_7876;
+	METHOD method_46771 getReadOnlyWrapper ()Lnet/minecraft/class_7225$class_7226;
+		COMMENT {@return a registry wrapper that does not mutate the backing registry under
+		COMMENT any circumstances}
+		COMMENT
+		COMMENT @see net.minecraft.command.CommandRegistryAccess.EntryListCreationPolicy#FAIL
+	METHOD method_46772 getTagCreatingWrapper ()Lnet/minecraft/class_7225$class_7226;
+		COMMENT {@return a registry wrapper that creates and stores a new registry entry list
+		COMMENT when handling an unknown tag key}
+		COMMENT
+		COMMENT @see net.minecraft.command.CommandRegistryAccess.EntryListCreationPolicy#CREATE_NEW
+	METHOD method_47441 (Lnet/minecraft/class_6880;)Lcom/mojang/serialization/Lifecycle;
+		ARG 1 entry
+	METHOD method_47442 (Lnet/minecraft/class_6880;)Lcom/mojang/serialization/Lifecycle;
+		ARG 1 entry
+	METHOD method_47443 (Lnet/minecraft/class_2960;)Lcom/mojang/serialization/DataResult;
+		ARG 1 id
+	METHOD method_47983 getEntry (Ljava/lang/Object;)Lnet/minecraft/class_6880;
+		ARG 1 value
+	METHOD method_47985 registerReference (Lnet/minecraft/class_2378;Lnet/minecraft/class_2960;Ljava/lang/Object;)Lnet/minecraft/class_6880$class_6883;
+	CLASS 1
+		METHOD method_46773 (Lnet/minecraft/class_6880$class_6883;)Lnet/minecraft/class_6880;
+			ARG 0 entry

@@ -20,7 +20,9 @@ CLASS net/minecraft/class_355 net/minecraft/client/gui/hud/PlayerListHud
 	FIELD field_32211 HALF_GOLDEN_HEART_U I
 	FIELD field_32212 BLINKING_HEART_U I
 	FIELD field_32213 BLINKING_HALF_HEART_U I
+	FIELD field_40393 hearts Ljava/util/Map;
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_329;)V
+		ARG 1 client
 		ARG 2 inGameHud
 	METHOD method_1918 getPlayerName (Lnet/minecraft/class_640;)Lnet/minecraft/class_2561;
 		COMMENT {@return the player name rendered by this HUD}
@@ -37,6 +39,9 @@ CLASS net/minecraft/class_355 net/minecraft/client/gui/hud/PlayerListHud
 		ARG 1 objective
 		ARG 2 y
 		ARG 3 player
+		ARG 4 left
+		ARG 5 right
+		ARG 6 uuid
 		ARG 7 matrices
 	METHOD method_1923 renderLatencyIcon (Lnet/minecraft/class_4587;IIILnet/minecraft/class_640;)V
 		ARG 1 matrices
@@ -53,3 +58,32 @@ CLASS net/minecraft/class_355 net/minecraft/client/gui/hud/PlayerListHud
 		COMMENT the given player is in {@linkplain net.minecraft.world.GameMode#SPECTATOR spectator mode}.
 		ARG 1 entry
 		ARG 2 name
+	METHOD method_45590 renderHearts (IIILjava/util/UUID;Lnet/minecraft/class_4587;I)V
+		ARG 1 y
+		ARG 2 left
+		ARG 3 right
+		ARG 4 uuid
+		ARG 5 matrices
+		ARG 6 score
+	METHOD method_45591 (ILjava/util/UUID;)Lnet/minecraft/class_355$class_7732;
+		ARG 1 uuid2
+	METHOD method_45593 (Ljava/util/Set;Ljava/util/UUID;)Z
+		ARG 1 uuid
+	METHOD method_45594 (Lnet/minecraft/class_640;)Ljava/util/UUID;
+		ARG 0 playerEntry
+	CLASS class_7732 Heart
+		FIELD field_40394 COOLDOWN_TICKS J
+		FIELD field_40395 SCORE_DECREASE_HIGHLIGHT_TICKS J
+		FIELD field_40396 SCORE_INCREASE_HIGHLIGHT_TICKS J
+		FIELD field_40397 score I
+		FIELD field_40398 prevScore I
+		FIELD field_40399 lastScoreChangeTick J
+		FIELD field_40400 highlightEndTick J
+		METHOD <init> (I)V
+			ARG 1 score
+		METHOD method_45596 getPrevScore ()I
+		METHOD method_45597 tick (IJ)V
+			ARG 1 score
+			ARG 2 currentTick
+		METHOD method_45598 useHighlighted (J)Z
+			ARG 1 currentTick
