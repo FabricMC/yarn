@@ -65,7 +65,7 @@ CLASS net/minecraft/class_437 net/minecraft/client/gui/screen/Screen
 		COMMENT Renders the background of this screen.
 		COMMENT
 		COMMENT <p>If the client is in a world, renders the translucent background gradient.
-		COMMENT Otherwise {@linkplain #renderBackgroundTexture(int) renders the background texture}.
+		COMMENT Otherwise {@linkplain #renderBackgroundTexture renders the background texture}.
 		ARG 1 matrices
 	METHOD method_25421 shouldPause ()Z
 	METHOD method_25422 shouldCloseOnEsc ()Z
@@ -83,6 +83,8 @@ CLASS net/minecraft/class_437 net/minecraft/client/gui/screen/Screen
 		COMMENT Called when a screen should be initialized.
 		COMMENT
 		COMMENT <p>This method is called when this screen is {@linkplain net.minecraft.client.MinecraftClient#setScreen(Screen) opened} or resized.
+		COMMENT
+		COMMENT <p>This should call {@link #setInitialFocus} to set the element that is initially focused.
 	METHOD method_25428 confirmLink (Z)V
 		ARG 1 open
 	METHOD method_25429 addSelectableChild (Lnet/minecraft/class_364;)Lnet/minecraft/class_364;
@@ -195,6 +197,17 @@ CLASS net/minecraft/class_437 net/minecraft/client/gui/screen/Screen
 		ARG 7 colorStart
 		ARG 8 colorEnd
 	METHOD method_48262 hasUsageText ()Z
+	METHOD method_48263 switchFocus (Lnet/minecraft/class_8016;)V
+		COMMENT Switches focus from the currently focused element, if any, to {@code path}.
+		ARG 1 path
+	METHOD method_48264 getArrowNavigation (Lnet/minecraft/class_8028;)Lnet/minecraft/class_8023$class_8024;
+		ARG 1 direction
+	METHOD method_48265 setInitialFocus (Lnet/minecraft/class_364;)V
+		COMMENT Sets the initial focus of this screen. This should be called inside the overridden
+		COMMENT {@link #init()} method by screen implementations.
+		ARG 1 element
+	METHOD method_48266 getTabNavigation ()Lnet/minecraft/class_8023$class_8026;
+	METHOD method_48267 blur ()V
 	CLASS class_6390 SelectedElementNarrationData
 		FIELD field_33825 selectable Lnet/minecraft/class_6379;
 		FIELD field_33826 index I

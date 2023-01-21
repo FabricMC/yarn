@@ -325,6 +325,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @see #requestTeleportAndDismount
 		COMMENT @see #requestTeleport
+		COMMENT @see #teleport(ServerWorld, double, double, double, Set, float, float)
 		COMMENT @see #refreshPositionAndAngles(double, double, double, float, float)
 		ARG 1 destX
 		ARG 3 destY
@@ -719,7 +720,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT Requests the entity to teleport to the given position. If the entity is
 		COMMENT a player, this also dismounts the player.
 		COMMENT
-		COMMENT @see #teleport
+		COMMENT @see #teleport(double, double, double)
+		COMMENT @see #teleport(ServerWorld, double, double, double, Set, float, float)
 		COMMENT @see #requestTeleport
 		COMMENT @see #refreshPositionAndAngles(double, double, double, float, float)
 		ARG 1 destX
@@ -751,7 +753,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT For living entities, {@link #refreshPositionAndAngles} should be used instead.
 		COMMENT
 		COMMENT @see #refreshPositionAndAngles
-		COMMENT @see #teleport
+		COMMENT @see #teleport(double, double, double)
 		ARG 1 pos
 	METHOD method_33724 isRegionUnloaded ()Z
 		COMMENT {@return whether any part of this entity's bounding box is in an unloaded
@@ -923,6 +925,22 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 tickDelta
 	METHOD method_46395 extinguishWithSound ()V
 	METHOD method_46396 reinitDimensions ()V
+	METHOD method_48105 teleport (Lnet/minecraft/class_3218;DDDLjava/util/Set;FF)Z
+		COMMENT Teleports the entity to the given position. If {@code world} differs from
+		COMMENT the current world, it copies the entity and discards the current one.
+		COMMENT
+		COMMENT @see #requestTeleportAndDismount
+		COMMENT @see #requestTeleport
+		COMMENT @see #teleport(double, double, double)
+		COMMENT @see #refreshPositionAndAngles(double, double, double, float, float)
+		ARG 1 world
+		ARG 2 destX
+		ARG 4 destY
+		ARG 6 destZ
+		ARG 8 flags
+		ARG 9 yaw
+		ARG 10 pitch
+	METHOD method_48155 canSprintAsVehicle ()Z
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		COMMENT Called when this entity's collision box intersects {@code state}.
@@ -1889,7 +1907,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT For living entities, {@link #refreshPositionAndAngles} should be used instead.
 		COMMENT
 		COMMENT @see #refreshPositionAndAngles
-		COMMENT @see #teleport
+		COMMENT @see #teleport(double, double, double)
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
@@ -2105,7 +2123,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT <p>For players, this sends the teleport packet. For other entities,
 		COMMENT this just sets the position of the entity and its passengers.
 		COMMENT
-		COMMENT @see #teleport
+		COMMENT @see #teleport(double, double, double)
+		COMMENT @see #teleport(ServerWorld, double, double, double, Set, float, float)
 		COMMENT @see #requestTeleportOffset(double, double, double)
 		COMMENT @see #requestTeleportAndDismount
 		COMMENT @see #refreshPositionAndAngles(double, double, double, float, float)
