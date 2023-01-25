@@ -9,7 +9,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <th><b>Object Type</b></th> <th><b>read method</b></th> <th><b>write method</b></th>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>Codec-based</td><td>{@link #decode(Codec)}</td><td>{@link #encode(Codec, Object)}</td>
+	COMMENT  <td>Codec-based</td><td>{@link #decode(DynamicOps, Codec)}</td><td>{@link #encode(DynamicOps, Codec, Object)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link net.minecraft.registry.Registry} value</td><td>{@link #readRegistryValue(IndexedIterable)}</td><td>{@link #writeRegistryValue(IndexedIterable, Object)}</td>
@@ -642,14 +642,19 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @return the read object
 		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
 		COMMENT to decode the compound NBT
-		COMMENT @see #encode(Codec, Object)
+		COMMENT @see #encode(DynamicOps, Codec, Object)
+		ARG 1 ops
+		ARG 2 codec
 	METHOD method_29172 encode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Codec;Ljava/lang/Object;)V
 		COMMENT Writes an object to this buf as a compound NBT with the given codec.
 		COMMENT
 		COMMENT @param <T> the encoded object's type
 		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
 		COMMENT to encode the compound NBT
-		COMMENT @see #decode(Codec)
+		COMMENT @see #decode(DynamicOps, Codec)
+		ARG 1 ops
+		ARG 2 codec
+		ARG 3 value
 	METHOD method_30616 readNbt (Lnet/minecraft/class_2505;)Lnet/minecraft/class_2487;
 		COMMENT Reads an NBT compound from this buf. The binary representation of NBT is
 		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an NBT null is encountered,
