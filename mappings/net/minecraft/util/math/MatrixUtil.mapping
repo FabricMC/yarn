@@ -1,9 +1,35 @@
 CLASS net/minecraft/class_7837 net/minecraft/util/math/MatrixUtil
+	FIELD field_40746 COT_PI_OVER_8 F
 	FIELD field_40747 COS_PI_OVER_8 F
 	FIELD field_40748 SIN_PI_OVER_8 F
+	METHOD method_46410 qrGivensQuaternion (FF)Lcom/mojang/datafixers/util/Pair;
+		COMMENT Compute the Givens quaternion for a QR factorization.
+		COMMENT
+		COMMENT @return a pair (c, s) = (cos(theta), sin(theta))
+		COMMENT @see Algorithm 4 of https://pages.cs.wisc.edu/~sifakis/papers/SVD_TR1690.pdf
+		ARG 0 a1
+		ARG 1 a2
+	METHOD method_46411 approximateGivensQuaternion (FFF)Lcom/mojang/datafixers/util/Pair;
+		COMMENT Compute the approximate Givens rotation factors (c, s) = (cos(phi), sin(phi)) for a 2×2 matrix.
+		COMMENT
+		COMMENT @return a pair (c, s) = (cos(phi), sin(phi))
+		COMMENT
+		COMMENT @see Algorithm 2 of https://pages.cs.wisc.edu/~sifakis/papers/SVD_TR1690.pdf
+		ARG 0 a11
+		COMMENT the top-left element of the matrix
+		ARG 1 a12
+		COMMENT the average of the two elements on the minor diagonal
+		ARG 2 a22
+		COMMENT the bottom-right element of the matrix
 	METHOD method_46412 svdDecompose (Lorg/joml/Matrix3f;)Lorg/apache/commons/lang3/tuple/Triple;
+		COMMENT Performs an approximate singular value decomposition on a 3×3 matrix.
+		COMMENT
+		COMMENT @see https://pages.cs.wisc.edu/~sifakis/papers/SVD_TR1690.pdf
+		ARG 0 A
 	METHOD method_46413 affineTransform (Lorg/joml/Matrix4f;)Lorg/joml/Matrix4x3f;
 		ARG 0 matrix
 	METHOD method_46414 scale (Lorg/joml/Matrix4f;F)Lorg/joml/Matrix4f;
 		ARG 0 matrix
 		ARG 1 scalar
+	METHOD method_46415 applyJacobiIteration (Lorg/joml/Matrix3f;)Lorg/joml/Quaternionf;
+		ARG 0 S
