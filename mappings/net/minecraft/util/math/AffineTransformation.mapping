@@ -1,7 +1,7 @@
 CLASS net/minecraft/class_4590 net/minecraft/util/math/AffineTransformation
 	COMMENT An affine transformation is a decomposition of a 4&times;4 real matrix into
-	COMMENT a {@linkplain #rotation1 rotation} quaternion, a {@linkplain #scale scale}
-	COMMENT 3-vector, a second {@linkplain #rotation2 rotation} quaternion, and a
+	COMMENT a {@linkplain #leftRotation left rotation} quaternion, a {@linkplain #scale scale}
+	COMMENT 3-vector, a second {@linkplain #rightRotation right rotation} quaternion, and a
 	COMMENT {@linkplain #translation translation} 3-vector. It is also known as "TRSR"
 	COMMENT transformation, meaning "translation rotation scale rotation".
 	COMMENT
@@ -13,7 +13,8 @@ CLASS net/minecraft/class_4590 net/minecraft/util/math/AffineTransformation
 	FIELD field_20904 scale Lorg/joml/Vector3f;
 	FIELD field_20905 rightRotation Lorg/joml/Quaternionf;
 	FIELD field_20906 IDENTITY Lnet/minecraft/class_4590;
-	FIELD field_42533 CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_42532 CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_42533 ANY_CODEC Lcom/mojang/serialization/Codec;
 	METHOD <init> (Lorg/joml/Matrix4f;)V
 		ARG 1 matrix
 	METHOD <init> (Lorg/joml/Vector3f;Lorg/joml/Quaternionf;Lorg/joml/Vector3f;Lorg/joml/Quaternionf;)V
@@ -27,6 +28,10 @@ CLASS net/minecraft/class_4590 net/minecraft/util/math/AffineTransformation
 	METHOD method_22933 multiply (Lnet/minecraft/class_4590;)Lnet/minecraft/class_4590;
 		ARG 1 other
 	METHOD method_22934 setup (Lorg/joml/Vector3f;Lorg/joml/Quaternionf;Lorg/joml/Vector3f;Lorg/joml/Quaternionf;)Lorg/joml/Matrix4f;
+		ARG 0 translation
+		ARG 1 leftRotation
+		ARG 2 scale
+		ARG 3 rightRotation
 	METHOD method_22935 invert ()Lnet/minecraft/class_4590;
 	METHOD method_22936 getMatrix ()Lorg/joml/Matrix4f;
 	METHOD method_22937 getLeftRotation ()Lorg/joml/Quaternionf;
@@ -37,3 +42,17 @@ CLASS net/minecraft/class_4590 net/minecraft/util/math/AffineTransformation
 	METHOD method_35865 getTranslation ()Lorg/joml/Vector3f;
 	METHOD method_35866 getScale ()Lorg/joml/Vector3f;
 	METHOD method_35867 getRightRotation ()Lorg/joml/Quaternionf;
+	METHOD method_49058 (Lcom/mojang/datafixers/util/Either;)Lnet/minecraft/class_4590;
+		ARG 0 either
+	METHOD method_49059 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 0 instance
+	METHOD method_49060 (Lnet/minecraft/class_4590;)Lnet/minecraft/class_4590;
+		ARG 0 affineTransformation
+	METHOD method_49061 (Lnet/minecraft/class_4590;)Lnet/minecraft/class_4590;
+		ARG 0 affineTransformation
+	METHOD method_49062 (Lnet/minecraft/class_4590;)Lorg/joml/Quaternionf;
+		ARG 0 affineTransformation
+	METHOD method_49063 (Lnet/minecraft/class_4590;)Lorg/joml/Vector3f;
+		ARG 0 affineTransformation
+	METHOD method_49064 (Lnet/minecraft/class_4590;)Lorg/joml/Quaternionf;
+		ARG 0 affineTransformation

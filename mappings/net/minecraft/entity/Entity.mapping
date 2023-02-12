@@ -133,8 +133,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see Entity#removePassenger
 	FIELD field_29988 DEFAULT_PORTAL_COOLDOWN I
 		COMMENT @see Entity#getDefaultPortalCooldown
-	FIELD field_29989 MAX_SCOREBOARD_TAGS I
-		COMMENT @see Entity#addScoreboardTag
+	FIELD field_29989 MAX_COMMAND_TAGS I
+		COMMENT @see Entity#addCommandTag
 		COMMENT @see Entity#readNbt
 	FIELD field_29990 VELOCITY_AFFECTING_POS_Y_OFFSET D
 		COMMENT @see Entity#getVelocityAffectingPos
@@ -941,6 +941,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_48155 canSprintAsVehicle ()Z
 	METHOD method_48850 onDataTrackerUpdate (Ljava/util/List;)V
 		ARG 1 dataEntries
+	METHOD method_48921 couldAcceptPassenger ()Z
+		COMMENT {@return {@code true} if this entity supports passengers in general}
 	METHOD method_48922 onDamaged (Lnet/minecraft/class_1282;)V
 		ARG 1 damageSource
 	METHOD method_48923 getDamageSources ()Lnet/minecraft/class_8109;
@@ -1131,7 +1133,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT <p>This is saved on the {@code Invulnerable} NBT key.
 		COMMENT
 		COMMENT @implNote Invulnerable entities are immune from all damages except {@link
-		COMMENT DamageSource#OUT_OF_WORLD} and damages by creative mode players by default.
+		COMMENT net.minecraft.entity.damage.DamageTypes#OUT_OF_WORLD}
+		COMMENT and damages by creative mode players by default.
 		COMMENT
 		COMMENT @see #isInvulnerableTo
 		COMMENT @see #setInvulnerable
@@ -1226,11 +1229,13 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT {@code super.isInvulnerableTo()} should be called in this case.
 		COMMENT
 		COMMENT @implNote Entity is invulnerable to all damages if it is {@linkplain #isRemoved
-		COMMENT removed}, and is invulnerable to all damages except {@link DamageSource#OUT_OF_WORLD}
+		COMMENT removed}, and is invulnerable to all damages except {@link
+		COMMENT net.minecraft.entity.damage.DamageTypes#OUT_OF_WORLD}
 		COMMENT or damages from creative mode players if the entity is {@linkplain #isInvulnerable
 		COMMENT invulnerable}. This also checks {@link #isFireImmune}.
 		COMMENT
-		COMMENT @see DamageSource
+		COMMENT @see net.minecraft.entity.damage.DamageSources
+		COMMENT @see net.minecraft.registry.tag.DamageTypeTags
 		COMMENT @see #isFireImmune
 		COMMENT @see #damage
 		COMMENT @see #isInvulnerable
@@ -1259,7 +1264,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT <p>This is saved on the {@code Invulnerable} NBT key.
 		COMMENT
 		COMMENT @implNote Invulnerable entities are immune from all damages except {@link
-		COMMENT DamageSource#OUT_OF_WORLD} and damages by creative mode players by default.
+		COMMENT net.minecraft.entity.damage.DamageTypes#OUT_OF_WORLD}
+		COMMENT and damages by creative mode players by default.
 		COMMENT
 		COMMENT @see #isInvulnerableTo
 		COMMENT @see #isInvulnerable
@@ -1612,7 +1618,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT <p>Scoreboard tags are set using the {@linkplain net.minecraft.server.command.TagCommand
 		COMMENT /tag command}, and is different from entity type tags defined in data packs.
 	METHOD method_5753 isFireImmune ()Z
-		COMMENT {@return whether the entity is immune to {@linkplain DamageSource#setFire fire damage}}
+		COMMENT {@return whether the entity is immune to {@linkplain
+		COMMENT net.minecraft.registry.tag.DamageTypeTags#IS_FIRE fire damage}}
 		COMMENT
 		COMMENT @see EntityType.Builder#makeFireImmune
 	METHOD method_5755 getMovementDirection ()Lnet/minecraft/class_2350;
@@ -1983,7 +1990,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5825 tickInVoid ()V
 		COMMENT Called when the entity is 64 blocks below the world's {@linkplain net.minecraft.world.HeightLimitView#getBottomY() minimum Y position}.
 		COMMENT
-		COMMENT <p>{@linkplain LivingEntity Living entities} use this to deal {@linkplain net.minecraft.entity.damage.DamageSource#OUT_OF_WORLD out of world damage}.
+		COMMENT <p>{@linkplain LivingEntity Living entities} use this to deal {@linkplain net.minecraft.entity.damage.DamageTypes#OUT_OF_WORLD out of world damage}.
 	METHOD method_5826 setUuid (Ljava/util/UUID;)V
 		COMMENT Sets the UUID of the entity to {@code uuid}.
 		COMMENT
