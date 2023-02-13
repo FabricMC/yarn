@@ -7,7 +7,7 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	FIELD field_26620 DISCONNECT_LOST_TEXT Lnet/minecraft/class_2561;
 	FIELD field_34963 telemetrySender Lnet/minecraft/class_6628;
 	FIELD field_35164 simulationDistance I
-	FIELD field_3687 random Ljava/util/Random;
+	FIELD field_3687 random Lnet/minecraft/class_5819;
 	FIELD field_3688 recipeManager Lnet/minecraft/class_1863;
 	FIELD field_3689 connection Lnet/minecraft/class_2535;
 	FIELD field_3690 client Lnet/minecraft/class_310;
@@ -20,6 +20,16 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	FIELD field_3699 world Lnet/minecraft/class_638;
 	FIELD field_3700 advancementHandler Lnet/minecraft/class_632;
 	FIELD field_3701 loginScreen Lnet/minecraft/class_437;
+	FIELD field_39808 messagePacker Lnet/minecraft/class_7610$class_7612;
+	FIELD field_39857 MAX_PENDING_ACKNOWLEDGMENTS I
+	FIELD field_39858 lastSeenMessagesCollector Lnet/minecraft/class_7637;
+	FIELD field_39859 lastReceivedMessage Ljava/util/Optional;
+	FIELD field_39860 pendingAcknowledgments I
+		COMMENT The number of messages whose acknowledgments aren't sent to the server yet.
+		COMMENT They are sent when the count reaches {@value #MAX_PENDING_ACKNOWLEDGMENTS}
+		COMMENT or when the client sends a message, and this count is reset to zero in those cases.
+	FIELD field_39916 UNSECURE_SERVER_TOAST_TITLE Lnet/minecraft/class_2561;
+	FIELD field_39917 UNSECURE_SERVER_TOAST_TEXT Lnet/minecraft/class_2561;
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_437;Lnet/minecraft/class_2535;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_6628;)V
 		ARG 1 client
 		ARG 2 screen
@@ -58,8 +68,6 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	METHOD method_2885 feedbackAfterDownload (Ljava/util/concurrent/CompletableFuture;)V
 		ARG 1 downloadFuture
 	METHOD method_2886 getCommandDispatcher ()Lcom/mojang/brigadier/CommandDispatcher;
-	METHOD method_2888 validateResourcePackUrl (Ljava/lang/String;)Z
-		ARG 1 url
 	METHOD method_2890 getWorld ()Lnet/minecraft/class_638;
 	METHOD method_29091 getRegistryManager ()Lnet/minecraft/class_5455;
 	METHOD method_29356 getWorldKeys ()Ljava/util/Set;
@@ -67,6 +75,8 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	METHOD method_34007 (ILnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 2 pos
 		ARG 3 state
+	METHOD method_34008 (Lnet/minecraft/class_1297;Lcom/mojang/datafixers/util/Pair;)V
+		ARG 1 pair
 	METHOD method_34009 (Lnet/minecraft/class_1703;Lnet/minecraft/class_1860;)V
 		ARG 2 recipe
 	METHOD method_34010 (Lnet/minecraft/class_268;Lnet/minecraft/class_5900$class_5902;)V
@@ -75,7 +85,7 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 2 recipe
 	METHOD method_34012 (Lnet/minecraft/class_299;Lnet/minecraft/class_516;)V
 		ARG 1 recipeResultCollection
-	METHOD method_34014 (Ljava/lang/String;Ljava/lang/String;ZZ)V
+	METHOD method_34014 (Ljava/net/URL;Ljava/lang/String;ZZ)V
 		ARG 4 enabled
 	METHOD method_36322 getServerResourcePackPrompt (Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
 		ARG 0 defaultPrompt
@@ -102,6 +112,26 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 3 data
 	METHOD method_38544 unloadChunk (Lnet/minecraft/class_2666;)V
 		ARG 1 packet
+	METHOD method_40215 (Lnet/minecraft/class_5455$class_6892;)V
+		ARG 0 entry
 	METHOD method_40217 loadTags (Lnet/minecraft/class_5321;Lnet/minecraft/class_6864$class_5748;)V
 		ARG 1 registryKey
 		ARG 2 serialized
+	METHOD method_43209 playSpawnSound (Lnet/minecraft/class_1297;)V
+		ARG 1 entity
+	METHOD method_43331 resolveUrl (Ljava/lang/String;)Ljava/net/URL;
+		ARG 0 url
+	METHOD method_44071 (Lnet/minecraft/class_642;Ljava/lang/String;)V
+		ARG 1 favicon
+	METHOD method_44072 (Lnet/minecraft/class_642;Lnet/minecraft/class_2561;)V
+		ARG 1 description
+	METHOD method_44816 getMessagePacker ()Lnet/minecraft/class_7610$class_7612;
+	METHOD method_44940 acknowledge (Lnet/minecraft/class_7471;Z)V
+		ARG 1 message
+		ARG 2 displayed
+	METHOD method_44941 consumeAcknowledgment ()Lnet/minecraft/class_7635$class_7636;
+		COMMENT {@return the consumed acknowledgment}
+		COMMENT
+		COMMENT <p>This resets {@link #pendingAcknowledgments} to {@code 0}.
+		COMMENT
+		COMMENT @see #pendingAcknowledgments

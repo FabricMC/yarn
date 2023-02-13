@@ -1,16 +1,17 @@
 CLASS net/minecraft/class_4153 net/minecraft/world/poi/PointOfInterestStorage
 	FIELD field_18484 pointOfInterestDistanceTracker Lnet/minecraft/class_4153$class_4154;
 	FIELD field_20688 preloadedChunks Lit/unimi/dsi/fastutil/longs/LongSet;
-	METHOD <init> (Ljava/nio/file/Path;Lcom/mojang/datafixers/DataFixer;ZLnet/minecraft/class_5539;)V
+	METHOD <init> (Ljava/nio/file/Path;Lcom/mojang/datafixers/DataFixer;ZLnet/minecraft/class_5455;Lnet/minecraft/class_5539;)V
 		ARG 1 path
 		ARG 2 dataFixer
 		ARG 3 dsync
-		ARG 4 world
+		ARG 4 registryManager
+		ARG 5 world
 	METHOD method_19112 remove (Lnet/minecraft/class_2338;)V
 		ARG 1 pos
 	METHOD method_19113 (Lnet/minecraft/class_2338;ILnet/minecraft/class_4156;)Z
 		ARG 2 poi
-	METHOD method_19115 add (Lnet/minecraft/class_2338;Lnet/minecraft/class_4158;)V
+	METHOD method_19115 add (Lnet/minecraft/class_2338;Lnet/minecraft/class_6880;)V
 		ARG 1 pos
 		ARG 2 type
 	METHOD method_19116 test (Lnet/minecraft/class_2338;Ljava/util/function/Predicate;)Z
@@ -31,9 +32,8 @@ CLASS net/minecraft/class_4153 net/minecraft/world/poi/PointOfInterestStorage
 		ARG 2 pos
 		ARG 3 radius
 		ARG 4 occupationStatus
-	METHOD method_19126 getPosition (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Lnet/minecraft/class_2338;I)Ljava/util/Optional;
+	METHOD method_19126 getPosition (Ljava/util/function/Predicate;Ljava/util/function/BiPredicate;Lnet/minecraft/class_2338;I)Ljava/util/Optional;
 		ARG 1 typePredicate
-		ARG 2 positionPredicate
 		ARG 3 pos
 		ARG 4 radius
 	METHOD method_19127 getPosition (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Lnet/minecraft/class_2338;ILnet/minecraft/class_4153$class_4155;)Ljava/util/Optional;
@@ -46,7 +46,7 @@ CLASS net/minecraft/class_4153 net/minecraft/world/poi/PointOfInterestStorage
 		ARG 0 poi
 	METHOD method_19129 releaseTicket (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
-	METHOD method_19130 (Ljava/util/function/Predicate;Lnet/minecraft/class_4156;)Z
+	METHOD method_19130 (Ljava/util/function/BiPredicate;Lnet/minecraft/class_4156;)Z
 		ARG 1 poi
 	METHOD method_19132 getType (Lnet/minecraft/class_2338;)Ljava/util/Optional;
 		ARG 1 pos
@@ -57,11 +57,11 @@ CLASS net/minecraft/class_4153 net/minecraft/world/poi/PointOfInterestStorage
 		ARG 2 chunkSection
 	METHOD method_19511 (Lnet/minecraft/class_2826;Ljava/util/function/BiConsumer;Lnet/minecraft/class_2338;)V
 		ARG 2 pos
-	METHOD method_19512 (Ljava/util/function/BiConsumer;Lnet/minecraft/class_2338;Lnet/minecraft/class_4158;)V
+	METHOD method_19512 (Ljava/util/function/BiConsumer;Lnet/minecraft/class_2338;Lnet/minecraft/class_6880;)V
 		ARG 2 poiType
 	METHOD method_20004 (Ljava/util/function/Predicate;Lnet/minecraft/class_4156;)Z
 		ARG 1 poi
-	METHOD method_20005 getPosition (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Lnet/minecraft/class_4153$class_4155;Lnet/minecraft/class_2338;ILjava/util/Random;)Ljava/util/Optional;
+	METHOD method_20005 getPosition (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Lnet/minecraft/class_4153$class_4155;Lnet/minecraft/class_2338;ILnet/minecraft/class_5819;)Ljava/util/Optional;
 		ARG 1 typePredicate
 		ARG 2 positionPredicate
 		ARG 3 occupationStatus
@@ -108,12 +108,12 @@ CLASS net/minecraft/class_4153 net/minecraft/world/poi/PointOfInterestStorage
 		ARG 1 chunkPos
 	METHOD method_22443 (Lnet/minecraft/class_4076;)Lcom/mojang/datafixers/util/Pair;
 		ARG 1 sectionPos
-	METHOD method_26339 hasTypeAt (Lnet/minecraft/class_4158;Lnet/minecraft/class_2338;)Z
+	METHOD method_26339 hasTypeAt (Lnet/minecraft/class_5321;Lnet/minecraft/class_2338;)Z
 		ARG 1 type
 		ARG 2 pos
 	METHOD method_30335 (Lnet/minecraft/class_2338;ILnet/minecraft/class_4156;)Z
 		ARG 2 poi
-	METHOD method_30957 getSortedPositions (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Lnet/minecraft/class_2338;ILnet/minecraft/class_4153$class_4155;)Ljava/util/stream/Stream;
+	METHOD method_30957 getSortedTypesAndPositions (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Lnet/minecraft/class_2338;ILnet/minecraft/class_4153$class_4155;)Ljava/util/stream/Stream;
 		ARG 1 typePredicate
 		ARG 2 posPredicate
 		ARG 3 pos
@@ -135,6 +135,29 @@ CLASS net/minecraft/class_4153 net/minecraft/world/poi/PointOfInterestStorage
 		ARG 1 poiSet
 	METHOD method_35155 getFreeTickets (Lnet/minecraft/class_2338;)I
 		ARG 1 pos
+	METHOD method_43978 (Lnet/minecraft/class_5321;Lnet/minecraft/class_6880;)Z
+		ARG 1 entry
+	METHOD method_43979 (Lnet/minecraft/class_2338;Lnet/minecraft/class_4156;)D
+		ARG 1 poi
+	METHOD method_43980 (Lnet/minecraft/class_6880;)Z
+		ARG 0 entry
+	METHOD method_43981 (Lnet/minecraft/class_4156;)Lcom/mojang/datafixers/util/Pair;
+		ARG 0 poi
+	METHOD method_43982 (Ljava/util/function/Predicate;Lnet/minecraft/class_4156;)Z
+		ARG 1 poi
+	METHOD method_43983 getTypesAndPositions (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Lnet/minecraft/class_2338;ILnet/minecraft/class_4153$class_4155;)Ljava/util/stream/Stream;
+		ARG 1 typePredicate
+		ARG 2 posPredicate
+		ARG 3 pos
+		ARG 4 radius
+		ARG 5 occupationStatus
+	METHOD method_43984 (Lnet/minecraft/class_4156;)Lcom/mojang/datafixers/util/Pair;
+		ARG 0 poi
+	METHOD method_43985 getNearestTypeAndPosition (Ljava/util/function/Predicate;Lnet/minecraft/class_2338;ILnet/minecraft/class_4153$class_4155;)Ljava/util/Optional;
+		ARG 1 typePredicate
+		ARG 2 pos
+		ARG 3 radius
+		ARG 4 occupationStatus
 	CLASS class_4154 PointOfInterestDistanceTracker
 		FIELD field_18486 distances Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
 		METHOD method_19134 update ()V

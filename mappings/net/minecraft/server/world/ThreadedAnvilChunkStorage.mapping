@@ -15,7 +15,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	FIELD field_17230 totalChunksLoadedCount Ljava/util/concurrent/atomic/AtomicInteger;
 	FIELD field_17442 worldGenerationProgressListener Lnet/minecraft/class_3949;
 	FIELD field_17705 persistentStateManagerFactory Ljava/util/function/Supplier;
-	FIELD field_17706 structureManager Lnet/minecraft/class_3485;
+	FIELD field_17706 structureTemplateManager Lnet/minecraft/class_3485;
 	FIELD field_17707 saveDir Ljava/lang/String;
 	FIELD field_18239 MAX_LEVEL I
 		COMMENT Specifies the maximum ticket level a chunk can be before a chunk's {@link net.minecraft.server.world.ChunkHolder.LevelType} is {@link net.minecraft.server.world.ChunkHolder.LevelType#BORDER}.
@@ -32,11 +32,12 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	FIELD field_29672 UNMARKED_CHUNK B
 	FIELD field_29673 LEVEL_CHUNK B
 	FIELD field_36383 chunkToNextSaveTimeMs Lit/unimi/dsi/fastutil/longs/Long2LongMap;
+	FIELD field_37278 noiseConfig Lnet/minecraft/class_7138;
 	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_3949;Lnet/minecraft/class_5567;Ljava/util/function/Supplier;IZ)V
 		ARG 1 world
 		ARG 2 session
 		ARG 3 dataFixer
-		ARG 4 structureManager
+		ARG 4 structureTemplateManager
 		ARG 5 executor
 		ARG 6 mainThreadExecutor
 		ARG 7 chunkProvider
@@ -49,6 +50,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_17212 getLightingProvider ()Lnet/minecraft/class_3227;
 	METHOD method_17214 setViewDistance (I)V
 		ARG 1 watchDistance
+	METHOD method_17215 (IIILjava/util/List;)Lcom/mojang/datafixers/util/Either;
+		ARG 4 chunks
 	METHOD method_17216 getChunkHolder (J)Lnet/minecraft/class_3193;
 		ARG 1 pos
 	METHOD method_17217 setLevel (JILnet/minecraft/class_3193;I)Lnet/minecraft/class_3193;
@@ -100,6 +103,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_17244 updateHolderMap ()Z
 	METHOD method_17247 makeChunkEntitiesTickable (Lnet/minecraft/class_1923;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 pos
+	METHOD method_17248 (Lnet/minecraft/class_2806;I)Lnet/minecraft/class_2806;
+		ARG 2 distance
 	METHOD method_17252 (Lnet/minecraft/class_3193;Ljava/lang/Runnable;)V
 		ARG 2 task
 	METHOD method_17253 getTotalChunksLoadedCount ()I
@@ -113,8 +118,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_17263 getTicketManager ()Lnet/minecraft/class_3204;
 	METHOD method_17264 entryIterator ()Ljava/lang/Iterable;
 	METHOD method_17604 getCompletedLevelSupplier (J)Ljava/util/function/IntSupplier;
-		ARG 1 pos
-	METHOD method_17979 getUpdatedChunkNbt (Lnet/minecraft/class_1923;)Lnet/minecraft/class_2487;
 		ARG 1 pos
 	METHOD method_18193 (Lnet/minecraft/class_1923;Lnet/minecraft/class_2818;)V
 		ARG 2 chunk
@@ -164,6 +167,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_19487 (Lnet/minecraft/class_3193;Ljava/lang/Runnable;)V
 		ARG 2 task
 	METHOD method_19488 getPointOfInterestStorage ()Lnet/minecraft/class_4153;
+	METHOD method_19534 (Lnet/minecraft/class_3193;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
+		ARG 2 chunk
 	METHOD method_20440 (Lnet/minecraft/class_1923;Lnet/minecraft/class_3193$class_3724;)Ljava/util/concurrent/CompletableFuture;
 		ARG 2 unloaded
 	METHOD method_20441 releaseLightTicket (Lnet/minecraft/class_1923;)V
@@ -264,10 +269,33 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		COMMENT {@return whether the server shutdown should be delayed to process some tasks}
 	METHOD method_40067 crash (Ljava/lang/IllegalStateException;Ljava/lang/String;)Lnet/minecraft/class_148;
 		ARG 1 exception
+		ARG 2 details
 	METHOD method_40068 (Ljava/lang/StringBuilder;Lnet/minecraft/class_3193;)V
 		ARG 1 chunkHolder
 	METHOD method_40069 (Ljava/lang/StringBuilder;Lnet/minecraft/class_3193;Lcom/mojang/datafixers/util/Pair;)V
 		ARG 2 pair
+	METHOD method_41247 getNoiseConfig ()Lnet/minecraft/class_7138;
+	METHOD method_43374 (Lnet/minecraft/class_1923;Ljava/lang/Throwable;)Lcom/mojang/datafixers/util/Either;
+		ARG 2 throwable
+	METHOD method_43375 (Lnet/minecraft/class_1923;Ljava/util/Optional;)Lcom/mojang/datafixers/util/Either;
+		ARG 2 nbt
+	METHOD method_43376 recoverFromException (Ljava/lang/Throwable;Lnet/minecraft/class_1923;)Lcom/mojang/datafixers/util/Either;
+		ARG 1 throwable
+		ARG 2 chunkPos
+	METHOD method_43377 (Ljava/util/Optional;)Ljava/util/Optional;
+		ARG 1 nbt
+	METHOD method_43378 (Lnet/minecraft/class_1923;Ljava/util/Optional;)Ljava/util/Optional;
+		ARG 1 nbt
+	METHOD method_43379 (Lnet/minecraft/class_1923;Lnet/minecraft/class_2487;)Z
+		ARG 1 nbt2
+	METHOD method_43380 containsStatus (Lnet/minecraft/class_2487;)Z
+		ARG 0 nbt
+	METHOD method_43381 updateChunkNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
+		ARG 1 nbt
+	METHOD method_43382 getProtoChunk (Lnet/minecraft/class_1923;)Lnet/minecraft/class_2791;
+		ARG 1 chunkPos
+	METHOD method_43383 getUpdatedChunkNbt (Lnet/minecraft/class_1923;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 chunkPos
 	CLASS class_3208 EntityTracker
 		COMMENT An entity tracker governs which players' clients can see an entity. Each
 		COMMENT tracker corresponds to one entity in a server world and is mapped from the

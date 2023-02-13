@@ -1,37 +1,211 @@
 CLASS net/minecraft/class_3515 net/minecraft/network/encryption/NetworkEncryptionUtils
+	COMMENT Utilities for encryption, decryption, signing, and hashing of data.
+	COMMENT
+	COMMENT @apiNote Methods in this class usually throw {@link NetworkEncryptionException}
+	COMMENT when the operation fails. This is a checked exception and thus must be caught
+	COMMENT when using the methods.
 	FIELD field_29830 AES Ljava/lang/String;
 	FIELD field_29831 AES_KEY_LENGTH I
 	FIELD field_29832 RSA Ljava/lang/String;
 	FIELD field_29833 RSA_KEY_LENGTH I
 	FIELD field_29834 ISO_8859_1 Ljava/lang/String;
 	FIELD field_29835 SHA1 Ljava/lang/String;
+	FIELD field_39033 RSA_PUBLIC_KEY_PREFIX Ljava/lang/String;
+	FIELD field_39034 LINEBREAK Ljava/lang/String;
+	FIELD field_39035 RSA_PUBLIC_KEY_CODEC Lcom/mojang/serialization/Codec;
+		COMMENT The codec for RSA public keys.
+		COMMENT
+		COMMENT @implNote The key is encoded using the PEM format.
+		COMMENT
+		COMMENT @see #encodeRsaPublicKey(PublicKey)
+		COMMENT @see #decodeRsaPublicKeyPem(String)
+	FIELD field_39036 RSA_PRIVATE_KEY_CODEC Lcom/mojang/serialization/Codec;
+		COMMENT The codec for RSA private keys.
+		COMMENT
+		COMMENT @implNote The key is encoded using the PEM format.
+		COMMENT
+		COMMENT @see #encodeRsaPrivateKey(PrivateKey)
+		COMMENT @see #decodeRsaPrivateKeyPem(String)
+	FIELD field_39037 RSA_PRIVATE_KEY_PREFIX Ljava/lang/String;
+	FIELD field_39038 RSA_PRIVATE_KEY_SUFFIX Ljava/lang/String;
+	FIELD field_39039 RSA_PUBLIC_KEY_SUFFIX Ljava/lang/String;
+	FIELD field_39109 SHA256_WITH_RSA Ljava/lang/String;
+	FIELD field_39272 BASE64_ENCODER Ljava/util/Base64$Encoder;
 	METHOD method_15234 decryptSecretKey (Ljava/security/PrivateKey;[B)Ljavax/crypto/SecretKey;
+		COMMENT Decrypts RSA-encrypted AES secret key.
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when the secret key is malformed
 		ARG 0 privateKey
 		ARG 1 encryptedSecretKey
 	METHOD method_15235 cipherFromKey (ILjava/security/Key;)Ljavax/crypto/Cipher;
+		COMMENT Creates an AES cipher from the key.
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when creation fails, e.g. due to invalid key
 		ARG 0 opMode
 		ARG 1 key
+			COMMENT the AES secret key
 	METHOD method_15236 hash ([[B)[B
+		COMMENT {@return the SHA-1 hash of {@code bytes}}
 		ARG 0 bytes
 	METHOD method_15237 generateServerKeyPair ()Ljava/security/KeyPair;
+		COMMENT {@return a new {@value RSA_KEY_LENGTH} bit RSA public/private key pair}
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when generation fails
 	METHOD method_15238 encrypt (Ljava/security/Key;[B)[B
+		COMMENT Encrypts a data. The algorithm is determined from the key used.
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when encryption fails, e.g. due to invalid key
+		COMMENT
+		COMMENT @see #decrypt(Key, byte[])
 		ARG 0 key
+			COMMENT encryption key (e.g. AES secret key or RSA public key)
 		ARG 1 data
-	METHOD method_15239 generateKey ()Ljavax/crypto/SecretKey;
-	METHOD method_15240 generateServerId (Ljava/lang/String;Ljava/security/PublicKey;Ljavax/crypto/SecretKey;)[B
+	METHOD method_15239 generateSecretKey ()Ljavax/crypto/SecretKey;
+		COMMENT {@return a new {@value AES_KEY_LENGTH} bit AES secret key}
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when generation fails
+	METHOD method_15240 computeServerId (Ljava/lang/String;Ljava/security/PublicKey;Ljavax/crypto/SecretKey;)[B
+		COMMENT {@return the computed server ID}
+		COMMENT
+		COMMENT @implNote The server ID is a SHA-1 hash of ISO-8859-1 encoded {@code baseServerId},
+		COMMENT {@code publicKey}, and {@code secretKey}.
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when computation fails
 		ARG 0 baseServerId
 		ARG 1 publicKey
 		ARG 2 secretKey
-	METHOD method_15241 crypt (ILjava/lang/String;Ljava/security/Key;)Ljavax/crypto/Cipher;
+	METHOD method_15241 createCipher (ILjava/lang/String;Ljava/security/Key;)Ljavax/crypto/Cipher;
+		COMMENT Creates a cipher to perform encryption or decryption operation.
 		ARG 0 opMode
 		ARG 1 algorithm
 		ARG 2 key
-	METHOD method_15242 readEncodedPublicKey ([B)Ljava/security/PublicKey;
-		ARG 0 bytes
-	METHOD method_15243 decrypt (Ljava/security/Key;[B)[B
+	METHOD method_15242 decodeEncodedRsaPublicKey ([B)Ljava/security/PublicKey;
+		COMMENT Decodes a X.509-encoded RSA public key.
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when the key is malformed
+		COMMENT
+		COMMENT @see #decodeRsaPublicKeyPem(String)
 		ARG 0 key
+	METHOD method_15243 decrypt (Ljava/security/Key;[B)[B
+		COMMENT Decrypts an encrypted data. The algorithm is determined from the key used.
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when decryption fails, e.g. due to invalid key
+		COMMENT
+		COMMENT @see #encrypt(Key, byte[])
+		ARG 0 key
+			COMMENT decryption key (e.g. AES secret key or RSA private key)
 		ARG 1 data
 	METHOD method_15244 crypt (ILjava/security/Key;[B)[B
+		COMMENT Low-level API to perform encryption or decryption operation.
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when the operation fails
 		ARG 0 opMode
 		ARG 1 key
 		ARG 2 data
+	METHOD method_43519 decodeRsaPrivateKeyPem (Ljava/lang/String;)Ljava/security/PrivateKey;
+		COMMENT Decodes a PEM-formatted RSA private key.
+		COMMENT
+		COMMENT <p>A PEM-formatted RSA private key is {@value #RSA_PRIVATE_KEY_PREFIX}, followed
+		COMMENT by Base64 encoded PCKS #8 encoded key, followed by {@value #RSA_PRIVATE_KEY_SUFFIX}.
+		COMMENT Note that this method also allows Base64 encoded keys that have neither the prefix
+		COMMENT or the suffix.
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when the key is malformed
+		COMMENT
+		COMMENT @see #encodeRsaPrivateKey(PrivateKey)
+		COMMENT @see #encodeRsaPublicKey(PublicKey)
+		COMMENT @see #decodeRsaPublicKeyPem(String)
+		ARG 0 key
+	METHOD method_43520 decodePem (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lnet/minecraft/class_3515$class_7424;)Ljava/security/Key;
+		COMMENT Decodes a PEM-formatted string key.
+		COMMENT
+		COMMENT <p>A PEM-formatted key is {@code prefix}, followed by Base64 encoded key,
+		COMMENT followed by {@code suffix}. Note that this method also allows Base64 encoded
+		COMMENT keys that have neither the prefix or the suffix.
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when the {@code decoder} throws, e.g. due to
+		COMMENT invalid key content
+		ARG 0 key
+		ARG 1 prefix
+		ARG 2 suffix
+		ARG 3 decoder
+	METHOD method_43521 encodeRsaPrivateKey (Ljava/security/PrivateKey;)Ljava/lang/String;
+		COMMENT Encodes an RSA private {@code key} to a PEM-formatted key string.
+		COMMENT
+		COMMENT <p>A PEM-formatted RSA private key is {@value #RSA_PRIVATE_KEY_PREFIX}, followed
+		COMMENT by Base64 encoded PCKS #8 encoded key, followed by {@value #RSA_PRIVATE_KEY_SUFFIX}.
+		COMMENT
+		COMMENT @throws IllegalArgumentException when non-RSA key is passed
+		COMMENT
+		COMMENT @see #encodeRsaPublicKey(PublicKey)
+		COMMENT @see #decodeRsaPrivateKeyPem(String)
+		COMMENT @see #decodeRsaPublicKeyPem(String)
+		ARG 0 key
+	METHOD method_43522 encodeRsaPublicKey (Ljava/security/PublicKey;)Ljava/lang/String;
+		COMMENT Encodes an RSA public {@code key} to a PEM-formatted key string.
+		COMMENT
+		COMMENT <p>A PEM-formatted RSA public key is {@value #RSA_PUBLIC_KEY_PREFIX}, followed
+		COMMENT by Base64 encoded X.509 encoded key, followed by {@value #RSA_PUBLIC_KEY_SUFFIX}.
+		COMMENT
+		COMMENT @throws IllegalArgumentException when non-RSA key is passed
+		COMMENT
+		COMMENT @see #encodeRsaPrivateKey(PrivateKey)
+		COMMENT @see #decodeRsaPrivateKeyPem(String)
+		COMMENT @see #decodeRsaPublicKeyPem(String)
+		ARG 0 key
+	METHOD method_43524 decodeRsaPublicKeyPem (Ljava/lang/String;)Ljava/security/PublicKey;
+		COMMENT Decodes a PEM-formatted RSA public key.
+		COMMENT
+		COMMENT <p>A PEM-formatted RSA public key is {@value #RSA_PUBLIC_KEY_PREFIX}, followed
+		COMMENT by Base64 encoded X.509 encoded key, followed by {@value #RSA_PUBLIC_KEY_SUFFIX}.
+		COMMENT Note that this method also allows Base64 encoded keys that have neither the prefix
+		COMMENT or the suffix.
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when the key is malformed
+		COMMENT
+		COMMENT @see #encodeRsaPrivateKey(PrivateKey)
+		COMMENT @see #encodeRsaPublicKey(PublicKey)
+		COMMENT @see #decodeRsaPrivateKeyPem(String)
+		ARG 0 key
+	METHOD method_43525 decodeEncodedRsaPrivateKey ([B)Ljava/security/PrivateKey;
+		COMMENT Decodes a PCKS #8-encoded RSA private key.
+		COMMENT
+		COMMENT @throws NetworkEncryptionException when the key is malformed
+		COMMENT
+		COMMENT @see #decodeRsaPrivateKeyPem(String)
+		ARG 0 key
+	METHOD method_43526 (Ljava/lang/String;)Lcom/mojang/serialization/DataResult;
+		ARG 0 key
+	METHOD method_43527 (Ljava/lang/String;)Lcom/mojang/serialization/DataResult;
+		ARG 0 key
+	CLASS class_7424 KeyDecoder
+		COMMENT A functional interface that decodes an encoded key.
+		COMMENT
+		COMMENT @apiNote Implementations should throw {@link NetworkEncryptionException}
+		COMMENT when the key is malformed.
+		COMMENT
+		COMMENT @see NetworkEncryptionUtils#decodeEncodedRsaPrivateKey(byte[])
+		COMMENT @see NetworkEncryptionUtils#decodeEncodedRsaPublicKey(byte[])
+		METHOD apply ([B)Ljava/security/Key;
+			ARG 1 key
+	CLASS class_7425 SignatureData
+		COMMENT A record holding a signature of a data and the salt added while signing. Note that
+		COMMENT the signature might not be actually present.
+		FIELD field_39040 NONE Lnet/minecraft/class_3515$class_7425;
+			COMMENT The signature data for data without signatures.
+		METHOD <init> (Lnet/minecraft/class_2540;)V
+			ARG 1 buf
+		METHOD method_43528 isSignaturePresent ()Z
+			COMMENT {@return whether the signature data has a signature}
+			COMMENT
+			COMMENT @apiNote This <strong>does not validate</strong> the signature itself.
+		METHOD method_43529 write (Lnet/minecraft/class_2540;Lnet/minecraft/class_3515$class_7425;)V
+			ARG 0 buf
+			ARG 1 signatureData
+		METHOD method_43530 getSalt ()[B
+	CLASS class_7426 SecureRandomUtil
+		COMMENT Utilities for working with a secure random number generator.
+		FIELD field_39041 SECURE_RANDOM Ljava/security/SecureRandom;
+		METHOD method_43531 nextLong ()J
+			COMMENT {@return a random number generated with a cryptographically secure
+			COMMENT random number generator}

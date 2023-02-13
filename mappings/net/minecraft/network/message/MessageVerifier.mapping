@@ -1,0 +1,53 @@
+CLASS net/minecraft/class_7615 net/minecraft/network/message/MessageVerifier
+	COMMENT Verifies incoming messages' signature and the message chain.
+	COMMENT
+	COMMENT <p>Methods in this interface must be called in the order of the message's reception,
+	COMMENT as it affects the verification result.
+	METHOD method_44885 create (Lnet/minecraft/class_7428;Z)Lnet/minecraft/class_7615;
+		ARG 0 publicKey
+		ARG 1 secureChatEnforced
+	METHOD method_44886 verify (Lnet/minecraft/class_7471;)Lnet/minecraft/class_7615$class_7646;
+		COMMENT {@return the status of verifying the message}
+		ARG 1 message
+	METHOD method_44887 verify (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;[B)Lnet/minecraft/class_7615$class_7646;
+		COMMENT {@return the status of verifying the header}
+		COMMENT
+		COMMENT <p>Clients can receive only the message header instead of the whole message. This
+		COMMENT allows the verification of such messages.
+		ARG 1 header
+		ARG 2 signature
+		ARG 3 bodyDigest
+	CLASS class_7616 Impl
+		FIELD field_39821 lastMessageVerified Z
+		FIELD field_39822 signatureVerifier Lnet/minecraft/class_7500;
+		FIELD field_39823 precedingSignature Lnet/minecraft/class_7469;
+		METHOD <init> (Lnet/minecraft/class_7500;)V
+			ARG 1 signatureVerifier
+		METHOD method_44996 verifyPrecedingSignature (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;Z)Z
+			ARG 1 header
+			ARG 2 signature
+			ARG 3 fullMessage
+		METHOD method_44997 verifyInternal (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;[BZ)Z
+			ARG 1 header
+			ARG 2 signature
+			ARG 3 bodyDigest
+			ARG 4 fullMessage
+		METHOD method_45048 getStatus (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;[BZ)Lnet/minecraft/class_7615$class_7646;
+			ARG 1 header
+			ARG 2 signature
+			ARG 3 bodyDigest
+			ARG 4 fullMessage
+	CLASS class_7646 Status
+		COMMENT The verification status of a message.
+		FIELD field_39910 Lnet/minecraft/class_7615$class_7646;
+			COMMENT The message is verified.
+		FIELD field_39911 Lnet/minecraft/class_7615$class_7646;
+			COMMENT The message cannot be verified.
+		FIELD field_39912 Lnet/minecraft/class_7615$class_7646;
+			COMMENT The message cannot be verified due to the last message not being verified.
+	CLASS class_7651 Unsigned
+		FIELD field_39952 secureChatEnforced Z
+		METHOD <init> (Z)V
+			ARG 1 secureChatEnforced
+		METHOD method_45102 getStatus (Lnet/minecraft/class_7469;)Lnet/minecraft/class_7615$class_7646;
+			ARG 1 signature

@@ -1,5 +1,4 @@
 CLASS net/minecraft/class_3806 net/minecraft/server/dedicated/ServerPropertiesHandler
-	FIELD field_16801 resourcePack Ljava/lang/String;
 	FIELD field_16802 broadcastConsoleToOps Z
 	FIELD field_16804 whiteList Lnet/minecraft/class_3808$class_3809;
 	FIELD field_16805 enforceWhitelist Z
@@ -16,7 +15,6 @@ CLASS net/minecraft/class_3806 net/minecraft/server/dedicated/ServerPropertiesHa
 	FIELD field_16818 enableRcon Z
 	FIELD field_16819 enableQuery Z
 	FIELD field_16820 levelName Ljava/lang/String;
-	FIELD field_16821 resourcePackSha1 Ljava/lang/String;
 	FIELD field_16823 rconPassword Ljava/lang/String;
 	FIELD field_16824 broadcastRconToOps Z
 	FIELD field_16825 motd Ljava/lang/String;
@@ -27,7 +25,6 @@ CLASS net/minecraft/class_3806 net/minecraft/server/dedicated/ServerPropertiesHa
 	FIELD field_16831 queryPort I
 	FIELD field_16832 useNativeTransport Z
 	FIELD field_16833 pvp Z
-	FIELD field_16834 resourcePackHash Ljava/lang/String;
 	FIELD field_16835 spawnMonsters Z
 	FIELD field_16836 spawnAnimals Z
 	FIELD field_16837 serverPort I
@@ -46,11 +43,14 @@ CLASS net/minecraft/class_3806 net/minecraft/server/dedicated/ServerPropertiesHa
 	FIELD field_24623 generatorOptions Lnet/minecraft/class_5285;
 	FIELD field_25802 rateLimit I
 	FIELD field_26899 textFilteringConfig Ljava/lang/String;
-	FIELD field_27845 requireResourcePack Z
-	FIELD field_33432 resourcePackPrompt Ljava/lang/String;
 	FIELD field_34883 simulationDistance I
 	FIELD field_35564 hideOnlinePlayers Z
 	FIELD field_37039 worldGenProperties Lnet/minecraft/class_3806$class_7044;
+	FIELD field_37275 maxChainedNeighborUpdates I
+	FIELD field_39018 enforceSecureProfile Z
+	FIELD field_39093 serverResourcePackProperties Ljava/util/Optional;
+	FIELD field_39094 SHA1_PATTERN Ljava/util/regex/Pattern;
+	FIELD field_39259 previewsChat Z
 	METHOD method_16714 load (Ljava/nio/file/Path;)Lnet/minecraft/class_3806;
 		ARG 0 path
 	METHOD method_16715 (Ljava/lang/Integer;)Ljava/lang/Integer;
@@ -58,9 +58,24 @@ CLASS net/minecraft/class_3806 net/minecraft/server/dedicated/ServerPropertiesHa
 	METHOD method_27905 (Ljava/lang/Integer;)Ljava/lang/Integer;
 		ARG 0 percentage
 	METHOD method_37371 getGeneratorOptions (Lnet/minecraft/class_5455;)Lnet/minecraft/class_5285;
-		ARG 1 registryManager
+		ARG 1 dynamicRegistryManager
 	METHOD method_41005 (Ljava/lang/String;)Ljava/lang/String;
 		ARG 0 type
 	METHOD method_41186 (Ljava/lang/String;)Lcom/google/gson/JsonObject;
 		ARG 0 generatorSettings
+	METHOD method_43660 getServerResourcePackProperties (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;)Ljava/util/Optional;
+		ARG 0 url
+		ARG 1 sha1
+		ARG 2 hash
+		ARG 3 required
+		ARG 4 prompt
+	METHOD method_43661 parseResourcePackPrompt (Ljava/lang/String;)Lnet/minecraft/class_2561;
+		ARG 0 prompt
 	CLASS class_7044 WorldGenProperties
+		FIELD field_37277 LEVEL_TYPE_TO_PRESET_KEY Ljava/util/Map;
+		METHOD method_41242 createGeneratorOptions (Lnet/minecraft/class_5455;)Lnet/minecraft/class_5285;
+			ARG 1 dynamicRegistryManager
+		METHOD method_41243 (Lnet/minecraft/class_5321;)Ljava/lang/String;
+			ARG 0 key
+		METHOD method_41244 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_5321;
+			ARG 0 levelTypeId

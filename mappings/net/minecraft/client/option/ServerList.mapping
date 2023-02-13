@@ -1,7 +1,14 @@
 CLASS net/minecraft/class_641 net/minecraft/client/option/ServerList
+	COMMENT A list of {@link ServerInfo}. The list can contain an unlimited amount of
+	COMMENT {@linkplain #servers server entries that are displayed on the multiplayer screen},
+	COMMENT and up to {@value #MAX_HIDDEN_ENTRIES} {@linkplain #hiddenServers entries of servers}
+	COMMENT that are created when using "Direct Connection" and is hidden from the screen.
 	FIELD field_3749 servers Ljava/util/List;
 	FIELD field_3750 client Lnet/minecraft/class_310;
 	FIELD field_3751 LOGGER Lorg/slf4j/Logger;
+	FIELD field_39360 IO_EXECUTOR Lnet/minecraft/class_3846;
+	FIELD field_39437 MAX_HIDDEN_ENTRIES I
+	FIELD field_39438 hiddenServers Ljava/util/List;
 	METHOD <init> (Lnet/minecraft/class_310;)V
 		ARG 1 client
 	METHOD method_2980 set (ILnet/minecraft/class_642;)V
@@ -17,7 +24,27 @@ CLASS net/minecraft/class_641 net/minecraft/client/option/ServerList
 		ARG 1 index1
 		ARG 2 index2
 	METHOD method_2986 updateServerListEntry (Lnet/minecraft/class_642;)V
-		ARG 0 e
+		ARG 0 serverInfo
 	METHOD method_2987 saveFile ()V
-	METHOD method_2988 add (Lnet/minecraft/class_642;)V
+	METHOD method_2988 add (Lnet/minecraft/class_642;Z)V
+		COMMENT Adds a server info to this list.
 		ARG 1 serverInfo
+		ARG 2 hidden
+			COMMENT whether the info should not be listed in the multiplayer screen (also called
+			COMMENT "direct connection")
+	METHOD method_44294 replace (Lnet/minecraft/class_642;Ljava/util/List;)Z
+		COMMENT Replaces the server info in {@code serverInfos} whose name and address match
+		COMMENT {@code serverInfo}'s with {@code serverInfo}.
+		ARG 0 serverInfo
+		ARG 1 serverInfos
+	METHOD method_44295 get (Ljava/lang/String;)Lnet/minecraft/class_642;
+		COMMENT {@return the server info for {@code address}, or {@code null} if there is no such one}
+		ARG 1 address
+	METHOD method_44296 tryUnhide (Ljava/lang/String;)Lnet/minecraft/class_642;
+		COMMENT {@return the previously hidden server info for the address {@code address}, or
+		COMMENT {@code null} if there is no such info}
+		COMMENT
+		COMMENT <p>This "unhides" the server info and is used when adding the entry to the
+		COMMENT multiplayer screen to unhide any existing server info created when connecting
+		COMMENT directly.
+		ARG 1 address

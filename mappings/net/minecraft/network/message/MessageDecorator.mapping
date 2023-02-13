@@ -1,0 +1,34 @@
+CLASS net/minecraft/class_7492 net/minecraft/network/message/MessageDecorator
+	COMMENT Message decorator decorates the chat messages and other messages server-side.
+	COMMENT Currently, only one message decorator can exist at a time. The message decorator
+	COMMENT that is currently used can be obtained by
+	COMMENT {@link net.minecraft.server.MinecraftServer#getMessageDecorator}.
+	COMMENT
+	COMMENT <p>For the message decorator to produce a signed message, <strong>both the server
+	COMMENT and the sender's client need to have chat previews enabled</strong>, Otherwise, the decorated
+	COMMENT content is considered unsigned, and if the clients require chat messages to be signed
+	COMMENT via the {@linkplain net.minecraft.client.option.GameOptions#getOnlyShowSecureChat
+	COMMENT "Only Show Secure Chat" option}, they will see the undecorated message. Therefore,
+	COMMENT message decorator is <strong>not recommended for censoring messages</strong>.
+	COMMENT
+	COMMENT <p>Message decorator results are {@linkplain CachedDecoratorResult cached}, allowing
+	COMMENT non-pure decorators (i.e. ones affected by externally controlled variables) without
+	COMMENT affecting the signature verification process. Note that the decorator can still
+	COMMENT run during message submission to decorate filtered parts of the message.
+	FIELD field_39384 NOOP Lnet/minecraft/class_7492;
+		COMMENT An empty message decorator that returns the original message.
+	METHOD attachIfNotDecorated (Lnet/minecraft/class_7471;Lnet/minecraft/class_2561;)Lnet/minecraft/class_7471;
+		ARG 0 message
+		ARG 1 attached
+	METHOD decorate (Lnet/minecraft/class_3222;Lnet/minecraft/class_2561;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT {@return the decorated {@code message}}
+		ARG 1 sender
+			COMMENT the player who sent the message, or {@code null} if {@code message} was not
+			COMMENT sent by a player
+		ARG 2 message
+	METHOD decorate (Lnet/minecraft/class_3222;Lnet/minecraft/class_7471;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 sender
+		ARG 2 message
+	METHOD method_44303 (Lnet/minecraft/class_3222;Lnet/minecraft/class_2561;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 sender
+		ARG 1 message

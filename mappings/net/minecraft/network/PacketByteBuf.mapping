@@ -12,13 +12,16 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>Codec-based</td><td>{@link #decode(Codec)}</td><td>{@link #encode(Codec, Object)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>{@link Collection}</td><td>{@link #readCollection(IntFunction, Function)}</td><td>{@link #writeCollection(Collection, BiConsumer)}</td>
+	COMMENT  <td>{@link net.minecraft.util.registry.Registry} value</td><td>{@link #readRegistryValue(IndexedIterable)}</td><td>{@link #writeRegistryValue(IndexedIterable, Object)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link Collection}</td><td>{@link #readCollection(IntFunction, PacketByteBuf.PacketReader)}</td><td>{@link #writeCollection(Collection, PacketByteBuf.PacketWriter)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link IntList}</td><td>{@link #readIntList()}</td><td>{@link #writeIntList(IntList)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>{@link Map}</td><td>{@link #readMap(IntFunction, Function, Function)}</td><td>{@link #writeMap(Map, BiConsumer, BiConsumer)}</td>
+	COMMENT  <td>{@link Map}</td><td>{@link #readMap(IntFunction, PacketByteBuf.PacketReader, PacketByteBuf.PacketReader)}</td><td>{@link #writeMap(Map, PacketByteBuf.PacketWriter, PacketByteBuf.PacketWriter)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@code byte[]}</td><td>{@link #readByteArray()}</td><td>{@link #writeByteArray(byte[])}</td>
@@ -39,6 +42,9 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@link ChunkSectionPos}</td><td>{@link #readChunkSectionPos()}</td><td>{@link #writeChunkSectionPos(ChunkSectionPos)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
+	COMMENT  <td>{@link GlobalPos}</td><td>{@link #readGlobalPos()}</td><td>{@link #writeGlobalPos(GlobalPos)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
 	COMMENT  <td>{@link Text}</td><td>{@link #readText()}</td><td>{@link #writeText(Text)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
@@ -54,6 +60,12 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@link UUID}</td><td>{@link #readUuid()}</td><td>{@link #writeUuid(UUID)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
+	COMMENT  <td>{@index GameProfile}</td><td>{@link #readGameProfile()}</td><td>{@link #writeGameProfile(GameProfile)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@index Property}</td><td>{@link #readProperty()}</td><td>{@link #writeProperty(Property)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
 	COMMENT  <td>{@link NbtCompound}</td><td>{@link #readNbt()}</td><td>{@link #writeNbt(NbtCompound)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
@@ -66,7 +78,16 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@link Identifier}</td><td>{@link #readIdentifier()}</td><td>{@link #writeIdentifier(Identifier)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
+	COMMENT  <td>{@link RegistryKey}</td><td>{@link #readRegistryKey(RegistryKey)}</td><td>{@link #writeRegistryKey(RegistryKey)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
 	COMMENT  <td>{@link Date}</td><td>{@link #readDate()}</td><td>{@link #writeDate(Date)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link Instant}</td><td>{@link #readInstant()}</td><td>{@link #writeInstant(Instant)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link PublicKey}</td><td>{@link #readPublicKey()}</td><td>{@link #writePublicKey(PublicKey)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link BlockHitResult}</td><td>{@link #readBlockHitResult()}</td><td>{@link #writeBlockHitResult(BlockHitResult)}</td>
@@ -75,7 +96,13 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@link BitSet}</td><td>{@link #readBitSet()}</td><td>{@link #writeBitSet(BitSet)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>{@link Optional}</td><td>{@link #readOptional(Function)}</td><td>{@link #writeOptional(Optional, BiConsumer)}</td>
+	COMMENT  <td>{@link Optional}</td><td>{@link #readOptional(PacketByteBuf.PacketReader)}</td><td>{@link #writeOptional(Optional, PacketByteBuf.PacketWriter)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>Nullable value</td><td>{@link #readNullable(PacketByteBuf.PacketReader)}</td><td>{@link #writeNullable(Object, PacketByteBuf.PacketWriter)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@index Either}</td><td>{@link #readEither(PacketByteBuf.PacketReader, PacketByteBuf.PacketReader)}</td><td>{@link #writeEither(Either, PacketByteBuf.PacketWriter, PacketByteBuf.PacketWriter)}</td>
 	COMMENT </tr>
 	COMMENT </table></div>
 	COMMENT
@@ -693,32 +720,29 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 			COMMENT the list to write
 	METHOD method_34061 (Ljava/lang/Object;Lcom/mojang/serialization/DataResult$PartialResult;)V
 		ARG 1 partial
-	METHOD method_34062 writeCollection (Ljava/util/Collection;Ljava/util/function/BiConsumer;)V
+	METHOD method_34062 writeCollection (Ljava/util/Collection;Lnet/minecraft/class_2540$class_7462;)V
 		COMMENT Writes a collection to this buf. The collection is stored as a leading
 		COMMENT {@linkplain #readVarInt() var int} size followed by the entries
 		COMMENT sequentially.
 		COMMENT
 		COMMENT @param <T> the list's entry type
-		COMMENT @see #readCollection(IntFunction, Function)
+		COMMENT @see #readCollection(IntFunction, PacketByteBuf.PacketReader)
 		ARG 1 collection
 			COMMENT the collection to write
-		ARG 2 entrySerializer
-			COMMENT a serializer that writes each entry to this buf
-	METHOD method_34063 writeMap (Ljava/util/Map;Ljava/util/function/BiConsumer;Ljava/util/function/BiConsumer;)V
+		ARG 2 writer
+	METHOD method_34063 writeMap (Ljava/util/Map;Lnet/minecraft/class_2540$class_7462;Lnet/minecraft/class_2540$class_7462;)V
 		COMMENT Writes a map to this buf. The map is stored as a leading
 		COMMENT {@linkplain #readVarInt() var int} size followed by each key and value
 		COMMENT pair.
 		COMMENT
 		COMMENT @param <K> the key type
 		COMMENT @param <V> the value type
-		COMMENT @see #readMap(IntFunction, Function, Function)
+		COMMENT @see #readMap(IntFunction, PacketByteBuf.PacketReader, PacketByteBuf.PacketReader)
 		ARG 1 map
 			COMMENT the map to write
-		ARG 2 keySerializer
-			COMMENT a serializer that writes each key in the map to this buf
-		ARG 3 valueSerializer
-			COMMENT a serializer that writes each value in the map to this buf
-	METHOD method_34064 (Ljava/util/function/BiConsumer;Ljava/util/function/BiConsumer;Ljava/lang/Object;Ljava/lang/Object;)V
+		ARG 2 keyWriter
+		ARG 3 valueWriter
+	METHOD method_34064 (Lnet/minecraft/class_2540$class_7462;Lnet/minecraft/class_2540$class_7462;Ljava/lang/Object;Ljava/lang/Object;)V
 		ARG 3 key
 		ARG 4 value
 	METHOD method_34065 forEachInCollection (Ljava/util/function/Consumer;)V
@@ -726,29 +750,26 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT {@linkplain #readVarInt() var int} {@code size} followed by the entries
 		COMMENT sequentially. The {@code consumer} will be called {@code size} times.
 		COMMENT
-		COMMENT @see #readCollection(IntFunction, Function)
+		COMMENT @see #readCollection(IntFunction, PacketByteBuf.PacketReader)
 		ARG 1 consumer
 			COMMENT the consumer to read entries
-	METHOD method_34066 readList (Ljava/util/function/Function;)Ljava/util/List;
+	METHOD method_34066 readList (Lnet/minecraft/class_2540$class_7461;)Ljava/util/List;
 		COMMENT Reads a collection from this buf as an array list.
 		COMMENT
 		COMMENT @param <T> the list's entry type
 		COMMENT @return the read list
-		COMMENT @see #readCollection(IntFunction, Function)
-		ARG 1 entryParser
-			COMMENT a parser that parses each entry for the collection given this buf
-	METHOD method_34067 readMap (Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/Map;
+		COMMENT @see #readCollection(IntFunction, PacketByteBuf.PacketReader)
+		ARG 1 reader
+	METHOD method_34067 readMap (Lnet/minecraft/class_2540$class_7461;Lnet/minecraft/class_2540$class_7461;)Ljava/util/Map;
 		COMMENT Reads a map from this buf as a hash map.
 		COMMENT
 		COMMENT @param <K> the key type
 		COMMENT @param <V> the value type
 		COMMENT @return the read map
-		COMMENT @see #readMap(IntFunction, Function, Function)
-		ARG 1 keyParser
-			COMMENT a parser that parses each key for the map given this buf
-		ARG 2 valueParser
-			COMMENT a parser that parses each value for the map given this buf
-	METHOD method_34068 readCollection (Ljava/util/function/IntFunction;Ljava/util/function/Function;)Ljava/util/Collection;
+		COMMENT @see #readMap(IntFunction, PacketByteBuf.PacketReader, PacketByteBuf.PacketReader)
+		ARG 1 keyReader
+		ARG 2 valueReader
+	METHOD method_34068 readCollection (Ljava/util/function/IntFunction;Lnet/minecraft/class_2540$class_7461;)Ljava/util/Collection;
 		COMMENT Reads a collection from this buf. The collection is stored as a leading
 		COMMENT {@linkplain #readVarInt() var int} size followed by the entries
 		COMMENT sequentially.
@@ -756,13 +777,12 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @param <T> the collection's entry type
 		COMMENT @param <C> the collection's type
 		COMMENT @return the read collection
-		COMMENT @see #writeCollection(Collection, BiConsumer)
-		COMMENT @see #readList(Function)
+		COMMENT @see #writeCollection(Collection, PacketByteBuf.PacketWriter)
+		COMMENT @see #readList(PacketByteBuf.PacketReader)
 		ARG 1 collectionFactory
 			COMMENT a factory that creates a collection with a given size
-		ARG 2 entryParser
-			COMMENT a parser that parses each entry for the collection given this buf
-	METHOD method_34069 readMap (Ljava/util/function/IntFunction;Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/Map;
+		ARG 2 reader
+	METHOD method_34069 readMap (Ljava/util/function/IntFunction;Lnet/minecraft/class_2540$class_7461;Lnet/minecraft/class_2540$class_7461;)Ljava/util/Map;
 		COMMENT Reads a map from this buf. The map is stored as a leading
 		COMMENT {@linkplain #readVarInt() var int} size followed by each key and value
 		COMMENT pair.
@@ -771,14 +791,12 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @param <V> the value type
 		COMMENT @param <M> the map type
 		COMMENT @return the read map
-		COMMENT @see #writeMap(Map, BiConsumer, BiConsumer)
-		COMMENT @see #readMap(Function, Function)
+		COMMENT @see #writeMap(Map, PacketByteBuf.PacketWriter, PacketByteBuf.PacketWriter)
+		COMMENT @see #readMap(PacketByteBuf.PacketReader, PacketByteBuf.PacketReader)
 		ARG 1 mapFactory
 			COMMENT a factory that creates a map with a given size
-		ARG 2 keyParser
-			COMMENT a parser that parses each key for the map given this buf
-		ARG 3 valueParser
-			COMMENT a parser that parses each value for the map given this buf
+		ARG 2 keyReader
+		ARG 3 valueReader
 	METHOD method_34070 (Lnet/minecraft/class_2487;Lcom/mojang/serialization/DataResult$PartialResult;)V
 		ARG 1 partial
 	METHOD method_36129 getVarLongLength (J)I
@@ -814,27 +832,177 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return the read chunk position
 		COMMENT @see #writeChunkPos(ChunkPos)
-	METHOD method_37435 writeOptional (Ljava/util/Optional;Ljava/util/function/BiConsumer;)V
+	METHOD method_37435 writeOptional (Ljava/util/Optional;Lnet/minecraft/class_2540$class_7462;)V
 		COMMENT Writes an optional value to this buf. An optional value is represented by
 		COMMENT a boolean indicating if the value is present, followed by the value only if
 		COMMENT the value is present.
 		COMMENT
-		COMMENT @see #readOptional(Function)
+		COMMENT @see #readOptional(PacketByteBuf.PacketReader)
 		ARG 1 value
-		ARG 2 serializer
-	METHOD method_37436 readOptional (Ljava/util/function/Function;)Ljava/util/Optional;
+		ARG 2 writer
+	METHOD method_37436 readOptional (Lnet/minecraft/class_2540$class_7461;)Ljava/util/Optional;
 		COMMENT Reads an optional value from this buf. An optional value is represented by
 		COMMENT a boolean indicating if the value is present, followed by the value only if
 		COMMENT the value is present.
 		COMMENT
 		COMMENT @return the read optional value
-		COMMENT @see #writeOptional(Optional, BiConsumer)
-		ARG 1 parser
+		COMMENT @see #writeOptional(Optional, PacketByteBuf.PacketWriter)
+		ARG 1 reader
 	METHOD method_37452 (ILjava/util/function/IntFunction;I)Ljava/lang/Object;
 		ARG 2 value
 	METHOD method_37453 getMaxValidator (Ljava/util/function/IntFunction;I)Ljava/util/function/IntFunction;
 		ARG 0 applier
 		ARG 1 max
+	METHOD method_42064 readRegistryValue (Lnet/minecraft/class_2359;)Ljava/lang/Object;
+		COMMENT Reads a value from a registry (or other {@link IndexedIterable}s). The value
+		COMMENT is stored using its raw ID as a {@linkplain #readVarInt() var int}.
+		COMMENT
+		COMMENT <p>Callers must ensure that <strong>the registry (or the indexed iterable) is
+		COMMENT properly synchronized</strong> between the client and the server.
+		COMMENT
+		COMMENT @return the value, or {@code null} if it is missing from {@code registry}
+		COMMENT @see #writeRegistryValue(IndexedIterable, Object)
+		ARG 1 registry
+			COMMENT the registry (or an indexed iterable) that contains the value
+	METHOD method_42065 writeRegistryValue (Lnet/minecraft/class_2359;Ljava/lang/Object;)V
+		COMMENT Writes a value from a registry (or other {@link IndexedIterable}s). The value
+		COMMENT is stored using its raw ID as a {@linkplain #readVarInt() var int}.
+		COMMENT
+		COMMENT <p>Callers must ensure that <strong>the registry (or the indexed iterable) is
+		COMMENT properly synchronized</strong> between the client and the server.
+		COMMENT
+		COMMENT @throws IllegalArgumentException if {@code value} is not in {@code registry}
+		COMMENT @see #readRegistryValue(IndexedIterable)
+		ARG 1 registry
+			COMMENT the registry (or an indexed iterable) that contains the value
+		ARG 2 value
+			COMMENT a value to write, must be in {@code registry}
+	METHOD method_43616 writeGameProfile (Lcom/mojang/authlib/GameProfile;)V
+		COMMENT Writes a game profile to this buf. A game profile is represented by a
+		COMMENT {@linkplain #writeUuid(UUID) uuid}, a username string, and a collection of
+		COMMENT {@linkplain #writeProperty(Property) properties}.
+		COMMENT
+		COMMENT @see #readGameProfile()
+		ARG 1 gameProfile
+	METHOD method_43617 writeProperty (Lcom/mojang/authlib/properties/Property;)V
+		COMMENT Writes a property to this buf. A property is represented by a string representing
+		COMMENT the property key, a string representing the property value, a boolean indicating
+		COMMENT whether the property is signed, and a string representing the signature (only
+		COMMENT exists if signed).
+		COMMENT
+		COMMENT @see #readProperty()
+		ARG 1 property
+	METHOD method_43618 (Lcom/mojang/authlib/properties/PropertyMap;Lnet/minecraft/class_2540;)V
+		ARG 2 buf
+	METHOD method_43619 writeEither (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/class_2540$class_7462;Lnet/minecraft/class_2540$class_7462;)V
+		COMMENT Writes an {@code Either} to this buf. An either is represented by
+		COMMENT a boolean indicating if the left side or the right side of the either,
+		COMMENT followed by the value.
+		COMMENT
+		COMMENT @see #readEither(PacketByteBuf.PacketReader, PacketByteBuf.PacketReader)
+		ARG 1 either
+		ARG 2 leftWriter
+		ARG 3 rightWriter
+	METHOD method_43620 (Lnet/minecraft/class_2540$class_7462;Ljava/lang/Object;)V
+		ARG 2 object
+	METHOD method_43621 (Lnet/minecraft/class_2540$class_7462;Ljava/lang/Object;)V
+		ARG 2 object
+	METHOD method_43622 readEither (Lnet/minecraft/class_2540$class_7461;Lnet/minecraft/class_2540$class_7461;)Lcom/mojang/datafixers/util/Either;
+		COMMENT Reads an {@code Either} from this buf. An either is represented by
+		COMMENT a boolean indicating if the left side or the right side of the either,
+		COMMENT followed by the value.
+		COMMENT
+		COMMENT @return the read either
+		COMMENT @see #writeEither(Either, PacketByteBuf.PacketWriter, PacketByteBuf.PacketWriter)
+		ARG 1 leftReader
+		ARG 2 rightReader
+	METHOD method_43623 readGameProfile ()Lcom/mojang/authlib/GameProfile;
+		COMMENT Reads a game profile from this buf. A game profile is represented by a
+		COMMENT {@linkplain #readUuid() uuid}, a username string, and a collection of
+		COMMENT {@linkplain #readProperty() properties}.
+		COMMENT
+		COMMENT @return the game profile
+		COMMENT @see #writeGameProfile(GameProfile)
+	METHOD method_43624 readProperty ()Lcom/mojang/authlib/properties/Property;
+		COMMENT Reads a property from this buf. A property is represented by a string representing
+		COMMENT the property key, a string representing the property value, a boolean indicating
+		COMMENT whether the property is signed, and a string representing the signature (only
+		COMMENT exists if signed).
+		COMMENT
+		COMMENT @return the property
+		COMMENT @see #writeProperty(Property)
+	METHOD method_43826 writeNullable (Ljava/lang/Object;Lnet/minecraft/class_2540$class_7462;)V
+		COMMENT Writes a nullable value to this buf. A nullable value is represented by
+		COMMENT a boolean indicating if the value is not null, followed by the value only if
+		COMMENT the value is not null.
+		COMMENT
+		COMMENT @see #readNullable(PacketByteBuf.PacketReader)
+		ARG 1 value
+		ARG 2 writer
+	METHOD method_43827 readNullable (Lnet/minecraft/class_2540$class_7461;)Ljava/lang/Object;
+		COMMENT Reads a nullable value from this buf. A nullable value is represented by
+		COMMENT a boolean indicating if the value is not null, followed by the value only if
+		COMMENT the value is not null.
+		COMMENT
+		COMMENT @return the read nullable value
+		COMMENT @see #writeNullable(Object, PacketByteBuf.PacketWriter)
+		ARG 1 reader
+	METHOD method_44112 readRegistryKey (Lnet/minecraft/class_5321;)Lnet/minecraft/class_5321;
+		COMMENT Reads a registry key from this buf. A registry key is represented by its
+		COMMENT {@linkplain #readIdentifier value as an identifier}.
+		COMMENT
+		COMMENT @return the read registry key
+		COMMENT @see #writeRegistryKey(RegistryKey)
+		ARG 1 registryRef
+			COMMENT the registry key of the registry the read registry key belongs to
+	METHOD method_44113 writeGlobalPos (Lnet/minecraft/class_4208;)V
+		COMMENT Writes a global position to this buf. A global position is represented by
+		COMMENT {@linkplain #writeRegistryKey the registry key} of the dimension followed by
+		COMMENT {@linkplain #writeBlockPos the block position}.
+		COMMENT
+		COMMENT @see #readGlobalPos()
+		ARG 1 pos
+	METHOD method_44114 writePublicKey (Ljava/security/PublicKey;)Lnet/minecraft/class_2540;
+		COMMENT Writes a public key to this buf. A public key is represented by a {@linkplain
+		COMMENT #writeByteArray byte array} of X.509-encoded payload.
+		COMMENT
+		COMMENT @return this buf, for chaining
+		COMMENT @see #readPublicKey()
+		ARG 1 publicKey
+	METHOD method_44115 writeInstant (Ljava/time/Instant;)V
+		COMMENT Writes an instant to this buf. An instant is represented by the milliseconds
+		COMMENT since the epoch.
+		COMMENT
+		COMMENT @see #readInstant()
+		ARG 1 instant
+	METHOD method_44116 writeRegistryKey (Lnet/minecraft/class_5321;)V
+		COMMENT Writes a registry key to this buf. A registry key is represented by its
+		COMMENT {@linkplain #writeIdentifier value as an identifier}.
+		COMMENT
+		COMMENT @see #readRegistryKey(RegistryKey)
+		ARG 1 key
+	METHOD method_44117 readGlobalPos ()Lnet/minecraft/class_4208;
+		COMMENT Reads a global position from this buf. A global position is represented by
+		COMMENT {@linkplain #readRegistryKey the registry key} of the dimension followed by
+		COMMENT {@linkplain #readBlockPos the block position}.
+		COMMENT
+		COMMENT @return the read global pos
+		COMMENT @see #writeGlobalPos(GlobalPos)
+	METHOD method_44118 readInstant ()Ljava/time/Instant;
+		COMMENT Reads an instant from this buf. An instant is represented by the milliseconds
+		COMMENT since the epoch.
+		COMMENT
+		COMMENT @return the read instant
+		COMMENT @see #writeInstant(Instant)
+	METHOD method_44119 readPublicKey ()Ljava/security/PublicKey;
+		COMMENT Reads a public key from this buf. A public key is represented by a {@linkplain
+		COMMENT #readByteArray byte array} of X.509-encoded payload.
+		COMMENT
+		COMMENT @return the read public key
+		COMMENT @throws io.netty.handler.codec.DecoderException if the public key is malformed
+		COMMENT @see #writePublicKey(PublicKey)
+	METHOD method_44302 toEncodedStringLength (I)I
+		ARG 0 decodedLength
 	METHOD nioBuffer (II)Ljava/nio/ByteBuffer;
 		ARG 1 index
 		ARG 2 length
@@ -1046,3 +1214,12 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 length
 	METHOD writerIndex (I)Lio/netty/buffer/ByteBuf;
 		ARG 1 index
+	CLASS class_7461 PacketReader
+		COMMENT A functional interface to read a value from {@link PacketByteBuf}.
+		METHOD method_43828 (Lnet/minecraft/class_2540;)Ljava/util/Optional;
+			ARG 1 buf
+	CLASS class_7462 PacketWriter
+		COMMENT A functional interface to write a value to {@link PacketByteBuf}.
+		METHOD method_43829 (Lnet/minecraft/class_2540;Ljava/util/Optional;)V
+			ARG 1 buf
+			ARG 2 value

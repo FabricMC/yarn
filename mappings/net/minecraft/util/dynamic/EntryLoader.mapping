@@ -1,26 +1,35 @@
 CLASS net/minecraft/class_5506 net/minecraft/util/dynamic/EntryLoader
 	METHOD method_31154 resourceBacked (Lnet/minecraft/class_3300;)Lnet/minecraft/class_5506;
 		ARG 0 resourceManager
-	METHOD method_31155 load (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;Lcom/mojang/serialization/Decoder;)Ljava/util/Optional;
-		ARG 1 json
-		ARG 2 registryId
-		ARG 3 entryId
-		ARG 4 decoder
-	METHOD method_31156 getKnownEntryPaths (Lnet/minecraft/class_5321;)Ljava/util/Collection;
+	METHOD method_31156 getKnownEntryPaths (Lnet/minecraft/class_5321;)Ljava/util/Map;
 		COMMENT @return A collection of file Identifiers of all known entries of the given registry.
 		COMMENT Note that these are file Identifiers for use in a resource manager, not the logical names of the entries.
 		ARG 1 key
+	METHOD method_42083 createParseable (Lnet/minecraft/class_5321;)Ljava/util/Optional;
+		ARG 1 key
 	CLASS 1
 		FIELD field_36186 JSON Ljava/lang/String;
-		METHOD method_31158 (Ljava/lang/String;)Z
-			ARG 0 name
-		METHOD method_39745 (Ljava/lang/String;Ljava/util/Set;Lnet/minecraft/class_5321;Lnet/minecraft/class_2960;)V
-			ARG 3 id
-		METHOD method_39746 createId (Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;)Lnet/minecraft/class_2960;
+		METHOD method_31158 (Lnet/minecraft/class_2960;)Z
+			ARG 0 id
+		METHOD method_39745 (Ljava/lang/String;Lnet/minecraft/class_5321;Ljava/util/Map;Lnet/minecraft/class_2960;Lnet/minecraft/class_3298;)V
+			ARG 4 id
+			ARG 5 resourceRef
+		METHOD method_39746 createId (Lnet/minecraft/class_5321;)Lnet/minecraft/class_2960;
 			ARG 0 rootKey
-			ARG 1 key
-		METHOD method_39747 getPath (Lnet/minecraft/class_5321;)Ljava/lang/String;
-			ARG 0 registryKey
+		METHOD method_39747 getPath (Lnet/minecraft/class_2960;)Ljava/lang/String;
+			ARG 0 id
+		METHOD method_42084 (Lnet/minecraft/class_3298;Lnet/minecraft/class_2960;Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Decoder;)Lcom/mojang/serialization/DataResult;
+			ARG 3 jsonOps
+			ARG 4 decoder
+		METHOD method_42085 (Lnet/minecraft/class_3298;Lnet/minecraft/class_2960;Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Decoder;)Lcom/mojang/serialization/DataResult;
+			ARG 3 jsonOps
+			ARG 4 decoder
+		METHOD method_42086 parse (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Decoder;Ljava/io/Reader;)Lcom/mojang/serialization/DataResult;
+			ARG 1 jsonOps
+			ARG 2 decoder
+			ARG 3 reader
+		METHOD method_43249 (Lnet/minecraft/class_2960;Lnet/minecraft/class_3298;)Lnet/minecraft/class_5506$class_7236;
+			ARG 2 resource
 	CLASS class_5507 Impl
 		FIELD field_26741 values Ljava/util/Map;
 		FIELD field_36187 LOGGER Lorg/slf4j/Logger;
@@ -31,14 +40,28 @@ CLASS net/minecraft/class_5506 net/minecraft/util/dynamic/EntryLoader
 			ARG 4 rawId
 			ARG 5 entry
 			ARG 6 lifecycle
-		METHOD method_39748 (Lnet/minecraft/class_5506$class_5507$class_6821;Ljava/lang/Object;)Lnet/minecraft/class_5506$class_6822;
-			ARG 1 value
-		METHOD method_39749 (Lnet/minecraft/class_5321;Lnet/minecraft/class_5321;)Ljava/util/stream/Stream;
-			ARG 1 registryKey
+		METHOD method_42087 (Lcom/mojang/serialization/DataResult;Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Decoder;)Lcom/mojang/serialization/DataResult;
+			ARG 1 jsonOps
+			ARG 2 decoder
+		METHOD method_42088 (Ljava/util/Map$Entry;)Lnet/minecraft/class_5506$class_7236;
+			ARG 0 entry
+		METHOD method_42089 (Lnet/minecraft/class_5321;Ljava/util/Map$Entry;)Z
+			ARG 1 entry
+		METHOD method_42090 (Ljava/util/Map$Entry;)Lnet/minecraft/class_5321;
+			ARG 0 entry
 		CLASS class_6821 Element
+			METHOD method_42091 parse (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Decoder;)Lcom/mojang/serialization/DataResult;
+				ARG 1 jsonOps
+				ARG 2 decoder
+			METHOD method_42092 (Ljava/lang/Object;)Lnet/minecraft/class_5506$class_6822;
+				ARG 1 value
 	CLASS class_6822 Entry
 		METHOD method_39750 of (Ljava/lang/Object;)Lnet/minecraft/class_5506$class_6822;
 			ARG 0 value
 		METHOD method_39751 of (Ljava/lang/Object;I)Lnet/minecraft/class_5506$class_6822;
 			ARG 0 value
 			ARG 1 id
+	CLASS class_7236 Parseable
+		METHOD parseElement (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Decoder;)Lcom/mojang/serialization/DataResult;
+			ARG 1 jsonOps
+			ARG 2 decoder

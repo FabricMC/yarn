@@ -1,36 +1,137 @@
 CLASS net/minecraft/class_3471 net/minecraft/structure/WoodlandMansionGenerator
-	METHOD method_15029 addPieces (Lnet/minecraft/class_3485;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Ljava/util/List;Ljava/util/Random;)V
+	COMMENT The generator for the woodland mansion structure.
+	COMMENT
+	COMMENT <p>The cobblestones underneath the mansion are generated {@linkplain
+	COMMENT net.minecraft.world.gen.structure.WoodlandMansionStructure#postPlace after
+	COMMENT the mansion placement}.
+	METHOD method_15029 addPieces (Lnet/minecraft/class_3485;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Ljava/util/List;Lnet/minecraft/class_5819;)V
 		ARG 0 manager
 		ARG 1 pos
 		ARG 2 rotation
 		ARG 3 pieces
 		ARG 4 random
+	METHOD method_35471 printRandomFloorLayouts ([Ljava/lang/String;)V
+		ARG 0 args
 	CLASS class_3472 FirstFloorRoomPool
+		COMMENT The {@link RoomPool} used for the first floor.
 	CLASS class_3473 RoomPool
-		METHOD method_15031 getMediumGenericRoom (Ljava/util/Random;Z)Ljava/lang/String;
+		COMMENT Provides methods that sample room template identifiers.
+		METHOD method_15031 getMediumGenericRoom (Lnet/minecraft/class_5819;Z)Ljava/lang/String;
 			ARG 1 random
 			ARG 2 staircase
-		METHOD method_15032 getSmallSecretRoom (Ljava/util/Random;)Ljava/lang/String;
+		METHOD method_15032 getSmallSecretRoom (Lnet/minecraft/class_5819;)Ljava/lang/String;
 			ARG 1 random
-		METHOD method_15033 getMediumFunctionalRoom (Ljava/util/Random;Z)Ljava/lang/String;
+		METHOD method_15033 getMediumFunctionalRoom (Lnet/minecraft/class_5819;Z)Ljava/lang/String;
 			ARG 1 random
 			ARG 2 staircase
-		METHOD method_15034 getBigRoom (Ljava/util/Random;)Ljava/lang/String;
+		METHOD method_15034 getBigRoom (Lnet/minecraft/class_5819;)Ljava/lang/String;
 			ARG 1 random
-		METHOD method_15035 getMediumSecretRoom (Ljava/util/Random;)Ljava/lang/String;
+		METHOD method_15035 getMediumSecretRoom (Lnet/minecraft/class_5819;)Ljava/lang/String;
 			ARG 1 random
-		METHOD method_15036 getBigSecretRoom (Ljava/util/Random;)Ljava/lang/String;
+		METHOD method_15036 getBigSecretRoom (Lnet/minecraft/class_5819;)Ljava/lang/String;
 			ARG 1 random
-		METHOD method_15037 getSmallRoom (Ljava/util/Random;)Ljava/lang/String;
+		METHOD method_15037 getSmallRoom (Lnet/minecraft/class_5819;)Ljava/lang/String;
 			ARG 1 random
 	CLASS class_3474 MansionParameters
-		FIELD field_15438 random Ljava/util/Random;
-		METHOD <init> (Ljava/util/Random;)V
+		COMMENT The parameters that control how the mansion will look like. It's
+		COMMENT generated before adding structure pieces and passed to {@link
+		COMMENT LayoutGenerator}.
+		FIELD field_15438 random Lnet/minecraft/class_5819;
+		FIELD field_15439 thirdFloorLayout Lnet/minecraft/class_3471$class_3478;
+			COMMENT Determines a rough shape of the third floor.
+			COMMENT
+			COMMENT <p>Each element in this matrix is one of {@link #UNSET},
+			COMMENT {@link #CORRIDOR}, {@link #ROOM}, {@link #STAIRCASE}, {@link #UNUSED} or
+			COMMENT {@link #OUTSIDE}.
+		FIELD field_15440 baseLayout Lnet/minecraft/class_3471$class_3478;
+			COMMENT Determines a rough shape of the first floor and the second floor.
+			COMMENT
+			COMMENT <p>Each element in this matrix is one of {@link #UNSET},
+			COMMENT {@link #CORRIDOR}, {@link #ROOM}, {@link #STAIRCASE}, {@link #UNUSED} or
+			COMMENT {@link #OUTSIDE}.
+		FIELD field_15441 entranceJ I
+		FIELD field_15442 entranceI I
+		FIELD field_15443 roomFlagsByFloor [Lnet/minecraft/class_3471$class_3478;
+			COMMENT Contains flags for each room cell on each floor.
+			COMMENT
+			COMMENT <p>Each element in the matrix consists of the following fields:
+			COMMENT <ul>
+			COMMENT   <li>{@linkplain #ROOM_ID_MASK room ID} (16 bit)
+			COMMENT   <li>{@linkplain #ROOM_SIZE_MASK room size} (4 bit)
+			COMMENT   <li>{@link #ORIGIN_CELL_FLAG} (1 bit)
+			COMMENT   <li>{@link #ENTRANCE_CELL_FLAG} (1 bit)
+			COMMENT   <li>{@link #STAIRCASE_CELL_FLAG} (1 bit)
+			COMMENT   <li>{@link #CARPET_CELL_FLAG} (1 bit)
+			COMMENT </ul>
+		FIELD field_31665 SIZE I
+		FIELD field_31666 UNSET I
+		FIELD field_31667 CORRIDOR I
+		FIELD field_31668 ROOM I
+		FIELD field_31669 STAIRCASE I
+		FIELD field_31670 UNUSED I
+		FIELD field_31671 OUTSIDE I
+		FIELD field_31672 SMALL_ROOM_FLAG I
+			COMMENT Whether the room has size 1x1.
+		FIELD field_31673 MEDIUM_ROOM_FLAG I
+			COMMENT Whether the room has size 1x2.
+		FIELD field_31674 BIG_ROOM_FLAG I
+			COMMENT Whether the room has size 2x2.
+		FIELD field_31675 ORIGIN_CELL_FLAG I
+			COMMENT Whether the cell is an origin of the room.
+		FIELD field_31676 ENTRANCE_CELL_FLAG I
+			COMMENT Whether the cell is an entrance of the room.
+		FIELD field_31677 STAIRCASE_CELL_FLAG I
+			COMMENT Whether the cell is a part of a staircase room.
+		FIELD field_31678 CARPET_CELL_FLAG I
+			COMMENT Whether the cell has carpet.
+		FIELD field_31679 ROOM_SIZE_MASK I
+			COMMENT The mask for the room size. The value takes one of {@link
+			COMMENT #SMALL_ROOM_FLAG}, {@link #MEDIUM_ROOM_FLAG} or {@link #BIG_ROOM_FLAG}.
+		FIELD field_31680 ROOM_ID_MASK I
+			COMMENT The mask for the room ID. Connected rooms share the same ID.
+		METHOD <init> (Lnet/minecraft/class_5819;)V
 			ARG 1 random
+		METHOD method_15039 isRoomId (Lnet/minecraft/class_3471$class_3478;IIII)Z
+			ARG 1 layout
+			ARG 2 i
+			ARG 3 j
+			ARG 4 floor
+			ARG 5 roomId
+		METHOD method_15040 findConnectedRoomDirection (Lnet/minecraft/class_3471$class_3478;IIII)Lnet/minecraft/class_2350;
+			ARG 1 layout
+			ARG 2 i
+			ARG 3 j
+			ARG 4 floor
+			ARG 5 roomId
+		METHOD method_15042 updateRoomFlags (Lnet/minecraft/class_3471$class_3478;Lnet/minecraft/class_3471$class_3478;)V
+			ARG 1 layout
+			ARG 2 roomFlags
+		METHOD method_15045 layoutCorridor (Lnet/minecraft/class_3471$class_3478;IILnet/minecraft/class_2350;I)V
+			ARG 1 layout
+			ARG 2 i
+			ARG 3 j
+			ARG 4 direction
+			ARG 5 length
+		METHOD method_15046 adjustLayoutWithRooms (Lnet/minecraft/class_3471$class_3478;)Z
+			ARG 1 layout
+		METHOD method_15047 isInsideMansion (Lnet/minecraft/class_3471$class_3478;II)Z
+			ARG 0 layout
+			ARG 1 i
+			ARG 2 j
+		METHOD method_15048 layoutThirdFloor ()V
+		METHOD method_35472 printFloorLayouts ()V
+			COMMENT Prints a string representation of {@link #baseLayout} and {@link
+			COMMENT #thirdFloorLayout}. Useful for debugging.
+			COMMENT
+			COMMENT @see WoodlandMansionGenerator#printRandomFloorLayouts
 	CLASS class_3475 LayoutGenerator
+		COMMENT Populates structure pieces based on the given {@link MansionParameters
+		COMMENT parameters}.
 		FIELD field_15444 manager Lnet/minecraft/class_3485;
-		FIELD field_15447 random Ljava/util/Random;
-		METHOD <init> (Lnet/minecraft/class_3485;Ljava/util/Random;)V
+		FIELD field_15445 entranceJ I
+		FIELD field_15446 entranceI I
+		FIELD field_15447 random Lnet/minecraft/class_5819;
+		METHOD <init> (Lnet/minecraft/class_3485;Lnet/minecraft/class_5819;)V
 			ARG 1 manager
 			ARG 2 random
 		METHOD method_15050 generate (Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Ljava/util/List;Lnet/minecraft/class_3471$class_3474;)V
@@ -38,30 +139,68 @@ CLASS net/minecraft/class_3471 net/minecraft/structure/WoodlandMansionGenerator
 			ARG 2 rotation
 			ARG 3 pieces
 			ARG 4 parameters
-		METHOD method_15051 addRoof (Ljava/util/List;Lnet/minecraft/class_3471$class_3476;Lnet/minecraft/class_3471$class_3478;Lnet/minecraft/class_2350;IIII)V
+		METHOD method_15051 addOuterWall (Ljava/util/List;Lnet/minecraft/class_3471$class_3476;Lnet/minecraft/class_3471$class_3478;Lnet/minecraft/class_2350;IIII)V
 			ARG 1 pieces
+			ARG 2 wallPiece
+			ARG 3 layout
+			ARG 4 direction
+			ARG 5 startI
+			ARG 6 startJ
+			ARG 7 endI
+			ARG 8 endJ
+		METHOD method_15052 addWallPiece (Ljava/util/List;Lnet/minecraft/class_3471$class_3476;)V
+			ARG 1 pieces
+			ARG 2 wallPiece
 		METHOD method_15053 addBigSecretRoom (Ljava/util/List;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Lnet/minecraft/class_3471$class_3473;)V
+			ARG 1 pieces
+			ARG 2 pos
+			ARG 3 rotation
+			ARG 4 pool
 		METHOD method_15054 addEntrance (Ljava/util/List;Lnet/minecraft/class_3471$class_3476;)V
 			ARG 1 pieces
+			ARG 2 wallPiece
+		METHOD method_15055 addRoof (Ljava/util/List;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Lnet/minecraft/class_3471$class_3478;Lnet/minecraft/class_3471$class_3478;)V
+			ARG 1 pieces
+			ARG 2 pos
+			ARG 3 rotation
+			ARG 4 layout
+			ARG 5 nextFloorLayout
 		METHOD method_15056 addBigRoom (Ljava/util/List;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Lnet/minecraft/class_2350;Lnet/minecraft/class_2350;Lnet/minecraft/class_3471$class_3473;)V
 			ARG 1 pieces
 			ARG 2 pos
 			ARG 3 rotation
+			ARG 4 connectedRoomDirection
+			ARG 5 entranceDirection
+			ARG 6 pool
 		METHOD method_15057 addSmallRoom (Ljava/util/List;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Lnet/minecraft/class_2350;Lnet/minecraft/class_3471$class_3473;)V
 			ARG 1 pieces
 			ARG 2 pos
 			ARG 3 rotation
+			ARG 4 direction
+			ARG 5 pool
+		METHOD method_15058 turnLeft (Ljava/util/List;Lnet/minecraft/class_3471$class_3476;)V
+			ARG 1 pieces
+			ARG 2 wallPiece
 		METHOD method_15059 addMediumRoom (Ljava/util/List;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Lnet/minecraft/class_2350;Lnet/minecraft/class_2350;Lnet/minecraft/class_3471$class_3473;Z)V
 			ARG 1 pieces
 			ARG 2 pos
 			ARG 3 rotation
+			ARG 4 connectedRoomDirection
+			ARG 5 entranceDirection
+			ARG 6 pool
 			ARG 7 staircase
+		METHOD method_15060 turnRight (Ljava/util/List;Lnet/minecraft/class_3471$class_3476;)V
+			ARG 1 pieces
+			ARG 2 wallPiece
 	CLASS class_3476 GenerationPiece
 		FIELD field_15448 template Ljava/lang/String;
 		FIELD field_15449 position Lnet/minecraft/class_2338;
 		FIELD field_15450 rotation Lnet/minecraft/class_2470;
 	CLASS class_3477 SecondFloorRoomPool
+		COMMENT The {@link RoomPool} used for the second floor.
 	CLASS class_3478 FlagMatrix
+		COMMENT A matrix used to store floor information. Each element in this matrix
+		COMMENT corresponds to the cell on the floor.
 		FIELD field_15451 array [[I
 		FIELD field_15452 fallback I
 		FIELD field_15453 m I
@@ -71,6 +210,8 @@ CLASS net/minecraft/class_3471 net/minecraft/structure/WoodlandMansionGenerator
 			ARG 2 m
 			ARG 3 fallback
 		METHOD method_15061 update (IIII)V
+			COMMENT Updates the element in {@code (i, j)} to {@code newValue} if the
+			COMMENT current value is equal to {@code expected}.
 			ARG 1 i
 			ARG 2 j
 			ARG 3 expected
@@ -93,6 +234,7 @@ CLASS net/minecraft/class_3471 net/minecraft/structure/WoodlandMansionGenerator
 			ARG 2 j
 			ARG 3 value
 	CLASS class_3479 ThirdFloorRoomPool
+		COMMENT The {@link RoomPool} used for the third floor.
 	CLASS class_3480 Piece
 		METHOD <init> (Lnet/minecraft/class_3485;Ljava/lang/String;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;)V
 			ARG 1 manager
@@ -113,3 +255,5 @@ CLASS net/minecraft/class_3471 net/minecraft/structure/WoodlandMansionGenerator
 			ARG 1 rotation
 		METHOD method_35474 getId (Ljava/lang/String;)Lnet/minecraft/class_2960;
 			ARG 0 identifier
+		METHOD method_35475 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2960;)Lnet/minecraft/class_3492;
+			ARG 1 id

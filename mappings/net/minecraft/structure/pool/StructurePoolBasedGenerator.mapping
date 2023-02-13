@@ -1,26 +1,41 @@
 CLASS net/minecraft/class_3778 net/minecraft/structure/pool/StructurePoolBasedGenerator
 	FIELD field_16665 LOGGER Lorg/slf4j/Logger;
-	METHOD method_27230 generate (Lnet/minecraft/class_5455;Lnet/minecraft/class_3790;ILnet/minecraft/class_3778$class_3779;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Ljava/util/List;Ljava/util/Random;Lnet/minecraft/class_5539;)V
-		ARG 0 registryManager
-		ARG 1 piece
-		ARG 2 maxDepth
-		ARG 3 pieceFactory
-		ARG 4 chunkGenerator
-		ARG 5 structureManager
-		ARG 6 results
-		ARG 7 random
-		ARG 8 world
-	METHOD method_30419 generate (Lnet/minecraft/class_6834$class_6835;Lnet/minecraft/class_3778$class_3779;Lnet/minecraft/class_2338;ZZ)Ljava/util/Optional;
-		ARG 1 pieceFactory
+	METHOD method_27230 generate (Lnet/minecraft/class_7138;IZLnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_5539;Lnet/minecraft/class_5819;Lnet/minecraft/class_2378;Lnet/minecraft/class_3790;Ljava/util/List;Lnet/minecraft/class_265;)V
+		ARG 0 noiseConfig
+		ARG 1 maxSize
+		ARG 2 modifyBoundingBox
+		ARG 3 chunkGenerator
+		ARG 4 structureTemplateManager
+		ARG 5 heightLimitView
+		ARG 6 random
+		ARG 7 structurePoolRegistry
+		ARG 8 firstPiece
+		ARG 9 pieces
+		ARG 10 pieceShape
+	METHOD method_30419 generate (Lnet/minecraft/class_3195$class_7149;Lnet/minecraft/class_6880;Ljava/util/Optional;ILnet/minecraft/class_2338;ZLjava/util/Optional;I)Ljava/util/Optional;
+		ARG 0 context
+		ARG 1 structurePool
+		ARG 2 id
+		ARG 3 size
+		ARG 4 pos
+		ARG 5 useExpansionHack
+		ARG 6 projectStartToHeightmap
+		ARG 7 maxDistanceFromCenter
+	METHOD method_39824 (Lnet/minecraft/class_3790;IIIIILnet/minecraft/class_3341;Lnet/minecraft/class_3195$class_7149;ZLnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_5539;Lnet/minecraft/class_2919;Lnet/minecraft/class_2378;Lnet/minecraft/class_6626;)V
+		ARG 14 collector
+	METHOD method_43566 findStartingJigsawPos (Lnet/minecraft/class_3784;Lnet/minecraft/class_2960;Lnet/minecraft/class_2338;Lnet/minecraft/class_2470;Lnet/minecraft/class_3485;Lnet/minecraft/class_2919;)Ljava/util/Optional;
+		ARG 0 pool
+		ARG 1 id
 		ARG 2 pos
-	CLASS class_3779 PieceFactory
-		METHOD create (Lnet/minecraft/class_3485;Lnet/minecraft/class_3784;Lnet/minecraft/class_2338;ILnet/minecraft/class_2470;Lnet/minecraft/class_3341;)Lnet/minecraft/class_3790;
-			ARG 1 structureManager
-			ARG 2 poolElement
-			ARG 3 pos
-			ARG 4 groundLevelDelta
-			ARG 5 rotation
-			ARG 6 elementBounds
+		ARG 3 rotation
+		ARG 4 structureManager
+		ARG 5 random
+	METHOD method_43729 generate (Lnet/minecraft/class_3218;Lnet/minecraft/class_6880;Lnet/minecraft/class_2960;ILnet/minecraft/class_2338;Z)Z
+		ARG 0 world
+		ARG 1 structurePool
+		ARG 2 id
+		ARG 4 pos
+		ARG 5 keepJigsaws
 	CLASS class_4181 ShapedPoolStructurePiece
 		FIELD field_18696 piece Lnet/minecraft/class_3790;
 		FIELD field_18697 pieceShape Lorg/apache/commons/lang3/mutable/MutableObject;
@@ -31,27 +46,26 @@ CLASS net/minecraft/class_3778 net/minecraft/structure/pool/StructurePoolBasedGe
 			ARG 3 currentSize
 	CLASS class_4182 StructurePoolGenerator
 		FIELD field_18700 maxSize I
-		FIELD field_18701 pieceFactory Lnet/minecraft/class_3778$class_3779;
 		FIELD field_18702 chunkGenerator Lnet/minecraft/class_2794;
-		FIELD field_18703 structureManager Lnet/minecraft/class_3485;
+		FIELD field_18703 structureTemplateManager Lnet/minecraft/class_3485;
 		FIELD field_18704 children Ljava/util/List;
-		FIELD field_18705 random Ljava/util/Random;
+		FIELD field_18705 random Lnet/minecraft/class_5819;
 		FIELD field_18706 structurePieces Ljava/util/Deque;
 		FIELD field_25852 registry Lnet/minecraft/class_2378;
-		METHOD <init> (Lnet/minecraft/class_2378;ILnet/minecraft/class_3778$class_3779;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Ljava/util/List;Ljava/util/Random;)V
+		METHOD <init> (Lnet/minecraft/class_2378;ILnet/minecraft/class_2794;Lnet/minecraft/class_3485;Ljava/util/List;Lnet/minecraft/class_5819;)V
 			ARG 1 registry
 			ARG 2 maxSize
-			ARG 3 pieceFactory
-			ARG 4 chunkGenerator
-			ARG 5 structureManager
-			ARG 6 children
-			ARG 7 random
-		METHOD method_19306 generatePiece (Lnet/minecraft/class_3790;Lorg/apache/commons/lang3/mutable/MutableObject;IZLnet/minecraft/class_5539;)V
+			ARG 3 chunkGenerator
+			ARG 4 structureTemplateManager
+			ARG 5 children
+			ARG 6 random
+		METHOD method_19306 generatePiece (Lnet/minecraft/class_3790;Lorg/apache/commons/lang3/mutable/MutableObject;IZLnet/minecraft/class_5539;Lnet/minecraft/class_7138;)V
 			ARG 1 piece
 			ARG 2 pieceShape
 			ARG 3 minY
 			ARG 4 modifyBoundingBox
 			ARG 5 world
+			ARG 6 noiseConfig
 		METHOD method_31113 (Lnet/minecraft/class_3785;)Ljava/lang/Integer;
 			ARG 1 pool
 		METHOD method_31114 (Lnet/minecraft/class_3785;)Ljava/lang/Integer;

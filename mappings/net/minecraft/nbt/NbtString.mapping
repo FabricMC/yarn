@@ -1,5 +1,6 @@
 CLASS net/minecraft/class_2519 net/minecraft/nbt/NbtString
-	COMMENT Represents an NBT string.
+	COMMENT Represents an NBT string. Its type is {@value NbtElement#STRING_TYPE}.
+	COMMENT Instances are immutable.
 	FIELD field_11590 value Ljava/lang/String;
 	FIELD field_21045 TYPE Lnet/minecraft/class_4614;
 	FIELD field_21046 EMPTY Lnet/minecraft/class_2519;
@@ -13,8 +14,17 @@ CLASS net/minecraft/class_2519 net/minecraft/nbt/NbtString
 	METHOD equals (Ljava/lang/Object;)Z
 		ARG 1 o
 	METHOD method_10706 escape (Ljava/lang/String;)Ljava/lang/String;
+		COMMENT {@return the string quoted with quotes and backslashes escaped}
+		COMMENT
+		COMMENT @implNote If {@code value} contains one of the singlequote or the double quote,
+		COMMENT it tries to use the other quotes to quote the string. If both appear, then the quote
+		COMMENT that appeared later will be used to quote the string. If neither of them appears, this
+		COMMENT uses a double quote. For example, the string {@code It's a "Tiny Potato"!} will be
+		COMMENT escaped as {@code "It's a \\"Tiny Potato\\"!"}, while the string
+		COMMENT {@code It is a "Tiny Potato"!} will be escaped as {@code 'It is a "Tiny Potato"!'}.
 		ARG 0 value
 	METHOD method_23256 of (Ljava/lang/String;)Lnet/minecraft/class_2519;
+		COMMENT {@return the NBT string from {@code value}}
 		ARG 0 value
 	METHOD method_39875 skip (Ljava/io/DataInput;)V
 		ARG 0 input

@@ -26,10 +26,11 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 		ARG 1 executor
 		ARG 2 world
 		ARG 3 generator
-		ARG 4 structureManager
+		ARG 4 structureTemplateManager
 		ARG 5 lightingProvider
 		ARG 6 fullChunkConverter
 		ARG 7 chunks
+		ARG 8 regenerate
 	METHOD method_12155 getMaxDistanceFromFull ()I
 	METHOD method_12160 getHeightmapTypes ()Ljava/util/EnumSet;
 	METHOD method_12161 byDistanceFromFull (I)Lnet/minecraft/class_2806;
@@ -68,7 +69,9 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 	METHOD method_16566 (Lnet/minecraft/class_2806;Lnet/minecraft/class_3218;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 targetStatus
 		ARG 1 world
+		ARG 2 structureTemplateManager
 		ARG 3 lightingProvider
+		ARG 4 fullChunkConverter
 		ARG 5 chunk
 	METHOD method_16569 (Lnet/minecraft/class_2806;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Ljava/util/List;Lnet/minecraft/class_2791;)V
 		ARG 0 targetStatus
@@ -93,12 +96,15 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 		ARG 1 chunk
 	METHOD method_20609 (Lnet/minecraft/class_2806;Ljava/util/concurrent/Executor;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Ljava/util/List;Lnet/minecraft/class_2791;Z)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 targetStatus
+		ARG 1 executor
 		ARG 2 world
 		ARG 3 generator
-		ARG 4 structureManager
+		ARG 4 structureTemplateManager
 		ARG 5 lightingProvider
+		ARG 6 fullChunkConverter
 		ARG 7 chunks
 		ARG 8 chunk
+		ARG 9 regenerate
 	METHOD method_20610 getLightingFuture (Lnet/minecraft/class_2806;Lnet/minecraft/class_3227;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 status
 		ARG 1 lightingProvider
@@ -113,30 +119,38 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 		ARG 6 loadTask
 	METHOD method_20612 runLoadTask (Lnet/minecraft/class_3218;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 world
-		ARG 2 structureManager
+		ARG 2 structureTemplateManager
 		ARG 3 lightingProvider
+		ARG 4 fullChunkConverter
 		ARG 5 chunk
 	METHOD method_20613 (Lnet/minecraft/class_2806;Ljava/util/concurrent/Executor;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Ljava/util/List;Lnet/minecraft/class_2791;Z)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 targetStatus
+		ARG 1 executor
 		ARG 2 world
 		ARG 3 generator
-		ARG 4 structureManager
+		ARG 4 structureTemplateManager
 		ARG 5 lightingProvider
+		ARG 6 fullChunkConverter
 		ARG 7 chunks
 		ARG 8 chunk
+		ARG 9 regenerate
 	METHOD method_20614 (Lnet/minecraft/class_2806;Ljava/util/concurrent/Executor;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Ljava/util/List;Lnet/minecraft/class_2791;Z)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 targetStatus
+		ARG 1 executor
 		ARG 2 world
 		ARG 3 generator
-		ARG 4 structureManager
+		ARG 4 structureTemplateManager
 		ARG 5 lightingProvider
+		ARG 6 fullChunkConverter
 		ARG 7 chunks
 		ARG 8 chunk
+		ARG 9 regenerate
 	METHOD method_20615 (Lnet/minecraft/class_2806;Lnet/minecraft/class_3218;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 targetStatus
 		ARG 1 world
-		ARG 2 structureManager
+		ARG 2 structureTemplateManager
 		ARG 3 lightingProvider
+		ARG 4 fullChunkConverter
 		ARG 5 chunk
 	METHOD method_38277 (Lnet/minecraft/class_2806;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Ljava/util/List;Lnet/minecraft/class_2791;)V
 		ARG 0 targetStatus
@@ -147,8 +161,12 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 	METHOD method_38278 (Lnet/minecraft/class_2806;Lnet/minecraft/class_3218;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 targetStatus
 		ARG 1 world
+		ARG 2 structureTemplateManager
 		ARG 3 lightingProvider
+		ARG 4 fullChunkConverter
 		ARG 5 chunk
+	METHOD method_38280 (Lnet/minecraft/class_6613;Lcom/mojang/datafixers/util/Either;)Lcom/mojang/datafixers/util/Either;
+		ARG 1 either
 	METHOD method_38282 (Lnet/minecraft/class_2806;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Ljava/util/List;Lnet/minecraft/class_2791;)V
 		ARG 0 targetStatus
 		ARG 1 world
@@ -159,30 +177,39 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 		ARG 1 chunk
 	METHOD method_38284 (Lnet/minecraft/class_2806;Ljava/util/concurrent/Executor;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Ljava/util/List;Lnet/minecraft/class_2791;Z)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 targetStatus
+		ARG 1 executor
 		ARG 2 world
 		ARG 3 generator
-		ARG 4 structureManager
+		ARG 4 structureTemplateManager
 		ARG 5 lightingProvider
+		ARG 6 fullChunkConverter
 		ARG 7 chunks
 		ARG 8 chunk
+		ARG 9 regenerate
 	METHOD method_38285 (Lnet/minecraft/class_2806;Ljava/util/concurrent/Executor;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Ljava/util/List;Lnet/minecraft/class_2791;Z)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 targetStatus
+		ARG 1 executor
 		ARG 2 world
 		ARG 3 generator
-		ARG 4 structureManager
+		ARG 4 structureTemplateManager
 		ARG 5 lightingProvider
+		ARG 6 fullChunkConverter
 		ARG 7 chunks
 		ARG 8 chunk
+		ARG 9 regenerate
 	METHOD method_39463 (Lnet/minecraft/class_2806;Lnet/minecraft/class_2791;)Lcom/mojang/datafixers/util/Either;
 		ARG 1 chunk
 	METHOD method_39464 (Lnet/minecraft/class_2806;Ljava/util/concurrent/Executor;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Ljava/util/List;Lnet/minecraft/class_2791;Z)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 targetStatus
+		ARG 1 executor
 		ARG 2 world
 		ARG 3 generator
-		ARG 4 structureManager
+		ARG 4 structureTemplateManager
 		ARG 5 lightingProvider
+		ARG 6 fullChunkConverter
 		ARG 7 chunks
 		ARG 8 chunk
+		ARG 9 regenerate
 	METHOD method_39789 (Lnet/minecraft/class_2806;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Ljava/util/List;Lnet/minecraft/class_2791;)V
 		ARG 0 targetStatus
 		ARG 1 world
@@ -192,7 +219,16 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 	METHOD method_39790 (Lnet/minecraft/class_2806;Lnet/minecraft/class_3218;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 targetStatus
 		ARG 1 world
+		ARG 2 structureTemplateManager
 		ARG 3 lightingProvider
+		ARG 4 fullChunkConverter
+		ARG 5 chunk
+	METHOD method_41523 (Lnet/minecraft/class_2806;Lnet/minecraft/class_3218;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 status
+		ARG 1 world
+		ARG 2 structureTemplateManager
+		ARG 3 lightingProvider
+		ARG 4 fullChunkConverter
 		ARG 5 chunk
 	CLASS class_2807 GenerationTask
 		COMMENT A task called when a chunk needs to be generated.
@@ -202,12 +238,13 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 			ARG 2 executor
 			ARG 3 world
 			ARG 4 generator
-			ARG 5 structureManager
+			ARG 5 structureTemplateManager
 			ARG 6 lightingProvider
 			ARG 7 fullChunkConverter
 				COMMENT a function that can convert a raw chunk to a full chunk
 			ARG 8 chunks
 			ARG 9 chunk
+			ARG 10 regenerate
 	CLASS class_2808 ChunkType
 		COMMENT Specifies the type of a chunk
 		FIELD field_12807 LEVELCHUNK Lnet/minecraft/class_2806$class_2808;
@@ -226,7 +263,7 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 		METHOD doWork (Lnet/minecraft/class_2806;Lnet/minecraft/class_3218;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 			ARG 1 targetStatus
 			ARG 2 world
-			ARG 3 structureManager
+			ARG 3 structureTemplateManager
 			ARG 4 lightingProvider
 			ARG 5 fullChunkConverter
 				COMMENT a function that can convert a raw chunk to a full chunk

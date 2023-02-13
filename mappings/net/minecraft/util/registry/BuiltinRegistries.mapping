@@ -12,7 +12,7 @@ CLASS net/minecraft/class_5458 net/minecraft/util/registry/BuiltinRegistries
 	FIELD field_25926 REGISTRIES Lnet/minecraft/class_2378;
 	FIELD field_25928 CONFIGURED_CARVER Lnet/minecraft/class_2378;
 	FIELD field_25929 CONFIGURED_FEATURE Lnet/minecraft/class_2378;
-	FIELD field_25930 CONFIGURED_STRUCTURE_FEATURE Lnet/minecraft/class_2378;
+	FIELD field_25930 STRUCTURE Lnet/minecraft/class_2378;
 	FIELD field_25931 STRUCTURE_PROCESSOR_LIST Lnet/minecraft/class_2378;
 	FIELD field_25932 STRUCTURE_POOL Lnet/minecraft/class_2378;
 	FIELD field_25933 BIOME Lnet/minecraft/class_2378;
@@ -24,6 +24,10 @@ CLASS net/minecraft/class_5458 net/minecraft/util/registry/BuiltinRegistries
 	FIELD field_36476 DYNAMIC_REGISTRY_MANAGER Lnet/minecraft/class_5455;
 	FIELD field_37231 STRUCTURE_SET Lnet/minecraft/class_2378;
 	FIELD field_37232 DENSITY_FUNCTION Lnet/minecraft/class_2378;
+	FIELD field_38009 DIMENSION_TYPE Lnet/minecraft/class_2378;
+	FIELD field_38010 WORLD_PRESET Lnet/minecraft/class_2378;
+	FIELD field_38011 FLAT_LEVEL_GENERATOR_PRESET Lnet/minecraft/class_2378;
+	FIELD field_39364 MESSAGE_TYPE Lnet/minecraft/class_2378;
 	METHOD method_30559 init ()V
 	METHOD method_30561 add (Lnet/minecraft/class_2378;Ljava/lang/String;Ljava/lang/Object;)Lnet/minecraft/class_6880;
 		ARG 0 registry
@@ -33,26 +37,34 @@ CLASS net/minecraft/class_5458 net/minecraft/util/registry/BuiltinRegistries
 		ARG 0 registry
 		ARG 1 id
 		ARG 2 object
-	METHOD method_30563 addRegistry (Lnet/minecraft/class_5321;Lcom/mojang/serialization/Lifecycle;Ljava/util/function/Supplier;)Lnet/minecraft/class_2378;
+	METHOD method_30563 addRegistry (Lnet/minecraft/class_5321;Lcom/mojang/serialization/Lifecycle;Lnet/minecraft/class_5458$class_7488;)Lnet/minecraft/class_2378;
 		ARG 0 registryRef
 		ARG 1 lifecycle
-		ARG 2 defaultValueSupplier
-	METHOD method_30564 addRegistry (Lnet/minecraft/class_5321;Lnet/minecraft/class_2385;Ljava/util/function/Supplier;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/class_2385;
+		ARG 2 initializer
+	METHOD method_30564 addRegistry (Lnet/minecraft/class_5321;Lnet/minecraft/class_2385;Lnet/minecraft/class_5458$class_7488;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/class_2385;
 		ARG 0 registryRef
 		ARG 1 registry
-		ARG 2 defaultValueSupplier
+		ARG 2 initializer
 		ARG 3 lifecycle
-	METHOD method_30565 addRegistry (Lnet/minecraft/class_5321;Ljava/util/function/Supplier;)Lnet/minecraft/class_2378;
+	METHOD method_30565 addRegistry (Lnet/minecraft/class_5321;Lnet/minecraft/class_5458$class_7488;)Lnet/minecraft/class_2378;
 		ARG 0 registryRef
-		ARG 1 defaultValueSupplier
+		ARG 1 initializer
 	METHOD method_30566 (Lnet/minecraft/class_2960;Ljava/util/function/Supplier;)V
 		ARG 0 id
 		ARG 1 supplier
+	METHOD method_30569 (Lnet/minecraft/class_2378;)Lnet/minecraft/class_6880;
+		ARG 0 registry
+	METHOD method_30572 (Lnet/minecraft/class_2378;)Lnet/minecraft/class_6880;
+		ARG 0 registry
 	METHOD method_39203 add (Lnet/minecraft/class_2378;Lnet/minecraft/class_5321;Ljava/lang/Object;)Lnet/minecraft/class_6880;
 		ARG 0 registry
 		ARG 1 key
 		ARG 2 object
-	METHOD method_40360 (Lnet/minecraft/class_2378;Ljava/lang/String;Ljava/lang/Object;)Lnet/minecraft/class_6880;
+	METHOD method_40360 addCasted (Lnet/minecraft/class_2378;Ljava/lang/String;Ljava/lang/Object;)Lnet/minecraft/class_6880;
 		ARG 0 registry
 		ARG 1 id
 		ARG 2 value
+	CLASS class_7488 Initializer
+		COMMENT A functional interface that initializes the registry and returns the default value.
+		METHOD run (Lnet/minecraft/class_2378;)Lnet/minecraft/class_6880;
+			ARG 1 registry

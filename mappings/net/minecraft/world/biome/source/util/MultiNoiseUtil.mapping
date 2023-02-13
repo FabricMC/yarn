@@ -1,5 +1,6 @@
 CLASS net/minecraft/class_6544 net/minecraft/world/biome/source/util/MultiNoiseUtil
 	FIELD field_34476 HYPERCUBE_DIMENSION I
+	FIELD field_35359 TO_LONG_FACTOR F
 	METHOD method_38116 createNoiseValuePoint (FFFFFF)Lnet/minecraft/class_6544$class_6553;
 		ARG 0 temperatureNoise
 		ARG 1 humidityNoise
@@ -23,9 +24,14 @@ CLASS net/minecraft/class_6544 net/minecraft/world/biome/source/util/MultiNoiseU
 		ARG 4 depth
 		ARG 5 weirdness
 		ARG 6 offset
+	METHOD method_38665 toLong (F)J
+		ARG 0 value
+	METHOD method_38666 toFloat (J)F
+		ARG 0 value
 	METHOD method_39164 findFittestPosition (Ljava/util/List;Lnet/minecraft/class_6544$class_6552;)Lnet/minecraft/class_2338;
 		ARG 0 noises
 		ARG 1 sampler
+	METHOD method_40443 createEmptyMultiNoiseSampler ()Lnet/minecraft/class_6544$class_6552;
 	CLASS class_4762 NoiseHypercube
 		COMMENT Represents a hypercube in a multi-dimensional cartesian plane. The multi-noise
 		COMMENT biome source picks the closest noise hypercube from its selected point
@@ -79,6 +85,7 @@ CLASS net/minecraft/class_6544 net/minecraft/world/biome/source/util/MultiNoiseU
 	CLASS class_6545 NodeDistanceFunction
 		METHOD distance getDistance (Lnet/minecraft/class_6544$class_6548$class_6550;[J)J
 			ARG 1 node
+			ARG 2 otherParameters
 	CLASS class_6546 ParameterRange
 		FIELD comp_103 min J
 		FIELD comp_104 max J
@@ -115,6 +122,23 @@ CLASS net/minecraft/class_6544 net/minecraft/world/biome/source/util/MultiNoiseU
 		METHOD <init> (Ljava/util/List;)V
 			ARG 1 entries
 		METHOD method_38128 getEntries ()Ljava/util/List;
+		METHOD method_39527 getValue (Lnet/minecraft/class_6544$class_6553;)Ljava/lang/Object;
+			COMMENT {@return the closest entry at the given point}.
+			ARG 1 point
+				COMMENT the point of all relevant noises
+		METHOD method_39528 getValue (Lnet/minecraft/class_6544$class_6553;Lnet/minecraft/class_6544$class_6545;)Ljava/lang/Object;
+			ARG 1 point
+			ARG 2 distanceFunction
+		METHOD method_39529 get (Lnet/minecraft/class_6544$class_6553;)Ljava/lang/Object;
+			COMMENT {@return the closest entry at the given point}.
+			ARG 1 point
+				COMMENT the point of all relevant noises
+		METHOD method_39530 getValueSimple (Lnet/minecraft/class_6544$class_6553;)Ljava/lang/Object;
+			COMMENT {@return the closest entry at the given point}.
+			COMMENT
+			COMMENT Note that this method only exists for testing, and is usually a lot slower
+			COMMENT than {@link getValue()}.
+			ARG 1 point
 	CLASS class_6548 SearchTree
 		FIELD field_34486 MAX_NODES_FOR_SIMPLE_TREE I
 		FIELD field_34487 firstNode Lnet/minecraft/class_6544$class_6548$class_6550;

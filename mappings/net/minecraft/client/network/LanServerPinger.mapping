@@ -1,0 +1,38 @@
+CLASS net/minecraft/class_1133 net/minecraft/client/network/LanServerPinger
+	COMMENT Used to send UDP multicasts to notify other clients of a local game on the same network.
+	COMMENT
+	COMMENT <p>These multicasts will always be sent to {@code 224.0.2.60:4445} where other clients can listen for local games.
+	FIELD field_33016 PING_ADDRESS Ljava/lang/String;
+	FIELD field_33017 PING_PORT I
+	FIELD field_33018 PING_INTERVAL J
+	FIELD field_5525 THREAD_ID Ljava/util/concurrent/atomic/AtomicInteger;
+	FIELD field_5526 motd Ljava/lang/String;
+	FIELD field_5527 running Z
+	FIELD field_5528 socket Ljava/net/DatagramSocket;
+	FIELD field_5529 LOGGER Lorg/slf4j/Logger;
+	FIELD field_5530 addressPort Ljava/lang/String;
+	METHOD <init> (Ljava/lang/String;Ljava/lang/String;)V
+		ARG 1 motd
+		ARG 2 addressPort
+	METHOD method_4818 createAnnouncement (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+		COMMENT Creates a server announcement.
+		COMMENT
+		COMMENT <pre>
+		COMMENT {@code [MOTD]} // Specifies the beginning of the message of the day
+		COMMENT {@code A message of the day} // The message of the day
+		COMMENT {@code [/MOTD]} // Specifies the end of the message of the day.
+		COMMENT {@code [AD]} // Specifies the beginning of the address and the port of the local server.
+		COMMENT {@code the address of the local server.} // Such as {@code 192.146.2.1:23132}
+		COMMENT {@code [/AD]} // Specifies the end of the address and port of the local server.
+		COMMENT </pre>
+		COMMENT
+		COMMENT <p>An example of a complete announcement:
+		COMMENT {@code [MOTD]A Player's Server[/MOTD][AD]192.168.0.33[/AD]}
+		ARG 0 motd
+			COMMENT the message of the day
+		ARG 1 addressPort
+			COMMENT the address of the server including the IP address and port
+	METHOD method_4819 parseAnnouncementMotd (Ljava/lang/String;)Ljava/lang/String;
+		ARG 0 announcement
+	METHOD method_4820 parseAnnouncementAddressPort (Ljava/lang/String;)Ljava/lang/String;
+		ARG 0 announcement

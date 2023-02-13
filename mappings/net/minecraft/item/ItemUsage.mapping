@@ -1,18 +1,46 @@
 CLASS net/minecraft/class_5328 net/minecraft/item/ItemUsage
+	COMMENT Utility methods related to item usage.
 	METHOD method_29282 consumeHeldItem (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1271;
+		COMMENT Consumes the item that {@code player} holds. This should be called inside
+		COMMENT {@link Item#use} for consumable items, such as milk bucket.
+		COMMENT
+		COMMENT @return the action result of consuming
 		ARG 0 world
 		ARG 1 player
 		ARG 2 hand
 	METHOD method_30012 exchangeStack (Lnet/minecraft/class_1799;Lnet/minecraft/class_1657;Lnet/minecraft/class_1799;)Lnet/minecraft/class_1799;
+		COMMENT {@return the stack to put in the player's hand after exchanging stacks}
+		COMMENT
+		COMMENT <p>Exchanging stacks causes the input stack to be decremented and the output stack to
+		COMMENT be inserted to the player's invetory (or dropped if it cannot be inserted.)
+		COMMENT For example, milking a cow exchanges one empty bucket and one milk bucket.
+		COMMENT If the player is in creative mode, the player only receives the new stack when
+		COMMENT they do not have the output stack.
+		COMMENT
+		COMMENT @see #exchangeStack(ItemStack, PlayerEntity, ItemStack, boolean)
 		ARG 0 inputStack
 		ARG 1 player
 		ARG 2 outputStack
 	METHOD method_30270 exchangeStack (Lnet/minecraft/class_1799;Lnet/minecraft/class_1657;Lnet/minecraft/class_1799;Z)Lnet/minecraft/class_1799;
+		COMMENT {@return the stack to put in the player's hand after exchanging stacks}
+		COMMENT
+		COMMENT <p>Exchanging stacks causes the input stack to be decremented and the output stack to
+		COMMENT be inserted to the player's invetory (or dropped if it cannot be inserted.)
+		COMMENT For example, milking a cow exchanges one empty bucket and one milk bucket.
+		COMMENT If {@code creativeOverride} is {@code true} and the player is in creative mode,
+		COMMENT the player only receives the new stack when they do not have the output stack.
+		COMMENT
+		COMMENT @see #exchangeStack(ItemStack, PlayerEntity, ItemStack)
 		ARG 0 inputStack
 		ARG 1 player
 		ARG 2 outputStack
 		ARG 3 creativeOverride
 	METHOD method_33263 spawnItemContents (Lnet/minecraft/class_1542;Ljava/util/stream/Stream;)V
+		COMMENT Spawns item entity's contents at the item entity's position. This should be
+		COMMENT called inside {@link Item#onItemEntityDestroyed} for items that hold other items,
+		COMMENT such as shulker boxes.
+		COMMENT
+		COMMENT @see Item#onItemEntityDestroyed
 		ARG 0 itemEntity
 		ARG 1 contents
 	METHOD method_33265 (Lnet/minecraft/class_1937;Lnet/minecraft/class_1542;Lnet/minecraft/class_1799;)V

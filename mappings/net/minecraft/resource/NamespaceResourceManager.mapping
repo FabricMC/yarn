@@ -12,17 +12,43 @@ CLASS net/minecraft/class_3294 net/minecraft/resource/NamespaceResourceManager
 	METHOD <init> (Lnet/minecraft/class_3264;Ljava/lang/String;)V
 		ARG 1 type
 		ARG 2 namespace
-	METHOD method_14472 validate (Lnet/minecraft/class_2960;)V
-		ARG 1 id
 	METHOD method_14473 getMetadataPath (Lnet/minecraft/class_2960;)Lnet/minecraft/class_2960;
 		ARG 0 id
-	METHOD method_14476 open (Lnet/minecraft/class_2960;Lnet/minecraft/class_3262;)Ljava/io/InputStream;
+	METHOD method_14476 createOpener (Lnet/minecraft/class_2960;Lnet/minecraft/class_3262;)Lnet/minecraft/class_3298$class_7367;
 		ARG 1 id
 		ARG 2 pack
 	METHOD method_18221 isPathAbsolute (Lnet/minecraft/class_2960;)Z
 		ARG 1 id
 	METHOD method_24233 addPack (Lnet/minecraft/class_3262;)V
 		ARG 1 pack
+	METHOD method_41256 addPack (Lnet/minecraft/class_3262;Ljava/util/function/Predicate;)V
+		ARG 1 pack
+		ARG 2 filter
+	METHOD method_41257 (Lnet/minecraft/class_3294$class_7082;)Lnet/minecraft/class_3262;
+		ARG 0 pack
+	METHOD method_41258 findAndAdd (Lnet/minecraft/class_3294$class_7082;Ljava/lang/String;Ljava/util/function/Predicate;Ljava/util/Map;)V
+		ARG 1 pack
+		ARG 2 startingPath
+		ARG 3 allowedPathPredicate
+		ARG 4 idToEntryList
+	METHOD method_41259 applyFilter (Lnet/minecraft/class_3294$class_7082;Ljava/util/Map;)V
+		ARG 0 pack
+		ARG 1 idToEntryList
+	METHOD method_41260 addPack (Ljava/lang/String;Lnet/minecraft/class_3262;Ljava/util/function/Predicate;)V
+		ARG 1 name
+		ARG 2 underlyingPack
+		ARG 3 filter
+	METHOD method_41261 addPack (Ljava/lang/String;Ljava/util/function/Predicate;)V
+		ARG 1 name
+		ARG 2 filter
+	METHOD method_41262 (Ljava/util/TreeMap;Lnet/minecraft/class_2960;Lnet/minecraft/class_3294$class_7081;)V
+		ARG 1 id
+		ARG 2 entryList
+	METHOD method_41264 (Lnet/minecraft/class_2960;Lnet/minecraft/class_2960;)Lnet/minecraft/class_3294$class_7081;
+		ARG 1 id
+	METHOD method_43035 createMetadataSupplier (Lnet/minecraft/class_2960;I)Lnet/minecraft/class_3298$class_7367;
+		ARG 1 id
+		ARG 2 index
 	CLASS class_3295 DebugInputStream
 		FIELD field_14287 closed Z
 		FIELD field_14288 leakMessage Ljava/lang/String;
@@ -30,3 +56,25 @@ CLASS net/minecraft/class_3294 net/minecraft/resource/NamespaceResourceManager
 			ARG 1 parent
 			ARG 2 id
 			ARG 3 packName
+	CLASS class_7081 EntryList
+		FIELD comp_527 metadataId Lnet/minecraft/class_2960;
+		METHOD comp_527 metadataId ()Lnet/minecraft/class_2960;
+		METHOD method_41266 toReferenceList ()Ljava/util/List;
+	CLASS class_7082 FilterablePack
+		FIELD comp_530 underlying Lnet/minecraft/class_3262;
+		METHOD comp_530 underlying ()Lnet/minecraft/class_3262;
+		METHOD method_41268 removeFiltered (Ljava/util/Collection;)V
+			ARG 1 ids
+		METHOD method_41269 isFiltered (Lnet/minecraft/class_2960;)Z
+			ARG 1 id
+	CLASS class_7083 Entry
+		FIELD field_37284 id Lnet/minecraft/class_2960;
+		FIELD field_37285 metadataId Lnet/minecraft/class_2960;
+		FIELD field_37286 pack Lnet/minecraft/class_3262;
+		FIELD field_37287 checksMetadata Z
+		METHOD <init> (Lnet/minecraft/class_3294;Lnet/minecraft/class_2960;Lnet/minecraft/class_2960;Lnet/minecraft/class_3262;)V
+			ARG 2 id
+			ARG 3 metadataId
+			ARG 4 pack
+		METHOD method_41270 ignoreMetadata ()V
+		METHOD method_41272 toReference ()Lnet/minecraft/class_3298;

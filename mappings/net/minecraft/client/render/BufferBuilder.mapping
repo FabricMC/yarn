@@ -7,10 +7,6 @@ CLASS net/minecraft/class_287 net/minecraft/client/render/BufferBuilder
 	FIELD field_1558 currentElement Lnet/minecraft/class_296;
 	FIELD field_1565 format Lnet/minecraft/class_293;
 	FIELD field_1567 drawMode Lnet/minecraft/class_293$class_5596;
-	FIELD field_20774 parameters Ljava/util/List;
-	FIELD field_20775 lastParameterIndex I
-	FIELD field_20776 buildStart I
-	FIELD field_20777 nextDrawStart I
 	FIELD field_20884 elementOffset I
 	FIELD field_21594 textured Z
 	FIELD field_21595 hasOverlay Z
@@ -20,11 +16,21 @@ CLASS net/minecraft/class_287 net/minecraft/client/render/BufferBuilder
 	FIELD field_27351 sortingCameraZ F
 	FIELD field_27352 hasNoVertexBuffer Z
 	FIELD field_32050 MAX_BUFFER_SIZE I
+	FIELD field_39061 builtBufferCount I
+	FIELD field_39062 batchOffset I
 	METHOD <init> (I)V
 		ARG 1 initialCapacity
 	METHOD method_1324 restoreState (Lnet/minecraft/class_287$class_5594;)V
 		ARG 1 state
-	METHOD method_1326 end ()V
+	METHOD method_1326 end ()Lnet/minecraft/class_287$class_7433;
+		COMMENT Builds a buffer from the current batch and resets the building state.
+		COMMENT
+		COMMENT <p>Unlike {@link #endNullable()}, this always builds a buffer even if
+		COMMENT there are no vertices in the current batch.
+		COMMENT
+		COMMENT @throws IllegalStateException if this builder has not begun building
+		COMMENT
+		COMMENT @return the buffer built from the current batch
 	METHOD method_1328 begin (Lnet/minecraft/class_293$class_5596;Lnet/minecraft/class_293;)V
 		ARG 1 drawMode
 		ARG 2 format
@@ -34,7 +40,9 @@ CLASS net/minecraft/class_287 net/minecraft/client/render/BufferBuilder
 	METHOD method_1343 clear ()V
 	METHOD method_16005 roundBufferSize (I)I
 		ARG 0 amount
-	METHOD method_22632 popData ()Lcom/mojang/datafixers/util/Pair;
+	METHOD method_22625 ([FII)I
+		ARG 1 a
+		ARG 2 b
 	METHOD method_22892 grow ()V
 	METHOD method_22893 isBuilding ()Z
 	METHOD method_23477 reset ()V
@@ -44,43 +52,43 @@ CLASS net/minecraft/class_287 net/minecraft/client/render/BufferBuilder
 		ARG 1 cameraX
 		ARG 2 cameraY
 		ARG 3 cameraZ
-	METHOD method_31949 createIndexWriter (Lnet/minecraft/class_293$class_5595;)Lit/unimi/dsi/fastutil/ints/IntConsumer;
-		ARG 1 elementFormat
+	METHOD method_31949 createIndexWriter (ILnet/minecraft/class_293$class_5595;)Lit/unimi/dsi/fastutil/ints/IntConsumer;
+		ARG 1 offset
+		ARG 2 indexType
 	METHOD method_31950 writeSortedIndices (Lnet/minecraft/class_293$class_5595;)V
-		ARG 1 elementFormat
-	METHOD method_31951 (I)V
-		ARG 1 value
-	METHOD method_31952 (I)V
-		ARG 1 value
-	METHOD method_31953 (I)V
-		ARG 1 value
+		ARG 1 indexType
+	METHOD method_31951 (Lorg/apache/commons/lang3/mutable/MutableInt;I)V
+		ARG 2 index
+	METHOD method_31952 (Lorg/apache/commons/lang3/mutable/MutableInt;I)V
+		ARG 2 index
+	METHOD method_31953 (Lorg/apache/commons/lang3/mutable/MutableInt;I)V
+		ARG 2 index
 	METHOD method_31954 buildPrimitiveCenters ()[Lnet/minecraft/class_1160;
+	METHOD method_43574 isBatchEmpty ()Z
+	METHOD method_43575 endNullable ()Lnet/minecraft/class_287$class_7433;
+		COMMENT Builds a buffer if there are vertices in the current batch and resets
+		COMMENT the building state.
+		COMMENT
+		COMMENT @throws IllegalStateException if this builder has not begun building
+		COMMENT
+		COMMENT @return the built buffer if there are vertices, otherwise {@code null}
+		COMMENT
+		COMMENT @see #end()
+	METHOD method_43576 slice (II)Ljava/nio/ByteBuffer;
+		ARG 1 start
+		ARG 2 end
+	METHOD method_43577 ensureBuilding ()V
+	METHOD method_43578 build ()Lnet/minecraft/class_287$class_7433;
+	METHOD method_43579 resetBuilding ()V
+	METHOD method_43580 releaseBuiltBuffer ()V
 	CLASS class_4574 DrawArrayParameters
-		FIELD field_20779 vertexFormat Lnet/minecraft/class_293;
-		FIELD field_20780 count I
-		FIELD field_20781 mode Lnet/minecraft/class_293$class_5596;
-		FIELD field_27354 vertexCount I
-		FIELD field_27355 elementFormat Lnet/minecraft/class_293$class_5595;
-		FIELD field_27356 hasNoVertexBuffer Z
-		FIELD field_27357 hasNoIndexBuffer Z
-		METHOD <init> (Lnet/minecraft/class_293;IILnet/minecraft/class_293$class_5596;Lnet/minecraft/class_293$class_5595;ZZ)V
-			ARG 1 vertexFormat
-			ARG 2 count
-			ARG 3 vertexCount
-			ARG 4 mode
-			ARG 5 elementFormat
-			ARG 6 hasNoVertexBuffer
-			ARG 7 hasNoIndexBuffer
-		METHOD method_22634 getVertexFormat ()Lnet/minecraft/class_293;
-		METHOD method_22635 getCount ()I
-		METHOD method_22636 getMode ()Lnet/minecraft/class_293$class_5596;
-		METHOD method_31955 getVertexCount ()I
-		METHOD method_31956 getElementFormat ()Lnet/minecraft/class_293$class_5595;
 		METHOD method_31957 getIndexBufferStart ()I
 		METHOD method_31958 getIndexBufferEnd ()I
-		METHOD method_31959 hasNoVertexBuffer ()Z
-		METHOD method_31960 hasNoIndexBuffer ()Z
 		METHOD method_31961 getIndexBufferLength ()I
+		METHOD method_43429 getVertexBufferPosition ()I
+		METHOD method_43430 getVertexBufferLimit ()I
+		METHOD method_43431 getIndexBufferPosition ()I
+		METHOD method_43432 getIndexBufferLimit ()I
 	CLASS class_5594 State
 		FIELD field_27358 drawMode Lnet/minecraft/class_293$class_5596;
 		FIELD field_27359 vertexCount I
@@ -95,3 +103,16 @@ CLASS net/minecraft/class_287 net/minecraft/client/render/BufferBuilder
 			ARG 4 cameraX
 			ARG 5 cameraY
 			ARG 6 cameraZ
+	CLASS class_7433 BuiltBuffer
+		COMMENT A pair of a vertex buffer and an index buffer ready to be uploaded.
+		FIELD field_39064 batchOffset I
+		FIELD field_39065 parameters Lnet/minecraft/class_287$class_4574;
+		FIELD field_39066 released Z
+		METHOD <init> (Lnet/minecraft/class_287;ILnet/minecraft/class_287$class_4574;)V
+			ARG 2 batchOffset
+			ARG 3 parameters
+		METHOD method_43581 getVertexBuffer ()Ljava/nio/ByteBuffer;
+		METHOD method_43582 getIndexBuffer ()Ljava/nio/ByteBuffer;
+		METHOD method_43583 getParameters ()Lnet/minecraft/class_287$class_4574;
+		METHOD method_43584 isEmpty ()Z
+		METHOD method_43585 release ()V

@@ -1,4 +1,40 @@
 CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
+	COMMENT A block entity is an object holding extra data about a block in a world.
+	COMMENT Blocks hold their data using pre-defined, finite sets of {@link BlockState};
+	COMMENT however, some blocks need to hold data that cannot be pre-defined, such as
+	COMMENT inventories of chests, texts of signs, or pattern combinations of banners.
+	COMMENT Block entities can hold these data.
+	COMMENT
+	COMMENT <p>Block entities have two other important additions to normal blocks: they
+	COMMENT can define custom rendering behaviors, and they can tick on every server tick
+	COMMENT instead of randomly. Some block entities only use these without any extra data.
+	COMMENT
+	COMMENT <p>Block entities are bound to a world and there is one instance of {@link
+	COMMENT BlockEntity} per the block position, unlike {@link net.minecraft.block.Block}
+	COMMENT or {@link BlockState} which are reused. Block entities are created using {@link
+	COMMENT BlockEntityType}, a type of block entities. In most cases, block entities do not
+	COMMENT have to be constructed manually except in {@link
+	COMMENT net.minecraft.block.BlockEntityProvider#createBlockEntity}.
+	COMMENT
+	COMMENT <p>To get the block entity at a certain position, use {@link World#getBlockEntity}.
+	COMMENT Note that the block entity returned can be, in rare cases, different from the
+	COMMENT one associated with the block at that position. For this reason the return value
+	COMMENT should not be cast unsafely.
+	COMMENT
+	COMMENT <p>Block entities, like entities, use NBT for the storage of data. The data is
+	COMMENT loaded to the instance's fields in {@link #readNbt} and written to NBT in
+	COMMENT {@link #writeNbt}. When a data that needs to be saved has changed, always make sure
+	COMMENT to call {@link #markDirty()}.
+	COMMENT
+	COMMENT <p>See {@link net.minecraft.block.BlockEntityProvider} and {@link BlockEntityType}
+	COMMENT for information on creating a block with block entities.
+	COMMENT
+	COMMENT <p>Block entity's data, unlike block states, are not automatically synced. Block
+	COMMENT entities declare when and which data to sync. In general, block entities need to
+	COMMENT sync states observable from the clients without specific interaction (such as opening
+	COMMENT a container). {@link #toUpdatePacket} and {@link #toInitialChunkDataNbt} control
+	COMMENT which data is sent to the client. To sync the block entity to the client, call
+	COMMENT {@code serverWorld.getChunkManager().markForUpdate(this.getPos());}.
 	FIELD field_11863 world Lnet/minecraft/class_1937;
 	FIELD field_11864 type Lnet/minecraft/class_2591;
 	FIELD field_11865 removed Z
@@ -11,38 +47,101 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		ARG 3 state
 	METHOD method_10996 cancelRemoval ()V
 	METHOD method_10997 getWorld ()Lnet/minecraft/class_1937;
+		COMMENT {@return the world the block entity belongs to}
+		COMMENT
+		COMMENT <p>This can return {@code null} during world generation.
 	METHOD method_10999 writeIdentifyingData (Lnet/minecraft/class_2487;)V
+		COMMENT Writes to {@code nbt} the block entity type ID under the {@code id} key,
+		COMMENT and the block's position under {@code x}, {@code y}, and {@code z} keys.
+		COMMENT
+		COMMENT @throws RuntimeException if the block entity type is not registered in
+		COMMENT the registry
 		ARG 1 nbt
 	METHOD method_11002 hasWorld ()Z
 	METHOD method_11003 populateCrashReport (Lnet/minecraft/class_129;)V
 		ARG 1 crashReportSection
 	METHOD method_11004 onSyncedBlockEvent (II)Z
+		COMMENT If this block entity's block extends {@link net.minecraft.block.BlockWithEntity},
+		COMMENT this is called inside {@link net.minecraft.block.AbstractBlock#onSyncedBlockEvent}.
+		COMMENT
+		COMMENT @see net.minecraft.block.AbstractBlock#onSyncedBlockEvent
 		ARG 1 type
 		ARG 2 data
 	METHOD method_11005 createFromNbt (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2586;
+		COMMENT {@return the new block entity loaded from {@code nbt}, or {@code null} if it fails}
+		COMMENT
+		COMMENT <p>This is used during chunk loading. This can fail if {@code nbt} has an improper or
+		COMMENT unregistered {@code id}, or if {@link #readNbt} throws an exception; in these cases,
+		COMMENT this logs an error and returns {@code null}.
 		ARG 0 pos
 		ARG 1 state
 		ARG 2 nbt
 	METHOD method_11007 writeNbt (Lnet/minecraft/class_2487;)V
+		COMMENT Writes data to {@code nbt}. Subclasses should override this if they
+		COMMENT store a persistent data.
+		COMMENT
+		COMMENT <p>NBT is a storage format; therefore, a data from NBT is loaded to a
+		COMMENT block entity instance's fields, which are used for other operations instead
+		COMMENT of the NBT. The data is written back to NBT when saving the block entity.
+		COMMENT
+		COMMENT @see #readNbt
 		ARG 1 nbt
 	METHOD method_11010 getCachedState ()Lnet/minecraft/class_2680;
+		COMMENT {@return the cached block state at the block entity's position}
+		COMMENT
+		COMMENT <p>This is faster than calling {@link World#getBlockState}.
 	METHOD method_11011 copyItemDataRequiresOperator ()Z
+		COMMENT {@return whether the block item should require the player to have operator
+		COMMENT permissions to copy the block entity data on placement}
+		COMMENT
+		COMMENT <p>Block entities that can execute commands should override this to return
+		COMMENT {@code true}.
+		COMMENT
+		COMMENT @see net.minecraft.entity.player.PlayerEntity#isCreativeLevelTwoOp
 	METHOD method_11012 markRemoved ()V
 	METHOD method_11014 readNbt (Lnet/minecraft/class_2487;)V
+		COMMENT Reads data from {@code nbt}. Subclasses should override this if they
+		COMMENT store a persistent data.
+		COMMENT
+		COMMENT <p>NBT is a storage format; therefore, a data from NBT is loaded to a
+		COMMENT block entity instance's fields, which are used for other operations instead
+		COMMENT of the NBT. The data is written back to NBT when saving the block entity.
+		COMMENT
+		COMMENT <p>{@code nbt} might not have all expected keys, or might have a key whose
+		COMMENT value does not meet the requirement (such as the type or the range). This
+		COMMENT method should fall back to a reasonable default value instead of throwing an
+		COMMENT exception.
+		COMMENT
+		COMMENT @see #writeNbt
 		ARG 1 nbt
 	METHOD method_11015 isRemoved ()Z
 	METHOD method_11016 getPos ()Lnet/minecraft/class_2338;
+		COMMENT {@return the block entity's position}
 	METHOD method_11017 getType ()Lnet/minecraft/class_2591;
 	METHOD method_16887 toInitialChunkDataNbt ()Lnet/minecraft/class_2487;
-		COMMENT Serializes the state of this block entity that is observable by clients.
-		COMMENT It is sent alongside the initial chunk data, as well as when the block
+		COMMENT {@return the serialized state of this block entity that is observable by clients}
+		COMMENT
+		COMMENT <p>This is sent alongside the initial chunk data, as well as when the block
 		COMMENT entity implements {@link #toUpdatePacket} and decides to use the default
 		COMMENT {@link net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket}.
+		COMMENT
+		COMMENT <p>"Observable state" is a state that clients can observe without specific interaction.
+		COMMENT For example, {@link CampfireBlockEntity}'s cooked items are observable states,
+		COMMENT but chests' inventories are not observable states, since the player must first open
+		COMMENT that chest before they can see the contents.
+		COMMENT
+		COMMENT <p>To send all NBT data of this block entity saved to disk, return {@link #createNbt}.
+		COMMENT
+		COMMENT @see #toUpdatePacket
 	METHOD method_17897 (Lnet/minecraft/class_2487;Ljava/lang/String;Lnet/minecraft/class_2586;)Lnet/minecraft/class_2586;
 		ARG 2 blockEntity
 	METHOD method_17899 (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Ljava/lang/String;Lnet/minecraft/class_2591;)Lnet/minecraft/class_2586;
 		ARG 3 type
 	METHOD method_31662 setWorld (Lnet/minecraft/class_1937;)V
+		COMMENT Sets the world the block entity belongs to.
+		COMMENT
+		COMMENT <p>This should not be called manually; however, this can be overridden
+		COMMENT to initialize fields dependent on the world.
 		ARG 1 world
 	METHOD method_31663 markDirty (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 0 world
@@ -51,23 +150,73 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 	METHOD method_31664 setCachedState (Lnet/minecraft/class_2680;)V
 		ARG 1 state
 	METHOD method_38235 toUpdatePacket ()Lnet/minecraft/class_2596;
-		COMMENT Implement and return a packet that should be sent to players nearby when the observable state of
-		COMMENT this block entity changes. Return null to not send an update packet.
-		COMMENT <p>
-		COMMENT If the data returned by {@link #toInitialChunkDataNbt initial chunk data} is suitable for updates,
-		COMMENT the following shortcut can be used to create an update packet: {@code BlockEntityUpdateS2CPacket.create(this)}.
-		COMMENT <p>
-		COMMENT The NBT will be passed to {@link #readNbt} on the client.
+		COMMENT {@return the packet to send to nearby players when the block entity's observable
+		COMMENT state changes, or {@code null} to not send the packet}
+		COMMENT
+		COMMENT <p>If the data returned by {@link #toInitialChunkDataNbt initial chunk data} is suitable
+		COMMENT for updates, the following shortcut can be used to create an update packet: {@code
+		COMMENT BlockEntityUpdateS2CPacket.create(this)}. The NBT will be passed to {@link #readNbt}
+		COMMENT on the client.
+		COMMENT
+		COMMENT <p>"Observable state" is a state that clients can observe without specific interaction.
+		COMMENT For example, {@link CampfireBlockEntity}'s cooked items are observable states,
+		COMMENT but chests' inventories are not observable states, since the player must first open
+		COMMENT that chest before they can see the contents.
+		COMMENT
+		COMMENT <p>To sync block entity data using this method, use {@code
+		COMMENT serverWorld.getChunkManager().markForUpdate(this.getPos());}.
+		COMMENT
+		COMMENT @see #toInitialChunkDataNbt
 	METHOD method_38238 writeIdToNbt (Lnet/minecraft/class_2487;Lnet/minecraft/class_2591;)V
+		COMMENT Writes the ID of {@code type} to {@code nbt} under the {@code id} key.
 		ARG 0 nbt
 		ARG 1 type
 	METHOD method_38239 posFromNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2338;
+		COMMENT {@return the block position from {@code nbt}}
+		COMMENT
+		COMMENT <p>The passed NBT should use lowercase {@code x}, {@code y}, and {@code z}
+		COMMENT keys to store the position. This is incompatible with {@link
+		COMMENT net.minecraft.nbt.NbtHelper#romBlockPos} that use uppercase keys.
 		ARG 0 nbt
 	METHOD method_38240 setStackNbt (Lnet/minecraft/class_1799;)V
+		COMMENT Sets {@code stack}'s {@code net.minecraft.item.BlockItem#BLOCK_ENTITY_TAG_KEY}
+		COMMENT NBT value to {@linkplain #createNbt the block entity's NBT data}.
 		ARG 1 stack
 	METHOD method_38241 writeIdToNbt (Lnet/minecraft/class_2487;)V
+		COMMENT Writes the block entity type ID to {@code nbt} under the {@code id} key.
+		COMMENT
+		COMMENT @throws RuntimeException if the block entity type is not registered in
+		COMMENT the registry
 		ARG 1 nbt
 	METHOD method_38242 createNbtWithIdentifyingData ()Lnet/minecraft/class_2487;
+		COMMENT {@return the block entity's NBT data with identifying data}
+		COMMENT
+		COMMENT <p>In addition to data written at {@link #writeNbt}, this also
+		COMMENT writes the {@linkplain #writeIdToNbt block entity type ID} and the
+		COMMENT position of the block entity.
+		COMMENT
+		COMMENT @see #createNbt
+		COMMENT @see #createNbtWithId
 	METHOD method_38243 createNbtWithId ()Lnet/minecraft/class_2487;
+		COMMENT {@return the block entity's NBT data with block entity type ID}
+		COMMENT
+		COMMENT <p>In addition to data written at {@link #writeNbt}, this also
+		COMMENT writes the {@linkplain #writeIdToNbt block entity type ID}.
+		COMMENT
+		COMMENT @see #createNbt
+		COMMENT @see #createNbtWithIdentifyingData
 	METHOD method_38244 createNbt ()Lnet/minecraft/class_2487;
+		COMMENT {@return the block entity's NBT data}
+		COMMENT
+		COMMENT <p>Internally, this calls {@link #writeNbt} with a new {@link NbtCompound}
+		COMMENT and returns the compound.
+		COMMENT
+		COMMENT @see #writeNbt
+		COMMENT @see #createNbtWithIdentifyingData
+		COMMENT @see #createNbtWithId
 	METHOD method_5431 markDirty ()V
+		COMMENT Marks this block entity as dirty and that it needs to be saved.
+		COMMENT This also triggers {@linkplain World#updateComparators comparator update}.
+		COMMENT
+		COMMENT <p>This <strong>must be called</strong> when something changed in a way that
+		COMMENT affects the saved NBT; otherwise, the game might not save the block entity.

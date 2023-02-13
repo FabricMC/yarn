@@ -32,9 +32,6 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		ARG 3 throwable
 	METHOD method_22756 send (Lnet/minecraft/class_846$class_851$class_4577;)V
 		ARG 1 task
-	METHOD method_22759 upload (Lnet/minecraft/class_287;Lnet/minecraft/class_291;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 buffer
-		ARG 2 glBuffer
 	METHOD method_22761 upload ()V
 	METHOD method_22763 scheduleRunTasks ()V
 	METHOD method_34845 getToBatchCount ()I
@@ -48,8 +45,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 	METHOD method_3630 isEmpty ()Z
 	METHOD method_3632 reset ()V
 	METHOD method_3633 clear ()V
-	METHOD method_3635 scheduleUpload (Lnet/minecraft/class_287;Lnet/minecraft/class_291;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 buffer
+	METHOD method_3635 scheduleUpload (Lnet/minecraft/class_287$class_7433;Lnet/minecraft/class_291;)Ljava/util/concurrent/CompletableFuture;
 		ARG 2 glBuffer
 	METHOD method_38555 (Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletionStage;
 		ARG 0 future
@@ -57,9 +53,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 	CLASS class_849 ChunkData
 		FIELD field_4450 nonEmptyLayers Ljava/util/Set;
 		FIELD field_4451 EMPTY Lnet/minecraft/class_846$class_849;
-		FIELD field_4452 initializedLayers Ljava/util/Set;
 		FIELD field_4453 bufferState Lnet/minecraft/class_287$class_5594;
-		FIELD field_4454 empty Z
 		FIELD field_4455 occlusionGraph Lnet/minecraft/class_854;
 		FIELD field_4456 blockEntities Ljava/util/List;
 		METHOD method_3641 isEmpty (Lnet/minecraft/class_1921;)Z
@@ -92,8 +86,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		METHOD method_22777 scheduleRebuild (Lnet/minecraft/class_846;Lnet/minecraft/class_6850;)V
 			ARG 1 chunkRenderer
 			ARG 2 builder
-		METHOD method_22778 setNoCullingBlockEntities (Ljava/util/Set;)V
-			ARG 1 noCullingBlockEntities
+		METHOD method_22778 setNoCullingBlockEntities (Ljava/util/Collection;)V
 		METHOD method_22781 rebuild (Lnet/minecraft/class_6850;)V
 			ARG 1 builder
 		METHOD method_3651 isChunkNonEmpty (Lnet/minecraft/class_2338;)Z
@@ -109,6 +102,8 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		METHOD method_3656 getBuffer (Lnet/minecraft/class_1921;)Lnet/minecraft/class_291;
 			ARG 1 layer
 		METHOD method_3659 delete ()V
+		METHOD method_3660 ([Lnet/minecraft/class_2338$class_2339;)V
+			ARG 0 neighborPositions
 		METHOD method_3661 needsImportantRebuild ()Z
 		METHOD method_3662 cancelRebuild ()V
 		METHOD method_3663 cancel ()Z
@@ -142,21 +137,21 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 				ARG 2 distance
 				ARG 4 region
 				ARG 5 prioritized
-			METHOD method_22785 render (FFFLnet/minecraft/class_846$class_849;Lnet/minecraft/class_750;)Ljava/util/Set;
+			METHOD method_22785 render (FFFLnet/minecraft/class_750;)Lnet/minecraft/class_846$class_851$class_4578$class_7435;
 				ARG 1 cameraX
 				ARG 2 cameraY
 				ARG 3 cameraZ
-				ARG 4 data
-				ARG 5 buffers
-			METHOD method_22788 (Ljava/util/List;Lnet/minecraft/class_750;Lnet/minecraft/class_1921;)V
-				ARG 3 renderLayer
-			METHOD method_23087 addBlockEntity (Lnet/minecraft/class_846$class_849;Ljava/util/Set;Lnet/minecraft/class_2586;)V
-				ARG 1 data
-				ARG 2 blockEntities
-				ARG 3 blockEntity
+			METHOD method_23087 addBlockEntity (Lnet/minecraft/class_846$class_851$class_4578$class_7435;Lnet/minecraft/class_2586;)V
+				ARG 1 renderData
+				ARG 2 blockEntity
 			METHOD method_23619 (Lnet/minecraft/class_846$class_849;Ljava/util/List;Ljava/lang/Throwable;)Lnet/minecraft/class_846$class_4690;
 				ARG 2 results
 				ARG 3 throwable
+			CLASS class_7435 RenderData
+				FIELD field_39079 noCullingBlockEntities Ljava/util/List;
+				FIELD field_39080 blockEntities Ljava/util/List;
+				FIELD field_39082 chunkOcclusionData Lnet/minecraft/class_854;
+				FIELD field_39083 translucencySortingData Lnet/minecraft/class_287$class_5594;
 		CLASS class_4579 SortTask
 			FIELD field_20841 data Lnet/minecraft/class_846$class_849;
 			METHOD <init> (Lnet/minecraft/class_846$class_851;DLnet/minecraft/class_846$class_849;)V

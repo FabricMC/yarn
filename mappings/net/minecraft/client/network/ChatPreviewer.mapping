@@ -1,0 +1,95 @@
+CLASS net/minecraft/class_7479 net/minecraft/client/network/ChatPreviewer
+	COMMENT Chat previewer manages the chat preview. Chat previewer is created per
+	COMMENT {@link net.minecraft.client.gui.screen.ChatScreen}, so closing the chat screen and
+	COMMENT reopening it would create a new chat previewer. {@link ChatPreviewRequester}
+	COMMENT handles the actual requesting.
+	COMMENT
+	COMMENT <p>The response to the query can be "consumed" by calling {@link #tryConsumeResponse}.
+	COMMENT If the response is still valid (i.e. the input has not changed since the query was sent),
+	COMMENT consuming the response will return the response and clear it. Note that to prevent race
+	COMMENT condition between the player sending the chat message and the response's arrival, responses
+	COMMENT can only be consumed after the cooldown (by default, {@value #CONSUME_COOLDOWN} milliseconds)
+	COMMENT has passed. It is also possible to get the response text without consuming by calling
+	COMMENT {@link #getPreviewText}.
+	FIELD field_39328 CONSUME_COOLDOWN J
+		COMMENT How long the previewer should wait before consuming the response since the response
+		COMMENT arrived at the client in milliseconds. Is {@value}.
+		COMMENT
+		COMMENT @see #tryConsumeResponse
+	FIELD field_39334 lastResponse Lnet/minecraft/class_7479$class_7481;
+	FIELD field_39430 lastPreviewedMessage Ljava/lang/String;
+	FIELD field_39431 pendingRequestMessage Ljava/lang/String;
+		COMMENT The message that is waiting for the previewer to request (i.e. the next query to be sent).
+		COMMENT Can be {@code null} if there is no such query.
+		COMMENT
+		COMMENT @implNote If the message is sent instantly, this field is not set.
+	FIELD field_39432 requester Lnet/minecraft/class_7516;
+	METHOD <init> (Lnet/minecraft/class_310;)V
+		ARG 1 client
+	METHOD method_44031 tryRequestPending ()V
+		COMMENT Sends the message that was waiting for its request delay to pass, if it is able to.
+	METHOD method_44032 onResponse (ILnet/minecraft/class_2561;)V
+		COMMENT Called when the preview response was received.
+		COMMENT
+		COMMENT @implNote This sets the last response if the requester {@linkplain
+		COMMENT ChatPreviewRequester#handleResponse successfully handled} the response.
+		ARG 1 id
+		ARG 2 previewText
+	METHOD method_44036 clear ()V
+		COMMENT Clears the last response and the requester's state.
+	METHOD method_44037 tryConsumeResponse (Ljava/lang/String;)Lnet/minecraft/class_7479$class_7481;
+		COMMENT {@return the consumed response text, or {@code null} if the server responded as such, or
+		COMMENT if the response could not be consumed}
+		COMMENT
+		COMMENT <p>If the response is still valid (i.e. the input has not changed since the query was sent),
+		COMMENT consuming the response will return the response and clear it. Note that to prevent race
+		COMMENT condition between the player sending the chat message and the response's arrival, responses
+		COMMENT can only be consumed after the cooldown (by default, {@value #CONSUME_COOLDOWN} milliseconds)
+		COMMENT has passed. It is also possible to get the response text without consuming by calling
+		COMMENT {@link #getPreviewText}.
+		ARG 1 message
+	METHOD method_44038 getPreviewText ()Lnet/minecraft/class_7479$class_7481;
+		COMMENT {@return the preview text (also known as the last response text), or {@code null}
+		COMMENT if the server responded as such}
+		COMMENT
+		COMMENT <p>This does not consume the response.
+	METHOD method_44039 normalize (Ljava/lang/String;)Ljava/lang/String;
+		COMMENT {@return the {@code message} normalized by trimming it and then normalizing spaces}
+		ARG 0 message
+	METHOD method_44274 tryRequest (Ljava/lang/String;)V
+		COMMENT Tries to send the request to preview {@code message}. If the delay has passed,
+		COMMENT it will send instantly; otherwise, it will set {@link #pendingRequestMessage} which
+		COMMENT can be requested by calling {@link #tryRequestPending()}.
+		ARG 1 message
+	METHOD method_44275 disablePreview ()V
+		COMMENT Clears this previewer.
+	METHOD method_44276 tryRequestInternal (Ljava/lang/String;)V
+		ARG 1 message
+	METHOD method_44927 equalsLastPreviewed (Ljava/lang/String;)Z
+		COMMENT {@return whether normalized {@code text} equals the last previewed text}
+		ARG 1 text
+	METHOD method_44928 cannotConsumePreview ()Z
+		COMMENT {@return whether the previewer cannot consume the preview (because the preview
+		COMMENT response hasn't arrived or because of the cooldown)}
+	CLASS class_7481 Response
+		COMMENT A response to the preview query.
+		FIELD comp_826 receptionTimestamp J
+		FIELD comp_827 Ljava/lang/String;
+			COMMENT the message that was queried to preview
+		FIELD comp_828 previewText Lnet/minecraft/class_2561;
+		METHOD comp_826 receptionTimestamp ()J
+		METHOD comp_828 previewText ()Lnet/minecraft/class_2561;
+		METHOD method_44045 canConsume (Ljava/lang/String;)Z
+			COMMENT {@return whether the response can be consumed for the {@code message}}
+			COMMENT
+			COMMENT <p>This returns {@code true} if the {@code message} equals the queried message and
+			COMMENT the cooldown has passed.
+			ARG 1 message
+		METHOD method_44929 queryEquals (Ljava/lang/String;)Z
+			COMMENT {@return whether normalized {@code query} equals the response query}
+			ARG 1 query
+		METHOD method_44930 hasCooldownPassed ()Z
+			COMMENT {@return the cooldown for consuming the preview has passed}
+			COMMENT
+			COMMENT @see #canConsume
+			COMMENT @see ChatPreviewer#tryConsumeResponse

@@ -27,15 +27,12 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_20850 dataCommandStorage Lnet/minecraft/class_4565;
 	FIELD field_22250 recorder Lnet/minecraft/class_5962;
 	FIELD field_23784 session Lnet/minecraft/class_32$class_5143;
-	FIELD field_24370 structureManager Lnet/minecraft/class_3485;
+	FIELD field_24370 structureTemplateManager Lnet/minecraft/class_3485;
 	FIELD field_24371 saveHandler Lnet/minecraft/class_29;
 	FIELD field_24372 saveProperties Lnet/minecraft/class_5219;
 	FIELD field_25132 registryManager Lnet/minecraft/class_5455$class_6890;
 	FIELD field_25318 resourceManagerHolder Lnet/minecraft/server/MinecraftServer$class_6897;
 	FIELD field_33205 MILLISECONDS_PER_TICK J
-	FIELD field_33207 LEVEL_PROTOCOL_NAME Ljava/lang/String;
-	FIELD field_33208 LEVEL_PROTOCOL Ljava/lang/String;
-	FIELD field_33209 RESOURCES_ZIP_FILE_NAME Ljava/lang/String;
 	FIELD field_33210 START_TICKET_CHUNK_RADIUS I
 	FIELD field_33211 MAX_WORLD_BORDER_RADIUS I
 	FIELD field_33217 PLAYER_SAMPLE_UPDATE_INTERVAL J
@@ -48,6 +45,8 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_34982 VANILLA Ljava/lang/String;
 	FIELD field_35437 saving Z
 	FIELD field_35641 ANONYMOUS_PLAYER_PROFILE Lcom/mojang/authlib/GameProfile;
+	FIELD field_39214 hostProfile Lcom/mojang/authlib/GameProfile;
+	FIELD field_39440 apiServices Lnet/minecraft/class_7497;
 	FIELD field_4543 onlineMode Z
 	FIELD field_4544 running Z
 	FIELD field_4546 LOGGER Lorg/slf4j/Logger;
@@ -59,7 +58,6 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4552 keyPair Ljava/security/KeyPair;
 	FIELD field_4554 flightEnabled Z
 	FIELD field_4555 serverPort I
-	FIELD field_4556 userCache Lnet/minecraft/class_3312;
 	FIELD field_4557 lastTimeReference J
 	FIELD field_4558 scoreboard Lnet/minecraft/class_2995;
 	FIELD field_4560 preventProxyConnections Z
@@ -71,11 +69,8 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4571 timeReference J
 	FIELD field_4572 ticks I
 	FIELD field_4573 lastTickLengths [J
-	FIELD field_4578 singlePlayerName Ljava/lang/String;
-	FIELD field_4584 resourcePackHash Ljava/lang/String;
 	FIELD field_4585 serverIp Ljava/lang/String;
 	FIELD field_4587 dataFixer Lcom/mojang/datafixers/DataFixer;
-	FIELD field_4588 USER_CACHE_FILE Ljava/io/File;
 	FIELD field_4589 worlds Ljava/util/Map;
 	FIELD field_4591 commandFunctionManager Lnet/minecraft/class_2991;
 	FIELD field_4592 tickTime F
@@ -83,22 +78,17 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4595 dataPackManager Lnet/minecraft/class_3283;
 	FIELD field_4596 playerIdleTimeout I
 	FIELD field_4599 proxy Ljava/net/Proxy;
-	FIELD field_4602 random Ljava/util/Random;
-	FIELD field_4603 sessionService Lcom/mojang/authlib/minecraft/MinecraftSessionService;
+	FIELD field_4602 random Lnet/minecraft/class_5819;
 	FIELD field_4604 pvpEnabled Z
-	FIELD field_4607 resourcePackUrl Ljava/lang/String;
-	FIELD field_4608 gameProfileRepo Lcom/mojang/authlib/GameProfileRepository;
-	METHOD <init> (Ljava/lang/Thread;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lcom/mojang/authlib/minecraft/MinecraftSessionService;Lcom/mojang/authlib/GameProfileRepository;Lnet/minecraft/class_3312;Lnet/minecraft/class_3950;)V
+	METHOD <init> (Ljava/lang/Thread;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_7497;Lnet/minecraft/class_3950;)V
 		ARG 1 serverThread
 		ARG 2 session
 		ARG 3 dataPackManager
 		ARG 4 saveLoader
 		ARG 5 proxy
 		ARG 6 dataFixer
-		ARG 7 sessionService
-		ARG 8 gameProfileRepo
-		ARG 9 userCache
-		ARG 10 worldGenerationProgressListenerFactory
+		ARG 7 apiServices
+		ARG 8 worldGenerationProgressListenerFactory
 	METHOD method_15876 getMetricsData ()Lnet/minecraft/class_3517;
 	METHOD method_16043 isStopping ()Z
 	METHOD method_16044 getProfiler ()Lnet/minecraft/class_3695;
@@ -137,7 +127,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_27050 getSavePath (Lnet/minecraft/class_5218;)Ljava/nio/file/Path;
 		ARG 1 worldSavePath
 	METHOD method_27051 syncChunkWrites ()Z
-	METHOD method_27727 getStructureManager ()Lnet/minecraft/class_3485;
+	METHOD method_27727 getStructureTemplateManager ()Lnet/minecraft/class_3485;
 	METHOD method_27728 getSaveProperties ()Lnet/minecraft/class_5219;
 	METHOD method_27729 updateMobSpawnOptions ()V
 	METHOD method_27731 updateDifficulty ()V
@@ -184,7 +174,6 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 player
 	METHOD method_34864 getResourceManager ()Lnet/minecraft/class_3300;
 	METHOD method_36113 getProxy ()Ljava/net/Proxy;
-	METHOD method_36326 getResourcePackPrompt ()Lnet/minecraft/class_2561;
 	METHOD method_37113 dumpProperties (Ljava/nio/file/Path;)V
 		ARG 1 file
 	METHOD method_3716 getKeyPair ()Ljava/security/KeyPair;
@@ -213,8 +202,8 @@ CLASS net/minecraft/server/MinecraftServer
 		COMMENT <p>A dedicated singleplayer server always turns online mode off, regardless of the
 		COMMENT content of {@code server.properties}.
 		COMMENT
-		COMMENT @see #getSinglePlayerName
-		COMMENT @see #setSinglePlayerName
+		COMMENT @see #getHostProfile
+		COMMENT @see #setHostProfile
 	METHOD method_3725 getIconFile ()Ljava/util/Optional;
 	METHOD method_3727 hasGui ()Z
 	METHOD method_3728 kickNonWhitelistedPlayers (Lnet/minecraft/class_2168;)V
@@ -224,6 +213,8 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 demo
 	METHOD method_3731 setEnforceWhitelist (Z)V
 		ARG 1 enforceWhitelist
+	METHOD method_37318 (Lnet/minecraft/class_3696;)V
+		ARG 1 profileResult
 	METHOD method_37319 (Ljava/util/function/Consumer;Lnet/minecraft/class_3696;)V
 		ARG 2 result
 	METHOD method_3732 shouldBroadcastRconToOps ()Z
@@ -235,6 +226,8 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_37323 stopRecorder ()V
 	METHOD method_37324 addSystemDetails (Lnet/minecraft/class_6396;)Lnet/minecraft/class_6396;
 		ARG 1 details
+	METHOD method_37329 (Ljava/nio/file/Path;)V
+		ARG 0 path
 	METHOD method_3734 getCommandManager ()Lnet/minecraft/class_2170;
 		COMMENT Gets the server's command manager.
 		COMMENT The command manager is responsible for parsing and dispatching commands.
@@ -297,7 +290,6 @@ CLASS net/minecraft/server/MinecraftServer
 		COMMENT Gets the amount of ticks the server has been running for.
 	METHOD method_3782 shutdown ()V
 	METHOD method_3783 isMonsterSpawningEnabled ()Z
-	METHOD method_3784 getResourcePackUrl ()Ljava/lang/String;
 	METHOD method_3785 isSpawnProtected (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)Z
 		ARG 1 world
 		ARG 2 pos
@@ -316,17 +308,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3802 getMaxPlayerCount ()I
 	METHOD method_3803 setPlayerIdleTimeout (I)V
 		ARG 1 playerIdleTimeout
-	METHOD method_3805 getResourcePackHash ()Ljava/lang/String;
 	METHOD method_3806 isRunning ()Z
-	METHOD method_3811 getSinglePlayerName ()Ljava/lang/String;
-		COMMENT {@return the name of the single player of this server} This may be
-		COMMENT {@code null} for non-singleplayer servers.
-		COMMENT
-		COMMENT <p>In vanilla, outside of integrated servers, this is used to
-		COMMENT determine to whom the {@code Player} NBT from {@code level.dat} applies.
-		COMMENT
-		COMMENT @see #setSinglePlayerName(String)
-		COMMENT @see #isSingleplayer()
 	METHOD method_3812 areCommandBlocksEnabled ()Z
 		COMMENT Specifies whether command blocks can execute commands on the server.
 	METHOD method_3813 tickWorlds (Ljava/util/function/BooleanSupplier;)V
@@ -373,27 +355,12 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3841 getSpawnProtectionRadius ()I
 	METHOD method_3842 setServerIp (Ljava/lang/String;)V
 		ARG 1 serverIp
-	METHOD method_3843 setResourcePack (Ljava/lang/String;Ljava/lang/String;)V
-		ARG 1 url
-		ARG 2 hash
 	METHOD method_3844 getSessionService ()Lcom/mojang/authlib/minecraft/MinecraftSessionService;
 	METHOD method_3845 getScoreboard ()Lnet/minecraft/class_2995;
 	METHOD method_3846 setPlayerManager (Lnet/minecraft/class_3324;)V
 		ARG 1 playerManager
 	METHOD method_3847 getWorld (Lnet/minecraft/class_5321;)Lnet/minecraft/class_3218;
 		ARG 1 key
-	METHOD method_3849 setSinglePlayerName (Ljava/lang/String;)V
-		COMMENT Sets the name of the single player of this server.
-		COMMENT
-		COMMENT <p>This is called by vanilla when setting up this server. The
-		COMMENT {@code singlePlayerName} is the client's player name for integrated
-		COMMENT servers and specified by the {@code --singleplayer <singlePlayerName>}
-		COMMENT command-line argument or {@code null} for dedicated servers.
-		COMMENT
-		COMMENT @see #getSinglePlayerName()
-		COMMENT @see #isSingleplayer()
-		ARG 1 singlePlayerName
-			COMMENT the single player's name, or {@code null} for non-singleplayer servers
 	METHOD method_3851 getAdvancementLoader ()Lnet/minecraft/class_2989;
 	METHOD method_3852 isPvpEnabled ()Z
 	METHOD method_3854 (Ljava/lang/Thread;Ljava/lang/Throwable;)V
@@ -410,7 +377,6 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3859 addExtraSystemDetails (Lnet/minecraft/class_6396;)Lnet/minecraft/class_6396;
 		ARG 1 details
 	METHOD method_3860 isRemote ()Z
-	METHOD method_3861 loadWorldResourcePack ()V
 	METHOD method_3862 getPlayerIdleTimeout ()I
 	METHOD method_3864 setOnlineMode (Z)V
 		COMMENT Sets whether this server is in the online mode, or whether it
@@ -437,6 +403,23 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 2 throwable
 	METHOD method_40376 createCrashReport (Ljava/lang/Throwable;)Lnet/minecraft/class_128;
 		ARG 0 throwable
+	METHOD method_41239 getMaxChainedNeighborUpdates ()I
+	METHOD method_42062 forceStopRecorder ()V
+	METHOD method_43500 shouldEnforceSecureProfile ()Z
+	METHOD method_43614 logChatMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_2556$class_7602;Ljava/lang/String;)V
+		ARG 1 message
+		ARG 2 params
+		ARG 3 prefix
+	METHOD method_43659 getResourcePackProperties ()Ljava/util/Optional;
+	METHOD method_43824 getHostProfile ()Lcom/mojang/authlib/GameProfile;
+	METHOD method_43825 setHostProfile (Lcom/mojang/authlib/GameProfile;)V
+		ARG 1 hostProfile
+	METHOD method_43928 shouldPreviewChat ()Z
+	METHOD method_43929 getMessageDecorator ()Lnet/minecraft/class_7492;
+		COMMENT {@return the message decorator used by the server}
+		COMMENT
+		COMMENT @see MessageDecorator
+	METHOD method_44301 getServicesSignatureVerifier ()Lnet/minecraft/class_7500;
 	METHOD method_5387 isMainThread ()Z
 	CLASS class_6414 DebugStart
 		FIELD field_33980 time J
@@ -450,3 +433,4 @@ CLASS net/minecraft/server/MinecraftServer
 	CLASS class_6897 ResourceManagerHolder
 		FIELD comp_353 dataPackContents Lnet/minecraft/class_5350;
 		METHOD comp_353 dataPackContents ()Lnet/minecraft/class_5350;
+	CLASS class_7460 ServerResourcePackProperties

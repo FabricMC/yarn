@@ -1,6 +1,6 @@
 CLASS net/minecraft/class_2259 net/minecraft/command/argument/BlockArgumentParser
-	FIELD field_10681 tagId Lnet/minecraft/class_6862;
-	FIELD field_10682 SUGGEST_DEFAULT Ljava/util/function/BiFunction;
+	FIELD field_10681 tagId Lnet/minecraft/class_6885;
+	FIELD field_10682 SUGGEST_DEFAULT Ljava/util/function/Function;
 	FIELD field_10683 INVALID_PROPERTY_EXCEPTION Lcom/mojang/brigadier/exceptions/Dynamic3CommandExceptionType;
 	FIELD field_10684 UNCLOSED_PROPERTIES_EXCEPTION Lcom/mojang/brigadier/exceptions/SimpleCommandExceptionType;
 	FIELD field_10685 tagProperties Ljava/util/Map;
@@ -12,9 +12,8 @@ CLASS net/minecraft/class_2259 net/minecraft/command/argument/BlockArgumentParse
 	FIELD field_10691 DISALLOWED_TAG_EXCEPTION Lcom/mojang/brigadier/exceptions/SimpleCommandExceptionType;
 	FIELD field_10692 DUPLICATE_PROPERTY_EXCEPTION Lcom/mojang/brigadier/exceptions/Dynamic2CommandExceptionType;
 	FIELD field_10693 data Lnet/minecraft/class_2487;
-	FIELD field_10694 cursorPos I
 	FIELD field_10695 UNKNOWN_PROPERTY_EXCEPTION Lcom/mojang/brigadier/exceptions/Dynamic2CommandExceptionType;
-	FIELD field_10696 suggestions Ljava/util/function/BiFunction;
+	FIELD field_10696 suggestions Ljava/util/function/Function;
 	FIELD field_10697 blockId Lnet/minecraft/class_2960;
 	FIELD field_10698 reader Lcom/mojang/brigadier/StringReader;
 	FIELD field_10699 blockProperties Ljava/util/Map;
@@ -24,11 +23,44 @@ CLASS net/minecraft/class_2259 net/minecraft/command/argument/BlockArgumentParse
 	FIELD field_32803 PROPERTY_DEFINER C
 	FIELD field_32804 PROPERTY_SEPARATOR C
 	FIELD field_32805 TAG_PREFIX C
-	METHOD <init> (Lcom/mojang/brigadier/StringReader;Z)V
+	FIELD field_37965 UNKNOWN_BLOCK_TAG_EXCEPTION Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;
+	FIELD field_37966 registryWrapper Lnet/minecraft/class_7225;
+	FIELD field_37967 allowSnbt Z
+	METHOD <init> (Lnet/minecraft/class_7225;Lcom/mojang/brigadier/StringReader;ZZ)V
+		ARG 1 registryWrapper
+		ARG 2 reader
+		ARG 3 allowTag
+		ARG 4 allowSnbt
+	METHOD method_41955 block (Lnet/minecraft/class_7225;Lcom/mojang/brigadier/StringReader;Z)Lnet/minecraft/class_2259$class_7211;
+		ARG 0 registryWrapper
 		ARG 1 reader
-		ARG 2 allowTag
-	METHOD method_29383 (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
-		ARG 0 builder
+		ARG 2 allowSnbt
+	METHOD method_41956 block (Lnet/minecraft/class_2378;Lcom/mojang/brigadier/StringReader;Z)Lnet/minecraft/class_2259$class_7211;
+		ARG 0 registry
+		ARG 1 reader
+		ARG 2 allowSnbt
+	METHOD method_41957 block (Lnet/minecraft/class_2378;Ljava/lang/String;Z)Lnet/minecraft/class_2259$class_7211;
+		ARG 0 registry
+		ARG 1 string
+		ARG 2 allowSnbt
+	METHOD method_41958 (Ljava/lang/Object;)Lcom/mojang/brigadier/Message;
+		ARG 0 tag
+	METHOD method_41959 (Lnet/minecraft/class_5321;)Ljava/lang/String;
+		ARG 0 key
+	METHOD method_41960 blockOrTag (Lnet/minecraft/class_7225;Lcom/mojang/brigadier/StringReader;Z)Lcom/mojang/datafixers/util/Either;
+		ARG 0 registryWrapper
+		ARG 1 reader
+		ARG 2 allowSnbt
+	METHOD method_41961 blockOrTag (Lnet/minecraft/class_2378;Lcom/mojang/brigadier/StringReader;Z)Lcom/mojang/datafixers/util/Either;
+		ARG 0 registry
+		ARG 1 reader
+		ARG 2 allowSnbt
+	METHOD method_41962 blockOrTag (Lnet/minecraft/class_2378;Ljava/lang/String;Z)Lcom/mojang/datafixers/util/Either;
+		ARG 0 registry
+		ARG 1 string
+		ARG 2 allowSnbt
+	METHOD method_41963 suggestBlockId (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 builder
 	METHOD method_9659 parseBlockProperties ()V
 	METHOD method_9660 (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/brigadier/Message;
 		ARG 0 block
@@ -44,60 +76,59 @@ CLASS net/minecraft/class_2259 net/minecraft/command/argument/BlockArgumentParse
 		ARG 0 builder
 		ARG 1 property
 		ARG 2 value
-	METHOD method_9664 getTagId ()Lnet/minecraft/class_6862;
-	METHOD method_9665 suggestBlockProperties (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9665 suggestBlockProperties (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
-	METHOD method_9666 getSuggestions (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9666 getSuggestions (Lnet/minecraft/class_7225;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;ZZ)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 registryWrapper
 		ARG 1 builder
-	METHOD method_9667 suggestTagProperties (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+		ARG 2 allowTag
+		ARG 3 allowSnbt
+	METHOD method_9667 suggestTagProperties (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
 	METHOD method_9668 parsePropertyValue (Lnet/minecraft/class_2769;Ljava/lang/String;I)V
 		ARG 1 property
 		ARG 2 value
 		ARG 3 cursor
-	METHOD method_9669 getBlockState ()Lnet/minecraft/class_2680;
-	METHOD method_9670 suggestIdentifiers (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9670 suggestIdentifiers (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
-	METHOD method_9671 suggestBlockPropertiesOrEnd (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9671 suggestBlockPropertiesOrEnd (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
 	METHOD method_9672 parseSnbt ()V
-	METHOD method_9673 suggestBlockOrTagId (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9673 suggestBlockOrTagId (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
-	METHOD method_9674 suggestTagPropertiesOrEnd (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9674 suggestTagPropertiesOrEnd (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
 	METHOD method_9675 parseBlockId ()V
-	METHOD method_9676 hasBlockEntity (Lnet/minecraft/class_2378;)Z
+	METHOD method_9676 hasBlockEntity ()Z
 	METHOD method_9677 parseTagId ()V
-	METHOD method_9678 parse (Z)Lnet/minecraft/class_2259;
-		ARG 1 allowNbt
-	METHOD method_9679 suggestSnbtOrTagProperties (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9678 parse ()V
+	METHOD method_9679 suggestSnbtOrTagProperties (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
 	METHOD method_9680 parseTagProperties ()V
-	METHOD method_9681 suggestSnbtOrBlockProperties (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9681 suggestSnbtOrBlockProperties (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
 	METHOD method_9682 (Ljava/lang/Object;)Lcom/mojang/brigadier/Message;
 		ARG 0 block
-	METHOD method_9683 (Ljava/lang/String;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9683 (Ljava/lang/String;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 2 builder
-	METHOD method_9684 (Lnet/minecraft/class_2769;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9684 (Lnet/minecraft/class_2769;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
 	METHOD method_9685 stringifyBlockState (Lnet/minecraft/class_2680;)Ljava/lang/String;
 		ARG 0 state
 	METHOD method_9686 (Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/brigadier/Message;
 		ARG 0 block
 		ARG 1 property
-	METHOD method_9687 suggestSnbt (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9687 suggestSnbt (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
-	METHOD method_9688 getProperties ()Ljava/util/Map;
-	METHOD method_9689 suggestCommaOrEnd (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9689 suggestCommaOrEnd (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
-	METHOD method_9690 suggestTagPropertyValues (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9690 suggestTagPropertyValues (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
-		ARG 3 propertyName
+		ARG 2 name
 	METHOD method_9691 (Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/brigadier/Message;
 		ARG 0 block
 		ARG 1 property
-	METHOD method_9692 getBlockProperties ()Ljava/util/Map;
-	METHOD method_9693 suggestEqualsCharacter (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_9693 suggestEqualsCharacter (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 builder
-	METHOD method_9694 getNbtData ()Lnet/minecraft/class_2487;
+	CLASS class_7211 BlockResult
+	CLASS class_7212 TagResult

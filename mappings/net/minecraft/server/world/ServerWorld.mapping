@@ -29,18 +29,19 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	FIELD field_35565 blockEventQueue Ljava/util/List;
 	FIELD field_36208 structureLocator Lnet/minecraft/class_6832;
 	FIELD field_36317 duringListenerUpdate Z
-	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5268;Lnet/minecraft/class_5321;Lnet/minecraft/class_6880;Lnet/minecraft/class_3949;Lnet/minecraft/class_2794;ZJLjava/util/List;Z)V
+	FIELD field_39095 queuedEvents Ljava/util/List;
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5268;Lnet/minecraft/class_5321;Lnet/minecraft/class_5363;Lnet/minecraft/class_3949;ZJLjava/util/List;Z)V
 		ARG 1 server
 		ARG 2 workerExecutor
 		ARG 3 session
 		ARG 4 properties
 		ARG 5 worldKey
+		ARG 6 dimensionOptions
 		ARG 7 worldGenerationProgressListener
-		ARG 8 chunkGenerator
-		ARG 9 debugWorld
-		ARG 10 seed
-		ARG 12 spawners
-		ARG 13 shouldTickTime
+		ARG 8 debugWorld
+		ARG 9 seed
+		ARG 11 spawners
+		ARG 12 shouldTickTime
 	METHOD method_14166 spawnParticles (Lnet/minecraft/class_3222;Lnet/minecraft/class_2394;ZDDDIDDDD)Z
 		COMMENT Spawns a particle visible to {@code viewer}, if the viewer is near the provided
 		COMMENT coordinates.
@@ -76,7 +77,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 3 savingDisabled
 			COMMENT whether to return early without doing anything
 	METHOD method_14177 isInBlockTick ()Z
-	METHOD method_14183 getStructureManager ()Lnet/minecraft/class_3485;
+	METHOD method_14183 getStructureTemplateManager ()Lnet/minecraft/class_3485;
 	METHOD method_14188 saveLevel ()V
 	METHOD method_14189 tickBlock (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;)V
 		ARG 1 pos
@@ -226,10 +227,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_19503 hasRaidAt (Lnet/minecraft/class_2338;)Z
 		COMMENT {@return {@code true} if a raid exists within 96 block radius of {@code pos}}
 		ARG 1 pos
-	METHOD method_19535 (Lnet/minecraft/class_2338;Lnet/minecraft/class_4158;)V
-		ARG 2 poiType
-	METHOD method_19536 (Lnet/minecraft/class_2338;Lnet/minecraft/class_4158;)V
-		ARG 2 poiType
 	METHOD method_20588 isNearOccupiedPointOfInterest (Lnet/minecraft/class_4076;)Z
 		ARG 1 sectionPos
 	METHOD method_21624 dumpEntities (Ljava/io/Writer;Ljava/lang/Iterable;)V
@@ -244,11 +241,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_23659 (Lnet/minecraft/class_3341;Lnet/minecraft/class_1919;)Z
 		ARG 1 event
 	METHOD method_23660 wakeSleepingPlayers ()V
-	METHOD method_24500 locateBiome (Ljava/util/function/Predicate;Lnet/minecraft/class_2338;II)Lcom/mojang/datafixers/util/Pair;
-		ARG 1 biomeEntryPredicate
-		ARG 2 pos
-		ARG 3 radius
-		ARG 4 blockCheckInterval
 	METHOD method_27056 getStructureAccessor ()Lnet/minecraft/class_5138;
 	METHOD method_27909 iterateEntities ()Ljava/lang/Iterable;
 	METHOD method_27910 setWeather (IIZZ)V
@@ -267,11 +259,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 			COMMENT whether a rain is ongoing
 		ARG 4 thundering
 			COMMENT whether a thunderstorm is ongoing
-	METHOD method_27911 getSpawnPos ()Lnet/minecraft/class_2338;
-		COMMENT {@return the world spawn point}
-		COMMENT
-		COMMENT @implNote If it is outside the world border, this returns the position of the
-		COMMENT highest {@linkplain Heightmap.Type#MOTION_BLOCKING motion-blocking} block at the center of the world border.
 	METHOD method_28125 isFlat ()Z
 	METHOD method_29198 getEnderDragonFight ()Lnet/minecraft/class_2881;
 	METHOD method_29199 setTimeOfDay (J)V
@@ -295,7 +282,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_29203 tickTime ()V
 	METHOD method_29204 (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)V
 		ARG 1 pos
-	METHOD method_30630 getSpawnAngle ()F
 	METHOD method_30736 spawnNewEntityAndPassengers (Lnet/minecraft/class_1297;)Z
 		COMMENT Checks whether any of the entity and its passengers already exist
 		COMMENT in the world, and if not, spawns the entity with its passengers.
@@ -316,8 +302,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 pos
 	METHOD method_31420 (Lnet/minecraft/class_3695;Lnet/minecraft/class_1297;)V
 		ARG 2 entity
-	METHOD method_31421 (Lnet/minecraft/class_4158;)Z
-		ARG 0 poiType
 	METHOD method_31422 (Ljava/util/function/Predicate;Ljava/util/List;Lnet/minecraft/class_1297;)V
 		ARG 2 entity
 	METHOD method_31423 loadEntities (Ljava/util/stream/Stream;)V
@@ -330,10 +314,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 entity
 	METHOD method_32310 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_3767;
 		ARG 1 nbt
-	METHOD method_32817 sendVibrationPacket (Lnet/minecraft/class_5720;)V
-		ARG 1 vibration
-	METHOD method_32818 (Lnet/minecraft/class_2338;Lnet/minecraft/class_5747;Lnet/minecraft/class_3222;)V
-		ARG 3 player
 	METHOD method_32819 getLogicalHeight ()I
 	METHOD method_33143 sendSleepingStatus ()V
 		COMMENT Sends sleeping status action bar messages to players in this world.
@@ -360,6 +340,18 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 pos
 	METHOD method_39999 shouldTick (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
+	METHOD method_42108 locateBiome (Ljava/util/function/Predicate;Lnet/minecraft/class_2338;III)Lcom/mojang/datafixers/util/Pair;
+		ARG 1 predicate
+		ARG 2 pos
+		ARG 3 radius
+		ARG 4 horizontalBlockCheckInterval
+		ARG 5 verticalBlockCheckInterval
+	METHOD method_43663 processEvents (Ljava/util/List;)V
+		ARG 1 events
+	METHOD method_43664 (Ljava/util/List;Lnet/minecraft/class_5712;Lnet/minecraft/class_243;Lnet/minecraft/class_5712$class_7397;Lnet/minecraft/class_5714;Lnet/minecraft/class_243;)V
+		ARG 5 listener
+		ARG 6 listenerPos
+	METHOD method_43665 processEventQueue ()V
 	METHOD method_8448 updateSleepingPlayers ()V
 	METHOD method_8487 locateStructure (Lnet/minecraft/class_6862;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
 		COMMENT Tries to find the closest structure of a given type near a given block.
@@ -370,14 +362,15 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		COMMENT
 		COMMENT @return the position of the structure, or {@code null} if no structure could be found within the given search radius
 		COMMENT
-		COMMENT @see ChunkGenerator#locateStructure
+		COMMENT @see net.minecraft.world.gen.chunk.ChunkGenerator#locateStructure(ServerWorld, RegistryEntryList, BlockPos, int, boolean)
 		ARG 1 structureTag
 		ARG 2 pos
 			COMMENT the position to start the searching at
 		ARG 3 radius
 			COMMENT the search radius in chunks around the chunk the given block position is in; a radius of 0 will only search in the given chunk
-		ARG 4 skipExistingChunks
-			COMMENT whether only structures that are not referenced by generated chunks (chunks past the {@code STRUCTURE_STARTS} stage) are returned, excluding strongholds
+		ARG 4 skipReferencedStructures
+			COMMENT whether to exclude structures that were previously located (has positive
+			COMMENT {@link net.minecraft.structure.StructureStart#references})
 	METHOD method_8554 setSpawnPos (Lnet/minecraft/class_2338;F)V
 		COMMENT Sets the world spawn point.
 		ARG 1 pos
