@@ -133,8 +133,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see Entity#removePassenger
 	FIELD field_29988 DEFAULT_PORTAL_COOLDOWN I
 		COMMENT @see Entity#getDefaultPortalCooldown
-	FIELD field_29989 MAX_SCOREBOARD_TAGS I
-		COMMENT @see Entity#addScoreboardTag
+	FIELD field_29989 MAX_COMMAND_TAGS I
+		COMMENT @see Entity#addCommandTag
 		COMMENT @see Entity#readNbt
 	FIELD field_29990 VELOCITY_AFFECTING_POS_Y_OFFSET D
 		COMMENT @see Entity#getVelocityAffectingPos
@@ -208,7 +208,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_6021 uuid Ljava/util/UUID;
 	FIELD field_6025 NULL_BOX Lnet/minecraft/class_238;
 	FIELD field_6027 CUSTOM_NAME Lnet/minecraft/class_2940;
-	FIELD field_6029 scoreboardTags Ljava/util/Set;
+	FIELD field_6029 commandTags Ljava/util/Set;
 	FIELD field_6030 EMPTY_STACK_LIST Ljava/util/List;
 	FIELD field_6031 yaw F
 	FIELD field_6032 AIR Lnet/minecraft/class_2940;
@@ -939,6 +939,13 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 9 yaw
 		ARG 10 pitch
 	METHOD method_48155 canSprintAsVehicle ()Z
+	METHOD method_48850 onDataTrackerUpdate (Ljava/util/List;)V
+		ARG 1 dataEntries
+	METHOD method_48921 couldAcceptPassenger ()Z
+		COMMENT {@return {@code true} if this entity supports passengers in general}
+	METHOD method_48922 onDamaged (Lnet/minecraft/class_1282;)V
+		ARG 1 damageSource
+	METHOD method_48923 getDamageSources ()Lnet/minecraft/class_8109;
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		COMMENT Called when this entity's collision box intersects {@code state}.
@@ -1126,7 +1133,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT <p>This is saved on the {@code Invulnerable} NBT key.
 		COMMENT
 		COMMENT @implNote Invulnerable entities are immune from all damages except {@link
-		COMMENT DamageSource#OUT_OF_WORLD} and damages by creative mode players by default.
+		COMMENT net.minecraft.entity.damage.DamageTypes#OUT_OF_WORLD}
+		COMMENT and damages by creative mode players by default.
 		COMMENT
 		COMMENT @see #isInvulnerableTo
 		COMMENT @see #setInvulnerable
@@ -1221,11 +1229,13 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT {@code super.isInvulnerableTo()} should be called in this case.
 		COMMENT
 		COMMENT @implNote Entity is invulnerable to all damages if it is {@linkplain #isRemoved
-		COMMENT removed}, and is invulnerable to all damages except {@link DamageSource#OUT_OF_WORLD}
+		COMMENT removed}, and is invulnerable to all damages except {@link
+		COMMENT net.minecraft.entity.damage.DamageTypes#OUT_OF_WORLD}
 		COMMENT or damages from creative mode players if the entity is {@linkplain #isInvulnerable
 		COMMENT invulnerable}. This also checks {@link #isFireImmune}.
 		COMMENT
-		COMMENT @see DamageSource
+		COMMENT @see net.minecraft.entity.damage.DamageSources
+		COMMENT @see net.minecraft.registry.tag.DamageTypeTags
 		COMMENT @see #isFireImmune
 		COMMENT @see #damage
 		COMMENT @see #isInvulnerable
@@ -1254,7 +1264,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT <p>This is saved on the {@code Invulnerable} NBT key.
 		COMMENT
 		COMMENT @implNote Invulnerable entities are immune from all damages except {@link
-		COMMENT DamageSource#OUT_OF_WORLD} and damages by creative mode players by default.
+		COMMENT net.minecraft.entity.damage.DamageTypes#OUT_OF_WORLD}
+		COMMENT and damages by creative mode players by default.
 		COMMENT
 		COMMENT @see #isInvulnerableTo
 		COMMENT @see #isInvulnerable
@@ -1521,12 +1532,12 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #streamPassengersAndSelf
 	METHOD method_5737 getSwimSound ()Lnet/minecraft/class_3414;
 	METHOD method_5738 removeScoreboardTag (Ljava/lang/String;)Z
-		COMMENT Removes a scoreboard tag from this entity.
+		COMMENT Removes a command tag from this entity.
 		COMMENT
-		COMMENT <p>Scoreboard tags are set using the {@linkplain net.minecraft.server.command.TagCommand
+		COMMENT <p>Command tags are set using the {@linkplain net.minecraft.server.command.TagCommand
 		COMMENT /tag command}, and is different from entity type tags defined in data packs.
 		COMMENT
-		COMMENT @return whether the scoreboard tag was successfully removed
+		COMMENT @return whether the command tag was successfully removed
 		ARG 1 tag
 	METHOD method_5739 distanceTo (Lnet/minecraft/class_1297;)F
 		COMMENT {@return the distance between this entity and {@code entity}}
@@ -1601,13 +1612,14 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT <p>This is used for calculating the leash offset.
 		COMMENT
 		COMMENT @see #getLeashOffset
-	METHOD method_5752 getScoreboardTags ()Ljava/util/Set;
-		COMMENT {@return all scoreboard tags the entity belongs to}
+	METHOD method_5752 getCommandTags ()Ljava/util/Set;
+		COMMENT {@return all command tags the entity belongs to}
 		COMMENT
 		COMMENT <p>Scoreboard tags are set using the {@linkplain net.minecraft.server.command.TagCommand
 		COMMENT /tag command}, and is different from entity type tags defined in data packs.
 	METHOD method_5753 isFireImmune ()Z
-		COMMENT {@return whether the entity is immune to {@linkplain DamageSource#setFire fire damage}}
+		COMMENT {@return whether the entity is immune to {@linkplain
+		COMMENT net.minecraft.registry.tag.DamageTypeTags#IS_FIRE fire damage}}
 		COMMENT
 		COMMENT @see EntityType.Builder#makeFireImmune
 	METHOD method_5755 getMovementDirection ()Lnet/minecraft/class_2350;
@@ -1734,14 +1746,14 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT An ender dragon is composed of several entity parts; each part returns {@code true}
 		COMMENT for {@code part.isPartOf(dragon)}.
 		ARG 1 entity
-	METHOD method_5780 addScoreboardTag (Ljava/lang/String;)Z
-		COMMENT Adds a scoreboard tag to this entity. An entity can have up to {@code 1024}
-		COMMENT scoreboard tags.
+	METHOD method_5780 addCommandTag (Ljava/lang/String;)Z
+		COMMENT Adds a command tag to this entity. An entity can have up to {@code 1024}
+		COMMENT command tags.
 		COMMENT
-		COMMENT <p>Scoreboard tags are set using the {@linkplain net.minecraft.server.command.TagCommand
+		COMMENT <p>Command tags are set using the {@linkplain net.minecraft.server.command.TagCommand
 		COMMENT /tag command}, and is different from entity type tags defined in data packs.
 		COMMENT
-		COMMENT @return whether the scoreboard tag was successfully added
+		COMMENT @return whether the command tag was successfully added
 		ARG 1 tag
 	METHOD method_5781 getScoreboardTeam ()Lnet/minecraft/class_270;
 		COMMENT {@return the scoreboard team the entity belongs to, or {@code null} if there is none}
@@ -1978,7 +1990,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5825 tickInVoid ()V
 		COMMENT Called when the entity is 64 blocks below the world's {@linkplain net.minecraft.world.HeightLimitView#getBottomY() minimum Y position}.
 		COMMENT
-		COMMENT <p>{@linkplain LivingEntity Living entities} use this to deal {@linkplain net.minecraft.entity.damage.DamageSource#OUT_OF_WORLD out of world damage}.
+		COMMENT <p>{@linkplain LivingEntity Living entities} use this to deal {@linkplain net.minecraft.entity.damage.DamageTypes#OUT_OF_WORLD out of world damage}.
 	METHOD method_5826 setUuid (Ljava/util/UUID;)V
 		COMMENT Sets the UUID of the entity to {@code uuid}.
 		COMMENT
