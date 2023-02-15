@@ -8,6 +8,7 @@ CLASS net/minecraft/class_4647 net/minecraft/world/gen/foliage/FoliagePlacer
 	METHOD method_23448 generate (Lnet/minecraft/class_3746;Lnet/minecraft/class_4647$class_8179;Lnet/minecraft/class_5819;Lnet/minecraft/class_4643;ILnet/minecraft/class_4647$class_5208;III)V
 		COMMENT This is the main method used to generate foliage.
 		ARG 1 world
+		ARG 2 placer
 		ARG 3 random
 		ARG 4 config
 		ARG 5 trunkHeight
@@ -18,6 +19,7 @@ CLASS net/minecraft/class_4647 net/minecraft/world/gen/foliage/FoliagePlacer
 	METHOD method_23449 generateSquare (Lnet/minecraft/class_3746;Lnet/minecraft/class_4647$class_8179;Lnet/minecraft/class_5819;Lnet/minecraft/class_4643;Lnet/minecraft/class_2338;IIZ)V
 		COMMENT Generates a square of leaves with the given radius. Sub-classes can use the method {@code isInvalidForLeaves} to exclude certain positions, such as corners.
 		ARG 1 world
+		ARG 2 placer
 		ARG 3 random
 		ARG 4 config
 		ARG 5 centerPos
@@ -41,6 +43,7 @@ CLASS net/minecraft/class_4647 net/minecraft/world/gen/foliage/FoliagePlacer
 		ARG 3 config
 	METHOD method_27385 generate (Lnet/minecraft/class_3746;Lnet/minecraft/class_4647$class_8179;Lnet/minecraft/class_5819;Lnet/minecraft/class_4643;ILnet/minecraft/class_4647$class_5208;II)V
 		ARG 1 world
+		ARG 2 placer
 		ARG 3 random
 		ARG 4 config
 		ARG 5 trunkHeight
@@ -65,11 +68,23 @@ CLASS net/minecraft/class_4647 net/minecraft/world/gen/foliage/FoliagePlacer
 		ARG 0 placer
 	METHOD method_34359 placeFoliageBlock (Lnet/minecraft/class_3746;Lnet/minecraft/class_4647$class_8179;Lnet/minecraft/class_5819;Lnet/minecraft/class_4643;Lnet/minecraft/class_2338;)Z
 		ARG 0 world
+		ARG 1 placer
 		ARG 2 random
 		ARG 3 config
 		ARG 4 pos
 	METHOD method_42380 (Lnet/minecraft/class_3610;)Z
 		ARG 0 fluidState
+	METHOD method_49247 generateSquareWithHangingLeaves (Lnet/minecraft/class_3746;Lnet/minecraft/class_4647$class_8179;Lnet/minecraft/class_5819;Lnet/minecraft/class_4643;Lnet/minecraft/class_2338;IIZFF)V
+		ARG 1 world
+		ARG 2 placer
+		ARG 3 random
+		ARG 4 config
+		ARG 5 centerPos
+		ARG 6 radius
+		ARG 7 y
+		ARG 8 giantTrunk
+		ARG 9 hangingLeavesChance
+		ARG 10 hangingLeavesExtensionChance
 	CLASS class_5208 TreeNode
 		COMMENT A point on a tree to generate foliage around
 		FIELD field_24158 center Lnet/minecraft/class_2338;
@@ -83,3 +98,9 @@ CLASS net/minecraft/class_4647 net/minecraft/world/gen/foliage/FoliagePlacer
 		METHOD method_27389 getFoliageRadius ()I
 		METHOD method_27390 isGiantTrunk ()Z
 			COMMENT Whether this node is the top of a giant (2x2 block) trunk
+	CLASS class_8179 BlockPlacer
+		METHOD method_49239 hasPlacedBlock (Lnet/minecraft/class_2338;)Z
+			ARG 1 pos
+		METHOD method_49240 placeBlock (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
+			ARG 1 pos
+			ARG 2 state
