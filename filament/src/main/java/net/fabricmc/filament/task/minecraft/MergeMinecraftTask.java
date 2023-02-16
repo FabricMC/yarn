@@ -19,9 +19,9 @@ public abstract class MergeMinecraftTask extends FileOutputTask {
 	@TaskAction
 	public void run() throws IOException {
 		try (JarMerger jarMerger = new JarMerger(
-				getClientJar().getAsFile().get(),
-				getServerJar().getAsFile().get(),
-				getOutputFile().getAsFile().get())) {
+			getClientJar().getAsFile().get(),
+			getServerJar().getAsFile().get(),
+			getOutput().getAsFile().get())) {
 			jarMerger.merge();
 		}
 	}

@@ -4,6 +4,9 @@ import java.io.File;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.fabricmc.filament.task.base.WithFileOutput;
+
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.file.RegularFile;
@@ -16,7 +19,6 @@ import net.fabricmc.filament.task.DownloadTask;
 import net.fabricmc.filament.task.GeneratePackageInfoMappingsTask;
 import net.fabricmc.filament.task.JavadocLintTask;
 import net.fabricmc.filament.task.RemapUnpickDefinitionsTask;
-import net.fabricmc.filament.task.base.FileOutputTask;
 import net.fabricmc.filament.task.minecraft.ExtractBundledServerTask;
 import net.fabricmc.filament.task.minecraft.MergeMinecraftTask;
 import net.fabricmc.filament.task.minecraft.MinecraftLibrariesTask;
@@ -39,25 +41,25 @@ public final class FilamentGradlePlugin implements Plugin<Project> {
 			task.getUrl().set(downloadProvider.map(MinecraftVersionMeta.Download::url));
 			task.getSha1().set(downloadProvider.map(MinecraftVersionMeta.Download::sha1));
 
-			task.getOutputFile().set(new File(extension.getMinecraftDirectory(), "client.jar"));
+			task.getOutput().set(new File(extension.getMinecraftDirectory(), "client.jar"));
 		});
 		var minecraftServer = tasks.register("downloadMinecraftServerJar", DownloadTask.class, task -> {
 			Provider<MinecraftVersionMeta.Download> downloadProvider = metaProvider.map(meta -> meta.download("server"));
 			task.getUrl().set(downloadProvider.map(MinecraftVersionMeta.Download::url));
 			task.getSha1().set(downloadProvider.map(MinecraftVersionMeta.Download::sha1));
 
-			task.getOutputFile().set(new File(extension.getMinecraftDirectory(), "server_bundle.jar"));
+			task.getOutput().set(new File(extension.getMinecraftDirectory(), "server_bundle.jar"));
 		});
 		var extractBundledServer = tasks.register("extractBundledServer", ExtractBundledServerTask.class, task -> {
 			task.dependsOn(minecraftServer);
-			task.getServerJar().set(getOutput(minecraftServer));
-			task.getOutputFile().set(new File(extension.getMinecraftDirectory(), "server.jar"));
+			task.getInput().set(getOutput(minecraftServer));
+			task.getOutput().set(new File(extension.getMinecraftDirectory(), "server.jar"));
 		});
 		tasks.register("mergeMinecraftJars", MergeMinecraftTask.class, task -> {
 			task.getClientJar().set(getOutput(minecraftClient));
 			task.getServerJar().set(getOutput(extractBundledServer));
 
-			task.getOutputFile().set(new File(extension.getMinecraftDirectory(), "merged.jar"));
+			task.getOutput().set(new File(extension.getMinecraftDirectory(), "merged.jar"));
 		});
 		tasks.register("generatePackageInfoMappings", GeneratePackageInfoMappingsTask.class);
 		tasks.register("javadocLint", JavadocLintTask.class);
@@ -80,7 +82,7 @@ public final class FilamentGradlePlugin implements Plugin<Project> {
 		});
 	}
 
-	private Provider<RegularFile> getOutput(TaskProvider<? extends FileOutputTask> taskProvider) {
-		return taskProvider.flatMap(FileOutputTask::getOutputFile);
+	private Provider<? extends RegularFile> getOutput(TaskProvider<? extends WithFileOutput> taskProvider) {
+		return taskProvider.flatMap(WithFileOutput::getOutput);
 	}
 }
