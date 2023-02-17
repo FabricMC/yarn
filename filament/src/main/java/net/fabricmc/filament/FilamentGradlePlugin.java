@@ -72,11 +72,7 @@ public final class FilamentGradlePlugin implements Plugin<Project> {
 
 		tasks.register("minecraftLibraries", MinecraftLibrariesTask.class, task -> {
 			task.dependsOn(minecraftMetaTask);
-
-			var files = MinecraftVersionMetaTask.readMetadata(minecraftMetaTask)
-					.map(meta -> MinecraftLibrariesTask.getDependencies(project, meta))
-					.map(dependencies -> project.getConfigurations().detachedConfiguration(dependencies).resolve());
-			task.getFiles().from(files);
+			task.getMetadataFile().set(minecraftMetaTask.flatMap(MinecraftVersionMetaTask::getVersionMetadata));
 		});
 	}
 
