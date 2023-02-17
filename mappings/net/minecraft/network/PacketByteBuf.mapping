@@ -9,7 +9,10 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <th><b>Object Type</b></th> <th><b>read method</b></th> <th><b>write method</b></th>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>Codec-based</td><td>{@link #decode(DynamicOps, Codec)}</td><td>{@link #encode(DynamicOps, Codec, Object)}</td>
+	COMMENT  <td>Codec-based (NBT)</td><td>{@link #decode(DynamicOps, Codec)}</td><td>{@link #encode(DynamicOps, Codec, Object)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>Codec-based (JSON)</td><td>{@link #decodeAsJson(Codec)}</td><td>{@link #encodeAsJson(Codec, Object)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link net.minecraft.registry.Registry} value</td><td>{@link #readRegistryValue(IndexedIterable)}</td><td>{@link #writeRegistryValue(IndexedIterable, Object)}</td>
@@ -145,6 +148,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	FIELD field_33287 MAX_READ_NBT_SIZE I
 		COMMENT The maximum size, in number of bytes, allowed of the NBT compound read by
 		COMMENT {@link #readNbt()}.
+	FIELD field_42966 GSON Lcom/google/gson/Gson;
 	METHOD <init> (Lio/netty/buffer/ByteBuf;)V
 		COMMENT Creates a packet byte buf that delegates its operations to the {@code
 		COMMENT parent} buf.
@@ -1086,6 +1090,28 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT by four {@code float}s.
 		COMMENT
 		COMMENT @see #writeQuaternionf(Quaternionf)
+	METHOD method_49394 decodeAsJson (Lcom/mojang/serialization/Codec;)Ljava/lang/Object;
+		COMMENT Reads an object from this buf as a JSON element with the given codec.
+		COMMENT
+		COMMENT @param <T> the decoded object's type
+		COMMENT @return the read object
+		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
+		COMMENT to decode the JSON element
+		COMMENT @see #encode(Codec, Object)
+		ARG 1 codec
+	METHOD method_49395 encodeAsJson (Lcom/mojang/serialization/Codec;Ljava/lang/Object;)V
+		COMMENT Writes an object to this buf as a JSON element with the given codec.
+		COMMENT
+		COMMENT @param <T> the encoded object's type
+		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
+		COMMENT to encode the JSON element
+		COMMENT @see #decodeAsJson(Codec)
+		ARG 1 codec
+		ARG 2 value
+	METHOD method_49396 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException;
+		ARG 1 error
+	METHOD method_49397 (Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
+		ARG 0 error
 	METHOD nioBuffer (II)Ljava/nio/ByteBuffer;
 		ARG 1 index
 		ARG 2 length
