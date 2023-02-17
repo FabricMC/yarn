@@ -4,9 +4,6 @@ import java.io.File;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.fabricmc.filament.task.base.WithFileOutput;
-
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.file.RegularFile;
@@ -19,6 +16,7 @@ import net.fabricmc.filament.task.DownloadTask;
 import net.fabricmc.filament.task.GeneratePackageInfoMappingsTask;
 import net.fabricmc.filament.task.JavadocLintTask;
 import net.fabricmc.filament.task.RemapUnpickDefinitionsTask;
+import net.fabricmc.filament.task.base.WithFileOutput;
 import net.fabricmc.filament.task.minecraft.ExtractBundledServerTask;
 import net.fabricmc.filament.task.minecraft.MergeMinecraftTask;
 import net.fabricmc.filament.task.minecraft.MinecraftLibrariesTask;
