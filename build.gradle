@@ -114,6 +114,7 @@ import net.fabricmc.stitch.commands.CommandReorderTiny
 import net.fabricmc.stitch.commands.tinyv2.CommandMergeTinyV2
 import net.fabricmc.stitch.commands.tinyv2.CommandReorderTinyV2
 import net.fabricmc.nameproposal.MappingNameCompleter
+import org.gradle.work.DisableCachingByDefault
 
 import java.util.zip.GZIPOutputStream
 
@@ -684,8 +685,9 @@ abstract class FileOutput extends DefaultTask {
 abstract class FileInputOutput extends DefaultTask implements WithFileInput, WithFileOutput {
 }
 
+@DisableCachingByDefault
 abstract class EnigmaTask extends JavaExec {
-	@Input
+	@InputFile
 	abstract RegularFileProperty getJar()
 
 	@Input
@@ -699,7 +701,7 @@ abstract class EnigmaTask extends JavaExec {
 	@TaskAction
 	void exec() {
 		args '-jar'
-		args jar.get().absolutePath
+		args jar.get().asFile.absolutePath
 		args '-mappings'
 		args mappings.get().absolutePath
 		args '-profile'
