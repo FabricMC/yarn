@@ -1,4 +1,9 @@
 CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
+	COMMENT {@code ChunkNoiseSampler} is responsible for sampling the density functions for
+	COMMENT the cells in each chunk, managing caches and interpolators, the {@code Blender},
+	COMMENT and the block state samplers.
+	COMMENT
+	COMMENT An instance of this is created for every chunk.
 	FIELD field_34598 verticalCellCount I
 	FIELD field_34599 horizontalCellCount I
 	FIELD field_34600 minimumCellY I
@@ -93,6 +98,8 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 		COMMENT correctly filled for the current cell.
 		COMMENT
 		COMMENT This starts the interpolators and fills the cell caches.
+		COMMENT
+		COMMENT @implNote For filling the cell caches, {@code this} is used as the {@link EachApplier}.
 		ARG 1 cellY
 			COMMENT the chunk-local cell Y coordinate
 		ARG 2 cellZ
@@ -110,7 +117,13 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 		ARG 1 blockX
 		ARG 2 blockZ
 	METHOD method_40529 getActualDensityFunction (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
-		ARG 1 densityFunction
+		COMMENT {@return the actual density function for a given density function}.
+		COMMENT
+		COMMENT The classes in {@link DensityFunctionTypes} for caches, interpolators,
+		COMMENT {@code blend_alpha} and {@code blend_offset} use simple stub implementations
+		COMMENT that get replaced with their actual implementation by calling this method.
+		ARG 1 function
+			COMMENT the density function to get an actual implementation for
 	METHOD method_40530 (Lnet/minecraft/class_6910;Lnet/minecraft/class_6910$class_6912;)Lnet/minecraft/class_2680;
 		ARG 2 pos
 	METHOD method_40531 createMultiNoiseSampler (Lnet/minecraft/class_6953;Ljava/util/List;)Lnet/minecraft/class_6544$class_6552;
@@ -124,7 +137,8 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 		ARG 2 cellX
 			COMMENT the current cell X coordinate
 	METHOD method_40533 getActualDensityFunctionImpl (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
-		ARG 1 densityFunction
+		COMMENT {@return the actual density function for a given density function}.
+		ARG 1 function
 	METHOD method_40535 calculateBlendResult (II)Lnet/minecraft/class_6748$class_6956;
 		ARG 1 blockX
 		ARG 2 blockZ
