@@ -608,11 +608,11 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT {@return the first passenger of the {@linkplain #getPassengerList passenger list},
 		COMMENT or {@code null} if there is no passengers}
 		COMMENT
-		COMMENT <p>Such passenger is usually also the {@linkplain #getPrimaryPassenger the
-		COMMENT primary passenger}.
+		COMMENT <p>Such passenger is usually also the {@linkplain #getControllingPassenger the
+		COMMENT controlling passenger}.
 		COMMENT
-		COMMENT @see #getPrimaryPassenger
-		COMMENT @see #hasPrimaryPassenger
+		COMMENT @see #getControllingPassenger
+		COMMENT @see #hasControllingPassenger
 		COMMENT @see #getPassengerList
 	METHOD method_31484 streamIntoPassengers ()Ljava/util/stream/Stream;
 		COMMENT {@return a recursive stream of all passengers}
@@ -950,6 +950,13 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_49476 getStepHeight ()F
 	METHOD method_49477 setStepHeight (F)V
 		ARG 1 stepHeight
+	METHOD method_49693 shouldDismountUnderwater ()Z
+		COMMENT {@return whether this vehicle should dismount the passenger if submerged underwater}
+	METHOD method_49694 getControllingVehicle ()Lnet/minecraft/class_1297;
+		COMMENT {@return the entity this entity rides and controls, or {@code null} if there is none}
+		COMMENT
+		COMMENT @see #getRootVehicle
+		COMMENT @see #getVehicle
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		COMMENT Called when this entity's collision box intersects {@code state}.
@@ -1277,7 +1284,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5685 getPassengerList ()Ljava/util/List;
 		COMMENT {@return the list of passengers of this entity}
 		COMMENT
-		COMMENT @see #getPrimaryPassenger
+		COMMENT @see #getControllingPassenger
 		COMMENT @see #getFirstPassenger
 		COMMENT @see #streamIntoPassengers
 		COMMENT @see #streamSelfAndPassengers
@@ -1789,7 +1796,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT on the server; for player-ridden entities, this checks whether the entity
 		COMMENT is on the client.
 		COMMENT
-		COMMENT @see #getPrimaryPassenger
+		COMMENT @see #getControllingPassenger
 	METHOD method_5790 updateSwimming ()V
 	METHOD method_5791 getHeadYaw ()F
 		COMMENT {@return the head yaw of the entity}
@@ -2097,6 +2104,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT {@return the entity this entity rides, or {@code null} if there is none}
 		COMMENT
 		COMMENT @see #getRootVehicle
+		COMMENT @see #getControllingVehicle
 	METHOD method_5855 setAir (I)V
 		COMMENT Sets the air left for the entity in ticks.
 		COMMENT
