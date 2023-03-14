@@ -29,6 +29,11 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 	FIELD field_42402 SCALE Lnet/minecraft/class_2940;
 	FIELD field_42403 LEFT_ROTATION Lnet/minecraft/class_2940;
 	FIELD field_42620 interpolationStart J
+	FIELD field_43135 lerpProgress F
+	FIELD field_43147 startInterpolationOnNextTick Z
+	FIELD field_43148 startInterpolationChanged Z
+	FIELD field_43149 START_INTERPOLATION_KEY Ljava/lang/String;
+	FIELD field_43151 START_INTERPOLATION Lnet/minecraft/class_2940;
 	METHOD method_48841 updateFixedRotation ()V
 	METHOD method_48842 lerpTransformation (F)Lnet/minecraft/class_4590;
 		ARG 1 delta
@@ -40,6 +45,8 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 		ARG 1 brightness
 	METHOD method_48847 setBillboardMode (Lnet/minecraft/class_8113$class_8114;)V
 		ARG 1 billboardMode
+	METHOD method_48848 (Lcom/mojang/datafixers/util/Pair;)V
+		ARG 1 pair
 	METHOD method_48849 setTransformation (Lnet/minecraft/class_4590;)V
 		ARG 1 transformation
 	METHOD method_48851 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
@@ -48,12 +55,19 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 		ARG 1 delta
 	METHOD method_48853 setInterpolationDuration (I)V
 		ARG 1 interpolationDuration
+	METHOD method_48854 (FLnet/minecraft/class_2945;)V
+		ARG 1 value
+		ARG 2 dataTracker
+	METHOD method_48855 (Lcom/mojang/datafixers/util/Pair;)V
+		ARG 1 pair
 	METHOD method_48856 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
 		ARG 1 billboard
 	METHOD method_48857 lerpShadowStrength (F)F
 		ARG 1 delta
 	METHOD method_48858 setGlowColorOverride (I)V
 		ARG 1 glowColorOverride
+	METHOD method_48859 (Lcom/mojang/datafixers/util/Pair;)V
+		ARG 1 pair
 	METHOD method_48860 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
 		ARG 1 transformations
 	METHOD method_48861 setViewRange (F)V
@@ -78,6 +92,9 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 	METHOD method_48876 getGlowColorOverride ()I
 	METHOD method_48877 getDisplayHeight ()F
 	METHOD method_48878 updateVisibilityBoundingBox ()V
+	METHOD method_49744 setStartInterpolation (I)V
+		ARG 1 startInterpolation
+	METHOD method_49745 getStartInterpolation ()I
 	CLASS class_8114 BillboardMode
 		FIELD field_42410 CODEC Lcom/mojang/serialization/Codec;
 		FIELD field_42411 FROM_INDEX Ljava/util/function/IntFunction;
@@ -125,17 +142,27 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 		METHOD <init> (Ljava/lang/Object;)V
 			ARG 1 value
 		METHOD method_48890 setValue (FLjava/lang/Object;)V
+			ARG 1 prevValue
+			ARG 2 value
+		METHOD method_49747 apply (F)Ljava/lang/Object;
+			ARG 1 value
 	CLASS class_8121 Interpolators
 		FIELD field_42419 interpolatedIds Lit/unimi/dsi/fastutil/ints/IntSet;
-		FIELD field_42420 interpolators Ljava/util/List;
+		FIELD field_42420 interpolationUpdaters Ljava/util/List;
 		METHOD method_48891 hasInterpolator (I)Z
 			ARG 1 id
 		METHOD method_48892 addInterpolator (Lnet/minecraft/class_2940;Lnet/minecraft/class_8113$class_8120;)V
 			ARG 1 data
 			ARG 2 interpolator
 		METHOD method_48893 interpolate (FLnet/minecraft/class_2945;)V
-		METHOD method_48895 addInterpolator (Ljava/util/Set;Lnet/minecraft/class_8113$class_8217;)V
+			ARG 1 value
+			ARG 2 dataTracker
+		METHOD method_48894 (Lnet/minecraft/class_8113$class_8120;Lnet/minecraft/class_2940;FLnet/minecraft/class_2945;)V
+			ARG 2 value
+			ARG 3 dataTracker
+		METHOD method_48895 addInterpolationUpdater (Ljava/util/Set;Lnet/minecraft/class_8113$class_8217;)V
 			ARG 1 dataSet
+			ARG 2 updater
 	CLASS class_8122 ItemDisplayEntity
 		FIELD field_42421 ITEM_NBT_KEY Ljava/lang/String;
 		FIELD field_42422 ITEM_DISPLAY_NBT_KEY Ljava/lang/String;
@@ -146,6 +173,10 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 			ARG 1 transformationMode
 		METHOD method_48897 setItemStack (Lnet/minecraft/class_1799;)V
 			ARG 1 stack
+		METHOD method_48898 (Lcom/mojang/datafixers/util/Pair;)V
+			ARG 1 mode
+		METHOD method_48899 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
+			ARG 1 nbt
 		METHOD method_48900 getItemStack ()Lnet/minecraft/class_1799;
 		METHOD method_48901 getTransformationMode ()Lnet/minecraft/class_811;
 	CLASS class_8123 TextDisplayEntity
@@ -179,6 +210,9 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 			ARG 1 nbt
 			ARG 2 nbtKey
 			ARG 3 flag
+		METHOD method_48904 (FLnet/minecraft/class_2945;)V
+			ARG 1 value
+			ARG 2 dataTracker
 		METHOD method_48905 splitLines (Lnet/minecraft/class_8113$class_8123$class_8127;)Lnet/minecraft/class_8113$class_8123$class_8125;
 			ARG 1 splitter
 		METHOD method_48907 writeFlag (BLnet/minecraft/class_2487;Ljava/lang/String;B)V
@@ -216,3 +250,7 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 			METHOD split (Lnet/minecraft/class_2561;I)Lnet/minecraft/class_8113$class_8123$class_8125;
 				ARG 1 text
 				ARG 2 lineWidth
+	CLASS class_8217 InterpolationUpdater
+		METHOD update (FLnet/minecraft/class_2945;)V
+			ARG 1 value
+			ARG 2 dataTracker
