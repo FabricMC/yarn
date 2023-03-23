@@ -1,17 +1,32 @@
 CLASS net/minecraft/class_6910 net/minecraft/world/gen/densityfunction/DensityFunction
+	COMMENT Represents a function that maps from a block position to a density value.
+	COMMENT
+	COMMENT <p>It can be defined in code or in data packs by using pre-defined function types
+	COMMENT like constant values or {@code add}, which in turn use other density functions
+	COMMENT to define their operands.
 	FIELD field_37057 CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_37058 REGISTRY_ENTRY_CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_37059 FUNCTION_CODEC Lcom/mojang/serialization/Codec;
 	METHOD method_40464 sample (Lnet/minecraft/class_6910$class_6912;)D
+		COMMENT {@return the density value for the given block position}
 		ARG 1 pos
+			COMMENT the block position
 	METHOD method_40468 clamp (DD)Lnet/minecraft/class_6910;
 		ARG 1 min
 		ARG 3 max
 	METHOD method_40469 apply (Lnet/minecraft/class_6910$class_6915;)Lnet/minecraft/class_6910;
+		COMMENT Applies the visitor to every child density function and {@code this}.
+		COMMENT
+		COMMENT @return the resulting density function
 		ARG 1 visitor
-	METHOD method_40470 applyEach ([DLnet/minecraft/class_6910$class_6911;)V
+			COMMENT the visitor that should be applied to this density function
+	METHOD method_40470 fill ([DLnet/minecraft/class_6910$class_6911;)V
+		COMMENT Fills an array of densities using {@code this} density function and
+		COMMENT the {@link EachApplier}.
 		ARG 1 densities
+			COMMENT the array of densities to fill, like a buffer or a cache
 		ARG 2 applier
+			COMMENT the {@code EachApplier} to use. It has a method for filling the array, as well as to get a block position for an index
 	METHOD method_40471 abs ()Lnet/minecraft/class_6910;
 	METHOD method_40472 square ()Lnet/minecraft/class_6910;
 	METHOD method_40473 cube ()Lnet/minecraft/class_6910;
@@ -22,14 +37,38 @@ CLASS net/minecraft/class_6910 net/minecraft/world/gen/densityfunction/DensityFu
 		ARG 0 function
 	METHOD method_41062 getCodecHolder ()Lnet/minecraft/class_7243;
 	CLASS class_6911 EachApplier
-		METHOD method_40477 getPosAt (I)Lnet/minecraft/class_6910$class_6912;
+		COMMENT {@code EachApplier} is used to fill an array of densities, like a density buffer
+		COMMENT or cache, with values from a density function.
+		COMMENT
+		COMMENT <p>This exists because {@link net.minecraft.world.gen.chunk.ChunkNoiseSampler ChunkNoiseSampler}
+		COMMENT uses itself as the block position passed to density functions and needs to set the
+		COMMENT position fields correctly before calling {@code sample}, as well as setting fields
+		COMMENT for the implementation of caches.
+		METHOD method_40477 at (I)Lnet/minecraft/class_6910$class_6912;
+			COMMENT {@return the block position at a specific index of the density array}
+			COMMENT
+			COMMENT <p>If you want to manually iterate the array and call {@link DensityFunction#sample}
+			COMMENT to set the individual elements in an implementation of {@link DensityFunction#fill},
+			COMMENT this method can be used to get the block position required for that.
+			COMMENT
+			COMMENT @implNote This can have side effects.
 			ARG 1 index
-		METHOD method_40478 applyEach ([DLnet/minecraft/class_6910;)V
+		METHOD method_40478 fill ([DLnet/minecraft/class_6910;)V
+			COMMENT Fills the density array using a density function.
+			COMMENT
+			COMMENT @implNote This can have side effects.
 			ARG 1 densities
 			ARG 2 densityFunction
 	CLASS class_6912 NoisePos
+		COMMENT {@code NoisePos} represents the absolute block position that is passed
+		COMMENT to density functions.
+		COMMENT
+		COMMENT <p>It also has a way to get the currently active {@link Blender}.
 		METHOD method_39327 getBlender ()Lnet/minecraft/class_6748;
 	CLASS class_6913 Base
+		COMMENT Represents a density function that has no other density functions as an argument,
+		COMMENT and provides default implementations of {@link #fill} and
+		COMMENT {@link #apply(DensityFunctionVisitor)} for this case.
 	CLASS class_6914 UnblendedNoisePos
 	CLASS class_6915 DensityFunctionVisitor
 		METHOD apply (Lnet/minecraft/class_6910;)Lnet/minecraft/class_6910;
