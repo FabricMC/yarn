@@ -17,7 +17,7 @@ buildscript {
 plugins {
 	id 'java' // for constants, packages, javadoc
 	id 'maven-publish'
-	id "com.diffplug.spotless" version "6.15.0"
+	id "com.diffplug.spotless" version "6.17.0"
 	id 'net.fabricmc.filament'
 }
 
@@ -95,7 +95,7 @@ def tempDir = file("build/temp/yarn")
 def cacheFilesMinecraft = new File(tempDir, "minecraft")
 def libs = new File("build/libs/")
 
-def minecraftLibraries = tasks.minecraftLibraries.files
+def minecraftLibraries = configurations.minecraftLibraries
 
 import cuchaz.enigma.command.CheckMappingsCommand
 import net.fabricmc.filament.task.MapJarTask
@@ -337,8 +337,10 @@ combineUnpickDefinitions {
 
 // Setup the build for the unpicked constants
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
 
 tasks.withType(JavaCompile).configureEach {
 	it.options.encoding = "UTF-8"
@@ -346,6 +348,8 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 spotless {
+	lineEndings = com.diffplug.spotless.LineEnding.UNIX
+
 	java {
 		licenseHeaderFile(rootProject.file("HEADER"))
 	}
