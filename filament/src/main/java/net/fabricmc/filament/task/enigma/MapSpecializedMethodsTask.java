@@ -1,4 +1,4 @@
-package net.fabricmc.filament.task.enimga;
+package net.fabricmc.filament.task.enigma;
 
 import java.util.List;
 
