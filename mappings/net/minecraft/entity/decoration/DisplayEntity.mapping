@@ -28,6 +28,12 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 	FIELD field_43135 lerpProgress F
 	FIELD field_43149 START_INTERPOLATION_KEY Ljava/lang/String;
 	FIELD field_43151 START_INTERPOLATION Lnet/minecraft/class_2940;
+	FIELD field_43180 RENDERING_DATA_IDS Lit/unimi/dsi/fastutil/ints/IntSet;
+	FIELD field_43181 interpolationDuration I
+	FIELD field_43182 startInterpolationSet Z
+	FIELD field_43183 interpolationDurationSet Z
+	FIELD field_43184 renderState Lnet/minecraft/class_8113$class_8229;
+	FIELD field_43185 renderingDataSet Z
 	METHOD method_48841 updateFixedRotation ()V
 	METHOD method_48844 getLerpProgress (F)F
 		ARG 1 delta
@@ -80,6 +86,14 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 	METHOD method_49744 setStartInterpolation (I)V
 		ARG 1 startInterpolation
 	METHOD method_49745 getStartInterpolation ()I
+	METHOD method_49774 copyRenderState ()Lnet/minecraft/class_8113$class_8229;
+	METHOD method_49775 getLerpedRenderState (Lnet/minecraft/class_8113$class_8229;F)Lnet/minecraft/class_8113$class_8229;
+		ARG 1 state
+		ARG 2 lerpProgress
+	METHOD method_49776 refreshData (ZF)V
+		ARG 1 shouldLerp
+		ARG 2 lerpProgress
+	METHOD method_49777 getRenderState ()Lnet/minecraft/class_8113$class_8229;
 	CLASS class_8114 BillboardMode
 		FIELD field_42410 CODEC Lcom/mojang/serialization/Codec;
 		FIELD field_42411 FROM_INDEX Ljava/util/function/IntFunction;
@@ -92,25 +106,41 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 	CLASS class_8115 BlockDisplayEntity
 		FIELD field_42415 BLOCK_STATE_NBT_KEY Ljava/lang/String;
 		FIELD field_42416 BLOCK_STATE Lnet/minecraft/class_2940;
+		FIELD field_43186 data Lnet/minecraft/class_8113$class_8115$class_8225;
 		METHOD method_48883 setBlockState (Lnet/minecraft/class_2680;)V
 			ARG 1 state
 		METHOD method_48884 getBlockState ()Lnet/minecraft/class_2680;
+		METHOD method_49778 getData ()Lnet/minecraft/class_8113$class_8115$class_8225;
+		CLASS class_8225 Data
 	CLASS class_8116 ArgbLerper
 	CLASS class_8117 FloatLerper
+		METHOD constant (F)Lnet/minecraft/class_8113$class_8117;
+			ARG 0 value
 		METHOD method_48886 lerp (F)F
 			ARG 1 delta
+		METHOD method_49779 (FF)F
+			ARG 1 delta
 	CLASS class_8118 AbstractInterpolator
+		METHOD constant (Ljava/lang/Object;)Lnet/minecraft/class_8113$class_8118;
+			ARG 0 value
 		METHOD method_48888 interpolate (F)Ljava/lang/Object;
 			ARG 1 delta
+		METHOD method_49780 (Ljava/lang/Object;F)Ljava/lang/Object;
+			ARG 1 delta
 	CLASS class_8119 IntLerper
+		METHOD constant (I)Lnet/minecraft/class_8113$class_8119;
+			ARG 0 value
 		METHOD method_48889 lerp (F)I
-			ARG 1 value
+			ARG 1 delta
+		METHOD method_49781 (IF)I
+			ARG 1 delta
 	CLASS class_8122 ItemDisplayEntity
 		FIELD field_42421 ITEM_NBT_KEY Ljava/lang/String;
 		FIELD field_42422 ITEM_DISPLAY_NBT_KEY Ljava/lang/String;
 		FIELD field_42423 ITEM Lnet/minecraft/class_2940;
 		FIELD field_42424 ITEM_DISPLAY Lnet/minecraft/class_2940;
 		FIELD field_42425 stackReference Lnet/minecraft/class_5630;
+		FIELD field_43187 data Lnet/minecraft/class_8113$class_8122$class_8226;
 		METHOD method_48896 setTransformationMode (Lnet/minecraft/class_811;)V
 			ARG 1 transformationMode
 		METHOD method_48897 setItemStack (Lnet/minecraft/class_1799;)V
@@ -121,6 +151,8 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 			ARG 1 nbt
 		METHOD method_48900 getItemStack ()Lnet/minecraft/class_1799;
 		METHOD method_48901 getTransformationMode ()Lnet/minecraft/class_811;
+		METHOD method_49782 getData ()Lnet/minecraft/class_8113$class_8122$class_8226;
+		CLASS class_8226 Data
 	CLASS class_8123 TextDisplayEntity
 		FIELD field_42427 LINE_WIDTH_NBT_KEY Ljava/lang/String;
 		FIELD field_42428 TEXT_OPACITY_NBT_KEY Ljava/lang/String;
@@ -143,6 +175,8 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 		FIELD field_42447 LEFT_ALIGNMENT_FLAG B
 		FIELD field_42448 RIGHT_ALIGNMENT_FLAG B
 		FIELD field_42449 INITIAL_BACKGROUND I
+		FIELD field_43188 TEXT_RENDERING_DATA_IDS Lit/unimi/dsi/fastutil/ints/IntSet;
+		FIELD field_43189 data Lnet/minecraft/class_8113$class_8123$class_8230;
 		METHOD method_48902 getAlignment (B)Lnet/minecraft/class_8113$class_8123$class_8124;
 			ARG 0 flags
 		METHOD method_48903 readFlag (BLnet/minecraft/class_2487;Ljava/lang/String;B)B
@@ -172,6 +206,11 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 		METHOD method_48917 getDisplayFlags ()B
 		METHOD method_48918 getTextOpacity ()B
 		METHOD method_48919 getBackground ()I
+		METHOD method_49783 getLerpedRenderState (Lnet/minecraft/class_8113$class_8123$class_8230;F)Lnet/minecraft/class_8113$class_8123$class_8230;
+			ARG 1 data
+			ARG 2 lerpProgress
+		METHOD method_49784 getData ()Lnet/minecraft/class_8113$class_8123$class_8230;
+		METHOD method_49785 copyData ()Lnet/minecraft/class_8113$class_8123$class_8230;
 		CLASS class_8124 TextAlignment
 			FIELD field_42453 CODEC Lcom/mojang/serialization/Codec;
 			FIELD field_42454 name Ljava/lang/String;
@@ -183,3 +222,8 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 			METHOD split (Lnet/minecraft/class_2561;I)Lnet/minecraft/class_8113$class_8123$class_8125;
 				ARG 1 text
 				ARG 2 lineWidth
+		CLASS class_8230 Data
+	CLASS class_8227 FloatLerperImpl
+	CLASS class_8228 IntLerperImpl
+	CLASS class_8229 RenderState
+	CLASS class_8231 AffineTransformationInterpolator
