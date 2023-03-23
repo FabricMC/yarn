@@ -11,7 +11,7 @@ import org.gradle.api.file.RegularFile;
 import org.gradle.api.provider.Property;
 import org.gradle.api.provider.Provider;
 
-import net.fabricmc.filament.task.minecraft.MinecraftVersionMetaHelper;
+import net.fabricmc.filament.util.MinecraftVersionMetaHelper;
 import net.fabricmc.loom.configuration.providers.minecraft.MinecraftVersionMeta;
 
 public abstract class FilamentExtension {

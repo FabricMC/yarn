@@ -1,4 +1,4 @@
-package net.fabricmc.filament.task.minecraft;
+package net.fabricmc.filament.util;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -7,7 +7,6 @@ import java.nio.file.Path;
 
 import javax.inject.Inject;
 
-import org.gradle.api.Project;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.Property;
 
@@ -26,15 +25,12 @@ public abstract class MinecraftVersionMetaHelper {
 	public abstract RegularFileProperty getVersionMetadataFile();
 
 	@Inject
-	protected abstract Project getProject();
-
-	@Inject
 	public MinecraftVersionMetaHelper(FilamentExtension extension) {
 		// Use the Minecraft version as an input to ensure the task re-runs on upgrade
 		getMinecraftVersion().set(extension.getMinecraftVersion());
 		getMinecraftVersionManifestUrl().set(extension.getMinecraftVersionManifestUrl());
 
-		getVersionManifestFile().set(extension.getCacheDirectory().file("version_manifest.json"));
+		getVersionManifestFile().set(extension.getMinecraftFile("version_manifest.json"));
 		getVersionMetadataFile().set(extension.getMinecraftFile("version.json"));
 	}
 
@@ -43,6 +39,7 @@ public abstract class MinecraftVersionMetaHelper {
 		final Path versionMetadataPath = getVersionMetadataFile().getAsFile().get().toPath();
 
 		final String versionManifest = Download.create(getMinecraftVersionManifestUrl().get())
+				.defaultCache()
 				.downloadString(versionManifestPath);
 
 		final ManifestVersion mcManifest = FilamentGradlePlugin.OBJECT_MAPPER.readValue(versionManifest, ManifestVersion.class);
