@@ -6,8 +6,7 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	COMMENT is held by an {@link ItemStack} which represents a stack of specific item. Therefore,
 	COMMENT there is one - and only one - instance of Item for one item (like apples, oak planks, etc),
 	COMMENT while there can be infinite amounts of {@link ItemStack} instances. This also means that
-	COMMENT items themselves cannot hold NBT data. To append item stacks with NBT data to the
-	COMMENT creative inventory, override {@link #appendStacks}.
+	COMMENT items themselves cannot hold NBT data.
 	COMMENT
 	COMMENT <p>Items with no custom behavior, like diamonds, can call the constructor of Item
 	COMMENT directly. If a custom behavior is needed, this should be subclassed. Items also have
@@ -27,10 +26,12 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	FIELD field_21979 fireproof Z
 	FIELD field_27017 LOGGER Lorg/slf4j/Logger;
 	FIELD field_30887 DEFAULT_MAX_COUNT I
+	FIELD field_30888 DEFAULT_MAX_USE_TIME I
+	FIELD field_30889 ITEM_BAR_STEPS I
 	FIELD field_36401 registryEntry Lnet/minecraft/class_6880$class_6883;
+	FIELD field_40209 requiredFeatures Lnet/minecraft/class_7699;
 	FIELD field_8001 ATTACK_SPEED_MODIFIER_ID Ljava/util/UUID;
 	FIELD field_8003 BLOCK_ITEMS Ljava/util/Map;
-	FIELD field_8004 group Lnet/minecraft/class_1761;
 	FIELD field_8006 ATTACK_DAMAGE_MODIFIER_ID Ljava/util/UUID;
 	FIELD field_8008 recipeRemainder Lnet/minecraft/class_1792;
 	FIELD field_8009 rarity Lnet/minecraft/class_1814;
@@ -212,15 +213,6 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 3 entity
 		ARG 4 hand
 	METHOD method_7848 getName ()Lnet/minecraft/class_2561;
-	METHOD method_7850 appendStacks (Lnet/minecraft/class_1761;Lnet/minecraft/class_2371;)V
-		COMMENT Appends the stacks of this item shown in the item group to the list.
-		COMMENT
-		COMMENT <p>This can be overridden to append item stacks with custom NBT data to the
-		COMMENT creative inventory.
-		COMMENT
-		COMMENT @see #isIn(ItemGroup)
-		ARG 1 group
-		ARG 2 stacks
 	METHOD method_7851 appendTooltip (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Ljava/util/List;Lnet/minecraft/class_1836;)V
 		COMMENT Called by the client to append tooltips to an item. Subclasses can override
 		COMMENT this and add custom tooltips to {@code tooltip} list.
@@ -263,7 +255,6 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT Checks if this item has a remainder item that is left behind when used as a crafting ingredient.
 	METHOD method_7858 getRecipeRemainder ()Lnet/minecraft/class_1792;
 		COMMENT Gets the remainder item that should be left behind when this item is used as a crafting ingredient.
-	METHOD method_7859 getGroup ()Lnet/minecraft/class_1761;
 	METHOD method_7860 postProcessNbt (Lnet/minecraft/class_2487;)V
 		COMMENT Processes the NBT applied to an item stack of this item.
 		COMMENT
@@ -337,11 +328,6 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 0 id
 	METHOD method_7876 getTranslationKey ()Ljava/lang/String;
 		COMMENT Gets the translation key of this item.
-	METHOD method_7877 isIn (Lnet/minecraft/class_1761;)Z
-		COMMENT Checks whether this item should appear in a specified item group.
-		COMMENT
-		COMMENT @return true if the item is in the specified item group or the item group is {@link net.minecraft.item.ItemGroup#SEARCH}.
-		ARG 1 group
 	METHOD method_7878 canRepair (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		COMMENT {@return whether {@code stack} can be repaired using {@code ingredient}}
 		COMMENT
@@ -416,12 +402,12 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 			COMMENT whether the item is in the selected hotbar slot
 	CLASS class_1793 Settings
 		COMMENT Item settings configure behaviors common to all items, such as the stack's max
-		COMMENT count and the item group. An instance of this must be passed to the constructor
+		COMMENT count. An instance of this must be passed to the constructor
 		COMMENT of {@link Item} (or most of its subclasses).
 		FIELD field_18673 foodComponent Lnet/minecraft/class_4174;
 		FIELD field_21980 fireproof Z
+		FIELD field_40210 requiredFeatures Lnet/minecraft/class_7699;
 		FIELD field_8016 rarity Lnet/minecraft/class_1814;
-		FIELD field_8017 group Lnet/minecraft/class_1761;
 		FIELD field_8018 recipeRemainder Lnet/minecraft/class_1792;
 		FIELD field_8019 maxDamage I
 		FIELD field_8020 maxCount I
@@ -435,6 +421,8 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 			COMMENT If called, any item with this Settings instance is immune to fire and lava damage.
 			COMMENT
 			COMMENT @return this instance
+		METHOD method_45434 requires ([Lnet/minecraft/class_7696;)Lnet/minecraft/class_1792$class_1793;
+			ARG 1 features
 		METHOD method_7889 maxCount (I)Lnet/minecraft/class_1792$class_1793;
 			COMMENT Sets the maximum stack count of any ItemStack with an Item using this Settings instance.
 			COMMENT
@@ -446,12 +434,6 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 			COMMENT @return this instance
 			ARG 1 maxCount
 				COMMENT maximum stack count of any ItemStack with an item using this Settings instance
-		METHOD method_7892 group (Lnet/minecraft/class_1761;)Lnet/minecraft/class_1792$class_1793;
-			COMMENT Sets the ItemGroup of any item using this Settings instance. ItemGroups represent tabs in the creative inventory.
-			COMMENT
-			COMMENT @return this instance
-			ARG 1 group
-				COMMENT {@link ItemGroup itemGroup} to use
 		METHOD method_7894 rarity (Lnet/minecraft/class_1814;)Lnet/minecraft/class_1792$class_1793;
 			COMMENT Sets the {@link Rarity} of any item configured with this Settings instance, which changes the color of its name.
 			COMMENT

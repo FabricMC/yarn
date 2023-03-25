@@ -1,14 +1,14 @@
 CLASS net/minecraft/class_4587 net/minecraft/client/util/math/MatrixStack
-	COMMENT A stack of transformation matrices used to specify how things are
+	COMMENT A stack of transformation matrices used to specify how 3D objects are
 	COMMENT {@linkplain #translate translated}, {@linkplain #scale scaled} or
 	COMMENT {@linkplain #multiply rotated} in 3D space. Each entry consists of a
-	COMMENT {@linkplain Entry#getPositionMatrix position matrix} and a {@linkplain
-	COMMENT Entry#getNormalMatrix normal matrix}.
+	COMMENT {@linkplain Entry#getPositionMatrix position matrix} and its
+	COMMENT corresponding {@linkplain Entry#getNormalMatrix normal matrix}.
 	COMMENT
 	COMMENT <p>By putting matrices in a stack, a transformation can be expressed
-	COMMENT relative to another. You can {@linkplain #push push}, transform, render
-	COMMENT and {@linkplain #pop pop}, which allows you to restore the original
-	COMMENT state after rendering.
+	COMMENT relative to another. You can {@linkplain #push push}, transform,
+	COMMENT render and {@linkplain #pop pop}, which allows you to restore the
+	COMMENT original matrix after rendering.
 	COMMENT
 	COMMENT <p>An entry of identity matrix is pushed when a stack is created. This
 	COMMENT means that a stack is {@linkplain #isEmpty empty} if and only if the
@@ -23,6 +23,9 @@ CLASS net/minecraft/class_4587 net/minecraft/client/util/math/MatrixStack
 		ARG 5 z
 	METHOD method_22905 scale (FFF)V
 		COMMENT Applies the scale transformation to the top entry.
+		COMMENT
+		COMMENT @implNote This does not scale the normal matrix correctly when the
+		COMMENT scaling is uniform and the scaling factor is negative.
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
@@ -39,6 +42,9 @@ CLASS net/minecraft/class_4587 net/minecraft/client/util/math/MatrixStack
 		COMMENT {@return the entry at the top of this stack}
 	METHOD method_34425 multiplyPositionMatrix (Lnet/minecraft/class_1159;)V
 		COMMENT Multiplies the top position matrix with the given matrix.
+		COMMENT
+		COMMENT <p>This does not update the normal matrix unlike other transformation
+		COMMENT methods.
 		ARG 1 matrix
 	METHOD method_34426 loadIdentity ()V
 		COMMENT Sets the top entry to be the identity matrix.
@@ -51,4 +57,4 @@ CLASS net/minecraft/class_4587 net/minecraft/client/util/math/MatrixStack
 		METHOD method_23761 getPositionMatrix ()Lnet/minecraft/class_1159;
 			COMMENT {@return the matrix used to transform positions}
 		METHOD method_23762 getNormalMatrix ()Lnet/minecraft/class_4581;
-			COMMENT {@return the normal matrix}
+			COMMENT {@return the matrix used to transform normal vectors}
