@@ -13,11 +13,12 @@ import org.gradle.workers.WorkParameters;
 import org.gradle.workers.WorkQueue;
 import org.gradle.workers.WorkerExecutor;
 
-import net.fabricmc.filament.task.base.FileOutputTask;
+import net.fabricmc.filament.task.base.FilamentTask;
+import net.fabricmc.filament.task.base.WithFileOutput;
 import net.fabricmc.loom.util.download.Download;
 import net.fabricmc.loom.util.download.DownloadException;
 
-public abstract class DownloadTask extends FileOutputTask {
+public abstract class DownloadTask extends FilamentTask implements WithFileOutput {
 	@Input
 	public abstract Property<String> getUrl();
 	@Input
@@ -26,13 +27,18 @@ public abstract class DownloadTask extends FileOutputTask {
 	@Inject
 	protected abstract WorkerExecutor getWorkerExecutor();
 
+	@Inject
+	public DownloadTask() {
+		getSha1().convention("");
+	}
+
 	@TaskAction
 	public void run() {
 		WorkQueue workQueue = getWorkerExecutor().noIsolation();
 		workQueue.submit(DownloadAction.class, parameters -> {
 			parameters.getUrl().set(getUrl());
 			parameters.getSha1().set(getSha1());
-			parameters.getOutput().set(getOutputFile());
+			parameters.getOutput().set(getOutput());
 		});
 	}
 
@@ -46,9 +52,16 @@ public abstract class DownloadTask extends FileOutputTask {
 		@Override
 		public void execute() {
 			try {
-				Download.create(getParameters().getUrl().get())
-						.sha1(getParameters().getSha1().get())
-						.downloadPath(getParameters().getOutput().get().getAsFile().toPath());
+				var sha1 = getParameters().getSha1().get();
+				var download = Download.create(getParameters().getUrl().get());
+
+				if (!sha1.isEmpty()) {
+					download.sha1(sha1);
+				} else {
+					download.defaultCache();
+				}
+
+				download.downloadPath(getParameters().getOutput().get().getAsFile().toPath());
 			} catch (DownloadException | URISyntaxException e) {
 				throw new RuntimeException("Failed to download", e);
 			}

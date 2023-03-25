@@ -5,23 +5,20 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
-import org.gradle.api.file.RegularFileProperty;
-import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.TaskAction;
 
-import net.fabricmc.filament.task.base.FileOutputTask;
+import net.fabricmc.filament.task.base.FilamentTask;
+import net.fabricmc.filament.task.base.WithFileInput;
+import net.fabricmc.filament.task.base.WithFileOutput;
 import net.fabricmc.loom.util.FileSystemUtil;
 
-public abstract class ExtractBundledServerTask extends FileOutputTask {
-	@InputFile
-	public abstract RegularFileProperty getServerJar();
-
+public abstract class ExtractBundledServerTask extends FilamentTask implements WithFileOutput, WithFileInput {
 	@TaskAction
 	public void run() throws IOException {
-		try (FileSystemUtil.Delegate fs = FileSystemUtil.getJarFileSystem(getServerJar().get().getAsFile().toPath(), false)) {
+		try (FileSystemUtil.Delegate fs = FileSystemUtil.getJarFileSystem(getInputPath(), false)) {
 			String versionsList = new String(fs.readAllBytes("META-INF/versions.list"), StandardCharsets.UTF_8);
 			String jarPath = "META-INF/versions/" + versionsList.split("\t")[2];
-			Files.copy(fs.getPath(jarPath), getOutputFile().get().getAsFile().toPath(), StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(fs.getPath(jarPath), getOutputPath(), StandardCopyOption.REPLACE_EXISTING);
 		}
 	}
 }

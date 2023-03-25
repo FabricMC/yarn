@@ -21,7 +21,7 @@ public abstract class MergeMinecraftTask extends FileOutputTask {
 		try (JarMerger jarMerger = new JarMerger(
 				getClientJar().getAsFile().get(),
 				getServerJar().getAsFile().get(),
-				getOutputFile().getAsFile().get())) {
+				getOutput().getAsFile().get())) {
 			jarMerger.merge();
 		}
 	}
