@@ -13,10 +13,16 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 	FIELD field_19345 STATUS_BUMP_LOAD_TASK Lnet/minecraft/class_2806$class_4305;
 		COMMENT A load task which only bumps the chunk status of the chunk.
 	FIELD field_19346 loadTask Lnet/minecraft/class_2806$class_4305;
+	FIELD field_44634 shouldAlwaysUpgrade Z
 	METHOD <init> (Ljava/lang/String;Lnet/minecraft/class_2806;IZLjava/util/EnumSet;Lnet/minecraft/class_2806$class_2808;Lnet/minecraft/class_2806$class_2807;Lnet/minecraft/class_2806$class_4305;)V
 		ARG 1 id
 		ARG 2 previous
 		ARG 3 taskMargin
+		ARG 4 shouldAlwaysUpgrade
+		ARG 5 heightMapTypes
+		ARG 6 chunkType
+		ARG 7 generationTask
+		ARG 8 loadTask
 	METHOD method_12152 getTaskMargin ()I
 	METHOD method_12154 runGenerationTask (Ljava/util/concurrent/Executor;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 executor
@@ -103,6 +109,11 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 		ARG 0 id
 		ARG 1 previous
 		ARG 2 taskMargin
+		ARG 3 shouldAlwaysUpgrade
+		ARG 4 heightMapTypes
+		ARG 5 chunkType
+		ARG 6 generationTask
+		ARG 7 loadTask
 	METHOD method_20612 runLoadTask (Lnet/minecraft/class_3218;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 world
 		ARG 2 structureTemplateManager
@@ -139,6 +150,8 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 		ARG 2 generator
 		ARG 3 chunks
 		ARG 4 chunk
+	METHOD method_38283 (Lnet/minecraft/class_2791;)Lcom/mojang/datafixers/util/Either;
+		ARG 0 populatedChunk
 	METHOD method_38284 (Lnet/minecraft/class_2806;Ljava/util/concurrent/Executor;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Ljava/util/List;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 targetStatus
 		ARG 1 executor
@@ -159,6 +172,8 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 		ARG 6 fullChunkConverter
 		ARG 7 chunks
 		ARG 8 chunk
+	METHOD method_39463 (Lnet/minecraft/class_2791;)Lcom/mojang/datafixers/util/Either;
+		ARG 0 populatedChunk
 	METHOD method_39464 (Lnet/minecraft/class_2806;Ljava/util/concurrent/Executor;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Ljava/util/List;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 targetStatus
 		ARG 1 executor
@@ -183,6 +198,26 @@ CLASS net/minecraft/class_2806 net/minecraft/world/chunk/ChunkStatus
 		ARG 3 lightingProvider
 		ARG 4 fullChunkConverter
 		ARG 5 chunk
+	METHOD method_51373 getInitializeLightingFuture (Lnet/minecraft/class_3227;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 lightingProvider
+		ARG 1 chunk
+	METHOD method_51375 (Lnet/minecraft/class_2806;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Ljava/util/List;Lnet/minecraft/class_2791;)V
+		ARG 0 targetStatus
+		ARG 1 world
+		ARG 2 generator
+		ARG 3 chunks
+		ARG 4 chunk
+	METHOD method_51376 (Lnet/minecraft/class_2806;Ljava/util/concurrent/Executor;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Ljava/util/List;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 targetStatus
+		ARG 1 executor
+		ARG 2 world
+		ARG 3 generator
+		ARG 4 structureTemplateManager
+		ARG 5 lightingProvider
+		ARG 6 fullChunkConverter
+		ARG 7 chunks
+		ARG 8 chunk
+	METHOD method_51378 shouldAlwaysUpgrade ()Z
 	CLASS class_2807 GenerationTask
 		COMMENT A task called when a chunk needs to be generated.
 		METHOD doWork (Lnet/minecraft/class_2806;Ljava/util/concurrent/Executor;Lnet/minecraft/class_3218;Lnet/minecraft/class_2794;Lnet/minecraft/class_3485;Lnet/minecraft/class_3227;Ljava/util/function/Function;Ljava/util/List;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
