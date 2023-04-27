@@ -19,6 +19,9 @@ CLASS net/minecraft/class_3560 net/minecraft/world/chunk/light/LightStorage
 	FIELD field_15807 queuedSections Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 	FIELD field_16448 notifySections Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_19342 columnsToRetain Lit/unimi/dsi/fastutil/longs/LongSet;
+	FIELD field_44716 sectionPropagations Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
+	FIELD field_44717 hasLightUpdates Z
+	FIELD field_44718 enabledColumns Lit/unimi/dsi/fastutil/longs/LongSet;
 	METHOD <init> (Lnet/minecraft/class_1944;Lnet/minecraft/class_2823;Lnet/minecraft/class_3556;)V
 		ARG 1 lightType
 		ARG 2 chunkProvider
@@ -64,3 +67,37 @@ CLASS net/minecraft/class_3560 net/minecraft/world/chunk/light/LightStorage
 		ARG 3 retain
 	METHOD method_51415 addNotifySections (J)V
 		ARG 1 id
+	METHOD method_51546 setSectionPropagation (JB)V
+		ARG 1 sectionPos
+		ARG 3 flags
+	METHOD method_51547 (J)Lnet/minecraft/class_2804;
+		ARG 1 sectionPos
+	METHOD method_51548 isSectionInEnabledColumn (J)Z
+		ARG 1 sectionPos
+	METHOD method_51549 getStatus (J)Lnet/minecraft/class_3560$class_8530;
+		ARG 1 sectionPos
+	METHOD method_51550 queueForUpdate (J)V
+		ARG 1 sectionPos
+	METHOD method_51551 queueForRemoval (J)V
+		ARG 1 sectionPos
+	CLASS class_8529 PropagationFlags
+		FIELD field_44720 MIN_NEIGHBOR_COUNT I
+		FIELD field_44721 MAX_NEIGHBOR_COUNT I
+		FIELD field_44723 NEIGHBOR_COUNT_MASK B
+		METHOD method_51552 isReady (B)Z
+			ARG 0 packed
+		METHOD method_51553 withNeighborCount (BI)B
+			ARG 0 packed
+			ARG 1 neighborCount
+		METHOD method_51554 setReady (BZ)B
+			ARG 0 packed
+			ARG 1 ready
+		METHOD method_51555 getNeighborCount (B)I
+			ARG 0 packed
+		METHOD method_51556 getStatus (B)Lnet/minecraft/class_3560$class_8530;
+			ARG 0 packed
+	CLASS class_8530 Status
+		FIELD field_44727 sigil Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
+			ARG 3 sigil
+		METHOD method_51557 getSigil ()Ljava/lang/String;

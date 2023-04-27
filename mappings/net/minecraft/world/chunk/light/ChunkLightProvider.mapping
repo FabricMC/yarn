@@ -5,6 +5,7 @@ CLASS net/minecraft/class_3558 net/minecraft/world/chunk/light/ChunkLightProvide
 	FIELD field_17397 cachedChunkPositions [J
 	FIELD field_17398 cachedChunks [Lnet/minecraft/class_8527;
 	FIELD field_19284 reusableBlockPos Lnet/minecraft/class_2338$class_2339;
+	FIELD field_44733 blockPositionsToCheck Lit/unimi/dsi/fastutil/longs/LongSet;
 	METHOD <init> (Lnet/minecraft/class_2823;Lnet/minecraft/class_3560;)V
 		ARG 1 chunkProvider
 		ARG 2 lightStorage
@@ -24,9 +25,12 @@ CLASS net/minecraft/class_3558 net/minecraft/world/chunk/light/ChunkLightProvide
 		ARG 5 direction
 		ARG 6 opacity2
 	METHOD method_20599 setRetainColumn (Lnet/minecraft/class_1923;Z)V
+		ARG 1 pos
 		ARG 2 retainData
 	METHOD method_20710 getOpaqueShape (Lnet/minecraft/class_2680;JLnet/minecraft/class_2350;)Lnet/minecraft/class_265;
+		ARG 1 blockState
 		ARG 2 pos
+		ARG 4 direction
 	METHOD method_22875 displaySectionLevel (J)Ljava/lang/String;
 		ARG 1 sectionPos
 	METHOD method_50016 shapesCoverFullCube (JLnet/minecraft/class_2680;JLnet/minecraft/class_2680;Lnet/minecraft/class_2350;)Z
@@ -40,3 +44,84 @@ CLASS net/minecraft/class_3558 net/minecraft/world/chunk/light/ChunkLightProvide
 		ARG 2 pos
 	METHOD method_50018 getStateForLighting (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;
 		ARG 1 pos
+	METHOD method_51529 (J)V
+		ARG 1 blockPos
+	METHOD method_51530 (JJ)V
+		ARG 1 blockPos
+	METHOD method_51531 (JJI)V
+		ARG 1 blockPos
+	METHOD method_51561 needsLightUpdate (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)Z
+		ARG 0 blockView
+		ARG 1 pos
+		ARG 2 oldState
+		ARG 3 newState
+	METHOD method_51562 getOpaqueShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2350;)Lnet/minecraft/class_265;
+		ARG 0 blockView
+		ARG 1 pos
+		ARG 2 blockState
+		ARG 3 direction
+	METHOD method_51563 isTrivialForLighting (Lnet/minecraft/class_2680;)Z
+		ARG 0 blockState
+	METHOD method_51564 markSectionAsChecked (J)V
+		ARG 1 sectionPos
+	METHOD method_51565 (JJ)V
+		ARG 1 blockPos
+		ARG 3 flags
+	METHOD method_51566 (JJ)V
+		ARG 1 blockPos
+		ARG 3 flags
+	METHOD method_51568 getStatus (J)Lnet/minecraft/class_3560$class_8530;
+		ARG 1 sectionPos
+	METHOD method_51569 (JJ)Z
+		ARG 2 blockPos
+	CLASS class_8531
+		COMMENT Methods for manipulating a set of bitflags with yet unknown functionality.
+		COMMENT
+		COMMENT <ul>
+		COMMENT <li>Bits 0 – 3 likely store a light level.</li>
+		COMMENT <li>Bits 4 – 9 store a flag for each of the six directions.</li>
+		COMMENT <li>Bit 10 stores whether the block at this position is trivial for lighting — if its opacity is not directionally dependent.</li>
+		COMMENT <li>Bit 11 stores a flag with unknown function.</li>
+		COMMENT </ul>
+		FIELD field_44737 DIRECTION_BIT_OFFSET I
+		FIELD field_44740 DIRECTION_BIT_MASK J
+		METHOD method_51571 packWithAllDirectionsSet (I)J
+			ARG 0 lightLevel
+		METHOD method_51572 packWithOneDirectionCleared (ILnet/minecraft/class_2350;)J
+			ARG 0 lightLevel
+			ARG 1 direction
+		METHOD method_51573 (IZ)J
+			ARG 0 lightLevel
+			ARG 1 trivial
+		METHOD method_51574 (IZLnet/minecraft/class_2350;)J
+			ARG 0 lightLevel
+			ARG 1 trivial
+			ARG 2 direction
+		METHOD method_51575 getLightLevel (J)I
+			ARG 0 packed
+		METHOD method_51576 withLightLevel (JI)J
+			ARG 0 packed
+			ARG 2 lightLevel
+		METHOD method_51577 isDirectionBitSet (JLnet/minecraft/class_2350;)Z
+			ARG 0 packed
+			ARG 2 direction
+		METHOD method_51578 (ZZZZZ)J
+			ARG 0 down
+			ARG 1 north
+			ARG 2 south
+			ARG 3 west
+			ARG 4 east
+		METHOD method_51579 (IZLnet/minecraft/class_2350;)J
+			ARG 0 lightLevel
+			ARG 1 trivial
+			ARG 2 direction
+		METHOD method_51580 isTrivial (J)Z
+			ARG 0 packed
+		METHOD method_51581 setDirectionBit (JLnet/minecraft/class_2350;)J
+			ARG 0 packed
+			ARG 2 direction
+		METHOD method_51582 (J)Z
+			ARG 0 packed
+		METHOD method_51583 clearDirectionBit (JLnet/minecraft/class_2350;)J
+			ARG 0 packed
+			ARG 2 direction
