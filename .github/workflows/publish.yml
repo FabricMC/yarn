@@ -13,10 +13,10 @@ jobs:
       # Generate the build number based on tags to allow per branch build numbers, not something github provides by default.
       - name: Generate build number
         id: buildnumber
-        uses: einaregilsson/build-number@v3
+        uses: onyxmueller/build-tag-number@v1
         with:
           token: ${{ secrets.github_token }}
-          prefix: ${{ github.ref }}
+          prefix: "build/${{ github.ref }}"
 
       - run: ./gradlew build javadocJar checkVersion publish --stacktrace
         env:
