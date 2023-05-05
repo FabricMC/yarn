@@ -40,6 +40,7 @@ public abstract class MergeMappingsTask extends MappingOutputTask {
 
 	private void fixInnerClasses(MemoryMappingTree mappingTree) {
 		int named = mappingTree.getNamespaceId("named");
+
 		for (MappingTree.ClassMapping entry : mappingTree.getClasses()) {
 			String name = entry.getName(named);
 
@@ -51,7 +52,7 @@ public abstract class MergeMappingsTask extends MappingOutputTask {
 		}
 	}
 
-	/**
+	/*
 	 * Takes something like net/minecraft/class_123$class_124 that doesn't have a mapping, tries to find net/minecraft/class_123
 	 * , say the mapping of net/minecraft/class_123 is path/to/someclass and then returns a class of the form
 	 * path/to/someclass$class124
@@ -66,7 +67,6 @@ public abstract class MergeMappingsTask extends MappingOutputTask {
 
 			if (match != null && match.getName(named) != null) {
 				return match.getName(named) + "$" + String.join("$", Arrays.copyOfRange(path, i + 1, path.length));
-
 			}
 		}
 
