@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package net.fabricmc.mappingpoet;
 
 import com.squareup.javapoet.AnnotationSpec;
@@ -24,7 +23,6 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import net.fabricmc.mapping.util.EntryTriple;
 import net.fabricmc.mappingpoet.signature.AnnotationAwareDescriptors;
 import net.fabricmc.mappingpoet.signature.AnnotationAwareSignatures;
 import net.fabricmc.mappingpoet.signature.ClassStaticContext;
@@ -69,7 +67,7 @@ public class FieldBuilder {
 	}
 
 	static void addFieldJavaDoc(TypeSpec.Builder enumBuilder, MappingsStore mappings, ClassNode classNode, FieldNode fieldNode) {
-		mappings.addFieldDoc(enumBuilder::addJavadoc, new EntryTriple(classNode.name, fieldNode.name, fieldNode.desc));
+		mappings.addFieldDoc(enumBuilder::addJavadoc, classNode.name, fieldNode.name, fieldNode.desc);
 	}
 
 	public static AnnotationSpec parseAnnotation(AnnotationNode annotation) {
@@ -468,11 +466,11 @@ public class FieldBuilder {
 	}
 
 	private void addJavaDoc() {
-		mappings.addFieldDoc(builder::addJavadoc, new EntryTriple(classNode.name, fieldNode.name, fieldNode.desc));
+		mappings.addFieldDoc(builder::addJavadoc, classNode.name, fieldNode.name, fieldNode.desc);
 	}
 
 	void addJavaDoc(ParameterSpec.Builder paramBuilder) {
-		mappings.addFieldDoc(paramBuilder::addJavadoc, new EntryTriple(classNode.name, fieldNode.name, fieldNode.desc));
+		mappings.addFieldDoc(paramBuilder::addJavadoc, classNode.name, fieldNode.name, fieldNode.desc);
 	}
 
 	private void addDirectAnnotations() {

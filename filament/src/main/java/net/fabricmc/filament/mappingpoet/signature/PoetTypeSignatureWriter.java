@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package net.fabricmc.mappingpoet.signature;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
@@ -42,7 +41,7 @@ import net.fabricmc.mappingpoet.Signatures;
 public final class PoetTypeSignatureWriter extends SignatureVisitor {
 
 	private final ClassStaticContext context;
-	private final LinkedList<TypeName> params = new LinkedList<>();
+	private final ArrayList<TypeName> params = new ArrayList<>();
 	private /* NonNull */ TypeAnnotationBank storage; // mutable
 	private TypeName result;
 	// array
@@ -158,7 +157,7 @@ public final class PoetTypeSignatureWriter extends SignatureVisitor {
 			};
 
 			used = AnnotationAwareDescriptors.annotate(used, storage.advance(TypePath.TYPE_ARGUMENT, params.size()));
-			params.addLast(used);
+			params.add(used);
 
 			activeTypeArgument = null;
 			activeTypeArgumentKind = 0;
@@ -172,7 +171,7 @@ public final class PoetTypeSignatureWriter extends SignatureVisitor {
 
 		TypeName used = WildcardTypeName.subtypeOf(TypeName.OBJECT);
 		used = AnnotationAwareDescriptors.annotate(used, storage.advance(TypePath.TYPE_ARGUMENT, params.size()));
-		params.addLast(used);
+		params.add(used);
 	}
 
 	// (? extends/ ? super)? ClassType like in Consumer<? super Integer>,

@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package net.fabricmc.mappingpoet;
 
 import com.squareup.javapoet.AnnotationSpec;
@@ -24,7 +23,6 @@ import com.squareup.javapoet.TypeVariableName;
 import net.fabricmc.mappingpoet.signature.AnnotationAwareDescriptors;
 import net.fabricmc.mappingpoet.signature.AnnotationAwareSignatures;
 import net.fabricmc.mappingpoet.signature.ClassSignature;
-import net.fabricmc.mappingpoet.signature.ClassStaticContext;
 import net.fabricmc.mappingpoet.signature.TypeAnnotationMapping;
 import net.fabricmc.mappingpoet.signature.TypeAnnotationStorage;
 import org.objectweb.asm.Handle;
@@ -40,10 +38,7 @@ import org.objectweb.asm.tree.MethodNode;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import static net.fabricmc.mappingpoet.FieldBuilder.parseAnnotation;
 
@@ -61,9 +56,7 @@ public class ClassBuilder {
 
 	private final TypeSpec.Builder builder;
 	private final List<ClassBuilder> innerClasses = new ArrayList<>();
-	private final Function<String, Collection<String>> superGetter;
-	private final Predicate<String> sealChecker;
-	private final ClassStaticContext context;
+	private final Environment environment;
 
 	private final ClassSignature signature; // not really signature
 	private final TypeAnnotationMapping typeAnnotations;
@@ -75,12 +68,10 @@ public class ClassBuilder {
 	// omits L and ;
 	private String receiverSignature;
 
-	public ClassBuilder(MappingsStore mappings, ClassNode classNode, Function<String, Collection<String>> superGetter, Predicate<String> sealChecker, ClassStaticContext context) {
+	public ClassBuilder(MappingsStore mappings, ClassNode classNode, Environment environment) {
 		this.mappings = mappings;
 		this.classNode = classNode;
-		this.superGetter = superGetter;
-		this.sealChecker = sealChecker;
-		this.context = context;
+		this.environment = environment;
 		this.typeAnnotations = setupAnnotations();
 		this.signature = setupSignature();
 		this.builder = setupBuilder();
@@ -141,8 +132,8 @@ public class ClassBuilder {
 
 	private ClassSignature setupSignature() {
 		return classNode.signature == null ?
-				AnnotationAwareDescriptors.parse(classNode.superName, classNode.interfaces, typeAnnotations, context) :
-				AnnotationAwareSignatures.parseClassSignature(classNode.signature, typeAnnotations, context);
+				AnnotationAwareDescriptors.parse(classNode.superName, classNode.interfaces, typeAnnotations, environment) :
+				AnnotationAwareSignatures.parseClassSignature(classNode.signature, typeAnnotations, environment);
 	}
 
 	private TypeSpec.Builder setupBuilder() {
@@ -180,7 +171,7 @@ public class ClassBuilder {
 
 		return builder
 				.addModifiers(new ModifierBuilder(classNode.access)
-						.checkUnseal(classNode, sealChecker)
+						.checkUnseal(classNode, environment)
 						.getModifiers(ModifierBuilder.getType(enumClass, recordClass))
 				);
 	}
@@ -258,7 +249,7 @@ public class ClassBuilder {
 					formalParamStartIndex = 1; // 0 this$0
 				}
 			}
-			builder.addMethod(new MethodBuilder(mappings, classNode, method, superGetter, context, receiverSignature, formalParamStartIndex).build());
+			builder.addMethod(new MethodBuilder(mappings, classNode, method, environment, receiverSignature, formalParamStartIndex).build());
 		}
 	}
 
@@ -270,7 +261,7 @@ public class ClassBuilder {
 				if (!Modifier.isFinal(field.access) || Modifier.isProtected(field.access) || Modifier.isPublic(field.access)) {
 					System.out.println("abnormal instance field " + field.name + " in record " + getClassName() + ", skipping");
 				} else {
-					var fieldBuilder = new FieldBuilder(mappings, classNode, field, context);
+					var fieldBuilder = new FieldBuilder(mappings, classNode, field, environment);
 					var paramBuilder = ParameterSpec.builder(fieldBuilder.calculateType(), field.name);
 					fieldBuilder.addJavaDoc(paramBuilder);
 					fieldBuilder.addDirectAnnotations(paramBuilder);
@@ -283,7 +274,7 @@ public class ClassBuilder {
 				continue; // hide synthetic stuff
 			}
 			if ((field.access & Opcodes.ACC_ENUM) == 0) {
-				builder.addField(new FieldBuilder(mappings, classNode, field, context).build());
+				builder.addField(new FieldBuilder(mappings, classNode, field, environment).build());
 			} else {
 				TypeSpec.Builder enumBuilder = TypeSpec.anonymousClassBuilder("");
 				// jd
@@ -347,7 +338,7 @@ public class ClassBuilder {
 
 			classBuilder.builder.modifiers.remove(javax.lang.model.element.Modifier.PUBLIC); // this modifier may come from class access
 			classBuilder.builder.addModifiers(new ModifierBuilder(innerClassNode.access)
-					.checkUnseal(classBuilder.classNode, sealChecker)
+					.checkUnseal(classBuilder.classNode, environment)
 					.getModifiers(ModifierBuilder.getType(classBuilder.enumClass, classBuilder.recordClass))
 			);
 			if (!Modifier.isStatic(innerClassNode.access)) {

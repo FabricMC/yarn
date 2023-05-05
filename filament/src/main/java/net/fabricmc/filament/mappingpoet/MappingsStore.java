@@ -13,71 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package net.fabricmc.mappingpoet;
 
-import java.io.BufferedReader;
+import net.fabricmc.mappingio.MappingReader;
+import net.fabricmc.mappingio.adapter.MappingSourceNsSwitch;
+import net.fabricmc.mappingio.format.MappingFormat;
+import net.fabricmc.mappingio.tree.MappingTreeView;
+import net.fabricmc.mappingio.tree.MappingTreeView.ClassMappingView;
+import net.fabricmc.mappingio.tree.MappingTreeView.ElementMappingView;
+import net.fabricmc.mappingio.tree.MappingTreeView.MethodMappingView;
+import net.fabricmc.mappingio.tree.MemoryMappingTree;
+
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.AbstractMap;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
-import net.fabricmc.mapping.tree.ClassDef;
-import net.fabricmc.mapping.tree.FieldDef;
-import net.fabricmc.mapping.tree.Mapped;
-import net.fabricmc.mapping.tree.MethodDef;
-import net.fabricmc.mapping.tree.TinyMappingFactory;
-import net.fabricmc.mapping.tree.TinyTree;
-import net.fabricmc.mapping.util.EntryTriple;
+import static net.fabricmc.mappingio.tree.MappingTreeView.SRC_NAMESPACE_ID;
 
 //Taken from loom
 public class MappingsStore {
-	private final Map<String, ClassDef> classes = new HashMap<>();
-	private final Map<EntryTriple, FieldDef> fields = new HashMap<>();
-	private final Map<EntryTriple, Map.Entry<String, MethodDef>> methods = new HashMap<>();
-
-	private final String namespace = "named";
-	private final List<String> namespaces;
+	private final MappingTreeView tree;
+	private final int maxNamespace;
 
 	public MappingsStore(Path tinyFile) {
-		final TinyTree mappings = readMappings(tinyFile);
-
-		namespaces = mappings.getMetadata().getNamespaces();
-
-		for (ClassDef classDef : mappings.getClasses()) {
-			final String className = classDef.getName(namespace);
-			classes.put(className, classDef);
-
-			for (FieldDef fieldDef : classDef.getFields()) {
-				fields.put(new EntryTriple(className, fieldDef.getName(namespace), fieldDef.getDescriptor(namespace)), fieldDef);
-			}
-
-			for (MethodDef methodDef : classDef.getMethods()) {
-				methods.put(new EntryTriple(className, methodDef.getName(namespace), methodDef.getDescriptor(namespace)), new AbstractMap.SimpleImmutableEntry<>(className, methodDef));
-			}
-		}
+		this.tree = readMappings(tinyFile);
+		this.maxNamespace = tree.getMaxNamespaceId();
 	}
 
-	private static TinyTree readMappings(Path input) {
-		try (BufferedReader reader = Files.newBufferedReader(input)) {
-			return TinyMappingFactory.loadWithDetection(reader);
+	private static MappingTreeView readMappings(Path input) {
+		var tree = new MemoryMappingTree();
+		try {
+			MappingReader.read(input, MappingFormat.TINY_2, new MappingSourceNsSwitch(tree, "named"));
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to read mappings", e);
 		}
+		return tree;
 	}
 
-	@Deprecated
-	public String getClassDoc(String className) {
-		ClassDef classDef = classes.get(className);
-		return classDef != null ? classDef.getComment() : null;
-	}
-
-	private void addDoc(Mapped element, DocAdder adder) {
+	private void addDoc(ElementMappingView element, DocAdder adder) {
 		String doc = element.getComment();
 		if (doc != null) {
 			adder.addJavadoc("$L", doc);
@@ -85,109 +60,95 @@ public class MappingsStore {
 	}
 
 	public void addClassDoc(DocAdder adder, String className) {
-		ClassDef classDef = classes.get(className);
+		var classDef = tree.getClass(className);
 		if (classDef == null) {
 			return;
 		}
 		addDoc(classDef, adder);
 		adder.addJavadoc("\n");
-		for (String namespace : namespaces) {
-			String transformedName = classDef.getName(namespace);
-			adder.addJavadoc("@mapping {@literal $L:$L}\n", namespace, transformedName);
+		for (int id = SRC_NAMESPACE_ID; id < maxNamespace; id++) {
+			String transformedName = classDef.getName(id);
+			adder.addJavadoc("@mapping {@literal $L:$L}\n", tree.getNamespaceName(id), transformedName);
 		}
 	}
 
-	@Deprecated
-	public String getFieldDoc(EntryTriple fieldEntry) {
-		FieldDef fieldDef = fields.get(fieldEntry);
-		return fieldDef != null ? fieldDef.getComment() : null;
-	}
+	public void addFieldDoc(DocAdder addJavadoc, String owner, String name, String desc) {
+		var classDef = tree.getClass(owner);
+		if (classDef == null) {
+			return;
+		}
 
-	public void addFieldDoc(DocAdder addJavadoc, EntryTriple fieldEntry) {
-		FieldDef fieldDef = fields.get(fieldEntry);
+		var fieldDef = classDef.getField(name, desc);
 		if (fieldDef == null) {
 			return;
 		}
 
 		addDoc(fieldDef, addJavadoc);
-		ClassDef owner = classes.get(fieldEntry.getOwner());
 		addJavadoc.addJavadoc("\n");
-		for (String namespace : namespaces) {
-			String transformedName = fieldDef.getName(namespace);
-			String mixinForm = "L" + owner.getName(namespace) + ";" + transformedName + ":" + fieldDef.getDescriptor(namespace);
-			addJavadoc.addJavadoc("@mapping {@literal $L:$L:$L}\n", namespace, transformedName, mixinForm);
+		for (int id = SRC_NAMESPACE_ID; id < maxNamespace; id++) {
+			String transformedName = fieldDef.getName(id);
+			String mixinForm = "L" + classDef.getName(id) + ";" + transformedName + ":" + fieldDef.getDesc(id);
+			addJavadoc.addJavadoc("@mapping {@literal $L:$L:$L}\n", tree.getNamespaceName(id), transformedName, mixinForm);
 		}
 	}
 
-	public Map.Entry<String, String> getParamNameAndDoc(Function<String, Collection<String>> superGetters, EntryTriple methodEntry, int index) {
-		Map.Entry<String, MethodDef> found = searchMethod(superGetters, methodEntry);
+	public Map.Entry<String, String> getParamNameAndDoc(Environment environment, String owner, String name, String desc, int index) {
+		var found = searchMethod(environment, owner, name, desc);
 		if (found != null) {
-			MethodDef methodDef = found.getValue();
-			if (methodDef.getParameters().isEmpty()) {
+			var methodDef = found.getValue();
+			if (methodDef.getArgs().isEmpty()) {
 				return null;
 			}
-			return methodDef.getParameters().stream()
-					.filter(param -> param.getLocalVariableIndex() == index)
-					.map(param -> new AbstractMap.SimpleImmutableEntry<>(param.getName(namespace), param.getComment()))
+			return methodDef.getArgs().stream()
+					.filter(param -> param.getLvIndex() == index)
+					// Map.entry() is null-hostile
+					.map(param -> new SimpleImmutableEntry<>(param.getSrcName(), param.getComment()))
 					.findFirst()
 					.orElse(null);
 		}
 		return null;
 	}
 
-	@Deprecated
-	public String getMethodDoc(Function<String, Collection<String>> superGetters, EntryTriple methodEntry) {
-		Map.Entry<String, MethodDef> methodDef = searchMethod(superGetters, methodEntry);
-
-		if (methodDef != null) {
-			return methodDef.getValue().getComment(); // comment doc handled separately by javapoet
-		}
-
-		return null;
-	}
-
-	public void addMethodDoc(DocAdder adder, Function<String, Collection<String>> superGetters, EntryTriple methodEntry) {
-		Map.Entry<String, MethodDef> found = searchMethod(superGetters, methodEntry);
+	public void addMethodDoc(DocAdder adder, Environment environment, String owner, String name, String desc) {
+		var found = searchMethod(environment, owner, name, desc);
 		if (found == null) {
 			return;
 		}
 
-		MethodDef methodDef = found.getValue();
-		ClassDef owner = classes.get(found.getKey());
-		if (!owner.getName(namespace).equals(methodEntry.getOwner())) {
+		var methodDef = found.getValue();
+		var ownerDef = found.getKey();
+		if (!ownerDef.equals(methodDef.getOwner())) {
 			adder.addJavadoc("{@inheritDoc}");
 		} else {
 			addDoc(methodDef, adder);
 		}
 
 		adder.addJavadoc("\n");
-		for (String namespace : namespaces) {
-			String transformedName = methodDef.getName(namespace);
-			String mixinForm = "L" + owner.getName(namespace) + ";" + transformedName + methodDef.getDescriptor(namespace);
-			adder.addJavadoc("@mapping {@literal $L:$L:$L}\n", namespace, transformedName, mixinForm);
+		for (int id = SRC_NAMESPACE_ID; id < maxNamespace; id++) {
+			String transformedName = methodDef.getName(id);
+			String mixinForm = "L" + ownerDef.getName(id) + ";" + transformedName + methodDef.getDesc(id);
+			adder.addJavadoc("@mapping {@literal $L:$L:$L}\n", tree.getNamespaceName(id), transformedName, mixinForm);
 		}
 	}
 
-	private Map.Entry<String, MethodDef> searchMethod(Function<String, Collection<String>> superGetters, EntryTriple methodEntry) {
-		String className = methodEntry.getOwner();
-		if (!classes.containsKey(className)) {
+	private Map.Entry<ClassMappingView, MethodMappingView> searchMethod(Environment environment, String owner, String name, String desc) {
+		var classDef = tree.getClass(owner);
+
+		if (classDef == null)
 			return null;
-		}
 
-		if (methods.containsKey(methodEntry)) {
-			return methods.get(methodEntry); // Nullable!
-		}
+		var methodDef = classDef.getMethod(name, desc);
+		if (methodDef != null)
+			return Map.entry(methodDef.getOwner(), methodDef);
 
-		for (String superName : superGetters.apply(className)) {
-			EntryTriple triple = new EntryTriple(superName, methodEntry.getName(), methodEntry.getDescriptor());
-			Map.Entry<String, MethodDef> ret = searchMethod(superGetters, triple);
+
+		for (String superName : environment.superTypes().getOrDefault(owner, List.of())) {
+			var ret = searchMethod(environment, superName, name, desc);
 			if (ret != null) {
-				methods.put(triple, ret);
 				return ret;
 			}
 		}
 
-		methods.put(methodEntry, null);
 		return null;
 	}
 

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package net.fabricmc.mappingpoet.signature;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
@@ -29,20 +28,20 @@ public final class PoetClassMethodSignatureVisitor extends SignatureVisitor {
 	private final TypeAnnotationMapping mapping;
 	private final ClassStaticContext context;
 	private final boolean forClass;
-	LinkedList<TypeVariableName> generics = new LinkedList<>();
+	ArrayList<TypeVariableName> generics = new ArrayList<>();
 	// collecting generic
 	String currentGenericName;
-	LinkedList<TypeName> currentGenericBounds = new LinkedList<>();
+	ArrayList<TypeName> currentGenericBounds = new ArrayList<>();
 	// bound for each generic
 	PoetTypeSignatureWriter pendingLowerBound;
 
 	// classes usage
-	LinkedList<TypeName> superTypes = new LinkedList<>();
+	ArrayList<TypeName> superTypes = new ArrayList<>();
 	PoetTypeSignatureWriter pendingSupertype;
 
 	// methods usage
-	LinkedList<TypeName> params = new LinkedList<>();
-	LinkedList<TypeName> throwables = new LinkedList<>();
+	ArrayList<TypeName> params = new ArrayList<>();
+	ArrayList<TypeName> throwables = new ArrayList<>();
 	PoetTypeSignatureWriter pendingSlot;
 	TypeName returnType;
 
@@ -84,7 +83,7 @@ public final class PoetClassMethodSignatureVisitor extends SignatureVisitor {
 
 	private void collectLowerBound() {
 		if (pendingLowerBound != null) {
-			currentGenericBounds.addLast(pendingLowerBound.compute());
+			currentGenericBounds.add(pendingLowerBound.compute());
 			pendingLowerBound = null;
 		}
 	}
@@ -113,7 +112,7 @@ public final class PoetClassMethodSignatureVisitor extends SignatureVisitor {
 	private void collectSupertype() {
 		if (pendingSupertype != null) {
 			TypeName simple = pendingSupertype.compute();
-			superTypes.addLast(simple);
+			superTypes.add(simple);
 
 			pendingSupertype = null;
 		}
@@ -139,7 +138,7 @@ public final class PoetClassMethodSignatureVisitor extends SignatureVisitor {
 	public ClassSignature collectClass() {
 		collectSupertype();
 
-		TypeName superclass = superTypes.removeFirst();
+		TypeName superclass = superTypes.remove(0);
 		return new ClassSignature(generics, superclass, superTypes);
 	}
 
@@ -148,7 +147,7 @@ public final class PoetClassMethodSignatureVisitor extends SignatureVisitor {
 	private void collectParam() {
 		if (pendingSlot != null) {
 			TypeName slot = pendingSlot.compute();
-			params.addLast(slot);
+			params.add(slot);
 
 			pendingSlot = null;
 		}
@@ -159,7 +158,7 @@ public final class PoetClassMethodSignatureVisitor extends SignatureVisitor {
 			if (returnType == null) {
 				returnType = pendingSlot.compute();
 			} else {
-				throwables.addLast(pendingSlot.compute());
+				throwables.add(pendingSlot.compute());
 			}
 
 			pendingSlot = null;

@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package net.fabricmc.mappingpoet;
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
+import net.fabricmc.mappingpoet.Environment.ClassNamePointer;
+import net.fabricmc.mappingpoet.Environment.NestedClassInfo;
 import net.fabricmc.mappingpoet.signature.ClassStaticContext;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -37,7 +39,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -46,8 +47,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -65,15 +64,16 @@ public class Main {
 
 		try {
 			if (Files.exists(outputDirectory)) {
-				Files.walk(outputDirectory)
-						.sorted(Comparator.reverseOrder())
-						.map(Path::toFile)
-						.forEach(File::delete);
+				try (var stream = Files.walk(outputDirectory)) {
+					stream.sorted(Comparator.reverseOrder())
+							.map(Path::toFile)
+							.forEach(File::delete);
+				}
 			}
 
 			Files.createDirectories(outputDirectory);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new UncheckedIOException(e);
 		}
 
 		if (!Files.exists(mappings)) {
@@ -92,7 +92,7 @@ public class Main {
 	public static void generate(Path mappings, Path inputJar, Path outputDirectory, Path librariesDir) {
 		final MappingsStore mapping = new MappingsStore(mappings);
 		Map<String, ClassBuilder> classes = new HashMap<>();
-		forEachClass(inputJar, (superGetter, classNode, context, sealChecker) -> writeClass(mapping, classNode, classes, superGetter, sealChecker, context), librariesDir);
+		forEachClass(inputJar, (classNode, environment) -> writeClass(mapping, classNode, classes, environment), librariesDir);
 
 		classes.values().stream()
 				.filter(classBuilder -> !classBuilder.getClassName().contains("$"))
@@ -115,10 +115,11 @@ public class Main {
 		Map<String, Collection<String>> supers = new HashMap<>();
 		Set<String> sealedClasses = new HashSet<>(); // their subclsses/impls need non-sealed modifier
 
-		Map<String, Boolean> instanceInnerClasses = new ConcurrentHashMap<>();
+		Map<String, Environment.NestedClassInfo> nestedClasses = new ConcurrentHashMap<>();
+		Map<String, ClassNamePointer> classNames = new ConcurrentHashMap<>();
 
 		if (librariesDir != null) {
-			scanInnerClasses(instanceInnerClasses, librariesDir);
+			scanNestedClasses(classNames, nestedClasses, librariesDir);
 		}
 
 		try (final JarFile jarFile = new JarFile(jar.toFile())) {
@@ -148,7 +149,10 @@ public class Main {
 
 					if (classNode.innerClasses != null) {
 						for (InnerClassNode e : classNode.innerClasses) {
-							instanceInnerClasses.put(e.name, !Modifier.isStatic(e.access));
+							if (e.outerName != null) {
+								// null -> declared in method/initializer
+								nestedClasses.put(e.name, new NestedClassInfo(e.outerName, !Modifier.isStatic(e.access), e.innerName));
+							}
 						}
 					}
 
@@ -166,12 +170,10 @@ public class Main {
 		//Sort all the classes making sure that inner classes come after the parent classes
 		classes.sort(Comparator.comparing(o -> o.name));
 
-		ClassStaticContext innerClassContext = new InnerClassStats(instanceInnerClasses);
-		Function<String, Collection<String>> superGetter = k -> supers.getOrDefault(k, Collections.emptyList());
-		classes.forEach(node -> classNodeConsumer.accept(superGetter, node, innerClassContext, sealedClasses::contains));
+		classes.forEach(node -> classNodeConsumer.accept(node, new Environment(supers, sealedClasses, nestedClasses)));
 	}
 
-	private static void scanInnerClasses(Map<String, Boolean> instanceInnerClasses, Path librariesDir) {
+	private static void scanNestedClasses(Map<String, ClassNamePointer> classNames, Map<String, Environment.NestedClassInfo> instanceInnerClasses, Path librariesDir) {
 		try {
 			Files.walkFileTree(librariesDir, new SimpleFileVisitor<>() {
 				@Override
@@ -194,8 +196,11 @@ public class Main {
 								ClassReader reader = new ClassReader(is);
 								reader.accept(new ClassVisitor(Opcodes.ASM8) {
 									@Override
-									public void visitInnerClass(String name, String outerName, String innerName, int access) {
-										instanceInnerClasses.put(name, !Modifier.isStatic(access));
+									public void visitInnerClass(String name, String outerName, String simpleName, int access) {
+										instanceInnerClasses.put(name, new Environment.NestedClassInfo(outerName, !Modifier.isStatic(access), simpleName));
+										if (outerName != null) {
+											classNames.put(name, new ClassNamePointer(simpleName, outerName));
+										}
 									}
 								}, ClassReader.SKIP_CODE);
 							}
@@ -225,7 +230,8 @@ public class Main {
 		return ch >= '0' && ch <= '9';
 	}
 
-	private static void writeClass(MappingsStore mappings, ClassNode classNode, Map<String, ClassBuilder> existingClasses, Function<String, Collection<String>> superGetter, Predicate<String> sealChecker, ClassStaticContext context) {
+	private static void writeClass(MappingsStore mappings, ClassNode classNode, Map<String, ClassBuilder> existingClasses, Environment environment) {
+		// TODO make sure named jar has valid InnerClasses, use that info instead
 		String name = classNode.name;
 		{
 			//Block anonymous class and their nested classes
@@ -239,7 +245,8 @@ public class Main {
 			}
 		}
 
-		ClassBuilder classBuilder = new ClassBuilder(mappings, classNode, superGetter, sealChecker, context);
+		// TODO: ensure InnerClasses is remapped, and create ClassName from parent class name
+		ClassBuilder classBuilder = new ClassBuilder(mappings, classNode, environment);
 
 		if (name.contains("$")) {
 			String parentClass = name.substring(0, name.lastIndexOf("$"));
@@ -256,23 +263,6 @@ public class Main {
 
 	@FunctionalInterface
 	private interface ClassNodeConsumer {
-		void accept(Function<String, Collection<String>> superGetter, ClassNode node, ClassStaticContext staticContext, Predicate<String> sealedChecker);
-	}
-
-	private static final class InnerClassStats implements ClassStaticContext {
-		final Map<String, Boolean> instanceInnerClasses;
-
-		InnerClassStats(Map<String, Boolean> instanceInnerClasses) {
-			this.instanceInnerClasses = instanceInnerClasses;
-		}
-
-		@Override
-		public boolean isInstanceInner(String internalName) {
-			if (internalName.indexOf('$') == -1) {
-				return false; // heuristics
-			}
-
-			return instanceInnerClasses.computeIfAbsent(internalName, Main::isInstanceInnerOnClasspath);
-		}
+		void accept(ClassNode node, Environment environment);
 	}
 }

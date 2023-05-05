@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package net.fabricmc.mappingpoet;
 
 import org.objectweb.asm.tree.ClassNode;
@@ -21,7 +20,6 @@ import org.objectweb.asm.tree.ClassNode;
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class ModifierBuilder {
 
@@ -32,21 +30,21 @@ public class ModifierBuilder {
 		this.access = access;
 	}
 
-	public ModifierBuilder checkUnseal(ClassNode node, Predicate<String> sealChecker) {
+	public ModifierBuilder checkUnseal(ClassNode node, Environment env) {
 		if (java.lang.reflect.Modifier.isFinal(node.access)) {
 			return this;
 		}
 
 		if (node.interfaces != null) {
 			for (String itf : node.interfaces) {
-				if (sealChecker.test(itf)) {
+				if (env.sealedClasses().contains(itf)) {
 					needsUnseal = true;
 					return this;
 				}
 			}
 		}
 
-		if (node.superName != null && sealChecker.test(node.superName)) {
+		if (node.superName != null && env.sealedClasses().contains(node.superName)) {
 			needsUnseal = true;
 		}
 
@@ -98,7 +96,7 @@ public class ModifierBuilder {
 			modifiers.add(Modifier.NATIVE);
 		}
 		if (java.lang.reflect.Modifier.isStrict(access)) {
-			modifiers.add(Modifier.STRICTFP);
+			modifiers.add(Modifier.STRICTFP); // obsolete as of Java 17
 		}
 
 		if (needsUnseal && type == Type.CLASS) {
