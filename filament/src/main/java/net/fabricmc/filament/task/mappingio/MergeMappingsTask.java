@@ -29,8 +29,7 @@ public abstract class MergeMappingsTask extends MappingOutputTask {
 		}
 
 		var nsCompleter = new MappingNsCompleter(writer, Map.of("named", "intermediary"), true);
-		var dstReorder = new MappingDstNsReorder(nsCompleter, List.of("intermediary", "named"));
-		var nsSwitch = new MappingSourceNsSwitch(dstReorder, "official");
-		mappingTree.accept(nsSwitch);
+		var dstReorder = new MappingDstNsReorder(nsCompleter, List.of("official", "named"));
+		mappingTree.accept(dstReorder);
 	}
 }
