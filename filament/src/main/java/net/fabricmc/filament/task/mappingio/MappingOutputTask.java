@@ -4,13 +4,12 @@ import java.io.IOException;
 
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.TaskAction;
 
 import net.fabricmc.filament.task.base.FilamentTask;
 import net.fabricmc.filament.task.base.WithFileOutput;
 import net.fabricmc.mappingio.MappingWriter;
 import net.fabricmc.mappingio.format.MappingFormat;
-
-import org.gradle.api.tasks.TaskAction;
 
 public abstract class MappingOutputTask extends FilamentTask implements WithFileOutput {
 	@Input
