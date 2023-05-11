@@ -4,13 +4,32 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 	COMMENT
 	COMMENT <p>Trigonometric functions defined in this class use the "sine table", a pre-calculated
 	COMMENT table of {@code sin(N)} ({@code 0 <= N < pi * 2}).
-	FIELD field_15722 COSINE_TABLE [D
+	FIELD field_15722 COSINE_OF_ARCSINE_TABLE [D
+		COMMENT Holds values of cos(arcsin(x)): {@code COSINE_OF_ARCSINE_TABLE[i]} is equal to
+		COMMENT {@code Math.cos(Math.arcsin(i / 256.0))}.
+		COMMENT
+		COMMENT <p>This is used by {@link MathHelper#atan2} to approximate the inverse
+		COMMENT tangent function.
 	FIELD field_15723 MULTIPLY_DE_BRUIJN_BIT_POSITION [I
 	FIELD field_15724 SQUARE_ROOT_OF_TWO F
 	FIELD field_15725 SINE_TABLE [F
 	FIELD field_15726 RANDOM Lnet/minecraft/class_5819;
 	FIELD field_15727 ARCSINE_TABLE [D
-	FIELD field_15728 SMALLEST_FRACTION_FREE_DOUBLE D
+		COMMENT Holds values of arcsin(x): {@code ARCSINE_TABLE[i]} is equal to
+		COMMENT {@code Math.arcsin(i / 256.0)}.
+		COMMENT
+		COMMENT <p>This is used by {@link MathHelper#atan2} to approximate the inverse
+		COMMENT tangent function.
+	FIELD field_15728 ROUNDER_256THS D
+		COMMENT A constant for rounding a double to the nearest multiple of 1/256.
+		COMMENT
+		COMMENT <p>When this constant is added to a double that is not too large, then the
+		COMMENT bits of the result's mantissa reflect the original number times 256.
+		COMMENT Consequently, adding this constant and then subtracting it rounds such
+		COMMENT doubles to the nearest multiple of 1/256.
+		COMMENT
+		COMMENT <p>This is used by {@link MathHelper#atan2} to produce an index into
+		COMMENT {@link MathHelper#ARCSINE_TABLE} and {@link MathHelper#COSINE_OF_ARCSINE_TABLE}.
 	FIELD field_29844 PI F
 	FIELD field_29845 HALF_PI F
 	FIELD field_29846 TAU F
@@ -20,6 +39,15 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 	FIELD field_29849 EPSILON F
 	FIELD field_29853 HALF_PI_RADIANS_SINE_TABLE_INDEX J
 	FIELD field_29856 DEGREES_TO_SINE_TABLE_INDEX F
+	FIELD field_29857 ARCSINE_MACLAURIN_3 D
+		COMMENT Used for the third-order Maclaurin series approximation of the arcsin function,
+		COMMENT x + x^3/6.
+	FIELD field_29859 ARCSINE_TABLE_LENGTH I
+		COMMENT The total number of entries in {@link MathHelper#ARCSINE_TABLE} and
+		COMMENT {@link MathHelper#COSINE_OF_ARCSINE_TABLE}.
+		COMMENT
+		COMMENT <p>These tables have 257 elements because they store values for multiples of
+		COMMENT 1/256 from 0 to 1, inclusive.
 	METHOD method_15338 wrapDegrees (D)D
 		COMMENT Wraps an angle in degrees to the interval {@code [-180, 180)}.
 		ARG 0 degrees
@@ -59,6 +87,18 @@ CLASS net/minecraft/class_3532 net/minecraft/util/math/MathHelper
 		ARG 1 to
 		ARG 2 step
 	METHOD method_15349 atan2 (DD)D
+		COMMENT {@return an approximation of {@code Math.atan2(y, x)}}
+		COMMENT
+		COMMENT @implNote This implementation transforms the arguments such that they
+		COMMENT lie in the first quadrant. If {@code y > x}, then {@code x} and {@code y}
+		COMMENT are swapped to minimize the error of the initial approximation.
+		COMMENT {@code x} and {@code y} are normalized, and an initial approximation
+		COMMENT of the result and the sine of the deviation from the true value are
+		COMMENT obtained using the {@link MathHelper#ARCSINE_TABLE} and
+		COMMENT {@link MathHelper#COSINE_OF_ARCSINE_TABLE} lookup tables. The error
+		COMMENT itself is approximated using the third-order Maclaurin series polynomial
+		COMMENT for arcsin. Finally, the implementation undoes any transformations that
+		COMMENT were performed initially.
 		ARG 0 y
 		ARG 2 x
 	METHOD method_15350 clamp (DDD)D
