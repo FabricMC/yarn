@@ -7,7 +7,7 @@ import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.TaskAction;
 
 import net.fabricmc.filament.task.base.FileOutputTask;
-import net.fabricmc.stitch.merge.JarMerger;
+import net.fabricmc.loom.configuration.providers.minecraft.MinecraftJarMerger;
 
 public abstract class MergeMinecraftTask extends FileOutputTask {
 	@InputFile
@@ -18,10 +18,10 @@ public abstract class MergeMinecraftTask extends FileOutputTask {
 
 	@TaskAction
 	public void run() throws IOException {
-		try (JarMerger jarMerger = new JarMerger(
+		try (MinecraftJarMerger jarMerger = new MinecraftJarMerger(
 				getClientJar().getAsFile().get(),
 				getServerJar().getAsFile().get(),
-				getOutputFile().getAsFile().get())) {
+				getOutput().getAsFile().get())) {
 			jarMerger.merge();
 		}
 	}

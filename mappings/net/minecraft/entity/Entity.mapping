@@ -136,8 +136,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_29989 MAX_COMMAND_TAGS I
 		COMMENT @see Entity#addCommandTag
 		COMMENT @see Entity#readNbt
-	FIELD field_29990 VELOCITY_AFFECTING_POS_Y_OFFSET D
-		COMMENT @see Entity#getVelocityAffectingPos
 	FIELD field_29992 DEFAULT_MIN_FREEZE_DAMAGE_TICKS I
 		COMMENT @see Entity#getMinFreezeDamageTicks
 	FIELD field_29993 FREEZING_DAMAGE_INTERVAL I
@@ -147,7 +145,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_34927 collidedSoftly Z
 	FIELD field_35101 chunkPos Lnet/minecraft/class_1923;
 	FIELD field_35588 blockStateAtPos Lnet/minecraft/class_2680;
+	FIELD field_36331 groundCollision Z
 	FIELD field_38931 trackedPosition Lnet/minecraft/class_7422;
+	FIELD field_44784 supportingBlockPos Ljava/util/Optional;
 	FIELD field_5951 ridingCooldown I
 	FIELD field_5952 onGround Z
 	FIELD field_5953 firstUpdate Z
@@ -578,8 +578,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT <p>This does not cause the entity to drop loot.
 	METHOD method_31473 attemptTickInVoid ()V
 		COMMENT Calls {@link #tickInVoid()} when the entity is 64 blocks below the world's {@linkplain net.minecraft.world.HeightLimitView#getBottomY() minimum Y position}.
-	METHOD method_31474 (Lnet/minecraft/class_1297;)V
-		ARG 0 entity
 	METHOD method_31475 (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_31476 getChunkPos ()Lnet/minecraft/class_1923;
@@ -806,8 +804,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_36975 playExtinguishSound ()V
 		COMMENT Plays the {@link
 		COMMENT net.minecraft.sound.SoundEvents#ENTITY_GENERIC_EXTINGUISH_FIRE} sound.
-	METHOD method_37215 playAmethystChimeSound (Lnet/minecraft/class_2680;)V
-		ARG 1 state
+	METHOD method_37215 playAmethystChimeSound ()V
 	METHOD method_37216 (Lnet/minecraft/class_1297;)V
 		ARG 0 player
 	METHOD method_37217 (Lnet/minecraft/class_1297;)Z
@@ -957,6 +954,35 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @see #getRootVehicle
 		COMMENT @see #getVehicle
+	METHOD method_49787 playCombinationStepSounds (Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)V
+		ARG 1 primaryState
+		ARG 2 secondaryState
+	METHOD method_49788 getStepSoundPos (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2338;
+		ARG 1 pos
+	METHOD method_49789 (Lnet/minecraft/class_1297;)V
+		ARG 0 entity
+	METHOD method_49790 shouldPlayAmethystChimeSound (Lnet/minecraft/class_2680;)Z
+		ARG 1 state
+	METHOD method_49792 teleportPassengers ()V
+	METHOD method_51152 getNameLabelHeight ()F
+	METHOD method_51295 playSwimSound ()V
+	METHOD method_51296 playSecondaryStepSound (Lnet/minecraft/class_2680;)V
+		ARG 1 state
+	METHOD method_51297 playStepSounds (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
+		ARG 1 pos
+		ARG 2 state
+	METHOD method_51502 setWorld (Lnet/minecraft/class_1937;)V
+		ARG 1 world
+	METHOD method_51701 stepOnBlock (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;ZZLnet/minecraft/class_243;)Z
+		ARG 1 pos
+		ARG 2 state
+		ARG 3 playSound
+		ARG 4 emitEvent
+		ARG 5 movement
+	METHOD method_51702 canClimb (Lnet/minecraft/class_2680;)Z
+		ARG 1 state
+	METHOD method_51703 updateSupportingBlockPos (Z)V
+		ARG 1 onGround
 	METHOD method_5621 getMountedHeightOffset ()D
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		COMMENT Called when this entity's collision box intersects {@code state}.
