@@ -102,18 +102,27 @@ public abstract class RemapUnpickDefinitionsTask extends DefaultTask {
 				final int toM = mappingTree.getNamespaceId(getParameters().getTargetNamespace().get());
 
 				for (MappingTree.ClassMapping classDef : mappingTree.getClasses()) {
-					classMappings.put(classDef.getName(fromM), classDef.getName(toM));
+					String fromClass = classDef.getName(fromM);
+					String toClass = classDef.getName(toM);
+
+					if (fromClass == null || fromClass.isEmpty()) {
+						fromClass = toClass;
+					} else if (toClass == null || toClass.isEmpty()) {
+						toClass = fromClass;
+					}
+
+					classMappings.put(fromClass, toClass);
 
 					for (MappingTree.MethodMapping methodDef : classDef.getMethods()) {
 						methodMappings.put(
-								new MethodKey(classDef.getName(fromM), methodDef.getName(fromM), methodDef.getDesc(fromM)),
+								new MethodKey(fromClass, methodDef.getName(fromM), methodDef.getDesc(fromM)),
 								methodDef.getName(toM)
 						);
 					}
 
 					for (MappingTree.FieldMapping fieldDef : classDef.getFields()) {
 						fieldMappings.put(
-								new FieldKey(classDef.getName(fromM), fieldDef.getName(fromM)),
+								new FieldKey(fromClass, fieldDef.getName(fromM)),
 								fieldDef.getName(toM)
 						);
 					}
