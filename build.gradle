@@ -430,15 +430,16 @@ tasks.register('genFakeSource', JavaExec) {
 }
 
 tasks.register('decompileCFR', JavaExec) {
+	def outputDir = file("namedSrc")
+
 	dependsOn mapNamedJar
 	mainClass = "org.benf.cfr.reader.Main"
-
-	args mapNamedJar.outputFile.getAbsolutePath(), "--outputdir", file("namedSrc").absolutePath
+	classpath.from configurations.decompileClasspath
+	classpath.from minecraftLibraries
+	args mapNamedJar.outputFile.getAbsolutePath(), "--outputdir", outputDir.absolutePath
 
 	doFirst {
-		file("namedSrc").deleteDir()
-		classpath.from configurations.decompileClasspath
-		classpath.from minecraftLibraries
+		outputDir.deleteDir()
 	}
 }
 
