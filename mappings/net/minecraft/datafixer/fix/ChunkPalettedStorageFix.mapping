@@ -27,6 +27,7 @@ CLASS net/minecraft/class_3582 net/minecraft/datafixer/fix/ChunkPalettedStorageF
 		ARG 0 map
 	METHOD method_15605 buildBanner (Ljava/util/Map;ILjava/lang/String;)V
 		ARG 0 out
+		ARG 1 colorId
 		ARG 2 color
 	METHOD method_15607 (Ljava/util/HashMap;)V
 		ARG 0 map
@@ -34,11 +35,13 @@ CLASS net/minecraft/class_3582 net/minecraft/datafixer/fix/ChunkPalettedStorageF
 		ARG 0 map
 	METHOD method_15610 buildSkull (Ljava/util/Map;ILjava/lang/String;Ljava/lang/String;)V
 		ARG 0 out
+		ARG 1 variant
 		ARG 2 mob
 		ARG 3 block
 	METHOD method_15611 buildDoor (Ljava/util/Map;Ljava/lang/String;I)V
 		ARG 0 out
 		ARG 1 name
+		ARG 2 firstStateId
 	METHOD method_15613 (Ljava/util/HashMap;)V
 		ARG 0 map
 	METHOD method_15615 getSideToUpgradeFlag (ZZZZ)I
@@ -54,6 +57,7 @@ CLASS net/minecraft/class_3582 net/minecraft/datafixer/fix/ChunkPalettedStorageF
 	METHOD method_15633 fixChunk (Lcom/mojang/serialization/Dynamic;)Lcom/mojang/serialization/Dynamic;
 	METHOD method_15636 buildBed (Ljava/util/Map;ILjava/lang/String;)V
 		ARG 0 out
+		ARG 1 colorId
 		ARG 2 color
 	METHOD method_15637 getName (Lcom/mojang/serialization/Dynamic;)Ljava/lang/String;
 	METHOD method_15638 getProperty (Lcom/mojang/serialization/Dynamic;Ljava/lang/String;)Ljava/lang/String;
@@ -61,9 +65,13 @@ CLASS net/minecraft/class_3582 net/minecraft/datafixer/fix/ChunkPalettedStorageF
 		ARG 0 map
 	CLASS class_3583 ChunkNibbleArray
 		FIELD field_15855 contents [B
+		FIELD field_29879 CONTENTS_LENGTH I
+		METHOD <init> ([B)V
+			ARG 1 contents
 		METHOD method_15640 get (III)I
 			ARG 1 x
 			ARG 2 y
+			ARG 3 z
 		METHOD method_15641 usesLowNibble (I)Z
 			ARG 1 index
 		METHOD method_15642 getRawIndex (I)I
@@ -73,11 +81,14 @@ CLASS net/minecraft/class_3582 net/minecraft/datafixer/fix/ChunkPalettedStorageF
 		FIELD field_15864 axis Lnet/minecraft/class_3582$class_3584$class_3585;
 		METHOD <init> (Ljava/lang/String;ILnet/minecraft/class_3582$class_3584$class_3586;Lnet/minecraft/class_3582$class_3584$class_3585;)V
 			ARG 3 direction
+			ARG 4 axis
 		METHOD method_15643 getDirection ()Lnet/minecraft/class_3582$class_3584$class_3586;
 		METHOD method_15644 getAxis ()Lnet/minecraft/class_3582$class_3584$class_3585;
 		CLASS class_3585 Axis
 		CLASS class_3586 Direction
 			FIELD field_15872 offset I
+			METHOD <init> (Ljava/lang/String;II)V
+				ARG 3 offset
 			METHOD method_15645 getOffset ()I
 	CLASS class_3587 Section
 		FIELD field_15874 innerPositions Lit/unimi/dsi/fastutil/ints/IntList;
@@ -108,11 +119,23 @@ CLASS net/minecraft/class_3582 net/minecraft/datafixer/fix/ChunkPalettedStorageF
 		FIELD field_15886 level Lcom/mojang/serialization/Dynamic;
 		FIELD field_15887 blockEntities Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 		FIELD field_15888 sections [Lnet/minecraft/class_3582$class_3587;
+		METHOD <init> (Lcom/mojang/serialization/Dynamic;)V
+			ARG 1 chunkTag
 		METHOD method_15655 getBlockEntity (I)Lcom/mojang/serialization/Dynamic;
+			ARG 1 packedLocalPos
+		METHOD method_15656 (Lcom/mojang/serialization/Dynamic;)V
+			ARG 1 sectionTag
 		METHOD method_15657 setBlock (ILcom/mojang/serialization/Dynamic;)V
+			ARG 1 packedLocalPos
 		METHOD method_15658 getSection (I)Lnet/minecraft/class_3582$class_3587;
+			ARG 1 packedLocalPos
 		METHOD method_15660 removeBlockEntity (I)Lcom/mojang/serialization/Dynamic;
+			ARG 1 packedLocalPos
 		METHOD method_15662 getBlock (I)Lcom/mojang/serialization/Dynamic;
+			ARG 1 packedLocalPos
 		METHOD method_15663 adjacentTo (ILnet/minecraft/class_3582$class_3584;)I
+			ARG 0 packedLocalPos
 			ARG 1 direction
 		METHOD method_15664 transform ()Lcom/mojang/serialization/Dynamic;
+		METHOD method_15665 (Lcom/mojang/serialization/Dynamic;)V
+			ARG 1 blockEntityTag
