@@ -1,12 +1,5 @@
 CLASS net/minecraft/class_1463 net/minecraft/entity/passive/RabbitEntity
 	FIELD field_30359 ESCAPE_SPEED D
-	FIELD field_30361 BROWN_TYPE I
-	FIELD field_30362 WHITE_TYPE I
-	FIELD field_30363 BLACK_TYPE I
-	FIELD field_30364 WHITE_SPOTTED_TYPE I
-	FIELD field_30365 GOLD_TYPE I
-	FIELD field_30366 SALT_TYPE I
-	FIELD field_30367 KILLER_BUNNY_TYPE I
 	FIELD field_6846 KILLER_BUNNY Lnet/minecraft/class_2960;
 	FIELD field_6847 moreCarrotTicks I
 	FIELD field_6848 ticksUntilJump I
@@ -21,13 +14,15 @@ CLASS net/minecraft/class_1463 net/minecraft/entity/passive/RabbitEntity
 		ARG 3 pos
 		ARG 4 random
 	METHOD method_26892 createRabbitAttributes ()Lnet/minecraft/class_5132$class_5133;
+	METHOD method_47854 getTypeFromPos (Lnet/minecraft/class_1936;Lnet/minecraft/class_2338;)Lnet/minecraft/class_1463$class_7990;
+		ARG 0 world
+		ARG 1 pos
 	METHOD method_6605 getJumpProgress (F)F
 		ARG 1 delta
 	METHOD method_6606 setSpeed (D)V
 		ARG 1 speed
 	METHOD method_6607 wantsCarrots ()Z
 	METHOD method_6608 doScheduleJump ()V
-	METHOD method_6610 getRabbitType ()I
 	METHOD method_6611 enableJump ()V
 	METHOD method_6614 isTempting (Lnet/minecraft/class_1799;)Z
 		ARG 0 stack
@@ -35,13 +30,9 @@ CLASS net/minecraft/class_1463 net/minecraft/entity/passive/RabbitEntity
 	METHOD method_6616 lookTowards (DD)V
 		ARG 1 x
 		ARG 3 z
-	METHOD method_6617 setRabbitType (I)V
-		ARG 1 rabbitType
 	METHOD method_6618 startJump ()V
 	METHOD method_6619 scheduleJump ()V
 	METHOD method_6621 disableJump ()V
-	METHOD method_6622 chooseType (Lnet/minecraft/class_1936;)I
-		ARG 1 world
 	CLASS class_1464 RabbitAttackGoal
 		METHOD <init> (Lnet/minecraft/class_1463;)V
 			ARG 1 rabbit
@@ -54,8 +45,8 @@ CLASS net/minecraft/class_1463 net/minecraft/entity/passive/RabbitEntity
 			ARG 4 slowSpeed
 			ARG 6 fastSpeed
 	CLASS class_1466 RabbitData
-		FIELD field_6854 type I
-		METHOD <init> (I)V
+		FIELD field_41560 type Lnet/minecraft/class_1463$class_7990;
+		METHOD <init> (Lnet/minecraft/class_1463$class_7990;)V
 			ARG 1 type
 	CLASS class_1468 RabbitMoveControl
 		FIELD field_6858 rabbitSpeed D
@@ -82,3 +73,14 @@ CLASS net/minecraft/class_1463 net/minecraft/entity/passive/RabbitEntity
 			ARG 1 canJump
 		METHOD method_27312 isActive ()Z
 		METHOD method_27313 canJump ()Z
+	CLASS class_7990 RabbitType
+		FIELD field_41568 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_41569 BY_ID Ljava/util/function/IntFunction;
+		FIELD field_41570 id I
+		FIELD field_41571 name Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;IILjava/lang/String;)V
+			ARG 3 id
+			ARG 4 name
+		METHOD method_47856 getId ()I
+		METHOD method_47857 byId (I)Lnet/minecraft/class_1463$class_7990;
+			ARG 0 id

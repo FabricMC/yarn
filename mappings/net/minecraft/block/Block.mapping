@@ -6,12 +6,12 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 	COMMENT
 	COMMENT <p>There is exactly one instance for every type of block. Every stone
 	COMMENT block for example in a world shares the same block instance. Each block
-	COMMENT instance is registered under {@link net.minecraft.util.registry.Registry#BLOCK}.
+	COMMENT instance is registered under {@link net.minecraft.registry.Registries#BLOCK}.
 	COMMENT See {@link Blocks} for examples of block instances.
 	COMMENT
 	COMMENT <p>An item corresponding to a block is not automatically created. You
 	COMMENT may create your own {@link net.minecraft.item.BlockItem} and register it
-	COMMENT under {@link net.minecraft.util.registry.Registry#ITEM}.
+	COMMENT under {@link net.minecraft.registry.Registries#ITEM}.
 	COMMENT
 	COMMENT <p>The translation key for the block name is determined by {@link
 	COMMENT #getTranslationKey}.
@@ -44,8 +44,6 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		COMMENT Prevents the previous block (container) from dropping items when destroyed.
 	FIELD field_31033 MOVED I
 		COMMENT Signals that the current block is being moved to a different location, usually because of a piston.
-	FIELD field_31034 SKIP_LIGHTING_UPDATES I
-		COMMENT Signals that lighting updates should be skipped.
 	FIELD field_31036 NOTIFY_ALL I
 		COMMENT The default setBlockState behavior. Same as {@code NOTIFY_NEIGHBORS | NOTIFY_LISTENERS}.
 	FIELD field_36404 registryEntry Lnet/minecraft/class_6880$class_6883;
@@ -172,7 +170,7 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		ARG 2 pos
 		ARG 3 blockEntity
 		ARG 4 entity
-		ARG 5 stack
+		ARG 5 tool
 	METHOD method_9515 appendProperties (Lnet/minecraft/class_2689$class_2690;)V
 		COMMENT Appends block state properties to this block. To use this, override and call {@link
 		COMMENT StateManager.Builder#add} inside the method. See {@link
@@ -191,7 +189,8 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		COMMENT
 		COMMENT @see net.minecraft.loot.condition.SurvivesExplosionLootCondition
 		ARG 1 explosion
-	METHOD method_9538 canMobSpawnInside ()Z
+	METHOD method_9538 canMobSpawnInside (Lnet/minecraft/class_2680;)Z
+		ARG 1 state
 	METHOD method_9539 getTranslationKey ()Ljava/lang/String;
 		COMMENT {@return the translation key for the name of this block}
 		COMMENT
@@ -246,7 +245,7 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		ARG 3 pos
 		ARG 4 state
 		ARG 5 blockEntity
-		ARG 6 stack
+		ARG 6 tool
 	METHOD method_9562 getDroppedStacks (Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_2586;)Ljava/util/List;
 		ARG 0 state
 		ARG 1 world
@@ -317,13 +316,7 @@ CLASS net/minecraft/class_2248 net/minecraft/block/Block
 		ARG 0 world
 		ARG 1 pos
 		ARG 2 stack
-	METHOD method_9578 appendStacks (Lnet/minecraft/class_1761;Lnet/minecraft/class_2371;)V
-		COMMENT Appends the stacks of this block shown in the item group to the list.
-		COMMENT
-		COMMENT @see net.minecraft.item.BlockItem#appendStacks(ItemGroup, DefaultedList)
-		ARG 1 group
-		ARG 2 stacks
-	METHOD method_9579 isTranslucent (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
+	METHOD method_9579 isTransparent (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos

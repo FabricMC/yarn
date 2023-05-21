@@ -20,11 +20,12 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 	FIELD field_14361 whitelist Lnet/minecraft/class_3337;
 	FIELD field_14362 statisticsMap Ljava/util/Map;
 	FIELD field_14364 BANNED_IPS_FILE Ljava/io/File;
-	FIELD field_24626 registryManager Lnet/minecraft/class_5455$class_6890;
+	FIELD field_24626 registryManager Lnet/minecraft/class_7780;
 	FIELD field_29790 LATENCY_UPDATE_INTERVAL I
 	FIELD field_34895 simulationDistance I
 	FIELD field_39921 FILTERED_FULL_TEXT Lnet/minecraft/class_2561;
-	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_5455$class_6890;Lnet/minecraft/class_29;I)V
+	FIELD field_40966 syncedRegistryManager Lnet/minecraft/class_5455$class_6890;
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_7780;Lnet/minecraft/class_29;I)V
 		ARG 1 server
 		ARG 2 registryManager
 		ARG 3 saveHandler
@@ -127,9 +128,8 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		ARG 1 profile
 	METHOD method_14611 remove (Lnet/minecraft/class_3222;)V
 		ARG 1 player
-	METHOD method_14613 createPlayer (Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_7428;)Lnet/minecraft/class_3222;
+	METHOD method_14613 createPlayer (Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/class_3222;
 		ARG 1 profile
-		ARG 2 publicKey
 	METHOD method_14614 isWhitelistEnabled ()Z
 	METHOD method_14617 saveAllPlayerData ()V
 	METHOD method_18241 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)Lnet/minecraft/class_1297;
@@ -200,7 +200,7 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		ARG 1 message
 		ARG 2 source
 		ARG 3 params
-	METHOD method_44791 broadcast (Lnet/minecraft/class_7471;Ljava/util/function/Predicate;Lnet/minecraft/class_3222;Lnet/minecraft/class_7436;Lnet/minecraft/class_2556$class_7602;)V
+	METHOD method_44791 broadcast (Lnet/minecraft/class_7471;Ljava/util/function/Predicate;Lnet/minecraft/class_3222;Lnet/minecraft/class_2556$class_7602;)V
 		COMMENT Broadcasts a chat message to all players and the server console.
 		COMMENT
 		COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
@@ -217,20 +217,10 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		ARG 2 shouldSendFiltered
 			COMMENT predicate that determines whether to send the filtered message for the given player
 		ARG 3 sender
-		ARG 4 sourceProfile
-		ARG 5 params
-	METHOD method_44792 sendMessageHeader (Lnet/minecraft/class_7471;Ljava/util/Set;)V
-		COMMENT Sends {@code message}'s headers (only) to all players except {@code except}.
-		COMMENT
-		COMMENT <p>This is used to keep the integrity of the "message chain" when a message is censored
-		COMMENT or when the message is originally sent without metadata due to it being originated from
-		COMMENT entities.
-		ARG 1 message
-		ARG 2 except
-	METHOD method_44793 verify (Lnet/minecraft/class_7471;Lnet/minecraft/class_7436;)Z
+		ARG 4 params
+	METHOD method_44793 verify (Lnet/minecraft/class_7471;)Z
 		COMMENT {@return whether {@code message} is not expired and is verified}
 		COMMENT
 		COMMENT @implNote This only affects the server log. Unverified messages are still broadcast
 		COMMENT to other clients.
 		ARG 1 message
-		ARG 2 profile

@@ -1,0 +1,150 @@
+CLASS net/minecraft/class_6880 net/minecraft/registry/entry/RegistryEntry
+	COMMENT An object holding a value that can be registered in a registry. In most cases, the
+	COMMENT value is already registered in a registry ("reference entry"), hence the name;
+	COMMENT however, it is possible to create a registry entry by direct reference
+	COMMENT ("direct entry"). This is useful for data packs, as they can define
+	COMMENT one-time use values directly without having to register them every time.
+	COMMENT
+	COMMENT <p>Registry entries do not define {@code equals} method. Instead, compare the result
+	COMMENT of {@link #getKeyOrValue}.
+	COMMENT
+	COMMENT <p>Reference registry entries also hold their {@linkplain TagKey tags}. For more
+	COMMENT information on type-specific behaviors, including "intrusive" and "stand-alone"
+	COMMENT reference registry entries, see the respective class documentations.
+	COMMENT
+	COMMENT <p>A registry entry is sometimes referred to as a "holder" in error messages.
+	COMMENT
+	COMMENT @see RegistryEntry.Direct
+	COMMENT @see RegistryEntry.Reference
+	COMMENT @see net.minecraft.registry.Registry#entryOf
+	COMMENT @see net.minecraft.registry.Registry#getEntry
+	METHOD method_40220 isIn (Lnet/minecraft/class_6862;)Z
+		COMMENT {@return whether this entry is in {@code tag}}
+		COMMENT
+		COMMENT <p>This always returns {@code false} for direct entries, since tags are managed by
+		COMMENT a registry.
+		ARG 1 tag
+	METHOD method_40223 of (Ljava/lang/Object;)Lnet/minecraft/class_6880;
+		COMMENT {@return a new direct registry entry of {@code value}}
+		ARG 0 value
+	METHOD method_40224 matches (Ljava/util/function/Predicate;)Z
+		COMMENT {@return whether this entry's key matches {@code predicate}}
+		COMMENT
+		COMMENT <p>This always returns {@code false} for direct entries.
+		ARG 1 predicate
+	METHOD method_40225 matchesKey (Lnet/minecraft/class_5321;)Z
+		COMMENT {@return whether the registry key of this entry is {@code key}}
+		COMMENT
+		COMMENT <p>This always returns {@code false} for direct entries.
+		ARG 1 key
+	METHOD method_40226 matchesId (Lnet/minecraft/class_2960;)Z
+		COMMENT {@return whether the ID of this entry is {@code id}}
+		COMMENT
+		COMMENT <p>This always returns {@code false} for direct entries.
+		ARG 1 id
+	METHOD method_40227 hasKeyAndValue ()Z
+	METHOD method_40228 streamTags ()Ljava/util/stream/Stream;
+		COMMENT {@return a stream of the tags of this entry, or an empty stream if this is a direct entry}
+	METHOD method_40229 getKeyOrValue ()Lcom/mojang/datafixers/util/Either;
+		COMMENT {@return the object that identifies this registry key}
+		COMMENT
+		COMMENT <p>For direct entries, this is the held value, and for reference entries, this is the
+		COMMENT key of the entry.
+	METHOD method_40230 getKey ()Ljava/util/Optional;
+		COMMENT {@return the registry key of this entry, or an empty optional if this is a direct entry}
+	METHOD method_40231 getType ()Lnet/minecraft/class_6880$class_6882;
+		COMMENT {@return the type (direct or reference) of this registry entry}
+		COMMENT
+		COMMENT <p>This is different from the types of reference registry entries, i.e.
+		COMMENT stand-alone or intrusive.
+	METHOD method_46745 ownerEquals (Lnet/minecraft/class_7876;)Z
+		ARG 1 owner
+	CLASS class_6881 Direct
+		COMMENT A direct registry entry holds the value directly. The value does not have to be
+		COMMENT registered in a registry. Therefore, they receive no ID or registry key, and they
+		COMMENT cannot be tagged.
+		COMMENT
+		COMMENT <p>This is most often used in data packs to inline one-time use values directly.
+	CLASS class_6882 Type
+		COMMENT The types of registry entries.
+		COMMENT
+		COMMENT @see RegistryEntry
+	CLASS class_6883 Reference
+		COMMENT A reference registry entry holds the value by reference. The value is previously
+		COMMENT registered in a registry, so they can be referred to by their registry keys.
+		COMMENT This object also holds the entry's tags.
+		COMMENT
+		COMMENT <p>There are two types of reference registry entries.
+		COMMENT
+		COMMENT <ul>
+		COMMENT <li><strong>Stand-alone</strong> registry entries are first instantiated by its key,
+		COMMENT and the value is set when registering the value. This is used by most of the registries.</li>
+		COMMENT <li><strong>Intrusive</strong> registry entries are registry entries tied to a specific
+		COMMENT registerable object at instantiation time. When instantiating those, it promises
+		COMMENT that the object is later registered - which, if broken, will result in a crash.
+		COMMENT This is used for {@link net.minecraft.registry.Registries#BLOCK}, {@link
+		COMMENT net.minecraft.registry.Registries#ITEM}, {@link net.minecraft.registry.Registries#FLUID},
+		COMMENT {@link net.minecraft.registry.Registries#ENTITY_TYPE}, and {@link
+		COMMENT net.minecraft.registry.Registries#GAME_EVENT} registries. This type
+		COMMENT exists for historical reasons and is deprecated.</li>
+		COMMENT </ul>
+		COMMENT
+		COMMENT <p>Therefore, it is very important to construct any intrusive-entry type object
+		COMMENT and register at the same time. For example, a mod that conditionally registers an
+		COMMENT {@link net.minecraft.item.Item} has to create an instance only if the condition is met.
+		COMMENT (See {@link net.minecraft.registry.Registry} for a code example.)
+		COMMENT
+		COMMENT <p>When a reference registry entry is first instantiated, it only has either the key
+		COMMENT or the value (depending on the type). They are later filled when registering the
+		COMMENT entry. Attempting to call methods before those fields are filled
+		COMMENT can cause a crash. Note that if you are just getting the entry from a registry, this
+		COMMENT should not be a problem.
+		COMMENT
+		COMMENT @see net.minecraft.registry.Registry#entryOf
+		COMMENT @see net.minecraft.registry.Registry#getEntry
+		FIELD field_36450 tags Ljava/util/Set;
+		FIELD field_36451 referenceType Lnet/minecraft/class_6880$class_6883$class_6884;
+		FIELD field_36452 registryKey Lnet/minecraft/class_5321;
+		FIELD field_36453 value Ljava/lang/Object;
+		FIELD field_40930 owner Lnet/minecraft/class_7876;
+		METHOD <init> (Lnet/minecraft/class_6880$class_6883$class_6884;Lnet/minecraft/class_7876;Lnet/minecraft/class_5321;Ljava/lang/Object;)V
+			ARG 1 referenceType
+			ARG 2 owner
+			ARG 3 registryKey
+			ARG 4 value
+		METHOD method_40233 intrusive (Lnet/minecraft/class_7876;Ljava/lang/Object;)Lnet/minecraft/class_6880$class_6883;
+			COMMENT {@return a new intrusive registry entry}
+			COMMENT
+			COMMENT <p>This should not be called manually. Call {@link net.minecraft.registry.Registry#entryOf} or
+			COMMENT {@link net.minecraft.registry.Registry#getEntry} instead.
+			COMMENT
+			COMMENT <p>Callers are responsible for filling the key later by calling {@link
+			COMMENT #setRegistryKey}.
+			COMMENT
+			COMMENT @deprecated Intrusive holders exist for legacy reasons only.
+			ARG 0 owner
+			ARG 1 value
+		METHOD method_40234 standAlone (Lnet/minecraft/class_7876;Lnet/minecraft/class_5321;)Lnet/minecraft/class_6880$class_6883;
+			COMMENT {@return a new stand-alone registry entry}
+			COMMENT
+			COMMENT <p>This should not be called manually. Call {@link net.minecraft.registry.Registry#entryOf} or
+			COMMENT {@link net.minecraft.registry.Registry#getEntry} instead.
+			COMMENT
+			COMMENT <p>Callers are responsible for filling the value later by calling {@link
+			COMMENT #setValue}.
+			ARG 0 owner
+			ARG 1 registryKey
+		METHOD method_40235 setTags (Ljava/util/Collection;)V
+			ARG 1 tags
+		METHOD method_40237 registryKey ()Lnet/minecraft/class_5321;
+			COMMENT {@return the registry key of this entry}
+			COMMENT
+			COMMENT @throws IllegalStateException if this is an intrusive entry and it is not initialized yet
+		METHOD method_45917 setRegistryKey (Lnet/minecraft/class_5321;)V
+			ARG 1 registryKey
+		METHOD method_45918 setValue (Ljava/lang/Object;)V
+			ARG 1 value
+		CLASS class_6884 Type
+			COMMENT The types of reference registry entries.
+			COMMENT
+			COMMENT @see RegistryEntry.Reference

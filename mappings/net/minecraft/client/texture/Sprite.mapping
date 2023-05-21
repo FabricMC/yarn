@@ -1,125 +1,36 @@
 CLASS net/minecraft/class_1058 net/minecraft/client/texture/Sprite
-	FIELD field_21750 atlas Lnet/minecraft/class_1059;
-	FIELD field_28464 LOGGER Lorg/slf4j/Logger;
-	FIELD field_28465 id Lnet/minecraft/class_2960;
-	FIELD field_28466 width I
-	FIELD field_28467 height I
-	FIELD field_28468 animation Lnet/minecraft/class_1058$class_5790;
+	FIELD field_40552 atlasId Lnet/minecraft/class_2960;
+	FIELD field_40553 contents Lnet/minecraft/class_7764;
 	FIELD field_5256 y I
 	FIELD field_5258 x I
-	FIELD field_5262 images [Lnet/minecraft/class_1011;
-	FIELD field_5267 vMax F
-	FIELD field_5268 vMin F
-	FIELD field_5269 uMax F
-	FIELD field_5270 uMin F
-	METHOD <init> (Lnet/minecraft/class_1059;Lnet/minecraft/class_1058$class_4727;IIIIILnet/minecraft/class_1011;)V
-		ARG 1 atlas
-		ARG 2 info
-		ARG 3 maxLevel
-		ARG 4 atlasWidth
-		ARG 5 atlasHeight
-		ARG 6 x
-		ARG 7 y
-		ARG 8 image
+	FIELD field_5267 maxV F
+	FIELD field_5268 minV F
+	FIELD field_5269 maxU F
+	FIELD field_5270 minU F
+	METHOD <init> (Lnet/minecraft/class_2960;Lnet/minecraft/class_7764;IIII)V
+		ARG 1 atlasId
+		ARG 2 contents
+		ARG 3 atlasWidth
+		ARG 4 atlasHeight
+		ARG 5 x
+		ARG 6 y
 	METHOD method_23841 getFrameDeltaFactor ()F
 	METHOD method_23842 getAnimationFrameDelta ()F
 	METHOD method_24108 getTextureSpecificVertexConsumer (Lnet/minecraft/class_4588;)Lnet/minecraft/class_4588;
 		ARG 1 consumer
-	METHOD method_24119 getAtlas ()Lnet/minecraft/class_1059;
-	METHOD method_33437 createAnimation (Lnet/minecraft/class_1058$class_4727;III)Lnet/minecraft/class_1058$class_5790;
-		ARG 1 info
-		ARG 2 nativeImageWidth
-		ARG 3 nativeImageHeight
-		ARG 4 maxLevel
-	METHOD method_33439 (Lit/unimi/dsi/fastutil/ints/IntSet;I)Z
-		ARG 0 index
-	METHOD method_33440 (Ljava/util/List;II)V
-		ARG 1 index
-		ARG 2 time
-	METHOD method_33442 getDistinctFrameCount ()Ljava/util/stream/IntStream;
-	METHOD method_33443 getAnimation ()Lnet/minecraft/class_1061;
+	METHOD method_33437 createAnimation ()Lnet/minecraft/class_1058$class_7770;
 	METHOD method_35806 getX ()I
 	METHOD method_35807 getY ()I
 	METHOD method_4570 getFrameV (D)F
 		ARG 1 frame
 	METHOD method_4575 getMaxV ()F
 	METHOD method_4577 getMaxU ()F
-	METHOD method_4578 getWidth ()I
-	METHOD method_4579 upload (II[Lnet/minecraft/class_1011;)V
-		ARG 1 frameX
-		ARG 2 frameY
-		ARG 3 output
 	METHOD method_4580 getFrameU (D)F
 		ARG 1 frame
-	METHOD method_4583 isPixelTransparent (III)Z
-		ARG 1 frame
-		ARG 2 x
-		ARG 3 y
 	METHOD method_4584 upload ()V
-	METHOD method_4592 getFrameCount ()I
+	METHOD method_45851 getContents ()Lnet/minecraft/class_7764;
+	METHOD method_45852 getAtlasId ()Lnet/minecraft/class_2960;
 	METHOD method_4593 getMinV ()F
 	METHOD method_4594 getMinU ()F
-	METHOD method_4595 getHeight ()I
-	METHOD method_4598 getId ()Lnet/minecraft/class_2960;
-	CLASS class_4727 Info
-		FIELD field_21753 id Lnet/minecraft/class_2960;
-		FIELD field_21754 width I
-		FIELD field_21755 height I
-		FIELD field_21756 animationData Lnet/minecraft/class_1079;
-		METHOD <init> (Lnet/minecraft/class_2960;IILnet/minecraft/class_1079;)V
-			ARG 1 id
-			ARG 2 width
-			ARG 3 height
-			ARG 4 animationData
-		METHOD method_24121 getId ()Lnet/minecraft/class_2960;
-		METHOD method_24123 getWidth ()I
-		METHOD method_24125 getHeight ()I
-	CLASS class_4728 Interpolation
-		FIELD field_21758 images [Lnet/minecraft/class_1011;
-		METHOD <init> (Lnet/minecraft/class_1058;Lnet/minecraft/class_1058$class_4727;I)V
-			ARG 2 info
-			ARG 3 maxLevel
-		METHOD method_24128 apply (Lnet/minecraft/class_1058$class_5790;)V
-			COMMENT Linearly interpolate between the current and next frame on all mip levels
-			COMMENT based on the tick position within the current frame,
-			COMMENT and upload the results to the currently bound texture to the frame slot at position (0,0).
-			ARG 1 animation
-		METHOD method_24129 lerp (DII)I
-			COMMENT Purely mathematical single-value linear interpolation.
-			COMMENT {@code lerp(0, a, b) == b}, {@code lerp(1, a, b) == a}.
-			ARG 1 delta
-			ARG 3 to
-			ARG 4 from
-		METHOD method_24130 getPixelColor (Lnet/minecraft/class_1058$class_5790;IIII)I
-			COMMENT {@return the pixel color at frame {@code frameIndex} within mipmap {@code layer} at sprite relative coordinates}
-			ARG 1 animation
-			ARG 2 frameIndex
-			ARG 3 layer
-			ARG 4 x
-			ARG 5 y
-	CLASS class_5790 Animation
-		FIELD field_28470 frameIndex I
-		FIELD field_28471 frameTicks I
-		FIELD field_28472 frames Ljava/util/List;
-		FIELD field_28473 frameCount I
-		FIELD field_28474 interpolation Lnet/minecraft/class_1058$class_4728;
-		METHOD <init> (Lnet/minecraft/class_1058;Ljava/util/List;ILnet/minecraft/class_1058$class_4728;)V
-			ARG 2 frames
-			ARG 3 frameCount
-			ARG 4 interpolation
-		METHOD method_33445 upload ()V
-		METHOD method_33446 getFrameX (I)I
-			ARG 1 frame
-		METHOD method_33449 (Lnet/minecraft/class_1058$class_5791;)I
-			ARG 0 frame
-		METHOD method_33450 getDistinctFrameCount ()Ljava/util/stream/IntStream;
-		METHOD method_33451 getFrameY (I)I
-			ARG 1 frame
-		METHOD method_33455 upload (I)V
-			ARG 1 frameIndex
-	CLASS class_5791 AnimationFrame
-		FIELD field_28475 index I
-		FIELD field_28476 time I
-		METHOD <init> (II)V
-			ARG 1 index
-			ARG 2 time
+	CLASS class_7770 TickableAnimation
+		METHOD method_45853 tick ()V

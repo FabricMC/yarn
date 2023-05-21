@@ -2,6 +2,7 @@ CLASS net/minecraft/class_1542 net/minecraft/entity/ItemEntity
 	FIELD field_30456 DESPAWN_AGE I
 	FIELD field_30457 CANNOT_PICK_UP_DELAY I
 	FIELD field_30458 NEVER_DESPAWN_AGE I
+	FIELD field_41893 owner Ljava/util/UUID;
 	FIELD field_7199 STACK Lnet/minecraft/class_2940;
 	FIELD field_7200 thrower Ljava/util/UUID;
 	FIELD field_7201 health I
@@ -12,7 +13,6 @@ CLASS net/minecraft/class_1542 net/minecraft/entity/ItemEntity
 		COMMENT It is a short value with key {@code Age} in the NBT structure.
 		COMMENT
 		COMMENT <p>It differs from {@link Entity#age}.
-	FIELD field_7205 owner Ljava/util/UUID;
 	METHOD <init> (Lnet/minecraft/class_1542;)V
 		ARG 1 entity
 	METHOD <init> (Lnet/minecraft/class_1937;DDDLnet/minecraft/class_1799;)V
@@ -54,7 +54,8 @@ CLASS net/minecraft/class_1542 net/minecraft/entity/ItemEntity
 		ARG 1 tickDelta
 	METHOD method_29271 copy ()Lnet/minecraft/class_1542;
 	METHOD method_35190 setNeverDespawn ()V
-	METHOD method_44329 getEventSource ()Lnet/minecraft/class_1297;
+	METHOD method_48349 setOwner (Ljava/util/UUID;)V
+		ARG 1 owner
 	METHOD method_6972 tryMerge (Lnet/minecraft/class_1542;)V
 		ARG 1 other
 	METHOD method_6973 tryMerge ()V
@@ -66,9 +67,6 @@ CLASS net/minecraft/class_1542 net/minecraft/entity/ItemEntity
 	METHOD method_6977 cannotPickup ()Z
 		COMMENT Returns whether the pickup delay of this item entity is greater
 		COMMENT than 0.
-	METHOD method_6978 getThrower ()Ljava/util/UUID;
-		COMMENT Returns the UUID of the entity which created this item entity
-		COMMENT by throwing an item, or {@code null} if it was created otherwise.
 	METHOD method_6979 setStack (Lnet/minecraft/class_1799;)V
 		COMMENT Sets the item stack contained in this item entity to {@code stack}.
 		ARG 1 stack
@@ -81,12 +79,6 @@ CLASS net/minecraft/class_1542 net/minecraft/entity/ItemEntity
 		ARG 1 pickupDelay
 	METHOD method_6983 getStack ()Lnet/minecraft/class_1799;
 		COMMENT Returns the item stack contained in this item entity.
-	METHOD method_6984 setOwner (Ljava/util/UUID;)V
-		COMMENT Sets the owner of this item entity to {@code owner}.
-		COMMENT
-		COMMENT <p>Used when an item is given to an entity, but this entity
-		COMMENT does not have enough space in its inventory.
-		ARG 1 owner
 	METHOD method_6985 getItemAge ()I
 		COMMENT Returns the number of ticks since this item entity has been created.
 		COMMENT
@@ -97,12 +89,6 @@ CLASS net/minecraft/class_1542 net/minecraft/entity/ItemEntity
 		COMMENT between the client and the server.
 		COMMENT
 		COMMENT @see #tick()
-	METHOD method_6986 getOwner ()Ljava/util/UUID;
-		COMMENT Returns the UUID of the entity to which belongs this item entity,
-		COMMENT or {@code null} if there is not.
-		COMMENT
-		COMMENT <p>If there is one, the owner is the only entity which can pick
-		COMMENT up this item entity.
 	METHOD method_6987 setDespawnImmediately ()V
 	METHOD method_6988 setToDefaultPickupDelay ()V
 		COMMENT Sets the number of ticks before this item entity can be picked up
