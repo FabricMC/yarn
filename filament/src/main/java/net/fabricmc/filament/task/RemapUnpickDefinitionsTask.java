@@ -106,7 +106,7 @@ public abstract class RemapUnpickDefinitionsTask extends DefaultTask {
 					String toClass = classDef.getName(toM);
 
 					if (fromClass == null || toClass == null) {
-						contiune;
+						continue;
 					}
 
 					classMappings.put(fromClass, toClass);
