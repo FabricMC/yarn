@@ -2,7 +2,11 @@ CLASS net/minecraft/class_4604 net/minecraft/client/render/Frustum
 	FIELD field_20995 x D
 	FIELD field_20996 y D
 	FIELD field_20997 z D
+	FIELD field_34820 RECESSION_SCALE I
+	FIELD field_34821 recession Lorg/joml/Vector4f;
+		COMMENT The vector corresponding to the direction toward the far plane of the frustum.
 	FIELD field_40823 frustumIntersection Lorg/joml/FrustumIntersection;
+	FIELD field_40824 positionProjectionMatrix Lorg/joml/Matrix4f;
 	METHOD <init> (Lnet/minecraft/class_4604;)V
 		ARG 1 frustum
 	METHOD <init> (Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V
@@ -20,7 +24,13 @@ CLASS net/minecraft/class_4604 net/minecraft/client/render/Frustum
 		ARG 9 maxY
 		ARG 11 maxZ
 	METHOD method_23092 init (Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V
+		COMMENT @implNote The upper-left 3x3 matrix of {@code positionMatrix * projectionMatrix}
+		COMMENT should be orthogonal for {@link Frustum#recession} to be set to a meaningful value.
 		ARG 1 positionMatrix
 		ARG 2 projectionMatrix
 	METHOD method_23093 isVisible (Lnet/minecraft/class_238;)Z
 		ARG 1 box
+	METHOD method_38557 coverBoxAroundSetPosition (I)Lnet/minecraft/class_4604;
+		COMMENT Moves the frustum backwards until it entirely covers the cell containing the
+		COMMENT current position in a cubic lattice with cell size {@code boxSize}.
+		ARG 1 boxSize

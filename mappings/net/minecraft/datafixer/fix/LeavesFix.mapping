@@ -1,11 +1,27 @@
 CLASS net/minecraft/class_1191 net/minecraft/datafixer/fix/LeavesFix
 	FIELD field_5686 LOGS_MAP Ljava/util/Set;
+	FIELD field_5687 AXIAL_OFFSETS [[I
 	FIELD field_5688 LEAVES_MAP Lit/unimi/dsi/fastutil/objects/Object2IntMap;
 	METHOD <init> (Lcom/mojang/datafixers/schemas/Schema;Z)V
 		ARG 1 outputSchema
 		ARG 2 changesType
+	METHOD method_5050 getZ (I)I
+		ARG 1 packedLocalPos
+	METHOD method_5051 packLocalPos (III)I
+		ARG 0 localX
+		ARG 1 localY
+		ARG 2 localZ
+	METHOD method_5052 getX (I)I
+		ARG 1 packedLocalPos
 	METHOD method_5055 (Lit/unimi/dsi/fastutil/objects/Object2IntOpenHashMap;)V
 		ARG 0 map
+	METHOD method_5061 getBoundaryClassBit (ZZZZ)I
+		ARG 0 westernmost
+		ARG 1 easternmost
+		ARG 2 northernmost
+		ARG 3 southernmost
+	METHOD method_5062 getY (I)I
+		ARG 1 packedLocalPos
 	CLASS class_1192 LeavesLogFixer
 		FIELD field_29897 PERSISTENT Ljava/lang/String;
 		FIELD field_29898 DECAYABLE Ljava/lang/String;
@@ -16,14 +32,21 @@ CLASS net/minecraft/class_1191 net/minecraft/datafixer/fix/LeavesFix
 		METHOD method_5065 getDistanceToLog (I)I
 		METHOD method_5068 isLog (I)Z
 		METHOD method_5070 computeLeafStates (III)V
+			ARG 3 distance
 		METHOD method_5071 isLeaf (I)Z
 		METHOD method_5072 createLeafProperties (Lcom/mojang/serialization/Dynamic;Ljava/lang/String;ZI)Lcom/mojang/serialization/Dynamic;
+			ARG 1 tag
+			ARG 2 name
+			ARG 3 persistent
+			ARG 4 distance
 	CLASS class_1193 ListFixer
 		FIELD field_29900 BLOCK_STATES_KEY Ljava/lang/String;
 		FIELD field_29901 NAME_KEY Ljava/lang/String;
 		FIELD field_29902 PROPERTIES_KEY Ljava/lang/String;
 		FIELD field_5692 properties Ljava/util/List;
+		FIELD field_5693 paletteFinder Lcom/mojang/datafixers/OpticFinder;
 		FIELD field_5694 y I
+		FIELD field_5695 blockStateType Lcom/mojang/datafixers/types/Type;
 		FIELD field_5696 blockStateMap Lnet/minecraft/class_5298;
 		METHOD method_5074 computeFixableBlockStates (Lcom/mojang/serialization/Dynamic;)V
 		METHOD method_5075 needsFix (I)I
@@ -34,3 +57,4 @@ CLASS net/minecraft/class_1191 net/minecraft/datafixer/fix/LeavesFix
 		METHOD method_5082 computeFlags (Ljava/lang/String;ZI)I
 			ARG 1 leafBlockName
 			ARG 2 persistent
+			ARG 3 distance

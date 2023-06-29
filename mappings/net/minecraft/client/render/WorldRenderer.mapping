@@ -1,5 +1,12 @@
 CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_20793 rainSoundCounter I
+	FIELD field_20794 NORMAL_LINE_DX [F
+		COMMENT Given {@code -16 <= z < 16} and {@code -16 <= x < 16}, let {@code i = 32 * (z + 16) + (x + 16)}.
+		COMMENT Then {@code NORMAL_LINE_DX[i]} and {@code NORMAL_LINE_DZ[i]} describe the
+		COMMENT unit vector perpendicular to {@code (x, z)}.
+		COMMENT
+		COMMENT These lookup tables are used for rendering rain and snow.
+	FIELD field_20795 NORMAL_LINE_DZ [F
 	FIELD field_20797 RAIN Lnet/minecraft/class_2960;
 	FIELD field_20798 SNOW Lnet/minecraft/class_2960;
 	FIELD field_20950 blockBreakingProgressions Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
@@ -100,7 +107,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 6 camera
 		ARG 7 gameRenderer
 		ARG 8 lightmapTextureManager
-		ARG 9 positionMatrix
+		ARG 9 projectionMatrix
 	METHOD method_22712 drawBlockOutline (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Lnet/minecraft/class_1297;DDDLnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 1 matrices
 		ARG 2 vertexConsumer
@@ -186,6 +193,19 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 10 green
 		ARG 11 blue
 		ARG 12 alpha
+		ARG 13 colorize
+	METHOD method_22984 renderCapturedFrustumVertex (Lnet/minecraft/class_4588;Lorg/joml/Matrix4f;I)V
+		ARG 1 vertexConsumer
+		ARG 3 planeNum
+	METHOD method_22985 renderCapturedFrustumFace (Lnet/minecraft/class_4588;Lorg/joml/Matrix4f;IIIIIII)V
+		ARG 1 vertexConsumer
+		ARG 3 plane0
+		ARG 4 plane1
+		ARG 5 plane2
+		ARG 6 plane3
+		ARG 7 r
+		ARG 8 g
+		ARG 9 b
 	METHOD method_22986 (Lnet/minecraft/class_4597$class_4598;Lnet/minecraft/class_4588;Lnet/minecraft/class_1921;)Lnet/minecraft/class_4588;
 		ARG 2 renderLayer
 	METHOD method_22987 removeBlockBreakingInfo (Lnet/minecraft/class_3191;)V
@@ -256,10 +276,28 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 2 projectionMatrix
 		ARG 3 tickDelta
 		ARG 4 camera
+		ARG 5 thickFog
+		ARG 6 fogCallback
+	METHOD method_3258 renderFilledBox (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;DDDDDDFFFF)V
+		ARG 0 matrices
+		ARG 1 vertexConsumer
+		ARG 2 minX
+		ARG 4 minY
+		ARG 6 minZ
+		ARG 8 maxX
+		ARG 10 maxY
+		ARG 12 maxZ
+		ARG 14 red
+		ARG 15 green
+		ARG 16 blue
+		ARG 17 alpha
 	METHOD method_3259 renderClouds (Lnet/minecraft/class_4587;Lorg/joml/Matrix4f;FDDD)V
 		ARG 1 matrices
 		ARG 2 projectionMatrix
 		ARG 3 tickDelta
+		ARG 4 cameraX
+		ARG 6 cameraY
+		ARG 8 cameraZ
 	METHOD method_3265 renderDarkSky ()V
 	METHOD method_3267 cleanUp ()V
 	METHOD method_3268 getRandomParticleSpawnChance (Z)Lnet/minecraft/class_4066;
@@ -275,6 +313,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 4 spectator
 	METHOD method_3275 captureFrustum (Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;DDDLnet/minecraft/class_4604;)V
 		ARG 1 positionMatrix
+		ARG 2 projectionMatrix
 		ARG 3 x
 		ARG 5 y
 		ARG 7 z
@@ -381,6 +420,26 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 1 pos
 	METHOD method_43788 hasBlindnessOrDarkness (Lnet/minecraft/class_4184;)Z
 		ARG 1 camera
+	METHOD method_49041 renderFilledBox (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;FFFFFFFFFF)V
+		ARG 0 matrices
+		ARG 1 vertexConsumer
+		ARG 2 minX
+		ARG 3 minY
+		ARG 4 minZ
+		ARG 5 maxX
+		ARG 6 maxY
+		ARG 7 maxZ
+		ARG 8 red
+		ARG 9 green
+		ARG 10 blue
+		ARG 11 alpha
+	METHOD method_51778 getMaxIntensityColor (F)Lnet/minecraft/class_243;
+		ARG 0 hue
+	METHOD method_51779 shiftHue (FFFF)Lnet/minecraft/class_243;
+		ARG 0 red
+		ARG 1 green
+		ARG 2 blue
+		ARG 3 hueOffset
 	METHOD method_8562 playSong (Lnet/minecraft/class_3414;Lnet/minecraft/class_2338;)V
 		ARG 1 song
 		ARG 2 songPosition
@@ -446,6 +505,10 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 			ARG 1 ordinal
 		METHOD method_34816 addDirection (Lnet/minecraft/class_2350;)V
 			ARG 1 direction
+		METHOD method_49633 isOriginInSection (III)Z
+			ARG 1 sectionX
+			ARG 2 sectionY
+			ARG 3 sectionZ
 	CLASS class_5347 ProgramInitException
 		METHOD <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
 			ARG 1 message
