@@ -133,18 +133,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	FIELD field_33284 MAX_TEXT_LENGTH I
 		COMMENT The maximum size, in terms of JSON string length, allowed of the text read by
 		COMMENT {@link #readText()} or written by {@link #writeText(Text)}.
-	FIELD field_33285 MAX_VAR_INT_LENGTH I
-		COMMENT The max number of bytes an encoded var int value may use.
-		COMMENT
-		COMMENT <p>Its value is {@value}. A regular int value always use 4 bytes in contrast.
-		COMMENT
-		COMMENT @see #getVarIntLength(int)
-	FIELD field_33286 MAX_VAR_LONG_LENGTH I
-		COMMENT The max number of bytes an encoded var long value may use.
-		COMMENT
-		COMMENT <p>Its value is {@value}. A regular long value always use 8 bytes in contrast.
-		COMMENT
-		COMMENT @see #getVarLongLength(long)
 	FIELD field_33287 MAX_READ_NBT_SIZE I
 		COMMENT The maximum size, in number of bytes, allowed of the NBT compound read by
 		COMMENT {@link #readNbt()}.
@@ -302,8 +290,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readString()
 		COMMENT @see #readString(int)
 		COMMENT @see #writeString(String)
-		ARG 1 string
-			COMMENT the string to write
 		ARG 2 maxLength
 			COMMENT the max length of the byte array
 	METHOD method_10789 writeLongArray ([J)Lnet/minecraft/class_2540;
@@ -347,7 +333,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readItemStack()
 		ARG 1 stack
 			COMMENT the stack to write
-	METHOD method_10794 writeNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540;
+	METHOD method_10794 writeNbt (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2540;
 		COMMENT Writes an NBT compound to this buf. The binary representation of NBT is
 		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If {@code compound} is {@code
 		COMMENT null}, it is treated as an NBT null.
@@ -358,8 +344,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readNbt()
 		COMMENT @see #readUnlimitedNbt()
 		COMMENT @see #readNbt(NbtTagSizeTracker)
-		ARG 1 compound
-			COMMENT the compound to write
 	METHOD method_10795 readByteArray ()[B
 		COMMENT Reads an array of primitive bytes from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the actual bytes. The array
@@ -576,14 +560,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #writeString(String, int)
 		ARG 1 string
 			COMMENT the string to write
-	METHOD method_10815 getVarIntLength (I)I
-		COMMENT Returns the number of bytes needed to encode {@code value} as a
-		COMMENT {@linkplain #writeVarInt(int) var int}. Guaranteed to be between {@code
-		COMMENT 1} and {@value #MAX_VAR_INT_LENGTH}.
-		COMMENT
-		COMMENT @return the number of bytes a var int {@code value} uses
-		ARG 0 value
-			COMMENT the value to encode
 	METHOD method_10816 readVarInt ()I
 		COMMENT Reads a single var int from this buf.
 		COMMENT
@@ -645,7 +621,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readString(int)
 		COMMENT @see #writeString(String)
 		COMMENT @see #writeString(String, int)
-	METHOD method_29171 decode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Codec;)Ljava/lang/Object;
+	METHOD method_29171 decode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Codec;Lnet/minecraft/class_2505;)Ljava/lang/Object;
 		COMMENT Reads an object from this buf as a compound NBT with the given codec.
 		COMMENT
 		COMMENT @param <T> the decoded object's type
@@ -655,7 +631,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #encode(DynamicOps, Codec, Object)
 		ARG 1 ops
 		ARG 2 codec
-	METHOD method_29172 encode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Codec;Ljava/lang/Object;)V
+	METHOD method_29172 encode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Codec;Ljava/lang/Object;)Lnet/minecraft/class_2540;
 		COMMENT Writes an object to this buf as a compound NBT with the given codec.
 		COMMENT
 		COMMENT @param <T> the encoded object's type
@@ -665,7 +641,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 ops
 		ARG 2 codec
 		ARG 3 value
-	METHOD method_30616 readNbt (Lnet/minecraft/class_2505;)Lnet/minecraft/class_2487;
+	METHOD method_30616 readNbt (Lnet/minecraft/class_2505;)Lnet/minecraft/class_2520;
 		COMMENT Reads an NBT compound from this buf. The binary representation of NBT is
 		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an NBT null is encountered,
 		COMMENT this method returns {@code null}. The compound can have a maximum size
@@ -678,19 +654,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readNbt()
 		COMMENT @see #readUnlimitedNbt()
 		ARG 1 sizeTracker
-	METHOD method_30617 readUnlimitedNbt ()Lnet/minecraft/class_2487;
-		COMMENT Reads an NBT compound from this buf. The binary representation of NBT is
-		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an NBT null is encountered,
-		COMMENT this method returns {@code null}. The compound does not have a size limit.
-		COMMENT
-		COMMENT @apiNote Since this version does not have a size limit, it may be
-		COMMENT vulnerable to malicious NBT spam attacks.
-		COMMENT
-		COMMENT @return the read compound, may be {@code null}
-		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
-		COMMENT @see #writeNbt(NbtCompound)
-		COMMENT @see #readNbt()
-		COMMENT @see #readNbt(NbtTagSizeTracker)
 	METHOD method_33134 readLongArray ()[J
 		COMMENT Reads an array of primitive longs from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the regular long (not var
@@ -812,16 +775,8 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 			COMMENT a factory that creates a map with a given size
 		ARG 2 keyReader
 		ARG 3 valueReader
-	METHOD method_34070 (Lnet/minecraft/class_2487;Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
+	METHOD method_34070 (Lnet/minecraft/class_2520;Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
 		ARG 1 error
-	METHOD method_36129 getVarLongLength (J)I
-		COMMENT Returns the number of bytes needed to encode {@code value} as a
-		COMMENT {@linkplain #writeVarLong(int) var long}. Guaranteed to be between {@code
-		COMMENT 1} and {@value #MAX_VAR_LONG_LENGTH}.
-		COMMENT
-		COMMENT @return the number of bytes a var long {@code value} uses
-		ARG 0 value
-			COMMENT the value to encode
 	METHOD method_36130 writeChunkPos (Lnet/minecraft/class_1923;)Lnet/minecraft/class_2540;
 		COMMENT Writes a chunk position to this buf. A chunk position is represented by
 		COMMENT a regular long.
@@ -838,9 +793,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readChunkSectionPos()
 		ARG 1 pos
 			COMMENT the section position to write
-	METHOD method_36132 getWrittenBytes ()[B
-		COMMENT Returns an array of bytes of contents in this buf between index {@code 0} and
-		COMMENT the {@link #writerIndex()}.
 	METHOD method_36133 readChunkPos ()Lnet/minecraft/class_1923;
 		COMMENT Reads a chunk position from this buf. A chunk position is represented by
 		COMMENT a regular long.
@@ -906,7 +858,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT exists if signed).
 		COMMENT
 		COMMENT @see #readProperty()
-		ARG 1 property
 	METHOD method_43619 writeEither (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/class_2540$class_7462;Lnet/minecraft/class_2540$class_7462;)V
 		COMMENT Writes an {@code Either} to this buf. An either is represented by
 		COMMENT a boolean indicating if the left side or the right side of the either,
@@ -1014,8 +965,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @return the read public key
 		COMMENT @throws io.netty.handler.codec.DecoderException if the public key is malformed
 		COMMENT @see #writePublicKey(PublicKey)
-	METHOD method_44302 toEncodedStringLength (I)I
-		ARG 0 decodedLength
 	METHOD method_46249 writePropertyMap (Lcom/mojang/authlib/properties/PropertyMap;)V
 		COMMENT Writes an authlib property map to this buf. A property map is represented as a
 		COMMENT collection of properties.
