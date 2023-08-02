@@ -15,14 +15,32 @@ CLASS net/minecraft/class_3853 net/minecraft/village/TradeOffers
 	FIELD field_30626 MASTER_TRADE_XP I
 	FIELD field_30627 LOW_PRICE_MULTIPLIER F
 	FIELD field_30628 HIGH_PRICE_MULTIPLIER F
+	FIELD field_45128 REBALANCED_PROFESSION_TO_LEVELED_TRADE Ljava/util/Map;
+	FIELD field_45129 REBALANCED_WANDERING_TRADER_TRADES Ljava/util/List;
 	METHOD method_16928 copyToFastUtilMap (Lcom/google/common/collect/ImmutableMap;)Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 		ARG 0 map
 	METHOD method_16929 (Ljava/util/HashMap;)V
 		ARG 0 map
+	METHOD method_52551 createMasterLibrarianTradeFactory ()Lnet/minecraft/class_3853$class_1652;
+	METHOD method_52552 createLibrarianTradeFactory (I)Lnet/minecraft/class_3853$class_1652;
+		ARG 0 experience
+	METHOD method_52553 createPotionStack (Lnet/minecraft/class_1842;)Lnet/minecraft/class_1799;
+		ARG 0 potion
 	CLASS class_1648 EnchantBookFactory
 		FIELD field_18557 experience I
+		FIELD field_45131 possibleEnchantments Ljava/util/List;
+		FIELD field_45132 minLevel I
+		FIELD field_45133 maxLevel I
 		METHOD <init> (I)V
 			ARG 1 experience
+		METHOD <init> (III[Lnet/minecraft/class_1887;)V
+			ARG 1 experience
+			ARG 2 minLevel
+			ARG 3 maxLevel
+			ARG 4 possibleEnchantments
+		METHOD <init> (I[Lnet/minecraft/class_1887;)V
+			ARG 1 experience
+			ARG 2 possibleEnchantments
 	CLASS class_1652 Factory
 		COMMENT A factory to create trade offers.
 		METHOD method_7246 create (Lnet/minecraft/class_1297;Lnet/minecraft/class_5819;)Lnet/minecraft/class_1914;
@@ -60,15 +78,28 @@ CLASS net/minecraft/class_3853 net/minecraft/village/TradeOffers
 			ARG 4 experience
 		METHOD method_19200 getDye (Lnet/minecraft/class_5819;)Lnet/minecraft/class_1769;
 			ARG 0 random
-	CLASS class_4161 BuyForOneEmeraldFactory
+	CLASS class_4161 BuyItemFactory
 		FIELD field_18549 price I
 		FIELD field_18550 maxUses I
 		FIELD field_18551 experience I
 		FIELD field_18552 multiplier F
+		FIELD field_45130 stack Lnet/minecraft/class_1799;
 		METHOD <init> (Lnet/minecraft/class_1799;III)V
-			ARG 2 price
+			ARG 1 stack
+			ARG 2 maxUses
+			ARG 3 experience
+			ARG 4 price
+		METHOD <init> (Lnet/minecraft/class_1935;III)V
+			ARG 1 item
+			ARG 2 count
 			ARG 3 maxUses
 			ARG 4 experience
+		METHOD <init> (Lnet/minecraft/class_1935;IIII)V
+			ARG 1 item
+			ARG 2 count
+			ARG 3 maxUses
+			ARG 4 experience
+			ARG 5 price
 	CLASS class_4162 TypeAwareBuyForOneEmeraldFactory
 		FIELD field_18553 map Ljava/util/Map;
 		FIELD field_18554 count I
@@ -188,3 +219,11 @@ CLASS net/minecraft/class_3853 net/minecraft/village/TradeOffers
 			ARG 7 experience
 		METHOD method_19203 (Lnet/minecraft/class_1842;)Z
 			ARG 0 potion
+	CLASS class_8640 TypedWrapperFactory
+		FIELD field_45134 typeToFactory Ljava/util/Map;
+		METHOD <init> (Ljava/util/Map;)V
+			ARG 1 typeToFactory
+		METHOD method_52555 (Lnet/minecraft/class_3854;)V
+			ARG 0 type
+		METHOD method_52556 (Ljava/util/Map;Lnet/minecraft/class_3854;)Z
+			ARG 1 type
