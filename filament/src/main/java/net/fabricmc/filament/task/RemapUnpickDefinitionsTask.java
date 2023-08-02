@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -102,19 +103,35 @@ public abstract class RemapUnpickDefinitionsTask extends DefaultTask {
 				final int toM = mappingTree.getNamespaceId(getParameters().getTargetNamespace().get());
 
 				for (MappingTree.ClassMapping classDef : mappingTree.getClasses()) {
-					classMappings.put(classDef.getName(fromM), classDef.getName(toM));
+					final String classFromName = classDef.getName(fromM);
+
+					if (classFromName == null) {
+						continue;
+					}
+
+					classMappings.put(
+							classFromName,
+							Objects.requireNonNull(classDef.getName(toM), "Null to name: " + classFromName)
+					);
 
 					for (MappingTree.MethodMapping methodDef : classDef.getMethods()) {
 						methodMappings.put(
-								new MethodKey(classDef.getName(fromM), methodDef.getName(fromM), methodDef.getDesc(fromM)),
-								methodDef.getName(toM)
+								new MethodKey(
+										Objects.requireNonNull(classFromName, "Null dst name: " + classDef.getSrcName()),
+										Objects.requireNonNull(methodDef.getName(fromM), "Null dst name: " + methodDef.getSrcName()),
+										Objects.requireNonNull(methodDef.getDesc(fromM), "Null dst name: " + methodDef.getSrcName())
+								),
+								Objects.requireNonNull(methodDef.getName(toM), "Null to name: " + methodDef.getSrcName())
 						);
 					}
 
 					for (MappingTree.FieldMapping fieldDef : classDef.getFields()) {
 						fieldMappings.put(
-								new FieldKey(classDef.getName(fromM), fieldDef.getName(fromM)),
-								fieldDef.getName(toM)
+								new FieldKey(
+										Objects.requireNonNull(classFromName, "Null dst name: " + classDef.getSrcName()),
+										Objects.requireNonNull(fieldDef.getName(fromM), "Null dst name: " + fieldDef.getSrcName())
+								),
+								Objects.requireNonNull(fieldDef.getName(toM), "Null to name: " + fieldDef.getSrcName())
 						);
 					}
 				}
