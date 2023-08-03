@@ -9,13 +9,16 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <th><b>Object Type</b></th> <th><b>read method</b></th> <th><b>write method</b></th>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>Codec-based (NBT)</td><td>{@link #decode(DynamicOps, Codec)}</td><td>{@link #encode(DynamicOps, Codec, Object)}</td>
+	COMMENT  <td>Codec-based (NBT)</td><td>{@link #decode(DynamicOps, Codec, NbtTagSizeTracker)}</td><td>{@link #encode(DynamicOps, Codec, Object)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>Codec-based (JSON)</td><td>{@link #decodeAsJson(Codec)}</td><td>{@link #encodeAsJson(Codec, Object)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link net.minecraft.registry.Registry} value</td><td>{@link #readRegistryValue(IndexedIterable)}</td><td>{@link #writeRegistryValue(IndexedIterable, Object)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>Integer-identified value</td><td>{@link #decode(IntFunction)}</td><td>{@link #encode(ToIntFunction, Object)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link Collection}</td><td>{@link #readCollection(IntFunction, PacketByteBuf.PacketReader)}</td><td>{@link #writeCollection(Collection, PacketByteBuf.PacketWriter)}</td>
@@ -52,6 +55,9 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link Vector3f}</td><td>{@link #readVector3f()}</td><td>{@link #writeVector3f(Vector3f)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link Vec3d}</td><td>{@link #readVec3d()}</td><td>{@link #writeVec3d(Vec3d)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link Quaternionf}</td><td>{@link #readQuaternionf()}</td><td>{@link #writeQuaternionf(Quaternionf)}</td>
@@ -94,6 +100,9 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link RegistryKey}</td><td>{@link #readRegistryKey(RegistryKey)}</td><td>{@link #writeRegistryKey(RegistryKey)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link RegistryKey} of a registry</td><td>{@link #readRegistryKey()}</td><td>{@link #writeRegistryKey(RegistryKey)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link Date}</td><td>{@link #readDate()}</td><td>{@link #writeDate(Date)}</td>
@@ -631,13 +640,14 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #encode(DynamicOps, Codec, Object)
 		ARG 1 ops
 		ARG 2 codec
+		ARG 3 sizeTracker
 	METHOD method_29172 encode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Codec;Ljava/lang/Object;)Lnet/minecraft/class_2540;
 		COMMENT Writes an object to this buf as a compound NBT with the given codec.
 		COMMENT
 		COMMENT @param <T> the encoded object's type
 		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
 		COMMENT to encode the compound NBT
-		COMMENT @see #decode(DynamicOps, Codec)
+		COMMENT @see #decode(DynamicOps, Codec, NbtTagSizeTracker)
 		ARG 1 ops
 		ARG 2 codec
 		ARG 3 value
@@ -1061,6 +1071,53 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 error
 	METHOD method_49397 (Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
 		ARG 0 error
+	METHOD method_52954 decode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Codec;)Ljava/lang/Object;
+		COMMENT Reads an object from this buf as a compound NBT with the given codec.
+		COMMENT
+		COMMENT @param <T> the decoded object's type
+		COMMENT @return the read object
+		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
+		COMMENT to decode the compound NBT
+		COMMENT @see #encode(DynamicOps, Codec, Object)
+		ARG 1 ops
+		ARG 2 codec
+	METHOD method_52955 writeVec3d (Lnet/minecraft/class_243;)V
+		COMMENT Writes a {@link Vec3d} to this buf. A {@link Vec3d} is represented
+		COMMENT by four {@code double}s.
+		COMMENT
+		COMMENT @see #readVec3d()
+		ARG 1 vec
+	METHOD method_52962 decode (Ljava/util/function/IntFunction;)Ljava/lang/Object;
+		COMMENT Reads a {@linkplain #readVarInt var int} representing an ID, then
+		COMMENT returns the value converted by {@code idToValue}.
+		COMMENT
+		COMMENT @see #encode(ToIntFunction, Object)
+		ARG 1 idToValue
+			COMMENT a function that gets the value from the integer ID
+	METHOD method_52963 encode (Ljava/util/function/ToIntFunction;Ljava/lang/Object;)Lnet/minecraft/class_2540;
+		COMMENT Converts {@code value} to an integer representing its ID, then
+		COMMENT writes a {@linkplain #readVarInt var int} representation of such ID.
+		COMMENT
+		COMMENT @see #decode(ToIntFunction)
+		ARG 1 valueToId
+			COMMENT a function that gets the value's integer ID
+		ARG 2 value
+	METHOD method_52996 readVec3d ()Lnet/minecraft/class_243;
+		COMMENT Reads a {@link Vec3d} from this buf. A {@link Vec3d} is represented
+		COMMENT by four {@code double}s.
+		COMMENT
+		COMMENT @see #writeVec3d(Vec3d)
+	METHOD method_53006 readRegistryRefKey ()Lnet/minecraft/class_5321;
+		COMMENT Reads a registry key referencing another registry key from this buf.
+		COMMENT Such key is represented by its {@linkplain #readIdentifier value as an identifier}.
+		COMMENT
+		COMMENT <p>This is the same as {@code readRegistryKey(Registries.ROOT)}.
+		COMMENT To read a registry key of a registered object (such as biomes),
+		COMMENT use {@link #readRegistryKey(RegistryKey)}.
+		COMMENT
+		COMMENT @return the read registry key
+		COMMENT @see #readRegistryKey(RegistryKey)
+		COMMENT @see #writeRegistryKey(RegistryKey)
 	METHOD nioBuffer (II)Ljava/nio/ByteBuffer;
 		ARG 1 index
 		ARG 2 length
@@ -1109,6 +1166,8 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 index
 	METHOD release (I)Z
 		ARG 1 decrement
+	METHOD retain (I)Lio/netty/buffer/ByteBuf;
+		ARG 1 increment
 	METHOD retain (I)Lio/netty/util/ReferenceCounted;
 		ARG 1 increment
 	METHOD retainedSlice (II)Lio/netty/buffer/ByteBuf;
@@ -1250,7 +1309,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 2 charset
 	METHOD writeDouble (D)Lio/netty/buffer/ByteBuf;
 		ARG 1 value
-	METHOD writeFloat (F)Lio/netty/buffer/ByteBuf;
+	METHOD writeFloat method_52941 (F)Lio/netty/buffer/ByteBuf;
 		ARG 1 value
 	METHOD writeInt (I)Lio/netty/buffer/ByteBuf;
 		ARG 1 value
