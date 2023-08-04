@@ -31,6 +31,10 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	FIELD field_36379 PACKET_RECEIVED_MARKER Lorg/slf4j/Marker;
 	FIELD field_36380 PACKET_SENT_MARKER Lorg/slf4j/Marker;
 	FIELD field_44972 pendingDisconnectionReason Lnet/minecraft/class_2561;
+	FIELD field_45666 SERVERBOUND_PROTOCOL_KEY Lio/netty/util/AttributeKey;
+	FIELD field_45667 CLIENTBOUND_PROTOCOL_KEY Lio/netty/util/AttributeKey;
+	FIELD field_45668 queuedTasks Ljava/util/Queue;
+	FIELD field_45669 prePlayStateListener Lnet/minecraft/class_2547;
 	METHOD <init> (Lnet/minecraft/class_2598;)V
 		ARG 1 side
 	METHOD channelActive (Lio/netty/channel/ChannelHandlerContext;)V
@@ -53,7 +57,7 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	METHOD method_10747 disconnect (Lnet/minecraft/class_2561;)V
 		ARG 1 disconnectReason
 	METHOD method_10748 getDisconnectReason ()Lnet/minecraft/class_2561;
-	METHOD method_10751 sendQueuedPackets ()V
+	METHOD method_10751 handleQueuedTasks ()V
 	METHOD method_10752 send (Lnet/minecraft/class_2596;Lnet/minecraft/class_7648;)V
 		ARG 1 packet
 		ARG 2 callbacks
@@ -63,7 +67,7 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	METHOD method_10754 tick ()V
 	METHOD method_10755 getAddress ()Ljava/net/SocketAddress;
 	METHOD method_10756 isLocal ()Z
-	METHOD method_10757 disableAutoRead ()V
+	METHOD method_10757 tryDisableAutoRead ()V
 	METHOD method_10758 isOpen ()Z
 	METHOD method_10759 handlePacket (Lnet/minecraft/class_2596;Lnet/minecraft/class_2547;)V
 		ARG 0 packet
@@ -88,8 +92,11 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		COMMENT
 		COMMENT @apiNote This may be called from the {@linkplain #packetListener} stored
 		COMMENT in this connection.
+		ARG 1 packetListener
 	METHOD method_10764 sendImmediately (Lnet/minecraft/class_2596;Lnet/minecraft/class_7648;Z)V
+		ARG 1 packet
 		ARG 2 callbacks
+		ARG 3 flush
 	METHOD method_10768 handleDisconnection ()V
 	METHOD method_10769 connectLocal (Ljava/net/SocketAddress;)Lnet/minecraft/class_2535;
 		ARG 0 address
@@ -105,6 +112,7 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	METHOD method_36942 sendInternal (Lnet/minecraft/class_2596;Lnet/minecraft/class_7648;Z)V
 		ARG 1 packet
 		ARG 2 callbacks
+		ARG 3 flush
 	METHOD method_40062 (Lorg/slf4j/Marker;)V
 		ARG 0 marker
 	METHOD method_40063 (Lorg/slf4j/Marker;)V
@@ -120,8 +128,58 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		ARG 0 address
 		ARG 1 useEpoll
 		ARG 2 connection
+	METHOD method_52898 disableAutoRead ()V
+	METHOD method_52899 setS2CPacketHandler (Lnet/minecraft/class_8592;)V
+		ARG 1 intent
+	METHOD method_52900 (Lnet/minecraft/class_8592;Lnet/minecraft/class_2547;Ljava/lang/String;ILnet/minecraft/class_2535;)V
+		ARG 5 connection
+	METHOD method_52901 setHandlers (Lio/netty/channel/Channel;)V
+		ARG 0 channel
+	METHOD method_52902 connect (Ljava/lang/String;ILnet/minecraft/class_2896;)V
+		ARG 1 address
+		ARG 2 port
+		ARG 3 listener
+	METHOD method_52903 connect (Ljava/lang/String;ILnet/minecraft/class_2921;)V
+		ARG 1 address
+		ARG 2 port
+		ARG 3 listener
+	METHOD method_52904 connect (Ljava/lang/String;ILnet/minecraft/class_2547;Lnet/minecraft/class_8592;)V
+		ARG 1 address
+		ARG 2 port
+		ARG 3 listener
+		ARG 4 intent
+	METHOD method_52905 submit (Ljava/util/function/Consumer;)V
+		ARG 1 task
+	METHOD method_52906 send (Lnet/minecraft/class_2596;Lnet/minecraft/class_7648;Z)V
+		ARG 1 packet
+		ARG 2 callbacks
+		ARG 3 flush
+	METHOD method_52907 (Lnet/minecraft/class_2596;Lnet/minecraft/class_7648;ZLnet/minecraft/class_2535;)V
+		ARG 3 connection
+	METHOD method_52908 getProtocolAttributeKey (Lnet/minecraft/class_2598;)Lio/netty/util/AttributeKey;
+		ARG 0 side
 	METHOD method_52909 getAddressAsString (Z)Ljava/lang/String;
 		ARG 1 logIps
+	METHOD method_52910 enableAutoRead ()V
+	METHOD method_52911 addValidator (Lio/netty/channel/ChannelPipeline;Lnet/minecraft/class_2598;)V
+		ARG 0 pipeline
+		ARG 1 side
+	METHOD method_52912 setInitialPacketListener (Lnet/minecraft/class_2547;)V
+		COMMENT Sets the initial packet listener.
+		COMMENT
+		COMMENT @throws IllegalStateException if the listener was already set
+		COMMENT @see #setPacketListener
+		ARG 1 packetListener
+	METHOD method_52913 sendWithoutFlush (Lnet/minecraft/class_2596;)V
+		ARG 1 packet
+	METHOD method_52914 sendWithoutFlush (Lnet/minecraft/class_2596;Lnet/minecraft/class_7648;)V
+		ARG 1 packet
+		ARG 2 callbacks
+	METHOD method_52915 flush ()V
+	METHOD method_52916 addValidatorInternal (Lio/netty/channel/ChannelPipeline;Lnet/minecraft/class_2598;)V
+		ARG 0 pipeline
+		ARG 1 side
+	METHOD method_52918 flushInternal ()V
 	CLASS 1
 		METHOD initChannel (Lio/netty/channel/Channel;)V
 			ARG 1 channel

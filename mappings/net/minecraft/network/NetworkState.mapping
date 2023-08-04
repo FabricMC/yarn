@@ -1,13 +1,17 @@
 CLASS net/minecraft/class_2539 net/minecraft/network/NetworkState
 	FIELD field_20594 stateId Ljava/lang/String;
 	FIELD field_20595 packetHandlers Ljava/util/Map;
+	FIELD field_41866 UNKNOWN_PACKET_ID I
 	METHOD <init> (Ljava/lang/String;ILjava/lang/String;Lnet/minecraft/class_2539$class_4533;)V
+		ARG 3 stateId
 		ARG 4 initializer
 	METHOD method_10785 getId ()Ljava/lang/String;
 	METHOD method_22308 createPacketHandlerInitializer ()Lnet/minecraft/class_2539$class_4533;
 	METHOD method_39498 getPacketIdToPacketMap (Lnet/minecraft/class_2598;)Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 		ARG 1 side
-	CLASS class_4532 PacketHandler
+	METHOD method_52921 getHandler (Lnet/minecraft/class_2598;)Lnet/minecraft/class_2539$class_8698;
+		ARG 1 side
+	CLASS class_4532 InternalPacketHandler
 		FIELD field_20596 packetIds Lit/unimi/dsi/fastutil/objects/Object2IntMap;
 		FIELD field_20597 packetFactories Ljava/util/List;
 		FIELD field_36381 LOGGER Lorg/slf4j/Logger;
@@ -29,8 +33,33 @@ CLASS net/minecraft/class_2539 net/minecraft/network/NetworkState
 		METHOD method_48317 registerBundlePacket (Ljava/lang/Class;Ljava/util/function/Function;)Lnet/minecraft/class_2539$class_4532;
 			ARG 1 bundlePacketType
 			ARG 2 bundleFunction
+		METHOD method_52929 canHandle (Ljava/lang/Class;)Z
+			ARG 1 clazz
 	CLASS class_4533 PacketHandlerInitializer
 		FIELD field_20598 packetHandlers Ljava/util/Map;
 		METHOD method_22315 setup (Lnet/minecraft/class_2598;Lnet/minecraft/class_2539$class_4532;)Lnet/minecraft/class_2539$class_4533;
 			ARG 1 side
 			ARG 2 handler
+		METHOD method_52930 createSideToHandlerMap (Lnet/minecraft/class_2539;)Ljava/util/Map;
+			ARG 1 state
+	CLASS class_8698 PacketHandler
+		FIELD field_45672 state Lnet/minecraft/class_2539;
+		FIELD field_45673 side Lnet/minecraft/class_2598;
+		FIELD field_45674 backingHandler Lnet/minecraft/class_2539$class_4532;
+		METHOD <init> (Lnet/minecraft/class_2539;Lnet/minecraft/class_2598;Lnet/minecraft/class_2539$class_4532;)V
+			ARG 1 state
+			ARG 2 side
+			ARG 3 backingHandler
+		METHOD method_52922 getState ()Lnet/minecraft/class_2539;
+		METHOD method_52923 createPacket (ILnet/minecraft/class_2540;)Lnet/minecraft/class_2596;
+			ARG 1 id
+			ARG 2 buf
+		METHOD method_52924 (Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;Ljava/lang/Class;Ljava/lang/Integer;)V
+			ARG 1 packet
+			ARG 2 id
+		METHOD method_52925 getId (Lnet/minecraft/class_2596;)I
+			ARG 1 packet
+		METHOD method_52926 getSide ()Lnet/minecraft/class_2598;
+		METHOD method_52927 canHandle (Lnet/minecraft/class_2596;)Z
+			ARG 1 packet
+		METHOD method_52928 getPacketIdToPacketMap ()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
