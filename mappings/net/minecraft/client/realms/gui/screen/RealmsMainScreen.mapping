@@ -42,6 +42,16 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 	FIELD field_45199 NO_PENDING_TOOLTIP Lnet/minecraft/class_7919;
 	FIELD field_45200 PENDING_TOOLTIP Lnet/minecraft/class_7919;
 	FIELD field_45201 INFO_ICON_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45202 hasUnreadNews Z
+	FIELD field_45203 newsLink Ljava/lang/String;
+	FIELD field_45204 purchaseButton Lnet/minecraft/class_4185;
+	FIELD field_45205 inviteButton Lnet/minecraft/class_4325$class_8651;
+	FIELD field_45206 newsButton Lnet/minecraft/class_4325$class_8651;
+	FIELD field_45207 loadStatus Lnet/minecraft/class_4325$class_8650;
+	FIELD field_45208 layout Lnet/minecraft/class_8132;
+	FIELD field_45213 availabilityInfo Ljava/util/concurrent/CompletableFuture;
+	FIELD field_45214 periodicRunnersManager Lnet/minecraft/class_7581$class_7584;
+	FIELD field_45215 playButton Lnet/minecraft/class_4185;
 	FIELD field_45216 NEW_REALM_ICON_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_45217 EXPIRED_STATUS_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_45218 EXPIRES_SOON_STATUS_TEXTURE Lnet/minecraft/class_2960;
@@ -141,6 +151,44 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 		ARG 2 void_
 	METHOD method_49561 (Ljava/util/List;)V
 		ARG 1 notifications
+	METHOD method_52630 makeHeader ()Lnet/minecraft/class_8133;
+	METHOD method_52631 makeNoRealmsLayout ()Lnet/minecraft/class_8667;
+	METHOD method_52632 refreshButtons ()V
+	METHOD method_52633 showBuyRealmsScreen ()V
+	METHOD method_52634 (Lnet/minecraft/class_8647$class_8648;)V
+		ARG 1 availabilityInfo
+	METHOD method_52635 onLoadStatusChange (Lnet/minecraft/class_4325$class_8650;)V
+		ARG 1 loadStatus
+	METHOD method_52636 (Lnet/minecraft/class_4325;Lnet/minecraft/class_364;)V
+		ARG 1 child
+	METHOD method_52637 drawEnvironmentText (Lnet/minecraft/class_332;Ljava/lang/String;I)V
+		ARG 1 context
+		ARG 2 text
+		ARG 3 color
+	METHOD method_52638 (Lnet/minecraft/class_4185;)V
+		ARG 1 button
+	METHOD method_52639 (Ljava/lang/Boolean;)V
+		ARG 1 trialAvailable
+	METHOD method_52640 (Lnet/minecraft/class_2561;Lnet/minecraft/class_4185;)V
+		ARG 2 button
+	METHOD method_52641 makeLayoutFor (Lnet/minecraft/class_4325$class_8650;)Lnet/minecraft/class_8132;
+		ARG 1 loadStatus
+	METHOD method_52642 (Lnet/minecraft/class_4325;Lnet/minecraft/class_364;)V
+		ARG 1 child
+	METHOD method_52643 (Lnet/minecraft/class_4185;)V
+		ARG 1 button
+	METHOD method_52644 makeInnerLayout (Lnet/minecraft/class_4325$class_8650;)Lnet/minecraft/class_8133;
+		ARG 1 loadStatus
+	METHOD method_52645 (Lnet/minecraft/class_4185;)V
+		ARG 1 button
+	METHOD method_52646 (Lnet/minecraft/class_4185;)V
+		ARG 1 button
+	METHOD method_52647 (Lnet/minecraft/class_4185;)V
+		ARG 1 button
+	METHOD method_52648 (Lnet/minecraft/class_4185;)V
+		ARG 1 button
+	METHOD method_52649 (Lnet/minecraft/class_4185;)V
+		ARG 1 button
 	CLASS class_4329 RealmSelectionList
 	CLASS class_4330 RealmSelectionListEntry
 		FIELD field_19518 server Lnet/minecraft/class_4877;
@@ -169,6 +217,8 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 			ARG 6 mouseY
 			ARG 7 xOffset
 			ARG 8 yOffset
+		METHOD method_52653 play ()V
+		METHOD method_52654 createRealm ()V
 	CLASS class_4866 Entry
 		METHOD method_38506 getRealmsServer ()Lnet/minecraft/class_4877;
 	CLASS class_8200 VisitButtonEntry
@@ -177,6 +227,10 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 		METHOD <init> (Lnet/minecraft/class_4325;Lnet/minecraft/class_4185;)V
 			ARG 2 button
 	CLASS class_8201 CrossButton
+		FIELD field_45222 TEXTURES Lnet/minecraft/class_8666;
+		METHOD <init> (Lnet/minecraft/class_4185$class_4241;Lnet/minecraft/class_2561;)V
+			ARG 1 onPress
+			ARG 2 tooltip
 	CLASS class_8202 VisitUrlNotification
 		FIELD field_43005 message Lnet/minecraft/class_2561;
 		FIELD field_43006 gridChildren Ljava/util/List;
@@ -199,3 +253,17 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 	CLASS class_8203 Request
 		METHOD request (Lnet/minecraft/class_4341;)Ljava/lang/Object;
 			ARG 1 client
+	CLASS class_8650 LoadStatus
+	CLASS class_8651 NotificationButtonWidget
+		FIELD field_45227 TEXTURES [Lnet/minecraft/class_2960;
+		FIELD field_45229 SIZE I
+		FIELD field_45230 TEXTURE_SIZE I
+		FIELD field_45231 notificationCount I
+		METHOD <init> (Lnet/minecraft/class_2561;Lnet/minecraft/class_2960;Lnet/minecraft/class_4185$class_4241;)V
+			ARG 1 message
+			ARG 2 texture
+			ARG 3 onPress
+		METHOD method_52651 setNotificationCount (I)V
+			ARG 1 notificationCount
+		METHOD method_52652 render (Lnet/minecraft/class_332;)V
+			ARG 1 context
