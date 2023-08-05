@@ -306,12 +306,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT when the player is in a 1 block tall tunnel).
 		COMMENT
 		COMMENT @see #isCrawling
-	METHOD method_20233 wouldPoseNotCollide (Lnet/minecraft/class_4050;)Z
-		COMMENT {@return {@code true} if the entity would not collide with blocks if the pose is
-		COMMENT {@code pose}}
-		ARG 1 pose
-	METHOD method_20343 calculateBoundsForPose (Lnet/minecraft/class_4050;)Lnet/minecraft/class_238;
-		ARG 1 pos
 	METHOD method_20448 isCrawling ()Z
 		COMMENT {@return whether the entity is crawling}
 		COMMENT
@@ -993,7 +987,18 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_52208 setOnGround (ZLnet/minecraft/class_243;)V
 		ARG 1 onGround
 		ARG 2 movement
-	METHOD method_5621 getMountedHeightOffset ()D
+	METHOD method_52533 getPassengerAttachmentPos (Lnet/minecraft/class_1297;Lnet/minecraft/class_4048;F)Lorg/joml/Vector3f;
+		ARG 1 passenger
+		ARG 2 dimensions
+		ARG 3 scaleFactor
+	METHOD method_52534 shouldControlVehicles ()Z
+	METHOD method_52535 isInFluid ()Z
+	METHOD method_52536 getRidingOffset (Lnet/minecraft/class_1297;)F
+		ARG 1 vehicle
+	METHOD method_52537 getUnscaledRidingOffset (Lnet/minecraft/class_1297;)F
+		ARG 1 vehicle
+	METHOD method_52538 getPassengerRidingPos (Lnet/minecraft/class_1297;)Lnet/minecraft/class_243;
+		ARG 1 passenger
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
 		COMMENT Called when this entity's collision box intersects {@code state}.
 		COMMENT
@@ -1268,7 +1273,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @apiNote Aquatic mobs should override this to return {@code false}.
 		COMMENT Players are not pushed by fluids if they can fly (e.g. because of game mode).
 	METHOD method_5676 getBurningDuration ()I
-	METHOD method_5678 getHeightOffset ()D
 	METHOD method_5679 isInvulnerableTo (Lnet/minecraft/class_1282;)Z
 		COMMENT {@return whether the entity is invulnerable to {@code damageSource}}
 		COMMENT
@@ -1686,14 +1690,13 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT <p>This returns {@code false} if {@link #noClip} is {@code true}; otherwise,
 		COMMENT this returns {@code true} if the eye position is occupied by a {@linkplain
 		COMMENT net.minecraft.block.AbstractBlock.Settings#suffocates block that can suffocate}.
-	METHOD method_5759 updateTrackedPositionAndAngles (DDDFFIZ)V
+	METHOD method_5759 updateTrackedPositionAndAngles (DDDFFI)V
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
 		ARG 7 yaw
 		ARG 8 pitch
 		ARG 9 interpolationSteps
-		ARG 10 interpolate
 	METHOD method_5760 tickPortalCooldown ()V
 	METHOD method_5762 addVelocity (DDD)V
 		ARG 1 deltaX
