@@ -1,7 +1,53 @@
 CLASS net/minecraft/class_1071 net/minecraft/client/texture/PlayerSkinProvider
 	FIELD field_32970 TEXTURES Ljava/lang/String;
+	FIELD field_45634 cache Lcom/google/common/cache/LoadingCache;
+	FIELD field_45635 skinCache Lnet/minecraft/class_1071$class_8687;
+	FIELD field_45636 capeCache Lnet/minecraft/class_1071$class_8687;
+	FIELD field_45637 elytraCache Lnet/minecraft/class_1071$class_8687;
 	METHOD <init> (Lnet/minecraft/class_1060;Ljava/nio/file/Path;Lcom/mojang/authlib/minecraft/MinecraftSessionService;Ljava/util/concurrent/Executor;)V
 		ARG 1 textureManager
+		ARG 2 directory
+		ARG 3 sessionService
+		ARG 4 executor
+	METHOD method_52858 getSkinTexturesSupplier (Lcom/mojang/authlib/GameProfile;)Ljava/util/function/Supplier;
+		ARG 1 profile
+	METHOD method_52859 fetchSkinTextures (Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_1071$class_8688;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 profile
+		ARG 2 textures
+	METHOD method_52862 getSkinTextures (Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/class_8685;
+		ARG 1 profile
+	METHOD method_52863 fetchSkinTextures (Lcom/mojang/authlib/GameProfile;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 profile
+	METHOD method_52864 areTexturesSigned (Lcom/mojang/authlib/GameProfile;)Z
+		ARG 1 profile
+	METHOD method_52865 getTextureEntry (Lcom/mojang/authlib/GameProfile;)Lcom/mojang/authlib/properties/Property;
+		ARG 0 profile
 	CLASS 1
 		METHOD load (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 value
+		METHOD method_52866 (Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_1071$class_8688;)Ljava/util/concurrent/CompletionStage;
+			ARG 2 textures
+	CLASS class_8686 Key
+		METHOD equals (Ljava/lang/Object;)Z
+			ARG 1 o
+		METHOD method_52869 getTextureEntry ()Ljava/lang/String;
+	CLASS class_8687 FileCache
+		FIELD field_45639 textureManager Lnet/minecraft/class_1060;
+		FIELD field_45640 directory Ljava/nio/file/Path;
+		FIELD field_45641 type Lcom/mojang/authlib/minecraft/MinecraftProfileTexture$Type;
+		FIELD field_45642 hashToTexture Ljava/util/Map;
+		METHOD <init> (Lnet/minecraft/class_1060;Ljava/nio/file/Path;Lcom/mojang/authlib/minecraft/MinecraftProfileTexture$Type;)V
+			ARG 1 textureManager
+			ARG 2 directory
+			ARG 3 type
+		METHOD method_52870 get (Lcom/mojang/authlib/minecraft/MinecraftProfileTexture;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 texture
+		METHOD method_52871 getTexturePath (Ljava/lang/String;)Lnet/minecraft/class_2960;
+			ARG 1 hash
+		METHOD method_52873 store (Lcom/mojang/authlib/minecraft/MinecraftProfileTexture;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 texture
+	CLASS class_8688 Textures
+		FIELD field_45643 MISSING Lnet/minecraft/class_1071$class_8688;
+		METHOD method_52874 fromMap (Ljava/util/Map;Z)Lnet/minecraft/class_1071$class_8688;
+			ARG 0 textures
+			ARG 1 secure
