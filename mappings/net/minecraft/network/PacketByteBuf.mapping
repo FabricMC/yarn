@@ -102,7 +102,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@link RegistryKey}</td><td>{@link #readRegistryKey(RegistryKey)}</td><td>{@link #writeRegistryKey(RegistryKey)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>{@link RegistryKey} of a registry</td><td>{@link #readRegistryKey()}</td><td>{@link #writeRegistryKey(RegistryKey)}</td>
+	COMMENT  <td>{@link RegistryKey} of a registry</td><td>{@link #readRegistryRef()}</td><td>{@link #writeRegistryKey(RegistryKey)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link Date}</td><td>{@link #readDate()}</td><td>{@link #writeDate(Date)}</td>
@@ -324,7 +324,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @see #readVarLong()
-		COMMENT @see #getVarLongLength(long)
+		COMMENT @see net.minecraft.network.encoding.VarLong
 		ARG 1 value
 			COMMENT the value to write
 	METHOD method_10792 readVarLong ()J
@@ -343,16 +343,16 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 stack
 			COMMENT the stack to write
 	METHOD method_10794 writeNbt (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2540;
-		COMMENT Writes an NBT compound to this buf. The binary representation of NBT is
-		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If {@code compound} is {@code
+		COMMENT Writes an NBT element to this buf. The binary representation of NBT is
+		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If {@code nbt} is {@code
 		COMMENT null}, it is treated as an NBT null.
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be
 		COMMENT written
 		COMMENT @see #readNbt()
-		COMMENT @see #readUnlimitedNbt()
 		COMMENT @see #readNbt(NbtTagSizeTracker)
+		ARG 1 nbt
 	METHOD method_10795 readByteArray ()[B
 		COMMENT Reads an array of primitive bytes from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the actual bytes. The array
@@ -383,11 +383,13 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT this method returns {@code null}. The compound can have a maximum size of
 		COMMENT {@value #MAX_READ_NBT_SIZE} bytes.
 		COMMENT
+		COMMENT <p>Note that unlike {@link #readNbt(NbtTagSizeTracker)}, this can only
+		COMMENT read compounds.
+		COMMENT
 		COMMENT @return the read compound, may be {@code null}
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
 		COMMENT @throws RuntimeException if the compound exceeds the allowed maximum size
 		COMMENT @see #writeNbt(NbtCompound)
-		COMMENT @see #readUnlimitedNbt()
 		COMMENT @see #readNbt(NbtTagSizeTracker)
 		COMMENT @see #MAX_READ_NBT_SIZE
 	METHOD method_10799 readIntArray (I)[I
@@ -459,7 +461,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @see #readVarInt()
-		COMMENT @see #getVarIntLength(int)
+		COMMENT @see net.minecraft.network.encoding.VarInts
 		ARG 1 value
 			COMMENT the value to write
 	METHOD method_10805 writeText (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2540;
@@ -652,17 +654,16 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 2 codec
 		ARG 3 value
 	METHOD method_30616 readNbt (Lnet/minecraft/class_2505;)Lnet/minecraft/class_2520;
-		COMMENT Reads an NBT compound from this buf. The binary representation of NBT is
+		COMMENT Reads an NBT element from this buf. The binary representation of NBT is
 		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an NBT null is encountered,
-		COMMENT this method returns {@code null}. The compound can have a maximum size
+		COMMENT this method returns {@code null}. The element can have a maximum size
 		COMMENT controlled by the {@code sizeTracker}.
 		COMMENT
-		COMMENT @return the read compound, may be {@code null}
+		COMMENT @return the read element, may be {@code null}
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
-		COMMENT @throws RuntimeException if the compound exceeds the allowed maximum size
-		COMMENT @see #writeNbt(NbtCompound)
+		COMMENT @throws RuntimeException if the element exceeds the allowed maximum size
+		COMMENT @see #writeNbt(NbtElement)
 		COMMENT @see #readNbt()
-		COMMENT @see #readUnlimitedNbt()
 		ARG 1 sizeTracker
 	METHOD method_33134 readLongArray ()[J
 		COMMENT Reads an array of primitive longs from this buf. The array first has a
@@ -1098,7 +1099,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT Converts {@code value} to an integer representing its ID, then
 		COMMENT writes a {@linkplain #readVarInt var int} representation of such ID.
 		COMMENT
-		COMMENT @see #decode(ToIntFunction)
+		COMMENT @see #decode(IntFunction)
 		ARG 1 valueToId
 			COMMENT a function that gets the value's integer ID
 		ARG 2 value
