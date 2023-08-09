@@ -6,6 +6,7 @@ CLASS net/minecraft/class_4553 net/minecraft/predicate/entity/PlayerPredicate
 	FIELD comp_1821 advancements Ljava/util/Map;
 	FIELD comp_1822 lookingAt Ljava/util/Optional;
 	FIELD field_33928 LOOKING_AT_DISTANCE I
+	FIELD field_45770 CODEC Lcom/mojang/serialization/MapCodec;
 	METHOD <init> (Lnet/minecraft/class_2096$class_2100;Ljava/util/Optional;Ljava/util/List;Lit/unimi/dsi/fastutil/objects/Object2BooleanMap;Ljava/util/Map;Ljava/util/Optional;)V
 		ARG 1 experienceLevel
 		ARG 4 recipes
@@ -22,6 +23,7 @@ CLASS net/minecraft/class_4553 net/minecraft/predicate/entity/PlayerPredicate
 		ARG 0 hitEntity
 	CLASS class_4554 AdvancementCriteriaPredicate
 		FIELD comp_1823 criteria Lit/unimi/dsi/fastutil/objects/Object2BooleanMap;
+		FIELD field_45771 CODEC Lcom/mojang/serialization/Codec;
 		METHOD <init> (Lit/unimi/dsi/fastutil/objects/Object2BooleanMap;)V
 			ARG 1 criteria
 		METHOD comp_1823 criteria ()Lit/unimi/dsi/fastutil/objects/Object2BooleanMap;
@@ -29,12 +31,14 @@ CLASS net/minecraft/class_4553 net/minecraft/predicate/entity/PlayerPredicate
 			ARG 1 progress
 	CLASS class_4555 CompletedAdvancementPredicate
 		FIELD comp_1824 done Z
+		FIELD field_45772 CODEC Lcom/mojang/serialization/Codec;
 		METHOD <init> (Z)V
 			ARG 1 done
 		METHOD comp_1824 done ()Z
 		METHOD test (Ljava/lang/Object;)Z
 			ARG 1 progress
 	CLASS class_4556 AdvancementPredicate
+		FIELD field_45773 CODEC Lcom/mojang/serialization/Codec;
 	CLASS class_4557 Builder
 		FIELD field_20730 experienceLevel Lnet/minecraft/class_2096$class_2100;
 		FIELD field_20731 gameMode Ljava/util/Optional;
@@ -45,6 +49,9 @@ CLASS net/minecraft/class_4553 net/minecraft/predicate/entity/PlayerPredicate
 		METHOD method_22507 build ()Lnet/minecraft/class_4553;
 		METHOD method_35310 create ()Lnet/minecraft/class_4553$class_4557;
 		METHOD method_35311 stat (Lnet/minecraft/class_3448;Lnet/minecraft/class_6880$class_6883;Lnet/minecraft/class_2096$class_2100;)Lnet/minecraft/class_4553$class_4557;
+			ARG 1 statType
+			ARG 2 value
+			ARG 3 range
 		METHOD method_35312 gameMode (Lnet/minecraft/class_1934;)Lnet/minecraft/class_4553$class_4557;
 			ARG 1 gameMode
 		METHOD method_35313 experienceLevel (Lnet/minecraft/class_2096$class_2100;)Lnet/minecraft/class_4553$class_4557;
@@ -59,3 +66,14 @@ CLASS net/minecraft/class_4553 net/minecraft/predicate/entity/PlayerPredicate
 			ARG 1 id
 			ARG 2 done
 		METHOD method_37251 lookingAt (Ljava/util/Optional;)Lnet/minecraft/class_4553$class_4557;
+			ARG 1 lookingAt
+	CLASS class_8749 StatMatcher
+		FIELD field_45774 CODEC Lcom/mojang/serialization/Codec;
+		METHOD <init> (Lnet/minecraft/class_3448;Lnet/minecraft/class_6880;Lnet/minecraft/class_2096$class_2100;)V
+			ARG 1 type
+			ARG 2 value
+			ARG 3 range
+		METHOD method_53224 createCodec (Lnet/minecraft/class_3448;)Lcom/mojang/serialization/Codec;
+			ARG 0 type
+		METHOD method_53228 test (Lnet/minecraft/class_3469;)Z
+			ARG 1 statHandler

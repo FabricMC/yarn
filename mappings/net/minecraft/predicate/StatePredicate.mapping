@@ -1,5 +1,7 @@
 CLASS net/minecraft/class_4559 net/minecraft/predicate/StatePredicate
 	FIELD comp_1830 conditions Ljava/util/List;
+	FIELD field_45777 CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_45778 CONDITION_LIST_CODEC Lcom/mojang/serialization/Codec;
 	METHOD <init> (Ljava/util/List;)V
 		ARG 1 conditions
 	METHOD comp_1830 conditions ()Ljava/util/List;
@@ -18,6 +20,8 @@ CLASS net/minecraft/class_4559 net/minecraft/predicate/StatePredicate
 		ARG 1 state
 	METHOD method_22519 fromJson (Lcom/google/gson/JsonElement;)Ljava/util/Optional;
 		ARG 0 json
+	METHOD method_53235 findMissing (Lnet/minecraft/class_2689;)Ljava/util/Optional;
+		ARG 1 stateManager
 	CLASS class_4560 Builder
 		FIELD field_20738 conditions Lcom/google/common/collect/ImmutableList$Builder;
 		METHOD method_22523 create ()Lnet/minecraft/class_4559$class_4560;
@@ -34,8 +38,9 @@ CLASS net/minecraft/class_4559 net/minecraft/predicate/StatePredicate
 			ARG 1 property
 			ARG 2 value
 		METHOD method_22528 build ()Ljava/util/Optional;
-	CLASS class_4561 ExactValueCondition
+	CLASS class_4561 ExactValueMatcher
 		FIELD comp_1831 value Ljava/lang/String;
+		FIELD field_45779 CODEC Lcom/mojang/serialization/Codec;
 		METHOD <init> (Ljava/lang/String;)V
 			ARG 1 key
 		METHOD comp_1831 value ()Ljava/lang/String;
@@ -49,8 +54,16 @@ CLASS net/minecraft/class_4559 net/minecraft/predicate/StatePredicate
 			ARG 2 state
 		METHOD method_22531 reportMissing (Lnet/minecraft/class_2689;)Ljava/util/Optional;
 			ARG 1 factory
-	CLASS class_4563 RangedValueCondition
+	CLASS class_4563 RangedValueMatcher
 		FIELD comp_1834 min Ljava/util/Optional;
 		FIELD comp_1835 max Ljava/util/Optional;
+		FIELD field_45780 CODEC Lcom/mojang/serialization/Codec;
 		METHOD comp_1834 min ()Ljava/util/Optional;
 		METHOD comp_1835 max ()Ljava/util/Optional;
+	CLASS class_8750 ValueMatcher
+		FIELD field_45781 CODEC Lcom/mojang/serialization/Codec;
+		METHOD method_22532 test (Lnet/minecraft/class_2688;Lnet/minecraft/class_2769;)Z
+			ARG 1 state
+			ARG 2 property
+		METHOD method_53243 (Lnet/minecraft/class_4559$class_8750;)Lcom/mojang/datafixers/util/Either;
+			ARG 0 valueMatcher
