@@ -44,12 +44,10 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_1687 world Lnet/minecraft/class_638;
 		COMMENT Represents the world the client is currently viewing.
 		COMMENT This field is not null when in game.
-	FIELD field_1688 metricsData Lnet/minecraft/class_3517;
 	FIELD field_1689 framebuffer Lnet/minecraft/class_276;
 	FIELD field_1690 options Lnet/minecraft/class_315;
 	FIELD field_1692 targetedEntity Lnet/minecraft/class_1297;
 	FIELD field_1693 is64Bit Z
-	FIELD field_1694 sessionPropertyMap Lcom/mojang/authlib/properties/PropertyMap;
 	FIELD field_1695 windowFocused Z
 	FIELD field_1696 thread Ljava/lang/Thread;
 	FIELD field_1697 runDirectory Ljava/io/File;
@@ -95,7 +93,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_1741 pausedTickDelta F
 	FIELD field_1742 itemRenderer Lnet/minecraft/class_918;
 	FIELD field_1743 skipGameRender Z
-	FIELD field_1744 connectedToRealms Z
 	FIELD field_1745 resourceManager Lnet/minecraft/class_3304;
 	FIELD field_1746 integratedServerConnection Lnet/minecraft/class_2535;
 		COMMENT The client connection to the integrated server.
@@ -184,6 +181,11 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_45293 guiAtlasManager Lnet/minecraft/class_8658;
 	FIELD field_45294 commandHistoryManager Lnet/minecraft/class_8657;
 	FIELD field_45295 symlinkFinder Lnet/minecraft/class_8580;
+	FIELD field_45899 gameProfileFuture Ljava/util/concurrent/CompletableFuture;
+	FIELD field_45900 finishedLoading Z
+	FIELD field_45901 fpsLog Lnet/minecraft/class_8743;
+	FIELD field_45902 pingPerformanceLog Lnet/minecraft/class_8743;
+	FIELD field_45903 receivedPacketSizeLog Lnet/minecraft/class_8743;
 	METHOD <init> (Lnet/minecraft/class_542;)V
 		ARG 1 args
 	METHOD method_1476 checkIs64Bit ()Z
@@ -258,7 +260,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_1534 getLastFrameDuration ()F
 	METHOD method_1536 doAttack ()Z
 	METHOD method_1538 getMusicTracker ()Lnet/minecraft/class_1142;
-	METHOD method_1539 getSessionProperties ()Lcom/mojang/authlib/properties/PropertyMap;
 	METHOD method_1540 is64Bit ()Z
 	METHOD method_1541 getBlockRenderManager ()Lnet/minecraft/class_776;
 	METHOD method_1542 isInSingleplayer ()Z
@@ -282,7 +283,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 0 report
 	METHOD method_1566 getToastManager ()Lnet/minecraft/class_374;
 	METHOD method_1569 isWindowFocused ()Z
-	METHOD method_1570 getMetricsData ()Lnet/minecraft/class_3517;
 	METHOD method_1571 getCreativeHotbarStorage ()Lnet/minecraft/class_302;
 	METHOD method_1573 forcesUnicodeFont ()Z
 	METHOD method_1574 tick ()V
@@ -524,6 +524,11 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_52701 uuidEquals (Ljava/util/UUID;)Z
 		ARG 1 uuid
 	METHOD method_52702 getSymlinkFinder ()Lnet/minecraft/class_8580;
+	METHOD method_52703 enterReconfiguration (Lnet/minecraft/class_437;)V
+		ARG 1 screen
+	METHOD method_53462 getGameProfile ()Lcom/mojang/authlib/GameProfile;
+	METHOD method_53465 onFinishedLoading ()V
+	METHOD method_53466 isFinishedLoading ()Z
 	CLASS class_5859 ChatRestriction
 		COMMENT Represents the restrictions on chat on a Minecraft client.
 		COMMENT

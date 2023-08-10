@@ -1,6 +1,6 @@
 CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 	COMMENT A set of utility functions for reading, writing, and scanning NBT files.
-	METHOD method_10625 read (Ljava/io/DataInput;Lnet/minecraft/class_2505;)Lnet/minecraft/class_2487;
+	METHOD method_10625 readCompound (Ljava/io/DataInput;Lnet/minecraft/class_2505;)Lnet/minecraft/class_2487;
 		COMMENT Reads an NBT compound from {@code input}.
 		COMMENT
 		COMMENT @return the NBT compound from the input
@@ -12,15 +12,15 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		ARG 0 input
 		ARG 1 depth
 		ARG 2 tracker
-	METHOD method_10627 read (Ljava/io/DataInput;)Lnet/minecraft/class_2487;
+	METHOD method_10627 readCompound (Ljava/io/DataInput;)Lnet/minecraft/class_2487;
 		COMMENT Reads an NBT compound from {@code input}.
 		COMMENT
 		COMMENT @return the NBT compound from the input
 		COMMENT @throws IOException if the IO operation fails or if the root NBT element is
 		COMMENT not a compound
 		ARG 0 input
-	METHOD method_10628 write (Lnet/minecraft/class_2487;Ljava/io/DataOutput;)V
-		COMMENT Writes the {@code nbt} to {@code file}.
+	METHOD method_10628 writeCompound (Lnet/minecraft/class_2487;Ljava/io/DataOutput;)V
+		COMMENT Writes the {@code nbt} to {@code output}.
 		COMMENT
 		COMMENT @throws IOException if the IO operation fails
 		COMMENT @see #write(NbtCompound, File)
@@ -42,6 +42,13 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		ARG 0 nbt
 		ARG 1 file
 	METHOD method_10631 write (Lnet/minecraft/class_2520;Ljava/io/DataOutput;)V
+		COMMENT Writes the {@code nbt} to {@code output}. The output is the byte indicating
+		COMMENT the element type, followed by {@linkplain DataOutput#writeUTF an empty string}
+		COMMENT and the NBT data.
+		COMMENT
+		COMMENT @throws IOException if the IO operation fails
+		COMMENT @see #read(DataInput, NbtTagSizeTracker)
+		COMMENT @see #writeForPacket(NbtElement, DataOutput)
 		ARG 0 nbt
 		ARG 1 output
 	METHOD method_10633 read (Ljava/io/File;)Lnet/minecraft/class_2487;
@@ -108,3 +115,27 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 	METHOD method_40059 decompress (Ljava/io/InputStream;)Ljava/io/DataInputStream;
 		COMMENT {@return a new input stream that decompresses the input {@code stream}}
 		ARG 0 stream
+	METHOD method_52892 read (Ljava/io/DataInput;ILnet/minecraft/class_2505;B)Lnet/minecraft/class_2520;
+		ARG 0 input
+		ARG 1 depth
+		ARG 2 tracker
+		ARG 3 type
+	METHOD method_52893 writeForPacket (Lnet/minecraft/class_2520;Ljava/io/DataOutput;)V
+		COMMENT Writes the {@code nbt} to {@code output}. The output is the byte indicating
+		COMMENT the element type, followed by the NBT data.
+		COMMENT
+		COMMENT @apiNote In vanilla, this is used exclusively in networking.
+		COMMENT @throws IOException if the IO operation fails
+		COMMENT @see #read(DataInput, NbtTagSizeTracker)
+		COMMENT @see #write(NbtElement, DataOutput)
+		ARG 0 nbt
+		ARG 1 output
+	METHOD method_52894 read (Ljava/io/DataInput;Lnet/minecraft/class_2505;)Lnet/minecraft/class_2520;
+		COMMENT Reads an NBT element from {@code input}. Unlike {@link
+		COMMENT #readCompound(DataInput, NbtTagSizeTracker)}, the element does not have to
+		COMMENT be a compound.
+		COMMENT
+		COMMENT @return the NBT element from the input
+		COMMENT @throws IOException if the IO operation fails
+		ARG 0 input
+		ARG 1 tracker
