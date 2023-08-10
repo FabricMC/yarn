@@ -35,6 +35,7 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	FIELD field_45667 CLIENTBOUND_PROTOCOL_KEY Lio/netty/util/AttributeKey;
 	FIELD field_45668 queuedTasks Ljava/util/Queue;
 	FIELD field_45669 prePlayStateListener Lnet/minecraft/class_2547;
+	FIELD field_45955 packetSizeLogger Lnet/minecraft/class_8762;
 	METHOD <init> (Lnet/minecraft/class_2598;)V
 		ARG 1 side
 	METHOD channelActive (Lio/netty/channel/ChannelHandlerContext;)V
@@ -62,7 +63,9 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		ARG 1 packet
 		ARG 2 callbacks
 	METHOD method_10753 connect (Ljava/net/InetSocketAddress;ZLnet/minecraft/class_8743;)Lnet/minecraft/class_2535;
+		ARG 0 address
 		ARG 1 useEpoll
+		ARG 2 packetSizeLog
 	METHOD method_10754 tick ()V
 	METHOD method_10755 getAddress ()Ljava/net/SocketAddress;
 	METHOD method_10756 isLocal ()Z
@@ -123,6 +126,7 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	METHOD method_48311 addHandlers (Lio/netty/channel/ChannelPipeline;Lnet/minecraft/class_2598;Lnet/minecraft/class_8762;)V
 		ARG 0 pipeline
 		ARG 1 side
+		ARG 2 packetSizeLogger
 	METHOD method_52271 connect (Ljava/net/InetSocketAddress;ZLnet/minecraft/class_2535;)Lio/netty/channel/ChannelFuture;
 		ARG 0 address
 		ARG 1 useEpoll
@@ -174,6 +178,8 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		ARG 0 pipeline
 		ARG 1 side
 	METHOD method_52918 flushInternal ()V
+	METHOD method_53505 resetPacketSizeLog (Lnet/minecraft/class_8743;)V
+		ARG 1 log
 	CLASS 1
 		METHOD initChannel (Lio/netty/channel/Channel;)V
 			ARG 1 channel
