@@ -92,9 +92,11 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 	FIELD field_33381 DEFAULT_NAMESPACE Ljava/lang/String;
 	FIELD field_33382 REALMS_NAMESPACE Ljava/lang/String;
 	METHOD <init> (Ljava/lang/String;)V
-		COMMENT <p>Takes a string of the form {@code <namespace>:<path>}, for example {@code minecraft:iron_ingot}.
+		COMMENT <p>Takes a string of the form {@code <namespace>:<path>} or {@code <path>} which will use the default namespace, for example {@code minecraft:iron_ingot} or {@code iron_ingot}.
 		COMMENT <p>The string will be split (on the {@code :}) into an identifier with the specified path and namespace.
 		COMMENT Prefer using the {@link net.minecraft.util.Identifier#Identifier(java.lang.String, java.lang.String) Identifier(java.lang.String, java.lang.String)} constructor that takes the namespace and path as individual parameters to avoid mistakes.
+		COMMENT <p>If there is no colon in the given string argument, the namespace will be set to {@value #DEFAULT_NAMESPACE}, and the path will be the given argument.
+		COMMENT If the colon is the first character of the given string argument (i.e. the namespace is empty), the namespace will also be set to {@value #DEFAULT_NAMESPACE}, and the path will be the given argument without the initial colon.
 		COMMENT @throws InvalidIdentifierException if the string cannot be parsed as an identifier.
 		ARG 1 id
 	METHOD <init> (Ljava/lang/String;Ljava/lang/String;)V
@@ -116,6 +118,7 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 		COMMENT @see #of
 		ARG 0 id
 	METHOD method_12830 split (Ljava/lang/String;C)[Ljava/lang/String;
+		COMMENT Splits the {@code id} into an array of two strings at the first occurrence of {@code delimiter}, excluding the delimiter character, or uses {@value #DEFAULT_NAMESPACE} for the first string in the resulting array when the deliminator does not exist or is the first character.
 		ARG 0 id
 		ARG 1 delimiter
 	METHOD method_12831 isCharValid (C)Z
