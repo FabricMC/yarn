@@ -339,6 +339,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 1 mipmapLevels
 	METHOD method_24226 handleResourceReloadException (Ljava/lang/Throwable;Lnet/minecraft/class_310$class_8764;)V
 		ARG 1 throwable
+		ARG 2 loadingContext
 	METHOD method_24287 getWindowTitle ()Ljava/lang/String;
 	METHOD method_24288 updateWindowTitle ()V
 	METHOD method_24289 getModStatus ()Lnet/minecraft/class_6683;
@@ -377,6 +378,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_31186 onResourceReloadFailure (Ljava/lang/Throwable;Lnet/minecraft/class_2561;Lnet/minecraft/class_310$class_8764;)V
 		ARG 1 exception
 		ARG 2 resourceName
+		ARG 3 loadingContext
 	METHOD method_31320 getSocialInteractionsManager ()Lnet/minecraft/class_5520;
 	METHOD method_31321 isConnectedToServer ()Z
 	METHOD method_31382 createUserApiService (Lcom/mojang/authlib/yggdrasil/YggdrasilAuthenticationService;Lnet/minecraft/class_542;)Lcom/mojang/authlib/minecraft/UserApiService;
@@ -421,6 +423,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_35706 isRealmsEnabled ()Z
 	METHOD method_36561 reloadResources (ZLnet/minecraft/class_310$class_8764;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 force
+		ARG 2 loadingContext
 	METHOD method_37274 addSystemDetailsToCrashReport (Lnet/minecraft/class_6396;Lnet/minecraft/class_310;Lnet/minecraft/class_1076;Ljava/lang/String;Lnet/minecraft/class_315;)Lnet/minecraft/class_6396;
 		ARG 0 systemDetails
 		ARG 1 client
@@ -502,6 +505,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_49294 onForcedResourceReloadFailure ()V
 	METHOD method_51253 getQuickPlayLogger ()Lnet/minecraft/class_8497;
 	METHOD method_51736 collectLoadTimes (Lnet/minecraft/class_310$class_8764;)V
+		ARG 1 loadingContext
 	METHOD method_52699 getGuiAtlasManager ()Lnet/minecraft/class_8658;
 	METHOD method_52700 getCommandHistoryManager ()Lnet/minecraft/class_8657;
 	METHOD method_52701 uuidEquals (Ljava/util/UUID;)Z
@@ -511,7 +515,22 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 1 screen
 	METHOD method_53462 getGameProfile ()Lcom/mojang/authlib/GameProfile;
 	METHOD method_53465 onFinishedLoading (Lnet/minecraft/class_310$class_8764;)V
+		ARG 1 loadingContext
 	METHOD method_53466 isFinishedLoading ()Z
+	METHOD method_53518 isUsernameBanned ()Z
+	METHOD method_53519 (Lcom/mojang/authlib/GameProfile;Ljava/lang/Runnable;)Lnet/minecraft/class_437;
+		ARG 1 onClose
+	METHOD method_53520 (Lcom/mojang/authlib/minecraft/BanDetails;Ljava/lang/Runnable;)Lnet/minecraft/class_437;
+		ARG 1 onClose
+	METHOD method_53523 (Ljava/lang/Runnable;)Lnet/minecraft/class_437;
+		ARG 1 onClose
+	METHOD method_53524 (Ljava/lang/Runnable;Z)V
+		ARG 1 confirmed
+	METHOD method_53525 createInitScreens (Ljava/util/List;)V
+		ARG 1 list
+	METHOD method_53526 getDebugHud ()Lnet/minecraft/class_340;
+	METHOD method_53527 onInitFinished (Lnet/minecraft/class_310$class_8764;)Ljava/lang/Runnable;
+		ARG 1 loadingContext
 	CLASS class_5859 ChatRestriction
 		COMMENT Represents the restrictions on chat on a Minecraft client.
 		COMMENT
@@ -523,3 +542,4 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		METHOD method_33885 getDescription ()Lnet/minecraft/class_2561;
 		METHOD method_33886 allowsChat (Z)Z
 			ARG 1 singlePlayer
+	CLASS class_8764 LoadingContext
