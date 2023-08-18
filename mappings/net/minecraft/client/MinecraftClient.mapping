@@ -323,8 +323,16 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_18506 getOverlay ()Lnet/minecraft/class_4071;
 	METHOD method_18507 (Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletionStage;
 		ARG 0 future
-	METHOD method_20539 openPauseMenu (Z)V
-		ARG 1 pause
+	METHOD method_20539 openGameMenu (Z)V
+		COMMENT Opens the "game menu", also called "pause menu".
+		COMMENT
+		COMMENT <p>This is also used for menu-less pausing, which can be triggered by
+		COMMENT pressing Esc and F3 keys at the same time.
+		COMMENT
+		COMMENT @implNote Calling this does not immediately pause the game. Instead,
+		COMMENT the game is paused during {@linkplain #render the next rendering}.
+		ARG 1 pauseOnly
+			COMMENT whether to trigger menu-less pausing instead of opening the game menu
 	METHOD method_22107 shouldRenderAsync ()Z
 	METHOD method_22108 isRunning ()Z
 	METHOD method_22681 addSystemDetailsToCrashReport (Lnet/minecraft/class_310;Lnet/minecraft/class_1076;Ljava/lang/String;Lnet/minecraft/class_315;Lnet/minecraft/class_128;)V
@@ -340,6 +348,8 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_24226 handleResourceReloadException (Ljava/lang/Throwable;Lnet/minecraft/class_310$class_8764;)V
 		ARG 1 throwable
 		ARG 2 loadingContext
+	METHOD method_24228 (ZLnet/minecraft/class_310$class_8764;Ljava/util/concurrent/CompletableFuture;Ljava/util/Optional;)V
+		ARG 4 error
 	METHOD method_24287 getWindowTitle ()Ljava/lang/String;
 	METHOD method_24288 updateWindowTitle ()V
 	METHOD method_24289 getModStatus ()Lnet/minecraft/class_6683;
@@ -502,6 +512,8 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_48186 getNavigationType ()Lnet/minecraft/class_8015;
 	METHOD method_49292 showResourceReloadFailureToast (Lnet/minecraft/class_2561;)V
 		ARG 1 description
+	METHOD method_49293 (ZLnet/minecraft/class_310$class_8764;Ljava/lang/Throwable;)V
+		ARG 3 throwable
 	METHOD method_49294 onForcedResourceReloadFailure ()V
 	METHOD method_51253 getQuickPlayLogger ()Lnet/minecraft/class_8497;
 	METHOD method_51736 collectLoadTimes (Lnet/minecraft/class_310$class_8764;)V
@@ -522,6 +534,10 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 1 onClose
 	METHOD method_53520 (Lcom/mojang/authlib/minecraft/BanDetails;Ljava/lang/Runnable;)Lnet/minecraft/class_437;
 		ARG 1 onClose
+	METHOD method_53521 (Lnet/minecraft/class_310$class_8764;Ljava/lang/Throwable;)V
+		ARG 2 throwable
+	METHOD method_53522 (Lnet/minecraft/class_310$class_8764;Ljava/util/Optional;)V
+		ARG 2 error
 	METHOD method_53523 (Ljava/lang/Runnable;)Lnet/minecraft/class_437;
 		ARG 1 onClose
 	METHOD method_53524 (Ljava/lang/Runnable;Z)V
