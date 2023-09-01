@@ -1,11 +1,77 @@
 CLASS net/minecraft/class_1741 net/minecraft/item/ArmorMaterial
+	COMMENT Defines the material stats of an {@link ArmorItem} item.
+	COMMENT
+	COMMENT <p>
+	COMMENT To view available vanilla armor materials, visit {@link ArmorMaterials}.
 	METHOD method_24355 getKnockbackResistance ()F
+		COMMENT {@return the knockback resistance value of an {@link ArmorItem} piece using this {@link ArmorMaterial}}
+		COMMENT
+		COMMENT <p>
+		COMMENT {@link ArmorItem} will cover the value returned here into the {@link net.minecraft.entity.attribute.EntityAttributes#GENERIC_KNOCKBACK_RESISTANCE}
+		COMMENT statistic with the {@link net.minecraft.entity.attribute.EntityAttributeModifier.Operation#ADDITION} modifier type.
 	METHOD method_48402 getDurability (Lnet/minecraft/class_1738$class_8051;)I
+		COMMENT Returns the total amount of durability points an {@link ArmorItem} using this {@link ArmorMaterial} has.
+		COMMENT
+		COMMENT <p>
+		COMMENT The value returned here will set the {@link Item.Settings} max durability option when passed
+		COMMENT into {@link ArmorItem#ArmorItem(net.minecraft.item.ArmorMaterial, ArmorItem.Type, Item.Settings)}
+		COMMENT if the value was not already specified.
+		COMMENT
+		COMMENT @return the total durability an {@link ArmorItem} with this {@link ArmorMaterial} has
 		ARG 1 type
+			COMMENT the {@link ArmorItem.Type} of the {@link Item} with this {@link ArmorMaterial}
 	METHOD method_48403 getProtection (Lnet/minecraft/class_1738$class_8051;)I
+		COMMENT Returns the amount of armor protection points offered by an {@link ArmorItem}
+		COMMENT using this {@link ArmorMaterial} while it is worn by a player.
+		COMMENT
+		COMMENT <p>
+		COMMENT The protection value returned here is applied as an {@link net.minecraft.entity.attribute.EntityAttributeModifier}
+		COMMENT to a player wearing the {@link ArmorItem} piece via the {@link net.minecraft.entity.attribute.EntityAttributeModifier.Operation#ADDITION} modifier.
+		COMMENT
+		COMMENT @return the amount of armor protection points offered by an {@link ArmorItem} with this {@link ArmorMaterial}
 		ARG 1 type
+			COMMENT the {@link ArmorItem.Type} of the {@link Item} with this {@link ArmorMaterial}
 	METHOD method_7694 getName ()Ljava/lang/String;
+		COMMENT Returns the {@code name} of this {@link ArmorMaterial}, which is used for locating armor texture files.
+		COMMENT
+		COMMENT <p>
+		COMMENT The return value of this method should be in {@code snake_case}.
+		COMMENT {@link net.minecraft.client.render.entity.feature.ArmorFeatureRenderer} will expect to find an armor
+		COMMENT texture file matching {@code minecraft:textures/models/armor/{material_name}_layer_[1/2].png}
+		COMMENT based off the return result of this method.
+		COMMENT
+		COMMENT <p>
+		COMMENT Example: given a return value of {@code cool_material}, {@code ArmorFeatureRenderer} will require a file
+		COMMENT at {@code minecraft:textures/models/armor/cool_material_layer_1.png} and {@code minecraft:textures/models/armor/cool_material_layer_2.png}.
+		COMMENT
+		COMMENT @return the {@code name} of this armor material in snake_case, used for finding armor textures
 	METHOD method_7695 getRepairIngredient ()Lnet/minecraft/class_1856;
+		COMMENT Returns the {@link Ingredient} used to repair items using this {@link ArmorMaterial}.
+		COMMENT
+		COMMENT <p>
+		COMMENT By default, {@link ArmorItem} will delegate {@link Item#canRepair(ItemStack, ItemStack)}
+		COMMENT back to this method.
+		COMMENT
+		COMMENT @return the {@link Ingredient} required to repair items with this {@link ArmorMaterial}
 	METHOD method_7698 getEquipSound ()Lnet/minecraft/class_3414;
+		COMMENT @return the {@link SoundEvent} played when a {@link net.minecraft.entity.LivingEntity} equips an {@link ArmorItem} using this {@link ArmorMaterial}
 	METHOD method_7699 getEnchantability ()I
+		COMMENT Returns the base enchantment value used by {@link ArmorItem} with this material.
+		COMMENT
+		COMMENT <p>
+		COMMENT By default, {@link ArmorItem} will override {@link Item#getEnchantability()}
+		COMMENT and delegate the call back to this method.
+		COMMENT
+		COMMENT <p>
+		COMMENT A higher return value will result in better enchantment results when using an {@code Enchanting Table}.
+		COMMENT The highest enchantability value in vanilla is Netherite, at {@code 37}.
+		COMMENT
+		COMMENT @return the enchantment value sent back to {@link Item#getEnchantability()} for armor using this material
 	METHOD method_7700 getToughness ()F
+		COMMENT Returns the toughness value of an {@link ArmorItem} piece using this {@link ArmorMaterial}.
+		COMMENT
+		COMMENT <p>
+		COMMENT {@link ArmorItem} will cover the value returned here into the {@link net.minecraft.entity.attribute.EntityAttributes#GENERIC_ARMOR_TOUGHNESS}
+		COMMENT statistic with the {@link net.minecraft.entity.attribute.EntityAttributeModifier.Operation#ADDITION} modifier type.
+		COMMENT
+		COMMENT @return the toughness value of any {@link ArmorItem} using this {@link ArmorMaterial}
