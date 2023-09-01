@@ -1,0 +1,65 @@
+CLASS net/minecraft/class_7610 net/minecraft/network/message/MessageChain
+	COMMENT A class for handling the "message chain".
+	COMMENT
+	COMMENT <p>A message chain (since 1.19.3) is implemented using an integer that is incremented
+	COMMENT for each message, called "index". {@link MessageLink} represents the link that a
+	COMMENT particular message has.
+	COMMENT
+	COMMENT <p>Clients signing a message with its preceding message's index is called
+	COMMENT "packing", and the server creating a signed message with its preceding message's
+	COMMENT index is called "unpacking". Unpacked messages can then be verified to check the
+	COMMENT chain's legitimacy.
+	COMMENT
+	COMMENT @see MessageLink
+	FIELD field_40691 LOGGER Lorg/slf4j/Logger;
+	FIELD field_40692 link Lnet/minecraft/class_7826;
+	METHOD <init> (Ljava/util/UUID;Ljava/util/UUID;)V
+		ARG 1 sender
+		ARG 2 sessionId
+	METHOD method_44874 getUnpacker (Lnet/minecraft/class_7428;)Lnet/minecraft/class_7610$class_7611;
+		ARG 1 playerPublicKey
+	METHOD method_44880 getPacker (Lnet/minecraft/class_7501;)Lnet/minecraft/class_7610$class_7612;
+		ARG 1 signer
+	METHOD method_46310 nextLink ()Lnet/minecraft/class_7826;
+	METHOD method_46311 (Lnet/minecraft/class_7501;Lnet/minecraft/class_7608;)Lnet/minecraft/class_7469;
+		ARG 2 body
+	METHOD method_46312 (Lnet/minecraft/class_7428;Lnet/minecraft/class_7500;Lnet/minecraft/class_7469;Lnet/minecraft/class_7608;)Lnet/minecraft/class_7471;
+		ARG 3 signature
+		ARG 4 body
+	METHOD method_46313 (Lnet/minecraft/class_7826;Lnet/minecraft/class_7608;Lnet/minecraft/class_7498$class_7499;)V
+		ARG 2 updatable
+	CLASS class_7611 Unpacker
+		COMMENT Unpacker creates a signed message on the server with the server's preceding message
+		COMMENT index when they receive a message. Unpacked messages can then be verified to check
+		COMMENT the message chain's legitimacy.
+		COMMENT
+		COMMENT @see MessageChain#getUnpacker
+		FIELD field_40848 NOT_INITIALIZED Lnet/minecraft/class_7610$class_7611;
+			COMMENT An unpacker used when the session is not initialized yet and the secure profile
+			COMMENT is enforced. This always throws the missing profile key exception.
+		METHOD method_46315 (Ljava/util/UUID;Lnet/minecraft/class_7469;Lnet/minecraft/class_7608;)Lnet/minecraft/class_7471;
+			ARG 1 signature
+			ARG 2 body
+		METHOD method_46613 (Lnet/minecraft/class_7469;Lnet/minecraft/class_7608;)Lnet/minecraft/class_7471;
+			ARG 0 signature
+			ARG 1 body
+		METHOD unpack (Lnet/minecraft/class_7469;Lnet/minecraft/class_7608;)Lnet/minecraft/class_7471;
+			ARG 1 signature
+			ARG 2 body
+		METHOD unsigned (Ljava/util/UUID;)Lnet/minecraft/class_7610$class_7611;
+			ARG 0 uuid
+	CLASS class_7612 Packer
+		COMMENT Packers sign a message on the client with its preceding message's index.
+		COMMENT
+		COMMENT @see MessageChain#getPacker
+		FIELD field_40694 NONE Lnet/minecraft/class_7610$class_7612;
+		METHOD method_46316 (Lnet/minecraft/class_7608;)Lnet/minecraft/class_7469;
+			ARG 0 body
+		METHOD pack (Lnet/minecraft/class_7608;)Lnet/minecraft/class_7469;
+			ARG 1 body
+	CLASS class_7825 MessageChainException
+		FIELD field_40693 shouldDisconnect Z
+		METHOD <init> (Lnet/minecraft/class_2561;Z)V
+			ARG 1 message
+			ARG 2 shouldDisconnect
+		METHOD method_46314 shouldDisconnect ()Z

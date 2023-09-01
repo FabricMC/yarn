@@ -48,21 +48,24 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_35007 fallStartPos Lnet/minecraft/class_243;
 	FIELD field_35008 vehicleInLavaRidingPos Lnet/minecraft/class_243;
 	FIELD field_35566 allowServerListing Z
-	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_3218;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_7428;)V
+	FIELD field_39985 sculkShriekerWarningManager Lnet/minecraft/class_7262;
+	FIELD field_39986 session Lnet/minecraft/class_7822;
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_3218;Lcom/mojang/authlib/GameProfile;)V
 		ARG 1 server
 		ARG 2 world
 		ARG 3 profile
-		ARG 4 publicKey
 	METHOD method_14203 copyFrom (Lnet/minecraft/class_3222;Z)V
 		ARG 1 oldPlayer
 		ARG 2 alive
-	METHOD method_14205 sendInitialChunkPackets (Lnet/minecraft/class_1923;Lnet/minecraft/class_2596;)V
+	METHOD method_14205 sendChunkPacket (Lnet/minecraft/class_1923;Lnet/minecraft/class_2596;)V
 		ARG 1 chunkPos
 		ARG 2 chunkDataPacket
 	METHOD method_14206 getPlayerListName ()Lnet/minecraft/class_2561;
-	METHOD method_14207 handleFall (DZ)V
-		ARG 1 heightDifference
-		ARG 3 onGround
+	METHOD method_14207 handleFall (DDDZ)V
+		ARG 1 xDifference
+		ARG 3 yDifference
+		ARG 5 zDifference
+		ARG 7 onGround
 	METHOD method_14208 isInTeleportationState ()Z
 	METHOD method_14209 getIp ()Ljava/lang/String;
 	METHOD method_14210 (Lnet/minecraft/class_2561;Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
@@ -120,12 +123,9 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 1 world
 	METHOD method_14246 sendUnloadChunkPacket (Lnet/minecraft/class_1923;)V
 		ARG 1 chunkPos
-	METHOD method_14247 closeScreenHandler ()V
-		COMMENT Runs closing tasks for the current screen handler and
-		COMMENT sets it to the {@code playerScreenHandler}.
 	METHOD method_14248 getStatHandler ()Lnet/minecraft/class_3442;
 	METHOD method_14250 (ILnet/minecraft/class_267;)V
-		ARG 1 score
+		ARG 1 innerScore
 	METHOD method_14251 teleport (Lnet/minecraft/class_3218;DDDFF)V
 		ARG 1 targetWorld
 		ARG 2 x
@@ -156,6 +156,8 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_26280 getSpawnPointPosition ()Lnet/minecraft/class_2338;
 	METHOD method_26281 getSpawnPointDimension ()Lnet/minecraft/class_5321;
 	METHOD method_26282 isSpawnForced ()Z
+	METHOD method_26283 (Lnet/minecraft/class_1588;)Z
+		ARG 1 entity
 	METHOD method_26284 setSpawnPoint (Lnet/minecraft/class_5321;Lnet/minecraft/class_2338;FZZ)V
 		COMMENT Sets the player's spawn point.
 		ARG 1 dimension
@@ -175,6 +177,8 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 2 direction
 	METHOD method_26287 isBedTooFarAway (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
+	METHOD method_29205 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
+		ARG 1 encoded
 	METHOD method_29777 (Lnet/minecraft/class_1308;)V
 		ARG 1 entity
 	METHOD method_29778 (Lnet/minecraft/class_1308;)Z
@@ -196,15 +200,10 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		COMMENT
 		COMMENT @see MinecraftServer#getForcedGameMode
 		ARG 1 backupGameMode
-	METHOD method_32747 setWorld (Lnet/minecraft/class_3218;)V
-		ARG 1 world
 	METHOD method_32748 setGameMode (Lnet/minecraft/class_2487;)V
 		ARG 1 nbt
 	METHOD method_32749 writeGameModeNbt (Lnet/minecraft/class_2487;)V
 		ARG 1 nbt
-	METHOD method_33793 shouldFilterText ()Z
-	METHOD method_33794 acceptsMessage (Lnet/minecraft/class_5321;)Z
-		ARG 1 typeKey
 	METHOD method_33795 shouldFilterMessagesSentTo (Lnet/minecraft/class_3222;)Z
 		ARG 1 player
 	METHOD method_34225 onSpawn ()V
@@ -216,38 +215,38 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_38786 tickFallStartPos ()V
 	METHOD method_38787 tickVehicleInLavaRiding ()V
 	METHOD method_39426 allowsServerListing ()Z
-	METHOD method_43502 sendMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_5321;)V
-		COMMENT Sends a message to the player.
-		COMMENT
-		COMMENT @see #sendMessage(Text)
-		COMMENT @see #sendChatMessage(SignedMessage, ChatMessageSender, RegistryKey)
+	METHOD method_43502 sendMessageToClient (Lnet/minecraft/class_2561;Z)V
 		ARG 1 message
-		ARG 2 typeKey
-	METHOD method_43505 sendChatMessage (Lnet/minecraft/class_7471;Lnet/minecraft/class_7436;Lnet/minecraft/class_5321;)V
+		ARG 2 overlay
+	METHOD method_43505 sendChatMessage (Lnet/minecraft/class_7604;ZLnet/minecraft/class_2556$class_7602;)V
 		COMMENT Sends a chat message to the player.
 		COMMENT
 		COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
-		COMMENT {@link net.minecraft.network.message.MessageSignature#none} - to send a chat
+		COMMENT {@link net.minecraft.network.message.SignedMessage#ofUnsigned} - to send a chat
 		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
 		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
-		COMMENT will log a warning. See {@link
-		COMMENT net.minecraft.network.message.MessageSignature#updateSignature} for how the
-		COMMENT message is signed.
+		COMMENT will show a warning and can discard it depending on the client's options.
 		COMMENT
 		COMMENT @see #sendMessage(Text)
-		COMMENT @see #sendMessage(Text, RegistryKey)
+		COMMENT @see #sendMessage(Text, boolean)
 		ARG 1 message
-		ARG 2 sender
-		ARG 3 typeKey
-	METHOD method_43506 sendMessageDeliverError (Lnet/minecraft/class_2561;Lnet/minecraft/class_5321;)V
-		ARG 1 message
-		ARG 2 typeKey
-	METHOD method_43507 (Lnet/minecraft/class_2561;Lnet/minecraft/class_5321;Lio/netty/util/concurrent/Future;)V
-		ARG 3 future
-	METHOD method_43666 getMessageTypeId (Lnet/minecraft/class_5321;)I
-		ARG 1 typeKey
+		ARG 2 filterMaskEnabled
+		ARG 3 params
 	METHOD method_43930 sendServerMetadata (Lnet/minecraft/class_2926;)V
 		ARG 1 metadata
+	METHOD method_44706 acceptsChatMessage ()Z
+	METHOD method_44707 acceptsMessage (Z)Z
+		ARG 1 overlay
+	METHOD method_45163 getSession ()Lnet/minecraft/class_7822;
+	METHOD method_45164 (Lnet/minecraft/class_7262;)V
+		ARG 1 sculkShriekerWarningManager
+	METHOD method_45165 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
+		ARG 1 encoded
+	METHOD method_46364 setSession (Lnet/minecraft/class_7822;)V
+		ARG 1 session
+	METHOD method_51468 setServerWorld (Lnet/minecraft/class_3218;)V
+		ARG 1 world
+	METHOD method_51469 getServerWorld ()Lnet/minecraft/class_3218;
 	METHOD method_7336 changeGameMode (Lnet/minecraft/class_1934;)Z
 		ARG 1 gameMode
 	CLASS 1

@@ -11,21 +11,17 @@ CLASS net/minecraft/class_3560 net/minecraft/world/chunk/light/LightStorage
 	COMMENT @see SkyLightStorage
 	COMMENT @see BlockLightStorage
 	FIELD field_15796 storage Lnet/minecraft/class_3556;
-	FIELD field_15797 markedNotReadySections Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_15798 sectionsToRemove Lit/unimi/dsi/fastutil/longs/LongSet;
-	FIELD field_15799 DIRECTIONS [Lnet/minecraft/class_2350;
-	FIELD field_15800 hasLightUpdates Z
-	FIELD field_15801 EMPTY Lnet/minecraft/class_2804;
 	FIELD field_15802 dirtySections Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_15803 chunkProvider Lnet/minecraft/class_2823;
-	FIELD field_15804 markedReadySections Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_15805 lightType Lnet/minecraft/class_1944;
 	FIELD field_15806 uncachedStorage Lnet/minecraft/class_3556;
 	FIELD field_15807 queuedSections Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
-	FIELD field_15808 readySections Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_16448 notifySections Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_19342 columnsToRetain Lit/unimi/dsi/fastutil/longs/LongSet;
-	FIELD field_25621 queuedEdgeSections Lit/unimi/dsi/fastutil/longs/LongSet;
+	FIELD field_44716 sectionPropagations Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
+	FIELD field_44717 hasLightUpdates Z
+	FIELD field_44718 enabledColumns Lit/unimi/dsi/fastutil/longs/LongSet;
 	METHOD <init> (Lnet/minecraft/class_1944;Lnet/minecraft/class_2823;Lnet/minecraft/class_3556;)V
 		ARG 1 lightType
 		ARG 2 chunkProvider
@@ -43,18 +39,15 @@ CLASS net/minecraft/class_3560 net/minecraft/world/chunk/light/LightStorage
 	METHOD method_15526 setSectionStatus (JZ)V
 		ARG 1 sectionPos
 		ARG 3 notReady
-	METHOD method_15527 updateLight (Lnet/minecraft/class_3558;ZZ)V
+	METHOD method_15527 updateLight (Lnet/minecraft/class_3558;)V
 		ARG 1 lightProvider
-		ARG 2 doSkylight
-		ARG 3 skipEdgeLightPropagation
 	METHOD method_15528 hasLightUpdates ()Z
 	METHOD method_15529 createSection (J)Lnet/minecraft/class_2804;
 		ARG 1 sectionPos
 	METHOD method_15530 notifyChanges ()V
-	METHOD method_15532 enqueueSectionData (JLnet/minecraft/class_2804;Z)V
+	METHOD method_15532 enqueueSectionData (JLnet/minecraft/class_2804;)V
 		ARG 1 sectionPos
 		ARG 3 array
-		ARG 4 nonEdge
 	METHOD method_15533 getLightSection (Lnet/minecraft/class_3556;J)Lnet/minecraft/class_2804;
 		ARG 1 storage
 		ARG 2 sectionPos
@@ -63,19 +56,48 @@ CLASS net/minecraft/class_3560 net/minecraft/world/chunk/light/LightStorage
 	METHOD method_15535 setColumnEnabled (JZ)V
 		ARG 1 columnPos
 		ARG 3 enabled
-	METHOD method_15536 removeSection (Lnet/minecraft/class_3558;J)V
-		ARG 1 storage
-		ARG 2 sectionPos
 	METHOD method_15537 get (J)I
 		ARG 1 blockPos
 	METHOD method_15538 getLight (J)I
 		ARG 1 blockPos
-	METHOD method_15539 updateAll ()V
 	METHOD method_20533 getLightSection (J)Lnet/minecraft/class_2804;
 		ARG 1 sectionPos
 	METHOD method_20600 setRetainColumn (JZ)V
 		ARG 1 sectionPos
 		ARG 3 retain
-	METHOD method_29967 updateSection (Lnet/minecraft/class_3558;J)V
-		ARG 1 lightProvider
-		ARG 2 sectionPos
+	METHOD method_51415 addNotifySections (J)V
+		ARG 1 id
+	METHOD method_51546 setSectionPropagation (JB)V
+		ARG 1 sectionPos
+		ARG 3 flags
+	METHOD method_51547 (J)Lnet/minecraft/class_2804;
+		ARG 1 sectionPos
+	METHOD method_51548 isSectionInEnabledColumn (J)Z
+		ARG 1 sectionPos
+	METHOD method_51549 getStatus (J)Lnet/minecraft/class_3560$class_8530;
+		ARG 1 sectionPos
+	METHOD method_51550 queueForUpdate (J)V
+		ARG 1 sectionPos
+	METHOD method_51551 queueForRemoval (J)V
+		ARG 1 sectionPos
+	CLASS class_8529 PropagationFlags
+		FIELD field_44720 MIN_NEIGHBOR_COUNT I
+		FIELD field_44721 MAX_NEIGHBOR_COUNT I
+		FIELD field_44723 NEIGHBOR_COUNT_MASK B
+		METHOD method_51552 isReady (B)Z
+			ARG 0 packed
+		METHOD method_51553 withNeighborCount (BI)B
+			ARG 0 packed
+			ARG 1 neighborCount
+		METHOD method_51554 setReady (BZ)B
+			ARG 0 packed
+			ARG 1 ready
+		METHOD method_51555 getNeighborCount (B)I
+			ARG 0 packed
+		METHOD method_51556 getStatus (B)Lnet/minecraft/class_3560$class_8530;
+			ARG 0 packed
+	CLASS class_8530 Status
+		FIELD field_44727 sigil Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
+			ARG 3 sigil
+		METHOD method_51557 getSigil ()Ljava/lang/String;

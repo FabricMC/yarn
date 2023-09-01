@@ -19,9 +19,10 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_30079 FALL_FLYING_FLAG I
 	FIELD field_30082 noDrag Z
 	FIELD field_33908 MAX_ENTITY_VIEWING_DISTANCE D
+	FIELD field_36332 LOGGER Lorg/slf4j/Logger;
 	FIELD field_37421 experienceDroppingDisabled Z
+	FIELD field_42108 limbAnimator Lnet/minecraft/class_8080;
 	FIELD field_6210 bodyTrackingIncrements I
-	FIELD field_6211 lastLimbDistance F
 	FIELD field_6212 sidewaysSpeed F
 	FIELD field_6213 deathTime I
 	FIELD field_6214 POTION_SWIRLS_AMBIENT Lnet/minecraft/class_2940;
@@ -32,7 +33,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6221 serverPitch D
 	FIELD field_6222 itemUseTimeLeft I
 	FIELD field_6224 serverX D
-	FIELD field_6225 limbDistance F
 	FIELD field_6226 lastDamageTime J
 	FIELD field_6227 upwardSpeed F
 	FIELD field_6228 jumpingCooldown I
@@ -56,7 +56,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6246 absorptionAmount F
 	FIELD field_6247 HEALTH Lnet/minecraft/class_2940;
 	FIELD field_6248 syncedArmorStacks Lnet/minecraft/class_2371;
-	FIELD field_6249 limbAngle F
 	FIELD field_6250 forwardSpeed F
 	FIELD field_6251 handSwingProgress F
 	FIELD field_6252 handSwinging Z
@@ -77,7 +76,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6268 lastBlockPos Lnet/minecraft/class_2338;
 	FIELD field_6269 defaultMaxHealth I
 	FIELD field_6270 lastAttackTime I
-	FIELD field_6271 knockbackVelocity F
 	FIELD field_6272 dead Z
 	FIELD field_6273 lastAttackedTicks I
 	FIELD field_6274 attacker Lnet/minecraft/class_1309;
@@ -87,21 +85,15 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6278 despawnCounter I
 	FIELD field_6279 handSwingTicks I
 	FIELD field_6280 activeStatusEffects Ljava/util/Map;
-	FIELD field_6281 airStrafingSpeed F
-		COMMENT Affects horizontal aerial velocity of entities (eg. when a player jumps,
-		COMMENT is falling, or is flying, while holding the horizontal movement keys)
 	FIELD field_6282 jumping Z
 	FIELD field_6283 bodyYaw F
 	FIELD field_6284 serverYaw D
 	FIELD field_6285 effectsChanged Z
 	FIELD field_6287 movementSpeed F
 	METHOD method_16077 dropLoot (Lnet/minecraft/class_1282;Z)V
-		ARG 1 source
+		ARG 1 damageSource
 		ARG 2 causedByPlayer
 	METHOD method_16078 dropInventory ()V
-	METHOD method_16079 getLootContextBuilder (ZLnet/minecraft/class_1282;)Lnet/minecraft/class_47$class_48;
-		ARG 1 causedByPlayer
-		ARG 2 source
 	METHOD method_16080 drop (Lnet/minecraft/class_1282;)V
 		ARG 1 source
 	METHOD method_16826 setDespawnCounter (I)V
@@ -146,7 +138,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 slipperiness
 	METHOD method_18807 getDrinkSound (Lnet/minecraft/class_1799;)Lnet/minecraft/class_3414;
 		ARG 1 stack
-	METHOD method_18808 getArrowType (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1799;
+	METHOD method_18808 getProjectileType (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1799;
 		ARG 1 stack
 	METHOD method_18865 applyFoodEffects (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)V
 		ARG 1 stack
@@ -248,9 +240,8 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_28305 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
 		ARG 1 brain
 	METHOD method_28306 createBrainProfile ()Lnet/minecraft/class_4095$class_5303;
-	METHOD method_29242 updateLimbs (Lnet/minecraft/class_1309;Z)V
-		ARG 1 entity
-		ARG 2 flutter
+	METHOD method_29242 updateLimbs (Z)V
+		ARG 1 flutter
 	METHOD method_29499 triggerItemPickedUpByEntityCriteria (Lnet/minecraft/class_1542;)V
 		COMMENT Called to trigger advancement criteria when an entity picks up an item
 		COMMENT thrown by a player.
@@ -329,15 +320,44 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 			COMMENT the source entity or {@code null} for non-entity sources
 	METHOD method_37410 processEquippedStack (Lnet/minecraft/class_1799;)V
 		ARG 1 stack
-	METHOD method_37416 getJumpBoostVelocityModifier ()D
+	METHOD method_37416 getJumpBoostVelocityModifier ()F
 	METHOD method_39760 getFallSounds ()Lnet/minecraft/class_1309$class_6823;
 	METHOD method_41329 disableExperienceDropping ()V
 	METHOD method_41330 isExperienceDroppingDisabled ()Z
 	METHOD method_42149 disablesShield ()Z
 	METHOD method_44201 isArmorSlot (Lnet/minecraft/class_1304;)Z
 		ARG 1 slot
-	METHOD method_44202 playEquipSound (Lnet/minecraft/class_1799;)V
+	METHOD method_45324 areItemsDifferent (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
+		ARG 2 stack2
+	METHOD method_45325 getAttributeValue (Lnet/minecraft/class_6880;)D
+		ARG 1 attribute
+	METHOD method_45326 getAttributeBaseValue (Lnet/minecraft/class_6880;)D
+		ARG 1 attribute
+	METHOD method_47921 getAttackPos ()Lnet/minecraft/class_243;
+		COMMENT {@return this entity's attack position} Used to determine if a mob can perform a melee attack on this entity. May be offset by a mount.
+		COMMENT @see net.minecraft.entity.AttackPosOffsettingMount#getPassengerAttackYOffset
+	METHOD method_48157 getDamageTiltYaw ()F
+	METHOD method_48565 updateLimbs (F)V
+		ARG 1 posDelta
+	METHOD method_48761 tiltScreen (DD)V
+		ARG 1 deltaX
+		ARG 3 deltaZ
+	METHOD method_49481 tickControlled (Lnet/minecraft/class_1657;Lnet/minecraft/class_243;)V
+		ARG 1 controllingPlayer
+		ARG 2 movementInput
+	METHOD method_49482 getControlledMovementInput (Lnet/minecraft/class_1657;Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 1 controllingPlayer
+		ARG 2 movementInput
+	METHOD method_49483 travelControlled (Lnet/minecraft/class_1657;Lnet/minecraft/class_243;)V
+		ARG 1 controllingPlayer
+		ARG 2 movementInput
+	METHOD method_49484 getOffGroundSpeed ()F
+	METHOD method_49485 getSaddledSpeed (Lnet/minecraft/class_1657;)F
+		ARG 1 controllingPlayer
+	METHOD method_51851 getLootTableSeed ()J
+	METHOD method_52197 sendEffectToControllingPlayer (Lnet/minecraft/class_1293;)V
+		ARG 1 effect
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
 	METHOD method_5989 getLootTable ()Lnet/minecraft/class_2960;
@@ -412,7 +432,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6032 getHealth ()F
 	METHOD method_6033 setHealth (F)V
 		ARG 1 health
-	METHOD method_6034 canMoveVoluntarily ()Z
 	METHOD method_6035 tickRiptide (Lnet/minecraft/class_238;Lnet/minecraft/class_238;)V
 		ARG 1 a
 		ARG 2 b

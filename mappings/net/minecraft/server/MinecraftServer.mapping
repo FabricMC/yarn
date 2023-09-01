@@ -30,7 +30,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_24370 structureTemplateManager Lnet/minecraft/class_3485;
 	FIELD field_24371 saveHandler Lnet/minecraft/class_29;
 	FIELD field_24372 saveProperties Lnet/minecraft/class_5219;
-	FIELD field_25132 registryManager Lnet/minecraft/class_5455$class_6890;
+	FIELD field_25132 combinedDynamicRegistries Lnet/minecraft/class_7780;
 	FIELD field_25318 resourceManagerHolder Lnet/minecraft/server/MinecraftServer$class_6897;
 	FIELD field_33205 MILLISECONDS_PER_TICK J
 	FIELD field_33210 START_TICKET_CHUNK_RADIUS I
@@ -47,6 +47,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_35641 ANONYMOUS_PLAYER_PROFILE Lcom/mojang/authlib/GameProfile;
 	FIELD field_39214 hostProfile Lcom/mojang/authlib/GameProfile;
 	FIELD field_39440 apiServices Lnet/minecraft/class_7497;
+	FIELD field_42958 favicon Lnet/minecraft/class_2926$class_8145;
 	FIELD field_4543 onlineMode Z
 	FIELD field_4544 running Z
 	FIELD field_4546 LOGGER Lorg/slf4j/Logger;
@@ -118,7 +119,6 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 path
 	METHOD method_21714 getFunctionPermissionLevel ()I
 	METHOD method_22827 getDataCommandStorage ()Lnet/minecraft/class_4565;
-	METHOD method_22828 getPredicateManager ()Lnet/minecraft/class_4567;
 	METHOD method_24307 getModStatus ()Lnet/minecraft/class_6683;
 	METHOD method_24487 startTickMetrics ()V
 	METHOD method_24488 isDebugRunning ()Z
@@ -143,7 +143,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_29437 (Lnet/minecraft/class_5455$class_6890;Lcom/google/common/collect/ImmutableList;)Ljava/util/concurrent/CompletionStage;
 		ARG 2 resourcePacks
 	METHOD method_29439 reloadResources (Ljava/util/Collection;)Ljava/util/concurrent/CompletableFuture;
-		COMMENT Reloads this server's datapacks.
+		COMMENT Reloads this server's data packs.
 		COMMENT
 		COMMENT @return a completable future which specifies whether the reload was successful
 		COMMENT A reload has failed when the future is exceptionally completed.
@@ -153,10 +153,11 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 2 resourceManagerHolder
 	METHOD method_29735 createDataPackSettings (Lnet/minecraft/class_3283;)Lnet/minecraft/class_5359;
 		ARG 0 dataPackManager
-	METHOD method_29736 loadDataPacks (Lnet/minecraft/class_3283;Lnet/minecraft/class_5359;Z)Lnet/minecraft/class_5359;
+	METHOD method_29736 loadDataPacks (Lnet/minecraft/class_3283;Lnet/minecraft/class_5359;ZLnet/minecraft/class_7699;)Lnet/minecraft/class_7712;
 		ARG 0 resourcePackManager
 		ARG 1 dataPackSettings
 		ARG 2 safeMode
+		ARG 3 enabledFeatures
 	METHOD method_29738 (Ljava/util/Collection;Ljava/lang/String;)Z
 		ARG 1 name
 	METHOD method_29740 startServer (Ljava/util/function/Function;)Lnet/minecraft/server/MinecraftServer;
@@ -169,7 +170,6 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 player
 	METHOD method_31400 generateKeyPair ()V
 	METHOD method_32303 requireResourcePack ()Z
-	METHOD method_32699 getItemModifierManager ()Lnet/minecraft/class_5640;
 	METHOD method_32816 getPlayerInteractionManager (Lnet/minecraft/class_3222;)Lnet/minecraft/class_3225;
 		ARG 1 player
 	METHOD method_34864 getResourceManager ()Lnet/minecraft/class_3300;
@@ -246,8 +246,13 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3745 setFlightEnabled (Z)V
 		ARG 1 flightEnabled
 	METHOD method_3747 stop (Z)V
-	METHOD method_37475 (Lnet/minecraft/class_2926;Ljava/io/File;)V
-		ARG 1 file
+		COMMENT Stops this server.
+		COMMENT
+		COMMENT @apiNote Pass {@code true} to {@code waitForShutdown} to wait until the server shuts
+		COMMENT down. Note that this must be {@code false} if called from the server thread,
+		COMMENT otherwise it deadlocks.
+		ARG 1 waitForShutdown
+			COMMENT whether to wait for server shutdown, if called outside the server thread
 	METHOD method_3748 tick (Ljava/util/function/BooleanSupplier;)V
 		ARG 1 shouldKeepTicking
 	METHOD method_3749 getMaxWorldBorderRadius ()I
@@ -299,8 +304,6 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3787 getNetworkIo ()Lnet/minecraft/class_3242;
 	METHOD method_3788 getCurrentPlayerCount ()I
 	METHOD method_3790 getDefaultGameMode ()Lnet/minecraft/class_1934;
-	METHOD method_3791 setFavicon (Lnet/minecraft/class_2926;)V
-		ARG 1 metadata
 	METHOD method_3793 getUserCache ()Lnet/minecraft/class_3312;
 	METHOD method_3796 shouldSpawnAnimals ()Z
 	METHOD method_3798 getOpPermissionLevel ()I
@@ -406,22 +409,38 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_41239 getMaxChainedNeighborUpdates ()I
 	METHOD method_42062 forceStopRecorder ()V
 	METHOD method_43500 shouldEnforceSecureProfile ()Z
-	METHOD method_43614 logChatMessage (Lnet/minecraft/class_7436;Lnet/minecraft/class_2561;Lnet/minecraft/class_5321;)V
-		ARG 1 sender
-		ARG 2 message
-		ARG 3 typeKey
+	METHOD method_43614 logChatMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_2556$class_7602;Ljava/lang/String;)V
+		ARG 1 message
+		ARG 2 params
+		ARG 3 prefix
 	METHOD method_43659 getResourcePackProperties ()Ljava/util/Optional;
 	METHOD method_43824 getHostProfile ()Lcom/mojang/authlib/GameProfile;
 	METHOD method_43825 setHostProfile (Lcom/mojang/authlib/GameProfile;)V
 		ARG 1 hostProfile
-	METHOD method_43928 shouldPreviewChat ()Z
 	METHOD method_43929 getMessageDecorator ()Lnet/minecraft/class_7492;
 		COMMENT {@return the message decorator used by the server}
 		COMMENT
 		COMMENT @see MessageDecorator
 	METHOD method_44301 getServicesSignatureVerifier ()Lnet/minecraft/class_7500;
-	METHOD method_44605 (Lnet/minecraft/class_5321;Lnet/minecraft/class_2378;)Lnet/minecraft/class_2556;
-		ARG 1 registry
+	METHOD method_46220 (Lnet/minecraft/class_3288;)Ljava/lang/String;
+		ARG 0 profile
+	METHOD method_46221 getCombinedDynamicRegistries ()Lnet/minecraft/class_7780;
+	METHOD method_46841 (Lnet/minecraft/class_3218;Lnet/minecraft/class_3215;Lnet/minecraft/class_5268;Lnet/minecraft/class_6880$class_6883;)V
+		ARG 3 feature
+	METHOD method_46842 (Lnet/minecraft/class_2378;)Ljava/util/Optional;
+		ARG 0 featureRegistry
+	METHOD method_49384 loadFavicon ()Ljava/util/Optional;
+	METHOD method_49385 createMetadata ()Lnet/minecraft/class_2926;
+	METHOD method_49386 createMetadataPlayers ()Lnet/minecraft/class_2926$class_2927;
+	METHOD method_49387 (Ljava/nio/file/Path;)Ljava/util/Optional;
+		ARG 0 path
+	METHOD method_49388 (Ljava/nio/file/Path;)Z
+		ARG 0 path
+	METHOD method_49389 (Ljava/nio/file/Path;)Z
+		ARG 0 path
+	METHOD method_49749 sendTimeUpdatePackets ()V
+	METHOD method_49750 sendTimeUpdatePackets (Lnet/minecraft/class_3218;)V
+		ARG 1 world
 	METHOD method_5387 isMainThread ()Z
 	CLASS class_6414 DebugStart
 		FIELD field_33980 time J

@@ -20,10 +20,12 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 	FIELD field_14361 whitelist Lnet/minecraft/class_3337;
 	FIELD field_14362 statisticsMap Ljava/util/Map;
 	FIELD field_14364 BANNED_IPS_FILE Ljava/io/File;
-	FIELD field_24626 registryManager Lnet/minecraft/class_5455$class_6890;
+	FIELD field_24626 registryManager Lnet/minecraft/class_7780;
 	FIELD field_29790 LATENCY_UPDATE_INTERVAL I
 	FIELD field_34895 simulationDistance I
-	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_5455$class_6890;Lnet/minecraft/class_29;I)V
+	FIELD field_39921 FILTERED_FULL_TEXT Lnet/minecraft/class_2561;
+	FIELD field_40966 syncedRegistryManager Lnet/minecraft/class_5455$class_6890;
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_7780;Lnet/minecraft/class_29;I)V
 		ARG 1 server
 		ARG 2 registryManager
 		ARG 3 saveHandler
@@ -126,9 +128,8 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 		ARG 1 profile
 	METHOD method_14611 remove (Lnet/minecraft/class_3222;)V
 		ARG 1 player
-	METHOD method_14613 createPlayer (Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_7428;)Lnet/minecraft/class_3222;
+	METHOD method_14613 createPlayer (Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/class_3222;
 		ARG 1 profile
-		ARG 2 publicKey
 	METHOD method_14614 isWhitelistEnabled ()Z
 	METHOD method_14617 saveAllPlayerData ()V
 	METHOD method_18241 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)Lnet/minecraft/class_1297;
@@ -140,127 +141,86 @@ CLASS net/minecraft/class_3324 net/minecraft/server/PlayerManager
 	METHOD method_38651 getSimulationDistance ()I
 	METHOD method_43511 (Lnet/minecraft/class_2561;Lnet/minecraft/class_3222;)Lnet/minecraft/class_2561;
 		ARG 1 player
-	METHOD method_43512 broadcast (Lnet/minecraft/class_2561;Ljava/util/function/Function;Lnet/minecraft/class_5321;)V
+	METHOD method_43512 broadcast (Lnet/minecraft/class_2561;Ljava/util/function/Function;Z)V
 		COMMENT Broadcasts a message to all players and the server console. A different
 		COMMENT message can be sent to a different player.
 		COMMENT
-		COMMENT @see #broadcast(Text, RegistryKey)
-		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, RegistryKey)
-		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, RegistryKey)
-		COMMENT @see #broadcast(SignedMessage, MessageSender, RegistryKey)
-		COMMENT @see #broadcast(SignedMessage, Function, MessageSender, RegistryKey)
+		COMMENT @see #broadcast(Text, boolean)
+		COMMENT @see #broadcast(SignedMessage, ServerCommandSource, MessageType.Parameters)
+		COMMENT @see #broadcast(SignedMessage, ServerPlayerEntity, MessageType.Parameters)
 		ARG 1 message
 		ARG 2 playerMessageFactory
 			COMMENT a function that takes the player to send the message to
 			COMMENT and returns either the text to send to them or {@code null}
 			COMMENT to indicate the message should not be sent to them
-		ARG 3 typeKey
-	METHOD method_43513 broadcast (Lnet/minecraft/class_7471;Ljava/util/function/Function;Lnet/minecraft/class_7436;Lnet/minecraft/class_5321;)V
-		COMMENT Broadcasts a chat message to all players and the server console. A different
-		COMMENT message can be sent to a different player.
-		COMMENT
-		COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
-		COMMENT {@link net.minecraft.network.message.MessageSignature#none} - to send a chat
-		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
-		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
-		COMMENT will log a warning. See {@link
-		COMMENT net.minecraft.network.message.MessageSignature#updateSignature} for how the
-		COMMENT message is signed.
-		COMMENT
-		COMMENT @apiNote This method is used to broadcast a message sent by a player
-		COMMENT through {@linkplain net.minecraft.client.gui.screen.ChatScreen the chat screen}
-		COMMENT as well as through commands like {@link net.minecraft.server.command.MeCommand} or
-		COMMENT {@link net.minecraft.server.command.SayCommand} .
-		COMMENT
-		COMMENT @see #broadcast(Text, RegistryKey)
-		COMMENT @see #broadcast(Text, Function, RegistryKey)
-		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, RegistryKey)
-		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, RegistryKey)
-		COMMENT @see #broadcast(SignedMessage, MessageSender, RegistryKey)
-		ARG 1 message
-		ARG 2 playerMessageFactory
-			COMMENT a function that takes the player to send the message to
-			COMMENT and returns either the message to send to them or {@code null}
-			COMMENT to indicate the message should not be sent to them
-		ARG 3 sender
-		ARG 4 typeKey
-	METHOD method_43514 broadcast (Lnet/minecraft/class_2561;Lnet/minecraft/class_5321;)V
+		ARG 3 overlay
+	METHOD method_43514 broadcast (Lnet/minecraft/class_2561;Z)V
 		COMMENT Broadcasts a message to all players and the server console.
 		COMMENT
 		COMMENT @apiNote This is used to send general messages such as a death
 		COMMENT message or a join/leave message.
 		COMMENT
-		COMMENT @see #broadcast(Text, Function, RegistryKey)
-		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, RegistryKey)
-		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, RegistryKey)
-		COMMENT @see #broadcast(SignedMessage, MessageSender, RegistryKey)
-		COMMENT @see #broadcast(SignedMessage, Function, MessageSender, RegistryKey)
+		COMMENT @see #broadcast(Text, Function, boolean)
+		COMMENT @see #broadcast(SignedMessage, ServerCommandSource, MessageType.Parameters)
+		COMMENT @see #broadcast(SignedMessage, ServerPlayerEntity, MessageType.Parameters)
 		ARG 1 message
-		ARG 2 typeKey
+		ARG 2 overlay
 	METHOD method_43670 (Lnet/minecraft/class_3222;Lnet/minecraft/server/MinecraftServer$class_7460;)V
 		ARG 1 properties
-	METHOD method_43672 (Lnet/minecraft/class_7471;Lnet/minecraft/class_3222;)Lnet/minecraft/class_7471;
-		ARG 1 player
-	METHOD method_43673 broadcast (Lnet/minecraft/class_5837;Lnet/minecraft/class_3222;Lnet/minecraft/class_5321;)V
+	METHOD method_43673 broadcast (Lnet/minecraft/class_7471;Lnet/minecraft/class_3222;Lnet/minecraft/class_2556$class_7602;)V
 		COMMENT Broadcasts a chat message to all players and the server console.
 		COMMENT
 		COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
-		COMMENT {@link net.minecraft.network.message.MessageSignature#none} - to send a chat
+		COMMENT {@link net.minecraft.network.message.SignedMessage#ofUnsigned} - to send a chat
 		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
 		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
-		COMMENT will log a warning. See {@link
-		COMMENT net.minecraft.network.message.MessageSignature#updateSignature} for how the
-		COMMENT message is signed.
+		COMMENT will show a warning and can discard it depending on the client's options.
 		COMMENT
 		COMMENT @apiNote This method is used to broadcast a message sent by a player
 		COMMENT through {@linkplain net.minecraft.client.gui.screen.ChatScreen the chat screen}
 		COMMENT as well as through commands like {@link net.minecraft.server.command.MeCommand} or
 		COMMENT {@link net.minecraft.server.command.SayCommand} .
 		COMMENT
-		COMMENT @see #broadcast(Text, RegistryKey)
-		COMMENT @see #broadcast(Text, Function, RegistryKey)
-		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, RegistryKey)
-		COMMENT @see #broadcast(SignedMessage, MessageSender, RegistryKey)
-		COMMENT @see #broadcast(SignedMessage, Function, MessageSender, RegistryKey)
+		COMMENT @see #broadcast(Text, boolean)
+		COMMENT @see #broadcast(Text, Function, boolean)
+		COMMENT @see #broadcast(SignedMessage, ServerCommandSource, MessageType.Parameters)
 		ARG 1 message
 		ARG 2 sender
-		ARG 3 typeKey
-	METHOD method_43674 broadcast (Lnet/minecraft/class_7471;Lnet/minecraft/class_7436;Lnet/minecraft/class_5321;)V
-		COMMENT Broadcasts a chat message to all players and the server console.
-		COMMENT
-		COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
-		COMMENT {@link net.minecraft.network.message.MessageSignature#none} - to send a chat
-		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
-		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
-		COMMENT will log a warning. See {@link
-		COMMENT net.minecraft.network.message.MessageSignature#updateSignature} for how the
-		COMMENT message is signed.
-		COMMENT
-		COMMENT @apiNote This method is used to broadcast messages from commands like {@link
-		COMMENT net.minecraft.server.command.MeCommand} or {@link net.minecraft.server.command.SayCommand}.
-		COMMENT
-		COMMENT @see #broadcast(Text, RegistryKey)
-		COMMENT @see #broadcast(Text, Function, RegistryKey)
-		COMMENT @see #broadcast(FilteredMessage, ServerCommandSource, RegistryKey)
-		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, RegistryKey)
-		COMMENT @see #broadcast(SignedMessage, Function, MessageSender, RegistryKey)
-		ARG 1 message
-		ARG 2 sender
-		ARG 3 typeKey
-	METHOD method_44165 (Lnet/minecraft/class_5837;Lnet/minecraft/class_3222;Lnet/minecraft/class_3222;)Lnet/minecraft/class_7471;
-		ARG 2 player
-	METHOD method_44166 broadcast (Lnet/minecraft/class_5837;Lnet/minecraft/class_2168;Lnet/minecraft/class_5321;)V
+		ARG 3 params
+	METHOD method_44166 broadcast (Lnet/minecraft/class_7471;Lnet/minecraft/class_2168;Lnet/minecraft/class_2556$class_7602;)V
 		COMMENT Broadcasts a chat message to all players and the server console.
 		COMMENT
 		COMMENT @apiNote This method is used to broadcast a message sent by  commands like
 		COMMENT {@link net.minecraft.server.command.MeCommand} or
 		COMMENT {@link net.minecraft.server.command.SayCommand} .
 		COMMENT
-		COMMENT @see #broadcast(Text, RegistryKey)
-		COMMENT @see #broadcast(Text, Function, RegistryKey)
-		COMMENT @see #broadcast(FilteredMessage, ServerPlayerEntity, RegistryKey)
-		COMMENT @see #broadcast(SignedMessage, MessageSender, RegistryKey)
-		COMMENT @see #broadcast(SignedMessage, Function, MessageSender, RegistryKey)
+		COMMENT @see #broadcast(Text, boolean)
+		COMMENT @see #broadcast(Text, Function, boolean)
+		COMMENT @see #broadcast(SignedMessage, ServerPlayerEntity, MessageType.Parameters)
 		ARG 1 message
 		ARG 2 source
-		ARG 3 typeKey
+		ARG 3 params
+	METHOD method_44791 broadcast (Lnet/minecraft/class_7471;Ljava/util/function/Predicate;Lnet/minecraft/class_3222;Lnet/minecraft/class_2556$class_7602;)V
+		COMMENT Broadcasts a chat message to all players and the server console.
+		COMMENT
+		COMMENT <p>Chat messages have signatures. It is possible to use a bogus signature - such as
+		COMMENT {@link net.minecraft.network.message.SignedMessage#ofUnsigned} - to send a chat
+		COMMENT message; however if the signature is invalid (e.g. because the text's content differs
+		COMMENT from the one sent by the client, or because the passed signature is invalid) the client
+		COMMENT will show a warning and can discard it depending on the client's options.
+		COMMENT
+		COMMENT @see #broadcast(Text, boolean)
+		COMMENT @see #broadcast(Text, Function, boolean)
+		COMMENT @see #broadcast(SignedMessage, ServerCommandSource, MessageType.Parameters)
+		COMMENT @see #broadcast(SignedMessage, ServerPlayerEntity, MessageType.Parameters)
+		ARG 1 message
+		ARG 2 shouldSendFiltered
+			COMMENT predicate that determines whether to send the filtered message for the given player
+		ARG 3 sender
+		ARG 4 params
+	METHOD method_44793 verify (Lnet/minecraft/class_7471;)Z
+		COMMENT {@return whether {@code message} is not expired and is verified}
+		COMMENT
+		COMMENT @implNote This only affects the server log. Unverified messages are still broadcast
+		COMMENT to other clients.
+		ARG 1 message

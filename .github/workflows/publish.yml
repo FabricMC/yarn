@@ -4,21 +4,19 @@ concurrency: ci-${{ github.ref }}
 jobs:
   publish:
     if: ${{ github.repository_owner == 'FabricMC' }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
-      image: openjdk:18-jdk
+      image: eclipse-temurin:20-jdk
       options: --user root
     steps:
-      - uses: actions/checkout@v2
-      - uses: gradle/wrapper-validation-action@v1
-
+      - uses: actions/checkout@v3
       # Generate the build number based on tags to allow per branch build numbers, not something github provides by default.
       - name: Generate build number
         id: buildnumber
-        uses: einaregilsson/build-number@v3
+        uses: onyxmueller/build-tag-number@v1
         with:
           token: ${{ secrets.github_token }}
-          prefix: ${{ github.ref }}
+          prefix: "build/${{ github.ref }}"
 
       - run: ./gradlew build javadocJar checkVersion publish --stacktrace
         env:
