@@ -1,4 +1,21 @@
 CLASS net/minecraft/class_1277 net/minecraft/inventory/SimpleInventory
+	COMMENT A generic implementation of {@link Inventory}. This is used in a number of
+	COMMENT places, mostly:
+	COMMENT
+	COMMENT <ul>
+	COMMENT <li>To store the input of a {@link net.minecraft.screen.ScreenHandler} while
+	COMMENT it is open. The inventory is stored as a field, and the screen handler will have
+	COMMENT a slot backed by that inventory.</li>
+	COMMENT <li>When defining the clientside constructor for a {@link
+	COMMENT net.minecraft.screen.ScreenHandler} subclass. The contents of the inventory will
+	COMMENT then be automatically synced from the serverside screen handler, which queries
+	COMMENT the original inventory.</li>
+	COMMENT <li>For entities and block entities which do not interact with hoppers and therefore
+	COMMENT do not need to implement {@link Inventory} themselves.
+	COMMENT </ul>
+	COMMENT
+	COMMENT <p>Changes to the inventory can be listened to either by subclassing this and
+	COMMENT overriding {@link #markDirty}, or by using {@link #addListener}.
 	FIELD field_5828 stacks Lnet/minecraft/class_2371;
 	FIELD field_5829 listeners Ljava/util/List;
 	FIELD field_5831 size I
@@ -24,15 +41,37 @@ CLASS net/minecraft/class_1277 net/minecraft/inventory/SimpleInventory
 	METHOD method_24513 (Lnet/minecraft/class_1799;)Z
 		ARG 0 stack
 	METHOD method_24514 clearToList ()Ljava/util/List;
-		COMMENT Clears this inventory and return all the non-empty stacks in a list.
+		COMMENT Clears this inventory and returns all the non-empty stacks in a list.
+		COMMENT
+		COMMENT @return the non-empty stacks previously in the inventory
 	METHOD method_27070 canInsert (Lnet/minecraft/class_1799;)Z
+		COMMENT {@return whether {@code stack} can be inserted into this inventory}
 		ARG 1 stack
 	METHOD method_5488 removeListener (Lnet/minecraft/class_1265;)V
+		COMMENT Removes a {@code listener} previously added by {@code #addListener}.
+		COMMENT Does nothing when the listener was not found.
 		ARG 1 listener
 	METHOD method_5489 addListener (Lnet/minecraft/class_1265;)V
+		COMMENT Adds a {@code listener} for inventory modifications. If a listener is
+		COMMENT added multiple times, it will also be triggered multiple times.
 		ARG 1 listener
 	METHOD method_5491 addStack (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1799;
+		COMMENT Adds {@code stack} to this inventory as much as possible. It is possible
+		COMMENT that the item stack gets inserted into a non-empty slot or spread across
+		COMMENT several slots, if it can combine with other stack(s) in this inventory.
+		COMMENT
+		COMMENT @return the leftover part of the stack, or {@code ItemStack#EMPTY} if the entire
+		COMMENT stack fit inside the inventory
 		ARG 1 stack
 	METHOD method_7659 readNbtList (Lnet/minecraft/class_2499;)V
+		COMMENT Reads the item stacks from {@code nbtList}.
+		COMMENT
+		COMMENT @see #toNbtList
 		ARG 1 nbtList
 	METHOD method_7660 toNbtList ()Lnet/minecraft/class_2499;
+		COMMENT {@return an NBT list of non-empty {@linkplain ItemStack#writeNbt item stacks}}
+		COMMENT
+		COMMENT <p>Unlike {@link Inventories#writeNbt(NbtCompound, DefaultedList, boolean)},
+		COMMENT this does not serialize the slots.
+		COMMENT
+		COMMENT @see #readNbtList

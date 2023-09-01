@@ -15,41 +15,35 @@ CLASS net/minecraft/class_3248 net/minecraft/server/network/ServerLoginNetworkHa
 	FIELD field_14156 loginTicks I
 	FIELD field_14157 NEXT_AUTHENTICATOR_THREAD_ID Ljava/util/concurrent/atomic/AtomicInteger;
 	FIELD field_14158 connection Lnet/minecraft/class_2535;
-	FIELD field_14160 profile Lcom/mojang/authlib/GameProfile;
-	FIELD field_14161 delayedPlayer Lnet/minecraft/class_3222;
-		COMMENT The delayed player, waiting to join the server once the existing player
-		COMMENT with the same UUID is gone.
-		COMMENT
-		COMMENT <p>This will only be non-{@code null} if the state is delay-accept, and is reset
-		COMMENT to {@code null} once the player is accepted.
 	FIELD field_14162 server Lnet/minecraft/server/MinecraftServer;
 	FIELD field_14163 state Lnet/minecraft/class_3248$class_3249;
-	FIELD field_14164 RANDOM Lnet/minecraft/class_5819;
 	FIELD field_14165 serverId Ljava/lang/String;
 	FIELD field_14166 LOGGER Lorg/slf4j/Logger;
 	FIELD field_14167 nonce [B
 	FIELD field_29779 TIMEOUT_TICKS I
+	FIELD field_45027 UNEXPECTED_QUERY_RESPONSE_TEXT Lnet/minecraft/class_2561;
+	FIELD field_45028 profileName Ljava/lang/String;
+	FIELD field_45029 profile Lcom/mojang/authlib/GameProfile;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_2535;)V
 		ARG 1 server
 		ARG 2 connection
-	METHOD method_14375 toOfflineProfile (Lcom/mojang/authlib/GameProfile;)Lcom/mojang/authlib/GameProfile;
-		ARG 1 profile
 	METHOD method_14380 disconnect (Lnet/minecraft/class_2561;)V
 		ARG 1 reason
 	METHOD method_14383 getConnectionInfo ()Ljava/lang/String;
-	METHOD method_14384 acceptPlayer ()V
-		COMMENT Creates the player to be added to the server and adds it to the server.
-		COMMENT
-		COMMENT <p>If a player with the same UUID is in the world, it will create the
-		COMMENT player and transition to the delay accept state.
-		COMMENT
-		COMMENT @apiNote This method should only be called on the server thread.
-	METHOD method_33800 addToServer (Lnet/minecraft/class_3222;)V
-		ARG 1 player
 	METHOD method_40084 (I)Z
 		ARG 0 c
 	METHOD method_40085 isValidName (Ljava/lang/String;)Z
 		ARG 0 name
+	METHOD method_52416 hasPlayerWithId (Lcom/mojang/authlib/GameProfile;)Z
+		ARG 1 profile
+	METHOD method_52417 startVerify (Lcom/mojang/authlib/GameProfile;)V
+		ARG 1 profile
+	METHOD method_52418 createOfflineProfile (Ljava/lang/String;)Lcom/mojang/authlib/GameProfile;
+		ARG 0 name
+	METHOD method_52419 tickVerify (Lcom/mojang/authlib/GameProfile;)V
+		ARG 1 profile
+	METHOD method_52420 sendSuccessPacket (Lcom/mojang/authlib/GameProfile;)V
+		ARG 1 profile
 	CLASS 1
 		METHOD method_14386 getClientAddress ()Ljava/net/InetAddress;
 	CLASS class_3249 State

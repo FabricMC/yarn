@@ -2,15 +2,11 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	FIELD field_16771 sessionId Ljava/util/UUID;
 	FIELD field_19144 chunkLoadDistance I
 	FIELD field_24321 worldProperties Lnet/minecraft/class_638$class_5271;
-	FIELD field_25063 combinedDynamicRegistries Lnet/minecraft/class_7780;
+	FIELD field_25063 combinedDynamicRegistries Lnet/minecraft/class_5455$class_6890;
 	FIELD field_25273 worldKeys Ljava/util/Set;
-	FIELD field_26620 DISCONNECT_LOST_TEXT Lnet/minecraft/class_2561;
-	FIELD field_34963 worldSession Lnet/minecraft/class_7975;
 	FIELD field_35164 simulationDistance I
 	FIELD field_3687 random Lnet/minecraft/class_5819;
 	FIELD field_3688 recipeManager Lnet/minecraft/class_1863;
-	FIELD field_3689 connection Lnet/minecraft/class_2535;
-	FIELD field_3690 client Lnet/minecraft/class_310;
 	FIELD field_3691 commandSource Lnet/minecraft/class_637;
 	FIELD field_3692 dataQueryHandler Lnet/minecraft/class_300;
 	FIELD field_3693 playerListEntries Ljava/util/Map;
@@ -19,27 +15,23 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	FIELD field_3697 profile Lcom/mojang/authlib/GameProfile;
 	FIELD field_3699 world Lnet/minecraft/class_638;
 	FIELD field_3700 advancementHandler Lnet/minecraft/class_632;
-	FIELD field_3701 loginScreen Lnet/minecraft/class_437;
 	FIELD field_39808 messagePacker Lnet/minecraft/class_7610$class_7612;
 	FIELD field_39858 lastSeenMessagesCollector Lnet/minecraft/class_7637;
 	FIELD field_39916 UNSECURE_SERVER_TOAST_TITLE Lnet/minecraft/class_2561;
 	FIELD field_39917 UNSECURE_SERVER_TOAST_TEXT Lnet/minecraft/class_2561;
-	FIELD field_40482 enabledFeatures Lnet/minecraft/class_7699;
 	FIELD field_40483 signatureStorage Lnet/minecraft/class_7561;
 	FIELD field_40485 INVALID_PACKET_TEXT Lnet/minecraft/class_2561;
 	FIELD field_40486 CHAT_VALIDATION_FAILED_TEXT Lnet/minecraft/class_2561;
 	FIELD field_40487 ACKNOWLEDGMENT_BATCH_SIZE I
-	FIELD field_40488 serverInfo Lnet/minecraft/class_642;
 	FIELD field_40489 listedPlayerListEntries Ljava/util/Set;
 	FIELD field_40799 session Lnet/minecraft/class_7818;
-	FIELD field_42514 queuedPackets Ljava/util/List;
-	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_437;Lnet/minecraft/class_2535;Lnet/minecraft/class_642;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_7975;)V
+	FIELD field_45600 enabledFeatures Lnet/minecraft/class_7699;
+	FIELD field_45603 RECONFIGURING_TEXT Lnet/minecraft/class_2561;
+	FIELD field_45945 chunkBatchSizeCalculator Lnet/minecraft/class_8760;
+	FIELD field_45946 pingMeasurer Lnet/minecraft/class_8761;
+	FIELD field_45947 displayedUnsecureChatWarning Z
+	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_2535;Lnet/minecraft/class_8675;)V
 		ARG 1 client
-		ARG 2 screen
-		ARG 3 connection
-		ARG 4 serverInfo
-		ARG 5 profile
-		ARG 6 worldSession
 	METHOD method_16690 getSessionId ()Ljava/util/UUID;
 	METHOD method_19691 getActiveTotemOfUndying (Lnet/minecraft/class_1657;)Lnet/minecraft/class_1799;
 		ARG 0 player
@@ -54,8 +46,6 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 7 nibbles
 	METHOD method_2871 getPlayerListEntry (Ljava/util/UUID;)Lnet/minecraft/class_640;
 		ARG 1 uuid
-	METHOD method_2873 sendResourcePackStatus (Lnet/minecraft/class_2856$class_2857;)V
-		ARG 1 packStatus
 	METHOD method_2874 getPlayerListEntry (Ljava/lang/String;)Lnet/minecraft/class_640;
 		ARG 1 profileName
 	METHOD method_2875 getCommandSource ()Lnet/minecraft/class_637;
@@ -63,15 +53,8 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	METHOD method_2877 getRecipeManager ()Lnet/minecraft/class_1863;
 	METHOD method_2879 getProfile ()Lcom/mojang/authlib/GameProfile;
 	METHOD method_2880 getPlayerList ()Ljava/util/Collection;
-	METHOD method_2883 sendPacket (Lnet/minecraft/class_2596;)V
-		COMMENT Sends a packet to the server.
-		ARG 1 packet
-			COMMENT the packet to send
-	METHOD method_2885 feedbackAfterDownload (Ljava/util/concurrent/CompletableFuture;)V
-		ARG 1 downloadFuture
 	METHOD method_2886 getCommandDispatcher ()Lcom/mojang/brigadier/CommandDispatcher;
 	METHOD method_2890 getWorld ()Lnet/minecraft/class_638;
-	METHOD method_29091 getRegistryManager ()Lnet/minecraft/class_5455;
 	METHOD method_29356 getWorldKeys ()Ljava/util/Set;
 	METHOD method_31363 getPlayerUuids ()Ljava/util/Collection;
 	METHOD method_34007 (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
@@ -79,19 +62,10 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 2 state
 	METHOD method_34008 (Lnet/minecraft/class_1297;Lcom/mojang/datafixers/util/Pair;)V
 		ARG 1 pair
-	METHOD method_34009 (Lnet/minecraft/class_1703;Lnet/minecraft/class_1860;)V
-		ARG 2 recipe
 	METHOD method_34010 (Lnet/minecraft/class_268;Lnet/minecraft/class_5900$class_5902;)V
 		ARG 1 team
-	METHOD method_34011 (Lnet/minecraft/class_299;Lnet/minecraft/class_1860;)V
-		ARG 2 recipe
 	METHOD method_34012 (Lnet/minecraft/class_299;Lnet/minecraft/class_516;)V
 		ARG 1 recipeResultCollection
-	METHOD method_34014 (Ljava/net/URL;Ljava/lang/String;ZZ)V
-		ARG 4 enabled
-	METHOD method_36322 getServerResourcePackPrompt (Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
-		ARG 0 defaultPrompt
-		ARG 1 customPrompt
 	METHOD method_37472 (I)V
 		ARG 1 entityId
 	METHOD method_38539 loadChunk (IILnet/minecraft/class_6603;)V
@@ -108,15 +82,8 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 1 x
 		ARG 2 z
 		ARG 3 data
-	METHOD method_40215 (Lnet/minecraft/class_5455$class_6892;)V
-		ARG 0 entry
-	METHOD method_40217 loadTags (Lnet/minecraft/class_5321;Lnet/minecraft/class_6864$class_5748;)V
-		ARG 1 registryKey
-		ARG 2 serialized
 	METHOD method_43209 playSpawnSound (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
-	METHOD method_43331 resolveUrl (Ljava/lang/String;)Ljava/net/URL;
-		ARG 0 url
 	METHOD method_44940 acknowledge (Lnet/minecraft/class_7471;Z)V
 		ARG 1 message
 		ARG 2 displayed
@@ -152,11 +119,6 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 1 keyPair
 	METHOD method_47658 clearWorld ()V
 	METHOD method_48296 getConnection ()Lnet/minecraft/class_2535;
-	METHOD method_49033 sendPacket (Lnet/minecraft/class_2596;Ljava/util/function/BooleanSupplier;Ljava/time/Duration;)V
-		ARG 1 packet
-		ARG 2 sendCondition
-		ARG 3 expirationTime
-	METHOD method_49035 tickQueuedPackets ()V
 	METHOD method_51684 unloadChunk (Lnet/minecraft/class_2666;)V
 		ARG 1 packet
-	CLASS class_8137 QueuedPacket
+	METHOD method_52802 refreshTagBasedData ()V

@@ -1,7 +1,7 @@
 CLASS net/minecraft/class_3204 net/minecraft/server/world/ChunkTicketManager
 	FIELD field_13894 age J
 	FIELD field_13895 ticketsByPosition Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap;
-	FIELD field_16210 chunkHolders Ljava/util/Set;
+	FIELD field_16210 chunkHoldersWithPendingUpdates Ljava/util/Set;
 	FIELD field_16211 LOGGER Lorg/slf4j/Logger;
 	FIELD field_17452 NEARBY_PLAYER_TICKET_LEVEL I
 	FIELD field_17453 playersByChunkPos Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
@@ -10,7 +10,7 @@ CLASS net/minecraft/class_3204 net/minecraft/server/world/ChunkTicketManager
 	FIELD field_17456 levelUpdateListener Lnet/minecraft/class_3900;
 	FIELD field_17457 playerTicketThrottler Lnet/minecraft/class_3906;
 	FIELD field_17458 playerTicketThrottlerUnblocker Lnet/minecraft/class_3906;
-	FIELD field_17459 chunkPositions Lit/unimi/dsi/fastutil/longs/LongSet;
+	FIELD field_17459 freshPlayerTicketPositions Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_17460 mainThreadExecutor Ljava/util/concurrent/Executor;
 	FIELD field_18252 distanceFromTicketTracker Lnet/minecraft/class_3204$class_4077;
 	FIELD field_34886 simulationDistanceTracker Lnet/minecraft/class_6609;
@@ -52,7 +52,13 @@ CLASS net/minecraft/class_3204 net/minecraft/server/world/ChunkTicketManager
 		ARG 4 holder
 	METHOD method_15891 (Lnet/minecraft/class_3898;Lnet/minecraft/class_3193;)V
 		ARG 2 holder
-	METHOD method_15892 tick (Lnet/minecraft/class_3898;)Z
+	METHOD method_15892 update (Lnet/minecraft/class_3898;)Z
+		COMMENT Update the states related to chunk tickets and chunk loading levels, which mainly involves three kind of updates:
+		COMMENT <ul>
+		COMMENT <li>Add or remove PLAYER tickets when necessary.</li>
+		COMMENT <li>Update the expected loading states of chunks depending on their new levels.</li>
+		COMMENT <li>Special updates of chunks with PLAYER tickets added recently.</li>
+		COMMENT </ul>
 		ARG 1 chunkStorage
 	METHOD method_17290 addTicketWithLevel (Lnet/minecraft/class_3230;Lnet/minecraft/class_1923;ILjava/lang/Object;)V
 		ARG 1 type

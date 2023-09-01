@@ -1,4 +1,6 @@
 CLASS net/minecraft/class_1262 net/minecraft/inventory/Inventories
+	COMMENT Contains utility methods used by {@link Inventory} implementations or for working
+	COMMENT with inventories.
 	METHOD method_29234 remove (Lnet/minecraft/class_1263;Ljava/util/function/Predicate;IZ)I
 		COMMENT Removes a number, not exceeding {@code maxCount}, of items from an inventory based on a predicate and returns that number.
 		COMMENT @return the number of items removed
@@ -16,19 +18,65 @@ CLASS net/minecraft/class_1262 net/minecraft/inventory/Inventories
 		ARG 3 dryRun
 			COMMENT whether to return the number of items which would have been removed without actually removing them
 	METHOD method_5426 writeNbt (Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)Lnet/minecraft/class_2487;
+		COMMENT Writes the inventory to {@code nbt}. This method will always write to the NBT,
+		COMMENT even if {@code stacks} only contains empty stacks.
+		COMMENT
+		COMMENT <p>See {@link #writeNbt(NbtCompound, DefaultedList, boolean)} for the serialization
+		COMMENT format.
+		COMMENT
+		COMMENT @see #readNbt(NbtCompound, DefaultedList)
+		COMMENT @see #writeNbt(NbtCompound, DefaultedList, boolean)
+		COMMENT @return the passed {@code nbt}
 		ARG 0 nbt
 		ARG 1 stacks
 	METHOD method_5427 writeNbt (Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;Z)Lnet/minecraft/class_2487;
+		COMMENT Writes the inventory to {@code nbt}.
+		COMMENT
+		COMMENT <p>The inventory is serialized as a list of non-empty {@linkplain ItemStack#writeNbt
+		COMMENT item stacks}. In addition, each compound has a byte entry with the key {@code Slot},
+		COMMENT indicating the slot. The list is then written to {@code nbt} under the key {@code
+		COMMENT Items}.
+		COMMENT
+		COMMENT <p>If {@code setIfEmpty} is {@code false} and each stack in {@code stacks} is empty,
+		COMMENT then {@code nbt} will not be modified at all. Otherwise, the {@code Items} entry
+		COMMENT will always be present.
+		COMMENT
+		COMMENT @see #readNbt(NbtCompound, DefaultedList)
+		COMMENT @return the passed {@code nbt}
 		ARG 0 nbt
 		ARG 1 stacks
 		ARG 2 setIfEmpty
 	METHOD method_5428 removeStack (Ljava/util/List;I)Lnet/minecraft/class_1799;
+		COMMENT Sets the stack at {@code slot} to {@link ItemStack#EMPTY} and returns the old stack.
+		COMMENT
+		COMMENT <p>This returns {@link ItemStack#EMPTY} when {@code slot} is out of bounds.
+		COMMENT
+		COMMENT @apiNote This is used to implement {@link Inventory#removeStack(int)}.
+		COMMENT This should not otherwise be used directly.
+		COMMENT
+		COMMENT @returns the stack previously at {@code slot}
 		ARG 0 stacks
 		ARG 1 slot
 	METHOD method_5429 readNbt (Lnet/minecraft/class_2487;Lnet/minecraft/class_2371;)V
+		COMMENT Reads {@code nbt} and sets the elements of {@code stacks} accordingly.
+		COMMENT
+		COMMENT <p>See {@link #writeNbt(NbtCompound, DefaultedList, boolean)} for the serialization
+		COMMENT format. If the slot is out of bounds, it is ignored.
+		COMMENT
+		COMMENT @see #writeNbt(NbtCompound, DefaultedList)
+		COMMENT @see #writeNbt(NbtCompound, DefaultedList, boolean)
 		ARG 0 nbt
 		ARG 1 stacks
 	METHOD method_5430 splitStack (Ljava/util/List;II)Lnet/minecraft/class_1799;
+		COMMENT {@return the copy of the stack split from the stack at {@code slot}}
+		COMMENT
+		COMMENT <p>This returns {@link ItemStack#EMPTY} when {@code slot} is out of bounds,
+		COMMENT the stack at the slot is empty, or when {@code amount <= 0}.
+		COMMENT
+		COMMENT @apiNote This is used to implement {@link Inventory#removeStack(int, int)}.
+		COMMENT This should not otherwise be used directly.
+		COMMENT
+		COMMENT @see ItemStack#split(int)
 		ARG 0 stacks
 		ARG 1 slot
 		ARG 2 amount

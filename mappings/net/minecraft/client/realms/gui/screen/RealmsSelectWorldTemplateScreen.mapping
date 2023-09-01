@@ -1,25 +1,20 @@
 CLASS net/minecraft/class_4419 net/minecraft/client/realms/gui/screen/RealmsSelectWorldTemplateScreen
 	FIELD field_20069 LOGGER Lorg/slf4j/Logger;
 	FIELD field_20071 templateList Lnet/minecraft/class_4419$class_4420;
-	FIELD field_20072 selectedTemplate I
+	FIELD field_20072 selectedTemplate Lnet/minecraft/class_4890;
 	FIELD field_20074 selectButton Lnet/minecraft/class_4185;
 	FIELD field_20075 trailerButton Lnet/minecraft/class_4185;
 	FIELD field_20076 publisherButton Lnet/minecraft/class_4185;
-	FIELD field_20077 tooltip Lnet/minecraft/class_2561;
 	FIELD field_20078 currentLink Ljava/lang/String;
 	FIELD field_20079 worldType Lnet/minecraft/class_4877$class_4321;
-	FIELD field_20080 clicks I
 	FIELD field_20081 warning [Lnet/minecraft/class_2561;
-	FIELD field_20082 warningURL Ljava/lang/String;
-	FIELD field_20083 displayWarning Z
-	FIELD field_20084 hoverWarning Z
 	FIELD field_20085 noTemplatesMessage Ljava/util/List;
-	FIELD field_22719 LINK_ICONS Lnet/minecraft/class_2960;
-	FIELD field_22720 TRAILER_ICONS Lnet/minecraft/class_2960;
-	FIELD field_22721 SLOT_FRAME Lnet/minecraft/class_2960;
-	FIELD field_26512 INFO_TOOLTIP Lnet/minecraft/class_2561;
-	FIELD field_26513 TRAILER_TOOLTIP Lnet/minecraft/class_2561;
+	FIELD field_22721 SLOT_FRAME_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_27941 callback Ljava/util/function/Consumer;
+	FIELD field_45976 layout Lnet/minecraft/class_8132;
+	FIELD field_45977 SELECT_TEXT Lnet/minecraft/class_2561;
+	FIELD field_45978 TRAILER_TEXT Lnet/minecraft/class_2561;
+	FIELD field_45979 PUBLISHER_TEXT Lnet/minecraft/class_2561;
 	METHOD <init> (Lnet/minecraft/class_2561;Ljava/util/function/Consumer;Lnet/minecraft/class_4877$class_4321;)V
 		ARG 1 title
 		ARG 2 callback
@@ -39,18 +34,9 @@ CLASS net/minecraft/class_4419 net/minecraft/client/realms/gui/screen/RealmsSele
 	METHOD method_21416 fetchWorldTemplates (Lnet/minecraft/class_4891;Lnet/minecraft/class_4341;)Lcom/mojang/datafixers/util/Either;
 		ARG 1 templateList
 		ARG 2 realms
-	METHOD method_21424 renderMousehoverTooltip (Lnet/minecraft/class_332;Lnet/minecraft/class_2561;II)V
-		ARG 1 context
-		ARG 2 tooltip
-		ARG 3 mouseX
-		ARG 4 mouseY
 	METHOD method_21425 updateButtonStates ()V
 	METHOD method_21429 setWarning ([Lnet/minecraft/class_2561;)V
 		ARG 1 warning
-	METHOD method_21430 shouldSelectButtonBeActive ()Z
-	METHOD method_21432 shouldPublisherBeVisible ()Z
-	METHOD method_21434 getSelectedTemplate ()Lnet/minecraft/class_4890;
-	METHOD method_21436 shouldTrailerBeVisible ()Z
 	METHOD method_21440 selectTemplate ()V
 	METHOD method_21442 onTrailer ()V
 	METHOD method_21444 onPublish ()V
@@ -64,15 +50,17 @@ CLASS net/minecraft/class_4419 net/minecraft/client/realms/gui/screen/RealmsSele
 		ARG 1 button
 	METHOD method_25236 (Lnet/minecraft/class_4185;)V
 		ARG 1 button
-	METHOD method_25247 isSelectionValid ()Z
+	METHOD method_53514 getTemplateListTop ()I
+	METHOD method_53515 (Lnet/minecraft/class_4419;Lnet/minecraft/class_364;)V
+		ARG 1 child
+	METHOD method_53517 (Z)V
+		ARG 1 confirmed
 	CLASS class_4420 WorldTemplateObjectSelectionList
 		METHOD <init> (Lnet/minecraft/class_4419;)V
 			ARG 1 screen
 		METHOD <init> (Lnet/minecraft/class_4419;Ljava/lang/Iterable;)V
 			ARG 2 templates
 		METHOD method_21446 isEmpty ()Z
-		METHOD method_21447 getItem (I)Lnet/minecraft/class_4890;
-			ARG 1 index
 		METHOD method_21448 addEntry (Lnet/minecraft/class_4890;)V
 			ARG 1 template
 		METHOD method_21450 getValues ()Ljava/util/List;
@@ -80,28 +68,12 @@ CLASS net/minecraft/class_4419 net/minecraft/client/realms/gui/screen/RealmsSele
 			ARG 0 child
 	CLASS class_4421 WorldTemplateObjectSelectionListEntry
 		FIELD field_20094 mTemplate Lnet/minecraft/class_4890;
+		FIELD field_45980 LINK_TEXTURES Lnet/minecraft/class_8666;
+		FIELD field_45981 VIDEO_LINK_TEXTURES Lnet/minecraft/class_8666;
+		FIELD field_45982 INFO_TOOLTIP_TEXT Lnet/minecraft/class_2561;
+		FIELD field_45983 TRAILER_TOOLTIP_TEXT Lnet/minecraft/class_2561;
+		FIELD field_45984 prevClickTime J
+		FIELD field_45985 infoButton Lnet/minecraft/class_344;
+		FIELD field_45986 trailerButton Lnet/minecraft/class_344;
 		METHOD <init> (Lnet/minecraft/class_4419;Lnet/minecraft/class_4890;)V
 			ARG 2 template
-		METHOD method_21451 drawImage (Lnet/minecraft/class_332;IIIILnet/minecraft/class_4890;)V
-			ARG 1 context
-			ARG 2 x
-			ARG 3 y
-			ARG 4 mouseX
-			ARG 5 mouseY
-			ARG 6 template
-		METHOD method_21452 drawIcons (Lnet/minecraft/class_332;IIIILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-			ARG 1 context
-			ARG 2 x
-			ARG 3 y
-			ARG 4 mouseX
-			ARG 5 mouseY
-			ARG 6 link
-			ARG 7 trailer
-			ARG 8 recommendedPlayers
-		METHOD method_21453 renderWorldTemplateItem (Lnet/minecraft/class_332;Lnet/minecraft/class_4890;IIII)V
-			ARG 1 context
-			ARG 2 template
-			ARG 3 x
-			ARG 4 y
-			ARG 5 mouseX
-			ARG 6 mouseY

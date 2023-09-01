@@ -8,9 +8,7 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 	FIELD field_42373 WIDTH Lnet/minecraft/class_2940;
 	FIELD field_42374 HEIGHT Lnet/minecraft/class_2940;
 	FIELD field_42375 GLOW_COLOR_OVERRIDE Lnet/minecraft/class_2940;
-	FIELD field_42382 fixedRotation Lorg/joml/Quaternionf;
 	FIELD field_42383 visibilityBoundingBox Lnet/minecraft/class_238;
-	FIELD field_42385 INTERPOLATION_DURATION_NBT_KEY Ljava/lang/String;
 	FIELD field_42387 TRANSFORMATION_NBT_KEY Ljava/lang/String;
 	FIELD field_42388 BILLBOARD_NBT_KEY Ljava/lang/String;
 	FIELD field_42389 BRIGHTNESS_NBT_KEY Ljava/lang/String;
@@ -20,21 +18,25 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 	FIELD field_42393 WIDTH_NBT_KEY Ljava/lang/String;
 	FIELD field_42394 HEIGHT_NBT_KEY Ljava/lang/String;
 	FIELD field_42395 GLOW_COLOR_OVERRIDE_NBT_KEY Ljava/lang/String;
-	FIELD field_42400 INTERPOLATION_DURATION Lnet/minecraft/class_2940;
+	FIELD field_42397 LOGGER Lorg/slf4j/Logger;
 	FIELD field_42401 TRANSLATION Lnet/minecraft/class_2940;
 	FIELD field_42402 SCALE Lnet/minecraft/class_2940;
 	FIELD field_42403 LEFT_ROTATION Lnet/minecraft/class_2940;
 	FIELD field_42620 interpolationStart J
 	FIELD field_43135 lerpProgress F
-	FIELD field_43149 START_INTERPOLATION_KEY Ljava/lang/String;
-	FIELD field_43151 START_INTERPOLATION Lnet/minecraft/class_2940;
 	FIELD field_43180 RENDERING_DATA_IDS Lit/unimi/dsi/fastutil/ints/IntSet;
 	FIELD field_43181 interpolationDuration I
 	FIELD field_43182 startInterpolationSet Z
 	FIELD field_43183 interpolationDurationSet Z
 	FIELD field_43184 renderState Lnet/minecraft/class_8113$class_8229;
 	FIELD field_43185 renderingDataSet Z
-	METHOD method_48841 updateFixedRotation ()V
+	FIELD field_45108 interpolationTarget Lnet/minecraft/class_8113$class_8639;
+	FIELD field_45109 TELEPORT_DURATION_KEY Ljava/lang/String;
+	FIELD field_45110 INTERPOLATION_DURATION_KEY Ljava/lang/String;
+	FIELD field_45111 START_INTERPOLATION_KEY Ljava/lang/String;
+	FIELD field_45112 START_INTERPOLATION Lnet/minecraft/class_2940;
+	FIELD field_45113 INTERPOLATION_DURATION Lnet/minecraft/class_2940;
+	FIELD field_45114 TELEPORT_DURATION Lnet/minecraft/class_2940;
 	METHOD method_48844 getLerpProgress (F)F
 		ARG 1 delta
 	METHOD method_48845 getTransformation (Lnet/minecraft/class_2945;)Lnet/minecraft/class_4590;
@@ -49,8 +51,6 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 		ARG 1 transformation
 	METHOD method_48851 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
 		ARG 1 brightness
-	METHOD method_48853 setInterpolationDuration (I)V
-		ARG 1 interpolationDuration
 	METHOD method_48855 (Lcom/mojang/datafixers/util/Pair;)V
 		ARG 1 pair
 	METHOD method_48856 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
@@ -65,10 +65,8 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 		ARG 1 viewRange
 	METHOD method_48862 setShadowRadius (F)V
 		ARG 1 shadowRadius
-	METHOD method_48863 getFixedRotation ()Lorg/joml/Quaternionf;
 	METHOD method_48864 getBillboardMode ()Lnet/minecraft/class_8113$class_8114;
 	METHOD method_48865 getBrightness ()I
-	METHOD method_48866 getInterpolationDuration ()I
 	METHOD method_48868 getBrightnessUnpacked ()Lnet/minecraft/class_8104;
 	METHOD method_48869 getViewRange ()F
 	METHOD method_48870 getShadowRadius ()F
@@ -83,9 +81,6 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 	METHOD method_48876 getGlowColorOverride ()I
 	METHOD method_48877 getDisplayHeight ()F
 	METHOD method_48878 updateVisibilityBoundingBox ()V
-	METHOD method_49744 setStartInterpolation (I)V
-		ARG 1 startInterpolation
-	METHOD method_49745 getStartInterpolation ()I
 	METHOD method_49774 copyRenderState ()Lnet/minecraft/class_8113$class_8229;
 	METHOD method_49775 getLerpedRenderState (Lnet/minecraft/class_8113$class_8229;F)Lnet/minecraft/class_8113$class_8229;
 		ARG 1 state
@@ -94,6 +89,15 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 		ARG 1 shouldLerp
 		ARG 2 lerpProgress
 	METHOD method_49777 getRenderState ()Lnet/minecraft/class_8113$class_8229;
+	METHOD method_52524 setInterpolationDuration (I)V
+		ARG 1 interpolationDuration
+	METHOD method_52525 setStartInterpolation (I)V
+		ARG 1 startInterpolation
+	METHOD method_52526 setTeleportDuration (I)V
+		ARG 1 teleportDuration
+	METHOD method_52527 getInterpolationDuration ()I
+	METHOD method_52528 getStartInterpolation ()I
+	METHOD method_52529 getTeleportDuration ()I
 	CLASS class_8114 BillboardMode
 		FIELD field_42410 CODEC Lcom/mojang/serialization/Codec;
 		FIELD field_42411 FROM_INDEX Ljava/util/function/IntFunction;
@@ -227,3 +231,21 @@ CLASS net/minecraft/class_8113 net/minecraft/entity/decoration/DisplayEntity
 	CLASS class_8228 IntLerperImpl
 	CLASS class_8229 RenderState
 	CLASS class_8231 AffineTransformationInterpolator
+	CLASS class_8639 InterpolationTarget
+		FIELD field_45115 step I
+		FIELD field_45116 x D
+		FIELD field_45117 y D
+		FIELD field_45118 z D
+		FIELD field_45119 yaw D
+		FIELD field_45120 pitch D
+		METHOD <init> (IDDDDD)V
+			ARG 1 step
+			ARG 2 x
+			ARG 4 y
+			ARG 6 z
+			ARG 8 yaw
+			ARG 10 pitch
+		METHOD method_52530 apply (Lnet/minecraft/class_1297;)V
+			ARG 1 entity
+		METHOD method_52531 applyInterpolated (Lnet/minecraft/class_1297;)V
+			ARG 1 entity
