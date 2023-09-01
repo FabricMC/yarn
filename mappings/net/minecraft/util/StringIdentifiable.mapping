@@ -5,6 +5,7 @@ CLASS net/minecraft/class_3542 net/minecraft/util/StringIdentifiable
 	COMMENT @apiNote To make an enum serializable with codecs, implement this on the enum class,
 	COMMENT implement {@link #asString} to return a unique ID, and add a {@code static final}
 	COMMENT field that holds {@linkplain #createCodec the codec for the enum}.
+	FIELD field_38377 CACHED_MAP_THRESHOLD I
 	METHOD method_15434 asString ()Ljava/lang/String;
 		COMMENT {@return the unique string representation of the enum, used for serialization}
 	METHOD method_28140 createCodec (Ljava/util/function/Supplier;)Lnet/minecraft/class_3542$class_7292;
@@ -14,18 +15,24 @@ CLASS net/minecraft/class_3542 net/minecraft/util/StringIdentifiable
 		ARG 0 enumValues
 	METHOD method_28142 toKeyable ([Lnet/minecraft/class_3542;)Lcom/mojang/serialization/Keyable;
 		ARG 0 values
-	METHOD method_39516 (Ljava/lang/Object;)Ljava/lang/String;
-		ARG 0 identifiable
-	METHOD method_42628 (Ljava/lang/Enum;)Ljava/lang/Enum;
-		ARG 0 enum_
-	METHOD method_42629 (Ljava/util/Map;Ljava/lang/String;)Ljava/lang/Enum;
+	METHOD method_49451 (Ljava/lang/String;)Ljava/lang/String;
+		ARG 0 id
+	METHOD method_49452 (Ljava/util/Map;Ljava/lang/String;)Ljava/lang/Enum;
 		ARG 1 id
-	METHOD method_42630 ([Ljava/lang/Enum;Ljava/lang/String;)Ljava/lang/Enum;
-		ARG 1 id
+	METHOD method_49453 (Ljava/util/function/Function;Ljava/lang/Enum;)Ljava/lang/String;
+		ARG 1 enum_
+	METHOD method_49454 createCodec (Ljava/util/function/Supplier;Ljava/util/function/Function;)Lnet/minecraft/class_3542$class_7292;
+		COMMENT Creates a codec that serializes an enum implementing this interface either
+		COMMENT using its ordinals (when compressed) or using its {@link #asString()} method
+		COMMENT and a given decode function.
+		ARG 0 enumValues
+		ARG 1 valueNameTransformer
+	METHOD method_49455 ([Ljava/lang/Enum;Ljava/util/function/Function;Ljava/lang/String;)Ljava/lang/Enum;
+		ARG 2 id
 	CLASS 1
 		METHOD keys (Lcom/mojang/serialization/DynamicOps;)Ljava/util/stream/Stream;
 			ARG 1 ops
-	CLASS class_7292 Codec
+	CLASS class_7292 EnumCodec
 		FIELD field_38378 base Lcom/mojang/serialization/Codec;
 		FIELD field_38379 idToIdentifiable Ljava/util/function/Function;
 		METHOD <init> ([Ljava/lang/Enum;Ljava/util/function/Function;)V
@@ -46,3 +53,6 @@ CLASS net/minecraft/class_3542 net/minecraft/util/StringIdentifiable
 			ARG 1 ordinal
 		METHOD method_42635 (Ljava/lang/Object;)Ljava/lang/String;
 			ARG 0 identifiable
+		METHOD method_47920 byId (Ljava/lang/String;Ljava/lang/Enum;)Ljava/lang/Enum;
+			ARG 1 id
+			ARG 2 fallback

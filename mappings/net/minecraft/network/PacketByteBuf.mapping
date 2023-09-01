@@ -9,10 +9,16 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <th><b>Object Type</b></th> <th><b>read method</b></th> <th><b>write method</b></th>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>Codec-based</td><td>{@link #decode(Codec)}</td><td>{@link #encode(Codec, Object)}</td>
+	COMMENT  <td>Codec-based (NBT)</td><td>{@link #decode(DynamicOps, Codec, NbtTagSizeTracker)}</td><td>{@link #encode(DynamicOps, Codec, Object)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>{@link net.minecraft.util.registry.Registry} value</td><td>{@link #readRegistryValue(IndexedIterable)}</td><td>{@link #writeRegistryValue(IndexedIterable, Object)}</td>
+	COMMENT  <td>Codec-based (JSON)</td><td>{@link #decodeAsJson(Codec)}</td><td>{@link #encodeAsJson(Codec, Object)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link net.minecraft.registry.Registry} value</td><td>{@link #readRegistryValue(IndexedIterable)}</td><td>{@link #writeRegistryValue(IndexedIterable, Object)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>Integer-identified value</td><td>{@link #decode(IntFunction)}</td><td>{@link #encode(ToIntFunction, Object)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link Collection}</td><td>{@link #readCollection(IntFunction, PacketByteBuf.PacketReader)}</td><td>{@link #writeCollection(Collection, PacketByteBuf.PacketWriter)}</td>
@@ -22,6 +28,9 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link Map}</td><td>{@link #readMap(IntFunction, PacketByteBuf.PacketReader, PacketByteBuf.PacketReader)}</td><td>{@link #writeMap(Map, PacketByteBuf.PacketWriter, PacketByteBuf.PacketWriter)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link EnumSet}</td><td>{@link #readEnumSet(Class)}</td><td>{@link #writeEnumSet(EnumSet, Class)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@code byte[]}</td><td>{@link #readByteArray()}</td><td>{@link #writeByteArray(byte[])}</td>
@@ -45,6 +54,15 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@link GlobalPos}</td><td>{@link #readGlobalPos()}</td><td>{@link #writeGlobalPos(GlobalPos)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
+	COMMENT  <td>{@link Vector3f}</td><td>{@link #readVector3f()}</td><td>{@link #writeVector3f(Vector3f)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link Vec3d}</td><td>{@link #readVec3d()}</td><td>{@link #writeVec3d(Vec3d)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link Quaternionf}</td><td>{@link #readQuaternionf()}</td><td>{@link #writeQuaternionf(Quaternionf)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
 	COMMENT  <td>{@link Text}</td><td>{@link #readText()}</td><td>{@link #writeText(Text)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
@@ -66,6 +84,9 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <td>{@index Property}</td><td>{@link #readProperty()}</td><td>{@link #writeProperty(Property)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
+	COMMENT  <td>{@index PropertyMap}</td><td>{@link #readPropertyMap()}</td><td>{@link #writePropertyMap(PropertyMap)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
 	COMMENT  <td>{@link NbtCompound}</td><td>{@link #readNbt()}</td><td>{@link #writeNbt(NbtCompound)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
@@ -79,6 +100,9 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link RegistryKey}</td><td>{@link #readRegistryKey(RegistryKey)}</td><td>{@link #writeRegistryKey(RegistryKey)}</td>
+	COMMENT </tr>
+	COMMENT <tr>
+	COMMENT  <td>{@link RegistryKey} of a registry</td><td>{@link #readRegistryRefKey()}</td><td>{@link #writeRegistryKey(RegistryKey)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>{@link Date}</td><td>{@link #readDate()}</td><td>{@link #writeDate(Date)}</td>
@@ -118,21 +142,10 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	FIELD field_33284 MAX_TEXT_LENGTH I
 		COMMENT The maximum size, in terms of JSON string length, allowed of the text read by
 		COMMENT {@link #readText()} or written by {@link #writeText(Text)}.
-	FIELD field_33285 MAX_VAR_INT_LENGTH I
-		COMMENT The max number of bytes an encoded var int value may use.
-		COMMENT
-		COMMENT <p>Its value is {@value}. A regular int value always use 4 bytes in contrast.
-		COMMENT
-		COMMENT @see #getVarIntLength(int)
-	FIELD field_33286 MAX_VAR_LONG_LENGTH I
-		COMMENT The max number of bytes an encoded var long value may use.
-		COMMENT
-		COMMENT <p>Its value is {@value}. A regular long value always use 8 bytes in contrast.
-		COMMENT
-		COMMENT @see #getVarLongLength(long)
 	FIELD field_33287 MAX_READ_NBT_SIZE I
 		COMMENT The maximum size, in number of bytes, allowed of the NBT compound read by
 		COMMENT {@link #readNbt()}.
+	FIELD field_42966 GSON Lcom/google/gson/Gson;
 	METHOD <init> (Lio/netty/buffer/ByteBuf;)V
 		COMMENT Creates a packet byte buf that delegates its operations to the {@code
 		COMMENT parent} buf.
@@ -286,8 +299,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readString()
 		COMMENT @see #readString(int)
 		COMMENT @see #writeString(String)
-		ARG 1 string
-			COMMENT the string to write
 		ARG 2 maxLength
 			COMMENT the max length of the byte array
 	METHOD method_10789 writeLongArray ([J)Lnet/minecraft/class_2540;
@@ -313,7 +324,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @see #readVarLong()
-		COMMENT @see #getVarLongLength(long)
+		COMMENT @see net.minecraft.network.encoding.VarLongs
 		ARG 1 value
 			COMMENT the value to write
 	METHOD method_10792 readVarLong ()J
@@ -331,19 +342,17 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readItemStack()
 		ARG 1 stack
 			COMMENT the stack to write
-	METHOD method_10794 writeNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2540;
-		COMMENT Writes an NBT compound to this buf. The binary representation of NBT is
-		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If {@code compound} is {@code
+	METHOD method_10794 writeNbt (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2540;
+		COMMENT Writes an NBT element to this buf. The binary representation of NBT is
+		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If {@code nbt} is {@code
 		COMMENT null}, it is treated as an NBT null.
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be
 		COMMENT written
 		COMMENT @see #readNbt()
-		COMMENT @see #readUnlimitedNbt()
 		COMMENT @see #readNbt(NbtTagSizeTracker)
-		ARG 1 compound
-			COMMENT the compound to write
+		ARG 1 nbt
 	METHOD method_10795 readByteArray ()[B
 		COMMENT Reads an array of primitive bytes from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the actual bytes. The array
@@ -374,11 +383,13 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT this method returns {@code null}. The compound can have a maximum size of
 		COMMENT {@value #MAX_READ_NBT_SIZE} bytes.
 		COMMENT
+		COMMENT <p>Note that unlike {@link #readNbt(NbtTagSizeTracker)}, this can only
+		COMMENT read compounds.
+		COMMENT
 		COMMENT @return the read compound, may be {@code null}
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
 		COMMENT @throws RuntimeException if the compound exceeds the allowed maximum size
 		COMMENT @see #writeNbt(NbtCompound)
-		COMMENT @see #readUnlimitedNbt()
 		COMMENT @see #readNbt(NbtTagSizeTracker)
 		COMMENT @see #MAX_READ_NBT_SIZE
 	METHOD method_10799 readIntArray (I)[I
@@ -450,7 +461,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return this buf, for chaining
 		COMMENT @see #readVarInt()
-		COMMENT @see #getVarIntLength(int)
+		COMMENT @see net.minecraft.network.encoding.VarInts
 		ARG 1 value
 			COMMENT the value to write
 	METHOD method_10805 writeText (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2540;
@@ -560,14 +571,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #writeString(String, int)
 		ARG 1 string
 			COMMENT the string to write
-	METHOD method_10815 getVarIntLength (I)I
-		COMMENT Returns the number of bytes needed to encode {@code value} as a
-		COMMENT {@linkplain #writeVarInt(int) var int}. Guaranteed to be between {@code
-		COMMENT 1} and {@value #MAX_VAR_INT_LENGTH}.
-		COMMENT
-		COMMENT @return the number of bytes a var int {@code value} uses
-		ARG 0 value
-			COMMENT the value to encode
 	METHOD method_10816 readVarInt ()I
 		COMMENT Reads a single var int from this buf.
 		COMMENT
@@ -629,53 +632,39 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readString(int)
 		COMMENT @see #writeString(String)
 		COMMENT @see #writeString(String, int)
-	METHOD method_29171 decode (Lcom/mojang/serialization/Codec;)Ljava/lang/Object;
+	METHOD method_29171 decode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Codec;Lnet/minecraft/class_2505;)Ljava/lang/Object;
 		COMMENT Reads an object from this buf as a compound NBT with the given codec.
 		COMMENT
 		COMMENT @param <T> the decoded object's type
 		COMMENT @return the read object
 		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
 		COMMENT to decode the compound NBT
-		COMMENT @see #encode(Codec, Object)
-		ARG 1 codec
-			COMMENT the codec to decode the object
-	METHOD method_29172 encode (Lcom/mojang/serialization/Codec;Ljava/lang/Object;)V
+		COMMENT @see #encode(DynamicOps, Codec, Object)
+		ARG 1 ops
+		ARG 2 codec
+		ARG 3 sizeTracker
+	METHOD method_29172 encode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Codec;Ljava/lang/Object;)Lnet/minecraft/class_2540;
 		COMMENT Writes an object to this buf as a compound NBT with the given codec.
 		COMMENT
 		COMMENT @param <T> the encoded object's type
 		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
 		COMMENT to encode the compound NBT
-		COMMENT @see #decode(Codec)
-		ARG 1 codec
-			COMMENT the codec to encode the object
-		ARG 2 object
-			COMMENT the object to write to this buf
-	METHOD method_30616 readNbt (Lnet/minecraft/class_2505;)Lnet/minecraft/class_2487;
-		COMMENT Reads an NBT compound from this buf. The binary representation of NBT is
+		COMMENT @see #decode(DynamicOps, Codec, NbtTagSizeTracker)
+		ARG 1 ops
+		ARG 2 codec
+		ARG 3 value
+	METHOD method_30616 readNbt (Lnet/minecraft/class_2505;)Lnet/minecraft/class_2520;
+		COMMENT Reads an NBT element from this buf. The binary representation of NBT is
 		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an NBT null is encountered,
-		COMMENT this method returns {@code null}. The compound can have a maximum size
+		COMMENT this method returns {@code null}. The element can have a maximum size
 		COMMENT controlled by the {@code sizeTracker}.
 		COMMENT
-		COMMENT @return the read compound, may be {@code null}
+		COMMENT @return the read element, may be {@code null}
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
-		COMMENT @throws RuntimeException if the compound exceeds the allowed maximum size
-		COMMENT @see #writeNbt(NbtCompound)
+		COMMENT @throws RuntimeException if the element exceeds the allowed maximum size
+		COMMENT @see #writeNbt(NbtElement)
 		COMMENT @see #readNbt()
-		COMMENT @see #readUnlimitedNbt()
 		ARG 1 sizeTracker
-	METHOD method_30617 readUnlimitedNbt ()Lnet/minecraft/class_2487;
-		COMMENT Reads an NBT compound from this buf. The binary representation of NBT is
-		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If an NBT null is encountered,
-		COMMENT this method returns {@code null}. The compound does not have a size limit.
-		COMMENT
-		COMMENT @apiNote Since this version does not have a size limit, it may be
-		COMMENT vulnerable to malicious NBT spam attacks.
-		COMMENT
-		COMMENT @return the read compound, may be {@code null}
-		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
-		COMMENT @see #writeNbt(NbtCompound)
-		COMMENT @see #readNbt()
-		COMMENT @see #readNbt(NbtTagSizeTracker)
 	METHOD method_33134 readLongArray ()[J
 		COMMENT Reads an array of primitive longs from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the regular long (not var
@@ -718,8 +707,8 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #writeIntArray(int[])
 		ARG 1 list
 			COMMENT the list to write
-	METHOD method_34061 (Ljava/lang/Object;Lcom/mojang/serialization/DataResult$PartialResult;)V
-		ARG 1 partial
+	METHOD method_34061 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException;
+		ARG 1 error
 	METHOD method_34062 writeCollection (Ljava/util/Collection;Lnet/minecraft/class_2540$class_7462;)V
 		COMMENT Writes a collection to this buf. The collection is stored as a leading
 		COMMENT {@linkplain #readVarInt() var int} size followed by the entries
@@ -797,16 +786,8 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 			COMMENT a factory that creates a map with a given size
 		ARG 2 keyReader
 		ARG 3 valueReader
-	METHOD method_34070 (Lnet/minecraft/class_2487;Lcom/mojang/serialization/DataResult$PartialResult;)V
-		ARG 1 partial
-	METHOD method_36129 getVarLongLength (J)I
-		COMMENT Returns the number of bytes needed to encode {@code value} as a
-		COMMENT {@linkplain #writeVarLong(int) var long}. Guaranteed to be between {@code
-		COMMENT 1} and {@value #MAX_VAR_LONG_LENGTH}.
-		COMMENT
-		COMMENT @return the number of bytes a var long {@code value} uses
-		ARG 0 value
-			COMMENT the value to encode
+	METHOD method_34070 (Lnet/minecraft/class_2520;Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
+		ARG 1 error
 	METHOD method_36130 writeChunkPos (Lnet/minecraft/class_1923;)Lnet/minecraft/class_2540;
 		COMMENT Writes a chunk position to this buf. A chunk position is represented by
 		COMMENT a regular long.
@@ -823,9 +804,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readChunkSectionPos()
 		ARG 1 pos
 			COMMENT the section position to write
-	METHOD method_36132 getWrittenBytes ()[B
-		COMMENT Returns an array of bytes of contents in this buf between index {@code 0} and
-		COMMENT the {@link #writerIndex()}.
 	METHOD method_36133 readChunkPos ()Lnet/minecraft/class_1923;
 		COMMENT Reads a chunk position from this buf. A chunk position is represented by
 		COMMENT a regular long.
@@ -891,9 +869,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT exists if signed).
 		COMMENT
 		COMMENT @see #readProperty()
-		ARG 1 property
-	METHOD method_43618 (Lcom/mojang/authlib/properties/PropertyMap;Lnet/minecraft/class_2540;)V
-		ARG 2 buf
 	METHOD method_43619 writeEither (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/class_2540$class_7462;Lnet/minecraft/class_2540$class_7462;)V
 		COMMENT Writes an {@code Either} to this buf. An either is represented by
 		COMMENT a boolean indicating if the left side or the right side of the either,
@@ -1001,8 +976,149 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @return the read public key
 		COMMENT @throws io.netty.handler.codec.DecoderException if the public key is malformed
 		COMMENT @see #writePublicKey(PublicKey)
-	METHOD method_44302 toEncodedStringLength (I)I
-		ARG 0 decodedLength
+	METHOD method_46249 writePropertyMap (Lcom/mojang/authlib/properties/PropertyMap;)V
+		COMMENT Writes an authlib property map to this buf. A property map is represented as a
+		COMMENT collection of properties.
+		COMMENT
+		COMMENT @see #readPropertyMap
+		ARG 1 propertyMap
+	METHOD method_46250 (Lcom/mojang/authlib/properties/PropertyMap;Lnet/minecraft/class_2540;)V
+		ARG 2 buf
+	METHOD method_46251 readEnumSet (Ljava/lang/Class;)Ljava/util/EnumSet;
+		COMMENT Reads an enum set from this buf. An enum set is represented by a bit set that indicates
+		COMMENT whether each element is in the set.
+		COMMENT
+		COMMENT @see #writeEnumSet
+		ARG 1 type
+			COMMENT the type of the enum
+	METHOD method_46252 writeBitSet (Ljava/util/BitSet;I)V
+		COMMENT Writes a bit set to this buf. A bit set is represented using its byte array representation.
+		COMMENT
+		COMMENT @throws io.netty.handler.codec.EncoderException if the bit set's length is above {@code size}
+		COMMENT
+		COMMENT @see BitSet#toByteArray
+		COMMENT @see #readBitSet
+		ARG 1 bitSet
+		ARG 2 size
+			COMMENT the maximum size of the bit set
+	METHOD method_46253 writeEnumSet (Ljava/util/EnumSet;Ljava/lang/Class;)V
+		COMMENT Writes an enum set to this buf. An enum set is represented by a bit set that indicates
+		COMMENT whether each element is in the set.
+		COMMENT
+		COMMENT @see #readEnumSet
+		ARG 1 enumSet
+		ARG 2 type
+			COMMENT the type of the enum
+	METHOD method_46254 readBitSet (I)Ljava/util/BitSet;
+		COMMENT Reads a bit set from this buf. A bit set is represented using its byte array representation.
+		COMMENT
+		COMMENT @see BitSet#valueOf
+		COMMENT @see #writeBitSet
+		ARG 1 size
+			COMMENT the maximum size of the bit set
+	METHOD method_46255 readPropertyMap ()Lcom/mojang/authlib/properties/PropertyMap;
+		COMMENT Reads an authlib property map from this buf. A property map is represented as a
+		COMMENT collection of properties.
+		COMMENT
+		COMMENT @see #writePropertyMap
+	METHOD method_47989 writeRegistryEntry (Lnet/minecraft/class_2359;Lnet/minecraft/class_6880;Lnet/minecraft/class_2540$class_7462;)V
+		ARG 1 registryEntries
+		ARG 2 entry
+		ARG 3 writer
+	METHOD method_47990 readRegistryEntry (Lnet/minecraft/class_2359;Lnet/minecraft/class_2540$class_7461;)Lnet/minecraft/class_6880;
+		ARG 1 registryEntries
+		ARG 2 reader
+	METHOD method_49067 writeQuaternionf (Lorg/joml/Quaternionf;)V
+		COMMENT Writes a {@link Quaternionf} to this buf. A {@link Quaternionf} is represented
+		COMMENT by four {@code float}s.
+		COMMENT
+		COMMENT @see #readQuaternionf()
+		ARG 1 quaternionf
+	METHOD method_49068 writeVector3f (Lorg/joml/Vector3f;)V
+		COMMENT Writes a {@link Vector3f} to this buf. A {@link Vector3f} is represented by
+		COMMENT three {@code float}s.
+		COMMENT
+		COMMENT @see #readVector3f()
+		ARG 1 vector3f
+	METHOD method_49069 readVector3f ()Lorg/joml/Vector3f;
+		COMMENT Reads a {@link Vector3f} from this buf. A {@link Vector3f} is represented by
+		COMMENT three {@code float}s.
+		COMMENT
+		COMMENT @see #writeVector3f(Vector3f)
+	METHOD method_49070 readQuaternionf ()Lorg/joml/Quaternionf;
+		COMMENT Reads a {@link Quaternionf} from this buf. A {@link Quaternionf} is represented
+		COMMENT by four {@code float}s.
+		COMMENT
+		COMMENT @see #writeQuaternionf(Quaternionf)
+	METHOD method_49394 decodeAsJson (Lcom/mojang/serialization/Codec;)Ljava/lang/Object;
+		COMMENT Reads an object from this buf as a JSON element with the given codec.
+		COMMENT
+		COMMENT @param <T> the decoded object's type
+		COMMENT @return the read object
+		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
+		COMMENT to decode the JSON element
+		COMMENT @see #encodeAsJson(Codec, Object)
+		ARG 1 codec
+	METHOD method_49395 encodeAsJson (Lcom/mojang/serialization/Codec;Ljava/lang/Object;)V
+		COMMENT Writes an object to this buf as a JSON element with the given codec.
+		COMMENT
+		COMMENT @param <T> the encoded object's type
+		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
+		COMMENT to encode the JSON element
+		COMMENT @see #decodeAsJson(Codec)
+		ARG 1 codec
+		ARG 2 value
+	METHOD method_49396 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException;
+		ARG 1 error
+	METHOD method_49397 (Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
+		ARG 0 error
+	METHOD method_52954 decode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Codec;)Ljava/lang/Object;
+		COMMENT Reads an object from this buf as a compound NBT with the given codec.
+		COMMENT
+		COMMENT @param <T> the decoded object's type
+		COMMENT @return the read object
+		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
+		COMMENT to decode the compound NBT
+		COMMENT @see #encode(DynamicOps, Codec, Object)
+		ARG 1 ops
+		ARG 2 codec
+	METHOD method_52955 writeVec3d (Lnet/minecraft/class_243;)V
+		COMMENT Writes a {@link Vec3d} to this buf. A {@link Vec3d} is represented
+		COMMENT by four {@code double}s.
+		COMMENT
+		COMMENT @see #readVec3d()
+		ARG 1 vec
+	METHOD method_52962 decode (Ljava/util/function/IntFunction;)Ljava/lang/Object;
+		COMMENT Reads a {@linkplain #readVarInt var int} representing an ID, then
+		COMMENT returns the value converted by {@code idToValue}.
+		COMMENT
+		COMMENT @see #encode(ToIntFunction, Object)
+		ARG 1 idToValue
+			COMMENT a function that gets the value from the integer ID
+	METHOD method_52963 encode (Ljava/util/function/ToIntFunction;Ljava/lang/Object;)Lnet/minecraft/class_2540;
+		COMMENT Converts {@code value} to an integer representing its ID, then
+		COMMENT writes a {@linkplain #readVarInt var int} representation of such ID.
+		COMMENT
+		COMMENT @see #decode(IntFunction)
+		ARG 1 valueToId
+			COMMENT a function that gets the value's integer ID
+		ARG 2 value
+	METHOD method_52996 readVec3d ()Lnet/minecraft/class_243;
+		COMMENT Reads a {@link Vec3d} from this buf. A {@link Vec3d} is represented
+		COMMENT by four {@code double}s.
+		COMMENT
+		COMMENT @see #writeVec3d(Vec3d)
+	METHOD method_53006 readRegistryRefKey ()Lnet/minecraft/class_5321;
+		COMMENT Reads a registry key referencing another registry key from this buf.
+		COMMENT Such key is represented by its {@linkplain #readIdentifier value as an identifier}.
+		COMMENT
+		COMMENT <p>This is the same as {@code readRegistryKey(Registries.ROOT)}.
+		COMMENT To read a registry key of a registered object (such as biomes),
+		COMMENT use {@link #readRegistryKey(RegistryKey)}.
+		COMMENT
+		COMMENT @return the read registry key
+		COMMENT @see #readRegistryKey(RegistryKey)
+		COMMENT @see #writeRegistryKey(RegistryKey)
 	METHOD nioBuffer (II)Ljava/nio/ByteBuffer;
 		ARG 1 index
 		ARG 2 length
@@ -1051,6 +1167,8 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 index
 	METHOD release (I)Z
 		ARG 1 decrement
+	METHOD retain (I)Lio/netty/buffer/ByteBuf;
+		ARG 1 increment
 	METHOD retain (I)Lio/netty/util/ReferenceCounted;
 		ARG 1 increment
 	METHOD retainedSlice (II)Lio/netty/buffer/ByteBuf;

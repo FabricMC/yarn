@@ -70,7 +70,7 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 	COMMENT
 	COMMENT <h2 id="using">Using Identifier</h2>
 	COMMENT <p>Identifiers identify several objects in the game. {@link
-	COMMENT net.minecraft.util.registry.Registry} holds objects, such as blocks and items, that are
+	COMMENT net.minecraft.registry.Registry} holds objects, such as blocks and items, that are
 	COMMENT identified by an identifier. Textures are also identified using an identifier; such
 	COMMENT an identifier is represented as a file path with an extension, such as {@code
 	COMMENT minecraft:textures/entity/pig/pig.png}.
@@ -82,7 +82,7 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 	COMMENT <h3 id="registrykey">RegistryKey</h3>
 	COMMENT <p>Identifier is not type-aware; {@code minecraft:tnt} could refer to a TNT block, a TNT
 	COMMENT item, or a TNT entity. To identify a registered object uniquely, {@link
-	COMMENT net.minecraft.util.registry.RegistryKey} can be used. A registry key is a combination
+	COMMENT net.minecraft.registry.RegistryKey} can be used. A registry key is a combination
 	COMMENT of the registry's identifier and the object's identifier.
 	FIELD field_13353 namespace Ljava/lang/String;
 	FIELD field_13354 COMMAND_EXCEPTION Lcom/mojang/brigadier/exceptions/SimpleCommandExceptionType;
@@ -92,14 +92,20 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 	FIELD field_33381 DEFAULT_NAMESPACE Ljava/lang/String;
 	FIELD field_33382 REALMS_NAMESPACE Ljava/lang/String;
 	METHOD <init> (Ljava/lang/String;)V
-		COMMENT <p>Takes a string of the form {@code <namespace>:<path>}, for example {@code minecraft:iron_ingot}.
+		COMMENT <p>Takes a string of the form {@code <namespace>:<path>} or {@code <path>} which will use the default namespace, for example {@code minecraft:iron_ingot} or {@code iron_ingot}.
 		COMMENT <p>The string will be split (on the {@code :}) into an identifier with the specified path and namespace.
 		COMMENT Prefer using the {@link net.minecraft.util.Identifier#Identifier(java.lang.String, java.lang.String) Identifier(java.lang.String, java.lang.String)} constructor that takes the namespace and path as individual parameters to avoid mistakes.
+		COMMENT <p>If there is no colon in the given string argument, the namespace will be set to {@value #DEFAULT_NAMESPACE}, and the path will be the given argument.
+		COMMENT If the colon is the first character of the given string argument (i.e. the namespace is empty), the namespace will also be set to {@value #DEFAULT_NAMESPACE}, and the path will be the given argument without the initial colon.
 		COMMENT @throws InvalidIdentifierException if the string cannot be parsed as an identifier.
 		ARG 1 id
 	METHOD <init> (Ljava/lang/String;Ljava/lang/String;)V
 		ARG 1 namespace
 		ARG 2 path
+	METHOD <init> (Ljava/lang/String;Ljava/lang/String;Lnet/minecraft/class_2960$class_7658;)V
+		ARG 1 namespace
+		ARG 2 path
+		ARG 3 extraData
 	METHOD <init> ([Ljava/lang/String;)V
 		ARG 1 id
 	METHOD compareTo (Ljava/lang/Object;)I
@@ -112,6 +118,7 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 		COMMENT @see #of
 		ARG 0 id
 	METHOD method_12830 split (Ljava/lang/String;C)[Ljava/lang/String;
+		COMMENT Splits the {@code id} into an array of two strings at the first occurrence of {@code delimiter}, excluding the delimiter character, or uses {@value #DEFAULT_NAMESPACE} for the first string in the resulting array when the deliminator does not exist or is the first character.
 		ARG 0 id
 		ARG 1 delimiter
 	METHOD method_12831 isCharValid (C)Z
@@ -162,6 +169,25 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 		ARG 1 path
 	METHOD method_43903 toShortTranslationKey ()Ljava/lang/String;
 		COMMENT {@return the short translation key, with the default namespace omitted if present}
+	METHOD method_45134 withPath (Ljava/util/function/UnaryOperator;)Lnet/minecraft/class_2960;
+		ARG 1 pathFunction
+	METHOD method_45135 validateNamespace (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+		ARG 0 namespace
+		ARG 1 path
+	METHOD method_45136 withPath (Ljava/lang/String;)Lnet/minecraft/class_2960;
+		ARG 1 path
+	METHOD method_45137 validatePath (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+		ARG 0 namespace
+		ARG 1 path
+	METHOD method_45138 withPrefixedPath (Ljava/lang/String;)Lnet/minecraft/class_2960;
+		ARG 1 prefix
+	METHOD method_48331 withSuffixedPath (Ljava/lang/String;)Lnet/minecraft/class_2960;
+		ARG 1 suffix
+	METHOD method_48747 toTranslationKey (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+		COMMENT {@return the {@linkplain #toTranslationKey() long translation key} prefixed with
+		COMMENT {@code prefix} and a dot, and suffixed with a dot and {@code suffix}}
+		ARG 1 prefix
+		ARG 2 suffix
 	CLASS class_2961 Serializer
 		METHOD deserialize (Lcom/google/gson/JsonElement;Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)Ljava/lang/Object;
 			ARG 1 json
@@ -171,3 +197,6 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 			ARG 1 id
 			ARG 2 type
 			ARG 3 context
+	CLASS class_7658 ExtraData
+		COMMENT A piece of extra data that a subclass may attach to an identifier. This is
+		COMMENT not used by {@link Identifier} itself.

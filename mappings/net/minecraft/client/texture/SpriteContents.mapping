@@ -1,0 +1,102 @@
+CLASS net/minecraft/class_7764 net/minecraft/client/texture/SpriteContents
+	FIELD field_40535 LOGGER Lorg/slf4j/Logger;
+	FIELD field_40536 id Lnet/minecraft/class_2960;
+	FIELD field_40537 width I
+	FIELD field_40538 height I
+	FIELD field_40539 image Lnet/minecraft/class_1011;
+	FIELD field_40540 mipmapLevelsImages [Lnet/minecraft/class_1011;
+	FIELD field_40541 animation Lnet/minecraft/class_7764$class_5790;
+	FIELD field_45631 metadata Lnet/minecraft/class_7368;
+	METHOD <init> (Lnet/minecraft/class_2960;Lnet/minecraft/class_7771;Lnet/minecraft/class_1011;Lnet/minecraft/class_7368;)V
+		ARG 1 id
+		ARG 2 dimensions
+		ARG 3 image
+		ARG 4 metadata
+	METHOD method_45808 generateMipmaps (I)V
+		ARG 1 mipmapLevels
+	METHOD method_45809 upload (II)V
+		ARG 1 x
+		ARG 2 y
+	METHOD method_45810 isPixelTransparent (III)Z
+		ARG 1 frame
+		ARG 2 x
+		ARG 3 y
+	METHOD method_45811 upload (IIII[Lnet/minecraft/class_1011;)V
+		ARG 1 x
+		ARG 2 y
+		ARG 3 unpackSkipPixels
+		ARG 4 unpackSkipRows
+		ARG 5 images
+	METHOD method_45812 createAnimation (Lnet/minecraft/class_7771;IILnet/minecraft/class_1079;)Lnet/minecraft/class_7764$class_5790;
+		ARG 1 dimensions
+		ARG 2 imageWidth
+		ARG 3 imageHeight
+		ARG 4 metadata
+	METHOD method_45813 (Lit/unimi/dsi/fastutil/ints/IntSet;I)Z
+		ARG 0 frameIndex
+	METHOD method_45814 (Ljava/util/List;II)V
+		ARG 1 index
+		ARG 2 frameTime
+	METHOD method_45817 getDistinctFrameCount ()Ljava/util/stream/IntStream;
+	METHOD method_45818 createAnimator ()Lnet/minecraft/class_7768;
+	METHOD method_45819 getFrameCount ()I
+	METHOD method_52848 getMetadata ()Lnet/minecraft/class_7368;
+	CLASS class_4728 Interpolation
+		FIELD field_21758 images [Lnet/minecraft/class_1011;
+		METHOD method_24128 apply (IILnet/minecraft/class_7764$class_7765;)V
+			COMMENT Linearly interpolate between the current and next frame on all mip levels
+			COMMENT based on the tick position within the current frame,
+			COMMENT and upload the results to the currently bound texture to the frame slot at position (0,0).
+			ARG 1 x
+			ARG 2 y
+			ARG 3 animator
+		METHOD method_24129 lerp (DII)I
+			COMMENT Purely mathematical single-value linear interpolation.
+			COMMENT {@code lerp(0, a, b) == b}, {@code lerp(1, a, b) == a}.
+			ARG 1 delta
+			ARG 3 to
+			ARG 4 from
+		METHOD method_24130 getPixelColor (Lnet/minecraft/class_7764$class_5790;IIII)I
+			COMMENT {@return the pixel color at frame {@code frameIndex} within mipmap {@code layer} at sprite relative coordinates}
+			ARG 1 animation
+			ARG 2 frameIndex
+			ARG 3 layer
+			ARG 4 x
+			ARG 5 y
+	CLASS class_5790 Animation
+		FIELD field_28472 frames Ljava/util/List;
+		FIELD field_28473 frameCount I
+		FIELD field_40542 interpolation Z
+		METHOD <init> (Lnet/minecraft/class_7764;Ljava/util/List;IZ)V
+			ARG 2 frames
+			ARG 3 frameCount
+			ARG 4 interpolation
+		METHOD method_33445 upload (II)V
+			ARG 1 x
+			ARG 2 y
+		METHOD method_33446 getFrameX (I)I
+			ARG 1 frame
+		METHOD method_33449 (Lnet/minecraft/class_7764$class_5791;)I
+			ARG 0 frame
+		METHOD method_33450 getDistinctFrameCount ()Ljava/util/stream/IntStream;
+		METHOD method_33451 getFrameY (I)I
+			ARG 1 frame
+		METHOD method_33455 upload (III)V
+			ARG 1 x
+			ARG 2 y
+			ARG 3 frame
+		METHOD method_45823 createAnimator ()Lnet/minecraft/class_7768;
+	CLASS class_5791 AnimationFrame
+		FIELD field_28475 index I
+		FIELD field_28476 time I
+		METHOD <init> (II)V
+			ARG 1 index
+			ARG 2 time
+	CLASS class_7765 AnimatorImpl
+		FIELD field_40544 frame I
+		FIELD field_40545 currentTime I
+		FIELD field_40546 animation Lnet/minecraft/class_7764$class_5790;
+		FIELD field_40547 interpolation Lnet/minecraft/class_7764$class_4728;
+		METHOD <init> (Lnet/minecraft/class_7764;Lnet/minecraft/class_7764$class_5790;Lnet/minecraft/class_7764$class_4728;)V
+			ARG 2 animation
+			ARG 3 interpolation

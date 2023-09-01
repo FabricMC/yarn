@@ -1,5 +1,6 @@
 package net.fabricmc.filament.task;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,8 +12,6 @@ import javax.inject.Inject;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.FileSystemLocation;
-import org.gradle.api.file.FileVisitDetails;
-import org.gradle.api.file.FileVisitor;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.MapProperty;
 import org.gradle.api.provider.Property;
@@ -20,21 +19,20 @@ import org.gradle.api.provider.Provider;
 import org.gradle.api.tasks.Classpath;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;
-import org.gradle.api.tasks.OutputFile;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.workers.WorkAction;
 import org.gradle.workers.WorkParameters;
 import org.gradle.workers.WorkQueue;
 import org.gradle.workers.WorkerExecutor;
 
+import net.fabricmc.filament.task.base.WithFileInput;
+import net.fabricmc.filament.task.base.WithFileOutput;
 import net.fabricmc.tinyremapper.OutputConsumerPath;
 import net.fabricmc.tinyremapper.TinyRemapper;
 import net.fabricmc.tinyremapper.TinyUtils;
 
-public abstract class MapJarTask extends DefaultTask {
-	@InputFile public abstract RegularFileProperty getInput();
+public abstract class MapJarTask extends DefaultTask implements WithFileOutput, WithFileInput {
 	@InputFile public abstract RegularFileProperty getMappings();
-	@OutputFile public abstract RegularFileProperty getOutput();
 	@Classpath public abstract ConfigurableFileCollection getClasspath();
 	@Input public abstract Property<String> getFrom();
 	@Input public abstract Property<String> getTo();
@@ -49,8 +47,6 @@ public abstract class MapJarTask extends DefaultTask {
 
 	@TaskAction
 	public void remap() {
-		getProject().getLogger().lifecycle(":remapping {} from {} to {}", getInput().get().getAsFile(), getFrom().get(), getTo().get());
-
 		WorkQueue workQueue = getWorkerExecutor().noIsolation();
 		workQueue.submit(RemapAction.class, parameters -> {
 			parameters.getInput().set(getInput());
@@ -64,20 +60,16 @@ public abstract class MapJarTask extends DefaultTask {
 	}
 
 	public interface RemapParameters extends WorkParameters {
-		@InputFile RegularFileProperty getInput();
-		@InputFile RegularFileProperty getMappings();
-		@OutputFile RegularFileProperty getOutput();
-		@Classpath ConfigurableFileCollection getClasspath();
-		@Input Property<String> getFrom();
-		@Input Property<String> getTo();
-		@Input MapProperty<String, String> getClassMappings();
+		RegularFileProperty getInput();
+		RegularFileProperty getMappings();
+		RegularFileProperty getOutput();
+		ConfigurableFileCollection getClasspath();
+		Property<String> getFrom();
+		Property<String> getTo();
+		MapProperty<String, String> getClassMappings();
 	}
 
 	public abstract static class RemapAction implements WorkAction<RemapParameters> {
-		@Inject
-		public RemapAction() {
-		}
-
 		private static Path getPath(Provider<? extends FileSystemLocation> provider) {
 			return provider.get().getAsFile().toPath();
 		}
@@ -108,19 +100,11 @@ public abstract class MapJarTask extends DefaultTask {
 			try (OutputConsumerPath outputConsumer = new OutputConsumerPath.Builder(output).build()) {
 				Path input = getPath(params.getInput());
 				outputConsumer.addNonClassFiles(input);
-				remapper.readInputs(input);
+				remapper.readInputsAsync(input);
 
-				params.getClasspath().getAsFileTree().visit(new FileVisitor() {
-					@Override
-					public void visitDir(FileVisitDetails dirDetails) {
-						// ignore
-					}
-
-					@Override
-					public void visitFile(FileVisitDetails fileDetails) {
-						remapper.readClassPath(fileDetails.getFile().toPath());
-					}
-				});
+				for (File file : params.getClasspath().getFiles()) {
+					remapper.readClassPathAsync(file.toPath());
+				}
 
 				remapper.apply(outputConsumer);
 			} finally {

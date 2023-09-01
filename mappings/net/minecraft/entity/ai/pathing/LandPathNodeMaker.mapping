@@ -2,7 +2,7 @@ CLASS net/minecraft/class_14 net/minecraft/entity/ai/pathing/LandPathNodeMaker
 	FIELD field_25190 nodeTypes Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 	FIELD field_25191 collidedBoxes Lit/unimi/dsi/fastutil/objects/Object2BooleanMap;
 	FIELD field_31809 Y_OFFSET D
-	FIELD field_63 waterPathNodeTypeWeight F
+	FIELD field_40928 MIN_STEP_HEIGHT D
 	METHOD method_20536 isValidAdjacentSuccessor (Lnet/minecraft/class_9;Lnet/minecraft/class_9;)Z
 		ARG 1 node
 		ARG 2 successor1
@@ -11,8 +11,6 @@ CLASS net/minecraft/class_14 net/minecraft/entity/ai/pathing/LandPathNodeMaker
 		ARG 1 pos
 	METHOD method_27138 inflictsFireDamage (Lnet/minecraft/class_2680;)Z
 		ARG 0 state
-	METHOD method_27139 canPathThrough (Lnet/minecraft/class_2338;)Z
-		ARG 1 pos
 	METHOD method_29303 getNodeType (Lnet/minecraft/class_1308;III)Lnet/minecraft/class_7;
 		ARG 1 entity
 		ARG 2 x
@@ -20,6 +18,8 @@ CLASS net/minecraft/class_14 net/minecraft/entity/ai/pathing/LandPathNodeMaker
 		ARG 4 z
 	METHOD method_29304 checkBoxCollision (Lnet/minecraft/class_238;)Z
 		ARG 1 box
+	METHOD method_29305 (Lnet/minecraft/class_238;Ljava/lang/Object;)Z
+		ARG 2 box2
 	METHOD method_29578 isBlocked (Lnet/minecraft/class_9;)Z
 		ARG 1 node
 	METHOD method_29579 isValidDiagonalSuccessor (Lnet/minecraft/class_9;Lnet/minecraft/class_9;Lnet/minecraft/class_9;Lnet/minecraft/class_9;)Z
@@ -34,6 +34,19 @@ CLASS net/minecraft/class_14 net/minecraft/entity/ai/pathing/LandPathNodeMaker
 		ARG 0 nodeType
 	METHOD method_43415 getStart (Lnet/minecraft/class_2338;)Lnet/minecraft/class_9;
 		ARG 1 pos
+	METHOD method_43569 getNodeWith (IIILnet/minecraft/class_7;F)Lnet/minecraft/class_9;
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+		ARG 4 type
+		ARG 5 penalty
+	METHOD method_43570 getBlockedNode (III)Lnet/minecraft/class_9;
+		ARG 1 x
+		ARG 2 y
+		ARG 3 z
+	METHOD method_46739 getStepHeight ()D
+	METHOD method_47893 canPathThrough (Lnet/minecraft/class_2338;)Z
+		ARG 1 pos
 	METHOD method_58 getCommonNodeType (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_7;
 		ARG 0 world
 		ARG 1 pos
@@ -44,12 +57,10 @@ CLASS net/minecraft/class_14 net/minecraft/entity/ai/pathing/LandPathNodeMaker
 	METHOD method_60 getFeetY (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)D
 		ARG 0 world
 		ARG 1 pos
-	METHOD method_61 adjustNodeType (Lnet/minecraft/class_1922;ZZLnet/minecraft/class_2338;Lnet/minecraft/class_7;)Lnet/minecraft/class_7;
+	METHOD method_61 adjustNodeType (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_7;)Lnet/minecraft/class_7;
 		ARG 1 world
-		ARG 2 canOpenDoors
-		ARG 3 canEnterOpenDoors
-		ARG 4 pos
-		ARG 5 type
+		ARG 2 pos
+		ARG 3 type
 	METHOD method_62 getPathNode (IIIIDLnet/minecraft/class_2350;Lnet/minecraft/class_7;)Lnet/minecraft/class_9;
 		ARG 1 x
 		ARG 2 y
@@ -61,18 +72,13 @@ CLASS net/minecraft/class_14 net/minecraft/entity/ai/pathing/LandPathNodeMaker
 	METHOD method_63 getNodeType (Lnet/minecraft/class_1308;Lnet/minecraft/class_2338;)Lnet/minecraft/class_7;
 		ARG 1 entity
 		ARG 2 pos
-	METHOD method_64 findNearbyNodeTypes (Lnet/minecraft/class_1922;IIIIIIZZLjava/util/EnumSet;Lnet/minecraft/class_7;Lnet/minecraft/class_2338;)Lnet/minecraft/class_7;
+	METHOD method_64 findNearbyNodeTypes (Lnet/minecraft/class_1922;IIILjava/util/EnumSet;Lnet/minecraft/class_7;Lnet/minecraft/class_2338;)Lnet/minecraft/class_7;
 		COMMENT Adds the node types in the box with the given size to the input EnumSet.
 		COMMENT @return The node type at the least coordinates of the input box.
 		ARG 1 world
 		ARG 2 x
 		ARG 3 y
 		ARG 4 z
-		ARG 5 sizeX
-		ARG 6 sizeY
-		ARG 7 sizeZ
-		ARG 8 canOpenDoors
-		ARG 9 canEnterOpenDoors
-		ARG 10 nearbyTypes
-		ARG 11 type
-		ARG 12 pos
+		ARG 5 nearbyTypes
+		ARG 6 type
+		ARG 7 pos

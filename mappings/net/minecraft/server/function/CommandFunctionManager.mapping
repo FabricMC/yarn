@@ -36,10 +36,10 @@ CLASS net/minecraft/class_2991 net/minecraft/server/function/CommandFunctionMana
 		COMMENT Executes a function.
 		COMMENT
 		COMMENT <p>This is same as calling {@link #execute(CommandFunction, ServerCommandSource,
-		COMMENT Tracer) execute(function, source, null)}.
+		COMMENT Tracer, NbtCompound) execute(function, source, null, null)}.
 		COMMENT
 		COMMENT @return the command output value
-		COMMENT @see #execute(CommandFunction, ServerCommandSource, Tracer)
+		COMMENT @see #execute(CommandFunction, ServerCommandSource, Tracer, NbtCompound)
 		ARG 1 function
 			COMMENT the function
 		ARG 2 source
@@ -60,7 +60,7 @@ CLASS net/minecraft/class_2991 net/minecraft/server/function/CommandFunctionMana
 	METHOD method_29464 getFunctionTags ()Ljava/lang/Iterable;
 	METHOD method_29773 load (Lnet/minecraft/class_5349;)V
 		ARG 1 loader
-	METHOD method_36341 execute (Lnet/minecraft/class_2158;Lnet/minecraft/class_2168;Lnet/minecraft/class_2991$class_6346;)I
+	METHOD method_36341 execute (Lnet/minecraft/class_2158;Lnet/minecraft/class_2168;Lnet/minecraft/class_2991$class_6346;Lnet/minecraft/class_2487;)I
 		COMMENT Executes a function. This may have two cases: new or recursive.
 		COMMENT
 		COMMENT <p>In a new execution, the {@link #execution execution == null}, and a custom
@@ -80,6 +80,8 @@ CLASS net/minecraft/class_2991 net/minecraft/server/function/CommandFunctionMana
 			COMMENT the command source to execute with
 		ARG 3 tracer
 			COMMENT a tracer for a non-recursive function execution
+		ARG 4 arguments
+			COMMENT arguments for macro substitution, if any
 	CLASS class_2992 Entry
 		FIELD field_13424 source Lnet/minecraft/class_2168;
 		FIELD field_13425 element Lnet/minecraft/class_2158$class_2161;
@@ -103,11 +105,12 @@ CLASS net/minecraft/class_2991 net/minecraft/server/function/CommandFunctionMana
 		FIELD field_33546 tracer Lnet/minecraft/class_2991$class_6346;
 		FIELD field_33547 queue Ljava/util/Deque;
 		FIELD field_33548 waitlist Ljava/util/List;
+		FIELD field_44584 returned Z
 		METHOD <init> (Lnet/minecraft/class_2991;Lnet/minecraft/class_2991$class_6346;)V
 			ARG 2 tracer
 		METHOD method_36343 recursiveRun (Lnet/minecraft/class_2158;Lnet/minecraft/class_2168;)V
 			COMMENT Handles a recursive case in {@link CommandFunctionManager#execute(CommandFunction,
-			COMMENT ServerCommandSource, CommandFunctionManager.Tracer)}.
+			COMMENT ServerCommandSource, CommandFunctionManager.Tracer, NbtCompound)}.
 			COMMENT
 			COMMENT <p>This effectively swaps an entry with a command element with {@code /function}
 			COMMENT command at the head of the deque with another entry with a function element
@@ -120,13 +123,21 @@ CLASS net/minecraft/class_2991 net/minecraft/server/function/CommandFunctionMana
 			ARG 1 message
 		METHOD method_36346 run (Lnet/minecraft/class_2158;Lnet/minecraft/class_2168;)I
 			COMMENT Handles a new case in {@link CommandFunctionManager#execute(CommandFunction,
-			COMMENT ServerCommandSource, CommandFunctionManager.Tracer)}.
+			COMMENT ServerCommandSource, CommandFunctionManager.Tracer, NbtCompound)}.
 			COMMENT
 			COMMENT @return a value for the command result
 			ARG 1 function
 				COMMENT the function
 			ARG 2 source
 				COMMENT the command source
+		METHOD method_51275 addReturnConsumer (Lnet/minecraft/class_2168;)Lnet/minecraft/class_2168;
+			ARG 1 source
+		CLASS class_8502 ReturnValueConsumer
+			FIELD field_44586 delegate Ljava/util/function/IntConsumer;
+			METHOD <init> (Lnet/minecraft/class_2991$class_6345;Ljava/util/function/IntConsumer;)V
+				ARG 2 delegate
+			METHOD accept (I)V
+				ARG 1 value
 	CLASS class_6346 Tracer
 		COMMENT A tree-visitor-like tracer, useful for gaining insights on function execution.
 		METHOD method_36349 traceCommandStart (ILjava/lang/String;)V

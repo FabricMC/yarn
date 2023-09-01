@@ -1,0 +1,161 @@
+CLASS net/minecraft/class_7898 net/minecraft/entity/ai/brain/task/TaskTriggerer
+	COMMENT A lambda-based alternative to subclassing {@link Task}.
+	COMMENT
+	COMMENT <p>To use this,
+	COMMENT <ol>
+	COMMENT <li>Make a static method with all configurable parameters (such as speed, range, etc).</li>
+	COMMENT <li>If there is a value that needs to be tracked between ticks (such as cooldown),
+	COMMENT declare a mutable variable (such as {@link org.apache.commons.lang3.mutable.MutableInt}).</li>
+	COMMENT <li>Return the result of {@link #task}. This method creates a new {@link SingleTickTask}.</li>
+	COMMENT </ol>
+	COMMENT
+	COMMENT <p>A lambda is passed to the {@code task} method. This takes a {@link TaskTriggerer.TaskContext}.
+	COMMENT You can either call {@link TaskTriggerer.TaskContext#point} to set the actual task function,
+	COMMENT or declare a dependency on memory queries. The task function is a function that takes
+	COMMENT the server world, entity, and the current time, and returns a boolean indicating whether
+	COMMENT a task successfully ran.
+	COMMENT
+	COMMENT <h2>Example of memory-independent task</h2>
+	COMMENT <pre>{@code
+	COMMENT public static Task<LivingEntity> createHealTask() {
+	COMMENT     return TaskTriggerer.task(context -> context.point((world, entity, time) -> {
+	COMMENT         entity.heal(1.0f);
+	COMMENT         return true;
+	COMMENT     }));
+	COMMENT }
+	COMMENT }</pre>
+	COMMENT
+	COMMENT <h2>Memory-dependent task</h2>
+	COMMENT <p>Memory-dependent tasks (i.e. one that queries, remembers, or forgets a memory) first
+	COMMENT should call {@code TaskContext.group} with results of {@code Context.queryMemory} methods
+	COMMENT for all the dependent memories. Then, call {@code apply} with {@code context} and a
+	COMMENT lambda function taking the results of the query. This function returns the task function
+	COMMENT seen earlier.
+	COMMENT
+	COMMENT <p>If any of the query is not successful (e.g. because a value was not present), the task will
+	COMMENT not run. If all succeed, then the task runs, and the query result can be obtained via
+	COMMENT {@link TaskTriggerer.TaskContext#getValue}.
+	COMMENT
+	COMMENT <p>There are three query types:
+	COMMENT
+	COMMENT <ul>
+	COMMENT <li>{@link TaskTriggerer.TaskContext#queryMemoryAbsent} that succeeds if a value is
+	COMMENT <strong>not</strong> present in the memory.</li>
+	COMMENT <li>{@link TaskTriggerer.TaskContext#queryMemoryValue} that succeeds if a value is
+	COMMENT present in the memory. The result is the queried value.</li>
+	COMMENT <li>{@link TaskTriggerer.TaskContext#queryMemoryOptional} that always succeeds. The value
+	COMMENT is an optional that contains the value if it is present in the memory.</li>
+	COMMENT </ul>
+	COMMENT
+	COMMENT <p>For example, the following code queries {@link
+	COMMENT MemoryModuleType#MEETING_POINT} and forgets it:
+	COMMENT
+	COMMENT <pre>{@code
+	COMMENT public static Task<LivingEntity> createForgetMeetingPointTask() {
+	COMMENT     return TaskTriggerer.task(context -> context.group(context.queryMemoryValue(MemoryModuleType.MEETING_POINT)).apply(context, meetingPoint -> (world, entity, time) -> {
+	COMMENT         GlobalPos pos = (GlobalPos)context.getValue(meetingPoint);
+	COMMENT         // Do something with meetingPoint or pos
+	COMMENT         // For example, forget the meeting point:
+	COMMENT         meetingPoint.forget();
+	COMMENT         return true;
+	COMMENT     }));
+	COMMENT }
+	COMMENT }</pre>
+	FIELD field_40998 function Lnet/minecraft/class_7898$class_7904;
+	METHOD <init> (Lnet/minecraft/class_7898$class_7904;)V
+		ARG 1 function
+	METHOD method_47215 newContext ()Lnet/minecraft/class_7898$class_7900;
+	METHOD method_47216 of (Lnet/minecraft/class_7898$class_7904;)Lnet/minecraft/class_7898;
+		ARG 0 function
+	METHOD method_47217 runIf (Lnet/minecraft/class_7911;Lnet/minecraft/class_7911;)Lnet/minecraft/class_7894;
+		ARG 0 predicate
+		ARG 1 task
+	METHOD method_47218 (Lnet/minecraft/class_7911;Lnet/minecraft/class_7911;Lnet/minecraft/class_7898$class_7900;)Lcom/mojang/datafixers/kinds/App;
+		ARG 2 context
+	METHOD method_47219 (Lnet/minecraft/class_7911;Lcom/mojang/datafixers/util/Unit;)Lnet/minecraft/class_7911;
+		ARG 1 unit
+	METHOD method_47220 cast (Lcom/mojang/datafixers/kinds/App;)Lnet/minecraft/class_7898;
+		ARG 0 app
+	METHOD method_47221 predicate (Ljava/util/function/BiPredicate;)Lnet/minecraft/class_7894;
+		ARG 0 predicate
+	METHOD method_47222 (Ljava/util/function/BiPredicate;Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;J)Z
+		ARG 1 world
+		ARG 2 entity
+		ARG 3 time
+	METHOD method_47223 (Ljava/util/function/BiPredicate;Lnet/minecraft/class_7898$class_7900;)Lcom/mojang/datafixers/kinds/App;
+		ARG 1 context
+	METHOD method_47224 task (Ljava/util/function/Function;)Lnet/minecraft/class_7894;
+		ARG 0 creator
+	METHOD method_47225 predicate (Ljava/util/function/Predicate;)Lnet/minecraft/class_7894;
+		ARG 0 predicate
+	METHOD method_47226 (Ljava/util/function/Predicate;Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;J)Z
+		ARG 1 world
+		ARG 2 entity
+		ARG 3 time
+	METHOD method_47227 runIf (Ljava/util/function/Predicate;Lnet/minecraft/class_7894;)Lnet/minecraft/class_7894;
+		ARG 0 predicate
+		ARG 1 task
+	METHOD method_47228 (Ljava/util/function/Predicate;Lnet/minecraft/class_7898$class_7900;)Lcom/mojang/datafixers/kinds/App;
+		ARG 1 context
+	METHOD method_47229 getFunction (Lcom/mojang/datafixers/kinds/App;)Lnet/minecraft/class_7898$class_7904;
+		ARG 0 app
+	CLASS class_7899 Supply
+		METHOD <init> (Ljava/lang/Object;)V
+			ARG 1 value
+		METHOD <init> (Ljava/lang/Object;Ljava/util/function/Supplier;)V
+			ARG 1 value
+			ARG 2 nameSupplier
+	CLASS class_7900 TaskContext
+		METHOD ap2 (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+			ARG 1 app
+			ARG 2 function1
+			ARG 3 function2
+		METHOD ap3 (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+			ARG 1 app
+			ARG 2 function1
+			ARG 3 function2
+			ARG 4 function3
+		METHOD ap4 (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+			ARG 1 app
+			ARG 2 function1
+			ARG 3 function2
+			ARG 4 function3
+			ARG 5 function4
+		METHOD lift1 (Lcom/mojang/datafixers/kinds/App;)Ljava/util/function/Function;
+			ARG 1 app
+		METHOD map (Ljava/util/function/Function;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+			ARG 1 function
+			ARG 2 app
+		METHOD method_47233 getOptionalValue (Lnet/minecraft/class_7906;)Ljava/util/Optional;
+			ARG 1 result
+		METHOD method_47234 trigger (Lnet/minecraft/class_7911;)Lnet/minecraft/class_7898;
+			ARG 1 runnable
+		METHOD method_47235 queryMemoryOptional (Lnet/minecraft/class_4140;)Lnet/minecraft/class_7898;
+			ARG 1 type
+		METHOD method_47236 (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+			ARG 2 app2
+		METHOD method_47242 supply (Ljava/util/function/Supplier;Ljava/lang/Object;)Lnet/minecraft/class_7898;
+			ARG 1 nameSupplier
+			ARG 2 value
+		METHOD method_47243 getValue (Lnet/minecraft/class_7906;)Ljava/lang/Object;
+			ARG 1 result
+		METHOD method_47244 queryMemoryValue (Lnet/minecraft/class_4140;)Lnet/minecraft/class_7898;
+			ARG 1 type
+		METHOD method_47245 queryMemoryAbsent (Lnet/minecraft/class_4140;)Lnet/minecraft/class_7898;
+			ARG 1 type
+		METHOD point (Ljava/lang/Object;)Lcom/mojang/datafixers/kinds/App;
+			ARG 1 value
+		CLASS class_7901 Mu
+	CLASS class_7902 K1
+	CLASS class_7903 QueryMemory
+		METHOD <init> (Lnet/minecraft/class_7907;)V
+			ARG 1 query
+	CLASS class_7904 TaskFunction
+		METHOD method_47231 asString ()Ljava/lang/String;
+		METHOD method_47232 run (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;J)Ljava/lang/Object;
+			ARG 1 world
+			ARG 2 entity
+			ARG 3 time
+	CLASS class_7905 Trigger
+		METHOD <init> (Lnet/minecraft/class_7911;)V
+			ARG 1 taskRunnable

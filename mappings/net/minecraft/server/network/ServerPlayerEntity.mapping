@@ -3,7 +3,6 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_13964 disconnected Z
 	FIELD field_13965 lastLevelScore I
 	FIELD field_13966 statHandler Lnet/minecraft/class_3442;
-	FIELD field_13967 pingMilliseconds I
 	FIELD field_13968 lastAirScore I
 	FIELD field_13969 seenCredits Z
 	FIELD field_13970 advancementTracker Lnet/minecraft/class_2985;
@@ -48,21 +47,23 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_35007 fallStartPos Lnet/minecraft/class_243;
 	FIELD field_35008 vehicleInLavaRidingPos Lnet/minecraft/class_243;
 	FIELD field_35566 allowServerListing Z
-	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_3218;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_7428;)V
+	FIELD field_39985 sculkShriekerWarningManager Lnet/minecraft/class_7262;
+	FIELD field_39986 session Lnet/minecraft/class_7822;
+	FIELD field_44990 viewDistance Ljava/util/OptionalInt;
+	FIELD field_44991 chunkFilter Lnet/minecraft/class_8603;
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_3218;Lcom/mojang/authlib/GameProfile;)V
 		ARG 1 server
 		ARG 2 world
 		ARG 3 profile
-		ARG 4 publicKey
 	METHOD method_14203 copyFrom (Lnet/minecraft/class_3222;Z)V
 		ARG 1 oldPlayer
 		ARG 2 alive
-	METHOD method_14205 sendChunkPacket (Lnet/minecraft/class_1923;Lnet/minecraft/class_2596;)V
-		ARG 1 chunkPos
-		ARG 2 chunkDataPacket
 	METHOD method_14206 getPlayerListName ()Lnet/minecraft/class_2561;
-	METHOD method_14207 handleFall (DZ)V
-		ARG 1 heightDifference
-		ARG 3 onGround
+	METHOD method_14207 handleFall (DDDZ)V
+		ARG 1 xDifference
+		ARG 3 yDifference
+		ARG 5 zDifference
+		ARG 7 onGround
 	METHOD method_14208 isInTeleportationState ()Z
 	METHOD method_14209 getIp ()Ljava/lang/String;
 	METHOD method_14210 (Lnet/minecraft/class_2561;Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
@@ -118,14 +119,9 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 1 horizontalSpawnArea
 	METHOD method_14245 moveToSpawn (Lnet/minecraft/class_3218;)V
 		ARG 1 world
-	METHOD method_14246 sendUnloadChunkPacket (Lnet/minecraft/class_1923;)V
-		ARG 1 chunkPos
-	METHOD method_14247 closeScreenHandler ()V
-		COMMENT Runs closing tasks for the current screen handler and
-		COMMENT sets it to the {@code playerScreenHandler}.
 	METHOD method_14248 getStatHandler ()Lnet/minecraft/class_3442;
 	METHOD method_14250 (ILnet/minecraft/class_267;)V
-		ARG 1 score
+		ARG 1 innerScore
 	METHOD method_14251 teleport (Lnet/minecraft/class_3218;DDDFF)V
 		ARG 1 targetWorld
 		ARG 2 x
@@ -136,11 +132,6 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14252 setExperienceLevel (I)V
 		ARG 1 level
 	METHOD method_14253 getRecipeBook ()Lnet/minecraft/class_3441;
-	METHOD method_14255 sendResourcePackUrl (Ljava/lang/String;Ljava/lang/String;ZLnet/minecraft/class_2561;)V
-		ARG 1 url
-		ARG 2 hash
-		ARG 3 required
-		ARG 4 resourcePackPrompt
 	METHOD method_17668 setWatchedSection (Lnet/minecraft/class_4076;)V
 		COMMENT Sets the chunk section position the player's client is currently watching
 		COMMENT from. This is usually called when the player moves to a new chunk section.
@@ -156,6 +147,8 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_26280 getSpawnPointPosition ()Lnet/minecraft/class_2338;
 	METHOD method_26281 getSpawnPointDimension ()Lnet/minecraft/class_5321;
 	METHOD method_26282 isSpawnForced ()Z
+	METHOD method_26283 (Lnet/minecraft/class_1588;)Z
+		ARG 1 entity
 	METHOD method_26284 setSpawnPoint (Lnet/minecraft/class_5321;Lnet/minecraft/class_2338;FZZ)V
 		COMMENT Sets the player's spawn point.
 		ARG 1 dimension
@@ -175,6 +168,8 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 2 direction
 	METHOD method_26287 isBedTooFarAway (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
+	METHOD method_29205 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
+		ARG 1 encoded
 	METHOD method_29777 (Lnet/minecraft/class_1308;)V
 		ARG 1 entity
 	METHOD method_29778 (Lnet/minecraft/class_1308;)Z
@@ -196,13 +191,10 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		COMMENT
 		COMMENT @see MinecraftServer#getForcedGameMode
 		ARG 1 backupGameMode
-	METHOD method_32747 setWorld (Lnet/minecraft/class_3218;)V
-		ARG 1 world
 	METHOD method_32748 setGameMode (Lnet/minecraft/class_2487;)V
 		ARG 1 nbt
 	METHOD method_32749 writeGameModeNbt (Lnet/minecraft/class_2487;)V
 		ARG 1 nbt
-	METHOD method_33793 shouldFilterText ()Z
 	METHOD method_33795 shouldFilterMessagesSentTo (Lnet/minecraft/class_3222;)Z
 		ARG 1 player
 	METHOD method_34225 onSpawn ()V
@@ -236,15 +228,22 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_44706 acceptsChatMessage ()Z
 	METHOD method_44707 acceptsMessage (Z)Z
 		ARG 1 overlay
-	METHOD method_44786 sendMessageHeader (Lnet/minecraft/class_7614;Lnet/minecraft/class_7469;[B)V
-		COMMENT Sends a message's header and other data required for verification to this player.
-		COMMENT
-		COMMENT <p>This is used to keep the integrity of the "message chain" when a message is censored
-		COMMENT or when the message is originally sent without metadata due to it being originated from
-		COMMENT entities.
-		ARG 1 header
-		ARG 2 headerSignature
-		ARG 3 bodyDigest
+	METHOD method_45163 getSession ()Lnet/minecraft/class_7822;
+	METHOD method_45164 (Lnet/minecraft/class_7262;)V
+		ARG 1 sculkShriekerWarningManager
+	METHOD method_45165 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
+		ARG 1 encoded
+	METHOD method_46364 setSession (Lnet/minecraft/class_7822;)V
+		ARG 1 session
+	METHOD method_51468 setServerWorld (Lnet/minecraft/class_3218;)V
+		ARG 1 world
+	METHOD method_51469 getServerWorld ()Lnet/minecraft/class_3218;
+	METHOD method_52371 getViewDistance ()Ljava/util/OptionalInt;
+	METHOD method_52372 getChunkFilter ()Lnet/minecraft/class_8603;
+	METHOD method_52373 setChunkFilter (Lnet/minecraft/class_8603;)V
+		ARG 1 chunkFilter
+	METHOD method_52374 createCommonPlayerSpawnInfo (Lnet/minecraft/class_3218;)Lnet/minecraft/class_8589;
+		ARG 1 world
 	METHOD method_7336 changeGameMode (Lnet/minecraft/class_1934;)Z
 		ARG 1 gameMode
 	CLASS 1

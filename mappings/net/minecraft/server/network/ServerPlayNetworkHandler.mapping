@@ -8,17 +8,13 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	FIELD field_14122 updatedRiddenX D
 	FIELD field_14123 requestedTeleportId I
 	FIELD field_14124 lastTickRiddenY D
-	FIELD field_14125 waitingForKeepAlive Z
 	FIELD field_14126 updatedY D
-	FIELD field_14127 connection Lnet/minecraft/class_2535;
 	FIELD field_14128 lastTickZ D
 	FIELD field_14129 vehicleFloating Z
 	FIELD field_14130 lastTickX D
 	FIELD field_14131 floating Z
 	FIELD field_14133 creativeItemDropThreshold I
-	FIELD field_14134 keepAliveId J
 	FIELD field_14135 lastTickMovePacketsCount I
-	FIELD field_14136 lastKeepAliveTime J
 	FIELD field_14137 vehicleFloatingTicks I
 	FIELD field_14138 floatingTicks I
 	FIELD field_14139 teleportRequestTick I
@@ -30,22 +26,24 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	FIELD field_14145 updatedX D
 	FIELD field_14146 lastTickY D
 	FIELD field_14147 topmostRiddenEntity Lnet/minecraft/class_1297;
-	FIELD field_14148 server Lnet/minecraft/server/MinecraftServer;
-	FIELD field_29778 KEEP_ALIVE_INTERVAL I
 	FIELD field_37280 MAX_BREAK_SQUARED_DISTANCE D
 	FIELD field_37281 DEFAULT_SEQUENCE I
 	FIELD field_37282 sequence I
-	FIELD field_39261 previewTaskRunner Lnet/minecraft/class_7493;
 	FIELD field_39394 lastMessageTimestamp Ljava/util/concurrent/atomic/AtomicReference;
 	FIELD field_39805 messageUnpacker Lnet/minecraft/class_7610$class_7611;
 	FIELD field_39825 acknowledgmentValidator Lnet/minecraft/class_7638;
 	FIELD field_39826 messageChainTaskQueue Lnet/minecraft/class_7619;
-	FIELD field_39827 MAX_PENDING_ACKNOWLEDGMENTS I
-	FIELD field_39899 cachedDecoratorResult Lnet/minecraft/class_7642;
-	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_2535;Lnet/minecraft/class_3222;)V
+	FIELD field_39987 signatureStorage Lnet/minecraft/class_7561;
+	FIELD field_39989 MAX_PENDING_ACKNOWLEDGMENTS I
+	FIELD field_39990 CHAT_VALIDATION_FAILED_TEXT Lnet/minecraft/class_2561;
+	FIELD field_40720 session Lnet/minecraft/class_7822;
+	FIELD field_45025 requestedReconfiguration Z
+	FIELD field_45026 chunkDataSender Lnet/minecraft/class_8608;
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_2535;Lnet/minecraft/class_3222;I)V
 		ARG 1 server
 		ARG 2 connection
 		ARG 3 player
+		ARG 4 latency
 	METHOD method_14360 requestTeleport (DDDFFLjava/util/Set;)V
 		ARG 1 x
 		ARG 3 y
@@ -61,11 +59,6 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 8 pitch
 	METHOD method_14365 (Lnet/minecraft/class_2805;Lcom/mojang/brigadier/suggestion/Suggestions;)V
 		ARG 2 suggestions
-	METHOD method_14367 disconnect (Lnet/minecraft/class_2561;)V
-		ARG 1 reason
-	METHOD method_14369 sendPacket (Lnet/minecraft/class_2596;Lnet/minecraft/class_7648;)V
-		ARG 1 packet
-		ARG 2 callbacks
 	METHOD method_14371 isMovementInvalid (DDDFF)Z
 		COMMENT {@return whether this movement is invalid}
 		COMMENT
@@ -79,12 +72,12 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 6 yaw
 		ARG 7 pitch
 	METHOD method_14372 syncWithPlayerPosition ()V
-	METHOD method_17820 (Lnet/minecraft/class_2840;Lnet/minecraft/class_1860;)V
-		ARG 2 recipe
-	METHOD method_19507 isHost ()Z
-	METHOD method_20630 isPlayerNotCollidingWithBlocks (Lnet/minecraft/class_4538;Lnet/minecraft/class_238;)Z
+	METHOD method_20630 isPlayerNotCollidingWithBlocks (Lnet/minecraft/class_4538;Lnet/minecraft/class_238;DDD)Z
 		ARG 1 world
 		ARG 2 box
+		ARG 3 newX
+		ARG 5 newY
+		ARG 7 newZ
 	METHOD method_27913 canPlace (Lnet/minecraft/class_3222;Lnet/minecraft/class_1799;)Z
 		COMMENT Checks if a player can place a block or fluid from a bucket.
 		COMMENT
@@ -118,20 +111,6 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 1 filtered
 	METHOD method_31285 (Lnet/minecraft/class_2877;Ljava/util/List;)V
 		ARG 2 texts
-	METHOD method_33562 requestTeleportAndDismount (DDDFF)V
-		ARG 1 x
-		ARG 3 y
-		ARG 5 z
-		ARG 7 yaw
-		ARG 8 pitch
-	METHOD method_33563 requestTeleport (DDDFFLjava/util/Set;Z)V
-		ARG 1 x
-		ARG 3 y
-		ARG 5 z
-		ARG 7 yaw
-		ARG 8 pitch
-		ARG 9 flags
-		ARG 10 shouldDismount
 	METHOD method_33796 setTextToBook (Ljava/util/List;Ljava/util/function/UnaryOperator;Lnet/minecraft/class_1799;)V
 		ARG 1 messages
 		ARG 2 postProcessor
@@ -152,91 +131,60 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		COMMENT @see net.minecraft.SharedConstants#isValidChar(char)
 		ARG 0 message
 	METHOD method_43669 checkForSpam ()V
-	METHOD method_44154 (ILnet/minecraft/class_2561;)V
-		ARG 2 decorated
 	METHOD method_44155 handleDecoratedMessage (Lnet/minecraft/class_7471;)V
 		ARG 1 message
-	METHOD method_44156 decorateCommand (Lnet/minecraft/class_2168;Lnet/minecraft/class_7644;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 source
-		ARG 2 arguments
-	METHOD method_44158 (Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
-		ARG 1 decorated
-	METHOD method_44159 decorate (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 query
 	METHOD method_44160 isInProperOrder (Ljava/time/Instant;)Z
 		COMMENT {@return whether the message sent at {@code timestamp} is received in proper order}
 		COMMENT
 		COMMENT <p>If {@code false}, the message will be discarded.
 		ARG 1 timestamp
-	METHOD method_44161 decorateChat (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 query
-	METHOD method_44162 decorateCommand (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 query
-	METHOD method_44318 sendChatPreviewPacket (ILnet/minecraft/class_2561;)V
-		ARG 1 queryId
-		ARG 2 preview
-	METHOD method_44337 canAcceptMessage (Ljava/lang/String;Ljava/time/Instant;Lnet/minecraft/class_7635$class_7636;)Z
-		COMMENT {@return whether {@code message}, sent at {@code timestamp}, should be accepted}
+	METHOD method_44337 validateMessage (Ljava/lang/String;Ljava/time/Instant;Lnet/minecraft/class_7635$class_7636;)Ljava/util/Optional;
+		COMMENT {@return the validated acknowledgment if the message is valid, or an empty optional
+		COMMENT if it is not}
 		COMMENT
-		COMMENT <p>This returns {@code false} if the message arrives in {@linkplain
-		COMMENT #isInProperOrder improper order}, if chat is disabled, or if {@linkplain
-		COMMENT AcknowledgmentValidator#validate acknowledgment validation fails}.
-		COMMENT Note that the signatures are verified in {@link #canAcceptMessage(SignedMessage)}.
-		COMMENT
-		COMMENT @see #canAcceptMessage(SignedMessage)
+		COMMENT <p>This disconnects the player if the message arrives in {@linkplain
+		COMMENT #isInProperOrder improper order} or if chat is disabled.
 		ARG 1 message
 		ARG 2 timestamp
 		ARG 3 acknowledgment
-	METHOD method_44790 getMessageUnpacker ()Lnet/minecraft/class_7610$class_7611;
-	METHOD method_44895 handleAcknowledgmentFailure (Ljava/util/Set;)V
-		ARG 1 reasons
 	METHOD method_44897 addPendingAcknowledgment (Lnet/minecraft/class_7471;)V
 		ARG 1 message
-	METHOD method_44902 shouldPreviewChat ()Z
-		COMMENT {@return whether to handle chat preview requests}
-		COMMENT
-		COMMENT <p>Dedicated servers can configure chat preview in {@code server.properties} file.
-		COMMENT Chat preview is always enabled for integrated servers.
-		COMMENT
-		COMMENT @see MinecraftServer#shouldPreviewChat
 	METHOD method_45002 (Lnet/minecraft/class_7448;Lnet/minecraft/class_2168;)Lnet/minecraft/class_2168;
 		ARG 1 source
 	METHOD method_45003 parse (Ljava/lang/String;)Lcom/mojang/brigadier/ParseResults;
 		COMMENT {@return the result of parsing {@code command}}
 		ARG 1 command
 			COMMENT the command to parse (without the leading slash)
-	METHOD method_45004 (Ljava/lang/String;Lnet/minecraft/class_2561;)V
-		ARG 2 decorated
-	METHOD method_45006 collectArgumentMessages (Lnet/minecraft/class_7472;Lnet/minecraft/class_7644;)Ljava/util/Map;
+	METHOD method_45006 collectArgumentMessages (Lnet/minecraft/class_7472;Lnet/minecraft/class_7644;Lnet/minecraft/class_7635;)Ljava/util/Map;
 		COMMENT {@return a map of argument name and value as signed messages}
 		ARG 1 packet
 		ARG 2 arguments
-	METHOD method_45008 (Ljava/lang/String;Lnet/minecraft/class_2561;)V
-		ARG 2 decorated
-	METHOD method_45009 canAcceptMessage (Lnet/minecraft/class_7471;)Z
-		COMMENT {@return whether {@code message} can be accepted}
-		COMMENT
-		COMMENT <p>This verifies the message's signature and disconnects the client if it cannot
-		COMMENT be verified. Additionally, this logs a warning (without disconnection or
-		COMMENT rejection of messages) for expired messages.
-		COMMENT
-		COMMENT @see #canAcceptMessage(String, Instant, LastSeenMessageList.Acknowledgment)
+		ARG 3 lastSeenMessages
+	METHOD method_45010 handleCommandExecution (Lnet/minecraft/class_7472;Lnet/minecraft/class_7635;)V
+		ARG 1 packet
+		ARG 2 lastSeenMessages
+	METHOD method_45011 getSignedMessage (Lnet/minecraft/class_2797;Lnet/minecraft/class_7635;)Lnet/minecraft/class_7471;
+		ARG 1 packet
+		ARG 2 lastSeenMessages
+	METHOD method_45167 (Ljava/util/concurrent/CompletableFuture;Lnet/minecraft/class_7471;Lnet/minecraft/class_2561;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+		ARG 4 executor
+	METHOD method_45168 sendProfilelessChatMessage (Lnet/minecraft/class_2561;Lnet/minecraft/class_2556$class_7602;)V
 		ARG 1 message
-	METHOD method_45010 handleCommandExecution (Lnet/minecraft/class_7472;)V
-		ARG 1 packet
-	METHOD method_45011 getSignedMessage (Lnet/minecraft/class_2797;)Lnet/minecraft/class_7471;
-		ARG 1 packet
-	METHOD method_45013 getDecoratedContents (Lnet/minecraft/class_2797;)Lnet/minecraft/class_7634;
-		COMMENT {@return the decorated contents for {@code packet}}
-		COMMENT
-		COMMENT @implNote This returns the {@linkplain CachedDecoratorResult#tryConsume consumed
-		COMMENT cached result} if it exists, and otherwise returns a new {@link DecoratedContents}
-		COMMENT without message decorators applied. This method does not execute message decorators;
-		COMMENT they are executed in {@link #onRequestChatPreview} (for previewed messages) or {@link
-		COMMENT #onChatMessage} (for unpreviewed messages).
-		ARG 1 packet
-	METHOD method_45064 (Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;Ljava/lang/Void;)V
-		ARG 3 void_
+		ARG 2 params
+	METHOD method_45169 validateAcknowledgment (Lnet/minecraft/class_7635$class_7636;)Ljava/util/Optional;
+		ARG 1 acknowledgment
+	METHOD method_45170 sendChatMessage (Lnet/minecraft/class_7471;Lnet/minecraft/class_2556$class_7602;)V
+		ARG 1 message
+		ARG 2 params
+	METHOD method_45171 handleMessageChainException (Lnet/minecraft/class_7610$class_7825;)V
+		ARG 1 exception
+	METHOD method_46365 setSession (Lnet/minecraft/class_7822;)V
+		ARG 1 session
+	METHOD method_46366 (Lnet/minecraft/class_7822;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+		ARG 2 executor
+	METHOD method_48107 getConnectionAddress ()Ljava/net/SocketAddress;
+	METHOD method_52414 reconfigure ()V
+	METHOD method_52415 cleanUp ()V
 	CLASS 1
 		METHOD method_33897 processInteract (Lnet/minecraft/class_1268;Lnet/minecraft/class_3244$class_5860;)V
 			ARG 1 hand
@@ -244,7 +192,7 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		METHOD method_33898 (Lnet/minecraft/class_243;Lnet/minecraft/class_3222;Lnet/minecraft/class_1297;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
 			ARG 1 player
 			ARG 2 entity
-			ARG 3 hand
+			ARG 3 handx
 	CLASS class_5860 Interaction
 		METHOD run (Lnet/minecraft/class_3222;Lnet/minecraft/class_1297;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
 			ARG 1 player

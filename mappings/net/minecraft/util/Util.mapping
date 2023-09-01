@@ -5,7 +5,6 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	FIELD field_18034 NEXT_WORKER_ID Ljava/util/concurrent/atomic/AtomicInteger;
 	FIELD field_18035 MAIN_WORKER_EXECUTOR Ljava/util/concurrent/ExecutorService;
 	FIELD field_24477 IO_WORKER_EXECUTOR Ljava/util/concurrent/ExecutorService;
-	FIELD field_24622 BOOTSTRAP_EXECUTOR Ljava/util/concurrent/ExecutorService;
 	FIELD field_25140 NIL_UUID Ljava/util/UUID;
 		COMMENT The "nil UUID" that represents lack of a UUID.
 	FIELD field_33859 JAR_FILE_SYSTEM_PROVIDER Ljava/nio/file/spi/FileSystemProvider;
@@ -34,9 +33,6 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_18839 debugRunnable (Ljava/lang/Runnable;Ljava/util/function/Supplier;)Ljava/lang/Runnable;
 		ARG 0 runnable
 		ARG 1 messageSupplier
-	METHOD method_19483 completeExceptionally (Ljava/lang/Throwable;)Ljava/util/concurrent/CompletableFuture;
-		COMMENT {@return a future that is already completed exceptionally with {@code throwable}}
-		ARG 0 throwable
 	METHOD method_20793 getLast (Ljava/util/List;)Ljava/lang/Object;
 		COMMENT {@return the last item of {@code list}}
 		COMMENT
@@ -86,10 +82,6 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 name
 	METHOD method_28123 (Ljava/lang/String;Ljava/util/concurrent/ForkJoinPool;)Ljava/util/concurrent/ForkJoinWorkerThread;
 		ARG 1 forkJoinPool
-	METHOD method_28124 getBootstrapExecutor ()Ljava/util/concurrent/ExecutorService;
-		COMMENT {@return the executor for asynchronous bootstrapping}
-		COMMENT
-		COMMENT <p>This is used by DataFixerUpper to build schemas.
 	METHOD method_29187 getChoiceType (Lcom/mojang/datafixers/DSL$TypeReference;Ljava/lang/String;)Lcom/mojang/datafixers/types/Type;
 		ARG 0 typeReference
 		ARG 1 id
@@ -104,7 +96,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 1 consumer
 	METHOD method_29189 (Ljava/util/function/Consumer;Ljava/lang/String;Ljava/lang/String;)V
 		ARG 2 string
-	METHOD method_29190 toArray (Ljava/util/stream/IntStream;I)Lcom/mojang/serialization/DataResult;
+	METHOD method_29190 decodeFixedLengthArray (Ljava/util/stream/IntStream;I)Lcom/mojang/serialization/DataResult;
 		ARG 0 stream
 		ARG 1 length
 	METHOD method_29191 getChoiceTypeInternal (Lcom/mojang/datafixers/DSL$TypeReference;Ljava/lang/String;)Lcom/mojang/datafixers/types/Type;
@@ -150,7 +142,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		COMMENT @see #getRandomOrEmpty
 		ARG 0 list
 		ARG 1 random
-	METHOD method_33141 toArray (Ljava/util/List;I)Lcom/mojang/serialization/DataResult;
+	METHOD method_33141 decodeFixedLengthList (Ljava/util/List;I)Lcom/mojang/serialization/DataResult;
 		ARG 0 list
 		ARG 1 length
 	METHOD method_33559 error (Ljava/lang/String;)V
@@ -236,7 +228,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 1 random
 	METHOD method_43368 (Ljava/util/List;Ljava/lang/Void;)Ljava/util/List;
 		ARG 1 void_
-	METHOD method_43369 (Ljava/util/List;Ljava/util/concurrent/CompletableFuture;Ljava/lang/Throwable;)V
+	METHOD method_43369 (Ljava/util/concurrent/CompletableFuture;Ljava/util/List;Ljava/lang/Throwable;)V
 		ARG 2 throwable
 	METHOD method_43370 combine (Ljava/util/List;Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 futures
@@ -285,22 +277,6 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		COMMENT @implNote Unlike {@link java.util.List#lastIndexOf}, the returned function will
 		COMMENT return {@code 0} when given values not in the passed list.
 		ARG 0 values
-	METHOD method_43926 map (Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
-		COMMENT {@return the {@code value} with {@code mapper} applied if the value is not {@code null},
-		COMMENT otherwise {@code null}}
-		COMMENT
-		COMMENT <p>This is the nullable equivalent to {@link Optional#map}.
-		ARG 0 value
-		ARG 1 mapper
-	METHOD method_43927 mapOrElse (Ljava/lang/Object;Ljava/util/function/Function;Ljava/lang/Object;)Ljava/lang/Object;
-		COMMENT {@return the {@code value} with {@code mapper} applied if the value is not {@code null},
-		COMMENT otherwise {@code other}}
-		COMMENT
-		COMMENT <p>This is the nullable equivalent to {@link Optional#map} chained with
-		COMMENT {@link Optional#orElse}.
-		ARG 0 value
-		ARG 1 mapper
-		ARG 2 other
 	METHOD method_44146 lastIndexGetter (Ljava/util/List;Ljava/util/function/IntFunction;)Ljava/util/function/ToIntFunction;
 		COMMENT {@return a function that, when given a value in {@code values}, returns the last
 		COMMENT index of the value in the list}
@@ -313,6 +289,25 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 			COMMENT returns a map for storing the indices of the values
 	METHOD method_44893 getFormattedCurrentTime ()Ljava/lang/String;
 		COMMENT {@return the current time formatted using {@link #DATE_TIME_FORMATTER}}
+	METHOD method_47526 getResult (Lcom/mojang/serialization/DataResult;Ljava/util/function/Function;)Ljava/lang/Object;
+		COMMENT {@return the result wrapped in {@code result}}
+		ARG 0 result
+		ARG 1 exceptionGetter
+	METHOD method_48746 cachedMapper (Ljava/util/function/Function;)Lnet/minecraft/class_8105;
+		ARG 0 mapper
+	METHOD method_51822 decodeFixedLengthArray (Ljava/util/stream/LongStream;I)Lcom/mojang/serialization/DataResult;
+		ARG 0 stream
+		ARG 1 length
+	METHOD method_51893 isWhitespace (I)Z
+		COMMENT {@return whether {@code c} represents a space character}
+		COMMENT
+		COMMENT @see Character#isWhitespace
+		COMMENT @see Character#isSpaceChar
+		ARG 0 c
+	METHOD method_51894 isBlank (Ljava/lang/String;)Z
+		COMMENT {@return whether {@code string} is {@code null}, empty, or composed entirely
+		COMMENT of {@linkplain #isWhitespace} spaces}
+		ARG 0 string
 	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
 		COMMENT {@return the item preceding {@code object} in {@code iterable}}
 		COMMENT

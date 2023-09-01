@@ -2,9 +2,10 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	FIELD field_18134 POSE_DIMENSIONS Ljava/util/Map;
 	FIELD field_18135 STANDING_DIMENSIONS Lnet/minecraft/class_4048;
 	FIELD field_19428 shoulderEntityAddedTime J
-	FIELD field_38198 sculkShriekerWarningManager Lnet/minecraft/class_7262;
-	FIELD field_39118 publicKey Lnet/minecraft/class_7428;
+	FIELD field_30651 DEFAULT_EYE_HEIGHT F
+	FIELD field_38197 LOGGER Lorg/slf4j/Logger;
 	FIELD field_39445 lastDeathPos Ljava/util/Optional;
+	FIELD field_41765 damageTiltYaw F
 	FIELD field_7483 strideDistance F
 	FIELD field_7484 itemCooldownManager Lnet/minecraft/class_1796;
 	FIELD field_7486 enderChestInventory Lnet/minecraft/class_1730;
@@ -39,12 +40,14 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	FIELD field_7523 reducedDebugInfo Z
 	FIELD field_7524 prevCapeX D
 	FIELD field_7525 selectedItem Lnet/minecraft/class_1799;
-	METHOD <init> (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;FLcom/mojang/authlib/GameProfile;Lnet/minecraft/class_7428;)V
+	METHOD <init> (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;FLcom/mojang/authlib/GameProfile;)V
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 yaw
 		ARG 4 gameProfile
-		ARG 5 publicKey
+	METHOD method_14247 onHandledScreenClosed ()V
+		COMMENT Runs closing tasks for the current screen handler and
+		COMMENT sets it to the {@link #playerScreenHandler}.
 	METHOD method_16354 openJigsawScreen (Lnet/minecraft/class_3751;)V
 		ARG 1 jigsaw
 	METHOD method_16475 spawnParticles (Lnet/minecraft/class_2394;)V
@@ -111,14 +114,18 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 			COMMENT the item stack in the clicked slot
 		ARG 3 clickType
 			COMMENT the click type (mouse button used)
+	METHOD method_33793 shouldFilterText ()Z
 	METHOD method_40126 useRiptide (I)V
 		ARG 1 riptideTicks
-	METHOD method_42272 getSculkShriekerWarningManager ()Lnet/minecraft/class_7262;
+	METHOD method_42272 getSculkShriekerWarningManager ()Ljava/util/Optional;
 	METHOD method_43120 setLastDeathPos (Ljava/util/Optional;)V
 		ARG 1 lastDeathPos
 	METHOD method_43122 getLastDeathPos ()Ljava/util/Optional;
-	METHOD method_43696 getPublicKey ()Lnet/minecraft/class_7428;
 	METHOD method_45015 shouldCloseHandledScreenOnRespawn ()Z
+	METHOD method_51283 onRecipeCrafted (Lnet/minecraft/class_8786;Ljava/util/List;)V
+		ARG 2 ingredients
+	METHOD method_52558 canChangeIntoPose (Lnet/minecraft/class_4050;)Z
+		ARG 1 pose
 	METHOD method_7254 unlockRecipes (Ljava/util/Collection;)I
 		ARG 1 recipes
 	METHOD method_7255 addExperience (I)V
@@ -211,8 +218,9 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		COMMENT @see net.minecraft.item.Item#isSuitableFor(BlockState)
 		ARG 1 state
 	METHOD method_7308 getShoulderEntityRight ()Lnet/minecraft/class_2487;
-	METHOD method_7311 openEditSignScreen (Lnet/minecraft/class_2625;)V
+	METHOD method_7311 openEditSignScreen (Lnet/minecraft/class_2625;Z)V
 		ARG 1 sign
+		ARG 2 front
 	METHOD method_7313 updateCapeAngles ()V
 	METHOD method_7315 useBook (Lnet/minecraft/class_1799;Lnet/minecraft/class_1268;)V
 		COMMENT Called when the player uses (defaults to right click) a writable or written
@@ -286,6 +294,11 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7345 setShoulderEntityRight (Lnet/minecraft/class_2487;)V
 		ARG 1 entityNbt
 	METHOD method_7346 closeHandledScreen ()V
+		COMMENT Closes the currently open {@linkplain net.minecraft.client.gui.screen.ingame.HandledScreen
+		COMMENT handled screen}.
+		COMMENT
+		COMMENT <p>This method can be called on either logical side, and it will synchronize
+		COMMENT the closing automatically to the other.
 	METHOD method_7348 isPartVisible (Lnet/minecraft/class_1664;)Z
 		ARG 1 modelPart
 	METHOD method_7349 getNextLevelExperience ()I

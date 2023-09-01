@@ -1,13 +1,12 @@
 package net.fabricmc.filament.task;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -30,11 +29,9 @@ import org.gradle.workers.WorkerExecutor;
 
 import net.fabricmc.filament.util.FileUtil;
 import net.fabricmc.filament.util.UnpickUtil;
-import net.fabricmc.mapping.tree.ClassDef;
-import net.fabricmc.mapping.tree.FieldDef;
-import net.fabricmc.mapping.tree.MethodDef;
-import net.fabricmc.mapping.tree.TinyMappingFactory;
-import net.fabricmc.mapping.tree.TinyTree;
+import net.fabricmc.mappingio.MappingReader;
+import net.fabricmc.mappingio.tree.MappingTree;
+import net.fabricmc.mappingio.tree.MemoryMappingTree;
 
 public abstract class RemapUnpickDefinitionsTask extends DefaultTask {
 	@InputFile
@@ -98,28 +95,44 @@ public abstract class RemapUnpickDefinitionsTask extends DefaultTask {
 				Map<String, String> classMappings = new HashMap<>();
 				Map<MethodKey, String> methodMappings = new HashMap<>();
 				Map<FieldKey, String> fieldMappings = new HashMap<>();
-				String fromM = getParameters().getSourceNamespace().get();
-				String toM = getParameters().getTargetNamespace().get();
 
-				try (BufferedReader reader = new BufferedReader(new FileReader(getParameters().getMappings().getAsFile().get()))) {
-					TinyTree tinyTree = TinyMappingFactory.loadWithDetection(reader);
+				final MemoryMappingTree mappingTree = new MemoryMappingTree();
+				MappingReader.read(getParameters().getMappings().getAsFile().get().toPath(), mappingTree);
 
-					for (ClassDef classDef : tinyTree.getClasses()) {
-						classMappings.put(classDef.getName(fromM), classDef.getName(toM));
+				final int fromM = mappingTree.getNamespaceId(getParameters().getSourceNamespace().get());
+				final int toM = mappingTree.getNamespaceId(getParameters().getTargetNamespace().get());
 
-						for (MethodDef methodDef : classDef.getMethods()) {
-							methodMappings.put(
-									new MethodKey(classDef.getName(fromM), methodDef.getName(fromM), methodDef.getDescriptor(fromM)),
-									methodDef.getName(toM)
-							);
-						}
+				for (MappingTree.ClassMapping classDef : mappingTree.getClasses()) {
+					final String classFromName = classDef.getName(fromM);
 
-						for (FieldDef fieldDef : classDef.getFields()) {
-							fieldMappings.put(
-									new FieldKey(classDef.getName(fromM), fieldDef.getName(fromM)),
-									fieldDef.getName(toM)
-							);
-						}
+					if (classFromName == null) {
+						continue;
+					}
+
+					classMappings.put(
+							classFromName,
+							Objects.requireNonNull(classDef.getName(toM), "Null to name: " + classFromName)
+					);
+
+					for (MappingTree.MethodMapping methodDef : classDef.getMethods()) {
+						methodMappings.put(
+								new MethodKey(
+										Objects.requireNonNull(classFromName, "Null dst name: " + classDef.getSrcName()),
+										Objects.requireNonNull(methodDef.getName(fromM), "Null dst name: " + methodDef.getSrcName()),
+										Objects.requireNonNull(methodDef.getDesc(fromM), "Null dst name: " + methodDef.getSrcName())
+								),
+								Objects.requireNonNull(methodDef.getName(toM), "Null to name: " + methodDef.getSrcName())
+						);
+					}
+
+					for (MappingTree.FieldMapping fieldDef : classDef.getFields()) {
+						fieldMappings.put(
+								new FieldKey(
+										Objects.requireNonNull(classFromName, "Null dst name: " + classDef.getSrcName()),
+										Objects.requireNonNull(fieldDef.getName(fromM), "Null dst name: " + fieldDef.getSrcName())
+								),
+								Objects.requireNonNull(fieldDef.getName(toM), "Null to name: " + fieldDef.getSrcName())
+						);
 					}
 				}
 

@@ -2,7 +2,6 @@ CLASS net/minecraft/class_4267 net/minecraft/client/gui/screen/multiplayer/Multi
 	FIELD field_19104 LOGGER Lorg/slf4j/Logger;
 	FIELD field_19105 SERVER_PINGER_THREAD_POOL Ljava/util/concurrent/ThreadPoolExecutor;
 	FIELD field_19106 UNKNOWN_SERVER_TEXTURE Lnet/minecraft/class_2960;
-	FIELD field_19107 SERVER_SELECTION_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_19108 screen Lnet/minecraft/class_500;
 	FIELD field_19109 servers Ljava/util/List;
 	FIELD field_19110 scanningEntry Lnet/minecraft/class_4267$class_504;
@@ -10,9 +9,28 @@ CLASS net/minecraft/class_4267 net/minecraft/client/gui/screen/multiplayer/Multi
 	FIELD field_26581 LAN_SCANNING_TEXT Lnet/minecraft/class_2561;
 	FIELD field_26582 CANNOT_RESOLVE_TEXT Lnet/minecraft/class_2561;
 	FIELD field_26583 CANNOT_CONNECT_TEXT Lnet/minecraft/class_2561;
-	FIELD field_26586 NO_CONNECTION_TEXT Lnet/minecraft/class_2561;
-	FIELD field_26587 PINGING_TEXT Lnet/minecraft/class_2561;
-	FIELD field_26849 INCOMPATIBLE_TEXT Lnet/minecraft/class_2561;
+	FIELD field_41853 INCOMPATIBLE_TEXT Lnet/minecraft/class_2561;
+	FIELD field_41854 NO_CONNECTION_TEXT Lnet/minecraft/class_2561;
+	FIELD field_41855 PINGING_TEXT Lnet/minecraft/class_2561;
+	FIELD field_41856 ONLINE_TEXT Lnet/minecraft/class_2561;
+	FIELD field_45513 MOVE_UP_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45514 MOVE_DOWN_HIGHLIGHTED_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45515 MOVE_DOWN_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45516 INCOMPATIBLE_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45517 UNREACHABLE_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45518 PING_1_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45519 PING_2_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45520 PING_3_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45521 PING_4_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45522 PING_5_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45523 PINGING_1_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45524 PINGING_2_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45525 PINGING_3_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45526 PINGING_4_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45527 PINGING_5_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45528 JOIN_HIGHLIGHTED_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45529 JOIN_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_45530 MOVE_UP_HIGHLIGHTED_TEXTURE Lnet/minecraft/class_2960;
 	METHOD <init> (Lnet/minecraft/class_500;Lnet/minecraft/class_310;IIIII)V
 		ARG 1 screen
 		ARG 2 client
@@ -26,12 +44,15 @@ CLASS net/minecraft/class_4267 net/minecraft/client/gui/screen/multiplayer/Multi
 	METHOD method_20126 setLanServers (Ljava/util/List;)V
 		ARG 1 lanServers
 	METHOD method_20131 updateEntries ()V
-	METHOD method_30016 (Lnet/minecraft/class_4267$class_504;)Z
-		ARG 0 entry
 	METHOD method_36888 (Lnet/minecraft/class_4267;Lnet/minecraft/class_350$class_351;)V
 		ARG 1 lanServer
 	METHOD method_36889 (Lnet/minecraft/class_4267;Lnet/minecraft/class_350$class_351;)V
 		ARG 1 server
+	METHOD method_48271 (Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
+		ARG 0 style
+	METHOD method_48272 (Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
+		ARG 0 style
+	METHOD method_52204 onRemoved ()V
 	CLASS class_504 Entry
 	CLASS class_4268 ScanningEntry
 		FIELD field_19112 client Lnet/minecraft/class_310;
@@ -46,20 +67,20 @@ CLASS net/minecraft/class_4267 net/minecraft/client/gui/screen/multiplayer/Multi
 			ARG 1 screen
 			ARG 2 server
 		METHOD method_20132 getLanServerEntry ()Lnet/minecraft/class_1131;
+		METHOD method_48273 getMotdNarration ()Lnet/minecraft/class_2561;
 	CLASS class_4270 ServerEntry
 		FIELD field_19118 screen Lnet/minecraft/class_500;
 		FIELD field_19119 client Lnet/minecraft/class_310;
 		FIELD field_19120 server Lnet/minecraft/class_642;
-		FIELD field_19121 iconTextureId Lnet/minecraft/class_2960;
-		FIELD field_19122 iconUri Ljava/lang/String;
-		FIELD field_19123 icon Lnet/minecraft/class_1043;
+		FIELD field_19123 icon Lnet/minecraft/class_8573;
 		FIELD field_19124 time J
+		FIELD field_42874 favicon [B
 		METHOD <init> (Lnet/minecraft/class_4267;Lnet/minecraft/class_500;Lnet/minecraft/class_642;)V
 			ARG 2 screen
 			ARG 3 server
 		METHOD method_20133 getServer ()Lnet/minecraft/class_642;
-		METHOD method_20134 draw (Lnet/minecraft/class_4587;IILnet/minecraft/class_2960;)V
-			ARG 1 matrices
+		METHOD method_20134 draw (Lnet/minecraft/class_332;IILnet/minecraft/class_2960;)V
+			ARG 1 context
 			ARG 2 x
 			ARG 3 y
 			ARG 4 textureId
@@ -68,5 +89,7 @@ CLASS net/minecraft/class_4267 net/minecraft/client/gui/screen/multiplayer/Multi
 			ARG 1 i
 			ARG 2 j
 		METHOD method_29978 saveFile ()V
-		METHOD method_29979 isNewIconValid (Ljava/lang/String;)Z
-			ARG 1 newIconUri
+		METHOD method_48274 pinged ()Z
+		METHOD method_48275 protocolVersionMatches ()Z
+		METHOD method_49300 uploadFavicon ([B)Z
+			ARG 1 bytes

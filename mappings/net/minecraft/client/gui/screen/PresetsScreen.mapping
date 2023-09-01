@@ -8,7 +8,6 @@ CLASS net/minecraft/class_430 net/minecraft/client/gui/screen/PresetsScreen
 	FIELD field_2524 listText Lnet/minecraft/class_2561;
 	FIELD field_2525 selectPresetButton Lnet/minecraft/class_4185;
 	FIELD field_27985 BIOME_KEY Lnet/minecraft/class_5321;
-	FIELD field_32263 ICON_TEXTURE_SIZE I
 	FIELD field_32264 ICON_SIZE I
 	FIELD field_32265 BUTTON_HEIGHT I
 	FIELD field_32266 ICON_BACKGROUND_OFFSET_X I
@@ -16,42 +15,57 @@ CLASS net/minecraft/class_430 net/minecraft/client/gui/screen/PresetsScreen
 	FIELD field_32268 ICON_OFFSET_X I
 	FIELD field_32269 ICON_OFFSET_Y I
 	FIELD field_37908 UNKNOWN_PRESET_TEXT Lnet/minecraft/class_2561;
+	FIELD field_45417 SLOT_TEXTURE Lnet/minecraft/class_2960;
 	METHOD <init> (Lnet/minecraft/class_413;)V
 		ARG 1 parent
 	METHOD method_19846 (Lnet/minecraft/class_4185;)V
 		ARG 1 button
 	METHOD method_20102 updateSelectButton (Z)V
 		ARG 1 hasSelected
-	METHOD method_29058 parsePresetLayersString (Ljava/lang/String;)Ljava/util/List;
+	METHOD method_29058 parsePresetLayersString (Lnet/minecraft/class_7871;Ljava/lang/String;)Ljava/util/List;
 		COMMENT Parse a string like {@code "minecraft:bedrock,3*minecraft:dirt,minecraft:grass_block"}
 		COMMENT to a list of {@link FlatChunkGeneratorLayer}.
-		ARG 0 layers
-	METHOD method_29059 parseLayerString (Ljava/lang/String;I)Lnet/minecraft/class_3229;
+		ARG 0 blockLookup
+		ARG 1 layers
+	METHOD method_29059 parseLayerString (Lnet/minecraft/class_7871;Ljava/lang/String;I)Lnet/minecraft/class_3229;
 		COMMENT Parse a string like {@code "60*minecraft:stone"} to a {@link FlatChunkGeneratorLayer}.
-		ARG 0 layer
-		ARG 1 layerStartHeight
-	METHOD method_29060 parsePresetString (Lnet/minecraft/class_2378;Lnet/minecraft/class_2378;Ljava/lang/String;Lnet/minecraft/class_3232;)Lnet/minecraft/class_3232;
-		ARG 0 biomeRegistry
-		ARG 1 structureSetRegistry
-		ARG 2 preset
-		ARG 3 generatorConfig
+		ARG 0 blockLookup
+		ARG 1 layer
+		ARG 2 layerStartHeight
+	METHOD method_29060 parsePresetString (Lnet/minecraft/class_7871;Lnet/minecraft/class_7871;Lnet/minecraft/class_7871;Lnet/minecraft/class_7871;Ljava/lang/String;Lnet/minecraft/class_3232;)Lnet/minecraft/class_3232;
+		ARG 0 blockLookup
+		ARG 1 biomeLookup
+		ARG 2 structureSetLookup
+		ARG 3 placedFeatureLookup
+		ARG 4 preset
+		ARG 5 config
+	METHOD method_29061 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_5321;
+		ARG 0 biomeId
 	METHOD method_29062 getGeneratorConfigString (Lnet/minecraft/class_3232;)Ljava/lang/String;
 		ARG 0 config
 	CLASS class_4196 SuperflatPresetsListWidget
-		METHOD <init> (Lnet/minecraft/class_430;Lnet/minecraft/class_5455;)V
+		METHOD <init> (Lnet/minecraft/class_430;Lnet/minecraft/class_5455;Lnet/minecraft/class_7699;)V
 			ARG 2 dynamicRegistryManager
+			ARG 3 featureSet
+		METHOD method_47409 (Lnet/minecraft/class_5321;)Ljava/lang/String;
+			ARG 0 key
+		METHOD method_47410 (Lnet/minecraft/class_7699;Lnet/minecraft/class_2248;)Z
+			ARG 1 block
+		METHOD method_47411 (Lnet/minecraft/class_3229;)Lnet/minecraft/class_2248;
+			ARG 0 layer
 		CLASS class_432 SuperflatPresetEntry
 			FIELD field_33812 preset Lnet/minecraft/class_7142;
 			FIELD field_37909 text Lnet/minecraft/class_2561;
+			FIELD field_44668 STATS_ICONS_TEXTURE Lnet/minecraft/class_2960;
 			METHOD <init> (Lnet/minecraft/class_430$class_4196;Lnet/minecraft/class_6880;)V
 				ARG 2 preset
 			METHOD method_19389 setPreset ()V
-			METHOD method_2198 drawIconBackground (Lnet/minecraft/class_4587;II)V
-				ARG 1 matrices
+			METHOD method_2198 drawIconBackground (Lnet/minecraft/class_332;II)V
+				ARG 1 context
 				ARG 2 x
 				ARG 3 y
-			METHOD method_2200 renderIcon (Lnet/minecraft/class_4587;IILnet/minecraft/class_1792;)V
-				ARG 1 matrices
+			METHOD method_2200 renderIcon (Lnet/minecraft/class_332;IILnet/minecraft/class_1792;)V
+				ARG 1 context
 				ARG 2 x
 				ARG 3 y
 				ARG 4 iconItem
