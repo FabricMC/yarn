@@ -1,7 +1,38 @@
 CLASS net/minecraft/class_1832 net/minecraft/item/ToolMaterial
+	COMMENT Defines the material stats of a {@link net.minecraft.item.ToolItem} item.
+	COMMENT <p>
+	COMMENT To view available vanilla tool materials, visit {@link net.minecraft.item.ToolMaterials}.
 	METHOD method_8023 getRepairIngredient ()Lnet/minecraft/class_1856;
+		COMMENT {@return the {@link Ingredient} used to repair items using this {@link ToolMaterial}}
+		COMMENT <p>
+		COMMENT By default, {@link net.minecraft.item.ToolMaterial} will delegate {@link net.minecraft.item.Item#canRepair(ItemStack, ItemStack)}
+		COMMENT back to this method.
 	METHOD method_8024 getMiningLevel ()I
+		COMMENT {@return the mining level of a {@link net.minecraft.item.ToolItem} using this {@link ToolMaterial}}
+		COMMENT To prevent this tool from successfully harvesting any mining level gated blocks, return {@link net.fabricmc.yarn.constants.MiningLevels#HAND}.
+		COMMENT <p>
+		COMMENT For more information on mining levels, visit {@link net.fabricmc.yarn.constants.MiningLevels}.
 	METHOD method_8025 getDurability ()I
+		COMMENT {@return the total amount of durability a {@link net.minecraft.item.ToolItem} using this {@link ToolMaterial} has}
+		COMMENT <p>
+		COMMENT The value returned here will set the {@link net.minecraft.item.Item.Settings} max durability option when passed
+		COMMENT into {@link net.minecraft.item.ToolItem#ToolItem(net.minecraft.item.ToolMaterial, net.minecraft.item.Item.Settings)}
+		COMMENT if the value was not already specified.
 	METHOD method_8026 getEnchantability ()I
+		COMMENT {@return the enchantment value sent back to {@link net.minecraft.item.Item#getEnchantability()} for tools using this material}
+		COMMENT <p>
+		COMMENT By default, {@link ToolMaterial} will override {@link net.minecraft.item.Item#getEnchantability()}
+		COMMENT and delegate the call back to this method.
+		COMMENT <p>
+		COMMENT A higher return value will result in better enchantment results when using an {@code Enchanting Table}.
+		COMMENT The highest enchantability value in vanilla is Netherite, at {@code 37}.
 	METHOD method_8027 getMiningSpeedMultiplier ()F
+		COMMENT {@return the mining speed bonus applied when a {@link net.minecraft.item.ToolItem} using this material is breaking an appropriate block}
+		COMMENT {@code 1.0f} will result in no speed change.
+		COMMENT <p>
+		COMMENT <b>Note:</b> for default vanilla tool classes, this bonus is only applied in {@link net.minecraft.item.MiningToolItem#getMiningSpeedMultiplier(ItemStack, BlockState)}.
 	METHOD method_8028 getAttackDamage ()F
+		COMMENT {@return the attack damage bonus applied to any {@link net.minecraft.item.ToolItem} using this {@link ToolMaterial}}
+		COMMENT <p>
+		COMMENT In the case of {@link net.minecraft.item.MiningToolItem} or {@link net.minecraft.item.SwordItem}, the value returned
+		COMMENT here will be added on top of the {@code attackDamage} value passed into the tool's constructor.
