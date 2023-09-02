@@ -126,10 +126,6 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		ARG 0 pattern
 	METHOD method_42114 exceptionCatching (Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
 		ARG 0 codec
-	METHOD method_43532 instant (Ljava/time/format/DateTimeFormatter;)Lcom/mojang/serialization/Codec;
-		ARG 0 formatter
-	METHOD method_43533 (Ljava/time/format/DateTimeFormatter;Ljava/lang/String;)Lcom/mojang/serialization/DataResult;
-		ARG 1 dateTimeString
 	METHOD method_43958 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_5699$class_7476;
 		ARG 0 id
 	METHOD method_43959 (Ljava/lang/String;)Lcom/mojang/serialization/DataResult;
@@ -249,7 +245,7 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		ARG 0 instance
 	METHOD method_52463 (Ljava/lang/Object;)Ljava/lang/Object;
 		ARG 0 o
-	METHOD method_52465 either (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
+	METHOD method_52465 alternatively (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
 		ARG 0 a
 		ARG 1 b
 	METHOD method_52466 (Ljava/lang/Object;)Ljava/lang/Object;
@@ -264,6 +260,17 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		ARG 1 field
 		ARG 2 fallback
 	METHOD method_53052 createRecursive (Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+	METHOD method_53054 fromJsonSerializer (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+		ARG 0 deserializer
+		ARG 1 serializer
+	METHOD method_53700 formattedTime (Ljava/time/format/DateTimeFormatter;)Lcom/mojang/serialization/Codec;
+		ARG 0 formatter
+	METHOD method_53702 either (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lnet/minecraft/class_5699$class_6495;
+		ARG 0 first
+		ARG 1 second
+	METHOD method_53703 strictUnboundedMap (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lnet/minecraft/class_5699$class_8783;
+		ARG 0 keyCodec
+		ARG 1 elementCodec
 	CLASS 1
 		METHOD apply (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
 			ARG 1 ops
@@ -302,11 +309,13 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		COMMENT
 		COMMENT @see Codecs#xor(Codec, Codec)
 		COMMENT @see com.mojang.serialization.codecs.EitherCodec
-		FIELD field_28868 first Lcom/mojang/serialization/Codec;
-		FIELD field_28869 second Lcom/mojang/serialization/Codec;
+		FIELD comp_1928 first Lcom/mojang/serialization/Codec;
+		FIELD comp_1929 second Lcom/mojang/serialization/Codec;
 		METHOD <init> (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)V
 			ARG 1 first
 			ARG 2 second
+		METHOD comp_1928 first ()Lcom/mojang/serialization/Codec;
+		METHOD comp_1929 second ()Lcom/mojang/serialization/Codec;
 		METHOD decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
 			ARG 1 ops
 			ARG 2 input
@@ -373,3 +382,9 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		METHOD <init> (Ljava/lang/String;Lcom/mojang/serialization/Codec;)V
 			ARG 1 field
 			ARG 2 codec
+	CLASS class_8783 StrictUnboundedMap
+		FIELD a keyCodec Lcom/mojang/serialization/Codec;
+		FIELD b elementCodec Lcom/mojang/serialization/Codec;
+		METHOD <init> (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)V
+			ARG 1 keyCodec
+			ARG 2 elementCodec

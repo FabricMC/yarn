@@ -1,17 +1,17 @@
 CLASS net/minecraft/class_2985 net/minecraft/advancement/PlayerAdvancementTracker
-	FIELD field_13387 currentDisplayTab Lnet/minecraft/class_161;
+	FIELD field_13387 currentDisplayTab Lnet/minecraft/class_8779;
 	FIELD field_13388 progressUpdates Ljava/util/Set;
 	FIELD field_13390 visibleAdvancements Ljava/util/Set;
 	FIELD field_13391 owner Lnet/minecraft/class_3222;
-	FIELD field_13392 JSON_TYPE Lcom/google/gson/reflect/TypeToken;
 	FIELD field_13394 LOGGER Lorg/slf4j/Logger;
 	FIELD field_13395 GSON Lcom/google/gson/Gson;
 	FIELD field_13396 dirty Z
-	FIELD field_25324 dataFixer Lcom/mojang/datafixers/DataFixer;
 	FIELD field_25325 playerManager Lnet/minecraft/class_3324;
 	FIELD field_41734 filePath Ljava/nio/file/Path;
 	FIELD field_41735 progress Ljava/util/Map;
 	FIELD field_41736 updatedRoots Ljava/util/Set;
+	FIELD field_46073 advancementManager Lnet/minecraft/class_163;
+	FIELD field_46074 progressMapCodec Lcom/mojang/serialization/Codec;
 	METHOD <init> (Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3324;Lnet/minecraft/class_2989;Ljava/nio/file/Path;Lnet/minecraft/class_3222;)V
 		ARG 1 dataFixer
 		ARG 2 playerManager
@@ -22,41 +22,67 @@ CLASS net/minecraft/class_2985 net/minecraft/advancement/PlayerAdvancementTracke
 		ARG 1 advancementLoader
 	METHOD method_12873 load (Lnet/minecraft/class_2989;)V
 		ARG 1 advancementLoader
-	METHOD method_12874 beginTracking (Lnet/minecraft/class_161;)V
+	METHOD method_12874 beginTracking (Lnet/minecraft/class_8779;)V
 		ARG 1 advancement
 	METHOD method_12875 setOwner (Lnet/minecraft/class_3222;)V
 		ARG 1 owner
 	METHOD method_12876 sendUpdate (Lnet/minecraft/class_3222;)V
 		ARG 1 player
-	METHOD method_12878 grantCriterion (Lnet/minecraft/class_161;Ljava/lang/String;)Z
+	METHOD method_12878 grantCriterion (Lnet/minecraft/class_8779;Ljava/lang/String;)Z
 		ARG 1 advancement
 		ARG 2 criterionName
-	METHOD method_12880 endTrackingCompleted (Lnet/minecraft/class_161;)V
+	METHOD method_12880 endTrackingCompleted (Lnet/minecraft/class_8779;)V
 		ARG 1 advancement
 	METHOD method_12881 clearCriteria ()V
-	METHOD method_12882 getProgress (Lnet/minecraft/class_161;)Lnet/minecraft/class_167;
+	METHOD method_12882 getProgress (Lnet/minecraft/class_8779;)Lnet/minecraft/class_167;
 		ARG 1 advancement
-	METHOD method_12883 revokeCriterion (Lnet/minecraft/class_161;Ljava/lang/String;)Z
+	METHOD method_12883 revokeCriterion (Lnet/minecraft/class_8779;Ljava/lang/String;)Z
 		ARG 1 advancement
 		ARG 2 criterionName
-	METHOD method_12884 initProgress (Lnet/minecraft/class_161;Lnet/minecraft/class_167;)V
+	METHOD method_12884 initProgress (Lnet/minecraft/class_8779;Lnet/minecraft/class_167;)V
 		ARG 1 advancement
 		ARG 2 progress
 	METHOD method_12886 reload (Lnet/minecraft/class_2989;)V
 		ARG 1 advancementLoader
-	METHOD method_12888 setDisplayTab (Lnet/minecraft/class_161;)V
+	METHOD method_12888 setDisplayTab (Lnet/minecraft/class_8779;)V
 		ARG 1 advancement
 	METHOD method_12889 beginTrackingAllAdvancements (Lnet/minecraft/class_2989;)V
 		ARG 1 advancementLoader
 	METHOD method_12890 save ()V
-	METHOD method_48025 calculateDisplay (Lnet/minecraft/class_161;Ljava/util/Set;Ljava/util/Set;)V
+	METHOD method_48025 calculateDisplay (Lnet/minecraft/class_8781;Ljava/util/Set;Ljava/util/Set;)V
 		ARG 1 root
 		ARG 2 added
 		ARG 3 removed
-	METHOD method_48027 (Ljava/util/Set;Ljava/util/Set;Lnet/minecraft/class_161;Z)V
+	METHOD method_48027 (Ljava/util/Set;Ljava/util/Set;Lnet/minecraft/class_8781;Z)V
 		ARG 3 advancement
 		ARG 4 displayed
-	METHOD method_48028 onStatusUpdate (Lnet/minecraft/class_161;)V
+	METHOD method_48028 onStatusUpdate (Lnet/minecraft/class_8779;)V
 		ARG 1 advancement
-	METHOD method_48029 (Lnet/minecraft/class_161;)Z
+	METHOD method_48029 (Lnet/minecraft/class_8781;)Z
 		ARG 1 advancement
+	METHOD method_53637 (Lnet/minecraft/class_8779;Lnet/minecraft/class_185;)V
+		ARG 2 display
+	METHOD method_53638 beginTracking (Lnet/minecraft/class_8779;Ljava/lang/String;Lnet/minecraft/class_175;)V
+		ARG 1 advancement
+		ARG 2 id
+		ARG 3 criterion
+	METHOD method_53639 (Lnet/minecraft/class_2989;Lnet/minecraft/class_2960;Lnet/minecraft/class_167;)V
+		ARG 2 id
+		ARG 3 progress
+	METHOD method_53640 loadProgressMap (Lnet/minecraft/class_2989;Lnet/minecraft/class_2985$class_8780;)V
+		ARG 1 loader
+		ARG 2 progressMap
+	METHOD method_53641 (Ljava/util/Map;Lnet/minecraft/class_8779;Lnet/minecraft/class_167;)V
+		ARG 1 entry
+		ARG 2 progress
+	METHOD method_53642 endTrackingCompleted (Lnet/minecraft/class_8779;Ljava/lang/String;Lnet/minecraft/class_175;)V
+		ARG 1 advancement
+		ARG 2 id
+		ARG 3 criterion
+	METHOD method_53643 createProgressMap ()Lnet/minecraft/class_2985$class_8780;
+	CLASS class_8780 ProgressMap
+		FIELD field_46075 CODEC Lcom/mojang/serialization/Codec;
+		METHOD method_53644 forEach (Ljava/util/function/BiConsumer;)V
+			ARG 1 consumer
+		METHOD method_53645 (Ljava/util/function/BiConsumer;Ljava/util/Map$Entry;)V
+			ARG 1 entry
