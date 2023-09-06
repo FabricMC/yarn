@@ -17,6 +17,13 @@ CLASS net/minecraft/class_3853 net/minecraft/village/TradeOffers
 	FIELD field_30628 HIGH_PRICE_MULTIPLIER F
 	FIELD field_45128 REBALANCED_PROFESSION_TO_LEVELED_TRADE Ljava/util/Map;
 	FIELD field_45129 REBALANCED_WANDERING_TRADER_TRADES Ljava/util/List;
+	FIELD field_46167 SELL_DESERT_VILLAGE_MAP_TRADE Lnet/minecraft/class_3853$class_1654;
+	FIELD field_46168 SELL_SAVANNA_VILLAGE_MAP_TRADE Lnet/minecraft/class_3853$class_1654;
+	FIELD field_46169 SELL_PLAINS_VILLAGE_MAP_TRADE Lnet/minecraft/class_3853$class_1654;
+	FIELD field_46170 SELL_TAIGA_VILLAGE_MAP_TRADE Lnet/minecraft/class_3853$class_1654;
+	FIELD field_46171 SELL_SNOWY_VILLAGE_MAP_TRADE Lnet/minecraft/class_3853$class_1654;
+	FIELD field_46172 SELL_JUNGLE_TEMPLE_MAP_TRADE Lnet/minecraft/class_3853$class_1654;
+	FIELD field_46173 SELL_SWAMP_HUT_MAP_TRADE Lnet/minecraft/class_3853$class_1654;
 	METHOD method_16928 copyToFastUtilMap (Lcom/google/common/collect/ImmutableMap;)Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 		ARG 0 map
 	METHOD method_16929 (Ljava/util/HashMap;)V
@@ -26,6 +33,10 @@ CLASS net/minecraft/class_3853 net/minecraft/village/TradeOffers
 		ARG 0 experience
 	METHOD method_52553 createPotionStack (Lnet/minecraft/class_1842;)Lnet/minecraft/class_1799;
 		ARG 0 potion
+	METHOD method_53832 enchant (Lnet/minecraft/class_1792;Lnet/minecraft/class_1887;I)Lnet/minecraft/class_1799;
+		ARG 0 item
+		ARG 1 enchantment
+		ARG 2 level
 	CLASS class_1648 EnchantBookFactory
 		FIELD field_18557 experience I
 		FIELD field_45131 possibleEnchantments Ljava/util/List;
@@ -132,22 +143,30 @@ CLASS net/minecraft/class_3853 net/minecraft/village/TradeOffers
 			ARG 4 experience
 			ARG 5 multiplier
 	CLASS class_4164 ProcessItemFactory
-		FIELD field_18563 secondBuy Lnet/minecraft/class_1799;
+		FIELD field_18563 toBeProcessed Lnet/minecraft/class_1799;
 		FIELD field_18565 price I
-		FIELD field_18566 sell Lnet/minecraft/class_1799;
+		FIELD field_18566 processed Lnet/minecraft/class_1799;
 		FIELD field_18568 maxUses I
 		FIELD field_18569 experience I
 		FIELD field_18570 multiplier F
 		METHOD <init> (Lnet/minecraft/class_1935;IILnet/minecraft/class_1792;IIIF)V
 			ARG 1 item
-			ARG 2 secondCount
-		METHOD <init> (Lnet/minecraft/class_1935;IILnet/minecraft/class_1799;IIIF)V
-			ARG 1 item
-			ARG 2 secondCount
+			ARG 2 count
 			ARG 3 price
-			ARG 5 sellCount
+			ARG 4 processed
+			ARG 5 processedCount
 			ARG 6 maxUses
 			ARG 7 experience
+			ARG 8 multiplier
+		METHOD <init> (Lnet/minecraft/class_1935;IILnet/minecraft/class_1799;IIIF)V
+			ARG 1 item
+			ARG 2 count
+			ARG 3 price
+			ARG 4 processed
+			ARG 5 processedCount
+			ARG 6 maxUses
+			ARG 7 experience
+			ARG 8 multiplier
 	CLASS class_4165 SellItemFactory
 		FIELD field_18571 sell Lnet/minecraft/class_1799;
 		FIELD field_18572 price I
@@ -160,21 +179,31 @@ CLASS net/minecraft/class_3853 net/minecraft/village/TradeOffers
 			ARG 3 count
 			ARG 4 experience
 		METHOD <init> (Lnet/minecraft/class_1792;IIII)V
+			ARG 1 item
 			ARG 2 price
 			ARG 3 count
 			ARG 4 maxUses
 			ARG 5 experience
 		METHOD <init> (Lnet/minecraft/class_1792;IIIIF)V
+			ARG 1 item
 			ARG 2 price
 			ARG 3 count
 			ARG 4 maxUses
 			ARG 5 experience
 			ARG 6 multiplier
 		METHOD <init> (Lnet/minecraft/class_1799;IIII)V
+			ARG 1 stack
 			ARG 2 price
 			ARG 3 count
 			ARG 4 maxUses
 			ARG 5 experience
+		METHOD <init> (Lnet/minecraft/class_1799;IIIIF)V
+			ARG 1 sell
+			ARG 2 price
+			ARG 3 count
+			ARG 4 maxUses
+			ARG 5 experience
+			ARG 6 multiplier
 		METHOD <init> (Lnet/minecraft/class_2248;IIII)V
 			ARG 1 block
 			ARG 2 price
@@ -215,3 +244,11 @@ CLASS net/minecraft/class_3853 net/minecraft/village/TradeOffers
 	CLASS class_8640 TypedWrapperFactory
 		FIELD comp_1962 typeToFactory Ljava/util/Map;
 		METHOD comp_1962 typeToFactory ()Ljava/util/Map;
+		METHOD method_53833 (Lnet/minecraft/class_3853$class_1652;Lnet/minecraft/class_3854;)Lnet/minecraft/class_3853$class_1652;
+			ARG 1 type
+		METHOD method_53834 of (Lnet/minecraft/class_3853$class_1652;[Lnet/minecraft/class_3854;)Lnet/minecraft/class_3853$class_8640;
+			ARG 0 factory
+			ARG 1 types
+		METHOD method_53835 (Lnet/minecraft/class_3854;)Lnet/minecraft/class_3854;
+			ARG 0 type
+	CLASS class_8793 EmptyFactory
