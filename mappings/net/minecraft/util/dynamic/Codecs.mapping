@@ -29,6 +29,7 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 	FIELD field_44703 CODEPOINT Lcom/mojang/serialization/Codec;
 	FIELD field_45075 IDENTIFIER_PATH Lcom/mojang/serialization/Codec;
 	FIELD field_45076 GAME_PROFILE Lcom/mojang/serialization/MapCodec;
+	FIELD field_46165 ESCAPED_STRING Lcom/mojang/serialization/Codec;
 	METHOD method_33817 xor (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
 		COMMENT Returns an exclusive-or codec for {@link Either} instances.
 		COMMENT
@@ -286,6 +287,8 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 	METHOD method_53703 strictUnboundedMap (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lnet/minecraft/class_5699$class_8783;
 		ARG 0 keyCodec
 		ARG 1 elementCodec
+	METHOD method_53826 (Ljava/lang/String;)Lcom/mojang/serialization/DataResult;
+		ARG 0 string
 	CLASS 1
 		METHOD apply (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
 			ARG 1 ops
@@ -417,7 +420,7 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 			ARG 1 o
 		METHOD keys (Lcom/mojang/serialization/DynamicOps;)Ljava/util/stream/Stream;
 			ARG 1 ops
-	CLASS class_8783
+	CLASS class_8783 StrictUnboundedMapCodec
 		FIELD a keyCodec Lcom/mojang/serialization/Codec;
 		FIELD b elementCodec Lcom/mojang/serialization/Codec;
 		METHOD <init> (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)V
@@ -435,3 +438,7 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 			ARG 3 prefix
 		METHOD equals (Ljava/lang/Object;)Z
 			ARG 1 o
+		METHOD method_53706 (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/MapLike;)Lcom/mojang/serialization/DataResult;
+			ARG 2 map
+		METHOD method_53707 (Ljava/lang/Object;Ljava/util/Map;)Lcom/mojang/datafixers/util/Pair;
+			ARG 1 map
