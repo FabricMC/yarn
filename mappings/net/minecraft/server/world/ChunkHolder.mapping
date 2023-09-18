@@ -28,7 +28,10 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 		COMMENT Entries for a section are null if the section has no positions marked for update.
 	FIELD field_26929 world Lnet/minecraft/class_5539;
 	FIELD field_28806 actionStack Lnet/minecraft/class_5831;
+	FIELD field_36388 CHUNK_LOADING_NOT_FINISHED Lcom/mojang/datafixers/util/Either;
+	FIELD field_46085 postProcessingFuture Ljava/util/concurrent/CompletableFuture;
 	METHOD <init> (Lnet/minecraft/class_1923;ILnet/minecraft/class_5539;Lnet/minecraft/class_3568;Lnet/minecraft/class_3193$class_3896;Lnet/minecraft/class_3193$class_3897;)V
+		ARG 1 pos
 		ARG 2 level
 		ARG 3 world
 		ARG 4 lightingProvider
@@ -54,6 +57,7 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 		COMMENT Updates {@code Futures} indicating the expected loading state of the underlying chunk of this {@code ChunkHolder}.
 		COMMENT Note that the method merely makes actual loading process possible, but do not perform these actions.
 		ARG 1 chunkStorage
+		ARG 2 executor
 	METHOD method_14009 sendBlockEntityUpdatePacket (Ljava/util/List;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)V
 		ARG 1 players
 		ARG 2 world
@@ -65,6 +69,8 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 			COMMENT chunk section y coordinate
 	METHOD method_15890 setLevel (I)V
 		ARG 1 level
+	METHOD method_16142 (Lnet/minecraft/class_2791;)Lnet/minecraft/class_2791;
+		ARG 0 chunk
 	METHOD method_16143 combineSavingFuture (Ljava/util/concurrent/CompletableFuture;Ljava/lang/String;)V
 		ARG 1 then
 		ARG 2 thenDesc
@@ -72,6 +78,11 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 	METHOD method_16145 getTickingFuture ()Ljava/util/concurrent/CompletableFuture;
 	METHOD method_16146 getFutureFor (Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 leastStatus
+	METHOD method_16147 (Lnet/minecraft/class_2791;Lcom/mojang/datafixers/util/Either;)Lnet/minecraft/class_2791;
+		ARG 0 result
+		ARG 1 thenResult
+	METHOD method_16148 (Lnet/minecraft/class_2791;Lnet/minecraft/class_3193$class_3724;)Lnet/minecraft/class_2791;
+		ARG 1 unloaded
 	METHOD method_17207 setCompletedLevel (I)V
 		ARG 1 level
 	METHOD method_17208 getCompletedLevel ()I
@@ -92,10 +103,18 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 	METHOD method_30312 (Ljava/util/List;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 3 pos
 		ARG 4 state
+	METHOD method_39966 (Lnet/minecraft/class_2791;Ljava/lang/Object;)Lnet/minecraft/class_2791;
+		ARG 0 result
+		ARG 1 thenResult
 	METHOD method_39967 combineSavingFuture (Ljava/lang/String;Ljava/util/concurrent/CompletableFuture;)V
 		ARG 1 thenDesc
 		ARG 2 then
 	METHOD method_40066 collectFuturesByStatus ()Ljava/util/List;
+	METHOD method_41205 getAccessibleChunk ()Lnet/minecraft/class_2818;
+	METHOD method_53680 combinePostProcessingFuture (Ljava/util/concurrent/CompletableFuture;)V
+		ARG 1 postProcessingFuture
+	METHOD method_53681 getPostProcessingFuture ()Ljava/util/concurrent/CompletableFuture;
+	METHOD method_53682 getPostProcessedChunk ()Lnet/minecraft/class_2818;
 	CLASS class_3724 Unloaded
 		COMMENT Used to represent a chunk that has not been loaded yet.
 		FIELD field_16433 INSTANCE Lnet/minecraft/class_3193$class_3724;

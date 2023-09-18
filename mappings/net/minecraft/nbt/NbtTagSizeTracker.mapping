@@ -1,11 +1,24 @@
 CLASS net/minecraft/class_2505 net/minecraft/nbt/NbtTagSizeTracker
-	COMMENT Tracks the size of NBT elements. Throws {@link RuntimeException} if the
-	COMMENT tracked element becomes larger than {@link #maxBytes} during addition.
+	COMMENT Tracks the size of NBT elements in bytes and in depth. Throws {@link
+	COMMENT NbtSizeValidationException} if the tracked element becomes larger than {@link
+	COMMENT #maxBytes} or if the depth exceeds {@link #maxDepth} during addition.
 	FIELD field_11555 allocatedBytes J
-	FIELD field_11556 EMPTY Lnet/minecraft/class_2505;
 	FIELD field_11557 maxBytes J
-	METHOD <init> (J)V
+	FIELD field_46208 DEFAULT_MAX_DEPTH I
+	FIELD field_46209 maxDepth I
+	FIELD field_46210 depth I
+	METHOD <init> (JI)V
 		ARG 1 maxBytes
+		ARG 3 maxDepth
 	METHOD method_47987 getAllocatedBytes ()J
 	METHOD method_48004 add (J)V
 		ARG 1 bytes
+	METHOD method_53898 ofUnlimitedBytes ()Lnet/minecraft/class_2505;
+	METHOD method_53899 of (J)Lnet/minecraft/class_2505;
+		ARG 0 maxBytes
+	METHOD method_53900 pushStack ()V
+	METHOD method_53901 popStack ()V
+	METHOD method_53902 getDepth ()I
+	METHOD method_53908 add (JJ)V
+		ARG 1 multiplier
+		ARG 3 bytes
