@@ -1,5 +1,5 @@
 CLASS net/minecraft/class_3542 net/minecraft/util/StringIdentifiable
-	COMMENT An interface, implemented by enums, that allows the enum to be serialized
+	COMMENT An interface, usually implemented by enums, that allows the object to be serialized
 	COMMENT by codecs. An instance is identified using a string.
 	COMMENT
 	COMMENT @apiNote To make an enum serializable with codecs, implement this on the enum class,
@@ -23,6 +23,21 @@ CLASS net/minecraft/class_3542 net/minecraft/util/StringIdentifiable
 		COMMENT and a given decode function.
 		ARG 0 enumValues
 		ARG 1 valueNameTransformer
+	METHOD method_53949 (Lnet/minecraft/class_3542;)Lnet/minecraft/class_3542;
+		ARG 0 value
+	METHOD method_53950 (Ljava/lang/String;)Ljava/lang/String;
+		ARG 0 valueName
+	METHOD method_53951 (Ljava/util/Map;Ljava/lang/String;)Lnet/minecraft/class_3542;
+		ARG 1 name
+	METHOD method_53952 (Ljava/util/function/Function;Lnet/minecraft/class_3542;)Ljava/lang/String;
+		ARG 1 value
+	METHOD method_53953 createMapper ([Lnet/minecraft/class_3542;Ljava/util/function/Function;)Ljava/util/function/Function;
+		ARG 0 values
+		ARG 1 valueNameTransformer
+	METHOD method_53954 ([Lnet/minecraft/class_3542;Ljava/util/function/Function;Ljava/lang/String;)Lnet/minecraft/class_3542;
+		ARG 2 name
+	METHOD method_53955 createBasicCodec (Ljava/util/function/Supplier;)Lcom/mojang/serialization/Codec;
+		ARG 0 values
 	CLASS 1
 		METHOD keys (Lcom/mojang/serialization/DynamicOps;)Ljava/util/stream/Stream;
 			ARG 1 ops
@@ -38,3 +53,18 @@ CLASS net/minecraft/class_3542 net/minecraft/util/StringIdentifiable
 		METHOD method_47920 byId (Ljava/lang/String;Ljava/lang/Enum;)Ljava/lang/Enum;
 			ARG 1 id
 			ARG 2 fallback
+	CLASS class_8808 BasicCodec
+		FIELD field_46245 codec Lcom/mojang/serialization/Codec;
+		METHOD <init> ([Lnet/minecraft/class_3542;Ljava/util/function/Function;Ljava/util/function/ToIntFunction;)V
+			ARG 1 values
+			ARG 2 idToIdentifiable
+			ARG 3 identifiableToOrdinal
+		METHOD decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 input
+			ARG 2 ops
+			ARG 3 prefix
+		METHOD method_53957 ([Lnet/minecraft/class_3542;I)Lnet/minecraft/class_3542;
+			ARG 1 ordinal
