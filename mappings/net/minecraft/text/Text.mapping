@@ -69,22 +69,73 @@ CLASS net/minecraft/class_2561 net/minecraft/text/Text
 		ARG 0 key
 		ARG 1 fallback
 		ARG 2 args
-	CLASS class_2562 Serializer
-		COMMENT A JSON serializer for {@link Text}.
+	METHOD method_54154 of (Lnet/minecraft/class_2960;)Lnet/minecraft/class_2561;
+		COMMENT {@return a text representing {@code id}}
+		COMMENT
+		COMMENT <p>The returned text has the format {@code namespace:path}.
+		COMMENT Namespace is always included.
+		ARG 0 id
+	METHOD method_54155 of (Lcom/mojang/brigadier/Message;)Lnet/minecraft/class_2561;
+		COMMENT {@return a text with {@code message}}
+		COMMENT
+		COMMENT <p>If a text instance is passed, this method returns {@code message} itself;
+		COMMENT otherwise this creates a new literal text with the message content.
+		ARG 0 message
+	METHOD method_54156 of (Lnet/minecraft/class_1923;)Lnet/minecraft/class_2561;
+		COMMENT {@return a text representing chunk {@code pos}}
+		COMMENT
+		COMMENT <p>The returned text has the format {@code [X, Z]}.
+		ARG 0 pos
+	METHOD method_54157 of (Ljava/util/Date;)Lnet/minecraft/class_2561;
+		COMMENT {@return a {@linkplain #literal literal} text representing {@code date}}
+		COMMENT
+		COMMENT @implNote The date is converted to a string using {@link Date#toString}.
+		COMMENT Notably, it does not localize the date format.
+		ARG 0 date
+	METHOD method_54158 of (Ljava/util/UUID;)Lnet/minecraft/class_2561;
+		COMMENT {@return a text representing {@code uuid}}
+		COMMENT
+		COMMENT <p>The UUID is converted to a string like {@code 12345678-90AB-CDEF-1234-567890ABCDEF}.
+		COMMENT
+		COMMENT @see UUID#toString
+		ARG 0 uuid
+	METHOD method_54159 stringifiedTranslatable (Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/class_5250;
+		ARG 0 key
+		ARG 1 args
+	METHOD method_54160 getLiteralString ()Ljava/lang/String;
+		COMMENT {@return the string of the literal text, or {@code null} if this text is not
+		COMMENT a literal}
+		COMMENT
+		COMMENT <p>A literal text is an unstyled {@link PlainTextContent} without any siblings.
+		COMMENT Such texts are serialized as a string instead of an object.
+	CLASS class_2562 Serialization
 		FIELD field_11752 JSON_READER_LINE_START Ljava/lang/reflect/Field;
 		FIELD field_11753 JSON_READER_POS Ljava/lang/reflect/Field;
 		FIELD field_11754 GSON Lcom/google/gson/Gson;
-		METHOD method_10867 toJson (Lnet/minecraft/class_2561;)Ljava/lang/String;
+		METHOD method_10867 toJsonString (Lnet/minecraft/class_2561;)Ljava/lang/String;
 			ARG 0 text
 		METHOD method_10868 toJsonTree (Lnet/minecraft/class_2561;)Lcom/google/gson/JsonElement;
 			ARG 0 text
-		METHOD method_10872 fromJson (Lcom/google/gson/JsonElement;)Lnet/minecraft/class_5250;
+		METHOD method_10871 fromJson (Lcom/google/gson/JsonElement;)Lnet/minecraft/class_5250;
+			ARG 0 json
+		METHOD method_10872 fromJsonTree (Lcom/google/gson/JsonElement;)Lnet/minecraft/class_5250;
 			ARG 0 json
 		METHOD method_10873 fromLenientJson (Ljava/lang/String;)Lnet/minecraft/class_5250;
 			ARG 0 json
+		METHOD method_10874 toJson (Lnet/minecraft/class_2561;)Lcom/google/gson/JsonElement;
+			ARG 0 text
 		METHOD method_10877 fromJson (Ljava/lang/String;)Lnet/minecraft/class_5250;
 			ARG 0 json
 		METHOD method_10879 fromJson (Lcom/mojang/brigadier/StringReader;)Lnet/minecraft/class_5250;
 			ARG 0 reader
 		METHOD method_10880 getPosition (Lcom/google/gson/stream/JsonReader;)I
 			ARG 0 reader
+	CLASS class_8822 Serializer
+		METHOD deserialize (Lcom/google/gson/JsonElement;Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)Ljava/lang/Object;
+			ARG 1 json
+			ARG 2 type
+			ARG 3 context
+		METHOD serialize (Ljava/lang/Object;Ljava/lang/reflect/Type;Lcom/google/gson/JsonSerializationContext;)Lcom/google/gson/JsonElement;
+			ARG 1 text
+			ARG 2 type
+			ARG 3 context
