@@ -29,6 +29,11 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 	FIELD field_45075 IDENTIFIER_PATH Lcom/mojang/serialization/Codec;
 	FIELD field_45076 GAME_PROFILE Lcom/mojang/serialization/MapCodec;
 	FIELD field_46165 ESCAPED_STRING Lcom/mojang/serialization/Codec;
+	FIELD field_46236 BASIC_OBJECT Lcom/mojang/serialization/Codec;
+		COMMENT A passthrough codec for a basic object. See {@link RuntimeOps} for
+		COMMENT types of objects this can "serialize".
+		COMMENT
+		COMMENT @see RuntimeOps
 	METHOD method_33817 xor (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
 		COMMENT Returns an exclusive-or codec for {@link Either} instances.
 		COMMENT
@@ -267,6 +272,8 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		ARG 0 keyCodec
 	METHOD method_53700 formattedTime (Ljava/time/format/DateTimeFormatter;)Lcom/mojang/serialization/Codec;
 		ARG 0 formatter
+	METHOD method_53701 (Ljava/time/format/DateTimeFormatter;Ljava/lang/String;)Lcom/mojang/serialization/DataResult;
+		ARG 1 string
 	METHOD method_53702 either (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lnet/minecraft/class_5699$class_6495;
 		ARG 0 first
 		ARG 1 second
@@ -275,6 +282,17 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		ARG 1 elementCodec
 	METHOD method_53826 (Ljava/lang/String;)Lcom/mojang/serialization/DataResult;
 		ARG 0 string
+	METHOD method_53917 (Lcom/google/gson/JsonElement;)Lcom/mojang/serialization/DataResult;
+		ARG 0 json
+	METHOD method_53918 fromOps (Lcom/mojang/serialization/DynamicOps;)Lcom/mojang/serialization/Codec;
+		ARG 0 ops
+	METHOD method_53919 (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Dynamic;)Ljava/lang/Object;
+		ARG 1 dynamic
+	METHOD method_53920 (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/Dynamic;
+		ARG 1 object
+	METHOD method_53921 orCompressed (Lcom/mojang/serialization/MapCodec;Lcom/mojang/serialization/MapCodec;)Lcom/mojang/serialization/MapCodec;
+		ARG 0 uncompressedCodec
+		ARG 1 compressedCodec
 	CLASS 1
 		METHOD apply (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
 			ARG 1 ops
@@ -292,6 +310,16 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 			ARG 1 input
 			ARG 2 ops
 			ARG 3 prefix
+	CLASS 3
+		METHOD decode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/MapLike;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/RecordBuilder;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 input
+			ARG 2 ops
+			ARG 3 prefix
+		METHOD keys (Lcom/mojang/serialization/DynamicOps;)Ljava/util/stream/Stream;
+			ARG 1 ops
 	CLASS 4
 		METHOD apply (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
 			ARG 1 ops
