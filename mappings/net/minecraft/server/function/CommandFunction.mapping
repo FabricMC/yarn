@@ -1,98 +1,15 @@
 CLASS net/minecraft/class_2158 net/minecraft/server/function/CommandFunction
-	FIELD field_9805 elements [Lnet/minecraft/class_2158$class_2161;
-	FIELD field_9806 id Lnet/minecraft/class_2960;
-	METHOD <init> (Lnet/minecraft/class_2960;[Lnet/minecraft/class_2158$class_2161;)V
-		ARG 1 id
-		ARG 2 elements
+	METHOD comp_1994 getId ()Lnet/minecraft/class_2960;
 	METHOD method_52592 continuesToNextLine (Ljava/lang/CharSequence;)Z
 		ARG 0 string
-	METHOD method_52593 isValidMacroVariableName (Ljava/lang/String;)Z
-		ARG 0 name
-	METHOD method_52594 parseMacro (Ljava/lang/String;I)Lnet/minecraft/class_2158$class_8642;
-		ARG 0 macro
-		ARG 1 line
-	METHOD method_52595 withMacroReplaced (Lnet/minecraft/class_2487;Lcom/mojang/brigadier/CommandDispatcher;Lnet/minecraft/class_2168;)Lnet/minecraft/class_2158;
+	METHOD method_52595 withMacroReplaced (Lnet/minecraft/class_2487;Lcom/mojang/brigadier/CommandDispatcher;Ljava/lang/Object;)Lnet/minecraft/class_8868;
 		ARG 1 arguments
 		ARG 2 dispatcher
-		ARG 3 source
-	METHOD method_9193 getElements ()[Lnet/minecraft/class_2158$class_2161;
-	METHOD method_9194 getId ()Lnet/minecraft/class_2960;
-	METHOD method_9195 create (Lnet/minecraft/class_2960;Lcom/mojang/brigadier/CommandDispatcher;Lnet/minecraft/class_2168;Ljava/util/List;)Lnet/minecraft/class_2158;
+	METHOD method_9195 create (Lnet/minecraft/class_2960;Lcom/mojang/brigadier/CommandDispatcher;Lnet/minecraft/class_8839;Ljava/util/List;)Lnet/minecraft/class_2158;
 		COMMENT Parses a function in the context of {@code source}.
 		COMMENT
 		COMMENT <p>Any syntax errors, such as improper comment lines or unknown commands, will be thrown at this point.
 		ARG 0 id
 		ARG 1 dispatcher
-		ARG 2 source
 		ARG 3 lines
 			COMMENT the raw lines (including comments) read from a function file
-	CLASS class_2159 LazyContainer
-		COMMENT A lazy reference to another command function that may or may not exist.
-		COMMENT
-		COMMENT <p>Notice that such an instance does not refresh upon reloads and may become
-		COMMENT invalid.
-		FIELD field_9807 id Lnet/minecraft/class_2960;
-		FIELD field_9808 function Ljava/util/Optional;
-		FIELD field_9809 EMPTY Lnet/minecraft/class_2158$class_2159;
-		FIELD field_9810 initialized Z
-		METHOD <init> (Lnet/minecraft/class_2158;)V
-			ARG 1 function
-		METHOD <init> (Lnet/minecraft/class_2960;)V
-			ARG 1 id
-		METHOD method_17913 (Lnet/minecraft/class_2158;)Lnet/minecraft/class_2960;
-			ARG 0 f
-		METHOD method_9196 get (Lnet/minecraft/class_2991;)Ljava/util/Optional;
-			ARG 1 manager
-		METHOD method_9197 getId ()Lnet/minecraft/class_2960;
-	CLASS class_2160 CommandElement
-		COMMENT A standard element of a command function. Functions created by {@link
-		COMMENT CommandFunction#create} will only contain these elements.
-		FIELD field_9811 parsed Lcom/mojang/brigadier/ParseResults;
-		METHOD <init> (Lcom/mojang/brigadier/ParseResults;)V
-			ARG 1 parsed
-		METHOD method_36318 execute (Lnet/minecraft/class_2991;Lnet/minecraft/class_2168;)I
-			ARG 1 manager
-			ARG 2 source
-		METHOD method_45017 (Lnet/minecraft/class_2168;Lnet/minecraft/class_2168;)Lnet/minecraft/class_2168;
-			ARG 1 currentSource
-	CLASS class_2161 Element
-		METHOD method_9198 execute (Lnet/minecraft/class_2991;Lnet/minecraft/class_2168;Ljava/util/Deque;IILnet/minecraft/class_2991$class_6346;)V
-			ARG 1 manager
-			ARG 2 source
-			ARG 3 entries
-			ARG 4 maxChainLength
-			ARG 5 depth
-			ARG 6 tracer
-	CLASS class_2162 FunctionElement
-		COMMENT A synthetic element to be stored in a {@link CommandFunctionManager.Entry}.
-		COMMENT This is not present as parts of command functions, but created by {@link
-		COMMENT net.minecraft.server.function.CommandFunctionManager.Execution#recursiveRun}.
-		FIELD field_9812 function Lnet/minecraft/class_2158$class_2159;
-		METHOD <init> (Lnet/minecraft/class_2158;)V
-			ARG 1 function
-		METHOD method_17914 (Lnet/minecraft/class_2991$class_6346;IILjava/util/Deque;Lnet/minecraft/class_2168;Lnet/minecraft/class_2158;)V
-			ARG 5 f
-	CLASS class_8641 Macro
-		FIELD field_45149 variables Ljava/util/List;
-		FIELD field_45150 CACHE_SIZE I
-		FIELD field_45151 cache Lit/unimi/dsi/fastutil/objects/Object2ObjectLinkedOpenHashMap;
-		FIELD field_46190 DECIMAL_FORMAT Ljava/text/DecimalFormat;
-		METHOD <init> (Lnet/minecraft/class_2960;[Lnet/minecraft/class_2158$class_2161;Ljava/util/List;)V
-			ARG 1 id
-			ARG 2 elements
-			ARG 3 variables
-		METHOD method_52597 withMacroReplaced (Ljava/util/List;Lcom/mojang/brigadier/CommandDispatcher;Lnet/minecraft/class_2168;)Lnet/minecraft/class_2158;
-			ARG 1 arguments
-			ARG 2 dispatcher
-			ARG 3 source
-		METHOD method_53840 toString (Lnet/minecraft/class_2520;)Ljava/lang/String;
-			ARG 0 nbt
-	CLASS class_8642 MacroElement
-		FIELD field_45152 parts Ljava/util/List;
-		FIELD field_45153 variables Ljava/util/List;
-		METHOD <init> (Ljava/util/List;Ljava/util/List;)V
-			ARG 1 parts
-			ARG 2 variables
-		METHOD method_52598 getVariables ()Ljava/util/List;
-		METHOD method_52599 getCommand (Ljava/util/List;)Ljava/lang/String;
-			ARG 1 arguments
