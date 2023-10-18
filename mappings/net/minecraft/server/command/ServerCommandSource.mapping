@@ -13,7 +13,7 @@ CLASS net/minecraft/class_2168 net/minecraft/server/command/ServerCommandSource
 	FIELD field_9818 server Lnet/minecraft/server/MinecraftServer;
 	FIELD field_9819 output Lnet/minecraft/class_2165;
 	FIELD field_9820 entity Lnet/minecraft/class_1297;
-	FIELD field_9821 resultConsumer Lnet/minecraft/class_8838;
+	FIELD field_9821 resultStorer Lnet/minecraft/class_8838;
 	FIELD field_9822 rotation Lnet/minecraft/class_241;
 	FIELD field_9823 silent Z
 	FIELD field_9824 REQUIRES_PLAYER_EXCEPTION Lcom/mojang/brigadier/exceptions/SimpleCommandExceptionType;
@@ -42,7 +42,7 @@ CLASS net/minecraft/class_2168 net/minecraft/server/command/ServerCommandSource
 		ARG 8 server
 		ARG 9 entity
 		ARG 10 silent
-		ARG 11 resultConsumer
+		ARG 11 resultStorer
 		ARG 12 entityAnchor
 		ARG 13 signedArguments
 		ARG 14 messageChainTaskQueue
@@ -78,6 +78,8 @@ CLASS net/minecraft/class_2168 net/minecraft/server/command/ServerCommandSource
 		ARG 1 message
 	METHOD method_51411 withReturnValueConsumer (Ljava/util/function/IntConsumer;)Lnet/minecraft/class_2168;
 		ARG 1 returnValueConsumer
+	METHOD method_51412 (I)V
+		ARG 0 returnValue
 	METHOD method_54305 (Lnet/minecraft/class_2168;ZI)V
 		ARG 0 context
 		ARG 1 success
@@ -90,8 +92,8 @@ CLASS net/minecraft/class_2168 net/minecraft/server/command/ServerCommandSource
 		COMMENT @throws CommandSyntaxException if this command source is not a player
 	METHOD method_9208 withPosition (Lnet/minecraft/class_243;)Lnet/minecraft/class_2168;
 		ARG 1 position
-	METHOD method_9209 mergeConsumers (Lnet/minecraft/class_8838;Ljava/util/function/BinaryOperator;)Lnet/minecraft/class_2168;
-		ARG 1 resultConsumer
+	METHOD method_9209 mergeStorers (Lnet/minecraft/class_8838;Ljava/util/function/BinaryOperator;)Lnet/minecraft/class_2168;
+		ARG 1 resultStorer
 		ARG 2 merger
 	METHOD method_9210 getRotation ()Lnet/minecraft/class_241;
 	METHOD method_9211 getServer ()Lnet/minecraft/server/MinecraftServer;
@@ -125,6 +127,5 @@ CLASS net/minecraft/class_2168 net/minecraft/server/command/ServerCommandSource
 		COMMENT Gets the entity from this command source or throws a command syntax exception if this command source is not an entity.
 	METHOD method_9230 withMaxLevel (I)Lnet/minecraft/class_2168;
 		ARG 1 level
-	METHOD method_9231 withConsumer (Lnet/minecraft/class_8838;)Lnet/minecraft/class_2168;
 	METHOD method_9232 withEntity (Lnet/minecraft/class_1297;)Lnet/minecraft/class_2168;
 		ARG 1 entity

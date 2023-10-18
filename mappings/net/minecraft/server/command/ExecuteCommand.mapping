@@ -31,6 +31,7 @@ CLASS net/minecraft/class_3050 net/minecraft/server/command/ExecuteCommand
 	METHOD method_13259 (Lcom/mojang/brigadier/context/CommandContext;)Lnet/minecraft/class_2168;
 		ARG 0 context
 	METHOD method_13260 (Ljava/util/Collection;Lnet/minecraft/class_269;Lnet/minecraft/class_266;ZLnet/minecraft/class_2168;ZI)V
+		ARG 4 context
 		ARG 5 success
 		ARG 6 result
 	METHOD method_13261 testBlocksCondition (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;Z)Ljava/util/OptionalInt;
@@ -77,6 +78,7 @@ CLASS net/minecraft/class_3050 net/minecraft/server/command/ExecuteCommand
 	METHOD method_13276 (Lcom/mojang/brigadier/context/CommandContext;I)Lnet/minecraft/class_2520;
 		ARG 1 result
 	METHOD method_13277 (ZZLnet/minecraft/class_3002;Lnet/minecraft/class_2168;ZI)V
+		ARG 3 context
 		ARG 4 success
 		ARG 5 result
 	METHOD method_13280 (Lcom/mojang/brigadier/context/CommandContext;)Z
@@ -113,6 +115,7 @@ CLASS net/minecraft/class_3050 net/minecraft/server/command/ExecuteCommand
 	METHOD method_13293 (Lcom/mojang/brigadier/context/CommandContext;)Ljava/util/Collection;
 		ARG 0 context
 	METHOD method_13294 (Lnet/minecraft/class_3162;ZLnet/minecraft/class_2203$class_2209;Ljava/util/function/IntFunction;Lnet/minecraft/class_2168;ZI)V
+		ARG 4 context
 		ARG 5 success
 		ARG 6 result
 	METHOD method_13295 (Lcom/mojang/brigadier/context/CommandContext;)Ljava/util/Collection;
@@ -266,9 +269,10 @@ CLASS net/minecraft/class_3050 net/minecraft/server/command/ExecuteCommand
 		ARG 0 sources
 		ARG 1 sourceTransformer
 		ARG 2 resultPredicate
+		ARG 3 contextChain
 		ARG 4 arguments
 		ARG 5 control
-		ARG 6 getFunctionNames
+		ARG 6 functionNamesGetter
 		ARG 7 silent
 	METHOD method_54265 createExecutionSource (Ljava/util/function/Function;Ljava/util/function/IntPredicate;Ljava/util/List;Lnet/minecraft/class_8839;Z)Lnet/minecraft/class_8839;
 		ARG 0 sourceTransformer
@@ -286,10 +290,16 @@ CLASS net/minecraft/class_3050 net/minecraft/server/command/ExecuteCommand
 	CLASS class_3052 Condition
 		METHOD test (Lcom/mojang/brigadier/context/CommandContext;)Z
 			ARG 1 context
-	CLASS class_8830
+	CLASS class_8830 FunctionNamesGetter
 		METHOD get (Lcom/mojang/brigadier/context/CommandContext;)Ljava/lang/Object;
 			ARG 1 context
 	CLASS class_8831 IfUnlessRedirector
 		FIELD field_46643 predicate Ljava/util/function/IntPredicate;
 		METHOD <init> (Z)V
-			ARG 1 positive
+			ARG 1 success
+		METHOD method_54268 (I)Z
+			ARG 0 result
+		METHOD method_54269 (Lcom/mojang/brigadier/context/CommandContext;)Ljava/util/Collection;
+			ARG 0 context
+		METHOD method_54271 (I)Z
+			ARG 0 result
