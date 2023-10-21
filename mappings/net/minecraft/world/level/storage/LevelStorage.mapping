@@ -8,6 +8,8 @@ CLASS net/minecraft/class_32 net/minecraft/world/level/storage/LevelStorage
 	FIELD field_44950 ALLOWED_SYMLINKS_FILE_NAME Ljava/lang/String;
 	FIELD field_44951 DEFAULT_ALLOWED_SYMLINK_MATCHER Ljava/nio/file/PathMatcher;
 	FIELD field_44952 symlinkFinder Lnet/minecraft/class_8580;
+	FIELD field_46830 MAX_LEVEL_DATA_SIZE I
+	FIELD field_46831 handlingError Z
 	METHOD <init> (Ljava/nio/file/Path;Ljava/nio/file/Path;Lnet/minecraft/class_8580;Lcom/mojang/datafixers/DataFixer;)V
 		ARG 1 savesDirectory
 		ARG 2 backupsDirectory
@@ -56,12 +58,27 @@ CLASS net/minecraft/class_32 net/minecraft/world/level/storage/LevelStorage
 		ARG 1 name
 	METHOD method_52616 (Ljava/nio/file/Path;)Z
 		ARG 0 path
-	METHOD method_54524 (Lcom/mojang/serialization/Dynamic;Lnet/minecraft/class_32$class_7411;Z)Lnet/minecraft/class_34;
+	METHOD method_54522 parseDataPacks (Lcom/mojang/serialization/Dynamic;Lnet/minecraft/class_3283;Z)Lnet/minecraft/class_7237$class_7238;
+		ARG 0 dynamic
+		ARG 1 dataPackManager
+		ARG 2 safeMode
+	METHOD method_54523 parseSaveProperties (Lcom/mojang/serialization/Dynamic;Lnet/minecraft/class_7712;Lnet/minecraft/class_2378;Lnet/minecraft/class_5455$class_6890;)Lnet/minecraft/class_8895;
+		ARG 0 dynamic
+		ARG 1 dataConfiguration
+		ARG 2 dimensionsRegistry
+		ARG 3 registryManager
+	METHOD method_54524 parseSummary (Lcom/mojang/serialization/Dynamic;Lnet/minecraft/class_32$class_7411;Z)Lnet/minecraft/class_34;
+		ARG 1 dynamic
 		ARG 2 save
+		ARG 3 locked
+	METHOD method_54525 wrap (Lcom/mojang/serialization/Dynamic;Lnet/minecraft/class_5455$class_6890;)Lcom/mojang/serialization/Dynamic;
+		ARG 0 dynamic
+		ARG 1 registryManager
 	METHOD method_54526 getLastModifiedTime (Lnet/minecraft/class_32$class_7411;)J
 		ARG 0 save
-	METHOD method_54527 (Lnet/minecraft/class_32$class_7411;Z)Lnet/minecraft/class_34;
+	METHOD method_54527 readSummary (Lnet/minecraft/class_32$class_7411;Z)Lnet/minecraft/class_34;
 		ARG 1 save
+		ARG 2 locked
 	METHOD method_54528 readLevelProperties (Ljava/nio/file/Path;Lcom/mojang/datafixers/DataFixer;)Lcom/mojang/serialization/Dynamic;
 		ARG 0 path
 		ARG 1 dataFixer
@@ -99,13 +116,26 @@ CLASS net/minecraft/class_32 net/minecraft/world/level/storage/LevelStorage
 			ARG 3 nbt
 		METHOD method_27427 createSaveHandler ()Lnet/minecraft/class_29;
 		METHOD method_29584 getLevelSummary (Lcom/mojang/serialization/Dynamic;)Lnet/minecraft/class_34;
+			ARG 1 dynamic
 		METHOD method_52617 getLevelStorage ()Lnet/minecraft/class_32;
 		METHOD method_54532 tryClose ()V
-		METHOD method_54539 (Z)Ljava/time/Instant;
+		METHOD method_54534 (Ljava/lang/String;Lnet/minecraft/class_2487;)V
+			ARG 1 nbt
+		METHOD method_54537 save (Ljava/util/function/Consumer;)V
+			ARG 1 nbtProcessor
+		METHOD method_54538 save (Lnet/minecraft/class_2487;)V
+			ARG 1 nbt
+		METHOD method_54539 getLastModifiedTime (Z)Ljava/time/Instant;
 			ARG 1 old
+		METHOD method_54540 removePlayerAndSave (Ljava/lang/String;)V
+			ARG 1 name
+		METHOD method_54541 (Ljava/lang/String;Lnet/minecraft/class_2487;)V
+			ARG 1 nbt
 		METHOD method_54543 getDirectory ()Lnet/minecraft/class_32$class_7411;
 		METHOD method_54545 readLevelProperties ()Lcom/mojang/serialization/Dynamic;
 		METHOD method_54546 readOldLevelProperties ()Lcom/mojang/serialization/Dynamic;
+		METHOD method_54547 levelDatExists ()Z
+		METHOD method_54548 tryRestoreBackup ()Z
 		CLASS 1
 			METHOD postVisitDirectory (Ljava/lang/Object;Ljava/io/IOException;)Ljava/nio/file/FileVisitResult;
 				ARG 1 path
@@ -129,3 +159,5 @@ CLASS net/minecraft/class_32 net/minecraft/world/level/storage/LevelStorage
 		METHOD method_43426 getLevelDatOldPath ()Ljava/nio/file/Path;
 		METHOD method_43427 getIconPath ()Ljava/nio/file/Path;
 		METHOD method_43428 getSessionLockPath ()Ljava/nio/file/Path;
+		METHOD method_54531 getRawLevelDatPath (Ljava/time/LocalDateTime;)Ljava/nio/file/Path;
+			ARG 1 dateTime
