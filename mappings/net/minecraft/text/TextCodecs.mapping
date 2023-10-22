@@ -19,6 +19,9 @@ CLASS net/minecraft/class_8824 net/minecraft/text/TextCodecs
 		ARG 0 text
 	METHOD method_54174 dispatchingCodec ([Lnet/minecraft/class_3542;Ljava/util/function/Function;Ljava/util/function/Function;Ljava/lang/String;)Lcom/mojang/serialization/MapCodec;
 		ARG 0 types
+		ARG 1 typeToCodec
+		ARG 2 valueToType
+		ARG 3 dispatchingKey
 	METHOD method_54175 (Lcom/mojang/datafixers/util/Either;)Lnet/minecraft/class_2561;
 		ARG 0 either2
 	METHOD method_54177 (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2561;
@@ -42,3 +45,20 @@ CLASS net/minecraft/class_8824 net/minecraft/text/TextCodecs
 			ARG 1 ops
 		METHOD method_54181 (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/MapCodec;)Ljava/util/stream/Stream;
 			ARG 1 codec
+	CLASS class_8912 DispatchingCodec
+		FIELD field_46914 dispatchingKey Ljava/lang/String;
+		FIELD field_46915 withKeyCodec Lcom/mojang/serialization/MapCodec;
+		FIELD field_46916 withoutKeyCodec Lcom/mojang/serialization/MapCodec;
+		METHOD <init> (Ljava/lang/String;Lcom/mojang/serialization/MapCodec;Lcom/mojang/serialization/MapCodec;)V
+			ARG 1 dispatchingKey
+			ARG 2 withKeyCodec
+			ARG 3 withoutKeyCodec
+		METHOD decode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/MapLike;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/RecordBuilder;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 input
+			ARG 2 ops
+			ARG 3 prefix
+		METHOD keys (Lcom/mojang/serialization/DynamicOps;)Ljava/util/stream/Stream;
+			ARG 1 ops
