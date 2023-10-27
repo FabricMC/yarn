@@ -73,6 +73,17 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4599 proxy Ljava/net/Proxy;
 	FIELD field_4602 random Lnet/minecraft/class_5819;
 	FIELD field_4604 pvpEnabled Z
+	FIELD field_47135 ticksUntilAutosave I
+	FIELD field_47136 tickTimes [J
+	FIELD field_47137 recentTickTimesNanos J
+	FIELD field_47138 lastOverloadWarningNanos J
+	FIELD field_47139 tickStartTimeNanos J
+	FIELD field_47140 tickEndTimeNanos J
+	FIELD field_47141 averageTickTime F
+	FIELD field_47142 tickManager Lnet/minecraft/class_8915;
+	FIELD field_47143 OVERLOAD_THRESHOLD_NANOS J
+	FIELD field_47145 OVERLOAD_WARNING_INTERVAL_NANOS J
+	FIELD field_47148 PREPARE_START_REGION_TICK_DELAY_NANOS J
 	METHOD <init> (Ljava/lang/Thread;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_7497;Lnet/minecraft/class_3950;)V
 		ARG 1 serverThread
 		ARG 2 session
@@ -81,6 +92,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 5 proxy
 		ARG 6 dataFixer
 		ARG 7 apiServices
+		ARG 8 worldGenerationProgressListenerFactory
 	METHOD method_16043 isStopping ()Z
 	METHOD method_16044 getProfiler ()Lnet/minecraft/class_3695;
 	METHOD method_16208 runTasksTillTickEnd ()V
@@ -244,6 +256,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 waitForShutdown
 			COMMENT whether to wait for server shutdown, if called outside the server thread
 	METHOD method_3748 tick (Ljava/util/function/BooleanSupplier;)V
+		ARG 1 shouldKeepTicking
 	METHOD method_3749 getMaxWorldBorderRadius ()I
 	METHOD method_3750 isStopped ()Z
 	METHOD method_3754 isHardcore ()Z
@@ -426,9 +439,18 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_49750 sendTimeUpdatePackets (Lnet/minecraft/class_3218;)V
 		ARG 1 world
 	METHOD method_52344 shouldLogIps ()Z
+	METHOD method_53501 (Lnet/minecraft/class_3222;)V
+		ARG 0 player
 	METHOD method_53620 tickTickLog (J)V
 		ARG 1 nanos
 	METHOD method_5387 isMainThread ()Z
+	METHOD method_54809 isPaused ()Z
+	METHOD method_54831 updateAutosaveTicks ()V
+	METHOD method_54832 getAverageTickTime ()F
+	METHOD method_54833 getTickManager ()Lnet/minecraft/class_8915;
+	METHOD method_54834 getAverageNanosPerTick ()J
+	METHOD method_54835 getTickTimes ()[J
+	METHOD method_54837 getAutosaveInterval ()I
 	CLASS class_6414 DebugStart
 		FIELD field_33980 time J
 		FIELD field_33981 tick I
