@@ -26,7 +26,7 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		COMMENT Writes the {@code nbt} to {@code output}.
 		COMMENT
 		COMMENT @throws IOException if the IO operation fails
-		COMMENT @see #write(NbtCompound, File)
+		COMMENT @see #write(NbtCompound, Path)
 		ARG 0 nbt
 		ARG 1 output
 	METHOD method_10629 readCompressed (Ljava/io/InputStream;Lnet/minecraft/class_2505;)Lnet/minecraft/class_2487;
@@ -36,15 +36,16 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		COMMENT @throws IOException if the IO operation fails or if the root NBT element is
 		COMMENT not a compound
 		COMMENT @throws NbtSizeValidationException if the NBT is too deep
-		COMMENT @see #readCompressed(File, NbtTagSizeTracker)
+		COMMENT @see #readCompressed(Path, NbtTagSizeTracker)
 		ARG 0 stream
 		ARG 1 tagSizeTracker
 	METHOD method_10630 write (Lnet/minecraft/class_2487;Ljava/nio/file/Path;)V
-		COMMENT Writes the {@code nbt} to {@code file}.
+		COMMENT Writes the {@code nbt} to the file at {@code path}.
 		COMMENT
 		COMMENT @throws IOException if the IO operation fails
 		COMMENT @see #write(NbtCompound, DataOutput)
 		ARG 0 nbt
+		ARG 1 path
 	METHOD method_10631 write (Lnet/minecraft/class_2520;Ljava/io/DataOutput;)V
 		COMMENT Writes the {@code nbt} to {@code output}. The output is the byte indicating
 		COMMENT the element type, followed by {@linkplain DataOutput#writeUTF an empty string}
@@ -56,34 +57,37 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		ARG 0 nbt
 		ARG 1 output
 	METHOD method_10633 read (Ljava/nio/file/Path;)Lnet/minecraft/class_2487;
-		COMMENT Reads an NBT compound from {@code file}.
+		COMMENT Reads an NBT compound from the file at{@code path}.
 		COMMENT
 		COMMENT @return the NBT compound from the file, or {@code null} if the file does not exist
 		COMMENT @throws IOException if the IO operation fails or if the root NBT element is
 		COMMENT not a compound
 		COMMENT @throws NbtSizeValidationException if the NBT is too deep
+		ARG 0 path
 	METHOD method_10634 writeCompressed (Lnet/minecraft/class_2487;Ljava/io/OutputStream;)V
 		COMMENT Writes the Gzip-compressed {@code nbt} to {@code stream}.
 		COMMENT
 		COMMENT @throws IOException if the IO operation fails
-		COMMENT @see #writeCompressed(NbtCompound, File)
+		COMMENT @see #writeCompressed(NbtCompound, Path)
 		ARG 0 nbt
 		ARG 1 stream
 	METHOD method_30613 readCompressed (Ljava/nio/file/Path;Lnet/minecraft/class_2505;)Lnet/minecraft/class_2487;
-		COMMENT Reads an NBT compound from Gzip-compressed {@code file}.
+		COMMENT Reads an NBT compound from Gzip-compressed file at {@code path}.
 		COMMENT
 		COMMENT @return the NBT compound from the file
 		COMMENT @throws IOException if the IO operation fails or if the root NBT element is
 		COMMENT not a compound
 		COMMENT @throws NbtSizeValidationException if the NBT is too deep
 		COMMENT @see #readCompressed(InputStream, NbtTagSizeTracker)
+		ARG 0 path
 		ARG 1 tagSizeTracker
 	METHOD method_30614 writeCompressed (Lnet/minecraft/class_2487;Ljava/nio/file/Path;)V
-		COMMENT Writes the Gzip-compressed {@code nbt} to {@code file}.
+		COMMENT Writes the Gzip-compressed {@code nbt} to the file at {@code path}.
 		COMMENT
 		COMMENT @throws IOException if the IO operation fails
 		COMMENT @see #writeCompressed(NbtCompound, OutputStream)
 		ARG 0 nbt
+		ARG 1 path
 	METHOD method_39855 scan (Ljava/io/DataInput;Lnet/minecraft/class_6836;Lnet/minecraft/class_2505;)V
 		COMMENT Scans the NBT input using {@code scanner}.
 		COMMENT
@@ -106,6 +110,7 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		COMMENT @throws IOException if the IO operation fails
 		COMMENT @throws NbtSizeValidationException if the {@code tracker}'s validation fails
 		COMMENT @see #scanCompressed(InputStream, NbtScanner, NbtTagSizeTracker)
+		ARG 0 path
 		ARG 1 scanner
 		ARG 2 tracker
 	METHOD method_40058 scanCompressed (Ljava/io/InputStream;Lnet/minecraft/class_6836;Lnet/minecraft/class_2505;)V
@@ -117,7 +122,7 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		COMMENT
 		COMMENT @throws IOException if the IO operation fails
 		COMMENT @throws NbtSizeValidationException if the {@code tracker}'s validation fails
-		COMMENT @see #scanCompressed(File, NbtScanner, NbtTagSizeTracker)
+		COMMENT @see #scanCompressed(Path, NbtScanner, NbtTagSizeTracker)
 		ARG 0 stream
 		ARG 1 scanner
 		ARG 2 tracker
@@ -154,3 +159,6 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 	METHOD method_54662 toBytes (Lnet/minecraft/class_2487;)[B
 		COMMENT {@return the byte array serialization of {@code nbt}}
 		ARG 0 nbt
+	METHOD method_54906 compress (Ljava/io/OutputStream;)Ljava/io/DataOutputStream;
+		COMMENT {@return a new output stream that compresses the input {@code stream}}
+		ARG 0 stream
