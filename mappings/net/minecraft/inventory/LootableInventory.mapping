@@ -1,25 +1,81 @@
 CLASS net/minecraft/class_8934 net/minecraft/inventory/LootableInventory
+	COMMENT An inventory whose contents can be supplied from a loot table.
+	COMMENT
+	COMMENT <p>This is usually implemented by block entities, which extend {@link
+	COMMENT net.minecraft.block.entity.LootableContainerBlockEntity}.
 	FIELD field_47154 LOOT_TABLE_KEY Ljava/lang/String;
 	FIELD field_47155 LOOT_TABLE_SEED_KEY Ljava/lang/String;
 	METHOD method_10997 getWorld ()Lnet/minecraft/class_1937;
 	METHOD method_11016 getPos ()Lnet/minecraft/class_2338;
-	METHOD method_11285 setLootTable (Lnet/minecraft/class_2960;)V
+	METHOD method_11285 setLootTableId (Lnet/minecraft/class_2960;)V
+		COMMENT Sets the loot table ID.
+		COMMENT
+		COMMENT <p>This is usually stored under the {@value LOOT_TABLE_KEY} NBT key.
 		ARG 1 lootTableId
+			COMMENT the loot table ID, or {@code null} to remove the loot table
 	METHOD method_54866 setLootTableSeed (J)V
+		COMMENT Sets the loot table's seed.
+		COMMENT
+		COMMENT <p>Vanilla implementations return {@code 0} when there is no loot
+		COMMENT table associated with the inventory, although it is not necessary.
+		COMMENT
+		COMMENT <p>This is usually stored under the {@value LOOT_TABLE_SEED_KEY} NBT key.
 		ARG 1 lootTableSeed
 	METHOD method_54867 setLootTable (Lnet/minecraft/class_2960;J)V
+		COMMENT Sets the loot table ID and seed at once.
+		COMMENT This is useful for code-based structure generation.
+		COMMENT
+		COMMENT @see #setLootTableId(Identifier)
+		COMMENT @see #setLootTableSeed(long)
+		COMMENT @see #setLootTable(BlockView, Random, BlockPos, Identifier)
 		ARG 1 lootTableId
 		ARG 2 lootTableSeed
 	METHOD method_54868 setLootTable (Lnet/minecraft/class_1922;Lnet/minecraft/class_5819;Lnet/minecraft/class_2338;Lnet/minecraft/class_2960;)V
+		COMMENT Queries the block entity at {@code pos}, checks if it is a {@link LootableInventory},
+		COMMENT and sets the loot table ID and seed if applicable.
+		COMMENT This is useful for code-based structure generation.
+		COMMENT
+		COMMENT @see #setLootTableId(Identifier)
+		COMMENT @see #setLootTableSeed(long)
+		COMMENT @see #setLootTable(Identifier, long)
 		ARG 0 world
 		ARG 1 random
 		ARG 2 pos
 		ARG 3 lootTableId
-	METHOD method_54869 getLootTable ()Lnet/minecraft/class_2960;
+	METHOD method_54869 getLootTableId ()Lnet/minecraft/class_2960;
+		COMMENT {@return the loot table ID, or {@code null} if there is no associated loot table}
+		COMMENT
+		COMMENT <p>This is usually stored under the {@value LOOT_TABLE_KEY} NBT key.
 	METHOD method_54870 getLootTableSeed ()J
+		COMMENT {@return the loot table's seed}
+		COMMENT
+		COMMENT <p>Vanilla implementations return {@code 0} when there is no loot
+		COMMENT table associated with the inventory, although it is not necessary.
+		COMMENT
+		COMMENT <p>This is usually stored under the {@value LOOT_TABLE_SEED_KEY} NBT key.
 	METHOD method_54871 readLootTable (Lnet/minecraft/class_2487;)Z
+		COMMENT Reads the loot table ID and seed from {@code nbt}, if the loot table ID
+		COMMENT exists in {@code nbt}. Implementations should skip reading the contents of
+		COMMENT the inventory if this returns {@code true}.
+		COMMENT
+		COMMENT @return whether the loot table ID was found
 		ARG 1 nbt
 	METHOD method_54872 writeLootTable (Lnet/minecraft/class_2487;)Z
+		COMMENT Writes the loot table ID and seed to {@code nbt}, if {@linkplain #getLootTableId
+		COMMENT the loot table ID} is not {@code null}. Implementations should skip writing the
+		COMMENT contents of the inventory if this returns {@code true}.
+		COMMENT
+		COMMENT <p>This skips writing the seed if it equals {@code 0L}. This has no practical
+		COMMENT difference in-game, as getting nonexistent {@code long} values return {@code 0L}.
+		COMMENT
+		COMMENT @return whether the loot table ID was non-{@code null}
 		ARG 1 nbt
 	METHOD method_54873 generateLoot (Lnet/minecraft/class_1657;)V
+		COMMENT Replaces the contents of this inventory with the generated loot, if it exists.
+		COMMENT Does nothing if there is no loot table associated with this inventory.
+		COMMENT After generation, the loot table is removed from the inventory.
+		COMMENT
+		COMMENT <p>Implementations should call this method whenever the inventory is accessed.
 		ARG 1 player
+			COMMENT the player that triggered this generation (by opening, breaking, etc), or
+			COMMENT {@code null} if there was no player involvement
