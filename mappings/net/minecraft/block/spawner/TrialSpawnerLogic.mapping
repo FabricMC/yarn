@@ -1,17 +1,22 @@
-CLASS net/minecraft/class_8963 net/minecraft/block/entity/spawner/TrialSpawnerLogic
+CLASS net/minecraft/class_8963 net/minecraft/block/spawner/TrialSpawnerLogic
 	FIELD field_47359 MAX_ENTITY_DISTANCE I
 	FIELD field_47360 MAX_ENTITY_DISTANCE_SQUARED I
+	FIELD field_47362 config Lnet/minecraft/class_8965;
 	FIELD field_47363 data Lnet/minecraft/class_8966;
 	FIELD field_47364 trialSpawner Lnet/minecraft/class_8963$class_8964;
 	FIELD field_47365 entityDetector Lnet/minecraft/class_8962;
+	FIELD field_47366 forceActivate Z
 	METHOD <init> (Lnet/minecraft/class_8963$class_8964;Lnet/minecraft/class_8962;)V
 		ARG 1 trialSpawner
 		ARG 2 entityDetector
 	METHOD <init> (Lnet/minecraft/class_8965;Lnet/minecraft/class_8966;Lnet/minecraft/class_8963$class_8964;Lnet/minecraft/class_8962;)V
+		ARG 1 config
 		ARG 2 data
 		ARG 3 trialSpawner
 		ARG 4 entityDetector
 	METHOD method_55156 codec ()Lcom/mojang/serialization/Codec;
+	METHOD method_55157 (DDDLnet/minecraft/class_5819;Lnet/minecraft/class_1297;)Lnet/minecraft/class_1297;
+		ARG 7 entity
 	METHOD method_55158 trySpawnMob (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)Ljava/util/Optional;
 		ARG 1 world
 		ARG 2 pos
@@ -19,6 +24,10 @@ CLASS net/minecraft/class_8963 net/minecraft/block/entity/spawner/TrialSpawnerLo
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 lootTable
+	METHOD method_55160 shouldRemoveMobFromData (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Ljava/util/UUID;)Z
+		ARG 0 world
+		ARG 1 pos
+		ARG 2 uuid
 	METHOD method_55161 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
 		ARG 1 instance
 	METHOD method_55162 canActivate (Lnet/minecraft/class_1937;)Z
@@ -26,25 +35,31 @@ CLASS net/minecraft/class_8963 net/minecraft/block/entity/spawner/TrialSpawnerLo
 	METHOD method_55163 setSpawnerState (Lnet/minecraft/class_1937;Lnet/minecraft/class_8967;)V
 		ARG 1 world
 		ARG 2 spawnerState
-	METHOD method_55164 (Lnet/minecraft/class_1937;Lnet/minecraft/class_243;Lnet/minecraft/class_243;)Z
+	METHOD method_55164 hasLineOfSight (Lnet/minecraft/class_1937;Lnet/minecraft/class_243;Lnet/minecraft/class_243;)Z
 		ARG 0 world
+		ARG 1 spawnerPos
+		ARG 2 spawnPos
 	METHOD method_55165 tickClient (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)V
 		ARG 1 world
 		ARG 2 pos
-	METHOD method_55166 (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;)V
+	METHOD method_55166 addMobSpawnParticles (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;)V
 		ARG 0 world
 		ARG 1 pos
 		ARG 2 random
-	METHOD method_55167 (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;I)V
+	METHOD method_55167 addDetectionParticles (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;I)V
 		ARG 0 world
 		ARG 1 pos
 		ARG 2 random
+		ARG 3 playerCount
 	METHOD method_55168 setEntityDetector (Lnet/minecraft/class_8962;)V
 		ARG 1 detector
+	METHOD method_55170 getConfig ()Lnet/minecraft/class_8965;
 	METHOD method_55171 tickServer (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)V
 		ARG 1 world
 		ARG 2 pos
-	METHOD method_55173 (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;)V
+	METHOD method_55172 (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Ljava/util/UUID;)Z
+		ARG 2 uuid
+	METHOD method_55173 addEjectItemParticles (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_5819;)V
 		ARG 0 world
 		ARG 1 pos
 		ARG 2 random
@@ -52,6 +67,7 @@ CLASS net/minecraft/class_8963 net/minecraft/block/entity/spawner/TrialSpawnerLo
 	METHOD method_55175 getSpawnerState ()Lnet/minecraft/class_8967;
 	METHOD method_55176 updateListeners ()V
 	METHOD method_55177 getEntityDetector ()Lnet/minecraft/class_8962;
+	METHOD method_55178 forceActivate ()V
 	CLASS class_8964 TrialSpawner
 		METHOD method_55146 setSpawnerState (Lnet/minecraft/class_1937;Lnet/minecraft/class_8967;)V
 			ARG 1 world
