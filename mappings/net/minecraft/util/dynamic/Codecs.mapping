@@ -265,6 +265,8 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 	METHOD method_53051 (Ljava/lang/Object;Ljava/util/Optional;)Ljava/lang/Object;
 		ARG 1 value
 	METHOD method_53052 createRecursive (Ljava/lang/String;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+		ARG 0 name
+		ARG 1 codecFunction
 	METHOD method_53055 (Ljava/util/function/Supplier;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
 		ARG 1 codec
 	METHOD method_53058 object2BooleanMap (Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
@@ -292,6 +294,12 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 	METHOD method_53921 orCompressed (Lcom/mojang/serialization/MapCodec;Lcom/mojang/serialization/MapCodec;)Lcom/mojang/serialization/MapCodec;
 		ARG 0 uncompressedCodec
 		ARG 1 compressedCodec
+	METHOD method_54941 parameters (Ljava/lang/String;Ljava/lang/String;Lcom/mojang/serialization/Codec;Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/MapCodec;
+		ARG 0 typeKey
+		ARG 1 parametersKey
+		ARG 2 typeCodec
+		ARG 3 typeGetter
+		ARG 4 parametersCodecGetter
 	CLASS 1
 		METHOD apply (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
 			ARG 1 ops
@@ -334,6 +342,22 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		METHOD decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
 			ARG 1 ops
 			ARG 2 input
+	CLASS 6
+		METHOD decode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/MapLike;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/RecordBuilder;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 input
+			ARG 2 ops
+			ARG 3 prefix
+		METHOD keys (Lcom/mojang/serialization/DynamicOps;)Ljava/util/stream/Stream;
+			ARG 1 ops
+		METHOD method_54942 encode (Lcom/mojang/serialization/Codec;Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;)Lcom/mojang/serialization/DataResult;
+			ARG 1 codec
+			ARG 2 value
+			ARG 3 ops
+		METHOD method_54943 (Lcom/mojang/serialization/MapLike;Ljava/lang/String;Lcom/mojang/serialization/DynamicOps;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Pair;)Lcom/mojang/serialization/DataResult;
+			ARG 4 pair
 	CLASS class_5839 Xor
 		COMMENT An xor codec that only permits exactly one of the two data choices to be
 		COMMENT present.
@@ -364,6 +388,9 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 			ARG 0 pair
 		METHOD method_33824 (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
 			ARG 3 left
+		METHOD method_53709 (Lcom/mojang/datafixers/util/Pair;Lcom/mojang/datafixers/util/Pair;)Lcom/mojang/datafixers/util/Pair;
+			ARG 0 a
+			ARG 1 b
 	CLASS class_6495 Either
 		FIELD field_34388 first Lcom/mojang/serialization/Codec;
 		FIELD field_34389 second Lcom/mojang/serialization/Codec;
@@ -407,6 +434,10 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		METHOD method_43963 asString ()Ljava/lang/String;
 	CLASS class_8741 Recursive
 		FIELD field_45716 supplier Ljava/util/function/Supplier;
+		FIELD field_47224 name Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;Ljava/util/function/Function;)V
+			ARG 1 name
+			ARG 2 codecFunction
 		METHOD decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
 			ARG 1 ops
 			ARG 2 input

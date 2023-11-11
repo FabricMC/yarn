@@ -10,9 +10,11 @@ CLASS net/minecraft/class_7877 net/minecraft/registry/RegistryBuilder
 	METHOD method_46778 toLookup (Lnet/minecraft/class_7225$class_7226;)Lnet/minecraft/class_7871;
 		ARG 0 wrapper
 	METHOD method_46780 createWrapperLookup (Lnet/minecraft/class_5455;)Lnet/minecraft/class_7225$class_7874;
+		ARG 1 registryManager
 	METHOD method_46781 createWrapperLookup (Lnet/minecraft/class_5455;Lnet/minecraft/class_7225$class_7874;Lnet/minecraft/class_8990$class_8991;)Lnet/minecraft/class_7877$class_8993;
 		ARG 1 baseRegistryManager
 		ARG 2 wrapperLookup
+		ARG 3 cloneableRegistries
 	METHOD method_46782 (Lnet/minecraft/class_7877$class_7878;Lnet/minecraft/class_7877$class_7884;)Lnet/minecraft/class_7877$class_7883;
 		ARG 1 info
 	METHOD method_46784 createBootstrappedRegistries (Lnet/minecraft/class_5455;)Lnet/minecraft/class_7877$class_7878;
@@ -23,6 +25,42 @@ CLASS net/minecraft/class_7877 net/minecraft/registry/RegistryBuilder
 		ARG 1 registry
 	METHOD method_49352 (Ljava/util/Map;Lnet/minecraft/class_7877$class_7883;)V
 		ARG 1 registry
+	METHOD method_55283 createWrapper (Lnet/minecraft/class_5321;Lcom/mojang/serialization/Lifecycle;Ljava/util/Map;)Lnet/minecraft/class_7225$class_7226;
+		ARG 0 registryRef
+		ARG 1 lifecycle
+		ARG 2 entries
+	METHOD method_55285 (Lnet/minecraft/class_7876;Lnet/minecraft/class_5321;Lnet/minecraft/class_8990;Lnet/minecraft/class_6880$class_6883;Lnet/minecraft/class_7225$class_7874;Lorg/apache/commons/lang3/mutable/MutableObject;Lnet/minecraft/class_5321;)Lnet/minecraft/class_6880$class_6883;
+		ARG 6 key
+	METHOD method_55286 applyPatches (Lnet/minecraft/class_7876;Lnet/minecraft/class_8990$class_8991;Lnet/minecraft/class_5321;Lnet/minecraft/class_7225$class_7874;Lnet/minecraft/class_7225$class_7874;Lorg/apache/commons/lang3/mutable/MutableObject;)Lnet/minecraft/class_7225$class_7226;
+		ARG 1 owner
+		ARG 2 cloneableRegistries
+		ARG 3 registryRef
+		ARG 4 patches
+		ARG 5 base
+		ARG 6 lazyWrapper
+	METHOD method_55287 (Lnet/minecraft/class_7876;Lnet/minecraft/class_8990;Lnet/minecraft/class_7225$class_7874;Lorg/apache/commons/lang3/mutable/MutableObject;Ljava/util/Map;Lnet/minecraft/class_6880$class_6883;)V
+		ARG 5 entry
+	METHOD method_55288 (Lnet/minecraft/class_5455$class_6892;)Lnet/minecraft/class_7225$class_7226;
+		ARG 0 entry
+	METHOD method_55289 createFullWrapperLookup (Lnet/minecraft/class_5455;Lnet/minecraft/class_7225$class_7874;Lnet/minecraft/class_8990$class_8991;Ljava/util/Map;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_7225$class_7874;
+		ARG 1 registryManager
+		ARG 2 base
+		ARG 3 cloneableRegistries
+		ARG 4 initializedRegistries
+		ARG 5 patches
+	METHOD method_55290 createWrapperLookup (Lnet/minecraft/class_5455;Ljava/util/stream/Stream;)Lnet/minecraft/class_7225$class_7874;
+		ARG 0 registryManager
+		ARG 1 additionalRegistries
+	METHOD method_55291 (Lnet/minecraft/class_7877$class_7878;Lnet/minecraft/class_7877$class_7883;)Lnet/minecraft/class_7225$class_7226;
+		ARG 1 registry
+	METHOD method_55292 (Lnet/minecraft/class_7877$class_7879;Lnet/minecraft/class_8990$class_8991;Lnet/minecraft/class_7225$class_7874;Lnet/minecraft/class_7225$class_7874;Lorg/apache/commons/lang3/mutable/MutableObject;Lnet/minecraft/class_5321;)Lnet/minecraft/class_7225$class_7226;
+		ARG 6 registryRef
+	METHOD method_55293 (Ljava/util/Map;Lnet/minecraft/class_5321;)V
+		ARG 1 key
+	METHOD method_55294 (Ljava/util/Map;Lnet/minecraft/class_7876;Lnet/minecraft/class_8990;Lnet/minecraft/class_7225$class_7874;Lorg/apache/commons/lang3/mutable/MutableObject;Lnet/minecraft/class_6880$class_6883;)V
+		ARG 5 entry
+	METHOD method_55295 (Ljava/util/Set;Lnet/minecraft/class_5321;)Z
+		ARG 1 key
 	CLASS 2
 		FIELD field_40947 keysToEntries Ljava/util/Map;
 	CLASS class_7878 Registries
@@ -35,6 +73,11 @@ CLASS net/minecraft/class_7877 net/minecraft/registry/RegistryBuilder
 			ARG 0 dynamicRegistryManager
 			ARG 1 registryRefs
 		METHOD method_46798 throwErrors ()V
+		METHOD method_55297 (Lnet/minecraft/class_5321;Lnet/minecraft/class_7877$class_7881;)V
+			ARG 1 key
+			ARG 2 value
+		METHOD method_55298 checkOrphanedValues ()V
+		METHOD method_55299 checkUnreferencedKeys ()V
 	CLASS class_7879 AnyOwner
 		COMMENT An owner that owns multiple registries and holds the owner object for those.
 		COMMENT {@link #ownerEquals} returns {@code true} for all owners {@linkplain #addOwner previously
@@ -42,6 +85,7 @@ CLASS net/minecraft/class_7877 net/minecraft/registry/RegistryBuilder
 		FIELD field_40944 owners Ljava/util/Set;
 		METHOD method_46801 addOwner (Lnet/minecraft/class_7876;)V
 			ARG 1 owner
+		METHOD method_55300 downcast ()Lnet/minecraft/class_7876;
 	CLASS class_7880 EntryListCreatingLookup
 		FIELD field_40945 entryOwner Lnet/minecraft/class_7876;
 		METHOD <init> (Lnet/minecraft/class_7876;)V
@@ -52,6 +96,9 @@ CLASS net/minecraft/class_7877 net/minecraft/registry/RegistryBuilder
 			ARG 1 registerable
 	CLASS class_7883 InitializedRegistry
 		METHOD method_46802 toWrapper (Lnet/minecraft/class_7877$class_7879;)Lnet/minecraft/class_7225$class_7226;
+			ARG 1 anyOwner
+		METHOD method_55301 (Lnet/minecraft/class_7877$class_7879;Ljava/util/Map$Entry;)Lnet/minecraft/class_6880$class_6883;
+			ARG 1 entry
 	CLASS class_7884 RegistryInfo
 		METHOD method_46805 init (Lnet/minecraft/class_7877$class_7878;)Lnet/minecraft/class_7877$class_7883;
 			ARG 1 registries
@@ -66,3 +113,9 @@ CLASS net/minecraft/class_7877 net/minecraft/registry/RegistryBuilder
 	CLASS class_7886 EntryAssociatedValue
 		FIELD comp_1148 entry Ljava/util/Optional;
 		METHOD comp_1148 entry ()Ljava/util/Optional;
+	CLASS class_8992 LazyReferenceEntry
+		FIELD field_47490 supplier Ljava/util/function/Supplier;
+		METHOD <init> (Lnet/minecraft/class_7876;Lnet/minecraft/class_5321;)V
+			ARG 1 owner
+			ARG 2 key
+	CLASS class_8993 FullPatchesRegistriesPair
