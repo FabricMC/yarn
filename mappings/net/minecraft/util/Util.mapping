@@ -16,6 +16,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		COMMENT A locale-independent datetime formatter that uses {@code yyyy-MM-dd_HH.mm.ss}
 		COMMENT as the format string. Example: {@code 2022-01-01_00.00.00}
 	FIELD field_46764 BACKUP_ATTEMPTS I
+	FIELD field_47571 DOWNLOAD_WORKER_EXECUTOR Ljava/util/concurrent/ExecutorService;
 	METHOD method_17974 ifPresentOrElse (Ljava/util/Optional;Ljava/util/function/Consumer;Ljava/lang/Runnable;)Ljava/util/Optional;
 		COMMENT If {@code optional} has value, calls {@code presentAction} with the value,
 		COMMENT otherwise calls {@code elseAction}.
@@ -66,13 +67,19 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 string
 		ARG 1 cursor
 		ARG 2 delta
+	METHOD method_27956 (Ljava/lang/String;Ljava/util/concurrent/atomic/AtomicInteger;ZLjava/lang/Runnable;)Ljava/lang/Thread;
+		ARG 3 runnable
 	METHOD method_27957 attemptShutdown (Ljava/util/concurrent/ExecutorService;)V
 		ARG 0 service
 	METHOD method_27958 getIoWorkerExecutor ()Ljava/util/concurrent/ExecutorService;
 		COMMENT {@return the executor for disk or network IO tasks}
 	METHOD method_27959 createIoWorker (Ljava/lang/String;Z)Ljava/util/concurrent/ExecutorService;
+		ARG 0 namePrefix
+		ARG 1 daemon
 	METHOD method_28122 createWorker (Ljava/lang/String;)Ljava/util/concurrent/ExecutorService;
 		ARG 0 name
+	METHOD method_28123 (Ljava/lang/String;Ljava/util/concurrent/atomic/AtomicInteger;Ljava/util/concurrent/ForkJoinPool;)Ljava/util/concurrent/ForkJoinWorkerThread;
+		ARG 2 pool
 	METHOD method_29187 getChoiceType (Lcom/mojang/datafixers/DSL$TypeReference;Ljava/lang/String;)Lcom/mojang/datafixers/types/Type;
 		ARG 0 typeReference
 		ARG 1 id
@@ -307,6 +314,8 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_55334 getResultOrPartial (Lcom/mojang/serialization/DataResult;Ljava/util/function/Function;)Ljava/lang/Object;
 		ARG 0 result
 		ARG 1 exceptionGetter
+	METHOD method_55473 getDownloadWorkerExecutor ()Ljava/util/concurrent/ExecutorService;
+		COMMENT {@return the executor for download tasks}
 	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
 		COMMENT {@return the item preceding {@code object} in {@code iterable}}
 		COMMENT
