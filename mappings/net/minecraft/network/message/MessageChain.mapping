@@ -13,6 +13,10 @@ CLASS net/minecraft/class_7610 net/minecraft/network/message/MessageChain
 	COMMENT @see MessageLink
 	FIELD field_40691 LOGGER Lorg/slf4j/Logger;
 	FIELD field_40692 link Lnet/minecraft/class_7826;
+	FIELD field_47703 lastTimestamp Ljava/time/Instant;
+	METHOD <init> (Ljava/util/UUID;Ljava/util/UUID;)V
+		ARG 1 sender
+		ARG 2 sessionId
 	METHOD method_44874 getUnpacker (Lnet/minecraft/class_7428;)Lnet/minecraft/class_7610$class_7611;
 		ARG 1 playerPublicKey
 	METHOD method_44880 getPacker (Lnet/minecraft/class_7501;)Lnet/minecraft/class_7610$class_7612;
@@ -31,9 +35,15 @@ CLASS net/minecraft/class_7610 net/minecraft/network/message/MessageChain
 		COMMENT the message chain's legitimacy.
 		COMMENT
 		COMMENT @see MessageChain#getUnpacker
+		METHOD method_46315 (Ljava/util/function/BooleanSupplier;Ljava/util/UUID;Lnet/minecraft/class_7469;Lnet/minecraft/class_7608;)Lnet/minecraft/class_7471;
+			ARG 2 signature
+			ARG 3 body
 		METHOD unpack (Lnet/minecraft/class_7469;Lnet/minecraft/class_7608;)Lnet/minecraft/class_7471;
 			ARG 1 signature
 			ARG 2 body
+		METHOD unsigned (Ljava/util/UUID;Ljava/util/function/BooleanSupplier;)Lnet/minecraft/class_7610$class_7611;
+			ARG 0 sender
+			ARG 1 secureProfileEnforced
 	CLASS class_7612 Packer
 		COMMENT Packers sign a message on the client with its preceding message's index.
 		COMMENT
