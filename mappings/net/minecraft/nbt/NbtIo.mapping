@@ -1,7 +1,7 @@
 CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 	COMMENT A set of utility functions for reading, writing, and scanning NBT files.
-	COMMENT Methods that do not require {@link NbtTagSizeTracker} accept any bytes of data,
-	COMMENT provided that its depth does not exceed {@value NbtTagSizeTracker#DEFAULT_MAX_DEPTH}.
+	COMMENT Methods that do not require {@link NbtSizeTracker} accept any bytes of data,
+	COMMENT provided that its depth does not exceed {@value NbtSizeTracker#DEFAULT_MAX_DEPTH}.
 	COMMENT
 	COMMENT <p>When {@linkplain DataOutput#writeUTF writing an invalid string}, methods in
 	COMMENT this class will write an empty string instead of crashing, with the exception of
@@ -41,7 +41,7 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		COMMENT @throws IOException if the IO operation fails or if the root NBT element is
 		COMMENT not a compound
 		COMMENT @throws NbtSizeValidationException if the NBT is too deep
-		COMMENT @see #readCompressed(Path, NbtTagSizeTracker)
+		COMMENT @see #readCompressed(Path, NbtSizeTracker)
 		ARG 0 stream
 		ARG 1 tagSizeTracker
 	METHOD method_10630 write (Lnet/minecraft/class_2487;Ljava/nio/file/Path;)V
@@ -60,7 +60,7 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		COMMENT method will <strong>throw an error</strong>, unlike other methods.
 		COMMENT
 		COMMENT @throws IOException if the IO operation fails
-		COMMENT @see #read(DataInput, NbtTagSizeTracker)
+		COMMENT @see #read(DataInput, NbtSizeTracker)
 		COMMENT @see #writeForPacket(NbtElement, DataOutput)
 		COMMENT @see #write(NbtElement, DataOutput)
 		ARG 0 nbt
@@ -87,7 +87,7 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		COMMENT @throws IOException if the IO operation fails or if the root NBT element is
 		COMMENT not a compound
 		COMMENT @throws NbtSizeValidationException if the NBT is too deep
-		COMMENT @see #readCompressed(InputStream, NbtTagSizeTracker)
+		COMMENT @see #readCompressed(InputStream, NbtSizeTracker)
 		ARG 0 path
 		ARG 1 tagSizeTracker
 	METHOD method_30614 writeCompressed (Lnet/minecraft/class_2487;Ljava/nio/file/Path;)V
@@ -118,7 +118,7 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		COMMENT
 		COMMENT @throws IOException if the IO operation fails
 		COMMENT @throws NbtSizeValidationException if the {@code tracker}'s validation fails
-		COMMENT @see #scanCompressed(InputStream, NbtScanner, NbtTagSizeTracker)
+		COMMENT @see #scanCompressed(InputStream, NbtScanner, NbtSizeTracker)
 		ARG 0 path
 		ARG 1 scanner
 		ARG 2 tracker
@@ -131,7 +131,7 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		COMMENT
 		COMMENT @throws IOException if the IO operation fails
 		COMMENT @throws NbtSizeValidationException if the {@code tracker}'s validation fails
-		COMMENT @see #scanCompressed(Path, NbtScanner, NbtTagSizeTracker)
+		COMMENT @see #scanCompressed(Path, NbtScanner, NbtSizeTracker)
 		ARG 0 stream
 		ARG 1 scanner
 		ARG 2 tracker
@@ -148,13 +148,13 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		COMMENT
 		COMMENT @apiNote In vanilla, this is used exclusively in networking.
 		COMMENT @throws IOException if the IO operation fails
-		COMMENT @see #read(DataInput, NbtTagSizeTracker)
+		COMMENT @see #read(DataInput, NbtSizeTracker)
 		COMMENT @see #write(NbtElement, DataOutput)
 		ARG 0 nbt
 		ARG 1 output
 	METHOD method_52894 read (Ljava/io/DataInput;Lnet/minecraft/class_2505;)Lnet/minecraft/class_2520;
 		COMMENT Reads an NBT element from {@code input}. Unlike {@link
-		COMMENT #readCompound(DataInput, NbtTagSizeTracker)}, the element does not have to
+		COMMENT #readCompound(DataInput, NbtSizeTracker)}, the element does not have to
 		COMMENT be a compound.
 		COMMENT
 		COMMENT @return the NBT element from the input
@@ -174,7 +174,7 @@ CLASS net/minecraft/class_2507 net/minecraft/nbt/NbtIo
 		COMMENT method will write an empty string instead of crashing.
 		COMMENT
 		COMMENT @throws IOException if the IO operation fails
-		COMMENT @see #read(DataInput, NbtTagSizeTracker)
+		COMMENT @see #read(DataInput, NbtSizeTracker)
 		COMMENT @see #writeForPacket(NbtElement, DataOutput)
 		COMMENT @see #writeUnsafe(NbtElement, DataOutput)
 		ARG 0 nbt

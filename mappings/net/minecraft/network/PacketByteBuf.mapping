@@ -9,7 +9,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	COMMENT  <th><b>Object Type</b></th> <th><b>read method</b></th> <th><b>write method</b></th>
 	COMMENT </tr>
 	COMMENT <tr>
-	COMMENT  <td>Codec-based (NBT)</td><td>{@link #decode(DynamicOps, Codec, NbtTagSizeTracker)}</td><td>{@link #encode(DynamicOps, Codec, Object)}</td>
+	COMMENT  <td>Codec-based (NBT)</td><td>{@link #decode(DynamicOps, Codec, NbtSizeTracker)}</td><td>{@link #encode(DynamicOps, Codec, Object)}</td>
 	COMMENT </tr>
 	COMMENT <tr>
 	COMMENT  <td>Codec-based (JSON)</td><td>{@link #decodeAsJson(Codec)}</td><td>{@link #encodeAsJson(Codec, Object)}</td>
@@ -351,7 +351,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be
 		COMMENT written
 		COMMENT @see #readNbt()
-		COMMENT @see #readNbt(NbtTagSizeTracker)
+		COMMENT @see #readNbt(NbtSizeTracker)
 		ARG 1 nbt
 	METHOD method_10795 readByteArray ()[B
 		COMMENT Reads an array of primitive bytes from this buf. The array first has a
@@ -383,14 +383,14 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT this method returns {@code null}. The compound can have a maximum size of
 		COMMENT {@value #MAX_READ_NBT_SIZE} bytes.
 		COMMENT
-		COMMENT <p>Note that unlike {@link #readNbt(NbtTagSizeTracker)}, this can only
+		COMMENT <p>Note that unlike {@link #readNbt(NbtSizeTracker)}, this can only
 		COMMENT read compounds.
 		COMMENT
 		COMMENT @return the read compound, may be {@code null}
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
 		COMMENT @throws net.minecraft.nbt.NbtSizeValidationException if the compound exceeds the allowed maximum size
 		COMMENT @see #writeNbt(NbtCompound)
-		COMMENT @see #readNbt(NbtTagSizeTracker)
+		COMMENT @see #readNbt(NbtSizeTracker)
 		COMMENT @see #MAX_READ_NBT_SIZE
 	METHOD method_10799 readIntArray (I)[I
 		COMMENT Reads an array of primitive ints from this buf. The array first has a
@@ -494,7 +494,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 			COMMENT the pos to write
 	METHOD method_10808 readText ()Lnet/minecraft/class_2561;
 		COMMENT Reads a text from this buf. A text is represented as an NBT-encoded data
-		COMMENT with {@linkplain NbtTagSizeTracker the maximum size} as {@value #MAX_READ_NBT_SIZE}.
+		COMMENT with {@linkplain NbtSizeTracker the maximum size} as {@value #MAX_READ_NBT_SIZE}.
 		COMMENT
 		COMMENT @return the read text
 		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
@@ -647,7 +647,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @param <T> the encoded object's type
 		COMMENT @throws io.netty.handler.codec.EncoderException if the {@code codec} fails
 		COMMENT to encode the compound NBT
-		COMMENT @see #decode(DynamicOps, Codec, NbtTagSizeTracker)
+		COMMENT @see #decode(DynamicOps, Codec, NbtSizeTracker)
 		ARG 1 ops
 		ARG 2 codec
 		ARG 3 value
