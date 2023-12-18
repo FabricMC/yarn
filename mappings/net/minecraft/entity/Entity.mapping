@@ -144,7 +144,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_33758 hasVisualFire Z
 	FIELD field_34927 collidedSoftly Z
 	FIELD field_35101 chunkPos Lnet/minecraft/class_1923;
-	FIELD field_35588 blockStateAtPos Lnet/minecraft/class_2680;
 	FIELD field_36331 groundCollision Z
 	FIELD field_38931 trackedPosition Lnet/minecraft/class_7422;
 	FIELD field_44784 supportingBlockPos Ljava/util/Optional;
@@ -202,7 +201,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_6009 invulnerable Z
 	FIELD field_6011 dataTracker Lnet/minecraft/class_2945;
 	FIELD field_6012 age I
-	FIELD field_6013 stepHeight F
 	FIELD field_6014 prevX D
 	FIELD field_6017 fallDistance F
 	FIELD field_6018 portalCooldown I
@@ -254,9 +252,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #getWidth
 		COMMENT @see #getHeight
 		ARG 1 pose
-	METHOD method_18378 getEyeHeight (Lnet/minecraft/class_4050;Lnet/minecraft/class_4048;)F
-		ARG 1 pose
-		ARG 2 dimensions
 	METHOD method_18379 tickPortal ()V
 	METHOD method_18380 setPose (Lnet/minecraft/class_4050;)V
 		ARG 1 pose
@@ -681,7 +676,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 			COMMENT the mapped index as given by the item slot argument
 	METHOD method_32319 setInPowderSnow (Z)V
 		ARG 1 inPowderSnow
-	METHOD method_32875 emitGameEvent (Lnet/minecraft/class_5712;Lnet/minecraft/class_1297;)V
+	METHOD method_32875 emitGameEvent (Lnet/minecraft/class_6880;Lnet/minecraft/class_1297;)V
 		COMMENT Emits a game event originating from another entity at this entity's position.
 		COMMENT
 		COMMENT <p>A common example is a game event called in {@link #interact}, where the player
@@ -691,7 +686,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 event
 		ARG 2 entity
 			COMMENT the entity that emitted the game event, or {@code null} if there is none
-	METHOD method_32876 emitGameEvent (Lnet/minecraft/class_5712;)V
+	METHOD method_32876 emitGameEvent (Lnet/minecraft/class_6880;)V
 		COMMENT Emits a game event originating from this entity at this entity's position.
 		COMMENT
 		COMMENT @see #emitGameEvent(GameEvent, Entity)
@@ -770,14 +765,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 yaw
 	METHOD method_36457 setPitch (F)V
 		ARG 1 pitch
-	METHOD method_36601 getBlockStateAtPos ()Lnet/minecraft/class_2680;
-		COMMENT {@return the block state at the entity's position}
-		COMMENT
-		COMMENT <p>The result is cached.
-		COMMENT
-		COMMENT @see #getBlockPos
-		COMMENT @see #getLandingBlockState
-		COMMENT @see #getSteppingBlockState
 	METHOD method_36971 canModifyAt (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)Z
 		COMMENT {@return whether the entity can modify the world at {@code pos}}
 		COMMENT
@@ -937,8 +924,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_48923 getDamageSources ()Lnet/minecraft/class_8109;
 	METHOD method_49108 canBeHitByProjectile ()Z
 	METHOD method_49476 getStepHeight ()F
-	METHOD method_49477 setStepHeight (F)V
-		ARG 1 stepHeight
 	METHOD method_49693 shouldDismountUnderwater ()Z
 		COMMENT {@return whether this vehicle should dismount the passenger if submerged underwater}
 	METHOD method_49694 getControllingVehicle ()Lnet/minecraft/class_1297;
@@ -956,7 +941,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_49790 shouldPlayAmethystChimeSound (Lnet/minecraft/class_2680;)Z
 		ARG 1 state
 	METHOD method_49792 teleportPassengers ()V
-	METHOD method_51152 getNameLabelHeight ()F
 	METHOD method_51295 playSwimSound ()V
 	METHOD method_51296 playSecondaryStepSound (Lnet/minecraft/class_2680;)V
 		ARG 1 state
@@ -992,16 +976,12 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 6 z
 		ARG 8 yaw
 		ARG 10 pitch
-	METHOD method_52533 getPassengerAttachmentPos (Lnet/minecraft/class_1297;Lnet/minecraft/class_4048;F)Lorg/joml/Vector3f;
+	METHOD method_52533 getPassengerAttachmentPos (Lnet/minecraft/class_1297;Lnet/minecraft/class_4048;F)Lnet/minecraft/class_243;
 		ARG 1 passenger
 		ARG 2 dimensions
 		ARG 3 scaleFactor
 	METHOD method_52534 shouldControlVehicles ()Z
 	METHOD method_52535 isInFluid ()Z
-	METHOD method_52536 getRidingOffset (Lnet/minecraft/class_1297;)F
-		ARG 1 vehicle
-	METHOD method_52537 getUnscaledRidingOffset (Lnet/minecraft/class_1297;)F
-		ARG 1 vehicle
 	METHOD method_52538 getPassengerRidingPos (Lnet/minecraft/class_1297;)Lnet/minecraft/class_243;
 		ARG 1 passenger
 	METHOD method_53827 getLerpTargetY ()D
@@ -2216,8 +2196,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT the player crosshair}
 	METHOD method_5864 getType ()Lnet/minecraft/class_1299;
 	METHOD method_5865 updatePassengerPosition (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297$class_4738;)V
-		ARG 1 passenger
-		ARG 2 positionUpdater
 	METHOD method_5867 calculateNextStepSoundDistance ()F
 	METHOD method_5869 isSubmergedInWater ()Z
 		COMMENT {@return whether this entity's hitbox is fully submerged in water}
