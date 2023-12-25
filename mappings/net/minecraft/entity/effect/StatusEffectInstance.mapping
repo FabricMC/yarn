@@ -13,6 +13,7 @@ CLASS net/minecraft/class_1293 net/minecraft/entity/effect/StatusEffectInstance
 	FIELD field_45734 DURATION_NBT_KEY Ljava/lang/String;
 	FIELD field_45735 SHOW_PARTICLES_NBT_KEY Ljava/lang/String;
 	FIELD field_45736 SHOW_ICON_NBT_KEY Ljava/lang/String;
+	FIELD field_47739 fading Lnet/minecraft/class_1293$class_9063;
 	FIELD field_5889 showIcon Z
 	FIELD field_5890 showParticles Z
 	FIELD field_5892 ambient Z
@@ -76,10 +77,24 @@ CLASS net/minecraft/class_1293 net/minecraft/entity/effect/StatusEffectInstance
 	METHOD method_48563 getDurationString ()Ljava/lang/String;
 	METHOD method_52523 onApplied (Lnet/minecraft/class_1309;)V
 		ARG 1 entity
+	METHOD method_55653 getFadeFactor (Lnet/minecraft/class_1309;F)F
+		COMMENT {@return the factor (multiplier) for effect fade-in and fade-out}
+		COMMENT
+		COMMENT <p>The return value is between {@code 0.0f} and {@code 1.0f} (both inclusive).
+		COMMENT
+		COMMENT @see StatusEffect#fadeTicks(int)
+		ARG 1 entity
+		ARG 2 tickDelta
 	METHOD method_55654 equals (Lnet/minecraft/class_6880;)Z
 		ARG 1 effect
 	METHOD method_55655 (Lnet/minecraft/class_2487;Lnet/minecraft/class_6880$class_6883;)Lnet/minecraft/class_1293;
 		ARG 1 effect
+	METHOD method_55656 copyFadingFrom (Lnet/minecraft/class_1293;)V
+		ARG 1 effect
+	METHOD method_55657 skipFading ()V
+		COMMENT Skips fade-in or fade-out currently in progress, instantly setting it
+		COMMENT to the final state (factor {@code 1.0f} or {@code 0.0f}, depending on the
+		COMMENT effect's duration).
 	METHOD method_5578 getAmplifier ()I
 	METHOD method_5579 getEffectType ()Lnet/minecraft/class_6880;
 	METHOD method_5581 shouldShowParticles ()Z
@@ -97,3 +112,28 @@ CLASS net/minecraft/class_1293 net/minecraft/entity/effect/StatusEffectInstance
 		ARG 1 that
 	METHOD method_5591 isAmbient ()Z
 	METHOD method_5592 shouldShowIcon ()Z
+	CLASS class_9063 Fading
+		COMMENT Computes the factor (multiplier) for effect fade-in and fade-out.
+		COMMENT
+		COMMENT <p>This is used by {@link StatusEffects#DARKNESS} in vanilla.
+		COMMENT
+		COMMENT @see StatusEffect#fadeTicks(int)
+		COMMENT @see StatusEffect#getFadeTicks
+		FIELD field_47740 factor F
+		FIELD field_47741 prevFactor F
+		METHOD method_55658 copyFrom (Lnet/minecraft/class_1293$class_9063;)V
+			ARG 1 fading
+		METHOD method_55659 skipFading (Lnet/minecraft/class_1293;)V
+			COMMENT Skips fade-in or fade-out currently in progress, instantly setting it
+			COMMENT to the final state (factor {@code 1.0f} or {@code 0.0f}, depending on the
+			COMMENT effect's duration).
+			ARG 1 effect
+		METHOD method_55660 calculate (Lnet/minecraft/class_1309;F)F
+			ARG 1 entity
+			ARG 2 tickDelta
+		METHOD method_55661 update (Lnet/minecraft/class_1293;)V
+			ARG 1 effect
+		METHOD method_55662 getTarget (Lnet/minecraft/class_1293;)F
+			ARG 0 effect
+		METHOD method_55663 getFadeTicks (Lnet/minecraft/class_1293;)I
+			ARG 0 effect
