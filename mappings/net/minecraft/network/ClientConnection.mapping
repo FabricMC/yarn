@@ -31,8 +31,6 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	FIELD field_36379 PACKET_RECEIVED_MARKER Lorg/slf4j/Marker;
 	FIELD field_36380 PACKET_SENT_MARKER Lorg/slf4j/Marker;
 	FIELD field_44972 pendingDisconnectionReason Lnet/minecraft/class_2561;
-	FIELD field_45666 SERVERBOUND_PROTOCOL_KEY Lio/netty/util/AttributeKey;
-	FIELD field_45667 CLIENTBOUND_PROTOCOL_KEY Lio/netty/util/AttributeKey;
 	FIELD field_45668 queuedTasks Ljava/util/Queue;
 	FIELD field_45669 prePlayStateListener Lnet/minecraft/class_2547;
 	FIELD field_45955 packetSizeLogger Lnet/minecraft/class_8762;
@@ -88,13 +86,6 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		ARG 2 rejectsBadPackets
 			COMMENT whether this connection may abort if a compressed packet with a bad size is received
 	METHOD method_10762 getAveragePacketsReceived ()F
-	METHOD method_10763 setPacketListener (Lnet/minecraft/class_2547;)V
-		COMMENT Sets the packet listener that will handle oncoming packets, including
-		COMMENT ones that are not yet handled by the current packet listener.
-		COMMENT
-		COMMENT @apiNote This may be called from the {@linkplain #packetListener} stored
-		COMMENT in this connection.
-		ARG 1 packetListener
 	METHOD method_10764 sendImmediately (Lnet/minecraft/class_2596;Lnet/minecraft/class_7648;Z)V
 		ARG 1 packet
 		ARG 2 callbacks
@@ -131,13 +122,6 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		ARG 0 address
 		ARG 1 useEpoll
 		ARG 2 connection
-	METHOD method_52898 disableAutoRead ()V
-	METHOD method_52899 setS2CPacketHandler (Lnet/minecraft/class_8592;)V
-		ARG 1 intent
-	METHOD method_52900 (Lnet/minecraft/class_8592;Lnet/minecraft/class_2547;Ljava/lang/String;ILnet/minecraft/class_2535;)V
-		ARG 5 connection
-	METHOD method_52901 setHandlers (Lio/netty/channel/Channel;)V
-		ARG 0 channel
 	METHOD method_52902 connect (Ljava/lang/String;ILnet/minecraft/class_2896;)V
 		ARG 1 address
 		ARG 2 port
@@ -146,11 +130,9 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		ARG 1 address
 		ARG 2 port
 		ARG 3 listener
-	METHOD method_52904 connect (Ljava/lang/String;ILnet/minecraft/class_2547;Lnet/minecraft/class_8592;)V
+	METHOD method_52904 connect (Ljava/lang/String;ILnet/minecraft/class_9127;Lnet/minecraft/class_9127;Lnet/minecraft/class_8697;Lnet/minecraft/class_8592;)V
 		ARG 1 address
 		ARG 2 port
-		ARG 3 listener
-		ARG 4 intent
 	METHOD method_52905 submit (Ljava/util/function/Consumer;)V
 		ARG 1 task
 	METHOD method_52906 send (Lnet/minecraft/class_2596;Lnet/minecraft/class_7648;Z)V
@@ -159,11 +141,8 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		ARG 3 flush
 	METHOD method_52907 (Lnet/minecraft/class_2596;Lnet/minecraft/class_7648;ZLnet/minecraft/class_2535;)V
 		ARG 3 connection
-	METHOD method_52908 getProtocolAttributeKey (Lnet/minecraft/class_2598;)Lio/netty/util/AttributeKey;
-		ARG 0 side
 	METHOD method_52909 getAddressAsString (Z)Ljava/lang/String;
 		ARG 1 logIps
-	METHOD method_52910 enableAutoRead ()V
 	METHOD method_52911 addValidator (Lio/netty/channel/ChannelPipeline;Lnet/minecraft/class_2598;)V
 		ARG 0 pipeline
 		ARG 1 side
@@ -174,17 +153,11 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		COMMENT @see #setPacketListener
 		ARG 1 packetListener
 	METHOD method_52915 flush ()V
-	METHOD method_52916 addValidatorInternal (Lio/netty/channel/ChannelPipeline;Lnet/minecraft/class_2598;)V
-		ARG 0 pipeline
-		ARG 1 side
 	METHOD method_52918 flushInternal ()V
 	METHOD method_53505 resetPacketSizeLog (Lnet/minecraft/class_8743;)V
 		ARG 1 log
 	METHOD method_53859 addFlowControlHandler (Lio/netty/channel/ChannelPipeline;)V
 		ARG 1 pipeline
 	CLASS 1
-		METHOD initChannel (Lio/netty/channel/Channel;)V
-			ARG 1 channel
-	CLASS 2
 		METHOD initChannel (Lio/netty/channel/Channel;)V
 			ARG 1 channel

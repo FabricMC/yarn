@@ -332,16 +332,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return the value read
 		COMMENT @see #writeVarLong(long)
-	METHOD method_10793 writeItemStack (Lnet/minecraft/class_1799;)Lnet/minecraft/class_2540;
-		COMMENT Writes an item stack to this buf. An item stack is represented by a
-		COMMENT boolean indicating whether it exists; if it exists, it is followed by
-		COMMENT a var int for its raw id, a byte for its count, and an NBT compound for
-		COMMENT its tag.
-		COMMENT
-		COMMENT @return this buf, for chaining
-		COMMENT @see #readItemStack()
-		ARG 1 stack
-			COMMENT the stack to write
 	METHOD method_10794 writeNbt (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2540;
 		COMMENT Writes an NBT element to this buf. The binary representation of NBT is
 		COMMENT handled by {@link net.minecraft.nbt.NbtIo}. If {@code nbt} is {@code
@@ -352,7 +342,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT written
 		COMMENT @see #readNbt()
 		COMMENT @see #readNbt(NbtSizeTracker)
-		ARG 1 nbt
 	METHOD method_10795 readByteArray ()[B
 		COMMENT Reads an array of primitive bytes from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the actual bytes. The array
@@ -590,14 +579,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #writeEnumConstant(Enum)
 		ARG 1 enumClass
 			COMMENT the enum class, for constant lookup
-	METHOD method_10819 readItemStack ()Lnet/minecraft/class_1799;
-		COMMENT Reads an item stack from this buf. An item stack is represented by a
-		COMMENT boolean indicating whether it exists; if it exists, it is followed by
-		COMMENT a var int for its raw id, a byte for its count, and an NBT compound for
-		COMMENT its tag.
-		COMMENT
-		COMMENT @return the read item stack
-		COMMENT @see #writeItemStack(ItemStack)
 	METHOD method_17813 writeBlockHitResult (Lnet/minecraft/class_3965;)V
 		COMMENT Writes a block hit result to this buf. A block hit result is represented
 		COMMENT by a block position, a direction enum constant, 3 floats for the hit
@@ -707,7 +688,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 			COMMENT the list to write
 	METHOD method_34061 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException;
 		ARG 1 error
-	METHOD method_34062 writeCollection (Ljava/util/Collection;Lnet/minecraft/class_2540$class_7462;)V
+	METHOD method_34062 writeCollection (Ljava/util/Collection;Lnet/minecraft/class_9142;)V
 		COMMENT Writes a collection to this buf. The collection is stored as a leading
 		COMMENT {@linkplain #readVarInt() var int} size followed by the entries
 		COMMENT sequentially.
@@ -717,7 +698,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 collection
 			COMMENT the collection to write
 		ARG 2 writer
-	METHOD method_34063 writeMap (Ljava/util/Map;Lnet/minecraft/class_2540$class_7462;Lnet/minecraft/class_2540$class_7462;)V
+	METHOD method_34063 writeMap (Ljava/util/Map;Lnet/minecraft/class_9142;Lnet/minecraft/class_9142;)V
 		COMMENT Writes a map to this buf. The map is stored as a leading
 		COMMENT {@linkplain #readVarInt() var int} size followed by each key and value
 		COMMENT pair.
@@ -729,7 +710,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 			COMMENT the map to write
 		ARG 2 keyWriter
 		ARG 3 valueWriter
-	METHOD method_34064 (Lnet/minecraft/class_2540$class_7462;Lnet/minecraft/class_2540$class_7462;Ljava/lang/Object;Ljava/lang/Object;)V
+	METHOD method_34064 (Lnet/minecraft/class_9142;Lnet/minecraft/class_9142;Ljava/lang/Object;Ljava/lang/Object;)V
 		ARG 3 key
 		ARG 4 value
 	METHOD method_34065 forEachInCollection (Ljava/util/function/Consumer;)V
@@ -740,14 +721,14 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readCollection(IntFunction, PacketByteBuf.PacketReader)
 		ARG 1 consumer
 			COMMENT the consumer to read entries
-	METHOD method_34066 readList (Lnet/minecraft/class_2540$class_7461;)Ljava/util/List;
+	METHOD method_34066 readList (Lnet/minecraft/class_9141;)Ljava/util/List;
 		COMMENT Reads a collection from this buf as an array list.
 		COMMENT
 		COMMENT @param <T> the list's entry type
 		COMMENT @return the read list
 		COMMENT @see #readCollection(IntFunction, PacketByteBuf.PacketReader)
 		ARG 1 reader
-	METHOD method_34067 readMap (Lnet/minecraft/class_2540$class_7461;Lnet/minecraft/class_2540$class_7461;)Ljava/util/Map;
+	METHOD method_34067 readMap (Lnet/minecraft/class_9141;Lnet/minecraft/class_9141;)Ljava/util/Map;
 		COMMENT Reads a map from this buf as a hash map.
 		COMMENT
 		COMMENT @param <K> the key type
@@ -756,7 +737,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readMap(IntFunction, PacketByteBuf.PacketReader, PacketByteBuf.PacketReader)
 		ARG 1 keyReader
 		ARG 2 valueReader
-	METHOD method_34068 readCollection (Ljava/util/function/IntFunction;Lnet/minecraft/class_2540$class_7461;)Ljava/util/Collection;
+	METHOD method_34068 readCollection (Ljava/util/function/IntFunction;Lnet/minecraft/class_9141;)Ljava/util/Collection;
 		COMMENT Reads a collection from this buf. The collection is stored as a leading
 		COMMENT {@linkplain #readVarInt() var int} size followed by the entries
 		COMMENT sequentially.
@@ -769,7 +750,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 collectionFactory
 			COMMENT a factory that creates a collection with a given size
 		ARG 2 reader
-	METHOD method_34069 readMap (Ljava/util/function/IntFunction;Lnet/minecraft/class_2540$class_7461;Lnet/minecraft/class_2540$class_7461;)Ljava/util/Map;
+	METHOD method_34069 readMap (Ljava/util/function/IntFunction;Lnet/minecraft/class_9141;Lnet/minecraft/class_9141;)Ljava/util/Map;
 		COMMENT Reads a map from this buf. The map is stored as a leading
 		COMMENT {@linkplain #readVarInt() var int} size followed by each key and value
 		COMMENT pair.
@@ -782,8 +763,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readMap(PacketByteBuf.PacketReader, PacketByteBuf.PacketReader)
 		ARG 1 mapFactory
 			COMMENT a factory that creates a map with a given size
-		ARG 2 keyReader
-		ARG 3 valueReader
 	METHOD method_34070 (Lnet/minecraft/class_2520;Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
 		ARG 1 error
 	METHOD method_36130 writeChunkPos (Lnet/minecraft/class_1923;)Lnet/minecraft/class_2540;
@@ -808,7 +787,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return the read chunk position
 		COMMENT @see #writeChunkPos(ChunkPos)
-	METHOD method_37435 writeOptional (Ljava/util/Optional;Lnet/minecraft/class_2540$class_7462;)V
+	METHOD method_37435 writeOptional (Ljava/util/Optional;Lnet/minecraft/class_9142;)V
 		COMMENT Writes an optional value to this buf. An optional value is represented by
 		COMMENT a boolean indicating if the value is present, followed by the value only if
 		COMMENT the value is present.
@@ -816,7 +795,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readOptional(PacketByteBuf.PacketReader)
 		ARG 1 value
 		ARG 2 writer
-	METHOD method_37436 readOptional (Lnet/minecraft/class_2540$class_7461;)Ljava/util/Optional;
+	METHOD method_37436 readOptional (Lnet/minecraft/class_9141;)Ljava/util/Optional;
 		COMMENT Reads an optional value from this buf. An optional value is represented by
 		COMMENT a boolean indicating if the value is present, followed by the value only if
 		COMMENT the value is present.
@@ -829,30 +808,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	METHOD method_37453 getMaxValidator (Ljava/util/function/IntFunction;I)Ljava/util/function/IntFunction;
 		ARG 0 applier
 		ARG 1 max
-	METHOD method_42064 readRegistryValue (Lnet/minecraft/class_2359;)Ljava/lang/Object;
-		COMMENT Reads a value from a registry (or other {@link IndexedIterable}s). The value
-		COMMENT is stored using its raw ID as a {@linkplain #readVarInt() var int}.
-		COMMENT
-		COMMENT <p>Callers must ensure that <strong>the registry (or the indexed iterable) is
-		COMMENT properly synchronized</strong> between the client and the server.
-		COMMENT
-		COMMENT @return the value, or {@code null} if it is missing from {@code registry}
-		COMMENT @see #writeRegistryValue(IndexedIterable, Object)
-		ARG 1 registry
-			COMMENT the registry (or an indexed iterable) that contains the value
-	METHOD method_42065 writeRegistryValue (Lnet/minecraft/class_2359;Ljava/lang/Object;)V
-		COMMENT Writes a value from a registry (or other {@link IndexedIterable}s). The value
-		COMMENT is stored using its raw ID as a {@linkplain #readVarInt() var int}.
-		COMMENT
-		COMMENT <p>Callers must ensure that <strong>the registry (or the indexed iterable) is
-		COMMENT properly synchronized</strong> between the client and the server.
-		COMMENT
-		COMMENT @throws IllegalArgumentException if {@code value} is not in {@code registry}
-		COMMENT @see #readRegistryValue(IndexedIterable)
-		ARG 1 registry
-			COMMENT the registry (or an indexed iterable) that contains the value
-		ARG 2 value
-			COMMENT a value to write, must be in {@code registry}
 	METHOD method_43616 writeGameProfile (Lcom/mojang/authlib/GameProfile;)V
 		COMMENT Writes a game profile to this buf. A game profile is represented by a
 		COMMENT {@linkplain #writeUuid(UUID) uuid}, a username string, and a collection of
@@ -867,7 +822,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT exists if signed).
 		COMMENT
 		COMMENT @see #readProperty()
-	METHOD method_43619 writeEither (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/class_2540$class_7462;Lnet/minecraft/class_2540$class_7462;)V
+	METHOD method_43619 writeEither (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/class_9142;Lnet/minecraft/class_9142;)V
 		COMMENT Writes an {@code Either} to this buf. An either is represented by
 		COMMENT a boolean indicating if the left side or the right side of the either,
 		COMMENT followed by the value.
@@ -876,11 +831,11 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 either
 		ARG 2 leftWriter
 		ARG 3 rightWriter
-	METHOD method_43620 (Lnet/minecraft/class_2540$class_7462;Ljava/lang/Object;)V
+	METHOD method_43620 (Lnet/minecraft/class_9142;Ljava/lang/Object;)V
 		ARG 2 object
-	METHOD method_43621 (Lnet/minecraft/class_2540$class_7462;Ljava/lang/Object;)V
+	METHOD method_43621 (Lnet/minecraft/class_9142;Ljava/lang/Object;)V
 		ARG 2 object
-	METHOD method_43622 readEither (Lnet/minecraft/class_2540$class_7461;Lnet/minecraft/class_2540$class_7461;)Lcom/mojang/datafixers/util/Either;
+	METHOD method_43622 readEither (Lnet/minecraft/class_9141;Lnet/minecraft/class_9141;)Lcom/mojang/datafixers/util/Either;
 		COMMENT Reads an {@code Either} from this buf. An either is represented by
 		COMMENT a boolean indicating if the left side or the right side of the either,
 		COMMENT followed by the value.
@@ -904,7 +859,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return the property
 		COMMENT @see #writeProperty(Property)
-	METHOD method_43826 writeNullable (Ljava/lang/Object;Lnet/minecraft/class_2540$class_7462;)V
+	METHOD method_43826 writeNullable (Ljava/lang/Object;Lnet/minecraft/class_9142;)V
 		COMMENT Writes a nullable value to this buf. A nullable value is represented by
 		COMMENT a boolean indicating if the value is not null, followed by the value only if
 		COMMENT the value is not null.
@@ -912,7 +867,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readNullable(PacketByteBuf.PacketReader)
 		ARG 1 value
 		ARG 2 writer
-	METHOD method_43827 readNullable (Lnet/minecraft/class_2540$class_7461;)Ljava/lang/Object;
+	METHOD method_43827 readNullable (Lnet/minecraft/class_9141;)Ljava/lang/Object;
 		COMMENT Reads a nullable value from this buf. A nullable value is represented by
 		COMMENT a boolean indicating if the value is not null, followed by the value only if
 		COMMENT the value is not null.
@@ -1019,13 +974,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT collection of properties.
 		COMMENT
 		COMMENT @see #writePropertyMap
-	METHOD method_47989 writeRegistryEntry (Lnet/minecraft/class_2359;Lnet/minecraft/class_6880;Lnet/minecraft/class_2540$class_7462;)V
-		ARG 1 registryEntries
-		ARG 2 entry
-		ARG 3 writer
-	METHOD method_47990 readRegistryEntry (Lnet/minecraft/class_2359;Lnet/minecraft/class_2540$class_7461;)Lnet/minecraft/class_6880;
-		ARG 1 registryEntries
-		ARG 2 reader
 	METHOD method_49067 writeQuaternionf (Lorg/joml/Quaternionf;)V
 		COMMENT Writes a {@link Quaternionf} to this buf. A {@link Quaternionf} is represented
 		COMMENT by four {@code float}s.
@@ -1337,12 +1285,3 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 length
 	METHOD writerIndex (I)Lio/netty/buffer/ByteBuf;
 		ARG 1 index
-	CLASS class_7461 PacketReader
-		COMMENT A functional interface to read a value from {@link PacketByteBuf}.
-		METHOD method_43828 (Lnet/minecraft/class_2540;)Ljava/util/Optional;
-			ARG 1 buf
-	CLASS class_7462 PacketWriter
-		COMMENT A functional interface to write a value to {@link PacketByteBuf}.
-		METHOD method_43829 (Lnet/minecraft/class_2540;Ljava/util/Optional;)V
-			ARG 1 buf
-			ARG 2 value
