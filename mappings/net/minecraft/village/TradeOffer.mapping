@@ -3,6 +3,7 @@ CLASS net/minecraft/class_1914 net/minecraft/village/TradeOffer
 	FIELD field_18677 demandBonus I
 	FIELD field_18678 priceMultiplier F
 	FIELD field_18679 merchantExperience I
+	FIELD field_48372 ignoreTags Z
 	FIELD field_9143 secondBuyItem Lnet/minecraft/class_1799;
 	FIELD field_9144 maxUses I
 	FIELD field_9145 rewardingPlayerExperience Z
@@ -22,6 +23,14 @@ CLASS net/minecraft/class_1914 net/minecraft/village/TradeOffer
 		ARG 4 maxUses
 		ARG 5 merchantExperience
 		ARG 6 priceMultiplier
+	METHOD <init> (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;IIIF)V
+		ARG 1 firstBuyItem
+		ARG 2 secondBuyItem
+		ARG 3 sellItem
+		ARG 4 uses
+		ARG 5 maxUses
+		ARG 6 merchantExperience
+		ARG 7 priceMultiplier
 	METHOD <init> (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;IIIFI)V
 		ARG 1 firstBuyItem
 		ARG 2 secondBuyItem
@@ -30,6 +39,7 @@ CLASS net/minecraft/class_1914 net/minecraft/village/TradeOffer
 		ARG 5 maxUses
 		ARG 6 merchantExperience
 		ARG 7 priceMultiplier
+		ARG 8 demandBonus
 	METHOD <init> (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;IIIFIZ)V
 		ARG 1 firstBuyItem
 		ARG 2 secondBuyItem
@@ -39,15 +49,21 @@ CLASS net/minecraft/class_1914 net/minecraft/village/TradeOffer
 		ARG 6 merchantExperience
 		ARG 7 priceMultiplier
 		ARG 8 demandBonus
+		ARG 9 ignoreTags
 	METHOD <init> (Lnet/minecraft/class_1914;)V
 		ARG 1 offer
 	METHOD <init> (Lnet/minecraft/class_2487;)V
 		ARG 1 nbt
 	METHOD method_16952 matchesBuyItems (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+		ARG 1 offered
+		ARG 2 buyItem
 	METHOD method_16953 depleteBuyItems (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 1 firstBuyStack
 		ARG 2 secondBuyStack
 	METHOD method_16954 acceptsBuy (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Z)Z
+		ARG 0 offered
+		ARG 1 buyItem
+		ARG 2 ignoreTags
 	METHOD method_18019 copySellItem ()Lnet/minecraft/class_1799;
 		COMMENT Returns a copy of the sell item of this trade offer.
 	METHOD method_19272 getAdjustedFirstBuyItem ()Lnet/minecraft/class_1799;
@@ -91,6 +107,7 @@ CLASS net/minecraft/class_1914 net/minecraft/village/TradeOffer
 		COMMENT <p>Checks if the number of times this trade offer has been used
 		COMMENT is greater than 0.
 	METHOD method_53881 copy ()Lnet/minecraft/class_1914;
+	METHOD method_56112 shouldIgnoreTags ()Z
 	METHOD method_8244 use ()V
 		COMMENT Increments the number of times this trade offer has been used.
 	METHOD method_8245 increaseSpecialPrice (I)V
