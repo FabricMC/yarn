@@ -34,6 +34,8 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	FIELD field_45668 queuedTasks Ljava/util/Queue;
 	FIELD field_45669 prePlayStateListener Lnet/minecraft/class_2547;
 	FIELD field_45955 packetSizeLogger Lnet/minecraft/class_8762;
+	FIELD field_48514 C2S_HANDSHAKE_STATE Lnet/minecraft/class_9127;
+	FIELD field_48515 duringLogin Z
 	METHOD <init> (Lnet/minecraft/class_2598;)V
 		ARG 1 side
 	METHOD channelActive (Lio/netty/channel/ChannelHandlerContext;)V
@@ -122,6 +124,8 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		ARG 0 address
 		ARG 1 useEpoll
 		ARG 2 connection
+	METHOD method_52900 (Lnet/minecraft/class_9127;Lnet/minecraft/class_8697;Ljava/lang/String;ILnet/minecraft/class_8592;Lnet/minecraft/class_9127;Lnet/minecraft/class_2535;)V
+		ARG 7 connection
 	METHOD method_52902 connect (Ljava/lang/String;ILnet/minecraft/class_2896;)V
 		ARG 1 address
 		ARG 2 port
@@ -133,6 +137,8 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	METHOD method_52904 connect (Ljava/lang/String;ILnet/minecraft/class_9127;Lnet/minecraft/class_9127;Lnet/minecraft/class_8697;Lnet/minecraft/class_8592;)V
 		ARG 1 address
 		ARG 2 port
+		ARG 3 outboundState
+		ARG 4 inboundState
 		ARG 5 prePlayStateListener
 		ARG 6 intent
 	METHOD method_52905 submit (Ljava/util/function/Consumer;)V
@@ -152,7 +158,8 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		COMMENT Sets the initial packet listener.
 		COMMENT
 		COMMENT @throws IllegalStateException if the listener was already set
-		COMMENT @see #setPacketListener
+		COMMENT @see #transitionInbound
+		COMMENT @see #transitionOutbound
 		ARG 1 packetListener
 	METHOD method_52915 flush ()V
 	METHOD method_52918 flushInternal ()V
@@ -163,7 +170,36 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	METHOD method_56326 connect (Ljava/lang/String;ILnet/minecraft/class_9127;Lnet/minecraft/class_9127;Lnet/minecraft/class_8697;Z)V
 		ARG 1 address
 		ARG 2 port
+		ARG 3 outboundState
+		ARG 4 inboundState
+		ARG 5 prePlayStateListener
 		ARG 6 transfer
+	METHOD method_56327 (Lnet/minecraft/class_8035;Lio/netty/channel/ChannelHandlerContext;)V
+		ARG 1 context
+	METHOD method_56328 (Lnet/minecraft/class_8036;Lio/netty/channel/ChannelHandlerContext;)V
+		ARG 1 context
+	METHOD method_56329 transitionOutbound (Lnet/minecraft/class_9127;)V
+		ARG 1 newState
+	METHOD method_56330 transitionInbound (Lnet/minecraft/class_9127;Lnet/minecraft/class_2547;)V
+		ARG 1 state
+		ARG 2 packetListener
+	METHOD method_56331 (ZLio/netty/channel/ChannelHandlerContext;)V
+		ARG 2 context
+	METHOD method_56332 setPacketListener (Lnet/minecraft/class_9127;Lnet/minecraft/class_2547;)V
+		ARG 1 state
+		ARG 2 listener
+	METHOD method_56333 getOutboundHandlerName (Z)Ljava/lang/String;
+		ARG 0 sendingSide
+	METHOD method_56334 getInboundHandlerName (Z)Ljava/lang/String;
+		ARG 0 receivingSide
 	CLASS 1
+		METHOD initChannel (Lio/netty/channel/Channel;)V
+			ARG 1 channel
+	CLASS 2
+		METHOD write (Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Object;Lio/netty/channel/ChannelPromise;)V
+			ARG 1 context
+			ARG 2 value
+			ARG 3 promise
+	CLASS 3
 		METHOD initChannel (Lio/netty/channel/Channel;)V
 			ARG 1 channel
