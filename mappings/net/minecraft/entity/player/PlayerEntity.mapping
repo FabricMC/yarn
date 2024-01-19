@@ -63,8 +63,13 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 6 refreshable
 	METHOD method_17355 openHandledScreen (Lnet/minecraft/class_3908;)Ljava/util/OptionalInt;
 		ARG 1 factory
-	METHOD method_17356 playSound (Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
-		ARG 1 event
+	METHOD method_17356 playSoundToPlayer (Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
+		COMMENT Plays {@code sound} to this player <strong>only</strong>.
+		COMMENT
+		COMMENT <p>Use {@link #playSound(SoundEvent, float, float)} to play sound that can be heard by
+		COMMENT nearby players. Unlike that method, this method should be called on only one side
+		COMMENT (i.e. either the server or the client, alone).
+		ARG 1 sound
 		ARG 2 category
 		ARG 3 volume
 		ARG 4 pitch
@@ -140,14 +145,26 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_55754 getBlockInteractionRange ()D
 	METHOD method_55755 getEntityInteractionRange ()D
 	METHOD method_56092 canInteractWithEntityIn (Lnet/minecraft/class_238;D)Z
+		COMMENT {@return whether the player can interact with entity whose bounding box
+		COMMENT is {@code box}}
 		ARG 1 box
-		ARG 2 range
+		ARG 2 additionalRange
+			COMMENT the player's additional interaction range added to {@linkplain
+			COMMENT #getEntityInteractionRange the default range}
 	METHOD method_56093 canInteractWithBlockAt (Lnet/minecraft/class_2338;D)Z
+		COMMENT {@return whether the player can interact with block at {@code pos}}
 		ARG 1 pos
-		ARG 2 range
+		ARG 2 additionalRange
+			COMMENT the player's additional interaction range added to {@linkplain
+			COMMENT #getBlockInteractionRange the default range}
 	METHOD method_56094 canInteractWithEntity (Lnet/minecraft/class_1297;D)Z
+		COMMENT {@return whether the player can interact with {@code entity}}
+		COMMENT
+		COMMENT <p>This returns {@code false} for {@linkplain Entity#isRemoved removed} entities.
 		ARG 1 entity
-		ARG 2 range
+		ARG 2 additionalRange
+			COMMENT the player's additional interaction range added to {@linkplain
+			COMMENT #getEntityInteractionRange the default range}
 	METHOD method_7254 unlockRecipes (Ljava/util/Collection;)I
 		ARG 1 recipes
 	METHOD method_7255 addExperience (I)V

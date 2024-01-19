@@ -259,6 +259,14 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_55067 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
 		ARG 0 instance
 	METHOD method_56098 isUnbreakable ()Z
+		COMMENT {@return whether the item stack can never be broken}
+		COMMENT
+		COMMENT <p>Item stacks with {@value #UNBREAKABLE_KEY} NBT set to {@code 1b} cannot be damaged.
+		COMMENT
+		COMMENT @see Item#getMaxDamage
+		COMMENT @see #isDamaged
+		COMMENT @see #getDamage
+		COMMENT @see #isDamageable
 	METHOD method_7909 getItem ()Lnet/minecraft/class_1792;
 		COMMENT {@return the item of this stack}
 		COMMENT
@@ -454,24 +462,23 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT {@return a text consisting of the bracketed {@linkplain #getName stack name} that
 		COMMENT can be hovered to show the item stack's tooltip}
 	METHOD method_7956 damage (ILnet/minecraft/class_5819;Lnet/minecraft/class_3222;Ljava/lang/Runnable;)V
-		COMMENT Damages this item stack. This method should be used when an entity, including a player,
-		COMMENT damages the stack. This does not damage {@linkplain #isDamageable non-damageable}
+		COMMENT Damages this item stack. This method should be used when a non-entity, such as a
+		COMMENT dispenser, damages the stack. This does not damage {@linkplain #isDamageable non-damageable}
 		COMMENT stacks, and the {@linkplain net.minecraft.enchantment.UnbreakingEnchantment
-		COMMENT unbreaking enchantment} is applied to {@code amount} before damaging. Additionally,
-		COMMENT if {@code entity} is a player in creative mode, the stack will not be damaged.
+		COMMENT unbreaking enchantment} is applied to {@code amount} before damaging.
 		COMMENT
-		COMMENT <p>If {@code entity} is a player, this triggers {@link
+		COMMENT <p>If {@code player} is not {@code null}, this triggers {@link
 		COMMENT net.minecraft.advancement.criterion.Criteria#ITEM_DURABILITY_CHANGED}.
 		COMMENT
-		COMMENT <p>If the stack's damage is equal to or above {@linkplain Item#getMaxDamage the maximum
-		COMMENT damage} (i.e. the item is "broken"), this will call {@code breakCallback}, decrement the
-		COMMENT stack, and increment {@link net.minecraft.stat.Stats#BROKEN} if the stack is held
-		COMMENT by a player. The callback should call {@link LivingEntity#sendEquipmentBreakStatus}
-		COMMENT or {@link LivingEntity#sendToolBreakStatus}.
+		COMMENT <p>When the item "breaks", that is, the stack's damage is equal to or above
+		COMMENT {@linkplain Item#getMaxDamage the maximum damage}, {@code breakCallback} is run.
+		COMMENT Callers should decrement the stack size inside the callback.
 		ARG 1 amount
 		ARG 2 random
-		ARG 3 entity
+		ARG 3 player
+			COMMENT the player that damaged the stack, or {@code null} if no player is involved
 		ARG 4 breakCallback
+			COMMENT a callback run when the item "breaks"
 	METHOD method_7958 hasGlint ()Z
 	METHOD method_7959 setSubNbt (Ljava/lang/String;Lnet/minecraft/class_2520;)V
 		COMMENT Sets the given NBT element in the item stack's custom NBT at the specified key.
@@ -498,6 +505,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT @see Item#getMaxDamage
 		COMMENT @see #isDamaged
 		COMMENT @see #getDamage
+		COMMENT @see #isUnbreakable
 	METHOD method_7964 getName ()Lnet/minecraft/class_2561;
 		COMMENT {@return the custom name of the stack if it exists, or the item's name}
 	METHOD method_7965 getBobbingAnimationTime ()I
@@ -509,22 +517,24 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT
 		COMMENT @see <a href="#nbt-operations">Item Stack NBT Operations</a>
 	METHOD method_7970 damage (ILnet/minecraft/class_1309;Lnet/minecraft/class_1304;)V
-		COMMENT Damages this item stack. This method should be used when a non-entity, such as a
-		COMMENT dispenser, damages the stack. This does not damage {@linkplain #isDamageable non-damageable}
+		COMMENT Damages this item stack. This method should be used when an entity, including a player,
+		COMMENT damages the stack. This does not damage {@linkplain #isDamageable non-damageable}
 		COMMENT stacks, and the {@linkplain net.minecraft.enchantment.UnbreakingEnchantment
-		COMMENT unbreaking enchantment} is applied to {@code amount} before damaging.
+		COMMENT unbreaking enchantment} is applied to {@code amount} before damaging. Additionally,
+		COMMENT if {@code entity} is a player in creative mode, the stack will not be damaged.
 		COMMENT
-		COMMENT <p>If {@code player} is not {@code null}, this triggers {@link
+		COMMENT <p>If {@code entity} is a player, this triggers {@link
 		COMMENT net.minecraft.advancement.criterion.Criteria#ITEM_DURABILITY_CHANGED}.
 		COMMENT
-		COMMENT <p>This method does not decrement the item count when the item "breaks". Callers should
-		COMMENT check the returned value and decrement themselves.
-		COMMENT
-		COMMENT @return whether the stack's damage is equal to or above {@linkplain Item#getMaxDamage
-		COMMENT the maximum damage} (i.e. whether the item is "broken")
+		COMMENT <p>If the stack's damage is equal to or above {@linkplain Item#getMaxDamage the maximum
+		COMMENT damage} (i.e. the item is "broken"), this will {@linkplain
+		COMMENT LivingEntity#sendEquipmentBreakStatus send the equipment break status}, decrement the
+		COMMENT stack, and increment {@link net.minecraft.stat.Stats#BROKEN} if the stack is held
+		COMMENT by a player.
 		ARG 1 amount
 		ARG 2 entity
 		ARG 3 slot
+			COMMENT the slot in which the stack is held
 	METHOD method_7971 split (I)Lnet/minecraft/class_1799;
 		COMMENT {@return the copy of the stack "split" from the current stack with item count
 		COMMENT being at most {@code amount}}
@@ -558,11 +568,11 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT Sets the stack's damage to {@code damage}.
 		COMMENT
 		COMMENT <p>This does not break the item if the damage reaches {@linkplain Item#getMaxDamage
-		COMMENT the maximum}, unlike {@link #damage(int, LivingEntity, Consumer)}.
+		COMMENT the maximum}, unlike {@link #damage(int, LivingEntity, EquipmentSlot)}.
 		COMMENT
 		COMMENT @see #getDamage
-		COMMENT @see #damage(int, Random, ServerPlayerEntity)
-		COMMENT @see #damage(int, LivingEntity, Consumer)
+		COMMENT @see #damage(int, Random, ServerPlayerEntity, Runnable)
+		COMMENT @see #damage(int, LivingEntity, EquipmentSlot)
 		ARG 1 damage
 	METHOD method_7976 getUseAction ()Lnet/minecraft/class_1839;
 	METHOD method_7977 setCustomName (Lnet/minecraft/class_2561;)Lnet/minecraft/class_1799;
