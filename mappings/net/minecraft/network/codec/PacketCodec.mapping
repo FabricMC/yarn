@@ -6,7 +6,7 @@ CLASS net/minecraft/class_9139 net/minecraft/network/codec/PacketCodec
 	COMMENT code, use {@link #of(ValueFirstEncoder, PacketDecoder)}
 	COMMENT like this:
 	COMMENT
-	COMMENT <p><pre>{@code
+	COMMENT <pre>{@code
 	COMMENT public static final PacketCodec<PacketByteBuf, MyPacket> CODEC = PacketCodec.of(MyPacket::write, MyPacket::new);
 	COMMENT
 	COMMENT private MyPacket(PacketByteBuf buf) {
@@ -30,6 +30,13 @@ CLASS net/minecraft/class_9139 net/minecraft/network/codec/PacketCodec
 	COMMENT phases (like configuration)
 	COMMENT @param <V> the type of the value to be encoded/decoded
 	METHOD method_56430 cast ()Lnet/minecraft/class_9139;
+		COMMENT {@return the same codec, casted to work with buffers of type {@code S}}
+		COMMENT
+		COMMENT @apiNote For example, {@link net.minecraft.util.math.BlockPos#PACKET_CODEC}
+		COMMENT is defined as {@code PacketCodec<ByteBuf, BlockPos>}. To use this codec
+		COMMENT where {@link net.minecraft.network.PacketByteBuf} is expected, you can call
+		COMMENT this method for easy casting, like: {@code PACKET_CODEC.cast()}.
+		COMMENT Doing this is generally safe and will not result in exceptions.
 	METHOD method_56431 unit (Ljava/lang/Object;)Lnet/minecraft/class_9139;
 		COMMENT {@return a codec that always returns {@code value}}
 		COMMENT
@@ -45,7 +52,7 @@ CLASS net/minecraft/class_9139 net/minecraft/network/codec/PacketCodec
 		COMMENT <p>This can be used to transform a codec for a simple value (like a string)
 		COMMENT into a corresponding, more complex value (like an identifier). An example:
 		COMMENT
-		COMMENT <p><pre>{@code
+		COMMENT <pre>{@code
 		COMMENT public static final PacketCodec<ByteBuf, Identifier> PACKET_CODEC = PacketCodecs.STRING.xmap(Identifier::new, Identifier::toString);
 		COMMENT }</pre>
 		ARG 1 to
@@ -83,7 +90,7 @@ CLASS net/minecraft/class_9139 net/minecraft/network/codec/PacketCodec
 		ARG 4 codec3
 		ARG 5 from3
 		ARG 6 to
-	METHOD method_56437 of (Lnet/minecraft/class_9142;Lnet/minecraft/class_9141;)Lnet/minecraft/class_9139;
+	METHOD method_56437 ofStatic (Lnet/minecraft/class_9142;Lnet/minecraft/class_9141;)Lnet/minecraft/class_9139;
 		COMMENT {@return a packet codec from the {@code encoder} and {@code decoder}}
 		COMMENT
 		COMMENT @apiNote This is useful for integrating with code that uses static methods for
@@ -99,7 +106,7 @@ CLASS net/minecraft/class_9139 net/minecraft/network/codec/PacketCodec
 		COMMENT @apiNote This is useful for integrating with code that uses instance methods for
 		COMMENT packet writing, like {@code void write(PacketByteBuf buf)}.
 		COMMENT For code that uses static methods like {@code static void write(PacketByteBuf buf, Data data)},
-		COMMENT where the buffer is the first argument, use {@link #of(PacketEncoder, PacketDecoder)}.
+		COMMENT where the buffer is the first argument, use {@link #ofStatic(PacketEncoder, PacketDecoder)}.
 		ARG 0 encoder
 		ARG 1 decoder
 	METHOD method_56439 mapBuf (Ljava/util/function/Function;)Lnet/minecraft/class_9139;
