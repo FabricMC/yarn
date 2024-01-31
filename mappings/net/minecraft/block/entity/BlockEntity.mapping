@@ -76,6 +76,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		ARG 0 pos
 		ARG 1 state
 		ARG 2 nbt
+		ARG 3 registryLookup
 	METHOD method_11007 writeNbt (Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V
 		COMMENT Writes data to {@code nbt}. Subclasses should override this if they
 		COMMENT store a persistent data.
@@ -86,6 +87,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT
 		COMMENT @see #readNbt
 		ARG 1 nbt
+		ARG 2 registryLookup
 	METHOD method_11010 getCachedState ()Lnet/minecraft/class_2680;
 		COMMENT {@return the cached block state at the block entity's position}
 		COMMENT
@@ -114,6 +116,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT
 		COMMENT @see #writeNbt
 		ARG 1 nbt
+		ARG 2 registryLookup
 	METHOD method_11015 isRemoved ()Z
 	METHOD method_11016 getPos ()Lnet/minecraft/class_2338;
 		COMMENT {@return the block entity's position}
@@ -133,6 +136,9 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT <p>To send all NBT data of this block entity saved to disk, return {@link #createNbt}.
 		COMMENT
 		COMMENT @see #toUpdatePacket
+		ARG 1 registryLookup
+	METHOD method_17897 (Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;Ljava/lang/String;Lnet/minecraft/class_2586;)Lnet/minecraft/class_2586;
+		ARG 3 blockEntity
 	METHOD method_17899 (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Ljava/lang/String;Lnet/minecraft/class_2591;)Lnet/minecraft/class_2586;
 		ARG 3 type
 	METHOD method_31662 setWorld (Lnet/minecraft/class_1937;)V
@@ -180,6 +186,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT Sets {@code stack}'s {@code net.minecraft.item.BlockItem#BLOCK_ENTITY_TAG_KEY}
 		COMMENT NBT value to {@linkplain #createNbt the block entity's NBT data}.
 		ARG 1 stack
+		ARG 2 registryLookup
 	METHOD method_38241 writeIdToNbt (Lnet/minecraft/class_2487;)V
 		COMMENT Writes the block entity type ID to {@code nbt} under the {@code id} key.
 		COMMENT
@@ -195,6 +202,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT
 		COMMENT @see #createNbt
 		COMMENT @see #createNbtWithId
+		ARG 1 registryLookup
 	METHOD method_38243 createNbtWithId (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;
 		COMMENT {@return the block entity's NBT data with block entity type ID}
 		COMMENT
@@ -203,6 +211,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT
 		COMMENT @see #createNbt
 		COMMENT @see #createNbtWithIdentifyingData
+		ARG 1 registryLookup
 	METHOD method_38244 createNbt (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;
 		COMMENT {@return the block entity's NBT data}
 		COMMENT
@@ -212,6 +221,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT @see #writeNbt
 		COMMENT @see #createNbtWithIdentifyingData
 		COMMENT @see #createNbtWithId
+		ARG 1 registryLookup
 	METHOD method_5431 markDirty ()V
 		COMMENT Marks this block entity as dirty and that it needs to be saved.
 		COMMENT This also triggers {@linkplain World#updateComparators comparator update}.
