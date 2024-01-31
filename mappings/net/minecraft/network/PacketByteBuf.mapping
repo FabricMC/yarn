@@ -449,14 +449,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see net.minecraft.network.encoding.VarInts
 		ARG 1 value
 			COMMENT the value to write
-	METHOD method_10805 writeText (Lnet/minecraft/class_2561;)Lnet/minecraft/class_2540;
-		COMMENT Writes a text to this buf. A text is represented as an NBT-encoded data.
-		COMMENT
-		COMMENT @return this buf, for chaining
-		COMMENT @see #readText()
-		COMMENT @see #readUnlimitedText()
-		ARG 1 text
-			COMMENT the text to write
 	METHOD method_10806 writeIntArray ([I)Lnet/minecraft/class_2540;
 		COMMENT Writes an array of primitive ints to this buf. The array first has a
 		COMMENT var int indicating its length, followed by the var int entries.
@@ -477,16 +469,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readBlockPos()
 		ARG 1 pos
 			COMMENT the pos to write
-	METHOD method_10808 readText ()Lnet/minecraft/class_2561;
-		COMMENT Reads a text from this buf. A text is represented as an NBT-encoded data
-		COMMENT with {@linkplain NbtSizeTracker the maximum size} as {@value #MAX_READ_NBT_SIZE}.
-		COMMENT
-		COMMENT @return the read text
-		COMMENT @throws io.netty.handler.codec.EncoderException if the NBT cannot be read
-		COMMENT @throws net.minecraft.nbt.NbtSizeValidationException if the serialized text is too big
-		COMMENT @see #readUnlimitedText()
-		COMMENT @see #writeText(Text)
-		COMMENT @see #MAX_READ_NBT_SIZE
 	METHOD method_10809 readLongArray ([JI)[J
 		COMMENT Reads an array of primitive longs from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the regular long (not var
@@ -864,7 +846,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT the value is not null.
 		COMMENT
 		COMMENT @see #readNullable(PacketByteBuf.PacketReader)
-		ARG 1 value
 		ARG 2 writer
 	METHOD method_43827 readNullable (Lnet/minecraft/class_9141;)Ljava/lang/Object;
 		COMMENT Reads a nullable value from this buf. A nullable value is represented by
@@ -1064,13 +1045,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @return the read registry key
 		COMMENT @see #readRegistryKey(RegistryKey)
 		COMMENT @see #writeRegistryKey(RegistryKey)
-	METHOD method_54148 readUnlimitedText ()Lnet/minecraft/class_2561;
-		COMMENT Reads a text from this buf. A text is represented as an NBT-encoded data.
-		COMMENT Unlike {@link #readText()}, this method can read an unlimited amount of text.
-		COMMENT
-		COMMENT @return the read text
-		COMMENT @see #readText()
-		COMMENT @see #writeText(Text)
 	METHOD method_56335 readBlockPos (Lio/netty/buffer/ByteBuf;)Lnet/minecraft/class_2338;
 		ARG 0 buf
 	METHOD method_56336 writeBlockPos (Lio/netty/buffer/ByteBuf;Lnet/minecraft/class_2338;)V
