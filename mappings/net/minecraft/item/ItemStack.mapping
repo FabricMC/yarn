@@ -200,7 +200,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 3 clickType
 		ARG 4 player
 		ARG 5 cursorStackReference
-	METHOD method_31577 canCombine (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+	METHOD method_31577 areItemsAndNbtEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		COMMENT {@return whether the given item stacks' items and NBT are equal}
 		COMMENT
 		COMMENT <p>If this returns {@code true}, the two item stacks can be combined into one,
@@ -239,7 +239,14 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_45435 isItemEnabled (Lnet/minecraft/class_7699;)Z
 		ARG 1 enabledFeatures
 	METHOD method_46651 copyWithCount (I)Lnet/minecraft/class_1799;
+		COMMENT {@return a copy of this item stack, including the NBT, and {@linkplain #getBobbingAnimationTime bobbing animation time}},
+		COMMENT with the item count set to {@code count}
+		COMMENT
+		COMMENT @see #copy
+		COMMENT @see #copyNbtToNewStack
+		COMMENT @see #copyNbtToNewStackIgnoreEmpty
 		ARG 1 count
+			COMMENT the item count of the resultant stack
 	METHOD method_51164 copyAndEmpty ()Lnet/minecraft/class_1799;
 	METHOD method_53187 itemMatches (Lnet/minecraft/class_6885;)Z
 		ARG 1 registryEntryList
@@ -267,6 +274,32 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT @see #isDamaged
 		COMMENT @see #getDamage
 		COMMENT @see #isDamageable
+	METHOD method_56700 (Lnet/minecraft/class_1799;)Ljava/util/Optional;
+		ARG 0 stack
+	METHOD method_56701 copyNbtToNewStack (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1799;
+		COMMENT {@return a new item stack with the NBT copied from this item stack}
+		COMMENT
+		COMMENT @see #copy
+		COMMENT @see #copyWithCount
+		COMMENT @see #copyNbtToNewStackIgnoreEmpty
+		ARG 1 item
+			COMMENT the item of the resultant stack
+		ARG 2 count
+			COMMENT the item count of the resultant stack
+	METHOD method_56702 createOptionalCodec (Ljava/lang/String;)Lcom/mojang/serialization/MapCodec;
+		ARG 0 fieldName
+	METHOD method_56703 (Ljava/util/Optional;)Lnet/minecraft/class_1799;
+		ARG 0 optional
+	METHOD method_56704 copyNbtToNewStackIgnoreEmpty (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1799;
+		COMMENT {@return a new item stack with the NBT copied from this item stack, even if this stack is empty}
+		COMMENT
+		COMMENT @see #copy
+		COMMENT @see #copyWithCount
+		COMMENT @see #copyNbtToNewStack
+		ARG 1 item
+			COMMENT the item of the resultant stack
+		ARG 2 count
+			COMMENT the item count of the resultant stack
 	METHOD method_7909 getItem ()Lnet/minecraft/class_1792;
 		COMMENT {@return the item of this stack}
 		COMMENT
@@ -557,11 +590,15 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7972 copy ()Lnet/minecraft/class_1799;
 		COMMENT {@return a copy of this item stack, including the item count, NBT, and
 		COMMENT {@linkplain #getBobbingAnimationTime bobbing animation time}}
+		COMMENT
+		COMMENT @see #copyWithCount
+		COMMENT @see #copyNbtToNewStack
+		COMMENT @see #copyNbtToNewStackIgnoreEmpty
 	METHOD method_7973 areEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		COMMENT {@return whether the given item stacks are equal, including the item count and NBT}
 		COMMENT
 		COMMENT @see #areItemsEqual
-		COMMENT @see #canCombine
+		COMMENT @see #areItemsAndNbtEqual
 		ARG 0 left
 		ARG 1 right
 	METHOD method_7974 setDamage (I)V
@@ -615,6 +652,10 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT @see <a href="#nbt-operations">Item Stack NBT Operations</a>
 		ARG 1 key
 	METHOD method_7984 areItemsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+		COMMENT {@return whether the given item stacks contain the same item, regardless of item count or NBT}
+		COMMENT
+		COMMENT @see #areEqual
+		COMMENT @see #areItemsAndNbtEqual
 		ARG 0 left
 		ARG 1 right
 	METHOD method_7985 hasNbt ()Z
