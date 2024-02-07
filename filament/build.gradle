@@ -64,6 +64,13 @@ checkstyle {
 	toolVersion = '10.13.0'
 }
 
+// Workaround https://github.com/gradle/gradle/issues/27035
+configurations.checkstyle {
+	resolutionStrategy.capabilitiesResolution.withCapability("com.google.collections:google-collections") {
+		select("com.google.guava:guava:0")
+	}
+}
+
 gradlePlugin {
 	plugins {
 		filament {
