@@ -24,6 +24,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_42108 limbAnimator Lnet/minecraft/class_8080;
 	FIELD field_45123 serverHeadYaw D
 	FIELD field_45740 ACTIVE_EFFECTS_NBT_KEY Ljava/lang/String;
+	FIELD field_48826 syncedBodyArmorStack Lnet/minecraft/class_1799;
 	FIELD field_6210 bodyTrackingIncrements I
 	FIELD field_6212 sidewaysSpeed F
 	FIELD field_6213 deathTime I
@@ -108,9 +109,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 pos
 	METHOD method_18393 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2338;)V
 		ARG 1 pos
-	METHOD method_18394 getActiveEyeHeight (Lnet/minecraft/class_4050;Lnet/minecraft/class_4048;)F
-		ARG 1 pose
-		ARG 2 dimensions
 	METHOD method_18395 canTarget (Lnet/minecraft/class_1309;)Z
 		ARG 1 target
 	METHOD method_18396 getArmorVisibility ()F
@@ -154,12 +152,8 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 stack
 	METHOD method_20235 sendEquipmentBreakStatus (Lnet/minecraft/class_1304;)V
 		ARG 1 slot
-	METHOD method_20236 sendToolBreakStatus (Lnet/minecraft/class_1268;)V
-		ARG 1 hand
 	METHOD method_20237 getEquipmentBreakStatus (Lnet/minecraft/class_1304;)B
 		ARG 0 slot
-	METHOD method_20238 (Lnet/minecraft/class_1309;)V
-		ARG 0 player
 	METHOD method_21753 getStingerCount ()I
 	METHOD method_21754 isHoldingOntoLadder ()Z
 		COMMENT @return {@code true} if this entity should not lose height while in a climbing state
@@ -218,8 +212,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 			COMMENT the effect to set
 		ARG 2 source
 			COMMENT the source entity or {@code null} for non-entity sources
-	METHOD method_26084 (Lnet/minecraft/class_1309;)V
-		ARG 0 player
 	METHOD method_26317 applyFluidMovingSpeed (DZLnet/minecraft/class_243;)Lnet/minecraft/class_243;
 		ARG 1 gravity
 		ARG 3 falling
@@ -229,10 +221,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 2 slipperiness
 	METHOD method_26319 canWalkOnFluid (Lnet/minecraft/class_3610;)Z
 		ARG 1 state
-	METHOD method_26825 getAttributeValue (Lnet/minecraft/class_1320;)D
-		ARG 1 attribute
-	METHOD method_26826 getAttributeBaseValue (Lnet/minecraft/class_1320;)D
-		ARG 1 attribute
 	METHOD method_26827 createLivingAttributes ()Lnet/minecraft/class_5132$class_5133;
 	METHOD method_27071 shouldDropLoot ()Z
 	METHOD method_27302 shouldDisplaySoulSpeedEffects ()Z
@@ -355,7 +343,10 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_51851 getLootTableSeed ()J
 	METHOD method_52197 sendEffectToControllingPlayer (Lnet/minecraft/class_1293;)V
 		ARG 1 effect
-	METHOD method_52540 updateAttribute (Lnet/minecraft/class_1320;)V
+	METHOD method_52539 lerpHeadYaw (ID)V
+		ARG 1 headTrackingIncrements
+		ARG 2 serverHeadYaw
+	METHOD method_52540 updateAttribute (Lnet/minecraft/class_6880;)V
 		ARG 1 attribute
 	METHOD method_52541 getMaxAbsorption ()F
 	METHOD method_52542 wouldNotSuffocateInPose (Lnet/minecraft/class_4050;)Z
@@ -369,16 +360,39 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT @see net.minecraft.entity.mob.MobEntity#getAttackBox
 	METHOD method_53964 getMaxRelativeHeadRotation ()F
 		COMMENT {@return the maximum rotation of the head relative to the body in degrees}
+	METHOD method_55693 getScale ()F
+	METHOD method_55694 getBaseDimensions (Lnet/minecraft/class_4050;)Lnet/minecraft/class_4048;
+		ARG 1 pose
+	METHOD method_56077 clampScale (F)F
+		ARG 1 scale
+	METHOD method_56078 playSound (Lnet/minecraft/class_3414;)V
+		ARG 1 sound
+	METHOD method_56079 getSlotForHand (Lnet/minecraft/class_1268;)Lnet/minecraft/class_1304;
+		ARG 0 hand
+	METHOD method_5661 getArmorItems ()Ljava/lang/Iterable;
+	METHOD method_56674 getAllArmorItems ()Ljava/lang/Iterable;
+	METHOD method_56675 getEquippedItems ()Ljava/lang/Iterable;
+	METHOD method_5673 equipStack (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
+		ARG 1 slot
+		ARG 2 stack
+	METHOD method_56991 canUseSlot (Lnet/minecraft/class_1304;)Z
+		ARG 1 slot
+	METHOD method_56992 isInCreativeMode ()Z
+	METHOD method_56993 getSafeFallDistance (F)I
+		ARG 1 health
+	METHOD method_56994 getJumpVelocity (F)F
+		ARG 1 strength
+	METHOD method_5877 getHandItems ()Ljava/lang/Iterable;
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
 	METHOD method_5989 getLootTable ()Lnet/minecraft/class_2960;
-	METHOD method_5996 getAttributeInstance (Lnet/minecraft/class_1320;)Lnet/minecraft/class_1324;
+	METHOD method_5996 getAttributeInstance (Lnet/minecraft/class_6880;)Lnet/minecraft/class_1324;
 		ARG 1 attribute
 	METHOD method_5997 attackLivingEntity (Lnet/minecraft/class_1309;)V
 		ARG 1 target
 	METHOD method_5998 getStackInHand (Lnet/minecraft/class_1268;)Lnet/minecraft/class_1799;
 		ARG 1 hand
-	METHOD method_5999 isUndead ()Z
+	METHOD method_5999 hasInvertedHealingAndHarm ()Z
 	METHOD method_6000 enterCombat ()V
 	METHOD method_6002 getDeathSound ()Lnet/minecraft/class_3414;
 	METHOD method_6003 getRoll ()I
@@ -401,11 +415,11 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 source
 	METHOD method_6012 clearStatusEffects ()Z
 	METHOD method_6013 playHurtSound (Lnet/minecraft/class_1282;)V
-		ARG 1 source
+		ARG 1 damageSource
 	METHOD method_6014 getItemUseTimeLeft ()I
 	METHOD method_6015 setAttacker (Lnet/minecraft/class_1309;)V
 		ARG 1 attacker
-	METHOD method_6016 removeStatusEffect (Lnet/minecraft/class_1291;)Z
+	METHOD method_6016 removeStatusEffect (Lnet/minecraft/class_6880;)Z
 		COMMENT Removes a status effect from this entity.
 		COMMENT
 		COMMENT <p>Calling this method will call cleanup methods on the status effect and trigger synchronization of effect particles with watching clients. If this entity is a player,
@@ -413,7 +427,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT
 		COMMENT @return whether the active status effects on this entity has been changed by
 		COMMENT this call
-		ARG 1 type
+		ARG 1 effect
 	METHOD method_6017 getSoundPitch ()F
 	METHOD method_6019 setCurrentHand (Lnet/minecraft/class_1268;)V
 		ARG 1 hand
@@ -470,7 +484,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6044 endCombat ()V
 	METHOD method_6045 playEquipmentBreakEffects (Lnet/minecraft/class_1799;)V
 		ARG 1 stack
-	METHOD method_6046 getGroup ()Lnet/minecraft/class_1310;
 	METHOD method_6047 getMainHandStack ()Lnet/minecraft/class_1799;
 	METHOD method_6048 getItemUseTime ()I
 	METHOD method_6049 canHaveStatusEffect (Lnet/minecraft/class_1293;)Z
@@ -497,7 +510,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6057 canSee (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_6058 getActiveHand ()Lnet/minecraft/class_1268;
-	METHOD method_6059 hasStatusEffect (Lnet/minecraft/class_1291;)Z
+	METHOD method_6059 hasStatusEffect (Lnet/minecraft/class_6880;)Z
 		ARG 1 effect
 	METHOD method_6060 knockback (Lnet/minecraft/class_1309;)V
 		ARG 1 target
@@ -608,15 +621,15 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT @see #dropXp()
 		COMMENT @see #shouldAlwaysDropXp()
 		COMMENT @see #shouldDropXp()
-	METHOD method_6111 removeStatusEffectInternal (Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;
+	METHOD method_6111 removeStatusEffectInternal (Lnet/minecraft/class_6880;)Lnet/minecraft/class_1293;
 		COMMENT Removes a status effect from this entity without calling any listener.
 		COMMENT
 		COMMENT <p>This method does not perform any cleanup or synchronization operation.
-		COMMENT Under most circumstances, calling {@link #removeStatusEffect(StatusEffect)} is highly preferable.
+		COMMENT Under most circumstances, calling {@link #removeStatusEffect(RegistryEntry)} is highly preferable.
 		COMMENT
 		COMMENT @return the status effect removed
-		ARG 1 type
-	METHOD method_6112 getStatusEffect (Lnet/minecraft/class_1291;)Lnet/minecraft/class_1293;
+		ARG 1 effect
+	METHOD method_6112 getStatusEffect (Lnet/minecraft/class_6880;)Lnet/minecraft/class_1293;
 		ARG 1 effect
 	METHOD method_6113 isSleeping ()Z
 	METHOD method_6114 onAttacking (Lnet/minecraft/class_1297;)V

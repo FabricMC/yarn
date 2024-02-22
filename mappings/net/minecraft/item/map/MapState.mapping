@@ -23,6 +23,8 @@ CLASS net/minecraft/class_22 net/minecraft/item/map/MapState
 	FIELD field_17403 locked Z
 	FIELD field_25019 LOGGER Lorg/slf4j/Logger;
 	FIELD field_31831 MAX_SCALE I
+	FIELD field_31832 SIZE I
+	FIELD field_31833 SIZE_HALF I
 	FIELD field_33991 MAX_ICONS I
 	FIELD field_33992 iconCount I
 	METHOD <init> (IIBZZZLnet/minecraft/class_5321;)V
@@ -33,8 +35,8 @@ CLASS net/minecraft/class_22 net/minecraft/item/map/MapState
 		ARG 5 unlimitedTracking
 		ARG 6 locked
 		ARG 7 dimension
-	METHOD method_100 getPlayerMarkerPacket (ILnet/minecraft/class_1657;)Lnet/minecraft/class_2596;
-		ARG 1 id
+	METHOD method_100 getPlayerMarkerPacket (Lnet/minecraft/class_9209;Lnet/minecraft/class_1657;)Lnet/minecraft/class_2596;
+		ARG 1 mapId
 		ARG 2 player
 	METHOD method_101 getPlayerSyncData (Lnet/minecraft/class_1657;)Lnet/minecraft/class_22$class_23;
 		ARG 1 player
@@ -108,8 +110,9 @@ CLASS net/minecraft/class_22 net/minecraft/item/map/MapState
 		ARG 1 x
 		ARG 2 z
 		ARG 3 color
-	METHOD method_32371 fromNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_22;
+	METHOD method_32371 fromNbt (Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_22;
 		ARG 0 nbt
+		ARG 1 registryLookup
 	METHOD method_32372 hasMonumentIcon ()Z
 	METHOD method_32373 getIcons ()Ljava/lang/Iterable;
 	METHOD method_32374 markIconsDirty ()V
@@ -117,6 +120,10 @@ CLASS net/minecraft/class_22 net/minecraft/item/map/MapState
 	METHOD method_37343 iconCountNotLessThan (I)Z
 		ARG 1 iconCount
 	METHOD method_52611 getPersistentStateType ()Lnet/minecraft/class_18$class_8645;
+	METHOD method_55784 getEqualPredicate (Lnet/minecraft/class_1799;)Ljava/util/function/Predicate;
+		ARG 0 stack
+	METHOD method_55785 (Lnet/minecraft/class_1799;Lnet/minecraft/class_9209;Lnet/minecraft/class_1799;)Z
+		ARG 2 other
 	CLASS class_23 PlayerUpdateTracker
 		FIELD field_124 emptyPacketsRequested I
 		FIELD field_125 player Lnet/minecraft/class_1657;
@@ -131,21 +138,32 @@ CLASS net/minecraft/class_22 net/minecraft/item/map/MapState
 		METHOD method_111 markDirty (II)V
 			ARG 1 startX
 			ARG 2 startZ
-		METHOD method_112 getPacket (I)Lnet/minecraft/class_2596;
+		METHOD method_112 getPacket (Lnet/minecraft/class_9209;)Lnet/minecraft/class_2596;
 			ARG 1 mapId
 		METHOD method_32375 getMapUpdateData ()Lnet/minecraft/class_22$class_5637;
 		METHOD method_32379 markIconsDirty ()V
 	CLASS class_5637 UpdateData
-		FIELD field_27892 startX I
-		FIELD field_27893 startZ I
-		FIELD field_27894 width I
-		FIELD field_27895 height I
-		FIELD field_27896 colors [B
+		FIELD comp_2316 startX I
+		FIELD comp_2317 startZ I
+		FIELD comp_2318 width I
+		FIELD comp_2319 height I
+		FIELD comp_2320 colors [B
+		FIELD field_48925 CODEC Lnet/minecraft/class_9139;
 		METHOD <init> (IIII[B)V
 			ARG 1 startX
 			ARG 2 startZ
 			ARG 3 width
 			ARG 4 height
 			ARG 5 colors
+		METHOD comp_2316 startX ()I
+		METHOD comp_2317 startZ ()I
+		METHOD comp_2318 width ()I
+		METHOD comp_2319 height ()I
+		METHOD comp_2320 colors ()[B
 		METHOD method_32380 setColorsTo (Lnet/minecraft/class_22;)V
 			ARG 1 mapState
+		METHOD method_56816 decode (Lio/netty/buffer/ByteBuf;)Ljava/util/Optional;
+			ARG 0 buf
+		METHOD method_56817 encode (Lio/netty/buffer/ByteBuf;Ljava/util/Optional;)V
+			ARG 0 buf
+			ARG 1 updateData

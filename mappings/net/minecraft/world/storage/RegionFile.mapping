@@ -2,7 +2,7 @@ CLASS net/minecraft/class_2861 net/minecraft/world/storage/RegionFile
 	FIELD field_20434 LOGGER Lorg/slf4j/Logger;
 	FIELD field_20435 ZERO Ljava/nio/ByteBuffer;
 	FIELD field_20436 channel Ljava/nio/channels/FileChannel;
-	FIELD field_20437 outputChunkStreamVersion Lnet/minecraft/class_4486;
+	FIELD field_20437 compressionFormat Lnet/minecraft/class_4486;
 	FIELD field_20438 header Ljava/nio/ByteBuffer;
 	FIELD field_20439 sectorData Ljava/nio/IntBuffer;
 	FIELD field_20440 saveTimes Ljava/nio/IntBuffer;
@@ -10,15 +10,19 @@ CLASS net/minecraft/class_2861 net/minecraft/world/storage/RegionFile
 	FIELD field_20657 directory Ljava/nio/file/Path;
 	FIELD field_31417 SECTOR_DATA_LIMIT I
 	FIELD field_31421 FILE_EXTENSION Ljava/lang/String;
-	METHOD <init> (Ljava/nio/file/Path;Ljava/nio/file/Path;Lnet/minecraft/class_4486;Z)V
-		ARG 1 file
+	FIELD field_48752 path Ljava/nio/file/Path;
+	FIELD field_49102 storageKey Lnet/minecraft/class_9240;
+	METHOD <init> (Lnet/minecraft/class_9240;Ljava/nio/file/Path;Ljava/nio/file/Path;Lnet/minecraft/class_4486;Z)V
+		ARG 1 storageKey
+		ARG 2 path
+		ARG 3 directory
+		ARG 4 compressionFormat
+		ARG 5 dsync
+	METHOD <init> (Lnet/minecraft/class_9240;Ljava/nio/file/Path;Ljava/nio/file/Path;Z)V
+		ARG 1 storageKey
 		ARG 2 directory
-		ARG 3 outputChunkStreamVersion
+		ARG 3 path
 		ARG 4 dsync
-	METHOD <init> (Ljava/nio/file/Path;Ljava/nio/file/Path;Z)V
-		ARG 1 file
-		ARG 2 directory
-		ARG 3 dsync
 	METHOD method_12419 getSectorData (Lnet/minecraft/class_1923;)I
 		ARG 1 pos
 	METHOD method_12423 hasChunk (Lnet/minecraft/class_1923;)Z
@@ -69,6 +73,7 @@ CLASS net/minecraft/class_2861 net/minecraft/world/storage/RegionFile
 	METHOD method_31739 getEpochTimeSeconds ()I
 	METHOD method_31740 delete (Lnet/minecraft/class_1923;)V
 		ARG 1 pos
+	METHOD method_56566 getPath ()Ljava/nio/file/Path;
 	CLASS class_2862 ChunkBuffer
 		FIELD field_17656 pos Lnet/minecraft/class_1923;
 		METHOD <init> (Lnet/minecraft/class_2861;Lnet/minecraft/class_1923;)V

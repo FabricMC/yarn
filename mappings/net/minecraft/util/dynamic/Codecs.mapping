@@ -34,6 +34,7 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		COMMENT types of objects this can "serialize".
 		COMMENT
 		COMMENT @see RuntimeOps
+	FIELD field_49012 UNSIGNED_BYTE Lcom/mojang/serialization/Codec;
 	METHOD method_33817 xor (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
 		COMMENT Returns an exclusive-or codec for {@link Either} instances.
 		COMMENT
@@ -300,6 +301,12 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		ARG 2 typeCodec
 		ARG 3 typeGetter
 		ARG 4 parametersCodecGetter
+	METHOD method_56627 createRecursiveMap (Ljava/lang/String;Ljava/util/function/Function;)Lcom/mojang/serialization/MapCodec;
+	METHOD method_56907 (Ljava/lang/Integer;)Lcom/mojang/serialization/DataResult;
+		ARG 0 value
+	METHOD method_56942 withLifecycle (Lcom/mojang/serialization/Codec;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+		ARG 0 originalCodec
+		ARG 1 lifecycleGetter
 	CLASS 1
 		METHOD apply (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
 			ARG 1 ops
@@ -484,3 +491,18 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 			ARG 2 map
 		METHOD method_53707 (Ljava/lang/Object;Ljava/util/Map;)Lcom/mojang/datafixers/util/Pair;
 			ARG 1 map
+	CLASS class_9181 RecursiveMap
+		FIELD field_48804 supplier Ljava/util/function/Supplier;
+		FIELD field_49013 name Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;Ljava/util/function/Function;)V
+			ARG 1 name
+			ARG 2 codecFunction
+		METHOD decode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/MapLike;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/RecordBuilder;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 input
+			ARG 2 ops
+			ARG 3 builder
+		METHOD keys (Lcom/mojang/serialization/DynamicOps;)Ljava/util/stream/Stream;
+			ARG 1 ops

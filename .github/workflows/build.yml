@@ -4,18 +4,18 @@ jobs:
   build:
     strategy:
       matrix:
-        java: [17-jdk, 20-jdk]
+        java: [17-jdk, 21-jdk]
     runs-on: ubuntu-22.04
     container:
       image: eclipse-temurin:${{ matrix.java }}
       options: --user root
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: ./gradlew build javadocJar checkMappings --stacktrace --warning-mode fail
       - name: Build artifacts
-        if: ${{ matrix.java == '20-jdk' }}
+        if: ${{ matrix.java == '21-jdk' }}
         continue-on-error: true
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Artifacts
           path: build/libs/
@@ -23,9 +23,9 @@ jobs:
   test-build-logic:
     runs-on: ubuntu-22.04
     container:
-      image: eclipse-temurin:20-jdk
+      image: eclipse-temurin:21-jdk
       options: --user root
     steps:
-      - uses: actions/checkout@v3
-      - uses: gradle/wrapper-validation-action@v1
+      - uses: actions/checkout@v4
+      - uses: gradle/wrapper-validation-action@v2
       - run: ./gradlew :filament:build

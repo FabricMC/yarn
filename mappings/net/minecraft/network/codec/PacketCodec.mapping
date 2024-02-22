@@ -1,0 +1,155 @@
+CLASS net/minecraft/class_9139 net/minecraft/network/codec/PacketCodec
+	COMMENT A codec that is used for serializing a packet.
+	COMMENT
+	COMMENT <p>Packet codecs serialize to, and deserialize from, {@link net.minecraft.network.PacketByteBuf},
+	COMMENT which is a stream of data. To integrate the classic {@link net.minecraft.network.PacketByteBuf}-based
+	COMMENT code, use {@link #of(ValueFirstEncoder, PacketDecoder)}
+	COMMENT like this:
+	COMMENT
+	COMMENT <pre>{@code
+	COMMENT public static final PacketCodec<PacketByteBuf, MyPacket> CODEC = PacketCodec.of(MyPacket::write, MyPacket::new);
+	COMMENT
+	COMMENT private MyPacket(PacketByteBuf buf) {
+	COMMENT \tthis.text = buf.readString();
+	COMMENT }
+	COMMENT
+	COMMENT private void write(PacketByteBuf buf) {
+	COMMENT \tbuf.writeString(this.text);
+	COMMENT }
+	COMMENT }</pre>
+	COMMENT
+	COMMENT <p>While this serves similar functions as codecs in the DataFixerUpper library,
+	COMMENT the two are wholly separate and DataFixerUpper methods cannot be used with this.
+	COMMENT However, a packet codec may reference a regular codec by using {@link
+	COMMENT PacketCodecs#codec}, which serializes the data to NBT.
+	COMMENT
+	COMMENT <p>See {@link PacketCodecs} for codecs to serialize various objects.
+	COMMENT
+	COMMENT @param <B> the type of the buffer; {@link net.minecraft.network.RegistryByteBuf}
+	COMMENT for play-phase packets, {@link net.minecraft.network.PacketByteBuf} for other
+	COMMENT phases (like configuration)
+	COMMENT @param <V> the type of the value to be encoded/decoded
+	METHOD method_56430 cast ()Lnet/minecraft/class_9139;
+		COMMENT {@return the same codec, casted to work with buffers of type {@code S}}
+		COMMENT
+		COMMENT @apiNote For example, {@link net.minecraft.util.math.BlockPos#PACKET_CODEC}
+		COMMENT is defined as {@code PacketCodec<ByteBuf, BlockPos>}. To use this codec
+		COMMENT where {@link net.minecraft.network.PacketByteBuf} is expected, you can call
+		COMMENT this method for easy casting, like: {@code PACKET_CODEC.cast()}.
+		COMMENT Doing this is generally safe and will not result in exceptions.
+	METHOD method_56431 unit (Ljava/lang/Object;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec that always returns {@code value}}
+		COMMENT
+		COMMENT <p>This does not encode anything. Instead, it throws {@link
+		COMMENT IllegalStateException} when the value does not
+		COMMENT equal {@code value}. This comparison is made with {@code equals()}, not
+		COMMENT reference equality ({@code ==}).
+		ARG 0 value
+	METHOD method_56432 xmap (Ljava/util/function/Function;Ljava/util/function/Function;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec that maps its encode input and decode output with {@code from}
+		COMMENT and {@code to}, respectively}
+		COMMENT
+		COMMENT <p>This can be used to transform a codec for a simple value (like a string)
+		COMMENT into a corresponding, more complex value (like an identifier). An example:
+		COMMENT
+		COMMENT <pre>{@code
+		COMMENT public static final PacketCodec<ByteBuf, Identifier> PACKET_CODEC = PacketCodecs.STRING.xmap(Identifier::new, Identifier::toString);
+		COMMENT }</pre>
+		ARG 1 to
+		ARG 2 from
+	METHOD method_56433 collect (Lnet/minecraft/class_9139$class_9140;)Lnet/minecraft/class_9139;
+		COMMENT {@return the result mapped with {@code function}}
+		COMMENT
+		COMMENT <p>For example, passing {@code PacketCodecs::optional} makes the value
+		COMMENT optional. Additionally, this method can be used like Stream {@link
+		COMMENT java.util.stream.Collectors} - hence its name. For example, to make a codec
+		COMMENT for a list of something, write {@code parentCodec.collect(PacketCodecs.toList())}.
+		COMMENT
+		COMMENT @see PacketCodecs#optional
+		COMMENT @see PacketCodecs#toCollection
+		COMMENT @see PacketCodecs#toList
+		ARG 1 function
+	METHOD method_56434 tuple (Lnet/minecraft/class_9139;Ljava/util/function/Function;Ljava/util/function/Function;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for encoding one value}
+		ARG 0 codec
+		ARG 1 from
+		ARG 2 to
+	METHOD method_56435 tuple (Lnet/minecraft/class_9139;Ljava/util/function/Function;Lnet/minecraft/class_9139;Ljava/util/function/Function;Ljava/util/function/BiFunction;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for encoding two values}
+		ARG 0 codec1
+		ARG 1 from1
+		ARG 2 codec2
+		ARG 3 from2
+		ARG 4 to
+	METHOD method_56436 tuple (Lnet/minecraft/class_9139;Ljava/util/function/Function;Lnet/minecraft/class_9139;Ljava/util/function/Function;Lnet/minecraft/class_9139;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Function3;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for encoding three values}
+		ARG 0 codec1
+		ARG 1 from1
+		ARG 2 codec2
+		ARG 3 from2
+		ARG 4 codec3
+		ARG 5 from3
+		ARG 6 to
+	METHOD method_56437 ofStatic (Lnet/minecraft/class_9142;Lnet/minecraft/class_9141;)Lnet/minecraft/class_9139;
+		COMMENT {@return a packet codec from the {@code encoder} and {@code decoder}}
+		COMMENT
+		COMMENT @apiNote This is useful for integrating with code that uses static methods for
+		COMMENT packet writing, where the buffer is the first argument, like
+		COMMENT {@code static void write(PacketByteBuf buf, Data data)}.
+		COMMENT For code that uses instance methods like {@code void write(PacketByteBuf buf)},
+		COMMENT use {@link #of(ValueFirstEncoder, PacketDecoder)}.
+		ARG 0 encoder
+		ARG 1 decoder
+	METHOD method_56438 of (Lnet/minecraft/class_9143;Lnet/minecraft/class_9141;)Lnet/minecraft/class_9139;
+		COMMENT {@return a packet codec from the {@code encoder} and {@code decoder}}
+		COMMENT
+		COMMENT @apiNote This is useful for integrating with code that uses instance methods for
+		COMMENT packet writing, like {@code void write(PacketByteBuf buf)}.
+		COMMENT For code that uses static methods like {@code static void write(PacketByteBuf buf, Data data)},
+		COMMENT where the buffer is the first argument, use {@link #ofStatic(PacketEncoder, PacketDecoder)}.
+		ARG 0 encoder
+		ARG 1 decoder
+	METHOD method_56439 mapBuf (Ljava/util/function/Function;)Lnet/minecraft/class_9139;
+		ARG 1 function
+	METHOD method_56440 dispatch (Ljava/util/function/Function;Ljava/util/function/Function;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec that dispatches one of the sub-codecs based on the type}
+		COMMENT
+		COMMENT <p>For example, subtypes of {@link net.minecraft.stat.Stat} requires different values
+		COMMENT to be serialized, yet it makes sense to use the same codec for all stats.
+		COMMENT This method should be called on the codec for the "type" - like {@link
+		COMMENT net.minecraft.stat.StatType}. An example:
+		COMMENT
+		COMMENT <pre>{@code
+		COMMENT public static final PacketCodec<RegistryByteBuf, Thing<?>> PACKET_CODEC = PacketCodecs.registryValue(RegistryKeys.THING_TYPE).dispatch(Thing::getType, ThingType::getPacketCodec);
+		COMMENT }</pre>
+		ARG 1 type
+			COMMENT a function that, given a value, returns its "type"
+		ARG 2 codec
+			COMMENT a function that, given a "type", returns the codec for encoding/decoding the value
+	METHOD method_56905 tuple (Lnet/minecraft/class_9139;Ljava/util/function/Function;Lnet/minecraft/class_9139;Ljava/util/function/Function;Lnet/minecraft/class_9139;Ljava/util/function/Function;Lnet/minecraft/class_9139;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Function4;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for encoding four values}
+		ARG 0 codec1
+		ARG 1 from1
+		ARG 2 codec2
+		ARG 3 from2
+		ARG 4 codec3
+		ARG 5 from3
+		ARG 6 codec4
+		ARG 7 from4
+		ARG 8 to
+	METHOD method_56906 tuple (Lnet/minecraft/class_9139;Ljava/util/function/Function;Lnet/minecraft/class_9139;Ljava/util/function/Function;Lnet/minecraft/class_9139;Ljava/util/function/Function;Lnet/minecraft/class_9139;Ljava/util/function/Function;Lnet/minecraft/class_9139;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Function5;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for encoding five values}
+		ARG 0 codec1
+		ARG 1 from1
+		ARG 2 codec2
+		ARG 3 from2
+		ARG 4 codec3
+		ARG 5 from3
+		ARG 6 codec4
+		ARG 7 from4
+		ARG 8 codec5
+		ARG 9 from5
+		ARG 10 to
+	CLASS class_9140 ResultFunction
+		METHOD apply (Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
+			ARG 1 codec

@@ -212,9 +212,10 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_1495 getSessionService ()Lcom/mojang/authlib/minecraft/MinecraftSessionService;
 	METHOD method_1496 isIntegratedServerRunning ()Z
 	METHOD method_1498 isHudEnabled ()Z
-	METHOD method_1499 addBlockEntityNbt (Lnet/minecraft/class_1799;Lnet/minecraft/class_2586;)V
+	METHOD method_1499 addBlockEntityNbt (Lnet/minecraft/class_1799;Lnet/minecraft/class_2586;Lnet/minecraft/class_5455;)V
 		ARG 1 stack
 		ARG 2 blockEntity
+		ARG 3 registryManager
 	METHOD method_1502 (Lnet/minecraft/class_1799;)Ljava/util/stream/Stream;
 		ARG 0 stack
 	METHOD method_1504 setCameraEntity (Lnet/minecraft/class_1297;)V
@@ -311,8 +312,9 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_17533 (I)Lnet/minecraft/class_3949;
 		ARG 1 spawnChunkRadius
 	METHOD method_18095 getSplashTextLoader ()Lnet/minecraft/class_4008;
-	METHOD method_18096 disconnect (Lnet/minecraft/class_437;)V
+	METHOD method_18096 disconnect (Lnet/minecraft/class_437;Z)V
 		ARG 1 disconnectionScreen
+		ARG 2 transferring
 	METHOD method_18097 setWorld (Lnet/minecraft/class_638;)V
 		ARG 1 world
 	METHOD method_18098 reset (Lnet/minecraft/class_437;)V
@@ -364,8 +366,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_27022 hasOutline (Lnet/minecraft/class_1297;)Z
 		COMMENT Checks if the provided {@code entity} should display an outline around its model.
 		ARG 1 entity
-	METHOD method_27466 initFont (Z)V
-		ARG 1 forcesUnicode
 	METHOD method_29041 openChatScreen (Ljava/lang/String;)V
 		ARG 1 text
 	METHOD method_29042 shouldBlockMessages (Ljava/util/UUID;)Z
@@ -538,6 +538,8 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_53526 getDebugHud ()Lnet/minecraft/class_340;
 	METHOD method_53527 onInitFinished (Lnet/minecraft/class_310$class_8764;)Ljava/lang/Runnable;
 		ARG 1 loadingContext
+	METHOD method_53865 (Ljava/util/List;)Lnet/minecraft/class_1123;
+		ARG 0 stacks
 	METHOD method_54116 formatSeconds (D)Ljava/lang/String;
 		ARG 0 seconds
 	METHOD method_54117 addUptimesToCrashReport (Lnet/minecraft/class_129;)V
@@ -551,6 +553,9 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_55505 onDisconnected ()V
 	METHOD method_55606 providesProfileKeys ()Z
 	METHOD method_55607 getUserProperties ()Lcom/mojang/authlib/minecraft/UserApiService$UserProperties;
+	METHOD method_56134 disconnect (Lnet/minecraft/class_437;)V
+		ARG 1 disconnectionScreen
+	METHOD method_57017 onFontOptionsChanged ()V
 	CLASS class_5859 ChatRestriction
 		COMMENT Represents the restrictions on chat on a Minecraft client.
 		COMMENT

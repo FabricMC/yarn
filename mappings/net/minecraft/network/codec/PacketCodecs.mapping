@@ -1,0 +1,259 @@
+CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
+	COMMENT A set of pre-defined packet codecs.
+	COMMENT
+	COMMENT @see PacketCodec
+	FIELD field_48547 BOOL Lnet/minecraft/class_9139;
+		COMMENT A codec for a boolean value.
+		COMMENT
+		COMMENT @see io.netty.buffer.ByteBuf#readBoolean
+		COMMENT @see io.netty.buffer.ByteBuf#writeBoolean
+	FIELD field_48548 BYTE Lnet/minecraft/class_9139;
+		COMMENT A codec for a byte value.
+		COMMENT
+		COMMENT @see io.netty.buffer.ByteBuf#readByte
+		COMMENT @see io.netty.buffer.ByteBuf#writeByte
+	FIELD field_48549 SHORT Lnet/minecraft/class_9139;
+		COMMENT A codec for a short value.
+		COMMENT
+		COMMENT @see io.netty.buffer.ByteBuf#readShort
+		COMMENT @see io.netty.buffer.ByteBuf#writeShort
+	FIELD field_48550 VAR_INT Lnet/minecraft/class_9139;
+		COMMENT A codec for a variable-length integer (var int) value.
+		COMMENT
+		COMMENT @see net.minecraft.network.PacketByteBuf#readVarInt
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeVarInt
+	FIELD field_48551 VAR_LONG Lnet/minecraft/class_9139;
+		COMMENT A codec for a variable-length long (var long) value.
+		COMMENT
+		COMMENT @see net.minecraft.network.PacketByteBuf#readVarLong
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeVarLong
+	FIELD field_48552 FLOAT Lnet/minecraft/class_9139;
+		COMMENT A codec for a float value.
+		COMMENT
+		COMMENT @see io.netty.buffer.ByteBuf#readFloat
+		COMMENT @see io.netty.buffer.ByteBuf#writeFloat
+	FIELD field_48553 DOUBLE Lnet/minecraft/class_9139;
+		COMMENT A codec for a double value.
+		COMMENT
+		COMMENT @see io.netty.buffer.ByteBuf#readDouble
+		COMMENT @see io.netty.buffer.ByteBuf#writeDouble
+	FIELD field_48554 STRING Lnet/minecraft/class_9139;
+		COMMENT A codec for a string value with maximum length {@value Short#MAX_VALUE}.
+		COMMENT
+		COMMENT @see #string
+		COMMENT @see net.minecraft.network.PacketByteBuf#readString()
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeString(String)
+	FIELD field_48555 NBT_ELEMENT Lnet/minecraft/class_9139;
+		COMMENT A codec for an NBT element of unlimited size.
+		COMMENT
+		COMMENT @see #nbt
+		COMMENT @see net.minecraft.network.PacketByteBuf#readNbt(NbtSizeTracker)
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeNbt(NbtElement)
+	FIELD field_48556 NBT_COMPOUND Lnet/minecraft/class_9139;
+		COMMENT A codec for an NBT compound of unlimited size.
+		COMMENT
+		COMMENT @see #nbt
+		COMMENT @see net.minecraft.network.PacketByteBuf#readNbt(NbtSizeTracker)
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeNbt(NbtElement)
+	FIELD field_48557 OPTIONAL_NBT Lnet/minecraft/class_9139;
+		COMMENT A codec for an optional NBT compound of up to {@value
+		COMMENT net.minecraft.network.PacketByteBuf#MAX_READ_NBT_SIZE} bytes.
+		COMMENT
+		COMMENT @see #nbt
+		COMMENT @see net.minecraft.network.PacketByteBuf#readNbt(PacketByteBuf)
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeNbt(io.netty.buffer.ByteBuf, NbtElement)
+	FIELD field_48558 VECTOR3F Lnet/minecraft/class_9139;
+		COMMENT A codec for a {@link org.joml.Vector3f}.
+		COMMENT
+		COMMENT @see net.minecraft.network.PacketByteBuf#readVector3f()
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeVector3f(Vector3f)
+	FIELD field_48559 QUATERNIONF Lnet/minecraft/class_9139;
+		COMMENT A codec for a {@link org.joml.Quaternionf}.
+		COMMENT
+		COMMENT @see net.minecraft.network.PacketByteBuf#readQuaternionf()
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeQuaternionf(Quaternionf)
+	FIELD field_48987 BYTE_ARRAY Lnet/minecraft/class_9139;
+		COMMENT A codec for a byte array.
+		COMMENT
+		COMMENT @see net.minecraft.network.PacketByteBuf#readByteArray()
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeByteArray(byte[])
+	METHOD method_56363 toList ()Lnet/minecraft/class_9139$class_9140;
+		COMMENT Used to make a codec for a list of values using {@link PacketCodec#collect}.
+		COMMENT This creates an {@link java.util.ArrayList}, so the decoded result can be modified.
+		COMMENT
+		COMMENT <p>For example, to make a codec for a list of values, write {@code
+		COMMENT codec.collect(PacketCodecs.toList())}.
+		COMMENT
+		COMMENT @see #toCollection
+	METHOD method_56364 string (I)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for a string value with maximum length {@code maxLength}}
+		COMMENT
+		COMMENT @see #STRING
+		COMMENT @see net.minecraft.network.PacketByteBuf#readString(int)
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeString(String, int)
+		ARG 0 maxLength
+	METHOD method_56365 registryValue (Lnet/minecraft/class_5321;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for a {@link net.minecraft.registry.Registry}-registered value}
+		COMMENT
+		COMMENT <p>This codec only works with {@link net.minecraft.network.RegistryByteBuf}, used
+		COMMENT during the play phase. Consider using {@link #entryOf} for encoding a value of a
+		COMMENT static registry during login or configuration phases.
+		COMMENT
+		COMMENT @implNote The value is serialized as the corresponding raw ID (as {@link #VAR_INT
+		COMMENT a var int}).
+		COMMENT
+		COMMENT @see #entryOf
+		ARG 0 registry
+	METHOD method_56366 registry (Lnet/minecraft/class_5321;Ljava/util/function/Function;)Lnet/minecraft/class_9139;
+		ARG 0 registry
+		ARG 1 registryTransformer
+	METHOD method_56367 registryEntry (Lnet/minecraft/class_5321;Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for a {@link net.minecraft.registry.entry.RegistryEntry}}
+		COMMENT
+		COMMENT <p>This codec only works with {@link net.minecraft.network.RegistryByteBuf}, used
+		COMMENT during the play phase. Consider using {@link #entryOf} for encoding a value of a
+		COMMENT static registry during login or configuration phases.
+		COMMENT
+		COMMENT @implNote If the entry is a reference entry, the value is serialized as the
+		COMMENT corresponding raw ID (as {@link #VAR_INT a var int}). If it is a direct entry,
+		COMMENT it is encoded using {@code directCodec}.
+		COMMENT
+		COMMENT @see #registryValue
+		COMMENT @see #registryEntry(RegistryKey)
+		ARG 0 registry
+		ARG 1 directCodec
+	METHOD method_56368 codec (Lcom/mojang/serialization/Codec;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec from DataFixerUpper codec {@code codec}}
+		COMMENT
+		COMMENT <p>Internally, the data is serialized as an NBT element of unlimited size.
+		ARG 0 codec
+	METHOD method_56369 (Lcom/mojang/serialization/Codec;Ljava/lang/Object;)Lnet/minecraft/class_2520;
+		ARG 1 value
+	METHOD method_56370 (Lcom/mojang/serialization/Codec;Lnet/minecraft/class_2520;)Ljava/lang/Object;
+		ARG 1 nbt
+	METHOD method_56371 entryOf (Lnet/minecraft/class_2359;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for an entry of {@code iterable}}
+		COMMENT
+		COMMENT @see #indexed
+		ARG 0 iterable
+	METHOD method_56372 (Lnet/minecraft/class_2378;)Lnet/minecraft/class_2359;
+		ARG 0 registry
+	METHOD method_56373 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException;
+		ARG 1 error
+	METHOD method_56374 toCollection (Ljava/util/function/IntFunction;)Lnet/minecraft/class_9139$class_9140;
+		COMMENT Used to make a codec for a collection of values using {@link PacketCodec#collect}.
+		COMMENT
+		COMMENT <p>For example, to make a codec for a set of values, write {@code
+		COMMENT codec.collect(PacketCodecs.toCollection(HashSet::new))}.
+		COMMENT
+		COMMENT @see #toList
+		ARG 0 collectionFactory
+			COMMENT a function that, given the collection's size, returns a new empty collection
+	METHOD method_56375 indexed (Ljava/util/function/IntFunction;Ljava/util/function/ToIntFunction;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for an indexed value}
+		COMMENT
+		COMMENT <p>An example of an indexed value is an enum.
+		COMMENT
+		COMMENT @see net.minecraft.util.function.ValueLists
+		COMMENT @see net.minecraft.network.PacketByteBuf#encode(ToIntFunction, Object)
+		COMMENT @see net.minecraft.network.PacketByteBuf#decode(IntFunction)
+		ARG 0 indexToValue
+			COMMENT a function that gets a value from its index
+		ARG 1 valueToIndex
+			COMMENT a function that gets a value's index
+	METHOD method_56376 collection (Ljava/util/function/IntFunction;Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for a collection of values}
+		COMMENT
+		COMMENT @see net.minecraft.network.PacketByteBuf#readCollection
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeCollection
+		ARG 0 factory
+			COMMENT a function that, given the collection's size, returns a new empty collection
+		ARG 1 elementCodec
+			COMMENT the codec of the collection's elements
+	METHOD method_56377 map (Ljava/util/function/IntFunction;Lnet/minecraft/class_9139;Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for a map}
+		COMMENT
+		COMMENT @see net.minecraft.network.PacketByteBuf#readMap(IntFunction, PacketDecoder, PacketDecoder)
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeMap(java.util.Map, PacketEncoder, PacketEncoder)
+		ARG 0 factory
+			COMMENT a function that, given the map's size, returns a new empty map
+		ARG 1 keyCodec
+			COMMENT the codec for the map's keys
+		ARG 2 valueCodec
+			COMMENT the codec for the map's values
+	METHOD method_56378 nbt (Ljava/util/function/Supplier;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for an NBT element}
+		COMMENT
+		COMMENT @see #NBT_ELEMENT
+		COMMENT @see net.minecraft.network.PacketByteBuf#readNbt(NbtSizeTracker)
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeNbt(NbtElement)
+		ARG 0 sizeTracker
+	METHOD method_56379 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2520;
+		ARG 0 nbt
+	METHOD method_56380 (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2487;
+		ARG 0 nbt
+	METHOD method_56381 (Lnet/minecraft/class_2520;Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
+		ARG 1 error
+	METHOD method_56382 optional (Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec wrapping another codec, the value of which is optional}
+		COMMENT
+		COMMENT <p>This can be used with {@link PacketCodec#collect} like
+		COMMENT {@code codec.collect(PacketCodecs::optional)}.
+		COMMENT
+		COMMENT @see net.minecraft.network.PacketByteBuf#readOptional
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeOptional
+		ARG 0 codec
+	METHOD method_56383 registryEntry (Lnet/minecraft/class_5321;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for a reference {@link net.minecraft.registry.entry.RegistryEntry}}
+		COMMENT
+		COMMENT <p>This codec only works with {@link net.minecraft.network.RegistryByteBuf}, used
+		COMMENT during the play phase. Consider using {@link #entryOf} for encoding a value of a
+		COMMENT static registry during login or configuration phases.
+		COMMENT
+		COMMENT @implNote The value is serialized as the corresponding raw ID (as {@link #VAR_INT
+		COMMENT a var int}). This does not handle direct (unregistered) entries.
+		COMMENT
+		COMMENT @see #registryValue
+		COMMENT @see #registryEntry(RegistryKey, PacketCodec)
+		ARG 0 registry
+	METHOD method_56384 (Ljava/util/function/IntFunction;Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
+		ARG 1 codec
+	METHOD method_56385 (Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
+		ARG 0 codec
+	METHOD method_56895 byteArray (I)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec for a byte array with maximum length {@code maxLength}}
+		COMMENT
+		COMMENT @see #BYTE_ARRAY
+		COMMENT @see net.minecraft.network.PacketByteBuf#readByteArray(ByteBuf, int)
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeByteArray(ByteBuf, byte[])
+		ARG 0 maxLength
+	METHOD method_56896 registryCodec (Lcom/mojang/serialization/Codec;)Lnet/minecraft/class_9139;
+		ARG 0 codec
+	CLASS 4
+		METHOD method_56899 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException;
+			ARG 1 error
+		METHOD method_56900 (Lnet/minecraft/class_2520;Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
+			ARG 1 error
+	CLASS 10
+		METHOD method_56419 (Lnet/minecraft/class_9139;Lio/netty/buffer/ByteBuf;Lnet/minecraft/class_9139;Ljava/lang/Object;Ljava/lang/Object;)V
+			ARG 3 k
+			ARG 4 v
+	CLASS 13
+		METHOD method_56424 getIterable (Lnet/minecraft/class_9129;)Lnet/minecraft/class_2359;
+			ARG 1 buf
+	CLASS 14
+		FIELD field_48562 DIRECT_ENTRY_MARKER I
+		METHOD method_56390 getEntries (Lnet/minecraft/class_9129;)Lnet/minecraft/class_2359;
+			ARG 1 buf
+	CLASS 21
+		METHOD method_56403 decode (Lio/netty/buffer/ByteBuf;)[B
+			ARG 1 buf
+		METHOD method_56404 encode (Lio/netty/buffer/ByteBuf;[B)V
+			ARG 1 buf
+			ARG 2 value
+	CLASS 22
+		METHOD method_56407 read (Lio/netty/buffer/ByteBuf;)[B
+			ARG 1 buf
+		METHOD method_56408 write (Lio/netty/buffer/ByteBuf;[B)V
+			ARG 1 buf
+			ARG 2 value

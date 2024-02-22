@@ -67,7 +67,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT @see net.minecraft.block.AbstractBlock#onSyncedBlockEvent
 		ARG 1 type
 		ARG 2 data
-	METHOD method_11005 createFromNbt (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2586;
+	METHOD method_11005 createFromNbt (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2586;
 		COMMENT {@return the new block entity loaded from {@code nbt}, or {@code null} if it fails}
 		COMMENT
 		COMMENT <p>This is used during chunk loading. This can fail if {@code nbt} has an improper or
@@ -76,7 +76,8 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		ARG 0 pos
 		ARG 1 state
 		ARG 2 nbt
-	METHOD method_11007 writeNbt (Lnet/minecraft/class_2487;)V
+		ARG 3 registryLookup
+	METHOD method_11007 writeNbt (Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V
 		COMMENT Writes data to {@code nbt}. Subclasses should override this if they
 		COMMENT store a persistent data.
 		COMMENT
@@ -86,6 +87,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT
 		COMMENT @see #readNbt
 		ARG 1 nbt
+		ARG 2 registryLookup
 	METHOD method_11010 getCachedState ()Lnet/minecraft/class_2680;
 		COMMENT {@return the cached block state at the block entity's position}
 		COMMENT
@@ -99,7 +101,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT
 		COMMENT @see net.minecraft.entity.player.PlayerEntity#isCreativeLevelTwoOp
 	METHOD method_11012 markRemoved ()V
-	METHOD method_11014 readNbt (Lnet/minecraft/class_2487;)V
+	METHOD method_11014 readNbt (Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;)V
 		COMMENT Reads data from {@code nbt}. Subclasses should override this if they
 		COMMENT store a persistent data.
 		COMMENT
@@ -114,11 +116,12 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT
 		COMMENT @see #writeNbt
 		ARG 1 nbt
+		ARG 2 registryLookup
 	METHOD method_11015 isRemoved ()Z
 	METHOD method_11016 getPos ()Lnet/minecraft/class_2338;
 		COMMENT {@return the block entity's position}
 	METHOD method_11017 getType ()Lnet/minecraft/class_2591;
-	METHOD method_16887 toInitialChunkDataNbt ()Lnet/minecraft/class_2487;
+	METHOD method_16887 toInitialChunkDataNbt (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;
 		COMMENT {@return the serialized state of this block entity that is observable by clients}
 		COMMENT
 		COMMENT <p>This is sent alongside the initial chunk data, as well as when the block
@@ -133,8 +136,9 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT <p>To send all NBT data of this block entity saved to disk, return {@link #createNbt}.
 		COMMENT
 		COMMENT @see #toUpdatePacket
-	METHOD method_17897 (Lnet/minecraft/class_2487;Ljava/lang/String;Lnet/minecraft/class_2586;)Lnet/minecraft/class_2586;
-		ARG 2 blockEntity
+		ARG 1 registryLookup
+	METHOD method_17897 (Lnet/minecraft/class_2487;Lnet/minecraft/class_7225$class_7874;Ljava/lang/String;Lnet/minecraft/class_2586;)Lnet/minecraft/class_2586;
+		ARG 3 blockEntity
 	METHOD method_17899 (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Ljava/lang/String;Lnet/minecraft/class_2591;)Lnet/minecraft/class_2586;
 		ARG 3 type
 	METHOD method_31662 setWorld (Lnet/minecraft/class_1937;)V
@@ -178,17 +182,18 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT keys to store the position. This is incompatible with {@link
 		COMMENT net.minecraft.nbt.NbtHelper#fromBlockPos} that use uppercase keys.
 		ARG 0 nbt
-	METHOD method_38240 setStackNbt (Lnet/minecraft/class_1799;)V
+	METHOD method_38240 setStackNbt (Lnet/minecraft/class_1799;Lnet/minecraft/class_7225$class_7874;)V
 		COMMENT Sets {@code stack}'s {@code net.minecraft.item.BlockItem#BLOCK_ENTITY_TAG_KEY}
 		COMMENT NBT value to {@linkplain #createNbt the block entity's NBT data}.
 		ARG 1 stack
+		ARG 2 registryLookup
 	METHOD method_38241 writeIdToNbt (Lnet/minecraft/class_2487;)V
 		COMMENT Writes the block entity type ID to {@code nbt} under the {@code id} key.
 		COMMENT
 		COMMENT @throws RuntimeException if the block entity type is not registered in
 		COMMENT the registry
 		ARG 1 nbt
-	METHOD method_38242 createNbtWithIdentifyingData ()Lnet/minecraft/class_2487;
+	METHOD method_38242 createNbtWithIdentifyingData (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;
 		COMMENT {@return the block entity's NBT data with identifying data}
 		COMMENT
 		COMMENT <p>In addition to data written at {@link #writeNbt}, this also
@@ -197,7 +202,8 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT
 		COMMENT @see #createNbt
 		COMMENT @see #createNbtWithId
-	METHOD method_38243 createNbtWithId ()Lnet/minecraft/class_2487;
+		ARG 1 registryLookup
+	METHOD method_38243 createNbtWithId (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;
 		COMMENT {@return the block entity's NBT data with block entity type ID}
 		COMMENT
 		COMMENT <p>In addition to data written at {@link #writeNbt}, this also
@@ -205,7 +211,8 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT
 		COMMENT @see #createNbt
 		COMMENT @see #createNbtWithIdentifyingData
-	METHOD method_38244 createNbt ()Lnet/minecraft/class_2487;
+		ARG 1 registryLookup
+	METHOD method_38244 createNbt (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;
 		COMMENT {@return the block entity's NBT data}
 		COMMENT
 		COMMENT <p>Internally, this calls {@link #writeNbt} with a new {@link NbtCompound}
@@ -214,6 +221,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT @see #writeNbt
 		COMMENT @see #createNbtWithIdentifyingData
 		COMMENT @see #createNbtWithId
+		ARG 1 registryLookup
 	METHOD method_5431 markDirty ()V
 		COMMENT Marks this block entity as dirty and that it needs to be saved.
 		COMMENT This also triggers {@linkplain World#updateComparators comparator update}.

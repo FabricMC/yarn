@@ -30,9 +30,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_24372 saveProperties Lnet/minecraft/class_5219;
 	FIELD field_25132 combinedDynamicRegistries Lnet/minecraft/class_7780;
 	FIELD field_25318 resourceManagerHolder Lnet/minecraft/server/MinecraftServer$class_6897;
-	FIELD field_33210 START_TICKET_CHUNK_RADIUS I
 	FIELD field_33211 MAX_WORLD_BORDER_RADIUS I
-	FIELD field_33219 START_TICKET_CHUNKS I
 	FIELD field_33975 recorderResultConsumer Ljava/util/function/Consumer;
 	FIELD field_33976 recorderDumpConsumer Ljava/util/function/Consumer;
 	FIELD field_33977 needsRecorderSetup Z
@@ -85,6 +83,9 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_47145 OVERLOAD_WARNING_INTERVAL_NANOS J
 	FIELD field_47147 PLAYER_SAMPLE_UPDATE_INTERVAL_NANOS J
 	FIELD field_47148 PREPARE_START_REGION_TICK_DELAY_NANOS J
+	FIELD field_48773 prevFullTickLogTime J
+	FIELD field_48774 tasksStartTime J
+	FIELD field_48775 waitTime J
 	METHOD <init> (Ljava/lang/Thread;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_7497;Lnet/minecraft/class_3950;)V
 		ARG 1 serverThread
 		ARG 2 session
@@ -442,8 +443,6 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_52344 shouldLogIps ()Z
 	METHOD method_53501 (Lnet/minecraft/class_3222;)V
 		ARG 0 player
-	METHOD method_53620 tickTickLog (J)V
-		ARG 1 nanos
 	METHOD method_5387 isMainThread ()Z
 	METHOD method_54809 isPaused ()Z
 	METHOD method_54831 updateAutosaveTicks ()V
@@ -452,6 +451,17 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_54834 getAverageNanosPerTick ()J
 	METHOD method_54835 getTickTimes ()[J
 	METHOD method_54837 getAutosaveInterval ()I
+	METHOD method_56040 acceptsTransfers ()Z
+	METHOD method_56593 getDebugSampleLog ()Lnet/minecraft/class_8743;
+	METHOD method_56602 pushTickLog (J)V
+		ARG 1 tickStartTime
+	METHOD method_56603 pushFullTickLog ()V
+	METHOD method_56604 startTaskPerformanceLog ()V
+	METHOD method_56605 pushPerformanceLogs ()V
+	METHOD method_56625 subscribeToDebugSample (Lnet/minecraft/class_3222;Lnet/minecraft/class_9192;)V
+		ARG 1 player
+		ARG 2 type
+	METHOD method_56626 shouldPushTickTimeLog ()Z
 	CLASS class_6414 DebugStart
 		FIELD field_33980 time J
 		FIELD field_33981 tick I

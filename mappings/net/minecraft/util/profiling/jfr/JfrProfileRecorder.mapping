@@ -13,6 +13,8 @@ CLASS net/minecraft/class_6516 net/minecraft/util/profiling/jfr/JfrProfileRecord
 	FIELD field_34433 threadAllocationStatisticsSamples Ljava/util/List;
 	FIELD field_34434 serverTickTimeSamples Ljava/util/List;
 	FIELD field_34435 worldGenDuration Ljava/time/Duration;
+	FIELD field_49070 chunkRegionReadCounter Ljava/util/Map;
+	FIELD field_49071 chunkRegionWriteCounter Ljava/util/Map;
 	METHOD <init> (Ljava/util/stream/Stream;)V
 		ARG 1 events
 	METHOD method_38000 createProfile ()Lnet/minecraft/class_6517;
@@ -26,7 +28,7 @@ CLASS net/minecraft/class_6516 net/minecraft/util/profiling/jfr/JfrProfileRecord
 		ARG 1 event
 		ARG 2 samples
 		ARG 3 bytesKey
-	METHOD method_39432 (Lnet/minecraft/class_6767$class_6769;)Lnet/minecraft/class_6516$class_6766;
+	METHOD method_39432 (Lnet/minecraft/class_6769;)Lnet/minecraft/class_6516$class_6766;
 		ARG 0 packet
 	METHOD method_39433 createNetworkIoStatistics (Ljava/time/Duration;Ljava/util/Map;)Lnet/minecraft/class_6767;
 		ARG 0 duration
@@ -37,7 +39,13 @@ CLASS net/minecraft/class_6516 net/minecraft/util/profiling/jfr/JfrProfileRecord
 		ARG 1 event
 		ARG 2 bytes
 		ARG 3 packetsToCounter
-	CLASS class_6766 PacketCounter
+	METHOD method_56981 (Lnet/minecraft/class_9234;)Lnet/minecraft/class_6516$class_6766;
+		ARG 0 chunk
+	METHOD method_56982 addChunkRegionEvent (Ljdk/jfr/consumer/RecordedEvent;ILjava/util/Map;)V
+		ARG 1 event
+		ARG 2 bytes
+		ARG 3 chunksToCounter
+	CLASS class_6766 Counter
 		FIELD field_35581 totalCount J
 		FIELD field_35582 totalBytes J
 		METHOD method_39436 toStatistics ()Lnet/minecraft/class_6767$class_6768;
