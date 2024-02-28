@@ -77,6 +77,13 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 		COMMENT
 		COMMENT @see net.minecraft.network.PacketByteBuf#readByteArray()
 		COMMENT @see net.minecraft.network.PacketByteBuf#writeByteArray(byte[])
+	FIELD field_49675 INTEGER Lnet/minecraft/class_9139;
+		COMMENT A codec for an integer value.
+		COMMENT
+		COMMENT @see io.netty.buffer.ByteBuf#readInt
+		COMMENT @see io.netty.buffer.ByteBuf#writeInt
+	FIELD field_49678 PROPERTY_MAP Lnet/minecraft/class_9139;
+	FIELD field_49679 GAME_PROFILE Lnet/minecraft/class_9139;
 	METHOD method_56363 toList ()Lnet/minecraft/class_9139$class_9140;
 		COMMENT Used to make a codec for a list of values using {@link PacketCodec#collect}.
 		COMMENT This creates an {@link java.util.ArrayList}, so the decoded result can be modified.
@@ -225,17 +232,31 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 		ARG 0 maxLength
 	METHOD method_56896 registryCodec (Lcom/mojang/serialization/Codec;)Lnet/minecraft/class_9139;
 		ARG 0 codec
-	CLASS 2
-		METHOD method_56403 decode (Lio/netty/buffer/ByteBuf;)[B
-			ARG 1 buf
-		METHOD method_56404 encode (Lio/netty/buffer/ByteBuf;[B)V
-			ARG 1 buf
-			ARG 2 value
-	CLASS 5
-		METHOD method_56899 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException;
-			ARG 1 error
-		METHOD method_56900 (Lnet/minecraft/class_2520;Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
-			ARG 1 error
+	METHOD method_57986 (ILnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
+		ARG 1 codec
+	METHOD method_57989 readCollectionSize (Lio/netty/buffer/ByteBuf;I)I
+		ARG 0 buf
+		ARG 1 maxSize
+	METHOD method_57990 writeCollectionSize (Lio/netty/buffer/ByteBuf;II)V
+		ARG 0 buf
+		ARG 1 size
+		ARG 2 maxSize
+	METHOD method_57991 collection (Ljava/util/function/IntFunction;Lnet/minecraft/class_9139;I)Lnet/minecraft/class_9139;
+		ARG 0 factory
+		ARG 1 elementCodec
+		ARG 2 maxSize
+	METHOD method_57992 map (Ljava/util/function/IntFunction;Lnet/minecraft/class_9139;Lnet/minecraft/class_9139;I)Lnet/minecraft/class_9139;
+		ARG 0 factory
+		ARG 1 keyCodec
+		ARG 2 valueCodec
+		ARG 3 maxSize
+	METHOD method_57995 either (Lnet/minecraft/class_9139;Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
+		ARG 0 left
+		ARG 1 right
+	METHOD method_58000 toList (I)Lnet/minecraft/class_9139$class_9140;
+		ARG 0 maxLength
+	METHOD method_58001 (Lnet/minecraft/class_5321;)Lnet/minecraft/class_9139;
+		ARG 0 registryRef
 	CLASS 10
 	CLASS 15
 		METHOD method_56424 getIterable (Lnet/minecraft/class_9129;)Lnet/minecraft/class_2359;
@@ -244,7 +265,24 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 		FIELD field_48562 DIRECT_ENTRY_MARKER I
 		METHOD method_56390 getEntries (Lnet/minecraft/class_9129;)Lnet/minecraft/class_2359;
 			ARG 1 buf
+	CLASS 18
+		FIELD field_49691 NAME_MAX_LENGTH I
+		FIELD field_49692 VALUE_MAX_LENGTH I
+		FIELD field_49693 SIGNATURE_MAX_LENGTH I
+		FIELD field_49694 MAP_MAX_SIZE I
+	CLASS 2
+		METHOD method_56403 decode (Lio/netty/buffer/ByteBuf;)[B
+			ARG 1 buf
+		METHOD method_56404 encode (Lio/netty/buffer/ByteBuf;[B)V
+			ARG 1 buf
+			ARG 2 value
 	CLASS 27
 		METHOD method_56407 read (Lio/netty/buffer/ByteBuf;)[B
 			ARG 1 buf
 		METHOD method_56408 write (Lio/netty/buffer/ByteBuf;[B)V
+			ARG 1 buf
+	CLASS 5
+		METHOD method_56899 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException;
+			ARG 1 error
+		METHOD method_56900 (Lnet/minecraft/class_2520;Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
+			ARG 1 error
