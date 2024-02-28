@@ -124,7 +124,7 @@ tasks.register('downloadIntermediary', DownloadTask) {
 tasks.register('mapIntermediaryJar', MapJarTask) {
 	dependsOn downloadIntermediary, mergeMinecraftJars
 	group = mapJarGroup
-	output = file("${minecraft_version}-intermediary.jar")
+	output = layout.buildDirectory.file("${minecraft_version}-intermediary.jar")
 	input = mergeMinecraftJars.output
 	mappings = downloadIntermediary.output
 	classpath.from minecraftLibraries
@@ -135,7 +135,7 @@ tasks.register('mapIntermediaryJar', MapJarTask) {
 tasks.register('mapServerIntermediaryJar', MapJarTask) {
 	dependsOn downloadIntermediary, extractBundledServer
 	group = mapJarGroup
-	output = file("${minecraft_version}-server-intermediary.jar")
+	output = layout.buildDirectory.file("${minecraft_version}-server-intermediary.jar")
 	input = extractBundledServer.output
 	mappings = downloadIntermediary.output
 	classpath.from minecraftLibraries
@@ -338,7 +338,7 @@ remapUnpickDefinitionsIntermediary {
 tasks.register('unpickIntermediaryJar', UnpickJarTask) {
 	group = 'unpick'
 	input = mapIntermediaryJar.output
-	output = file("${minecraft_version}-intermediary-unpicked.jar")
+	output = layout.buildDirectory.file("${minecraft_version}-intermediary-unpicked.jar")
 	unpickDefinition = remapUnpickDefinitionsIntermediary.output
 	constantsJarFile = constantsJar.archiveFile
 	classpath.from minecraftLibraries
@@ -406,7 +406,7 @@ tasks.register('v2MergedYarnJar', Jar) {
 tasks.register('mapNamedJar', MapJarTask) {
 	dependsOn mergeV2, unpickIntermediaryJar
 	group = mapJarGroup
-	output = file("${minecraft_version}-named.jar")
+	output = layout.buildDirectory.file("${minecraft_version}-named.jar")
 	input = unpickIntermediaryJar.output
 	mappings = mergeV2.output
 	classpath.from minecraftLibraries
@@ -445,7 +445,7 @@ tasks.register('genFakeSource', JavaExec) {
 }
 
 tasks.register('decompileCFR', JavaExec) {
-	def outputDir = file("namedSrc")
+	def outputDir = layout.buildDirectory.file("namedSrc")
 
 	dependsOn mapNamedJar
 	mainClass = "org.benf.cfr.reader.Main"
