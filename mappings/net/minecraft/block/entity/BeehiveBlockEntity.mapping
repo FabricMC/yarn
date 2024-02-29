@@ -8,6 +8,7 @@ CLASS net/minecraft/class_4482 net/minecraft/block/entity/BeehiveBlockEntity
 	FIELD field_31314 ANGERED_CANNOT_ENTER_HIVE_TICKS I
 	FIELD field_31315 MIN_OCCUPATION_TICKS_WITH_NECTAR I
 	FIELD field_33570 IRRELEVANT_BEE_NBT_KEYS Ljava/util/List;
+	FIELD field_49409 LOGGER Lorg/slf4j/Logger;
 	METHOD <init> (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 1 pos
 		ARG 2 state
@@ -50,8 +51,32 @@ CLASS net/minecraft/class_4482 net/minecraft/block/entity/BeehiveBlockEntity
 		ARG 2 state
 		ARG 3 blockEntity
 	METHOD method_35292 addBee (Lnet/minecraft/class_4482$class_9309;)V
+		ARG 1 bee
 	METHOD method_40019 (Lnet/minecraft/class_4970$class_4971;)Z
 		ARG 0 statex
+	METHOD method_57580 createBeesData ()Ljava/util/List;
 	CLASS class_4483 Bee
 		FIELD field_20426 ticksInHive I
+		FIELD field_49410 data Lnet/minecraft/class_4482$class_9309;
+		METHOD <init> (Lnet/minecraft/class_4482$class_9309;)V
+			ARG 1 data
+		METHOD method_57581 canExitHive ()Z
+		METHOD method_57582 createData ()Lnet/minecraft/class_4482$class_9309;
+		METHOD method_57583 hasNectar ()Z
 	CLASS class_4484 BeeState
+	CLASS class_9309 BeeData
+		FIELD field_49411 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_49412 LIST_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_49413 PACKET_CODEC Lnet/minecraft/class_9139;
+		METHOD method_57584 create (I)Lnet/minecraft/class_4482$class_9309;
+			ARG 0 ticksInHive
+		METHOD method_57585 tickEntity (ILnet/minecraft/class_4466;)V
+			ARG 0 ticksInHive
+			ARG 1 beeEntity
+		METHOD method_57586 of (Lnet/minecraft/class_1297;)Lnet/minecraft/class_4482$class_9309;
+			ARG 0 entity
+		METHOD method_57588 loadEntity (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)Lnet/minecraft/class_1297;
+			ARG 1 world
+			ARG 2 pos
+		METHOD method_57589 (Lnet/minecraft/class_1297;)Lnet/minecraft/class_1297;
+			ARG 0 entity

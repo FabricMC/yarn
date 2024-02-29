@@ -34,6 +34,7 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 		COMMENT
 		COMMENT @see RuntimeOps
 	FIELD field_49012 UNSIGNED_BYTE Lcom/mojang/serialization/Codec;
+	FIELD field_49183 PLAYER_NAME Lcom/mojang/serialization/Codec;
 	METHOD method_33817 xor (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
 		COMMENT Returns an exclusive-or codec for {@link Either} instances.
 		COMMENT
@@ -304,6 +305,28 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 	METHOD method_56942 withLifecycle (Lcom/mojang/serialization/Codec;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
 		ARG 0 originalCodec
 		ARG 1 lifecycleGetter
+	METHOD method_57148 (ILjava/util/List;)Lcom/mojang/serialization/DataResult;
+		ARG 1 list
+	METHOD method_57149 (ILjava/util/Map;)Lcom/mojang/serialization/DataResult;
+		ARG 1 map
+	METHOD method_57150 list (Lcom/mojang/serialization/Codec;I)Lcom/mojang/serialization/Codec;
+		ARG 0 codec
+		ARG 1 maxLength
+	METHOD method_57153 map (Lcom/mojang/serialization/Codec;I)Lcom/mojang/serialization/Codec;
+		ARG 0 codec
+		ARG 1 maxLength
+	METHOD method_57154 keyDispatching (Lcom/mojang/serialization/Codec;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+		COMMENT {@return a codec for a map, given the codec for the key {@code Codec<K>} and a
+		COMMENT function from the key to the codec for the value, {@code Codec<V>}}
+		COMMENT
+		COMMENT @param <K> the type of the map keys
+		COMMENT @param <V> the type of the map values
+		ARG 0 keyCodec
+		ARG 1 keyToValueCodec
+	METHOD method_57155 optional (Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
+		ARG 0 codec
+	METHOD method_57156 (Ljava/lang/String;)Lcom/mojang/serialization/DataResult;
+		ARG 0 name
 	CLASS 1
 		METHOD apply (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
 			ARG 1 ops
@@ -362,6 +385,55 @@ CLASS net/minecraft/class_5699 net/minecraft/util/dynamic/Codecs
 			ARG 3 ops
 		METHOD method_54943 (Lcom/mojang/serialization/MapLike;Ljava/lang/String;Lcom/mojang/serialization/DynamicOps;Ljava/util/function/Function;Lcom/mojang/datafixers/util/Pair;)Lcom/mojang/serialization/DataResult;
 			ARG 4 pair
+	CLASS 7
+		METHOD decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 input
+			ARG 2 ops
+			ARG 3 prefix
+		METHOD method_57158 (Lcom/google/common/collect/ImmutableMap$Builder;Lcom/mojang/datafixers/util/Pair;)V
+			ARG 1 decoded
+		METHOD method_57159 (Lcom/mojang/datafixers/util/Unit;Lcom/mojang/datafixers/util/Pair;)Lcom/mojang/datafixers/util/Unit;
+			ARG 0 unit
+			ARG 1 pair
+		METHOD method_57160 (Lcom/mojang/datafixers/util/Unit;Lcom/mojang/datafixers/util/Unit;)Lcom/mojang/datafixers/util/Unit;
+			ARG 0 unit
+			ARG 1 unit2
+		METHOD method_57161 (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/DynamicOps;Ljava/util/function/Function;Lcom/google/common/collect/ImmutableMap$Builder;Ljava/util/stream/Stream$Builder;Lcom/mojang/serialization/DataResult;Lcom/mojang/datafixers/util/Pair;)Lcom/mojang/serialization/DataResult;
+			ARG 5 result
+			ARG 6 entry
+		METHOD method_57162 (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/DynamicOps;Ljava/util/function/Function;Ljava/lang/Object;Lcom/mojang/serialization/MapLike;)Lcom/mojang/serialization/DataResult;
+			ARG 4 map
+		METHOD method_57163 encode (Lcom/mojang/serialization/Codec;Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;)Lcom/mojang/serialization/DataResult;
+			ARG 1 codec
+			ARG 2 value
+			ARG 3 ops
+		METHOD method_57164 (Lcom/mojang/serialization/DataResult;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
+			ARG 0 a
+			ARG 1 b
+		METHOD method_57165 (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/datafixers/util/Pair;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/DataResult;
+			ARG 2 codec
+		METHOD method_57166 (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;
+			ARG 1 error
+		METHOD method_57168 (Ljava/util/Map;Ljava/lang/Object;Lcom/mojang/datafixers/util/Unit;)Lcom/mojang/datafixers/util/Pair;
+			ARG 2 unit
+		METHOD method_57169 (Ljava/util/stream/Stream$Builder;Lcom/mojang/datafixers/util/Pair;Lcom/mojang/serialization/DataResult$PartialResult;)V
+			ARG 2 result
+	CLASS 8
+		METHOD decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 ops
+			ARG 2 input
+		METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 input
+			ARG 2 ops
+			ARG 3 prefix
+		METHOD method_57170 (Lcom/mojang/datafixers/util/Pair;)Lcom/mojang/datafixers/util/Pair;
+			ARG 0 pair
+		METHOD method_57171 isEmpty (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Z
+			ARG 0 ops
+			ARG 1 input
 	CLASS class_5839 Xor
 		COMMENT An xor codec that only permits exactly one of the two data choices to be
 		COMMENT present.
