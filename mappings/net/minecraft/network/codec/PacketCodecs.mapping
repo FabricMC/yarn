@@ -44,13 +44,13 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 		COMMENT @see net.minecraft.network.PacketByteBuf#readString()
 		COMMENT @see net.minecraft.network.PacketByteBuf#writeString(String)
 	FIELD field_48555 NBT_ELEMENT Lnet/minecraft/class_9139;
-		COMMENT A codec for an NBT element of unlimited size.
+		COMMENT A codec for an NBT element of up to {@code 0x200000L} bytes.
 		COMMENT
 		COMMENT @see #nbt
 		COMMENT @see net.minecraft.network.PacketByteBuf#readNbt(NbtSizeTracker)
 		COMMENT @see net.minecraft.network.PacketByteBuf#writeNbt(NbtElement)
 	FIELD field_48556 NBT_COMPOUND Lnet/minecraft/class_9139;
-		COMMENT A codec for an NBT compound of unlimited size.
+		COMMENT A codec for an NBT compound of up to {@code 0x200000L} bytes.
 		COMMENT
 		COMMENT @see #nbt
 		COMMENT @see net.minecraft.network.PacketByteBuf#readNbt(NbtSizeTracker)
@@ -82,6 +82,18 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 		COMMENT
 		COMMENT @see io.netty.buffer.ByteBuf#readInt
 		COMMENT @see io.netty.buffer.ByteBuf#writeInt
+	FIELD field_49676 UNLIMITED_NBT_ELEMENT Lnet/minecraft/class_9139;
+		COMMENT A codec for an NBT element of unlimited size.
+		COMMENT
+		COMMENT @see #nbt
+		COMMENT @see net.minecraft.network.PacketByteBuf#readNbt(NbtSizeTracker)
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeNbt(NbtElement)
+	FIELD field_49677 UNLIMITED_NBT_COMPOUND Lnet/minecraft/class_9139;
+		COMMENT A codec for an NBT compound of unlimited size.
+		COMMENT
+		COMMENT @see #nbt
+		COMMENT @see net.minecraft.network.PacketByteBuf#readNbt(NbtSizeTracker)
+		COMMENT @see net.minecraft.network.PacketByteBuf#writeNbt(NbtElement)
 	FIELD field_49678 PROPERTY_MAP Lnet/minecraft/class_9139;
 	FIELD field_49679 GAME_PROFILE Lnet/minecraft/class_9139;
 	METHOD method_56363 toList ()Lnet/minecraft/class_9139$class_9140;
@@ -132,7 +144,8 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 	METHOD method_56368 codec (Lcom/mojang/serialization/Codec;)Lnet/minecraft/class_9139;
 		COMMENT {@return a codec from DataFixerUpper codec {@code codec}}
 		COMMENT
-		COMMENT <p>Internally, the data is serialized as an NBT element of unlimited size.
+		COMMENT <p>Internally, the data is serialized as an NBT element of up to {@code 200000L}
+		COMMENT bytes.
 		ARG 0 codec
 	METHOD method_56369 (Lcom/mojang/serialization/Codec;Ljava/lang/Object;)Lnet/minecraft/class_2520;
 		ARG 1 value
@@ -234,6 +247,14 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 		ARG 0 codec
 	METHOD method_57986 (ILnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
 		ARG 1 codec
+	METHOD method_57987 unlimitedCodec (Lcom/mojang/serialization/Codec;)Lnet/minecraft/class_9139;
+		COMMENT {@return a codec from DataFixerUpper codec {@code codec}}
+		COMMENT
+		COMMENT <p>Internally, the data is serialized as an NBT element of unlimited size.
+		ARG 0 codec
+	METHOD method_57988 codec (Lcom/mojang/serialization/Codec;Ljava/util/function/Supplier;)Lnet/minecraft/class_9139;
+		ARG 0 codec
+		ARG 1 sizeTracker
 	METHOD method_57989 readCollectionSize (Lio/netty/buffer/ByteBuf;I)I
 		ARG 0 buf
 		ARG 1 maxSize
@@ -250,14 +271,34 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 		ARG 1 keyCodec
 		ARG 2 valueCodec
 		ARG 3 maxSize
+	METHOD method_57993 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2520;
+		ARG 0 nbt
+	METHOD method_57994 (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2487;
+		ARG 0 nbt
 	METHOD method_57995 either (Lnet/minecraft/class_9139;Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
 		ARG 0 left
 		ARG 1 right
+	METHOD method_57997 registryCodec (Lcom/mojang/serialization/Codec;Ljava/util/function/Supplier;)Lnet/minecraft/class_9139;
+		ARG 0 codec
+		ARG 1 sizeTracker
+	METHOD method_57998 nbtCompound (Ljava/util/function/Supplier;)Lnet/minecraft/class_9139;
+		ARG 0 sizeTracker
 	METHOD method_58000 toList (I)Lnet/minecraft/class_9139$class_9140;
 		ARG 0 maxLength
-	METHOD method_58001 (Lnet/minecraft/class_5321;)Lnet/minecraft/class_9139;
+	METHOD method_58001 registryEntryList (Lnet/minecraft/class_5321;)Lnet/minecraft/class_9139;
 		ARG 0 registryRef
+	METHOD method_58002 unlimitedRegistryCodec (Lcom/mojang/serialization/Codec;)Lnet/minecraft/class_9139;
+		ARG 0 codec
 	CLASS 10
+	CLASS 11
+		METHOD method_58007 (Lnet/minecraft/class_9139;Lio/netty/buffer/ByteBuf;Lnet/minecraft/class_9139;Ljava/lang/Object;Ljava/lang/Object;)V
+			ARG 3 k
+			ARG 4 v
+	CLASS 13
+		METHOD method_58010 (Lio/netty/buffer/ByteBuf;Lnet/minecraft/class_9139;Ljava/lang/Object;)V
+			ARG 2 right
+		METHOD method_58011 (Lio/netty/buffer/ByteBuf;Lnet/minecraft/class_9139;Ljava/lang/Object;)V
+			ARG 2 left
 	CLASS 15
 		METHOD method_56424 getIterable (Lnet/minecraft/class_9129;)Lnet/minecraft/class_2359;
 			ARG 1 buf
@@ -265,11 +306,19 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 		FIELD field_48562 DIRECT_ENTRY_MARKER I
 		METHOD method_56390 getEntries (Lnet/minecraft/class_9129;)Lnet/minecraft/class_2359;
 			ARG 1 buf
+	CLASS 17
+		FIELD field_49689 DIRECT_ENTRY_MARKER I
+		FIELD field_49690 entryPacketCodec Lnet/minecraft/class_9139;
 	CLASS 18
 		FIELD field_49691 NAME_MAX_LENGTH I
 		FIELD field_49692 VALUE_MAX_LENGTH I
 		FIELD field_49693 SIGNATURE_MAX_LENGTH I
 		FIELD field_49694 MAP_MAX_SIZE I
+		METHOD method_58016 (Lio/netty/buffer/ByteBuf;Ljava/lang/String;)V
+			ARG 0 buf2
+			ARG 1 signature
+		METHOD method_58017 (Lio/netty/buffer/ByteBuf;)Ljava/lang/String;
+			ARG 0 buf2
 	CLASS 2
 		METHOD method_56403 decode (Lio/netty/buffer/ByteBuf;)[B
 			ARG 1 buf
@@ -281,6 +330,7 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 			ARG 1 buf
 		METHOD method_56408 write (Lio/netty/buffer/ByteBuf;[B)V
 			ARG 1 buf
+			ARG 2 bytes
 	CLASS 5
 		METHOD method_56899 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException;
 			ARG 1 error
