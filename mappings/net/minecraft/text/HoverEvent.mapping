@@ -30,6 +30,7 @@ CLASS net/minecraft/class_2568 net/minecraft/text/HoverEvent
 			ARG 1 name
 			ARG 2 parsable
 			ARG 3 contentCodec
+			ARG 4 legacySerializer
 		METHOD method_27667 isParsable ()Z
 		METHOD method_27676 cast (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 o
@@ -37,6 +38,23 @@ CLASS net/minecraft/class_2568 net/minecraft/text/HoverEvent
 			ARG 0 action
 		METHOD method_54187 (Lnet/minecraft/class_2568$class_8826;)Ljava/lang/Object;
 			ARG 0 action
+		METHOD method_57979 (Lnet/minecraft/class_2561;Lnet/minecraft/class_6903;)Lcom/mojang/serialization/DataResult;
+			ARG 0 text
+			ARG 1 ops
+		METHOD method_57980 (Ljava/lang/Object;)Lnet/minecraft/class_2568$class_8826;
+			ARG 1 value
+		CLASS 1
+			METHOD decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+				ARG 1 ops
+				ARG 2 input
+			METHOD encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+				ARG 1 input
+				ARG 2 ops
+				ARG 3 prefix
+			METHOD method_57982 (Lcom/mojang/datafixers/util/Pair;Ljava/lang/Object;)Lcom/mojang/datafixers/util/Pair;
+				ARG 2 value
+			METHOD method_57983 (Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_2568$class_9341;Lcom/mojang/datafixers/util/Pair;)Lcom/mojang/serialization/DataResult;
+				ARG 3 pair
 	CLASS class_5248 EntityContent
 		FIELD field_24351 entityType Lnet/minecraft/class_1299;
 		FIELD field_24352 uuid Ljava/util/UUID;
@@ -58,27 +76,35 @@ CLASS net/minecraft/class_2568 net/minecraft/text/HoverEvent
 			ARG 0 instance
 		METHOD method_54195 legacySerializer (Lnet/minecraft/class_2561;Lnet/minecraft/class_6903;)Lcom/mojang/serialization/DataResult;
 			ARG 0 text
+			ARG 1 ops
 		METHOD method_54196 (Lnet/minecraft/class_2568$class_5248;)Ljava/util/Optional;
 			ARG 0 content
 		METHOD method_54197 (Lnet/minecraft/class_2568$class_5248;)Ljava/util/UUID;
 			ARG 0 content
 		METHOD method_54198 (Lnet/minecraft/class_2568$class_5248;)Lnet/minecraft/class_1299;
 			ARG 0 content
+		METHOD method_57985 (Lnet/minecraft/class_1299;Ljava/util/UUID;Lnet/minecraft/class_2561;)Lnet/minecraft/class_2568$class_5248;
+			ARG 2 text
 	CLASS class_5249 ItemStackContent
 		FIELD field_24355 item Lnet/minecraft/class_6880;
 		FIELD field_24356 count I
 		FIELD field_24358 stack Lnet/minecraft/class_1799;
 		FIELD field_46608 ITEM_STACK_CODEC Lcom/mojang/serialization/Codec;
 		FIELD field_46609 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_49672 ENTRY_BASED_CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_49673 changes Lnet/minecraft/class_9326;
 		METHOD <init> (Lnet/minecraft/class_1799;)V
 			ARG 1 stack
 		METHOD <init> (Lnet/minecraft/class_6880;ILnet/minecraft/class_9326;)V
+			ARG 1 item
 			ARG 2 count
+			ARG 3 changes
 		METHOD equals (Ljava/lang/Object;)Z
 			ARG 1 o
 		METHOD method_27683 asStack ()Lnet/minecraft/class_1799;
 		METHOD method_54203 legacySerializer (Lnet/minecraft/class_2561;Lnet/minecraft/class_6903;)Lcom/mojang/serialization/DataResult;
 			ARG 0 text
+			ARG 1 ops
 	CLASS class_8826 EventData
 		FIELD field_46610 CODEC Lcom/mojang/serialization/MapCodec;
 		FIELD field_46611 LEGACY_CODEC Lcom/mojang/serialization/MapCodec;
@@ -86,3 +112,7 @@ CLASS net/minecraft/class_2568 net/minecraft/text/HoverEvent
 			ARG 0 action
 		METHOD method_54209 (Lnet/minecraft/class_2568$class_5247;)Lcom/mojang/serialization/Codec;
 			ARG 0 action
+	CLASS class_9341 LegacySerializer
+		METHOD parse (Lnet/minecraft/class_2561;Lnet/minecraft/class_6903;)Lcom/mojang/serialization/DataResult;
+			ARG 1 text
+			ARG 2 os
