@@ -89,6 +89,8 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	FIELD field_48350 LIST_PACKET_CODEC Lnet/minecraft/class_9139;
 	FIELD field_49266 OPTIONAL_CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_49267 REGISTRY_ENTRY_CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_49268 OPTIONAL_PACKET_CODEC Lnet/minecraft/class_9139;
+	FIELD field_49269 OPTIONAL_LIST_PACKET_CODEC Lnet/minecraft/class_9139;
 	FIELD field_49270 components Lnet/minecraft/class_9335;
 	FIELD field_8030 bobbingAnimationTime I
 	FIELD field_8031 count I
@@ -119,6 +121,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD <init> (Lnet/minecraft/class_6880;ILnet/minecraft/class_9326;)V
 		ARG 1 item
 		ARG 2 count
+		ARG 3 changes
 	METHOD method_19267 isFood ()Z
 	METHOD method_21832 getDrinkSound ()Lnet/minecraft/class_3414;
 	METHOD method_21833 getEatSound ()Lnet/minecraft/class_3414;
@@ -239,13 +242,27 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT is a creative mode player.
 		ARG 1 amount
 		ARG 2 entity
+	METHOD method_57351 getBreakSound ()Lnet/minecraft/class_3414;
 	METHOD method_57354 applyAttributeModifiers (Lnet/minecraft/class_1304;Ljava/util/function/BiConsumer;)V
 		ARG 1 slot
 		ARG 2 attributeModifierConsumer
 	METHOD method_57355 hashCode (Lnet/minecraft/class_1799;)I
 		ARG 0 stack
+	METHOD method_57357 canPlaceOn (Lnet/minecraft/class_2694;)Z
+		ARG 1 pos
+	METHOD method_57358 encode (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2520;
+		ARG 1 registries
+	METHOD method_57359 fromNbtOrEmpty (Lnet/minecraft/class_7225$class_7874;Lnet/minecraft/class_2487;)Lnet/minecraft/class_1799;
+		ARG 0 registries
+		ARG 1 nbt
+	METHOD method_57360 fromNbt (Lnet/minecraft/class_7225$class_7874;Lnet/minecraft/class_2520;)Ljava/util/Optional;
+		ARG 0 registries
+		ARG 1 nbt
 	METHOD method_57361 listHashCode (Ljava/util/List;)I
 		ARG 0 stacks
+	METHOD method_57362 stacksEqual (Ljava/util/List;Ljava/util/List;)Z
+		ARG 0 left
+		ARG 1 right
 	METHOD method_57363 appendAttributeModifiersTooltip (Ljava/util/function/Consumer;Lnet/minecraft/class_1657;)V
 		ARG 1 textConsumer
 		ARG 2 player
@@ -254,6 +271,19 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 2 player
 		ARG 3 attribute
 		ARG 4 modifier
+	METHOD method_57365 copyComponentsFrom (Lnet/minecraft/class_9323;)V
+		ARG 1 components
+	METHOD method_57366 applyChanges (Lnet/minecraft/class_9326;)V
+		ARG 1 changes
+	METHOD method_57367 apply (Lnet/minecraft/class_9331;Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+		ARG 1 type
+		ARG 2 defaultValue
+		ARG 3 change
+		ARG 4 applier
+	METHOD method_57368 apply (Lnet/minecraft/class_9331;Ljava/lang/Object;Ljava/util/function/UnaryOperator;)Ljava/lang/Object;
+		ARG 1 type
+		ARG 2 defaultValue
+		ARG 3 applier
 	METHOD method_57369 appendTooltip (Lnet/minecraft/class_9331;Ljava/util/function/Consumer;Lnet/minecraft/class_1836;)V
 		ARG 1 componentType
 		ARG 2 textConsumer
@@ -261,7 +291,32 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_57370 (Lorg/apache/commons/lang3/mutable/MutableBoolean;Ljava/util/function/Consumer;Lnet/minecraft/class_1304;Lnet/minecraft/class_1657;Lnet/minecraft/class_6880;Lnet/minecraft/class_1322;)V
 		ARG 5 attribute
 		ARG 6 modifier
+	METHOD method_57371 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 0 instance
 	METHOD method_57372 validate (Lnet/minecraft/class_1799;)Lcom/mojang/serialization/DataResult;
+		ARG 0 stack
+	METHOD method_57373 canBreak (Lnet/minecraft/class_2694;)Z
+		ARG 1 pos
+	METHOD method_57374 (Lnet/minecraft/class_6880;)Lcom/mojang/serialization/DataResult;
+		ARG 0 entry
+	METHOD method_57375 encodeAllowEmpty (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2520;
+		ARG 1 registries
+	METHOD method_57376 encode (Lnet/minecraft/class_7225$class_7874;Lnet/minecraft/class_2520;)Lnet/minecraft/class_2520;
+		ARG 1 registries
+		ARG 2 prefix
+	METHOD method_57377 (Ljava/lang/String;)V
+		ARG 0 error
+	METHOD method_57378 (Ljava/util/Optional;)Lnet/minecraft/class_1799;
+		ARG 0 optional
+	METHOD method_57379 set (Lnet/minecraft/class_9331;Ljava/lang/Object;)Ljava/lang/Object;
+		ARG 1 type
+		ARG 2 value
+	METHOD method_57380 getComponentChanges ()Lnet/minecraft/class_9326;
+	METHOD method_57381 remove (Lnet/minecraft/class_9331;)Ljava/lang/Object;
+		ARG 1 type
+	METHOD method_57382 (Lnet/minecraft/class_1799;)Ljava/util/Optional;
+		ARG 0 stack
+	METHOD method_57385 (Lnet/minecraft/class_1799;)Lnet/minecraft/class_9326;
 		ARG 0 stack
 	METHOD method_7909 getItem ()Lnet/minecraft/class_1792;
 		COMMENT {@return the item of this stack}
