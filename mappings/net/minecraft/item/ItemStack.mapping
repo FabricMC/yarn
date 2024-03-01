@@ -8,8 +8,8 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	COMMENT method. This also means they cannot be used as a map key. To check if an item stack
 	COMMENT is of a certain item, use {@link #isOf(Item)}. To compare two item stacks, use {@link
 	COMMENT #areItemsEqual} to check the item only, or {@link #areEqual} to also check the item
-	COMMENT count and the NBT. Use {@link #isEmpty} to check if an item stack is empty instead of
-	COMMENT doing {@code stack == ItemStack.EMPTY}.
+	COMMENT count and the components. Use {@link #isEmpty} to check if an item stack is empty instead
+	COMMENT of doing {@code stack == ItemStack.EMPTY}.
 	COMMENT
 	COMMENT <p>When storing an item stack in an inventory or other places, make sure that an instance
 	COMMENT is never stored in multiple places. When two inventories hold the same instance, it
@@ -115,8 +115,8 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 3 clickType
 		ARG 4 player
 		ARG 5 cursorStackReference
-	METHOD method_31577 areItemsAndNbtEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
-		COMMENT {@return whether the given item stacks' items and NBT are equal}
+	METHOD method_31577 areItemsAndComponentsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+		COMMENT {@return whether the given item stacks' items and components are equal}
 		COMMENT
 		COMMENT <p>If this returns {@code true}, the two item stacks can be combined into one,
 		COMMENT as long as the resulting item count does not exceed {@linkplain Item#getMaxCount
@@ -154,12 +154,12 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_45435 isItemEnabled (Lnet/minecraft/class_7699;)Z
 		ARG 1 enabledFeatures
 	METHOD method_46651 copyWithCount (I)Lnet/minecraft/class_1799;
-		COMMENT {@return a copy of this item stack, including the NBT, and {@linkplain #getBobbingAnimationTime bobbing animation time}},
+		COMMENT {@return a copy of this item stack, including the components, and {@linkplain #getBobbingAnimationTime bobbing animation time}},
 		COMMENT with the item count set to {@code count}
 		COMMENT
 		COMMENT @see #copy
-		COMMENT @see #copyNbtToNewStack
-		COMMENT @see #copyNbtToNewStackIgnoreEmpty
+		COMMENT @see #copyComponentsToNewStack
+		COMMENT @see #copyComponentsToNewStackIgnoreEmpty
 		ARG 1 count
 			COMMENT the item count of the resultant stack
 	METHOD method_51164 copyAndEmpty ()Lnet/minecraft/class_1799;
@@ -171,12 +171,12 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 0 instance
 	METHOD method_56700 (Lnet/minecraft/class_1799;)Ljava/util/Optional;
 		ARG 0 stack
-	METHOD method_56701 copyNbtToNewStack (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1799;
-		COMMENT {@return a new item stack with the NBT copied from this item stack}
+	METHOD method_56701 copyComponentsToNewStack (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1799;
+		COMMENT {@return a new item stack with the components copied from this item stack}
 		COMMENT
 		COMMENT @see #copy
 		COMMENT @see #copyWithCount
-		COMMENT @see #copyNbtToNewStackIgnoreEmpty
+		COMMENT @see #copyComponentsToNewStackIgnoreEmpty
 		ARG 1 item
 			COMMENT the item of the resultant stack
 		ARG 2 count
@@ -185,8 +185,8 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 0 fieldName
 	METHOD method_56703 (Ljava/util/Optional;)Lnet/minecraft/class_1799;
 		ARG 0 optional
-	METHOD method_56704 copyNbtToNewStackIgnoreEmpty (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1799;
-		COMMENT {@return a new item stack with the NBT copied from this item stack, even if this stack is empty}
+	METHOD method_56704 copyComponentsToNewStackIgnoreEmpty (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1799;
+		COMMENT {@return a new item stack with the components copied from this item stack, even if this stack is empty}
 		COMMENT
 		COMMENT @see #copy
 		COMMENT @see #copyWithCount
@@ -231,7 +231,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 2 player
 		ARG 3 attribute
 		ARG 4 modifier
-	METHOD method_57365 copyComponentsFrom (Lnet/minecraft/class_9323;)V
+	METHOD method_57365 applyComponentsFrom (Lnet/minecraft/class_9323;)V
 		ARG 1 components
 	METHOD method_57366 applyChanges (Lnet/minecraft/class_9326;)V
 		ARG 1 changes
@@ -462,14 +462,14 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT }</pre>
 		ARG 1 amount
 	METHOD method_7972 copy ()Lnet/minecraft/class_1799;
-		COMMENT {@return a copy of this item stack, including the item count, NBT, and
+		COMMENT {@return a copy of this item stack, including the item count, components, and
 		COMMENT {@linkplain #getBobbingAnimationTime bobbing animation time}}
 		COMMENT
 		COMMENT @see #copyWithCount
-		COMMENT @see #copyNbtToNewStack
-		COMMENT @see #copyNbtToNewStackIgnoreEmpty
+		COMMENT @see #copyComponentsToNewStack
+		COMMENT @see #copyComponentsToNewStackIgnoreEmpty
 	METHOD method_7973 areEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
-		COMMENT {@return whether the given item stacks are equal, including the item count and NBT}
+		COMMENT {@return whether the given item stacks are equal, including the item count and components}
 		COMMENT
 		COMMENT @see #areItemsEqual
 		COMMENT @see #areItemsAndNbtEqual
@@ -506,7 +506,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 2 player
 		ARG 3 amount
 	METHOD method_7984 areItemsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
-		COMMENT {@return whether the given item stacks contain the same item, regardless of item count or NBT}
+		COMMENT {@return whether the given item stacks contain the same item, regardless of item count or components}
 		COMMENT
 		COMMENT @see #areEqual
 		COMMENT @see #areItemsAndNbtEqual
