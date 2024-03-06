@@ -56,3 +56,6 @@ Downloads the client and server Minecraft jars for the current Minecraft version
 
 ### `mergeJars`
 Merges the client and server jars into one merged jar, located at `VERSION-merged.jar` in the mappings directory where `VERSION` is the current Minecraft version.
+
+### `formatMappings`
+Formats and sorts the mappings, ensuring that they are in a consistent order.
