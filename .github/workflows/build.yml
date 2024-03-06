@@ -12,6 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: ./gradlew build javadocJar checkMappings --stacktrace --warning-mode fail
+      - run: ./gradlew formatMappings --stacktrace --warning-mode fail
+      - name: Check mapping format
+        run: if [ -n "$(git status --porcelain)" ]; then exit 1; fi
       - name: Build artifacts
         if: ${{ matrix.java == '21-jdk' }}
         continue-on-error: true
