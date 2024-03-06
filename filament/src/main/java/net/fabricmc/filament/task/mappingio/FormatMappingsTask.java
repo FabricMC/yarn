@@ -31,12 +31,11 @@ public abstract class FormatMappingsTask extends FilamentTask {
 	void run() throws IOException {
 		Path path = getInput().get().getAsFile().toPath();
 
-		try (MappingWriter writer = MappingWriter.create(path, MappingFormat.ENIGMA_DIR)) {
-			Objects.requireNonNull(writer, "writer");
+		MappingWriter writer = MappingWriter.create(path, MappingFormat.ENIGMA_DIR);
+		Objects.requireNonNull(writer, "writer");
 
-			MemoryMappingTree tree = new MemoryMappingTree();
-			MappingReader.read(path, MappingFormat.ENIGMA_DIR, tree);
-			tree.accept(writer, VisitOrder.createByName());
-		}
+		MemoryMappingTree tree = new MemoryMappingTree();
+		MappingReader.read(path, MappingFormat.ENIGMA_DIR, tree);
+		tree.accept(writer, VisitOrder.createByName());
 	}
 }
