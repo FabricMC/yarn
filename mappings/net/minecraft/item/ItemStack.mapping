@@ -15,11 +15,13 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	COMMENT is never stored in multiple places. When two inventories hold the same instance, it
 	COMMENT will duplicate the item stack (and become two instances) when one is saved and reloaded.
 	COMMENT
-	COMMENT <h2 id="nbt-operations">NBT operations</h2>
+	COMMENT <h2 id="components">Components</h2>
+	COMMENT <p>Components can be used to store data specific to the item stack.
+	COMMENT Use {@link ComponentHolder#get} or {@link ComponentHolder#getOrDefault} to
+	COMMENT get the component values. Use {@link #set} or {@link #remove} to set the components.
 	COMMENT
-	COMMENT <h3>NBT serialization</h3>
-	COMMENT
-	COMMENT An Item Stack can be serialized with {@link #encode(RegistryWrapper.WrapperLookup)}, and deserialized with {@link #fromNbt(RegistryWrapper.WrapperLookup, NbtCompound)}.
+	COMMENT <h2 id="nbt-serialization">NBT serialization</h2>
+	COMMENT <p>An Item Stack can be serialized with {@link #encode(RegistryWrapper.WrapperLookup)}, and deserialized with {@link #fromNbt(RegistryWrapper.WrapperLookup, NbtCompound)}.
 	COMMENT
 	COMMENT <div class="fabric">
 	COMMENT <table border=1>
@@ -234,11 +236,36 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_57366 applyChanges (Lnet/minecraft/class_9326;)V
 		ARG 1 changes
 	METHOD method_57367 apply (Lnet/minecraft/class_9331;Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+		COMMENT Sets the component {@code type} by passing the current value and {@code change}
+		COMMENT to {@code applier}, then setting its return value as the value. If the component is
+		COMMENT missing, {@code defaultValue} is used as the default.
+		COMMENT
+		COMMENT <p>In practice, {@code applier} is a reference to a method of the component
+		COMMENT class with one parameter, that returns a new instance of the component with the
+		COMMENT specific value changed to {@code change}. For example, adding a lore can be accomplished
+		COMMENT by passing reference to {@link net.minecraft.component.type.LoreComponent#with}
+		COMMENT and the added lore, like
+		COMMENT {@code stack.apply(DataComponentTypes.LORE, LoreComponent.DEFAULT, text, LoreComponent::with)}.
+		COMMENT
+		COMMENT @implNote This is the same as setting {@code applier.apply(stack.getOrDefault(type, defaultValue), change)}.
+		COMMENT
+		COMMENT @return the previous value set
+		COMMENT @see #apply(DataComponentType, Object, UnaryOperator)
+		COMMENT @see #set
 		ARG 1 type
 		ARG 2 defaultValue
 		ARG 3 change
 		ARG 4 applier
 	METHOD method_57368 apply (Lnet/minecraft/class_9331;Ljava/lang/Object;Ljava/util/function/UnaryOperator;)Ljava/lang/Object;
+		COMMENT Sets the component {@code type} by passing the current value (or {@code defaultValue}
+		COMMENT if the component is missing) to {@code applier} and then setting its return value as
+		COMMENT the value.
+		COMMENT
+		COMMENT @implNote This is the same as setting {@code applier.apply(stack.getOrDefault(type, defaultValue))}.
+		COMMENT
+		COMMENT @return the previous value set
+		COMMENT @see #set
+		COMMENT @see #apply(DataComponentType, Object, Object, BiFunction)
 		ARG 1 type
 		ARG 2 defaultValue
 		ARG 3 applier
@@ -267,10 +294,24 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_57378 (Ljava/util/Optional;)Lnet/minecraft/class_1799;
 		ARG 0 optional
 	METHOD method_57379 set (Lnet/minecraft/class_9331;Ljava/lang/Object;)Ljava/lang/Object;
+		COMMENT Sets the component {@code type} for this item stack to {@code value}.
+		COMMENT
+		COMMENT <p>If {@code value} is {@code null}, the component is removed and the base component
+		COMMENT is unset. To reverse the stack-specific change, instead pass the default value
+		COMMENT as {@code value}.
+		COMMENT
+		COMMENT @return the previous value set
+		COMMENT @see #apply(DataComponentType, Object, UnaryOperator)
+		COMMENT @see #apply(DataComponentType, Object, Object, BiFunction)
 		ARG 1 type
 		ARG 2 value
 	METHOD method_57380 getComponentChanges ()Lnet/minecraft/class_9326;
 	METHOD method_57381 remove (Lnet/minecraft/class_9331;)Ljava/lang/Object;
+		COMMENT Removes the component {@code type}. If it is in the stack's base component,
+		COMMENT it is unset and the component becomes missing. To reverse the stack-specific change,
+		COMMENT instead pass the default value as {@code value}.
+		COMMENT
+		COMMENT @return the previous value set
 		ARG 1 type
 	METHOD method_57382 (Lnet/minecraft/class_1799;)Ljava/util/Optional;
 		ARG 0 stack

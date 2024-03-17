@@ -1,9 +1,31 @@
 CLASS net/minecraft/class_9322 net/minecraft/component/ComponentHolder
+	COMMENT An object that holds components. Note that this interface does not expose
+	COMMENT methods to modify the held components.
+	COMMENT
+	COMMENT <p>Component holders usually have "base" components and the overrides to the base
+	COMMENT (usually referred to as "changes"). The overrides may set additional components,
+	COMMENT modify the values from the base-provided default, or "unset"/remove base values.
+	COMMENT Methods in this interface expose the final value, after applying the changes.
+	COMMENT
+	COMMENT @see ComponentMap
+	COMMENT @see ComponentChanges
 	METHOD method_57353 getComponents ()Lnet/minecraft/class_9323;
 	METHOD method_57824 get (Lnet/minecraft/class_9331;)Ljava/lang/Object;
+		COMMENT {@return the value for the component {@code type}, or {@code null} if the
+		COMMENT component is missing}
+		COMMENT
+		COMMENT <p>The returned value should never be mutated.
 		ARG 1 type
 	METHOD method_57825 getOrDefault (Lnet/minecraft/class_9331;Ljava/lang/Object;)Ljava/lang/Object;
+		COMMENT {@return the value for the component {@code type}, or {@code fallback} if the
+		COMMENT component is missing}
+		COMMENT
+		COMMENT <p>This method does not initialize the components with {@code fallback}.
+		COMMENT The returned value should never be mutated.
 		ARG 1 type
 		ARG 2 fallback
 	METHOD method_57826 contains (Lnet/minecraft/class_9331;)Z
+		COMMENT {@return whether the held components include {@code type}}
+		COMMENT
+		COMMENT @implNote This is implemented as {@code get(type) != null}.
 		ARG 1 type
