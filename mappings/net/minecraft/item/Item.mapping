@@ -22,11 +22,8 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	COMMENT @see BlockItem
 	COMMENT @see ItemStack
 	COMMENT @see net.minecraft.inventory.Inventory
-	FIELD field_18672 foodComponent Lnet/minecraft/class_4174;
-	FIELD field_21979 fireproof Z
 	FIELD field_27017 LOGGER Lorg/slf4j/Logger;
 	FIELD field_30887 DEFAULT_MAX_COUNT I
-	FIELD field_30888 DEFAULT_MAX_USE_TIME I
 	FIELD field_30889 ITEM_BAR_STEPS I
 	FIELD field_36401 registryEntry Lnet/minecraft/class_6880$class_6883;
 	FIELD field_40209 requiredFeatures Lnet/minecraft/class_7699;
@@ -35,9 +32,6 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	FIELD field_8003 BLOCK_ITEMS Ljava/util/Map;
 	FIELD field_8006 ATTACK_DAMAGE_MODIFIER_ID Ljava/util/UUID;
 	FIELD field_8008 recipeRemainder Lnet/minecraft/class_1792;
-	FIELD field_8009 rarity Lnet/minecraft/class_1814;
-	FIELD field_8012 maxDamage I
-	FIELD field_8013 maxCount I
 	FIELD field_8014 translationKey Ljava/lang/String;
 	METHOD <init> (Lnet/minecraft/class_1792$class_1793;)V
 		ARG 1 settings
@@ -50,19 +44,10 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT Such items must subclass {@link NetworkSyncedItem}.
 		COMMENT
 		COMMENT @see NetworkSyncedItem
-	METHOD method_19263 isFood ()Z
-		COMMENT Checks if this item is food and therefore is edible.
-	METHOD method_19264 getFoodComponent ()Lnet/minecraft/class_4174;
-		COMMENT {@return this item's {@link #foodComponent FoodComponent}, or {@code null} if none was set}
 	METHOD method_21830 getEatSound ()Lnet/minecraft/class_3414;
 		COMMENT {@return the sound for eating the item}
 	METHOD method_21831 getDrinkSound ()Lnet/minecraft/class_3414;
 		COMMENT {@return the sound for drinking the item}
-	METHOD method_24357 damage (Lnet/minecraft/class_1282;)Z
-		COMMENT {@return whether this item can be damaged by the given {@link DamageSource source}}
-		ARG 1 source
-	METHOD method_24358 isFireproof ()Z
-		COMMENT {@return whether this item is immune to fire and lava damage}
 	METHOD method_31565 onStackClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;)Z
 		COMMENT Called when the item at the cursor is clicked at {@code slot}.
 		COMMENT
@@ -191,8 +176,6 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 2 world
 		ARG 3 user
 		ARG 4 remainingUseTicks
-	METHOD method_7841 getMaxDamage ()I
-		COMMENT {@return the maximum durability of this item} Can be configured through {@link Item.Settings#maxDamage(int) settings.maxDamage()}.
 	METHOD method_7843 onCraft (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;)V
 		COMMENT Called when the item is made by crafting, smelting, smithing, etc.
 		ARG 1 stack
@@ -202,8 +185,6 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT
 		COMMENT <p>Tools and armor should override this to specify the attack damage or armor points.
 		ARG 1 slot
-	METHOD method_7846 isDamageable ()Z
-		COMMENT {@return whether this item can lose durability}
 	METHOD method_7847 useOnEntity (Lnet/minecraft/class_1799;Lnet/minecraft/class_1657;Lnet/minecraft/class_1309;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
 		COMMENT Called on both the client and the server when a player uses the item on an entity.
 		COMMENT
@@ -249,15 +230,6 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT
 		COMMENT <p>Items that expect certain components in the item stack should override
 		COMMENT this method to return the stack with the component data.
-	METHOD method_7856 isSuitableFor (Lnet/minecraft/class_2680;)Z
-		COMMENT Determines whether this item can be used as a suitable tool for mining the specified block.
-		COMMENT Depending on block implementation, when combined together, the correct item and block may achieve a better mining speed and yield
-		COMMENT drops that would not be obtained when mining otherwise.
-		COMMENT <p>
-		COMMENT Note that this is not the <b>only</b> way to achieve "effectiveness" when mining.
-		COMMENT Other items, such as shears on string, may use their own logic
-		COMMENT and calls to this method might not return a value consistent to this rule for those items.
-		ARG 1 state
 	METHOD method_7857 hasRecipeRemainder ()Z
 		COMMENT Checks if this item has a remainder item that is left behind when used as a crafting ingredient.
 	METHOD method_7858 getRecipeRemainder ()Lnet/minecraft/class_1792;
@@ -282,28 +254,8 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 1 stack
 		ARG 2 world
 		ARG 3 user
-	METHOD method_7862 getRarity (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1814;
-		COMMENT {@return this item's rarity, which changes the color of its name}
-		COMMENT
-		COMMENT <p>By default, if an item has an enchantment, its rarity is modified:
-		COMMENT <ul>
-		COMMENT \t<li>Common and Uncommon -> Rare
-		COMMENT \t<li>Rare -> Epic
-		COMMENT </ul>
-		ARG 1 stack
 	METHOD method_7864 getName (Lnet/minecraft/class_1799;)Lnet/minecraft/class_2561;
 		ARG 1 stack
-	METHOD method_7865 getMiningSpeedMultiplier (Lnet/minecraft/class_1799;Lnet/minecraft/class_2680;)F
-		COMMENT {@return the multiplier applied to the mining speed of {@code stack} when mining
-		COMMENT {@code state}}
-		COMMENT
-		COMMENT <p>The default value is {@code 1.0f}. Returning larger integer will cause the block
-		COMMENT to be mined faster. Enchantments, status effects, and other effects that affect
-		COMMENT mining speed are instead handled in {@link PlayerEntity#getBlockBreakingSpeed}.
-		COMMENT
-		COMMENT @see MiningToolItem
-		ARG 1 stack
-		ARG 2 state
 	METHOD method_7866 getTranslationKey (Lnet/minecraft/class_1799;)Ljava/lang/String;
 		COMMENT Gets the translation key of this item using the provided item stack for context.
 		ARG 1 stack
@@ -407,15 +359,10 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT Item settings configure behaviors common to all items, such as the stack's max
 		COMMENT count. An instance of this must be passed to the constructor
 		COMMENT of {@link Item} (or most of its subclasses).
-		FIELD field_18673 foodComponent Lnet/minecraft/class_4174;
-		FIELD field_21980 fireproof Z
 		FIELD field_40210 requiredFeatures Lnet/minecraft/class_7699;
 		FIELD field_49264 COMPONENT_MAP_INTERNER Lcom/google/common/collect/Interner;
 		FIELD field_49265 components Lnet/minecraft/class_9323$class_9324;
-		FIELD field_8016 rarity Lnet/minecraft/class_1814;
 		FIELD field_8018 recipeRemainder Lnet/minecraft/class_1792;
-		FIELD field_8019 maxDamage I
-		FIELD field_8020 maxCount I
 		METHOD method_19265 food (Lnet/minecraft/class_4174;)Lnet/minecraft/class_1792$class_1793;
 			COMMENT When set, any item configured with this Settings instance will be edible based on the provided {@link FoodComponent}.
 			COMMENT
@@ -467,11 +414,3 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 			COMMENT
 			COMMENT @return this instance
 			ARG 1 recipeRemainder
-		METHOD method_7898 maxDamageIfAbsent (I)Lnet/minecraft/class_1792$class_1793;
-			COMMENT Calls {@link Item.Settings#maxDamage} If this Settings instance has not already set max damage (or if max damage is the default value, 0).
-			COMMENT
-			COMMENT <p>Note that max stack count is set to 1 when maxDamage is called.
-			COMMENT
-			COMMENT @return this instance
-			ARG 1 maxDamage
-				COMMENT maximum durability of an ItemStack using an item with this Item.Settings instance
