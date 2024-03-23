@@ -7,11 +7,28 @@ CLASS net/minecraft/class_2293 net/minecraft/command/argument/ItemPredicateArgum
 	FIELD field_50060 UNKNOWN_ITEM_PREDICATE_EXCEPTION Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;
 	FIELD field_50061 MALFORMED_ITEM_PREDICATE_EXCEPTION Lcom/mojang/brigadier/exceptions/Dynamic2CommandExceptionType;
 	FIELD field_50062 COUNT_ID Lnet/minecraft/class_2960;
+	FIELD field_50063 SPECIAL_COMPONENT_CHECKS Ljava/util/Map;
+	FIELD field_50064 SPECIAL_SUB_PREDICATE_CHECKS Ljava/util/Map;
+	FIELD field_50065 parser Lnet/minecraft/class_9408;
 	METHOD <init> (Lnet/minecraft/class_7157;)V
 		ARG 1 commandRegistryAccess
 	METHOD listSuggestions (Lcom/mojang/brigadier/context/CommandContext;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 context
 		ARG 2 builder
+	METHOD method_58522 (Lnet/minecraft/class_1799;)Z
+		ARG 0 stack
+	METHOD method_58523 (Lnet/minecraft/class_2096$class_2100;)Ljava/util/function/Predicate;
+		ARG 0 range
+	METHOD method_58524 (Lnet/minecraft/class_2096$class_2100;Lnet/minecraft/class_1799;)Z
+		ARG 1 stack
+	METHOD method_58525 (Lnet/minecraft/class_2293$class_9444;)Lnet/minecraft/class_2293$class_9444;
+		ARG 0 check
+	METHOD method_58526 (Lnet/minecraft/class_2293$class_9446;)Lnet/minecraft/class_2293$class_9446;
+		ARG 0 check
+	METHOD method_58529 (Lnet/minecraft/class_2096$class_2100;)Ljava/util/function/Predicate;
+		ARG 0 range
+	METHOD method_58530 (Lnet/minecraft/class_2096$class_2100;Lnet/minecraft/class_1799;)Z
+		ARG 1 stack
 	METHOD method_9801 itemPredicate (Lnet/minecraft/class_7157;)Lnet/minecraft/class_2293;
 		ARG 0 commandRegistryAccess
 	METHOD method_9804 getItemStackPredicate (Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;)Lnet/minecraft/class_2293$class_2295;
@@ -20,6 +37,23 @@ CLASS net/minecraft/class_2293 net/minecraft/command/argument/ItemPredicateArgum
 	METHOD parse (Lcom/mojang/brigadier/StringReader;)Ljava/lang/Object;
 		ARG 1 reader
 	CLASS class_2295 ItemStackPredicateArgument
+	CLASS class_9444 ComponentCheck
+		METHOD method_58535 createPredicate (Lcom/mojang/brigadier/ImmutableStringReader;Lnet/minecraft/class_6903;Lnet/minecraft/class_2520;)Ljava/util/function/Predicate;
+			ARG 1 reader
+			ARG 2 ops
+			ARG 3 nbt
+		METHOD method_58536 read (Lcom/mojang/brigadier/ImmutableStringReader;Lnet/minecraft/class_2960;Lnet/minecraft/class_9331;)Lnet/minecraft/class_2293$class_9444;
+			ARG 0 reader
+			ARG 1 id
+			ARG 2 type
+		METHOD method_58537 (Lcom/mojang/brigadier/ImmutableStringReader;Ljava/lang/String;)Lcom/mojang/brigadier/exceptions/CommandSyntaxException;
+			ARG 2 error
+		METHOD method_58538 (Lnet/minecraft/class_9331;Lnet/minecraft/class_1799;)Z
+			ARG 1 stack
+		METHOD method_58539 (Lnet/minecraft/class_9331;Ljava/lang/Object;)Ljava/util/function/Predicate;
+			ARG 1 expected
+		METHOD method_58540 (Lnet/minecraft/class_9331;Ljava/lang/Object;Lnet/minecraft/class_1799;)Z
+			ARG 2 stack
 	CLASS class_9445
 		FIELD field_50066 itemRegistryWrapper Lnet/minecraft/class_7225$class_7226;
 		FIELD field_50067 dataComponentTypeRegistryWrapper Lnet/minecraft/class_7225$class_7226;
@@ -27,3 +61,22 @@ CLASS net/minecraft/class_2293 net/minecraft/command/argument/ItemPredicateArgum
 		FIELD field_50069 nbtOps Lnet/minecraft/class_6903;
 		METHOD <init> (Lnet/minecraft/class_7225$class_7874;)V
 			ARG 1 registryLookup
+		METHOD method_58544 (Lnet/minecraft/class_6880$class_6883;)Lnet/minecraft/class_2960;
+			ARG 0 entry
+		METHOD method_58545 (Lnet/minecraft/class_6880$class_6883;Lnet/minecraft/class_1799;)Z
+			ARG 1 stack
+		METHOD method_58546 (Lnet/minecraft/class_6885;Lnet/minecraft/class_1799;)Z
+			ARG 1 stack
+		METHOD method_58548 (Lnet/minecraft/class_6880$class_6883;)Z
+			ARG 0 entry
+	CLASS class_9446 SubPredicateCheck
+		METHOD <init> (Lnet/minecraft/class_6880$class_6883;)V
+			ARG 1 type
+		METHOD method_58558 (Lnet/minecraft/class_9360;)Ljava/util/function/Predicate;
+			ARG 0 predicate
+		METHOD method_58559 createPredicate (Lcom/mojang/brigadier/ImmutableStringReader;Lnet/minecraft/class_6903;Lnet/minecraft/class_2520;)Ljava/util/function/Predicate;
+			ARG 1 reader
+			ARG 2 ops
+			ARG 3 nbt
+		METHOD method_58560 (Lcom/mojang/brigadier/ImmutableStringReader;Ljava/lang/String;)Lcom/mojang/brigadier/exceptions/CommandSyntaxException;
+			ARG 2 error
