@@ -46,7 +46,7 @@ public final class PoetClassMethodSignatureVisitor extends SignatureVisitor {
 	TypeName returnType;
 
 	public PoetClassMethodSignatureVisitor(TypeAnnotationMapping mapping, ClassStaticContext context, boolean forClass) {
-		super(Opcodes.ASM8);
+		super(Opcodes.ASM9);
 		this.mapping = mapping;
 		this.context = context;
 		this.forClass = forClass;

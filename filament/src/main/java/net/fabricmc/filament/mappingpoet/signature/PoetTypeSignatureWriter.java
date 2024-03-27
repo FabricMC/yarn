@@ -54,7 +54,7 @@ public final class PoetTypeSignatureWriter extends SignatureVisitor {
 	private PoetTypeSignatureWriter activeTypeArgument;
 
 	public PoetTypeSignatureWriter(TypeAnnotationBank storage, ClassStaticContext context) {
-		super(Opcodes.ASM8);
+		super(Opcodes.ASM9);
 		this.storage = storage;
 		this.context = context;
 	}

@@ -194,7 +194,7 @@ public class Main {
 
 							try (InputStream is = jarFile.getInputStream(entry)) {
 								ClassReader reader = new ClassReader(is);
-								reader.accept(new ClassVisitor(Opcodes.ASM8) {
+								reader.accept(new ClassVisitor(Opcodes.ASM9) {
 									@Override
 									public void visitInnerClass(String name, String outerName, String simpleName, int access) {
 										instanceInnerClasses.put(name, new Environment.NestedClassInfo(outerName, !Modifier.isStatic(access), simpleName));
