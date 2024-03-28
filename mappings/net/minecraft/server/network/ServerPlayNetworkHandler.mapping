@@ -37,6 +37,7 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	FIELD field_40720 session Lnet/minecraft/class_7822;
 	FIELD field_45025 requestedReconfiguration Z
 	FIELD field_45026 chunkDataSender Lnet/minecraft/class_8608;
+	FIELD field_50089 INVALID_COMMAND_SIGNATURE_TEXT Lnet/minecraft/class_2561;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_2535;Lnet/minecraft/class_3222;Lnet/minecraft/class_8792;)V
 		ARG 1 server
 		ARG 2 connection
@@ -133,6 +134,8 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		COMMENT
 		COMMENT <p>This disconnects the player if the message arrives in
 		COMMENT improper order or if chat is disabled.
+		ARG 1 message
+		ARG 2 callback
 	METHOD method_44897 addPendingAcknowledgment (Lnet/minecraft/class_7471;)V
 		ARG 1 message
 	METHOD method_45002 (Lnet/minecraft/class_7448;Lnet/minecraft/class_2168;)Lnet/minecraft/class_2168;
@@ -143,9 +146,11 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 			COMMENT the command to parse (without the leading slash)
 	METHOD method_45006 collectArgumentMessages (Lnet/minecraft/class_9449;Lnet/minecraft/class_7644;Lnet/minecraft/class_7635;)Ljava/util/Map;
 		COMMENT {@return a map of argument name and value as signed messages}
+		ARG 1 packet
 		ARG 2 arguments
 		ARG 3 lastSeenMessages
 	METHOD method_45010 handleCommandExecution (Lnet/minecraft/class_9449;Lnet/minecraft/class_7635;)V
+		ARG 1 packet
 		ARG 2 lastSeenMessages
 	METHOD method_45011 getSignedMessage (Lnet/minecraft/class_2797;Lnet/minecraft/class_7635;)Lnet/minecraft/class_7471;
 		ARG 1 packet
@@ -161,6 +166,7 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 1 message
 		ARG 2 params
 	METHOD method_45171 handleMessageChainException (Lnet/minecraft/class_7610$class_7825;)V
+		ARG 1 exception
 	METHOD method_46365 setSession (Lnet/minecraft/class_7822;)V
 		ARG 1 session
 	METHOD method_48107 getConnectionAddress ()Ljava/net/SocketAddress;
@@ -170,6 +176,14 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 1 vehicle
 	METHOD method_57142 toRawFilteredPair (Lnet/minecraft/class_5837;)Lnet/minecraft/class_9262;
 		ARG 1 message
+	METHOD method_58589 createInvalidCommandSignatureException (Ljava/lang/String;Ljava/util/List;Ljava/util/List;)Lnet/minecraft/class_7610$class_7825;
+		ARG 0 command
+		ARG 1 actual
+		ARG 2 expected
+	METHOD method_58590 executeCommand (Ljava/lang/String;)V
+		ARG 1 command
+	METHOD method_58591 toUnsignedSignatures (Ljava/util/List;)Ljava/util/Map;
+		ARG 1 arguments
 	CLASS 1
 		METHOD method_33897 processInteract (Lnet/minecraft/class_1268;Lnet/minecraft/class_3244$class_5860;)V
 			ARG 1 hand
