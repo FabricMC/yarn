@@ -10,6 +10,8 @@ CLASS net/minecraft/class_2631 net/minecraft/block/entity/SkullBlockEntity
 	FIELD field_49763 CUSTOM_NAME_NBT_KEY Ljava/lang/String;
 	FIELD field_49764 LOGGER Lorg/slf4j/Logger;
 	FIELD field_49765 customName Lnet/minecraft/class_2561;
+	FIELD field_51356 nameToProfileCache Lcom/google/common/cache/LoadingCache;
+	FIELD field_51357 uuidToProfileCache Lcom/google/common/cache/LoadingCache;
 	METHOD <init> (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 1 pos
 		ARG 2 state
@@ -31,10 +33,21 @@ CLASS net/minecraft/class_2631 net/minecraft/block/entity/SkullBlockEntity
 	METHOD method_47888 getNoteBlockSound ()Lnet/minecraft/class_2960;
 	METHOD method_52579 (Ljava/lang/Runnable;)V
 		ARG 0 runnable
-	METHOD method_52580 fetchProfile (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
+	METHOD method_52580 fetchProfileByName (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 name
 	METHOD method_58126 (Lnet/minecraft/class_9296;)V
 		ARG 1 owner
+	METHOD method_59536 fetchProfileByName (Ljava/lang/String;Lnet/minecraft/class_7497;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 name
+		ARG 1 apiServices
+	METHOD method_59539 fetchProfileByUuid (Ljava/util/UUID;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 uuid
+	METHOD method_59540 fetchProfileByUuid (Ljava/util/UUID;Lnet/minecraft/class_7497;Ljava/util/function/BooleanSupplier;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 uuid
+		ARG 1 apiServices
 	CLASS 1
 		METHOD load (Ljava/lang/Object;)Ljava/lang/Object;
 			ARG 1 name
+	CLASS 2
+		METHOD load (Ljava/lang/Object;)Ljava/lang/Object;
+			ARG 1 uuid
