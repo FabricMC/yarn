@@ -80,6 +80,7 @@ dependencies {
 	javadocClasspath "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
 	javadocClasspath "com.google.code.findbugs:jsr305:3.0.2" // for some other jsr annotations
 	decompileClasspath "net.fabricmc:cfr:${project.cfr_version}"
+	decompileClasspath "org.vineflower:vineflower:${project.vineflower_version}"
 	mappingPoetJar "net.fabricmc:mappingpoet:${project.mappingpoet_version}"
 	asm "org.ow2.asm:asm:${project.asm_version}"
 	asm "org.ow2.asm:asm-tree:${project.asm_version}"
@@ -445,18 +446,30 @@ tasks.register('genFakeSource', JavaExec) {
 	args mergeV2.outputFile.getAbsolutePath(), mapNamedJar.outputFile.getAbsolutePath(), fakeSourceDir.getAbsolutePath(), mcLibsDir.getAbsolutePath()
 }
 
-tasks.register('decompileCFR', JavaExec) {
-	def outputDir = layout.buildDirectory.file("namedSrc")
+def decompileOutput = layout.buildDirectory.file("namedSrc")
 
+tasks.register("deleteDecompilerOutput", Delete) {
+	delete decompileOutput
+}
+
+tasks.register('decompileCFR', JavaExec) {
+	dependsOn deleteDecompilerOutput
 	dependsOn mapNamedJar
 	mainClass = "org.benf.cfr.reader.Main"
 	classpath.from configurations.decompileClasspath
 	classpath.from minecraftLibraries
-	args mapNamedJar.outputFile.getAbsolutePath(), "--outputdir", outputDir.absolutePath
+	args mapNamedJar.outputFile.getAbsolutePath(), "--outputdir", decompileOutput.get().asFile.absolutePath
+}
 
-	doFirst {
-		outputDir.deleteDir()
+tasks.register('decompileVineflower', JavaExec) {
+	dependsOn deleteDecompilerOutput
+	dependsOn mapNamedJar
+	mainClass = "org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler"
+	classpath.from configurations.decompileClasspath
+	minecraftLibraries.files().forEach { file ->
+		args "--add-external=${jar.absolutePath}"
 	}
+	args "--folder", mapNamedJar.outputFile.getAbsolutePath(), decompileOutput.get().asFile.absolutePath
 }
 
 tasks.register("formatMappings", FormatMappingsTask) {
