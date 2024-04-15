@@ -5,6 +5,7 @@ CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
 	FIELD field_19359 GSON Lcom/google/gson/Gson;
 	FIELD field_36308 recipesById Ljava/util/Map;
 	FIELD field_48848 registryLookup Lnet/minecraft/class_7225$class_7874;
+	FIELD field_51481 recipesByType Lcom/google/common/collect/Multimap;
 	FIELD field_9024 errored Z
 		COMMENT This isn't quite indicating an errored state; its value is only set to
 		COMMENT {@code false} and is never {@code true}, and isn't used anywhere.
@@ -27,6 +28,8 @@ CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
 			COMMENT the recipe's ID
 		ARG 1 json
 		ARG 2 registryLookup
+	METHOD method_17876 (Lnet/minecraft/class_1937;Lnet/minecraft/class_8786;)Ljava/lang/String;
+		ARG 1 entry
 	METHOD method_17877 getAllMatches (Lnet/minecraft/class_3956;Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;)Ljava/util/List;
 		COMMENT Creates a list of all recipes of the given {@code type} that match the
 		COMMENT given {@code inventory} and {@code world}. The list is ordered by the
@@ -62,6 +65,8 @@ CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
 		COMMENT return {@code false} without mods.
 	METHOD method_42297 (Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;Lnet/minecraft/class_8786;)Z
 		ARG 2 recipe
+	METHOD method_42298 (Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;Lnet/minecraft/class_8786;)Z
+		ARG 2 entry
 	METHOD method_42299 getFirstMatch (Lnet/minecraft/class_3956;Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;Lnet/minecraft/class_2960;)Ljava/util/Optional;
 		ARG 1 type
 		ARG 2 inventory
@@ -73,6 +78,12 @@ CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
 		COMMENT Creates a cached match getter. This is optimized for getting matches of the same
 		COMMENT recipe repeatedly, such as furnaces.
 		ARG 0 type
+	METHOD method_59821 get (Lnet/minecraft/class_3956;Lnet/minecraft/class_2960;)Lnet/minecraft/class_8786;
+		COMMENT {@return a recipe with the given {@code id} and {@code type}, or empty if there is no such recipe}
+		ARG 1 type
+			COMMENT the type of the desired recipe
+		ARG 2 id
+			COMMENT the ID of the desired recipe
 	METHOD method_8126 values ()Ljava/util/Collection;
 		COMMENT {@return all recipes in this manager}
 		COMMENT
