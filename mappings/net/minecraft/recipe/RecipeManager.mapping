@@ -5,14 +5,13 @@ CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
 	FIELD field_19359 GSON Lcom/google/gson/Gson;
 	FIELD field_36308 recipesById Ljava/util/Map;
 	FIELD field_48848 registryLookup Lnet/minecraft/class_7225$class_7874;
-	FIELD field_9023 recipes Ljava/util/Map;
 	FIELD field_9024 errored Z
 		COMMENT This isn't quite indicating an errored state; its value is only set to
 		COMMENT {@code false} and is never {@code true}, and isn't used anywhere.
 	FIELD field_9027 LOGGER Lorg/slf4j/Logger;
 	METHOD <init> (Lnet/minecraft/class_7225$class_7874;)V
 		ARG 1 registryLookup
-	METHOD method_17717 getAllOfType (Lnet/minecraft/class_3956;)Ljava/util/Map;
+	METHOD method_17717 getAllOfType (Lnet/minecraft/class_3956;)Ljava/util/Collection;
 		ARG 1 type
 	METHOD method_17720 deserialize (Lnet/minecraft/class_2960;Lcom/google/gson/JsonObject;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_8786;
 		COMMENT Reads a recipe from a JSON object.
@@ -28,10 +27,6 @@ CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
 			COMMENT the recipe's ID
 		ARG 1 json
 		ARG 2 registryLookup
-	METHOD method_17722 (Ljava/util/Map;)Ljava/util/stream/Stream;
-		ARG 0 map
-	METHOD method_17723 (Ljava/util/Map;)Ljava/util/stream/Stream;
-		ARG 0 map
 	METHOD method_17877 getAllMatches (Lnet/minecraft/class_3956;Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;)Ljava/util/List;
 		COMMENT Creates a list of all recipes of the given {@code type} that match the
 		COMMENT given {@code inventory} and {@code world}. The list is ordered by the
@@ -52,14 +47,6 @@ CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
 		COMMENT side recipes.
 		ARG 1 recipes
 			COMMENT the recipes to set
-	METHOD method_20703 (Ljava/util/Map$Entry;)Ljava/util/Map;
-		ARG 0 entry
-	METHOD method_20704 (Ljava/util/Map;Lcom/google/common/collect/ImmutableMap$Builder;Lnet/minecraft/class_8786;)V
-		ARG 2 recipe
-	METHOD method_20706 (Lnet/minecraft/class_3956;)Ljava/util/Map;
-		ARG 0 t
-	METHOD method_20707 (Lnet/minecraft/class_3956;)Lcom/google/common/collect/ImmutableMap$Builder;
-		ARG 0 recipeType
 	METHOD method_30027 listAllOfType (Lnet/minecraft/class_3956;)Ljava/util/List;
 		COMMENT Creates a list of all recipes of the given {@code type}. The list has an
 		COMMENT arbitrary order.
@@ -75,15 +62,11 @@ CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
 		COMMENT return {@code false} without mods.
 	METHOD method_42297 (Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;Lnet/minecraft/class_8786;)Z
 		ARG 2 recipe
-	METHOD method_42298 (Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;Ljava/util/Map$Entry;)Z
-		ARG 2 entry
 	METHOD method_42299 getFirstMatch (Lnet/minecraft/class_3956;Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;Lnet/minecraft/class_2960;)Ljava/util/Optional;
 		ARG 1 type
 		ARG 2 inventory
 		ARG 3 world
 		ARG 4 id
-	METHOD method_42300 (Ljava/util/Map$Entry;)Lcom/mojang/datafixers/util/Pair;
-		ARG 0 entry
 	METHOD method_42301 (Lnet/minecraft/class_1263;Lnet/minecraft/class_1937;Lnet/minecraft/class_8786;)Z
 		ARG 2 recipe
 	METHOD method_42302 createCachedMatchGetter (Lnet/minecraft/class_3956;)Lnet/minecraft/class_1863$class_7266;
