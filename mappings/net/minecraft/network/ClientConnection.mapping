@@ -119,6 +119,7 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 	METHOD method_48311 addHandlers (Lio/netty/channel/ChannelPipeline;Lnet/minecraft/class_2598;ZLnet/minecraft/class_8762;)V
 		ARG 0 pipeline
 		ARG 1 side
+		ARG 2 local
 		ARG 3 packetSizeLogger
 	METHOD method_52271 connect (Ljava/net/InetSocketAddress;ZLnet/minecraft/class_2535;)Lio/netty/channel/ChannelFuture;
 		ARG 0 address
@@ -151,7 +152,7 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		ARG 3 connection
 	METHOD method_52909 getAddressAsString (Z)Ljava/lang/String;
 		ARG 1 logIps
-	METHOD method_52911 addValidator (Lio/netty/channel/ChannelPipeline;Lnet/minecraft/class_2598;)V
+	METHOD method_52911 addLocalValidator (Lio/netty/channel/ChannelPipeline;Lnet/minecraft/class_2598;)V
 		ARG 0 pipeline
 		ARG 1 side
 	METHOD method_52912 setInitialPacketListener (Lnet/minecraft/class_2547;)V
@@ -192,8 +193,13 @@ CLASS net/minecraft/class_2535 net/minecraft/network/ClientConnection
 		ARG 0 sendingSide
 	METHOD method_56334 getInboundHandlerName (Z)Ljava/lang/String;
 		ARG 0 receivingSide
-	METHOD method_59852 (Lnet/minecraft/class_8762;Z)Lio/netty/channel/ChannelInboundHandler;
+	METHOD method_59851 syncUninterruptibly (Lio/netty/channel/ChannelFuture;)V
+		ARG 0 future
+	METHOD method_59852 getSplitter (Lnet/minecraft/class_8762;Z)Lio/netty/channel/ChannelInboundHandler;
 		ARG 0 packetSizeLogger
+		ARG 1 local
+	METHOD method_59853 getPrepender (Z)Lio/netty/channel/ChannelOutboundHandler;
+		ARG 0 local
 	CLASS 1
 		METHOD initChannel (Lio/netty/channel/Channel;)V
 			ARG 1 channel
