@@ -6,7 +6,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_20347 stuckStingerTimer I
 	FIELD field_20348 STINGER_COUNT Lnet/minecraft/class_2940;
 	FIELD field_22418 climbingPos Ljava/util/Optional;
-	FIELD field_23128 SOUL_SPEED_BOOST_ID Ljava/util/UUID;
 	FIELD field_27859 POWDER_SNOW_SLOW_ID Ljava/util/UUID;
 	FIELD field_30064 USING_ITEM_FLAG I
 	FIELD field_30065 OFF_HAND_ACTIVE_FLAG I
@@ -96,7 +95,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 2 causedByPlayer
 	METHOD method_16078 dropInventory ()V
 	METHOD method_16080 drop (Lnet/minecraft/class_1282;)V
-		ARG 1 source
 	METHOD method_16826 setDespawnCounter (I)V
 		ARG 1 despawnCounter
 	METHOD method_17825 getScaleFactor ()F
@@ -172,7 +170,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT <p> The default behavior spawns a wither rose if {@code adversary} is a {@code WitherEntity}.
 		ARG 1 adversary
 			COMMENT the main adversary responsible for this entity's death
-	METHOD method_23883 dropXp ()V
+	METHOD method_23883 dropXp (Lnet/minecraft/class_1297;)V
 		COMMENT Drops experience when this entity is killed.
 		COMMENT
 		COMMENT <p>To control the details of experience dropping, consider overriding
@@ -194,7 +192,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_24832 getClimbingPos ()Ljava/util/Optional;
 	METHOD method_24833 getBoundingBox (Lnet/minecraft/class_4050;)Lnet/minecraft/class_238;
 		ARG 1 pose
-	METHOD method_25937 displaySoulSpeedEffects ()V
 	METHOD method_26082 setStatusEffect (Lnet/minecraft/class_1293;Lnet/minecraft/class_1297;)V
 		COMMENT Sets a status effect in this entity.
 		COMMENT
@@ -221,8 +218,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 state
 	METHOD method_26827 createLivingAttributes ()Lnet/minecraft/class_5132$class_5133;
 	METHOD method_27071 shouldDropLoot ()Z
-	METHOD method_27302 shouldDisplaySoulSpeedEffects ()Z
-	METHOD method_27303 isOnSoulSpeedBlock ()Z
 	METHOD method_28305 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
 		ARG 1 brain
 	METHOD method_28306 createBrainProfile ()Lnet/minecraft/class_4095$class_5303;
@@ -232,10 +227,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT Called to trigger advancement criteria when an entity picks up an item
 		COMMENT thrown by a player.
 		ARG 1 item
-	METHOD method_29500 shouldRemoveSoulSpeedBoost (Lnet/minecraft/class_2680;)Z
-		ARG 1 landingState
-	METHOD method_29501 removeSoulSpeedBoost ()V
-	METHOD method_29502 addSoulSpeedBoostIfNeeded ()V
 	METHOD method_29503 hurtByWater ()Z
 	METHOD method_29504 isDead ()Z
 	METHOD method_29505 setAttacking (Lnet/minecraft/class_1657;)V
@@ -384,12 +375,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 source
 		ARG 2 amount
 		ARG 3 slots
-	METHOD method_57293 (Lnet/minecraft/class_5131;Lnet/minecraft/class_6880;Lnet/minecraft/class_1322;)V
-		ARG 1 attribute
-		ARG 2 modifier
-	METHOD method_57294 (Lnet/minecraft/class_5131;Lnet/minecraft/class_6880;Lnet/minecraft/class_1322;)V
-		ARG 1 attribute
-		ARG 2 modifier
 	METHOD method_58150 updatePotionSwirls ()V
 	METHOD method_5877 getHandItems ()Ljava/lang/Iterable;
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
@@ -498,7 +483,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6049 canHaveStatusEffect (Lnet/minecraft/class_1293;)Z
 		ARG 1 effect
 	METHOD method_6050 tickStatusEffects ()V
-	METHOD method_6051 getRandom ()Lnet/minecraft/class_5819;
 	METHOD method_6052 getAttacking ()Lnet/minecraft/class_1309;
 	METHOD method_6053 tickFallFlying ()V
 	METHOD method_6054 shouldDropXp ()Z
@@ -603,10 +587,8 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6098 spawnConsumptionEffects (Lnet/minecraft/class_1799;I)V
 		ARG 1 stack
 		ARG 2 particleCount
-	METHOD method_6099 dropEquipment (Lnet/minecraft/class_1282;IZ)V
+	METHOD method_6099 dropEquipment (Lnet/minecraft/class_1282;Z)V
 		ARG 1 source
-		ARG 2 lootingMultiplier
-		ARG 3 allowDrops
 	METHOD method_6100 setJumping (Z)V
 		ARG 1 jumping
 	METHOD method_6101 isClimbing ()Z
@@ -662,8 +644,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6124 getPrimeAdversary ()Lnet/minecraft/class_1309;
 	METHOD method_6125 setMovementSpeed (F)V
 		ARG 1 movementSpeed
-	METHOD method_6126 applyMovementEffects (Lnet/minecraft/class_2338;)V
-		ARG 1 pos
+	METHOD method_6126 applyMovementEffects (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)V
 	METHOD method_6127 getAttributes ()Lnet/minecraft/class_5131;
 	METHOD method_6128 isFallFlying ()Z
 	METHOD method_6129 onStatusEffectRemoved (Lnet/minecraft/class_1293;)V
