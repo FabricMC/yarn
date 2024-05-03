@@ -25,6 +25,9 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_47757 prevScale F
 	FIELD field_48826 syncedBodyArmorStack Lnet/minecraft/class_1799;
 	FIELD field_49792 POTION_SWIRLS Lnet/minecraft/class_2940;
+	FIELD field_51569 riptideAttackDamage F
+	FIELD field_51570 riptideStack Lnet/minecraft/class_1799;
+	FIELD field_51571 locationBasedEnchantmentEffects Lit/unimi/dsi/fastutil/objects/Reference2ObjectMap;
 	FIELD field_6210 bodyTrackingIncrements I
 	FIELD field_6212 sidewaysSpeed F
 	FIELD field_6213 deathTime I
@@ -95,6 +98,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 2 causedByPlayer
 	METHOD method_16078 dropInventory ()V
 	METHOD method_16080 drop (Lnet/minecraft/class_1282;)V
+		ARG 1 damageSource
 	METHOD method_16826 setDespawnCounter (I)V
 		ARG 1 despawnCounter
 	METHOD method_17825 getScaleFactor ()F
@@ -176,6 +180,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT <p>To control the details of experience dropping, consider overriding
 		COMMENT {@link #shouldAlwaysDropXp()}, {@link #shouldDropXp()}, and
 		COMMENT {@link #getXpToDrop()}.
+		ARG 1 attacker
 	METHOD method_24518 isHolding (Lnet/minecraft/class_1792;)Z
 		COMMENT Checks if this entity is holding a certain item.
 		COMMENT
@@ -380,6 +385,13 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
 	METHOD method_5989 getLootTable ()Lnet/minecraft/class_5321;
+	METHOD method_59923 getXpToDrop (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)I
+		ARG 1 world
+		ARG 2 attacker
+	METHOD method_59924 getKnockbackAgainst (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;)F
+		ARG 1 target
+		ARG 2 damageSource
+	METHOD method_59926 getLocationBasedEnchantmentEffects ()Ljava/util/Map;
 	METHOD method_5996 getAttributeInstance (Lnet/minecraft/class_6880;)Lnet/minecraft/class_1324;
 		ARG 1 attribute
 	METHOD method_5997 attackLivingEntity (Lnet/minecraft/class_1309;)V
@@ -645,6 +657,8 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6125 setMovementSpeed (F)V
 		ARG 1 movementSpeed
 	METHOD method_6126 applyMovementEffects (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)V
+		ARG 1 world
+		ARG 2 pos
 	METHOD method_6127 getAttributes ()Lnet/minecraft/class_5131;
 	METHOD method_6128 isFallFlying ()Z
 	METHOD method_6129 onStatusEffectRemoved (Lnet/minecraft/class_1293;)V
