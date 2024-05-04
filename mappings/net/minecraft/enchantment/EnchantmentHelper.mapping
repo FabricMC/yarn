@@ -32,15 +32,18 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 		ARG 3 enchantment
 		ARG 4 level
 		ARG 5 context
-	METHOD method_60111 onMovement (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)V
+	METHOD method_60111 applyLocationBasedEffects (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)V
 		ARG 0 world
 		ARG 1 user
 	METHOD method_60112 isInvulnerableTo (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;Lnet/minecraft/class_1282;)Z
 		ARG 0 world
 		ARG 1 user
 		ARG 2 damageSource
-	METHOD method_60113 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;Lnet/minecraft/class_1282;F)F
+	METHOD method_60113 getEquipmentDropChance (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;Lnet/minecraft/class_1282;F)F
 		ARG 0 world
+		ARG 1 attacker
+		ARG 2 damageSource
+		ARG 3 baseEquipmentDropChance
 	METHOD method_60114 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;Lnet/minecraft/class_1282;Lorg/apache/commons/lang3/mutable/MutableFloat;Lnet/minecraft/class_5819;Lnet/minecraft/class_6880;ILnet/minecraft/class_9699;)V
 		ARG 5 enchantment
 		ARG 6 level
@@ -91,9 +94,11 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 		ARG 4 slot
 		ARG 5 pos
 		ARG 6 onBreak
-	METHOD method_60125 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)V
+	METHOD method_60125 applyLocationBasedEffects (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)V
 		ARG 0 world
 		ARG 1 stack
+		ARG 2 user
+		ARG 3 slot
 	METHOD method_60126 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1309;Lorg/apache/commons/lang3/mutable/MutableFloat;Lnet/minecraft/class_6880;ILnet/minecraft/class_9699;)V
 		ARG 4 enchantment
 		ARG 5 level
@@ -130,6 +135,8 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 	METHOD method_60134 (Lnet/minecraft/class_1304;Ljava/util/function/BiConsumer;Lnet/minecraft/class_6880;I)V
 		ARG 2 enchantment
 		ARG 3 level
+	METHOD method_60135 removeLocationBasedEffects (Lnet/minecraft/class_1309;)V
+		ARG 0 user
 	METHOD method_60136 (Lnet/minecraft/class_1309;Lnet/minecraft/class_6880;ILnet/minecraft/class_9699;)V
 		ARG 1 enchantment
 		ARG 2 level
@@ -152,8 +159,10 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 		ARG 0 stack
 		ARG 1 slot
 		ARG 2 attributeBiConsumer
-	METHOD method_60141 (Lnet/minecraft/class_1799;Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)V
+	METHOD method_60141 removeLocationBasedEffects (Lnet/minecraft/class_1799;Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)V
 		ARG 0 stack
+		ARG 1 user
+		ARG 2 slot
 	METHOD method_60142 hasAnyEnchantmentsWith (Lnet/minecraft/class_1799;Lnet/minecraft/class_9331;)Z
 		ARG 0 stack
 		ARG 1 componentType
@@ -163,6 +172,8 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 		ARG 1 entry
 	METHOD method_60145 (Lnet/minecraft/class_9741;Lnet/minecraft/class_1799;Lnet/minecraft/class_5819;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_9304$class_9305;)V
 		ARG 5 componentBuilder
+	METHOD method_60146 (Lnet/minecraft/class_47;Lorg/apache/commons/lang3/mutable/MutableFloat;Lnet/minecraft/class_9699;ILnet/minecraft/class_5819;Lnet/minecraft/class_9710;)V
+		ARG 5 effect
 	METHOD method_60148 (Lnet/minecraft/class_6880;Lnet/minecraft/class_1304;Ljava/util/function/BiConsumer;ILnet/minecraft/class_9720;)V
 		ARG 4 effect
 	METHOD method_60150 (Lnet/minecraft/class_9331;Lorg/apache/commons/lang3/mutable/MutableBoolean;Lnet/minecraft/class_6880;I)V
@@ -179,8 +190,9 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 		ARG 3 enchantment
 		ARG 4 level
 		ARG 5 context
-	METHOD method_60154 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)V
+	METHOD method_60154 onTick (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)V
 		ARG 0 world
+		ARG 1 user
 	METHOD method_60155 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;Lnet/minecraft/class_1282;Lorg/apache/commons/lang3/mutable/MutableFloat;Lnet/minecraft/class_5819;Lnet/minecraft/class_6880;ILnet/minecraft/class_9699;)V
 		ARG 5 enchantment
 		ARG 6 level
@@ -224,13 +236,16 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 	METHOD method_60165 getEffect (Lnet/minecraft/class_1799;Lnet/minecraft/class_9331;)Ljava/util/Optional;
 		ARG 0 stack
 		ARG 1 componentType
+	METHOD method_60166 (Lnet/minecraft/class_47;Lorg/apache/commons/lang3/mutable/MutableFloat;Lnet/minecraft/class_9699;ILnet/minecraft/class_5819;Lnet/minecraft/class_9710;)V
+		ARG 5 effect
 	METHOD method_60167 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;Lnet/minecraft/class_6880;ILnet/minecraft/class_9699;)V
 		ARG 2 enchantment
 		ARG 3 level
 		ARG 4 context
-	METHOD method_60168 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;I)I
+	METHOD method_60168 getRepairWithXp (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;I)I
 		ARG 0 world
 		ARG 1 stack
+		ARG 2 baseRepairWithXp
 	METHOD method_60169 getTridentReturnAcceleration (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1297;)I
 		ARG 0 world
 		ARG 1 stack
