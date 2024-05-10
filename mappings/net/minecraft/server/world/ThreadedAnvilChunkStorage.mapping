@@ -4,7 +4,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	FIELD field_17214 world Lnet/minecraft/class_3218;
 	FIELD field_17215 lightingProvider Lnet/minecraft/class_3227;
 	FIELD field_17216 mainThreadExecutor Lnet/minecraft/class_1255;
-	FIELD field_17218 chunkGenerator Lnet/minecraft/class_2794;
 	FIELD field_17220 chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 	FIELD field_17221 unloadedChunks Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_17222 chunkHolderListDirty Z
@@ -19,7 +18,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	FIELD field_18241 playerChunkWatchingManager Lnet/minecraft/class_3210;
 	FIELD field_18242 entityTrackers Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 	FIELD field_18243 watchDistance I
-	FIELD field_18307 loadedChunks Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_18807 chunksToUnload Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 	FIELD field_18808 pointOfInterestStorage Lnet/minecraft/class_4153;
 	FIELD field_19343 unloadTaskQueue Ljava/util/Queue;
@@ -49,8 +47,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 	METHOD method_17212 getLightingProvider ()Lnet/minecraft/class_3227;
 	METHOD method_17214 setViewDistance (I)V
 		ARG 1 watchDistance
-	METHOD method_17215 (IIILjava/util/List;)Lnet/minecraft/class_9259;
-		ARG 4 chunks
 	METHOD method_17216 getChunkHolder (J)Lnet/minecraft/class_3193;
 		ARG 1 pos
 	METHOD method_17217 setLevel (JILnet/minecraft/class_3193;I)Lnet/minecraft/class_3193;
@@ -63,23 +59,14 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 1 centerChunk
 		ARG 2 margin
 		ARG 3 distanceToStatus
-	METHOD method_17226 convertToFullChunk (Lnet/minecraft/class_3193;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
-	METHOD method_17227 (Lnet/minecraft/class_3193;Lnet/minecraft/class_2791;)Lnet/minecraft/class_2791;
-		ARG 2 protoChunk
 	METHOD method_17228 save (Lnet/minecraft/class_2791;)Z
 		ARG 1 chunk
-	METHOD method_17229 getRequiredStatusForGeneration (Lnet/minecraft/class_2806;I)Lnet/minecraft/class_2806;
-		ARG 1 centerChunkTargetStatus
-		ARG 2 distance
 	METHOD method_17232 (Ljava/util/List;)Lnet/minecraft/class_2818;
 		ARG 0 chunks
 	METHOD method_17233 tick (Ljava/util/function/BooleanSupplier;)V
 		ARG 1 shouldKeepTicking
 	METHOD method_17235 makeChunkTickable (Lnet/minecraft/class_3193;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 holder
-	METHOD method_17236 getChunk (Lnet/minecraft/class_3193;Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 holder
-		ARG 2 requiredStatus
 	METHOD method_17241 sendWatchPackets (Lnet/minecraft/class_3222;)V
 		ARG 1 player
 	METHOD method_17242 save (Z)V
@@ -89,17 +76,11 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 0 distance
 	METHOD method_17247 makeChunkEntitiesTickable (Lnet/minecraft/class_3193;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 chunk
-	METHOD method_17248 (Lnet/minecraft/class_2806;I)Lnet/minecraft/class_2806;
-		ARG 2 distance
-	METHOD method_17252 (Lnet/minecraft/class_3193;Ljava/lang/Runnable;)V
-		ARG 2 task
 	METHOD method_17253 getTotalChunksLoadedCount ()I
 	METHOD method_17254 (I)Lnet/minecraft/class_2806;
 		ARG 0 distance
 	METHOD method_17255 getCurrentChunkHolder (J)Lnet/minecraft/class_3193;
 		ARG 1 pos
-	METHOD method_17259 (Lnet/minecraft/class_3193;Ljava/lang/Runnable;)V
-		ARG 2 task
 	METHOD method_17260 getLoadedChunkCount ()I
 	METHOD method_17263 getTicketManager ()Lnet/minecraft/class_3204;
 	METHOD method_17264 entryIterator ()Ljava/lang/Iterable;
@@ -136,13 +117,9 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		COMMENT tracking status of those entities to all players. It then checks if any player
 		COMMENT has changed chunk sections, and updates all entities tracking status to those
 		COMMENT players. This ensures all possible updates are accounted for.
-	METHOD method_18843 (Lnet/minecraft/class_3193;Ljava/util/concurrent/CompletableFuture;JLnet/minecraft/class_2791;)V
-		ARG 5 chunk
 	METHOD method_19487 (Lnet/minecraft/class_3193;Ljava/lang/Runnable;)V
 		ARG 2 task
 	METHOD method_19488 getPointOfInterestStorage ()Lnet/minecraft/class_4153;
-	METHOD method_20441 releaseLightTicket (Lnet/minecraft/class_1923;)V
-		ARG 1 pos
 	METHOD method_20458 tryUnloadChunk (JLnet/minecraft/class_3193;)V
 		ARG 1 pos
 		ARG 3 holder
@@ -152,18 +129,11 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 2 task
 	METHOD method_20582 (Lnet/minecraft/class_2791;)Z
 		ARG 0 chunk
-	METHOD method_20584 (Lnet/minecraft/class_3193;)Lnet/minecraft/class_2791;
-		ARG 1 chunkHolder
 	METHOD method_20604 (Lnet/minecraft/class_3193;Ljava/lang/Void;Ljava/lang/Throwable;)V
 		ARG 1 void_
 		ARG 2 throwable
 	METHOD method_20605 unloadChunks (Ljava/util/function/BooleanSupplier;)V
 		ARG 1 shouldKeepTicking
-	METHOD method_20617 upgradeChunk (Lnet/minecraft/class_3193;Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 holder
-		ARG 2 requiredStatus
-	METHOD method_20618 (Lnet/minecraft/class_3193;Lnet/minecraft/class_2791;)Ljava/util/concurrent/CompletableFuture;
-		ARG 2 chunk
 	METHOD method_20619 loadChunk (Lnet/minecraft/class_1923;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 pos
 	METHOD method_20726 updateWatchedSection (Lnet/minecraft/class_3222;)V
@@ -187,25 +157,15 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ThreadedAnvilChunkStor
 		ARG 1 pos
 	METHOD method_27055 isLevelChunk (Lnet/minecraft/class_1923;)Z
 		ARG 1 pos
-	METHOD method_31413 addEntitiesFromNbt (Lnet/minecraft/class_3218;Ljava/util/List;)V
-		ARG 0 world
-		ARG 1 nbt
 	METHOD method_31414 onChunkStatusChange (Lnet/minecraft/class_1923;Lnet/minecraft/class_3194;)V
 		ARG 1 chunkPos
 		ARG 2 levelType
-	METHOD method_31415 (Lnet/minecraft/class_2839;Lnet/minecraft/class_2818;)V
-		ARG 2 chunk
 	METHOD method_31416 (Ljava/util/List;)Lnet/minecraft/class_2818;
 		ARG 0 chunks
 	METHOD method_31417 makeChunkAccessible (Lnet/minecraft/class_3193;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 holder
 	METHOD method_37476 getSaveDir ()Ljava/lang/String;
 	METHOD method_37897 getChunkGenerator ()Lnet/minecraft/class_2794;
-	METHOD method_37902 (Lnet/minecraft/class_2794;)V
-		ARG 1 chunkGenerator
-	METHOD method_37903 (Lcom/google/gson/JsonElement;)Lcom/mojang/serialization/DataResult;
-		ARG 0 json
-	METHOD method_37904 verifyChunkGenerator ()V
 	METHOD method_37907 getPlayersWatchingChunk (Lnet/minecraft/class_1923;)Ljava/util/List;
 		ARG 1 pos
 	METHOD method_38782 canTickChunk (Lnet/minecraft/class_3222;Lnet/minecraft/class_1923;)Z
