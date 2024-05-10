@@ -12,8 +12,9 @@ CLASS net/minecraft/class_2291 net/minecraft/command/argument/ItemStringReader
 	FIELD field_50054 itemRegistry Lnet/minecraft/class_7225$class_7226;
 	FIELD field_50055 nbtOps Lcom/mojang/serialization/DynamicOps;
 	FIELD field_51458 MALFORMED_ITEM_EXCEPTION Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;
+	FIELD field_51831 EXCLAMATION_MARK C
 	METHOD <init> (Lnet/minecraft/class_7225$class_7874;)V
-		ARG 1 registriesLookup
+		ARG 1 registryLookup
 	METHOD method_58517 consume (Lcom/mojang/brigadier/StringReader;Lnet/minecraft/class_2291$class_9219;)V
 		ARG 1 reader
 		ARG 2 callbacks
@@ -31,6 +32,7 @@ CLASS net/minecraft/class_2291 net/minecraft/command/argument/ItemStringReader
 	METHOD method_59769 validate (Lcom/mojang/brigadier/StringReader;Lnet/minecraft/class_6880;Lnet/minecraft/class_9326;)V
 		ARG 0 reader
 		ARG 1 item
+		ARG 2 components
 	METHOD method_59770 (Ljava/lang/Object;)Lcom/mojang/brigadier/Message;
 		ARG 0 error
 	METHOD method_9789 consume (Lcom/mojang/brigadier/StringReader;)Lnet/minecraft/class_2291$class_7215;
@@ -61,6 +63,17 @@ CLASS net/minecraft/class_2291 net/minecraft/command/argument/ItemStringReader
 		METHOD method_57813 suggestEqual (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
 			ARG 1 builder
 		METHOD method_57814 readComponents ()V
+		METHOD method_60380 suggestComponents (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 builder
+			ARG 2 suffix
+		METHOD method_60381 (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Ljava/lang/String;Ljava/util/Map$Entry;)V
+			ARG 2 entry
+		METHOD method_60382 (Ljava/util/Map$Entry;)Lnet/minecraft/class_2960;
+			ARG 0 entry
+		METHOD method_60383 suggestComponents (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 builder
+		METHOD method_60384 suggestComponentsToRemove (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 builder
 	CLASS class_9218 SuggestionCallbacks
 		FIELD field_48973 suggestor Ljava/util/function/Function;
 		METHOD method_56879 getSuggestions (Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lcom/mojang/brigadier/StringReader;)Ljava/util/concurrent/CompletableFuture;
@@ -71,6 +84,8 @@ CLASS net/minecraft/class_2291 net/minecraft/command/argument/ItemStringReader
 			ARG 1 item
 		METHOD method_56880 setSuggestor (Ljava/util/function/Function;)V
 			ARG 1 suggestor
-		METHOD method_57802 onComponent (Lnet/minecraft/class_9331;Ljava/lang/Object;)V
+		METHOD method_57802 onComponentAdded (Lnet/minecraft/class_9331;Ljava/lang/Object;)V
 			ARG 1 type
 			ARG 2 value
+		METHOD method_60379 onComponentRemoved (Lnet/minecraft/class_9331;)V
+			ARG 1 type
