@@ -1,17 +1,11 @@
 CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 	FIELD field_13862 level I
 	FIELD field_13863 lightingProvider Lnet/minecraft/class_3568;
-	FIELD field_13864 pos Lnet/minecraft/class_1923;
 	FIELD field_13865 entityTickingFuture Ljava/util/concurrent/CompletableFuture;
-	FIELD field_13868 CHUNK_STATUSES Ljava/util/List;
 	FIELD field_13870 skyLightUpdateBits Ljava/util/BitSet;
 	FIELD field_13871 blockLightUpdateBits Ljava/util/BitSet;
-	FIELD field_16425 futuresByStatus Ljava/util/concurrent/atomic/AtomicReferenceArray;
-	FIELD field_16426 UNLOADED_CHUNK Lnet/minecraft/class_9259;
 	FIELD field_16427 UNLOADED_WORLD_CHUNK Lnet/minecraft/class_9259;
-	FIELD field_16428 savingFuture Ljava/util/concurrent/CompletableFuture;
 	FIELD field_16429 UNLOADED_WORLD_CHUNK_FUTURE Ljava/util/concurrent/CompletableFuture;
-	FIELD field_16430 UNLOADED_CHUNK_FUTURE Ljava/util/concurrent/CompletableFuture;
 	FIELD field_16431 accessibleFuture Ljava/util/concurrent/CompletableFuture;
 	FIELD field_16432 lastTickLevel I
 	FIELD field_17208 completedLevel I
@@ -27,8 +21,6 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 		COMMENT <p>
 		COMMENT Entries for a section are null if the section has no positions marked for update.
 	FIELD field_26929 world Lnet/minecraft/class_5539;
-	FIELD field_28806 actionStack Lnet/minecraft/class_5831;
-	FIELD field_36388 CHUNK_LOADING_NOT_FINISHED Lnet/minecraft/class_9259;
 	FIELD field_46085 postProcessingFuture Ljava/util/concurrent/CompletableFuture;
 	METHOD <init> (Lnet/minecraft/class_1923;ILnet/minecraft/class_5539;Lnet/minecraft/class_3568;Lnet/minecraft/class_3193$class_3896;Lnet/minecraft/class_3193$class_3897;)V
 		ARG 1 pos
@@ -40,17 +32,12 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 	METHOD method_13992 sendPacketToPlayers (Ljava/util/List;Lnet/minecraft/class_2596;)V
 		ARG 1 players
 		ARG 2 packet
-	METHOD method_13993 getChunkAt (Lnet/minecraft/class_2806;Lnet/minecraft/class_3898;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 targetStatus
-		ARG 2 chunkStorage
-	METHOD method_13994 getPos ()Lnet/minecraft/class_1923;
 	METHOD method_13996 (Lnet/minecraft/class_2596;Lnet/minecraft/class_3222;)V
 		ARG 1 player
 	METHOD method_14000 getSavingFuture ()Ljava/util/concurrent/CompletableFuture;
 	METHOD method_14002 markForBlockUpdate (Lnet/minecraft/class_2338;)V
 		ARG 1 pos
 	METHOD method_14003 getEntityTickingFuture ()Ljava/util/concurrent/CompletableFuture;
-	METHOD method_14005 getLevel ()I
 	METHOD method_14006 flushUpdates (Lnet/minecraft/class_2818;)V
 		ARG 1 chunk
 	METHOD method_14007 updateFutures (Lnet/minecraft/class_3898;Ljava/util/concurrent/Executor;)V
@@ -62,32 +49,19 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 		ARG 1 players
 		ARG 2 world
 		ARG 3 pos
-	METHOD method_14010 getCurrentChunk ()Lnet/minecraft/class_2791;
 	METHOD method_14012 markForLightUpdate (Lnet/minecraft/class_1944;I)V
 		ARG 1 lightType
 		ARG 2 y
 			COMMENT chunk section y coordinate
 	METHOD method_15890 setLevel (I)V
 		ARG 1 level
-	METHOD method_16143 combineSavingFuture (Ljava/util/concurrent/CompletableFuture;Ljava/lang/String;)V
-		ARG 1 then
-		ARG 2 thenDesc
 	METHOD method_16144 getWorldChunk ()Lnet/minecraft/class_2818;
 	METHOD method_16145 getTickingFuture ()Ljava/util/concurrent/CompletableFuture;
-	METHOD method_16146 getFutureFor (Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 leastStatus
 	METHOD method_17207 setCompletedLevel (I)V
 		ARG 1 level
-	METHOD method_17208 getCompletedLevel ()I
 	METHOD method_20384 isAccessible ()Z
 	METHOD method_20385 updateAccessibleStatus ()V
-	METHOD method_20456 setCompletedChunk (Lnet/minecraft/class_2821;)V
-		ARG 1 chunk
 	METHOD method_20725 getAccessibleFuture ()Ljava/util/concurrent/CompletableFuture;
-	METHOD method_21737 getValidFutureFor (Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 leastStatus
-	METHOD method_23270 getCurrentStatus ()Lnet/minecraft/class_2806;
-	METHOD method_23271 getLevelType ()Lnet/minecraft/class_3194;
 	METHOD method_30311 tryUpdateBlockEntityAt (Ljava/util/List;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 1 players
 		ARG 2 world
@@ -96,20 +70,13 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 	METHOD method_30312 (Ljava/util/List;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 3 pos
 		ARG 4 state
-	METHOD method_39966 (Lnet/minecraft/class_2791;Ljava/lang/Object;)Lnet/minecraft/class_2791;
-		ARG 0 result
+	METHOD method_39966 (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 		ARG 1 thenResult
-	METHOD method_39967 combineSavingFuture (Ljava/lang/String;Ljava/util/concurrent/CompletableFuture;)V
-		ARG 1 thenDesc
-		ARG 2 then
-	METHOD method_40066 collectFuturesByStatus ()Ljava/util/List;
+	METHOD method_39967 combineSavingFuture (Ljava/util/concurrent/CompletableFuture;)V
 	METHOD method_53680 combinePostProcessingFuture (Ljava/util/concurrent/CompletableFuture;)V
 		ARG 1 postProcessingFuture
 	METHOD method_53681 getPostProcessingFuture ()Ljava/util/concurrent/CompletableFuture;
 	METHOD method_53682 getPostProcessedChunk ()Lnet/minecraft/class_2818;
-	METHOD method_57116 (Lnet/minecraft/class_2791;Lnet/minecraft/class_9259;)Lnet/minecraft/class_2791;
-		ARG 0 chunk
-		ARG 1 otherChunk
 	CLASS class_3896 LevelUpdateListener
 		METHOD method_17209 updateLevel (Lnet/minecraft/class_1923;Ljava/util/function/IntSupplier;ILjava/util/function/IntConsumer;)V
 			ARG 1 pos
@@ -120,14 +87,3 @@ CLASS net/minecraft/class_3193 net/minecraft/server/world/ChunkHolder
 		METHOD method_17210 getPlayersWatchingChunk (Lnet/minecraft/class_1923;Z)Ljava/util/List;
 			ARG 1 chunkPos
 			ARG 2 onlyOnWatchDistanceEdge
-	CLASS class_5830 MultithreadAction
-		FIELD comp_2364 thread Ljava/lang/Thread;
-		FIELD comp_2365 action Ljava/util/concurrent/CompletableFuture;
-		FIELD comp_2366 actionDesc Ljava/lang/String;
-		METHOD <init> (Ljava/lang/Thread;Ljava/util/concurrent/CompletableFuture;Ljava/lang/String;)V
-			ARG 1 thread
-			ARG 2 action
-			ARG 3 actionDesc
-		METHOD comp_2364 thread ()Ljava/lang/Thread;
-		METHOD comp_2365 action ()Ljava/util/concurrent/CompletableFuture;
-		METHOD comp_2366 actionDesc ()Ljava/lang/String;
