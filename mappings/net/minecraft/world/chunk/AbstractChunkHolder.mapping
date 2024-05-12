@@ -1,0 +1,71 @@
+CLASS net/minecraft/class_9761 net/minecraft/world/chunk/AbstractChunkHolder
+	FIELD field_51865 STATUSES Ljava/util/List;
+	FIELD field_51866 UNLOADED Lnet/minecraft/class_9259;
+	FIELD field_51867 UNLOADED_FUTURE Ljava/util/concurrent/CompletableFuture;
+	FIELD field_51868 pos Lnet/minecraft/class_1923;
+	FIELD field_51869 NOT_DONE Lnet/minecraft/class_9259;
+	FIELD field_51870 status Lnet/minecraft/class_2806;
+	FIELD field_51871 currentStatus Ljava/util/concurrent/atomic/AtomicReference;
+	FIELD field_51872 chunkFuturesByStatus Ljava/util/concurrent/atomic/AtomicReferenceArray;
+	FIELD field_51873 chunkLoader Ljava/util/concurrent/atomic/AtomicReference;
+	FIELD field_51874 refCount Ljava/util/concurrent/atomic/AtomicInteger;
+	METHOD <init> (Lnet/minecraft/class_1923;)V
+		ARG 1 pos
+	METHOD method_14005 getLevel ()I
+	METHOD method_17208 getCompletedLevel ()I
+	METHOD method_60452 unload (ILjava/util/concurrent/CompletableFuture;)V
+		ARG 1 statusIndex
+		ARG 2 previousFuture
+	METHOD method_60453 clearLoader (Lnet/minecraft/class_9759;)V
+		ARG 1 loader
+	METHOD method_60454 updateStatus (Lnet/minecraft/class_3898;)V
+		ARG 1 chunkLoadingManager
+	METHOD method_60455 createLoader (Lnet/minecraft/class_3898;Lnet/minecraft/class_2806;)V
+		ARG 1 chunkLoadingManager
+		ARG 2 requestedStatus
+	METHOD method_60456 replaceWith (Lnet/minecraft/class_2821;)V
+		ARG 1 chunk
+	METHOD method_60457 getUncheckedOrNull (Lnet/minecraft/class_2806;)Lnet/minecraft/class_2791;
+		ARG 1 requestedStatus
+	METHOD method_60458 load (Lnet/minecraft/class_2806;Lnet/minecraft/class_3898;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 requestedStatus
+		ARG 2 chunkLoadingManager
+	METHOD method_60459 completeChunkFuture (Lnet/minecraft/class_2806;Lnet/minecraft/class_2791;)V
+		ARG 1 status
+		ARG 2 chunk
+	METHOD method_60460 unload (Lnet/minecraft/class_2806;Lnet/minecraft/class_2806;)V
+		ARG 1 from
+		ARG 2 to
+	METHOD method_60461 generate (Lnet/minecraft/class_9770;Lnet/minecraft/class_9760;Lnet/minecraft/class_9762;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 step
+		ARG 2 chunkLoadingManager
+		ARG 3 chunks
+	METHOD method_60462 (Lnet/minecraft/class_9770;Lnet/minecraft/class_2791;Ljava/lang/Throwable;)Lnet/minecraft/class_9259;
+		ARG 2 chunk
+		ARG 3 throwable
+	METHOD method_60463 getOrNull (Lnet/minecraft/class_2806;)Lnet/minecraft/class_2791;
+		ARG 1 requestedStatus
+	METHOD method_60464 getOrCreateFuture (Lnet/minecraft/class_2806;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 status
+	METHOD method_60465 getMaxPendingStatus (Lnet/minecraft/class_2806;)Lnet/minecraft/class_2806;
+		ARG 1 checkUpperBound
+	METHOD method_60466 progressStatus (Lnet/minecraft/class_2806;)Z
+		COMMENT Progresses to {@code nextStatus} if that is actually the next status
+		COMMENT for the current status. Does nothing if {@code nextStatus} is the same as the
+		COMMENT current status (or earlier).
+		COMMENT
+		COMMENT @return whether the progress was made
+		COMMENT @throws IllegalStateException when skipping intermediate statuses between the
+		COMMENT current and {@code nextStatus}
+		ARG 1 nextStatus
+	METHOD method_60467 cannotBeLoaded (Lnet/minecraft/class_2806;)Z
+		ARG 1 status
+	METHOD method_60468 incrementRefCount ()V
+	METHOD method_60469 decrementRefCount ()V
+	METHOD method_60470 getRefCount ()I
+	METHOD method_60471 getLatest ()Lnet/minecraft/class_2791;
+	METHOD method_60472 getActualStatus ()Lnet/minecraft/class_2806;
+	METHOD method_60473 getPos ()Lnet/minecraft/class_1923;
+	METHOD method_60474 getLevelType ()Lnet/minecraft/class_3194;
+	METHOD method_60475 enumerateFutures ()Ljava/util/List;
+	METHOD method_60476 getLatestStatus ()Lnet/minecraft/class_2806;
