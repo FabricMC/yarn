@@ -170,6 +170,8 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 1 registryEntryList
 	METHOD method_54466 onCraftByCrafter (Lnet/minecraft/class_1937;)V
 		ARG 1 world
+	METHOD method_56097 (Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;Lnet/minecraft/class_1792;)V
+		ARG 2 item
 	METHOD method_56700 (Lnet/minecraft/class_1799;)Ljava/util/Optional;
 		ARG 0 stack
 	METHOD method_56701 copyComponentsToNewStack (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1799;
@@ -354,6 +356,9 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_60504 splitUnlessCreative (ILnet/minecraft/class_1309;)Lnet/minecraft/class_1799;
 		ARG 1 amount
 		ARG 2 entity
+	METHOD method_60617 applyAttributeModifier (Lnet/minecraft/class_9274;Ljava/util/function/BiConsumer;)V
+		ARG 1 slot
+		ARG 2 attributeModifierConsumer
 	METHOD method_7909 getItem ()Lnet/minecraft/class_1792;
 		COMMENT {@return the item of this stack}
 		COMMENT
@@ -470,11 +475,12 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT
 		COMMENT <p>When the item "breaks", that is, the stack's damage is equal to or above
 		COMMENT {@linkplain #getMaxDamage the maximum damage}, {@code breakCallback} is run.
-		COMMENT Callers should decrement the stack size inside the callback.
+		COMMENT Note that this method automatically decrements the stack size.
 		ARG 1 amount
 		ARG 2 world
 		ARG 3 player
 			COMMENT the player that damaged the stack, or {@code null} if no player is involved
+		ARG 4 breakCallback
 	METHOD method_7958 hasGlint ()Z
 	METHOD method_7960 isEmpty ()Z
 		COMMENT {@return whether this item stack is empty}
