@@ -15,16 +15,17 @@
  */
 package net.fabricmc.mappingpoet;
 
+import static net.fabricmc.mappingpoet.FieldBuilder.parseAnnotation;
+
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
-import net.fabricmc.mappingpoet.signature.AnnotationAwareDescriptors;
-import net.fabricmc.mappingpoet.signature.AnnotationAwareSignatures;
-import net.fabricmc.mappingpoet.signature.ClassSignature;
-import net.fabricmc.mappingpoet.signature.TypeAnnotationMapping;
-import net.fabricmc.mappingpoet.signature.TypeAnnotationStorage;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.TypeReference;
@@ -36,11 +37,11 @@ import org.objectweb.asm.tree.InnerClassNode;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
-
-import static net.fabricmc.mappingpoet.FieldBuilder.parseAnnotation;
+import net.fabricmc.mappingpoet.signature.AnnotationAwareDescriptors;
+import net.fabricmc.mappingpoet.signature.AnnotationAwareSignatures;
+import net.fabricmc.mappingpoet.signature.ClassSignature;
+import net.fabricmc.mappingpoet.signature.TypeAnnotationMapping;
+import net.fabricmc.mappingpoet.signature.TypeAnnotationStorage;
 
 public class ClassBuilder {
 	static final Handle OBJ_MTH_BOOTSTRAP = new Handle(
@@ -48,8 +49,7 @@ public class ClassBuilder {
 			"java/lang/runtime/ObjectMethods",
 			"bootstrap",
 			"(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/TypeDescriptor;Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/invoke/MethodHandle;)Ljava/lang/Object;",
-			false
-	);
+			false);
 
 	private final MappingsStore mappings;
 	private final ClassNode classNode;
@@ -131,14 +131,17 @@ public class ClassBuilder {
 	}
 
 	private ClassSignature setupSignature() {
-		return classNode.signature == null ?
-				AnnotationAwareDescriptors.parse(classNode.superName, classNode.interfaces, typeAnnotations, environment) :
-				AnnotationAwareSignatures.parseClassSignature(classNode.signature, typeAnnotations, environment);
+		if (classNode.signature == null) {
+			return AnnotationAwareDescriptors.parse(classNode.superName, classNode.interfaces, typeAnnotations, environment);
+		} else {
+			return AnnotationAwareSignatures.parseClassSignature(classNode.signature, typeAnnotations, environment);
+		}
 	}
 
 	private TypeSpec.Builder setupBuilder() {
 		TypeSpec.Builder builder;
 		ClassName name = parseInternalName(classNode.name); // no type anno here
+
 		if (Modifier.isInterface(classNode.access)) {
 			if (classNode.interfaces.size() == 1 && classNode.interfaces.get(0).equals("java/lang/annotation/Annotation")) {
 				builder = TypeSpec.annotationBuilder(name);
@@ -172,18 +175,19 @@ public class ClassBuilder {
 		return builder
 				.addModifiers(new ModifierBuilder(classNode.access)
 						.checkUnseal(classNode, environment)
-						.getModifiers(ModifierBuilder.getType(enumClass, recordClass))
-				);
+						.getModifiers(ModifierBuilder.getType(enumClass, recordClass)));
 	}
 
 	private void addInterfaces() {
 		if (annotationClass) {
 			return;
 		}
+
 		if (signature != null) {
 			builder.addSuperinterfaces(signature.superinterfaces());
 			return;
 		}
+
 		if (classNode.interfaces.isEmpty()) return;
 
 		for (String iFace : classNode.interfaces) {
@@ -201,6 +205,7 @@ public class ClassBuilder {
 		if (regularAnnotations == null) {
 			return;
 		}
+
 		for (AnnotationNode annotation : regularAnnotations) {
 			builder.addAnnotation(parseAnnotation(annotation));
 		}
@@ -208,27 +213,33 @@ public class ClassBuilder {
 
 	private void addMethods() {
 		if (classNode.methods == null) return;
-		methodsLoop:
-		for (MethodNode method : classNode.methods) {
+
+		methodsLoop: for (MethodNode method : classNode.methods) {
 			if ((method.access & Opcodes.ACC_SYNTHETIC) != 0 || (method.access & Opcodes.ACC_MANDATED) != 0) {
 				continue;
 			}
+
 			if (method.name.equals("<clinit>")) {
 				continue;
 			}
+
 			int formalParamStartIndex = 0;
+
 			if (enumClass) {
 				// Skip enum sugar methods
 				if (method.name.equals("values") && method.desc.equals("()[L" + classNode.name + ";")) {
 					continue;
 				}
+
 				if (method.name.equals("valueOf") && method.desc.equals("(Ljava/lang/String;)L" + classNode.name + ";")) {
 					continue;
 				}
+
 				if (method.name.equals("<init>")) {
 					formalParamStartIndex = 2; // 0 String 1 int
 				}
 			}
+
 			if (recordClass) {
 				// skip record sugars
 				if (method.name.equals("equals") && method.desc.equals("(Ljava/lang/Object;)Z")
@@ -244,17 +255,20 @@ public class ClassBuilder {
 
 				// todo test component getters
 			}
+
 			if (instanceInner) {
 				if (method.name.equals("<init>")) {
 					formalParamStartIndex = 1; // 0 this$0
 				}
 			}
+
 			builder.addMethod(new MethodBuilder(mappings, classNode, method, environment, receiverSignature, formalParamStartIndex).build());
 		}
 	}
 
 	private void addFields() {
 		if (classNode.fields == null) return;
+
 		for (FieldNode field : classNode.fields) {
 			if (recordClass && !Modifier.isStatic(field.access)) {
 				// proguard elevates record field access for direct record field gets
@@ -270,9 +284,11 @@ public class ClassBuilder {
 
 				continue;
 			}
+
 			if ((field.access & Opcodes.ACC_SYNTHETIC) != 0 || (field.access & Opcodes.ACC_MANDATED) != 0) {
 				continue; // hide synthetic stuff
 			}
+
 			if ((field.access & Opcodes.ACC_ENUM) == 0) {
 				builder.addField(new FieldBuilder(mappings, classNode, field, environment).build());
 			} else {
@@ -288,6 +304,7 @@ public class ClassBuilder {
 						.add(field.visibleTypeAnnotations)
 						.build().getBank(TypeReference.newTypeReference(TypeReference.FIELD))
 						.getCurrentAnnotations();
+
 				if (!annotations.isEmpty()) {
 					enumBuilder.addAnnotations(annotations); // no custom paths for annotations rip
 				}
@@ -301,6 +318,7 @@ public class ClassBuilder {
 		if (regularAnnotations == null) {
 			return;
 		}
+		
 		for (AnnotationNode annotation : regularAnnotations) {
 			builder.addAnnotation(parseAnnotation(annotation));
 		}
@@ -312,6 +330,7 @@ public class ClassBuilder {
 
 	public void addInnerClass(ClassBuilder classBuilder) {
 		InnerClassNode innerClassNode = null;
+
 		if (classNode.innerClasses != null) {
 			for (InnerClassNode node : classNode.innerClasses) {
 				if (node.name.equals(classBuilder.classNode.name)) {
@@ -339,8 +358,8 @@ public class ClassBuilder {
 			classBuilder.builder.modifiers.remove(javax.lang.model.element.Modifier.PUBLIC); // this modifier may come from class access
 			classBuilder.builder.addModifiers(new ModifierBuilder(innerClassNode.access)
 					.checkUnseal(classBuilder.classNode, environment)
-					.getModifiers(ModifierBuilder.getType(classBuilder.enumClass, classBuilder.recordClass))
-			);
+					.getModifiers(ModifierBuilder.getType(classBuilder.enumClass, classBuilder.recordClass)));
+
 			if (!Modifier.isStatic(innerClassNode.access)) {
 				classBuilder.instanceInner = true;
 			}
@@ -352,6 +371,7 @@ public class ClassBuilder {
 				sb.append(innerClassNode.innerName); // append simple name
 
 				List<TypeVariableName> innerClassGenerics = classBuilder.signature.generics();
+
 				if (!innerClassGenerics.isEmpty()) {
 					sb.append("<");
 					for (TypeVariableName each : innerClassGenerics) {
@@ -359,9 +379,11 @@ public class ClassBuilder {
 					}
 					sb.append(">");
 				}
+
 				classBuilder.receiverSignature = sb.toString();
 			}
 		}
+
 		innerClasses.add(classBuilder);
 	}
 
@@ -370,9 +392,10 @@ public class ClassBuilder {
 	}
 
 	public TypeSpec build() {
-		innerClasses.stream()
-				.map(ClassBuilder::build)
-				.forEach(builder::addType);
+		for (ClassBuilder innerCb : innerClasses) {
+			builder.addType(innerCb.build());
+		}
+
 		return builder.build();
 	}
 }

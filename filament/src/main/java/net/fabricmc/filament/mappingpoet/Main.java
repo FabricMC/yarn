@@ -15,17 +15,6 @@
  */
 package net.fabricmc.mappingpoet;
 
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.JavaFile;
-import net.fabricmc.mappingpoet.Environment.ClassNamePointer;
-import net.fabricmc.mappingpoet.Environment.NestedClassInfo;
-import net.fabricmc.mappingpoet.signature.ClassStaticContext;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InnerClassNode;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,6 +39,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import com.squareup.javapoet.JavaFile;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.InnerClassNode;
+
+import net.fabricmc.mappingpoet.Environment.ClassNamePointer;
+import net.fabricmc.mappingpoet.Environment.NestedClassInfo;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -66,8 +65,8 @@ public class Main {
 			if (Files.exists(outputDirectory)) {
 				try (var stream = Files.walk(outputDirectory)) {
 					stream.sorted(Comparator.reverseOrder())
-							.map(Path::toFile)
-							.forEach(File::delete);
+					.map(Path::toFile)
+					.forEach(File::delete);
 				}
 			}
 
@@ -94,20 +93,20 @@ public class Main {
 		Map<String, ClassBuilder> classes = new HashMap<>();
 		forEachClass(inputJar, (classNode, environment) -> writeClass(mapping, classNode, classes, environment), librariesDir);
 
-		classes.values().stream()
-				.filter(classBuilder -> !classBuilder.getClassName().contains("$"))
-				.forEach(classBuilder -> {
-					int packageEnd = classBuilder.getClassName().lastIndexOf("/");
-					JavaFile javaFile = JavaFile.builder(packageEnd == -1 ? "" : classBuilder.getClassName().substring(0, packageEnd).replaceAll("/", "."), classBuilder.build())
-							.build();
-					try {
-						javaFile.writeTo(outputDirectory);
-					} catch (IOException e) {
-						throw new RuntimeException("Failed to write class", e);
-					}
-				});
+		for (ClassBuilder classBuilder : classes.values()) {
+			String name = classBuilder.getClassName();
+			if (name.contains("$")) continue;
 
+			try {
+				int packageEnd = classBuilder.getClassName().lastIndexOf("/");
+				String pkgName = packageEnd < 0 ? "" : classBuilder.getClassName().substring(0, packageEnd).replaceAll("/", ".");
+				JavaFile javaFile = JavaFile.builder(pkgName, classBuilder.build()).build();
 
+				javaFile.writeTo(outputDirectory);
+			} catch (Throwable t) {
+				throw new RuntimeException("Failed to process class "+name, t);
+			}
+		}
 	}
 
 	private static void forEachClass(Path jar, ClassNodeConsumer classNodeConsumer, Path librariesDir) {
@@ -170,7 +169,9 @@ public class Main {
 		//Sort all the classes making sure that inner classes come after the parent classes
 		classes.sort(Comparator.comparing(o -> o.name));
 
-		classes.forEach(node -> classNodeConsumer.accept(node, new Environment(supers, sealedClasses, nestedClasses)));
+		for (ClassNode node : classes) {
+			classNodeConsumer.accept(node, new Environment(supers, sealedClasses, nestedClasses));
+		}
 	}
 
 	private static void scanNestedClasses(Map<String, ClassNamePointer> classNames, Map<String, Environment.NestedClassInfo> instanceInnerClasses, Path librariesDir) {
