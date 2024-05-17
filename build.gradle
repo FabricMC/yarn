@@ -519,11 +519,11 @@ javadoc {
 	source fileTree(fakeSourceDir) + sourceSets.constants.allJava + sourceSets.packageDocs.allJava
 	classpath = configurations.javadocClasspath.plus minecraftLibraries
 
-	// TODO how to do this?
-//	def tagletClasspath = configurations.mappingPoet.files.toList()
+	def filamentCodeSource = MappingPoetTask.class.getProtectionDomain().getCodeSource()
+	def filamentJarFile = new File(filamentCodeSource.getLocation().getFile())
 
 	options {
-//		tagletPath tagletClasspath
+		tagletPath = [filamentJarFile]
 		header file("gradle/javadoc/header.txt").text.trim() // cannot include line breaks
 		addFileOption "-add-stylesheet", file("gradle/javadoc/forms.css")
 	}
