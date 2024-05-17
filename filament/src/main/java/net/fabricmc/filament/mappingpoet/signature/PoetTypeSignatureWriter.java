@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet.signature;
+
+package net.fabricmc.filament.mappingpoet.signature;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -29,7 +30,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.TypePath;
 import org.objectweb.asm.signature.SignatureVisitor;
 
-import net.fabricmc.mappingpoet.Signatures;
+import net.fabricmc.filament.mappingpoet.Signatures;
 
 /**
  * A type signature to javapoet visitor.
@@ -39,7 +40,6 @@ import net.fabricmc.mappingpoet.Signatures;
  * can be defined.</p>
  */
 public final class PoetTypeSignatureWriter extends SignatureVisitor {
-
 	private final ClassStaticContext context;
 	private final ArrayList<TypeName> params = new ArrayList<>();
 	private /* NonNull */ TypeAnnotationBank storage; // mutable
@@ -132,6 +132,7 @@ public final class PoetTypeSignatureWriter extends SignatureVisitor {
 			} else {
 				currentType = ((ClassName) currentType).nestedClass(nestedClassName);
 			}
+
 			nestedClassName = null;
 		}
 
@@ -150,10 +151,10 @@ public final class PoetTypeSignatureWriter extends SignatureVisitor {
 		if (activeTypeArgument != null) {
 			TypeName hold = activeTypeArgument.compute();
 			TypeName used = switch (activeTypeArgumentKind) {
-				case SignatureVisitor.EXTENDS -> WildcardTypeName.subtypeOf(hold);
-				case SignatureVisitor.SUPER -> WildcardTypeName.supertypeOf(hold);
-				case SignatureVisitor.INSTANCEOF -> hold;
-				default -> throw new IllegalStateException(String.format("Illegal type argument wildcard %s", activeTypeArgumentKind));
+			case SignatureVisitor.EXTENDS -> WildcardTypeName.subtypeOf(hold);
+			case SignatureVisitor.SUPER -> WildcardTypeName.supertypeOf(hold);
+			case SignatureVisitor.INSTANCEOF -> hold;
+			default -> throw new IllegalStateException(String.format("Illegal type argument wildcard %s", activeTypeArgumentKind));
 			};
 
 			used = AnnotationAwareDescriptors.annotate(used, storage.advance(TypePath.TYPE_ARGUMENT, params.size()));

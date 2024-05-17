@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet;
 
-import com.squareup.javapoet.ClassName;
-import net.fabricmc.mappingpoet.signature.ClassStaticContext;
+package net.fabricmc.filament.mappingpoet;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+
+import com.squareup.javapoet.ClassName;
+
+import net.fabricmc.filament.mappingpoet.signature.ClassStaticContext;
 
 /**
  * Represents an overall runtime environment, knows all inner class,
@@ -39,8 +41,9 @@ public record Environment(
 
 	public record ClassNamePointer(String simple, String outerClass) {
 		public ClassName toClassName(ClassName outerClassName) {
-			if (simple == null)
+			if (simple == null) {
 				return null;
+			}
 
 			return outerClassName.nestedClass(simple);
 		}

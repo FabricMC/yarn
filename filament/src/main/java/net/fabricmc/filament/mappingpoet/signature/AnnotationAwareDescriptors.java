@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet.signature;
+
+package net.fabricmc.filament.mappingpoet.signature;
 
 import java.util.AbstractMap;
 import java.util.ArrayDeque;
@@ -31,10 +32,9 @@ import com.squareup.javapoet.TypeName;
 import org.objectweb.asm.TypePath;
 import org.objectweb.asm.TypeReference;
 
-import net.fabricmc.mappingpoet.Signatures;
+import net.fabricmc.filament.mappingpoet.Signatures;
 
 public final class AnnotationAwareDescriptors {
-
 	private AnnotationAwareDescriptors() {
 	}
 
@@ -43,6 +43,7 @@ public final class AnnotationAwareDescriptors {
 		ClassName superName = parseType(rawSuper, mapping.getBank(TypeReference.newSuperTypeReference(-1)), context);
 
 		List<TypeName> interfaces = new ArrayList<>(rawInterfaces.size());
+
 		for (ListIterator<String> itr = rawInterfaces.listIterator(); itr.hasNext(); ) {
 			int i = itr.nextIndex();
 			String item = itr.next();
@@ -59,12 +60,14 @@ public final class AnnotationAwareDescriptors {
 		Deque<List<AnnotationSpec>> arrayAnnotations = new ArrayDeque<>();
 		int len = desc.length();
 		int index;
+
 		for (index = 0; (index < len) && (desc.charAt(index) == '['); index++) {
 			arrayAnnotations.push(bank.getCurrentAnnotations());
 			bank = bank.advance(TypePath.ARRAY_ELEMENT, 0);
 		}
 
 		TypeName current;
+
 		if (len - index == 1) {
 			current = annotate(Signatures.getPrimitive(desc.charAt(index)), bank);
 		} else {
@@ -72,9 +75,11 @@ public final class AnnotationAwareDescriptors {
 			assert desc.charAt(index) == 'L' && desc.charAt(len - 1) == ';';
 			current = parseType(desc.substring(index + 1, len - 1), bank, context);
 		}
+
 		while (!arrayAnnotations.isEmpty()) {
 			current = ArrayTypeName.of(current);
 			List<AnnotationSpec> specs = arrayAnnotations.pop();
+
 			if (!specs.isEmpty()) {
 				current = current.annotated(specs);
 			}
@@ -101,10 +106,12 @@ public final class AnnotationAwareDescriptors {
 		if (internalName.startsWith("L") && internalName.endsWith(";")) {
 			throw new AssertionError(internalName);
 		}
+
 		int slice = internalName.lastIndexOf('/');
 		String packageSt = slice < 0 ? "" : internalName.substring(0, slice).replace('/', '.');
 
 		int moneySign = internalName.indexOf('$', slice + 1);
+
 		if (moneySign == -1) {
 			return new AbstractMap.SimpleImmutableEntry<>(ClassName.get(packageSt, internalName.substring(slice + 1)), bank);
 		}
@@ -113,8 +120,10 @@ public final class AnnotationAwareDescriptors {
 
 		final int len = internalName.length();
 		boolean enteredInner = false;
+
 		for (int i = moneySign; i < len; ) {
 			int t = internalName.indexOf('$', i + 1);
+
 			if (t < 0) {
 				t = len;
 			}

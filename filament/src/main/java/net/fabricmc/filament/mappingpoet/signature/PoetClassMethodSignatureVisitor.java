@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet.signature;
+
+package net.fabricmc.filament.mappingpoet.signature;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,6 @@ import org.objectweb.asm.TypeReference;
 import org.objectweb.asm.signature.SignatureVisitor;
 
 public final class PoetClassMethodSignatureVisitor extends SignatureVisitor {
-
 	private final TypeAnnotationMapping mapping;
 	private final ClassStaticContext context;
 	private final boolean forClass;
@@ -91,8 +91,8 @@ public final class PoetClassMethodSignatureVisitor extends SignatureVisitor {
 	private SignatureVisitor visitLowerBound() {
 		collectLowerBound();
 
-		TypeAnnotationBank bank = mapping.getBank(TypeReference.newTypeParameterBoundReference(forClass ?
-						TypeReference.CLASS_TYPE_PARAMETER_BOUND : TypeReference.METHOD_TYPE_PARAMETER_BOUND, generics.size(),
+		TypeAnnotationBank bank = mapping.getBank(TypeReference.newTypeParameterBoundReference(forClass
+						? TypeReference.CLASS_TYPE_PARAMETER_BOUND : TypeReference.METHOD_TYPE_PARAMETER_BOUND, generics.size(),
 				currentGenericBounds.size()));
 		return pendingLowerBound = new PoetTypeSignatureWriter(bank, context);
 	}

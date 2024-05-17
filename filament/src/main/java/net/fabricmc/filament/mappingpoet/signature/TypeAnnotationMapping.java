@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet.signature;
+
+package net.fabricmc.filament.mappingpoet.signature;
 
 import org.objectweb.asm.TypeReference;
 
@@ -21,7 +22,6 @@ import org.objectweb.asm.TypeReference;
  * The collection of type annotations from a bytecode structure that stores type annotations.
  */
 public interface TypeAnnotationMapping {
-
 	TypeAnnotationMapping EMPTY = reference -> TypeAnnotationBank.EMPTY;
 
 	// implNote: TypeReference is not a pojo! No equals or hash!

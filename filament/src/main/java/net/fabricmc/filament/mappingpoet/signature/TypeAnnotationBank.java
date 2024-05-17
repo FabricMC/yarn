@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet.signature;
+
+package net.fabricmc.filament.mappingpoet.signature;
 
 import java.util.Collections;
 import java.util.List;

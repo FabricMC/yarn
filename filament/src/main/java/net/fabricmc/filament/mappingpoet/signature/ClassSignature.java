@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet.signature;
+
+package net.fabricmc.filament.mappingpoet.signature;
 
 import java.util.List;
 
@@ -22,6 +23,5 @@ import com.squareup.javapoet.TypeVariableName;
 
 // no more a class signature but general super info about class
 public record ClassSignature(List<TypeVariableName> generics, TypeName superclass,
-														 List<TypeName> superinterfaces) {
-
+								List<TypeName> superinterfaces) {
 }

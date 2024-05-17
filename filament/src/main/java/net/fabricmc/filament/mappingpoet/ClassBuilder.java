@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet;
 
-import static net.fabricmc.mappingpoet.FieldBuilder.parseAnnotation;
+package net.fabricmc.filament.mappingpoet;
+
+import static net.fabricmc.filament.mappingpoet.FieldBuilder.parseAnnotation;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -37,11 +38,11 @@ import org.objectweb.asm.tree.InnerClassNode;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import net.fabricmc.mappingpoet.signature.AnnotationAwareDescriptors;
-import net.fabricmc.mappingpoet.signature.AnnotationAwareSignatures;
-import net.fabricmc.mappingpoet.signature.ClassSignature;
-import net.fabricmc.mappingpoet.signature.TypeAnnotationMapping;
-import net.fabricmc.mappingpoet.signature.TypeAnnotationStorage;
+import net.fabricmc.filament.mappingpoet.signature.AnnotationAwareDescriptors;
+import net.fabricmc.filament.mappingpoet.signature.AnnotationAwareSignatures;
+import net.fabricmc.filament.mappingpoet.signature.ClassSignature;
+import net.fabricmc.filament.mappingpoet.signature.TypeAnnotationMapping;
+import net.fabricmc.filament.mappingpoet.signature.TypeAnnotationStorage;
 
 public class ClassBuilder {
 	static final Handle OBJ_MTH_BOOTSTRAP = new Handle(
@@ -88,6 +89,7 @@ public class ClassBuilder {
 		ClassName currentClassName = null;
 
 		char ch;
+
 		do {
 			ch = index == internalName.length() ? ';' : internalName.charAt(index);
 
@@ -165,9 +167,11 @@ public class ClassBuilder {
 			StringBuilder sb = new StringBuilder();
 			sb.append(classNode.name);
 			sb.append("<");
+
 			for (TypeVariableName each : signature.generics()) {
 				sb.append("T").append(each.name).append(";");
 			}
+
 			sb.append(">");
 			receiverSignature = sb.toString();
 		}
@@ -248,8 +252,9 @@ public class ClassBuilder {
 					for (AbstractInsnNode insn : method.instructions) {
 						if (insn instanceof InvokeDynamicInsnNode indy
 								&& indy.bsm.equals(OBJ_MTH_BOOTSTRAP)
-								&& indy.name.equals(method.name))
+								&& indy.name.equals(method.name)) {
 							continue methodsLoop;
+						}
 					}
 				}
 
@@ -318,7 +323,7 @@ public class ClassBuilder {
 		if (regularAnnotations == null) {
 			return;
 		}
-		
+
 		for (AnnotationNode annotation : regularAnnotations) {
 			builder.addAnnotation(parseAnnotation(annotation));
 		}
@@ -363,6 +368,7 @@ public class ClassBuilder {
 			if (!Modifier.isStatic(innerClassNode.access)) {
 				classBuilder.instanceInner = true;
 			}
+
 			// consider emit warning if this.instanceInner is true when classBuilder.instanceInner is false
 
 			if (this.receiverSignature != null && classBuilder.instanceInner) {
@@ -374,9 +380,11 @@ public class ClassBuilder {
 
 				if (!innerClassGenerics.isEmpty()) {
 					sb.append("<");
+
 					for (TypeVariableName each : innerClassGenerics) {
 						sb.append("T").append(each.name).append(";");
 					}
+
 					sb.append(">");
 				}
 

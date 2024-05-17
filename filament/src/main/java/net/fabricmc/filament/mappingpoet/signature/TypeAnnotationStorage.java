@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet.signature;
+
+package net.fabricmc.filament.mappingpoet.signature;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,10 +26,9 @@ import org.objectweb.asm.TypePath;
 import org.objectweb.asm.TypeReference;
 import org.objectweb.asm.tree.TypeAnnotationNode;
 
-import net.fabricmc.mappingpoet.FieldBuilder;
+import net.fabricmc.filament.mappingpoet.FieldBuilder;
 
 public final class TypeAnnotationStorage implements TypeAnnotationMapping, TypeAnnotationBank {
-
 	private final int[] targets; // target type and info, only exist in mapping version
 	private final String[] paths;
 	private final AnnotationSpec[] contents;
@@ -51,15 +51,18 @@ public final class TypeAnnotationStorage implements TypeAnnotationMapping, TypeA
 
 	static int comparePath(TypePath left, TypePath right) {
 		int len = Math.min(left.getLength(), right.getLength());
+
 		for (int i = 0; i < len; i++) {
 			int leftStep = left.getStep(i);
 			int rightStep = right.getStep(i);
+
 			if (leftStep != rightStep) {
 				return Integer.compare(leftStep, rightStep);
 			}
 
 			int leftStepArg = left.getStepArgument(i);
 			int rightStepArg = right.getStepArgument(i);
+
 			if (leftStepArg != rightStepArg) {
 				return Integer.compare(leftStepArg, rightStepArg);
 			}
@@ -97,14 +100,15 @@ public final class TypeAnnotationStorage implements TypeAnnotationMapping, TypeA
 
 		String hiCheck = check.substring(0, check.length() - 1).concat(Character.toString((char) (check.charAt(check.length() - 1) + 1)));
 
-
 		int low = Arrays.binarySearch(paths, startIndex, endIndex, check);
+
 		if (low < 0) {
 			low = -(low + 1);
 		}
 
 		// exclusive hi
 		int hi = Arrays.binarySearch(paths, startIndex, endIndex, hiCheck);
+
 		if (hi < 0) {
 			hi = -(hi + 1);
 		}
@@ -119,6 +123,7 @@ public final class TypeAnnotationStorage implements TypeAnnotationMapping, TypeA
 		}
 
 		int hi = Arrays.binarySearch(paths, startIndex, endIndex, currentPath + '\u0000');
+
 		if (hi < 0) {
 			hi = -(hi + 1);
 		}
@@ -140,12 +145,14 @@ public final class TypeAnnotationStorage implements TypeAnnotationMapping, TypeA
 		int target = reference.getValue();
 		// inclusive low
 		int low = Arrays.binarySearch(targets, startIndex, endIndex, target);
+
 		if (low < 0) {
 			low = -(low + 1);
 		}
 
 		// exclusive hi
 		int hi = Arrays.binarySearch(targets, startIndex, endIndex, target + 1);
+
 		if (hi < 0) {
 			hi = -(hi + 1);
 		}
@@ -154,7 +161,6 @@ public final class TypeAnnotationStorage implements TypeAnnotationMapping, TypeA
 	}
 
 	public static final class Builder {
-
 		final List<Entry> entries = new ArrayList<>();
 
 		Builder() {
@@ -169,9 +175,11 @@ public final class TypeAnnotationStorage implements TypeAnnotationMapping, TypeA
 			if (nodes == null) {
 				return this; // thanks asm
 			}
+
 			for (TypeAnnotationNode node : nodes) {
 				entries.add(new Entry(node.typeRef, node.typePath == null ? "" : node.typePath.toString(), FieldBuilder.parseAnnotation(node)));
 			}
+
 			return this;
 		}
 
@@ -184,6 +192,7 @@ public final class TypeAnnotationStorage implements TypeAnnotationMapping, TypeA
 			AnnotationSpec[] contents = new AnnotationSpec[len];
 
 			Iterator<Entry> itr = this.entries.iterator();
+
 			for (int i = 0; i < len; i++) {
 				Entry entry = itr.next();
 				targets[i] = entry.target;
@@ -212,6 +221,5 @@ public final class TypeAnnotationStorage implements TypeAnnotationMapping, TypeA
 				return path.compareTo(o.path);
 			}
 		}
-
 	}
 }

@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet.jd;
+
+package net.fabricmc.filament.mappingpoet.jd;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -30,7 +31,6 @@ import jdk.javadoc.doclet.Taglet;
 
 @SuppressWarnings("unused")
 public final class MappingTaglet implements Taglet {
-
 	public MappingTaglet() {
 		// Required by javadoc
 	}
@@ -59,9 +59,11 @@ public final class MappingTaglet implements Taglet {
 		builder.append("<thead>\n");
 		builder.append("<th>Namespace</th>\n");
 		builder.append("<th>Name</th>\n");
+
 		if (!typeDecl) {
 			builder.append("<th>Mixin selector</th>\n");
 		}
+
 		builder.append("</thead>\n");
 		builder.append("<tbody>\n");
 
@@ -71,9 +73,11 @@ public final class MappingTaglet implements Taglet {
 			builder.append("<tr>\n");
 			builder.append(String.format("<td>%s</td>\n", escaped(ans[0])));
 			builder.append(String.format("<td><span class=\"copyable\"><code>%s</code></span></td>\n", escaped(ans[1])));
+
 			if (!typeDecl) {
 				builder.append(String.format("<td><span class=\"copyable\"><code>%s</code></span></td>\n", escaped(ans[2])));
 			}
+
 			builder.append("</tr>\n");
 		}
 
@@ -86,14 +90,17 @@ public final class MappingTaglet implements Taglet {
 	private static String escaped(String original) {
 		StringBuilder builder = new StringBuilder(original.length());
 		final int len = original.length();
+
 		for (int i = 0; i < len; i++) {
 			char c = original.charAt(i);
+
 			if (c > 127 || c == '"' || c == '\'' || c == '<' || c == '>' || c == '&') {
 				builder.append("&#").append((int) c).append(";");
 			} else {
 				builder.append(c);
 			}
 		}
+
 		return builder.toString();
 	}
 }

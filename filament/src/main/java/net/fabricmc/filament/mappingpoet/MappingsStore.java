@@ -13,7 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet;
+
+package net.fabricmc.filament.mappingpoet;
+
+import static net.fabricmc.mappingio.tree.MappingTreeView.SRC_NAMESPACE_ID;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.List;
+import java.util.Map;
 
 import net.fabricmc.mappingio.MappingReader;
 import net.fabricmc.mappingio.adapter.MappingSourceNsSwitch;
@@ -23,14 +32,6 @@ import net.fabricmc.mappingio.tree.MappingTreeView.ClassMappingView;
 import net.fabricmc.mappingio.tree.MappingTreeView.ElementMappingView;
 import net.fabricmc.mappingio.tree.MappingTreeView.MethodMappingView;
 import net.fabricmc.mappingio.tree.MemoryMappingTree;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.AbstractMap.SimpleImmutableEntry;
-import java.util.List;
-import java.util.Map;
-
-import static net.fabricmc.mappingio.tree.MappingTreeView.SRC_NAMESPACE_ID;
 
 //Taken from loom
 public class MappingsStore {
@@ -44,16 +45,19 @@ public class MappingsStore {
 
 	private static MappingTreeView readMappings(Path input) {
 		var tree = new MemoryMappingTree();
+
 		try {
-			MappingReader.read(input, MappingFormat.TINY_2, new MappingSourceNsSwitch(tree, "named"));
+			MappingReader.read(input, MappingFormat.TINY_2_FILE, new MappingSourceNsSwitch(tree, "named"));
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to read mappings", e);
 		}
+
 		return tree;
 	}
 
 	private void addDoc(ElementMappingView element, DocAdder adder) {
 		String doc = element.getComment();
+
 		if (doc != null) {
 			adder.addJavadoc("$L", doc);
 		}
@@ -61,11 +65,14 @@ public class MappingsStore {
 
 	public void addClassDoc(DocAdder adder, String className) {
 		var classDef = tree.getClass(className);
+
 		if (classDef == null) {
 			return;
 		}
+
 		addDoc(classDef, adder);
 		adder.addJavadoc("\n");
+
 		for (int id = SRC_NAMESPACE_ID; id < maxNamespace; id++) {
 			String transformedName = classDef.getName(id);
 			adder.addJavadoc("@mapping {@literal $L:$L}\n", tree.getNamespaceName(id), transformedName);
@@ -74,17 +81,20 @@ public class MappingsStore {
 
 	public void addFieldDoc(DocAdder addJavadoc, String owner, String name, String desc) {
 		var classDef = tree.getClass(owner);
+
 		if (classDef == null) {
 			return;
 		}
 
 		var fieldDef = classDef.getField(name, desc);
+
 		if (fieldDef == null) {
 			return;
 		}
 
 		addDoc(fieldDef, addJavadoc);
 		addJavadoc.addJavadoc("\n");
+
 		for (int id = SRC_NAMESPACE_ID; id < maxNamespace; id++) {
 			String transformedName = fieldDef.getName(id);
 			String mixinForm = "L" + classDef.getName(id) + ";" + transformedName + ":" + fieldDef.getDesc(id);
@@ -94,11 +104,14 @@ public class MappingsStore {
 
 	public Map.Entry<String, String> getParamNameAndDoc(Environment environment, String owner, String name, String desc, int index) {
 		var found = searchMethod(environment, owner, name, desc);
+
 		if (found != null) {
 			var methodDef = found.getValue();
+
 			if (methodDef.getArgs().isEmpty()) {
 				return null;
 			}
+
 			return methodDef.getArgs().stream()
 					.filter(param -> param.getLvIndex() == index)
 					// Map.entry() is null-hostile
@@ -106,17 +119,20 @@ public class MappingsStore {
 					.findFirst()
 					.orElse(null);
 		}
+
 		return null;
 	}
 
 	public void addMethodDoc(DocAdder adder, Environment environment, String owner, String name, String desc) {
 		var found = searchMethod(environment, owner, name, desc);
+
 		if (found == null) {
 			return;
 		}
 
 		var methodDef = found.getValue();
 		var ownerDef = found.getKey();
+
 		if (!ownerDef.equals(methodDef.getOwner())) {
 			adder.addJavadoc("{@inheritDoc}");
 		} else {
@@ -124,6 +140,7 @@ public class MappingsStore {
 		}
 
 		adder.addJavadoc("\n");
+
 		for (int id = SRC_NAMESPACE_ID; id < maxNamespace; id++) {
 			String transformedName = methodDef.getName(id);
 			String mixinForm = "L" + ownerDef.getName(id) + ";" + transformedName + methodDef.getDesc(id);
@@ -134,16 +151,19 @@ public class MappingsStore {
 	private Map.Entry<ClassMappingView, MethodMappingView> searchMethod(Environment environment, String owner, String name, String desc) {
 		var classDef = tree.getClass(owner);
 
-		if (classDef == null)
+		if (classDef == null) {
 			return null;
+		}
 
 		var methodDef = classDef.getMethod(name, desc);
-		if (methodDef != null)
-			return Map.entry(methodDef.getOwner(), methodDef);
 
+		if (methodDef != null) {
+			return Map.entry(methodDef.getOwner(), methodDef);
+		}
 
 		for (String superName : environment.superTypes().getOrDefault(owner, List.of())) {
 			var ret = searchMethod(environment, superName, name, desc);
+
 			if (ret != null) {
 				return ret;
 			}

@@ -13,23 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet;
 
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
-import com.squareup.javapoet.TypeName;
-import net.fabricmc.mappingpoet.signature.AnnotationAwareDescriptors;
-import net.fabricmc.mappingpoet.signature.AnnotationAwareSignatures;
-import net.fabricmc.mappingpoet.signature.MethodSignature;
-import net.fabricmc.mappingpoet.signature.TypeAnnotationBank;
-import net.fabricmc.mappingpoet.signature.TypeAnnotationMapping;
-import net.fabricmc.mappingpoet.signature.TypeAnnotationStorage;
-import org.objectweb.asm.TypeReference;
-import org.objectweb.asm.tree.AnnotationNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodNode;
+package net.fabricmc.filament.mappingpoet;
 
-import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,6 +24,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.lang.model.element.Modifier;
+
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeName;
+import org.objectweb.asm.TypeReference;
+import org.objectweb.asm.tree.AnnotationNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
+
+import net.fabricmc.filament.mappingpoet.signature.AnnotationAwareDescriptors;
+import net.fabricmc.filament.mappingpoet.signature.AnnotationAwareSignatures;
+import net.fabricmc.filament.mappingpoet.signature.MethodSignature;
+import net.fabricmc.filament.mappingpoet.signature.TypeAnnotationBank;
+import net.fabricmc.filament.mappingpoet.signature.TypeAnnotationMapping;
+import net.fabricmc.filament.mappingpoet.signature.TypeAnnotationStorage;
 
 public class MethodBuilder {
 	private static final Set<String> RESERVED_KEYWORDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
@@ -83,6 +86,7 @@ public class MethodBuilder {
 		if (regularAnnotations == null || regularAnnotations.length <= index) {
 			return;
 		}
+
 		addDirectAnnotations(builder, regularAnnotations[index]);
 	}
 
@@ -90,6 +94,7 @@ public class MethodBuilder {
 		if (regularAnnotations == null) {
 			return;
 		}
+
 		for (AnnotationNode annotation : regularAnnotations) {
 			builder.addAnnotation(FieldBuilder.parseAnnotation(annotation));
 		}
@@ -104,8 +109,10 @@ public class MethodBuilder {
 			usedNames.add(suggestedName);
 			return suggestedName;
 		}
+
 		int t = 2;
 		String currentSuggestion = suggestedName + t;
+
 		while (usedNames.contains(currentSuggestion)) {
 			t++;
 			currentSuggestion = suggestedName + t;
@@ -122,22 +129,29 @@ public class MethodBuilder {
 		int newEnd = str.length();
 		int ltStart;
 		ltStart = str.indexOf('<', newStart);
+
 		if (ltStart != -1 && ltStart < newEnd) {
 			newEnd = ltStart;
 		}
+
 		ltStart = str.indexOf('[', newStart);
+
 		if (ltStart != -1 && ltStart < newEnd) {
 			newEnd = ltStart;
 		}
+
 		int dotEnd;
+
 		if ((dotEnd = str.lastIndexOf(".", newEnd)) != -1) {
 			newStart = dotEnd + 1;
 		}
+
 		str = Character.toLowerCase(str.charAt(newStart)) + str.substring(newStart + 1, newEnd);
 
 		if (str.equals("boolean")) {
 			str = "bool";
 		}
+
 		return str;
 	}
 
@@ -165,6 +179,7 @@ public class MethodBuilder {
 		if (regularAnnotations == null) {
 			return;
 		}
+
 		for (AnnotationNode annotation : regularAnnotations) {
 			builder.addAnnotation(FieldBuilder.parseAnnotation(annotation));
 		}
@@ -177,6 +192,7 @@ public class MethodBuilder {
 		}
 
 		TypeName typeName;
+
 		if (signature != null) {
 			typeName = signature.result();
 		} else {
@@ -185,6 +201,7 @@ public class MethodBuilder {
 		}
 
 		builder.returns(typeName);
+
 		if (typeName != TypeName.VOID && !builder.modifiers.contains(Modifier.ABSTRACT)) {
 			builder.addStatement("throw new RuntimeException()");
 		} else if (methodNode.annotationDefault != null) {
@@ -202,8 +219,10 @@ public class MethodBuilder {
 		// generate receiver param for type annos
 
 		TypeAnnotationBank receiverAnnos = typeAnnotations.getBank(TypeReference.newTypeReference(TypeReference.METHOD_RECEIVER));
+
 		if (!receiverAnnos.isEmpty()) {
 			ParameterSpec.Builder receiverBuilder;
+
 			// only instance inner class ctor can have receivers
 			if (methodNode.name.equals("<init>")) {
 				TypeName annotatedReceiver = AnnotationAwareSignatures.parseSignature("L" + receiverSignature.substring(0, receiverSignature.lastIndexOf('.')) + ";", receiverAnnos, environment);
@@ -217,6 +236,7 @@ public class MethodBuilder {
 				TypeName annotatedReceiver = AnnotationAwareSignatures.parseSignature("L" + receiverSignature + ";", receiverAnnos, environment);
 				receiverBuilder = ParameterSpec.builder(annotatedReceiver, "this");
 			}
+
 			// receiver param cannot have its jd/param anno except type use anno
 			builder.addParameter(receiverBuilder.build());
 		}
@@ -224,12 +244,15 @@ public class MethodBuilder {
 		List<AnnotationNode>[] visibleParameterAnnotations = methodNode.visibleParameterAnnotations;
 		List<AnnotationNode>[] invisibleParameterAnnotations = methodNode.invisibleParameterAnnotations;
 		int index = 0;
+
 		for (ParamType paramType : paramTypes) {
 			paramType.fillName(usedParamNames);
 			ParameterSpec.Builder paramBuilder = ParameterSpec.builder(paramType.type, paramType.name, paramType.modifiers);
+
 			if (paramType.comment != null) {
 				paramBuilder.addJavadoc(paramType.comment + "\n");
 			}
+
 			addDirectAnnotations(paramBuilder, visibleParameterAnnotations, index);
 			addDirectAnnotations(paramBuilder, invisibleParameterAnnotations, index);
 			builder.addParameter(paramBuilder.build());
@@ -246,9 +269,11 @@ public class MethodBuilder {
 		if (desc.charAt(index) != '(') {
 			throw invalidMethodDesc(desc, index);
 		}
+
 		index++; // consume '('
 
 		Iterator<TypeName> signatureParamIterator = signature == null ? Collections.emptyIterator() : signature.parameters().iterator();
+
 		while (desc.charAt(index) != ')') {
 			int oldIndex = index;
 			Map.Entry<Integer, TypeName> parsedParam = FieldBuilder.parseType(desc, index);
@@ -257,19 +282,25 @@ public class MethodBuilder {
 
 			if (paramIndex >= formalParamStartIndex) { // skip guessed synthetic/implicit params
 				TypeName parsedType;
+
 				if (signatureParamIterator.hasNext()) {
 					parsedType = signatureParamIterator.next();
 				} else {
 					parsedType = AnnotationAwareDescriptors.parseDesc(desc.substring(oldIndex, index), typeAnnotations.getBank(TypeReference.newFormalParameterReference(paramIndex - formalParamStartIndex)), environment);
 				}
+
 				paramTypes.add(new ParamType(mappings.getParamNameAndDoc(environment, classNode.name, methodNode.name, methodNode.desc, slot), parsedType, usedParamNames, slot));
 			}
+
 			slot++;
+
 			if (nonAnnotatedParsedType.equals(TypeName.DOUBLE) || nonAnnotatedParsedType.equals(TypeName.LONG)) {
 				slot++;
 			}
+
 			paramIndex++;
 		}
+
 		/* bruh, we don't care about return type
 		index++; // consume ')'
 		Map.Entry<Integer, TypeName> parsedReturn = FieldBuilder.parseType(desc, index);
@@ -283,11 +314,15 @@ public class MethodBuilder {
 			for (TypeName each : signature.thrown()) {
 				builder.addException(each);
 			}
+
 			return;
 		}
+
 		List<String> exceptions = methodNode.exceptions;
+
 		if (exceptions != null) {
 			int index = 0;
+
 			for (String internalName : exceptions) {
 				builder.addException(AnnotationAwareDescriptors.parseType(internalName, typeAnnotations.getBank(TypeReference.newExceptionReference(index)), environment));
 				index++;
@@ -309,8 +344,9 @@ public class MethodBuilder {
 		private final Modifier[] modifiers;
 		private String name;
 
-		public ParamType(Map.Entry<String, String> nameAndDoc, TypeName type, Set<String> usedNames, int slot) {
+		ParamType(Map.Entry<String, String> nameAndDoc, TypeName type, Set<String> usedNames, int slot) {
 			this.name = nameAndDoc != null ? nameAndDoc.getKey() : null;
+
 			if (this.name != null) {
 				if (usedNames.contains(this.name)) {
 					System.err.printf("Overridden parameter name detected in %s %s %s slot %d, resetting%n", classNode.name, methodNode.name, methodNode.desc, slot);
@@ -319,6 +355,7 @@ public class MethodBuilder {
 					usedNames.add(this.name);
 				}
 			}
+
 			this.comment = nameAndDoc == null ? null : nameAndDoc.getValue();
 			this.type = type;
 			this.modifiers = new ModifierBuilder(0)
@@ -329,6 +366,7 @@ public class MethodBuilder {
 			if (name != null) {
 				return;
 			}
+
 			name = reserveValidName(suggestName(type), usedNames);
 		}
 	}

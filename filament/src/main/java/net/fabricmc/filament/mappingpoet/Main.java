@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet;
+
+package net.fabricmc.filament.mappingpoet;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,16 +47,16 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InnerClassNode;
 
-import net.fabricmc.mappingpoet.Environment.ClassNamePointer;
-import net.fabricmc.mappingpoet.Environment.NestedClassInfo;
+import net.fabricmc.filament.mappingpoet.Environment.ClassNamePointer;
+import net.fabricmc.filament.mappingpoet.Environment.NestedClassInfo;
 
 public class Main {
-
 	public static void main(String[] args) {
 		if (args.length != 3 && args.length != 4) {
 			System.out.println("<mappings> <inputJar> <outputDir> [<librariesDir>]");
 			return;
 		}
+
 		Path mappings = Paths.get(args[0]);
 		Path inputJar = Paths.get(args[1]);
 		Path outputDirectory = Paths.get(args[2]);
@@ -65,8 +66,8 @@ public class Main {
 			if (Files.exists(outputDirectory)) {
 				try (var stream = Files.walk(outputDirectory)) {
 					stream.sorted(Comparator.reverseOrder())
-					.map(Path::toFile)
-					.forEach(File::delete);
+							.map(Path::toFile)
+							.forEach(File::delete);
 				}
 			}
 
@@ -121,7 +122,7 @@ public class Main {
 			scanNestedClasses(classNames, nestedClasses, librariesDir);
 		}
 
-		try (final JarFile jarFile = new JarFile(jar.toFile())) {
+		try (JarFile jarFile = new JarFile(jar.toFile())) {
 			Enumeration<JarEntry> entryEnumerator = jarFile.entries();
 
 			while (entryEnumerator.hasMoreElements()) {
@@ -136,12 +137,15 @@ public class Main {
 					ClassNode classNode = new ClassNode();
 					reader.accept(classNode, ClassReader.SKIP_CODE);
 					List<String> superNames = new ArrayList<>();
+
 					if (classNode.superName != null && !classNode.superName.equals("java/lang/Object")) {
 						superNames.add(classNode.superName);
 					}
+
 					if (classNode.interfaces != null) {
 						superNames.addAll(classNode.interfaces);
 					}
+
 					if (!superNames.isEmpty()) {
 						supers.put(classNode.name, superNames);
 					}
@@ -183,7 +187,7 @@ public class Main {
 						return FileVisitResult.CONTINUE;
 					}
 
-					try (final JarFile jarFile = new JarFile(file.toFile())) {
+					try (JarFile jarFile = new JarFile(file.toFile())) {
 						Enumeration<JarEntry> entryEnumerator = jarFile.entries();
 
 						while (entryEnumerator.hasMoreElements()) {
@@ -198,7 +202,8 @@ public class Main {
 								reader.accept(new ClassVisitor(Opcodes.ASM9) {
 									@Override
 									public void visitInnerClass(String name, String outerName, String simpleName, int access) {
-										instanceInnerClasses.put(name, new Environment.NestedClassInfo(outerName, !Modifier.isStatic(access), simpleName));
+										instanceInnerClasses.put(name, new NestedClassInfo(outerName, !Modifier.isStatic(access), simpleName));
+
 										if (outerName != null) {
 											classNames.put(name, new ClassNamePointer(simpleName, outerName));
 										}
@@ -234,11 +239,14 @@ public class Main {
 	private static void writeClass(MappingsStore mappings, ClassNode classNode, Map<String, ClassBuilder> existingClasses, Environment environment) {
 		// TODO make sure named jar has valid InnerClasses, use that info instead
 		String name = classNode.name;
+
 		{
 			//Block anonymous class and their nested classes
 			int lastSearch = name.length();
+
 			while (lastSearch != -1) {
 				lastSearch = name.lastIndexOf('$', lastSearch - 1);
+
 				// names starting with digit is illegal java
 				if (isDigit(name.charAt(lastSearch + 1))) {
 					return;
@@ -251,15 +259,16 @@ public class Main {
 
 		if (name.contains("$")) {
 			String parentClass = name.substring(0, name.lastIndexOf("$"));
+
 			if (!existingClasses.containsKey(parentClass)) {
 				throw new RuntimeException("Could not find parent class: " + parentClass + " for " + classNode.name);
 			}
+
 			existingClasses.get(parentClass).addInnerClass(classBuilder);
 		}
 
 		classBuilder.addMembers();
 		existingClasses.put(name, classBuilder);
-
 	}
 
 	@FunctionalInterface

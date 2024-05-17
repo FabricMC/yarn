@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.fabricmc.mappingpoet;
+
+package net.fabricmc.filament.mappingpoet;
 
 import java.util.AbstractMap;
 import java.util.Collections;
@@ -30,27 +31,30 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
 import com.squareup.javapoet.WildcardTypeName;
 
-import net.fabricmc.mappingpoet.signature.ClassSignature;
-import net.fabricmc.mappingpoet.signature.MethodSignature;
+import net.fabricmc.filament.mappingpoet.signature.ClassSignature;
+import net.fabricmc.filament.mappingpoet.signature.MethodSignature;
 
 public final class Signatures {
-
 	public static ClassSignature parseClassSignature(final String signature) {
 		// <A:Labc.Def:Ljava.util.Iterable<Ljava/lang.Object;>;B:Ljava/lang/Object>Ljava/lang/Object; etc etc
 		int index = 0;
 		char ch;
 		List<TypeVariableName> generics = Collections.emptyList();
+
 		if (signature.charAt(0) == '<') {
 			// parse generic decl
 			index++; // consume '<'
 
 			// parse type params e.g. <A, B>
 			generics = new LinkedList<>();
+
 			while ((ch = signature.charAt(index)) != '>') {
 				int genericNameStart = index;
+
 				if (ch == ':') {
 					throw errorAt(signature, index);
 				}
+
 				do {
 					index++;
 				} while (signature.charAt(index) != ':');
@@ -59,14 +63,17 @@ public final class Signatures {
 
 				List<TypeName> bounds = new LinkedList<>();
 				boolean classBound = true;
+
 				while (signature.charAt(index) == ':') {
 					// parse bounds
 					index++; // consume ':'
+
 					if (classBound && signature.charAt(index) == ':') {
 						// No class bound, only interface bounds, so '::'
 						classBound = false;
 						continue;
 					}
+
 					classBound = false;
 					Map.Entry<Integer, TypeName> bound = parseParameterizedType(signature, index);
 					index = bound.getKey();
@@ -80,6 +87,7 @@ public final class Signatures {
 		}
 
 		LinkedList<TypeName> supers = new LinkedList<>();
+
 		while (index < signature.length()) {
 			Map.Entry<Integer, TypeName> bound = parseParameterizedType(signature, index);
 			index = bound.getKey();
@@ -93,17 +101,21 @@ public final class Signatures {
 		int index = 0;
 		char ch;
 		List<TypeVariableName> generics = Collections.emptyList();
+
 		if (signature.charAt(0) == '<') {
 			// parse generic decl
 			index++; // consume '<'
 
 			// parse type params e.g. <A, B>
 			generics = new LinkedList<>();
+
 			while ((ch = signature.charAt(index)) != '>') {
 				int genericNameStart = index;
+
 				if (ch == ':') {
 					throw errorAt(signature, index);
 				}
+
 				do {
 					index++;
 				} while (signature.charAt(index) != ':');
@@ -112,14 +124,17 @@ public final class Signatures {
 
 				List<TypeName> bounds = new LinkedList<>();
 				boolean classBound = true;
+
 				while (signature.charAt(index) == ':') {
 					// parse bounds
 					index++; // consume ':'
+
 					if (classBound && signature.charAt(index) == ':') {
 						// No class bound, only interface bounds, so '::'
 						classBound = false;
 						continue;
 					}
+
 					classBound = false;
 					Map.Entry<Integer, TypeName> bound = parseParameterizedType(signature, index);
 					index = bound.getKey();
@@ -135,9 +150,11 @@ public final class Signatures {
 		if (signature.charAt(index) != '(') {
 			throw errorAt(signature, index);
 		}
+
 		index++; // consume '('
 
 		LinkedList<TypeName> params = new LinkedList<>();
+
 		while (signature.charAt(index) != ')') {
 			Map.Entry<Integer, TypeName> param = parseParameterizedType(signature, index);
 			index = param.getKey();
@@ -147,6 +164,7 @@ public final class Signatures {
 		index++; // consume ')'
 
 		TypeName returnType;
+
 		if (signature.charAt(index) == 'V') {
 			returnType = TypeName.VOID;
 			index++;
@@ -157,6 +175,7 @@ public final class Signatures {
 		}
 
 		LinkedList<TypeName> thrown = new LinkedList<>();
+
 		while (index < signature.length() && signature.charAt(index) == '^') {
 			index++; // consume '^'
 			Map.Entry<Integer, TypeName> parsedThrown = parseParameterizedType(signature, index);
@@ -175,6 +194,7 @@ public final class Signatures {
 		GenericStack stack = new GenericStack();
 
 		int index = startOffset;
+
 		// the loop parses a type and try to quit levels if possible
 		do {
 			char ch = signature.charAt(index);
@@ -208,6 +228,7 @@ public final class Signatures {
 
 			if (parseExactType) {
 				int arrayLevel = 0;
+
 				while ((ch = signature.charAt(index)) == '[') {
 					index++;
 					arrayLevel++;
@@ -230,9 +251,11 @@ public final class Signatures {
 				case 'T': {
 					// "TE;" for <E>
 					int nameStart = index;
+
 					while (signature.charAt(index) != ';') {
 						index++;
 					}
+
 					String typeVarName = signature.substring(nameStart, index);
 					stack.add(TypeVariableName.get(typeVarName), arrayLevel, bounded, extendsBound);
 					index++; // read ending ";"
@@ -245,6 +268,7 @@ public final class Signatures {
 					int nameStart = index;
 					ClassName currentClass = null;
 					int nextSimpleNamePrev = -1;
+
 					do {
 						ch = signature.charAt(index);
 
@@ -252,6 +276,7 @@ public final class Signatures {
 							if (currentClass != null) {
 								throw errorAt(signature, index);
 							}
+
 							nextSimpleNamePrev = index;
 						}
 
@@ -264,6 +289,7 @@ public final class Signatures {
 								String simpleName = signature.substring(nextSimpleNamePrev + 1, index);
 								currentClass = currentClass.nestedClass(simpleName);
 							}
+
 							nextSimpleNamePrev = index;
 						}
 
@@ -271,6 +297,7 @@ public final class Signatures {
 					} while (ch != '<' && ch != ';');
 
 					assert currentClass != null;
+
 					if (ch == ';') {
 						stack.add(currentClass, arrayLevel, bounded, extendsBound);
 					}
@@ -278,6 +305,7 @@ public final class Signatures {
 					if (ch == '<') {
 						stack.push(Frame.ofClass(currentClass), arrayLevel, bounded, extendsBound);
 					}
+
 					break;
 				}
 				default: {
@@ -288,6 +316,7 @@ public final class Signatures {
 
 			// quit generics
 			quitLoop:
+
 			while (stack.canQuit() && signature.charAt(index) == '>') {
 				// pop
 				stack.popFrame();
@@ -298,6 +327,7 @@ public final class Signatures {
 					if (ch != '.') {
 						throw errorAt(signature, index);
 					}
+
 					index++;
 					int innerNameStart = index;
 					final int checkIndex = index;
@@ -309,10 +339,13 @@ public final class Signatures {
 
 					while (true) {
 						ch = signature.charAt(index);
+
 						if (ch == '.' || ch == ';' || ch == '<') {
 							String simpleName = signature.substring(innerNameStart, index);
+
 							if (ch == '.' || ch == ';') {
 								stack.tweakLast(name -> ((ParameterizedTypeName) name).nestedClass(simpleName));
+
 								if (ch == ';') {
 									index++;
 									break;
@@ -329,9 +362,7 @@ public final class Signatures {
 				} else {
 					index++;
 				}
-
 			}
-
 		} while (stack.canQuit());
 
 		assert stack.deque.size() == 1;
@@ -345,9 +376,11 @@ public final class Signatures {
 
 	public static TypeName wrap(TypeName component, int level, boolean bounded, boolean extendsBound) {
 		TypeName ret = component;
+
 		for (int i = 0; i < level; i++) {
 			ret = ArrayTypeName.of(ret);
 		}
+
 		return bounded ? extendsBound ? WildcardTypeName.subtypeOf(ret) : WildcardTypeName.supertypeOf(ret) : ret;
 	}
 
@@ -372,6 +405,7 @@ public final class Signatures {
 		case 'Z':
 			return TypeName.BOOLEAN;
 		}
+
 		throw new IllegalArgumentException("Invalid primitive " + c);
 	}
 
@@ -390,6 +424,7 @@ public final class Signatures {
 				if (parameters.size() != 1) {
 					throw new IllegalStateException();
 				}
+
 				return parameters.get(0);
 			};
 		}
