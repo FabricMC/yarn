@@ -60,14 +60,6 @@ configurations {
 	}
 	javadocClasspath
 	decompileClasspath
-	mappingPoetJar {
-		transitive = false
-	}
-	mappingPoet {
-		extendsFrom mappingPoetJar
-		extendsFrom asm
-		transitive = true
-	}
 }
 
 def unpickMetaFile = file("unpick-definitions/unpick.json")
@@ -81,7 +73,6 @@ dependencies {
 	javadocClasspath "com.google.code.findbugs:jsr305:3.0.2" // for some other jsr annotations
 	decompileClasspath "net.fabricmc:cfr:${project.cfr_version}"
 	decompileClasspath "org.vineflower:vineflower:${project.vineflower_version}"
-	mappingPoetJar "net.fabricmc:mappingpoet:${project.mappingpoet_version}"
 	asm "org.ow2.asm:asm:${project.asm_version}"
 	asm "org.ow2.asm:asm-tree:${project.asm_version}"
 	asm "org.ow2.asm:asm-commons:${project.asm_version}"
@@ -102,6 +93,7 @@ import cuchaz.enigma.command.CheckMappingsCommand
 import net.fabricmc.filament.task.MapJarTask
 import net.fabricmc.filament.task.DownloadTask
 import net.fabricmc.filament.task.UnpickJarTask
+import net.fabricmc.filament.task.MappingPoetTask;
 import net.fabricmc.filament.task.base.WithFileInput
 import net.fabricmc.filament.task.base.WithFileOutput
 import net.fabricmc.filament.task.enigma.MapSpecializedMethodsTask
@@ -430,20 +422,12 @@ tasks.register('syncDependencies', Sync) {
 }
 
 def fakeSourceDir = file(".gradle/temp/fakeSource")
-tasks.register('genFakeSource', JavaExec) {
-	dependsOn mergeV2, mapNamedJar, syncDependencies
+tasks.register('genFakeSource', MappingPoetTask) {
 	group = "javadoc generation"
-
-	inputs.file mergeV2.output
-	inputs.file mapNamedJar.output
-	inputs.dir mcLibsDir
-
-	outputs.dir fakeSourceDir
-
-	mainClass = "net.fabricmc.mappingpoet.Main"
-	classpath configurations.mappingPoet
-	// use merged v2 so we have all namespaces in jd
-	args mergeV2.outputFile.getAbsolutePath(), mapNamedJar.outputFile.getAbsolutePath(), fakeSourceDir.getAbsolutePath(), mcLibsDir.getAbsolutePath()
+	mappings = mergeV2.output
+	minecraftJar = mapNamedJar.output
+	libraries.from(minecraftLibraries)
+	output = fakeSourceDir
 }
 
 def decompileOutput = layout.buildDirectory.file("namedSrc")
@@ -480,8 +464,6 @@ javadoc {
 	dependsOn genFakeSource
 	group = "javadoc generation"
 
-	def mappingPoetJar = project.provider { zipTree configurations.mappingPoetJar.singleFile }
-
 	failOnError = false
 	maxMemory = '2G'
 
@@ -498,7 +480,7 @@ javadoc {
 				'implSpec:a:Implementation Requirements:',
 				'implNote:a:Implementation Note:'
 		)
-		taglets "net.fabricmc.mappingpoet.jd.MappingTaglet"
+		taglets "net.fabricmc.filament.mappingpoet.jd.MappingTaglet"
 		// taglet path, header, extra stylesheet settings deferred
 		it.use()
 
@@ -537,26 +519,13 @@ javadoc {
 	source fileTree(fakeSourceDir) + sourceSets.constants.allJava + sourceSets.packageDocs.allJava
 	classpath = configurations.javadocClasspath.plus minecraftLibraries
 
-	def fs = project.services.get(FileSystemOperations.class)
-	def outputDir = javadoc.destinationDir
+	def filamentCodeSource = MappingPoetTask.class.getProtectionDomain().getCodeSource()
+	def filamentJarFile = new File(filamentCodeSource.getLocation().getFile())
 
-	doLast {
-		fs.copy {
-			from mappingPoetJar
-			include "copy_on_click.js"
-			into outputDir
-		}
-	}
-
-	def tagletClasspath = configurations.mappingPoet.files.toList()
-
-	doFirst {
-		// lazy setting
-		options {
-			tagletPath tagletClasspath
-			header mappingPoetJar.get().filter { it.name == 'javadoc_header.txt' }.singleFile.text.trim() // cannot include line breaks
-			addFileOption "-add-stylesheet", mappingPoetJar.get().filter { it.name == 'forms.css' }.singleFile
-		}
+	options {
+		tagletPath = [filamentJarFile]
+		header file("gradle/javadoc/header.txt").text.trim() // cannot include line breaks
+		addFileOption "-add-stylesheet", file("gradle/javadoc/forms.css")
 	}
 }
 
@@ -565,6 +534,7 @@ tasks.register('javadocJar', Jar) {
 	group = "javadoc generation"
 
 	from javadoc.destinationDir
+	from file("gradle/javadoc/copy_on_click.js")
 
 	archiveVersion.set yarnVersion
 	archiveClassifier = 'javadoc'
