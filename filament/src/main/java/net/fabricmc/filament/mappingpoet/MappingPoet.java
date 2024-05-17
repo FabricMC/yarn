@@ -16,17 +16,11 @@
 
 package net.fabricmc.filament.mappingpoet;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Modifier;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -50,49 +44,11 @@ import org.objectweb.asm.tree.InnerClassNode;
 import net.fabricmc.filament.mappingpoet.Environment.ClassNamePointer;
 import net.fabricmc.filament.mappingpoet.Environment.NestedClassInfo;
 
-public class Main {
-	public static void main(String[] args) {
-		if (args.length != 3 && args.length != 4) {
-			System.out.println("<mappings> <inputJar> <outputDir> [<librariesDir>]");
-			return;
-		}
-
-		Path mappings = Paths.get(args[0]);
-		Path inputJar = Paths.get(args[1]);
-		Path outputDirectory = Paths.get(args[2]);
-		Path librariesDir = args.length < 4 ? null : Paths.get(args[3]);
-
-		try {
-			if (Files.exists(outputDirectory)) {
-				try (var stream = Files.walk(outputDirectory)) {
-					stream.sorted(Comparator.reverseOrder())
-							.map(Path::toFile)
-							.forEach(File::delete);
-				}
-			}
-
-			Files.createDirectories(outputDirectory);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-
-		if (!Files.exists(mappings)) {
-			System.out.println("could not find mappings");
-			return;
-		}
-
-		if (!Files.exists(inputJar)) {
-			System.out.println("could not find input jar");
-			return;
-		}
-
-		generate(mappings, inputJar, outputDirectory, librariesDir);
-	}
-
-	public static void generate(Path mappings, Path inputJar, Path outputDirectory, Path librariesDir) {
+public class MappingPoet {
+	public static void generate(Path mappings, Path inputJar, Path outputDirectory, List<Path> libraries) {
 		final MappingsStore mapping = new MappingsStore(mappings);
 		Map<String, ClassBuilder> classes = new HashMap<>();
-		forEachClass(inputJar, (classNode, environment) -> writeClass(mapping, classNode, classes, environment), librariesDir);
+		forEachClass(inputJar, (classNode, environment) -> writeClass(mapping, classNode, classes, environment), libraries);
 
 		for (ClassBuilder classBuilder : classes.values()) {
 			String name = classBuilder.getClassName();
@@ -110,7 +66,7 @@ public class Main {
 		}
 	}
 
-	private static void forEachClass(Path jar, ClassNodeConsumer classNodeConsumer, Path librariesDir) {
+	private static void forEachClass(Path jar, ClassNodeConsumer classNodeConsumer, List<Path> libraries) {
 		List<ClassNode> classes = new ArrayList<>();
 		Map<String, Collection<String>> supers = new HashMap<>();
 		Set<String> sealedClasses = new HashSet<>(); // their subclsses/impls need non-sealed modifier
@@ -118,8 +74,8 @@ public class Main {
 		Map<String, Environment.NestedClassInfo> nestedClasses = new ConcurrentHashMap<>();
 		Map<String, ClassNamePointer> classNames = new ConcurrentHashMap<>();
 
-		if (librariesDir != null) {
-			scanNestedClasses(classNames, nestedClasses, librariesDir);
+		if (libraries.isEmpty()) {
+			scanNestedClasses(classNames, nestedClasses, libraries);
 		}
 
 		try (JarFile jarFile = new JarFile(jar.toFile())) {
@@ -178,44 +134,35 @@ public class Main {
 		}
 	}
 
-	private static void scanNestedClasses(Map<String, ClassNamePointer> classNames, Map<String, Environment.NestedClassInfo> instanceInnerClasses, Path librariesDir) {
+	private static void scanNestedClasses(Map<String, ClassNamePointer> classNames, Map<String, Environment.NestedClassInfo> instanceInnerClasses, List<Path> libraries) {
 		try {
-			Files.walkFileTree(librariesDir, new SimpleFileVisitor<>() {
-				@Override
-				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-					if (!file.getFileName().toString().endsWith(".jar")) {
-						return FileVisitResult.CONTINUE;
-					}
+			for (Path library : libraries) {
+				try (JarFile jarFile = new JarFile(library.toFile())) {
+					Enumeration<JarEntry> entryEnumerator = jarFile.entries();
 
-					try (JarFile jarFile = new JarFile(file.toFile())) {
-						Enumeration<JarEntry> entryEnumerator = jarFile.entries();
+					while (entryEnumerator.hasMoreElements()) {
+						JarEntry entry = entryEnumerator.nextElement();
 
-						while (entryEnumerator.hasMoreElements()) {
-							JarEntry entry = entryEnumerator.nextElement();
+						if (entry.isDirectory() || !entry.getName().endsWith(".class")) {
+							continue;
+						}
 
-							if (entry.isDirectory() || !entry.getName().endsWith(".class")) {
-								continue;
-							}
+						try (InputStream is = jarFile.getInputStream(entry)) {
+							ClassReader reader = new ClassReader(is);
+							reader.accept(new ClassVisitor(Opcodes.ASM9) {
+								@Override
+								public void visitInnerClass(String name, String outerName, String simpleName, int access) {
+									instanceInnerClasses.put(name, new NestedClassInfo(outerName, !Modifier.isStatic(access), simpleName));
 
-							try (InputStream is = jarFile.getInputStream(entry)) {
-								ClassReader reader = new ClassReader(is);
-								reader.accept(new ClassVisitor(Opcodes.ASM9) {
-									@Override
-									public void visitInnerClass(String name, String outerName, String simpleName, int access) {
-										instanceInnerClasses.put(name, new NestedClassInfo(outerName, !Modifier.isStatic(access), simpleName));
-
-										if (outerName != null) {
-											classNames.put(name, new ClassNamePointer(simpleName, outerName));
-										}
+									if (outerName != null) {
+										classNames.put(name, new ClassNamePointer(simpleName, outerName));
 									}
-								}, ClassReader.SKIP_CODE);
-							}
+								}
+							}, ClassReader.SKIP_CODE);
 						}
 					}
-
-					return FileVisitResult.CONTINUE;
 				}
-			});
+			}
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -225,7 +172,7 @@ public class Main {
 		String javaBinary = internalName.replace('/', '.');
 
 		try {
-			Class<?> c = Class.forName(javaBinary, false, Main.class.getClassLoader());
+			Class<?> c = Class.forName(javaBinary, false, MappingPoet.class.getClassLoader());
 			return !Modifier.isStatic(c.getModifiers()) && c.getDeclaringClass() != null;
 		} catch (Throwable ex) {
 			return false;
