@@ -109,6 +109,7 @@ import net.fabricmc.filament.task.mappingio.CompleteMappingsTask
 import net.fabricmc.filament.task.mappingio.ConvertMappingsTask
 import net.fabricmc.filament.task.mappingio.FormatMappingsTask
 import net.fabricmc.filament.task.mappingio.MergeMappingsTask
+import net.fabricmc.filament.task.mappingio.CheckMappingsTask
 import net.fabricmc.mappingio.format.MappingFormat
 import net.fabricmc.nameproposal.MappingNameCompleter
 import org.gradle.work.DisableCachingByDefault
@@ -581,6 +582,11 @@ javadocLint {
 	mappingDirectory = file("mappings")
 }
 
+def checkDuplicates = tasks.register("checkDuplicateNames", CheckMappingsTask) {
+	input = mergeV2.outputFile
+}
+
+check.dependsOn checkDuplicates
 check.dependsOn javadocLint
 
 publishing {
