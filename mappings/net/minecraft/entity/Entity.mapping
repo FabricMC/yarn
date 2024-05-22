@@ -159,12 +159,10 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_5960 noClip Z
 	FIELD field_5961 type Lnet/minecraft/class_1299;
 	FIELD field_5962 SILENT Lnet/minecraft/class_2940;
-	FIELD field_5963 inNetherPortal Z
 	FIELD field_5964 fluidHeight Lit/unimi/dsi/fastutil/objects/Object2DoubleMap;
 	FIELD field_5965 pitch F
 	FIELD field_5969 prevZ D
 	FIELD field_5971 lastRenderY D
-	FIELD field_5972 netherPortalTime I
 	FIELD field_5973 horizontalSpeed F
 	FIELD field_5974 random Lnet/minecraft/class_5819;
 	FIELD field_5975 NAME_VISIBLE Lnet/minecraft/class_2940;
@@ -185,7 +183,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #getId()
 	FIELD field_5989 lastRenderZ D
 	FIELD field_5990 FLAGS Lnet/minecraft/class_2940;
-	FIELD field_5991 lastNetherPortalPosition Lnet/minecraft/class_2338;
 	FIELD field_5992 verticalCollision Z
 	FIELD field_5993 pistonMovementDelta [D
 	FIELD field_5994 distanceTraveled F
@@ -252,7 +249,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #getWidth
 		COMMENT @see #getHeight
 		ARG 1 pose
-	METHOD method_18379 tickPortal ()V
 	METHOD method_18380 setPose (Lnet/minecraft/class_4050;)V
 		ARG 1 pose
 	METHOD method_18381 getEyeHeight (Lnet/minecraft/class_4050;)F
@@ -309,17 +305,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT when the player is in a 1 block tall tunnel).
 		COMMENT
 		COMMENT @see #isInSwimmingPose
-	METHOD method_20620 teleport (DDD)V
-		COMMENT Teleports the entity to the given position, loading the chunk with
-		COMMENT {@link net.minecraft.server.world.ChunkTicketType#POST_TELEPORT}.
-		COMMENT
-		COMMENT @see #requestTeleportAndDismount
-		COMMENT @see #requestTeleport
-		COMMENT @see #teleport(ServerWorld, double, double, double, Set, float, float)
-		COMMENT @see #refreshPositionAndAngles(double, double, double, float, float)
-		ARG 1 destX
-		ARG 3 destY
-		ARG 5 destZ
 	METHOD method_20736 adjustMovementForCollisions (Lnet/minecraft/class_1297;Lnet/minecraft/class_243;Lnet/minecraft/class_238;Lnet/minecraft/class_1937;Ljava/util/List;)Lnet/minecraft/class_243;
 		ARG 0 entity
 		ARG 1 movement
@@ -494,22 +479,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #getDefaultPortalCooldown
 	METHOD method_30230 hasPortalCooldown ()Z
 		COMMENT {@return whether the entity's portal cooldown is in effect}
-	METHOD method_30329 getTeleportTarget (Lnet/minecraft/class_3218;)Lnet/minecraft/class_5454;
-		COMMENT {@return a {@link TeleportTarget} for the entity based on its current and
-		COMMENT destination worlds, plus any nether portals that may be present}
-		ARG 1 destination
-	METHOD method_30330 getPortalRect (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;ZLnet/minecraft/class_2784;)Ljava/util/Optional;
-		COMMENT {@return the portal rect at {@code destPos}}
-		COMMENT
-		COMMENT @see net.minecraft.world.PortalForcer#getPortalRect
-		ARG 1 destWorld
-		ARG 2 destPos
-		ARG 3 destIsNether
-		ARG 4 worldBorder
-	METHOD method_30331 (Lnet/minecraft/class_3218;Lnet/minecraft/class_5459$class_5460;)Lnet/minecraft/class_5454;
-		ARG 2 rect
-	METHOD method_30332 (Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;)Z
-		ARG 2 pos
 	METHOD method_30632 collidesWithStateAtPos (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Z
 		COMMENT {@return whether the entity collides with the block {@code state} at {@code pos}}
 		ARG 1 pos
@@ -1470,8 +1439,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 entityKilled
 		ARG 2 score
 		ARG 3 damageSource
-	METHOD method_5717 setInNetherPortal (Lnet/minecraft/class_2338;)V
-		ARG 1 pos
 	METHOD method_5718 getBrightnessAtEyes ()F
 	METHOD method_5719 copyPositionAndRotation (Lnet/minecraft/class_1297;)V
 		COMMENT Sets the entity's position and rotation the same as {@code entity}.
@@ -1532,13 +1499,12 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT Sets the entity on fire from lava, applies lava damage, and plays the burning sound.
 		COMMENT
 		COMMENT @implNote Fire from lava lasts 15 seconds by default.
-	METHOD method_5731 moveToWorld (Lnet/minecraft/class_1297$class_9776;)Lnet/minecraft/class_1297;
+	METHOD method_5731 moveToWorld (Lnet/minecraft/class_5454;)Lnet/minecraft/class_1297;
 		COMMENT Moves this entity to another world.
 		COMMENT
 		COMMENT <p>Note all entities except server player entities are completely recreated at the destination.
 		COMMENT
 		COMMENT @return the entity in the other world
-		ARG 1 teleportTargetSupplier
 	METHOD method_5732 isAttackable ()Z
 		COMMENT {@return whether the entity can be attacked by players}
 		COMMENT
@@ -1586,9 +1552,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT <p>Entities using {@link net.minecraft.entity.ai.control.FlightMoveControl} has
 		COMMENT no gravity. This is saved under the {@code NoGravity} NBT key.
-	METHOD method_5741 getMaxNetherPortalTime ()I
-		COMMENT {@return how long entities can be inside the nether portal without teleporting,
-		COMMENT in ticks}
 	METHOD method_5742 onStoppedTrackingBy (Lnet/minecraft/class_3222;)V
 		COMMENT Called when {@code player} stops tracking this entity.
 		COMMENT
@@ -2265,12 +2228,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @see #isCustomNameVisible
 		ARG 1 visible
-	METHOD method_59655 (Lnet/minecraft/class_243;Lnet/minecraft/class_1297;)D
-		ARG 1 entity
-	METHOD method_59656 (Lnet/minecraft/class_1297;)Z
-		ARG 1 entity
-	METHOD method_59657 getPassengerNearestTo (Lnet/minecraft/class_243;)Ljava/util/Optional;
-		ARG 1 pos
 	METHOD method_5982 checkDespawn ()V
 		COMMENT Checks whether the entity should be despawned.
 		COMMENT
@@ -2355,4 +2312,3 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 			COMMENT Returns whether this means an entity may emit game events as it moves.
 		METHOD method_33578 playsSounds ()Z
 			COMMENT Returns whether this means an entity may play sounds as it moves.
-	CLASS class_9776 TeleportTargetSupplier
