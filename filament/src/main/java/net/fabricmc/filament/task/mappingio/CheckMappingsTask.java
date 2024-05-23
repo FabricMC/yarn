@@ -34,6 +34,7 @@ public abstract class CheckMappingsTask extends FilamentTask implements WithFile
 		for (MappingTree.ClassMapping classMapping : tree.getClasses()) {
 			method: for (MappingTree.MethodMapping method : classMapping.getMethods()) {
 				Set<String> names = new HashSet<>();
+
 				for (int id = minNamespaceId; id < maxNamespaceId; id++) {
 					String name = method.getName(id);
 

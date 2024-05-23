@@ -151,7 +151,7 @@ tasks.register('yarnCommon', EnigmaTask) {
 	mappings = mappingsDir
 }
 
-tasks.register('checkMappings') {
+def checkPackages = tasks.register('checkPackages') {
 	group = buildMappingGroup
 	inputs.dir mappingsDir
 	inputs.file mapIntermediaryJar.output
@@ -552,11 +552,12 @@ javadocLint {
 	mappingDirectory = file("mappings")
 }
 
-def checkDuplicates = tasks.register("checkDuplicateNames", CheckMappingsTask) {
-	input = mergeV2.outputFile
+def checkMappings = tasks.register("checkMappings", CheckMappingsTask) {
+	input = mergeV2.output
 }
 
-check.dependsOn checkDuplicates
+check.dependsOn checkPackages
+check.dependsOn checkMappings
 check.dependsOn javadocLint
 
 publishing {
