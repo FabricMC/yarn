@@ -149,6 +149,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_44784 supportingBlockPos Ljava/util/Optional;
 	FIELD field_44873 forceUpdateSupportingBlockPos Z
 	FIELD field_47742 stateAtPos Lnet/minecraft/class_2680;
+	FIELD field_51994 portalManager Lnet/minecraft/class_9787;
 	FIELD field_5951 ridingCooldown I
 	FIELD field_5952 onGround Z
 	FIELD field_5953 firstUpdate Z
@@ -1499,12 +1500,13 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT Sets the entity on fire from lava, applies lava damage, and plays the burning sound.
 		COMMENT
 		COMMENT @implNote Fire from lava lasts 15 seconds by default.
-	METHOD method_5731 moveToWorld (Lnet/minecraft/class_5454;)Lnet/minecraft/class_1297;
-		COMMENT Moves this entity to another world.
+	METHOD method_5731 teleportTo (Lnet/minecraft/class_5454;)Lnet/minecraft/class_1297;
+		COMMENT Teleports this entity to another location, potentially in another world.
 		COMMENT
-		COMMENT <p>Note all entities except server player entities are completely recreated at the destination.
+		COMMENT <p>Note if teleported to a different world, entities (excluding server player entities) are completely recreated at the destination.
 		COMMENT
-		COMMENT @return the entity in the other world
+		COMMENT @return the entity after teleporting
+		ARG 1 teleportTarget
 	METHOD method_5732 isAttackable ()Z
 		COMMENT {@return whether the entity can be attacked by players}
 		COMMENT
@@ -2256,6 +2258,10 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_60608 setAngles (FF)V
 		ARG 1 yaw
 		ARG 2 pitch
+	METHOD method_60697 tryUsePortal (Lnet/minecraft/class_9797;Lnet/minecraft/class_2338;)V
+		ARG 1 portal
+		ARG 2 pos
+	METHOD method_60698 tickPortalTeleportation ()V
 	METHOD method_7325 isSpectator ()Z
 		COMMENT {@return whether the entity is a spectator}
 		COMMENT
