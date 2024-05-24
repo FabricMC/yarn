@@ -49,17 +49,19 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 	COMMENT <p>There are many ways to create a new identifier:
 	COMMENT
 	COMMENT <ul>
-	COMMENT <li>{@link Identifier(String)} creates an identifier from a string in
+	COMMENT <li>{@link #of(String)} creates an identifier from a string in
 	COMMENT {@code <namespace>:<path>} format. If the colon is missing, the created identifier
 	COMMENT has the namespace {@value #DEFAULT_NAMESPACE} and the argument is used as the path.
 	COMMENT When passed an invalid value, this throws {@link InvalidIdentifierException}.</li>
-	COMMENT <li>{@link Identifier(String, String)} creates an identifier from namespace and path.
+	COMMENT <li>{@link #of(String, String)} creates an identifier from namespace and path.
 	COMMENT When passed an invalid value, this throws {@link InvalidIdentifierException}.</li>
-	COMMENT <li>{@link #tryParse} creates an identifier from a string in
+	COMMENT <li>{@link #ofVanilla(String)} creates an identifier in the {@value #DEFAULT_NAMESPACE}
+	COMMENT namespace.
+	COMMENT <li>{@link #tryParse(String)} creates an identifier from a string in
 	COMMENT {@code <namespace>:<path>} format. If the colon is missing, the created identifier
 	COMMENT has the namespace {@value #DEFAULT_NAMESPACE} and the argument is used as the path.
 	COMMENT When passed an invalid value, this returns {@code null}.</li>
-	COMMENT <li>{@link #of} creates an identifier from namespace and path.
+	COMMENT <li>{@link #tryParse(String, String)} creates an identifier from namespace and path.
 	COMMENT When passed an invalid value, this returns {@code null}.</li>
 	COMMENT <li>{@link #fromCommandInput} reads an identifier from command input reader.
 	COMMENT When an invalid value is read, this throws {@link #COMMAND_EXCEPTION}.</li>
@@ -108,7 +110,7 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 	METHOD method_12829 tryParse (Ljava/lang/String;)Lnet/minecraft/class_2960;
 		COMMENT {@return {@code id} parsed as an identifier, or {@code null} if it cannot be parsed}
 		COMMENT
-		COMMENT @see #of
+		COMMENT @see #tryParse(String, String)
 		ARG 0 id
 	METHOD method_12830 split (Ljava/lang/String;C)[Ljava/lang/String;
 		COMMENT Splits the {@code id} into an array of two strings at the first occurrence of {@code delimiter}, excluding the delimiter character, or uses {@value #DEFAULT_NAMESPACE} for the first string in the resulting array when the deliminator does not exist or is the first character.
@@ -157,7 +159,7 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 		COMMENT {@return an identifier from the provided {@code namespace} and {@code path}, or
 		COMMENT {@code null} if either argument is invalid}
 		COMMENT
-		COMMENT @see #tryParse
+		COMMENT @see #tryParse(String)
 		ARG 0 namespace
 		ARG 1 path
 	METHOD method_43903 toShortTranslationKey ()Ljava/lang/String;
