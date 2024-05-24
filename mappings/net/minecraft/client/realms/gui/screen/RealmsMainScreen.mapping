@@ -55,6 +55,7 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 	FIELD field_46673 showingSnapshotRealms Z
 	FIELD field_51815 INCOMPATIBLE_POPUP_TITLE Lnet/minecraft/class_2561;
 	FIELD field_51816 INCOMPATIBLE_RELEASE_TYPE_MESSAGE Lnet/minecraft/class_2561;
+	FIELD field_52116 onlinePlayers Lnet/minecraft/class_4881;
 	METHOD <init> (Lnet/minecraft/class_437;)V
 		ARG 1 parent
 	METHOD method_20853 play (Lnet/minecraft/class_4877;Lnet/minecraft/class_437;)V
@@ -69,6 +70,7 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 	METHOD method_20906 leaveClicked (Lnet/minecraft/class_4877;)V
 		ARG 1 selectedServer
 	METHOD method_20909 isSelfOwnedServer (Lnet/minecraft/class_4877;)Z
+		ARG 0 server
 	METHOD method_20922 pingRegions ()V
 	METHOD method_20924 getOwnedNonExpiredWorldIds ()Ljava/util/List;
 	METHOD method_20928 onRenew (Lnet/minecraft/class_4877;)V
@@ -160,14 +162,20 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 	METHOD method_54320 updateLoadStatus ()V
 	METHOD method_54324 resetPeriodicCheckers ()V
 	METHOD method_54326 showCompatibilityScreen (Lnet/minecraft/class_4877;Lnet/minecraft/class_437;Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;Lnet/minecraft/class_2561;)V
+		ARG 0 server
 		ARG 1 parent
+		ARG 2 title
+		ARG 3 description
+		ARG 4 confirmText
 	METHOD method_54327 play (Lnet/minecraft/class_4877;Lnet/minecraft/class_437;Z)V
-		ARG 0 serverData
+		ARG 0 server
 		ARG 1 parent
 		ARG 2 needsPreparation
 	METHOD method_54328 (Lnet/minecraft/class_5676;Ljava/lang/Boolean;)V
 		ARG 1 button
 		ARG 2 snapshot
+	METHOD method_54329 (Lnet/minecraft/class_437;Lnet/minecraft/class_4877;Lnet/minecraft/class_8816;)V
+		ARG 2 popup
 	METHOD method_54330 isSnapshotRealmsEligible ()Z
 	METHOD method_54561 getVersionText (Ljava/lang/String;I)Lnet/minecraft/class_2561;
 		ARG 0 version
@@ -175,10 +183,16 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 	METHOD method_54562 getVersionText (Ljava/lang/String;Z)Lnet/minecraft/class_2561;
 		ARG 0 version
 		ARG 1 compatible
+	METHOD method_60860 (Lnet/minecraft/class_4881;)V
+		ARG 1 onlinePlayers
+	METHOD method_60861 showNeedsUpgradeScreen (Lnet/minecraft/class_4877;Lnet/minecraft/class_437;)V
+		ARG 0 serverData
+		ARG 1 parent
 	CLASS class_4329 RealmSelectionList
 	CLASS class_4330 RealmSelectionListEntry
 		FIELD field_19518 server Lnet/minecraft/class_4877;
 		FIELD field_46686 tooltip Lnet/minecraft/class_9110;
+		FIELD field_52119 ONLINE_PLAYERS_TEXT Lnet/minecraft/class_2561;
 		METHOD <init> (Lnet/minecraft/class_4325;Lnet/minecraft/class_4877;)V
 			ARG 2 server
 		METHOD method_38506 getRealmsServer ()Lnet/minecraft/class_4877;
@@ -193,6 +207,14 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 			ARG 2 y
 			ARG 3 x
 			ARG 4 width
+		METHOD method_60862 drawPlayers (Lnet/minecraft/class_332;IIIIII)Z
+			ARG 1 context
+			ARG 2 top
+			ARG 3 left
+			ARG 4 width
+			ARG 5 height
+			ARG 6 mouseX
+			ARG 7 mouseY
 	CLASS class_4866 Entry
 		METHOD method_54345 getNameY (I)I
 			ARG 1 y
