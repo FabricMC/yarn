@@ -3,6 +3,16 @@ CLASS net/minecraft/class_293 net/minecraft/client/render/VertexFormat
 	FIELD field_1600 vertexSizeByte I
 	FIELD field_1602 elements Ljava/util/List;
 	FIELD field_38984 buffer Lnet/minecraft/class_291;
+	FIELD field_52100 names Ljava/util/List;
+	FIELD field_52101 requiredMask I
+	FIELD field_52102 offsetsByElementId [I
+	METHOD <init> (Ljava/util/List;Ljava/util/List;Lit/unimi/dsi/fastutil/ints/IntList;I)V
+		ARG 1 elements
+		ARG 2 names
+		ARG 3 offsets
+		ARG 4 vertexSizeByte
+	METHOD equals (Ljava/lang/Object;)Z
+		ARG 1 o
 	METHOD method_1357 getElements ()Ljava/util/List;
 	METHOD method_1362 getVertexSizeByte ()I
 	METHOD method_22649 setupState ()V
@@ -16,6 +26,18 @@ CLASS net/minecraft/class_293 net/minecraft/client/render/VertexFormat
 		COMMENT
 		COMMENT <p>The data uploaded to the returned vertex buffer cannot be reused as
 		COMMENT it can be overwritten by other users of this method.
+	METHOD method_60833 builder ()Lnet/minecraft/class_293$class_9803;
+	METHOD method_60834 (II)I
+		ARG 0 a
+		ARG 1 b
+	METHOD method_60835 getOffset (Lnet/minecraft/class_296;)I
+		ARG 1 element
+	METHOD method_60836 has (Lnet/minecraft/class_296;)Z
+		ARG 1 element
+	METHOD method_60837 getName (Lnet/minecraft/class_296;)Ljava/lang/String;
+		ARG 1 element
+	METHOD method_60838 getOffsetsByElementId ()[I
+	METHOD method_60839 getRequiredMask ()I
 	CLASS class_5595 IndexType
 		FIELD field_27374 glType I
 		FIELD field_27375 size I
@@ -42,3 +64,13 @@ CLASS net/minecraft/class_293 net/minecraft/client/render/VertexFormat
 			ARG 6 shareVertices
 		METHOD method_31973 getIndexCount (I)I
 			ARG 1 vertexCount
+	CLASS class_9803 Builder
+		FIELD field_52103 elements Lcom/google/common/collect/ImmutableMap$Builder;
+		FIELD field_52104 offsets Lit/unimi/dsi/fastutil/ints/IntList;
+		FIELD field_52105 currentOffset I
+		METHOD method_60840 build ()Lnet/minecraft/class_293;
+		METHOD method_60841 skip (I)Lnet/minecraft/class_293$class_9803;
+			ARG 1 offset
+		METHOD method_60842 add (Ljava/lang/String;Lnet/minecraft/class_296;)Lnet/minecraft/class_293$class_9803;
+			ARG 1 name
+			ARG 2 element
