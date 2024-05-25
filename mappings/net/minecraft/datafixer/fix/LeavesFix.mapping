@@ -2,6 +2,11 @@ CLASS net/minecraft/class_1191 net/minecraft/datafixer/fix/LeavesFix
 	FIELD field_5686 LOGS_MAP Ljava/util/Set;
 	FIELD field_5687 AXIAL_OFFSETS [[I
 	FIELD field_5688 LEAVES_MAP Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+	METHOD <init> (Lcom/mojang/datafixers/schemas/Schema;Z)V
+		ARG 1 outputSchema
+		ARG 2 changesType
+	METHOD method_5049 (Lnet/minecraft/class_1191$class_1192;)Lnet/minecraft/class_1191$class_1192;
+		ARG 0 fixer
 	METHOD method_5050 getZ (I)I
 		ARG 1 packedLocalPos
 	METHOD method_5051 packLocalPos (III)I
@@ -10,8 +15,16 @@ CLASS net/minecraft/class_1191 net/minecraft/datafixer/fix/LeavesFix
 		ARG 2 localZ
 	METHOD method_5052 getX (I)I
 		ARG 1 packedLocalPos
+	METHOD method_5054 (Lcom/mojang/datafixers/OpticFinder;Lcom/mojang/datafixers/OpticFinder;Lcom/mojang/datafixers/Typed;)Lcom/mojang/datafixers/Typed;
+		ARG 3 levelTyped
 	METHOD method_5055 (Lit/unimi/dsi/fastutil/objects/Object2IntOpenHashMap;)V
 		ARG 0 map
+	METHOD method_5056 (Lcom/mojang/datafixers/OpticFinder;Lcom/mojang/datafixers/OpticFinder;Lcom/mojang/datafixers/OpticFinder;Lcom/mojang/datafixers/Typed;)Lcom/mojang/datafixers/Typed;
+		ARG 4 chunkTyped
+	METHOD method_5057 (Lcom/mojang/datafixers/Typed;)Lnet/minecraft/class_1191$class_1192;
+		ARG 1 sectionTyped
+	METHOD method_5058 (Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;Lcom/mojang/datafixers/Typed;)Lcom/mojang/datafixers/Typed;
+		ARG 1 sectionDynamic
 	METHOD method_5061 getBoundaryClassBit (ZZZZ)I
 		ARG 0 westernmost
 		ARG 1 easternmost
@@ -19,6 +32,8 @@ CLASS net/minecraft/class_1191 net/minecraft/datafixer/fix/LeavesFix
 		ARG 3 southernmost
 	METHOD method_5062 getY (I)I
 		ARG 1 packedLocalPos
+	METHOD method_5063 (Lcom/mojang/datafixers/OpticFinder;[ILcom/mojang/datafixers/Typed;)Lcom/mojang/datafixers/Typed;
+		ARG 3 sectionsTyped
 	CLASS class_1192 LeavesLogFixer
 		FIELD field_29897 PERSISTENT Ljava/lang/String;
 		FIELD field_29898 DECAYABLE Ljava/lang/String;
@@ -27,10 +42,15 @@ CLASS net/minecraft/class_1191 net/minecraft/datafixer/fix/LeavesFix
 		FIELD field_5690 leafStates Lit/unimi/dsi/fastutil/ints/Int2IntMap;
 		FIELD field_5691 logIndices Lit/unimi/dsi/fastutil/ints/IntSet;
 		METHOD method_5065 getDistanceToLog (I)I
+			ARG 1 index
 		METHOD method_5068 isLog (I)Z
+			ARG 1 index
 		METHOD method_5070 computeLeafStates (III)V
+			ARG 1 packedLocalPos
+			ARG 2 propertyIndex
 			ARG 3 distance
 		METHOD method_5071 isLeaf (I)Z
+			ARG 1 index
 		METHOD method_5072 createLeafProperties (Lcom/mojang/serialization/Dynamic;Ljava/lang/String;ZI)Lcom/mojang/serialization/Dynamic;
 			ARG 1 tag
 			ARG 2 name
@@ -45,13 +65,23 @@ CLASS net/minecraft/class_1191 net/minecraft/datafixer/fix/LeavesFix
 		FIELD field_5694 y I
 		FIELD field_5695 blockStateType Lcom/mojang/datafixers/types/Type;
 		FIELD field_5696 blockStateMap Lnet/minecraft/class_5298;
+		METHOD <init> (Lcom/mojang/datafixers/Typed;Lcom/mojang/datafixers/schemas/Schema;)V
+			ARG 1 sectionTyped
+			ARG 2 inputSchema
 		METHOD method_5074 computeFixableBlockStates (Lcom/mojang/serialization/Dynamic;)V
-		METHOD method_5075 needsFix (I)I
+		METHOD method_5075 blockStateAt (I)I
 			ARG 1 index
-		METHOD method_5076 needsFix ()Z
+		METHOD method_5076 computeIsFixed ()Z
 		METHOD method_5077 getY ()I
+		METHOD method_5078 (Lcom/mojang/serialization/Dynamic;)Lcom/mojang/datafixers/util/Pair;
+			ARG 0 propertiesDynamic
 		METHOD method_5079 isFixed ()Z
+		METHOD method_5080 (Lcom/mojang/serialization/Dynamic;)Lcom/mojang/serialization/Dynamic;
+			ARG 1 remainder
+		METHOD method_5081 (Ljava/util/List;)Ljava/util/List;
+			ARG 0 palettes
 		METHOD method_5082 computeFlags (Ljava/lang/String;ZI)I
 			ARG 1 leafBlockName
 			ARG 2 persistent
 			ARG 3 distance
+		METHOD method_5083 finalizeFix (Lcom/mojang/datafixers/Typed;)Lcom/mojang/datafixers/Typed;
