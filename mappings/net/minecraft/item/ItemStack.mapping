@@ -453,8 +453,8 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT Depending on block implementation, when combined together, the correct item and block may achieve a better mining speed and yield
 		COMMENT drops that would not be obtained when mining otherwise.
 		COMMENT
-		COMMENT @return values consistent with calls to {@link Item#isSuitableFor}
-		COMMENT @see Item#isSuitableFor(BlockState)
+		COMMENT @return values consistent with calls to {@link Item#isCorrectForDrops}
+		COMMENT @see Item#isCorrectForDrops(ItemStack, BlockState)
 		ARG 1 state
 	METHOD method_7952 postMine (Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)V
 		ARG 1 world
@@ -467,8 +467,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7956 damage (ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;Ljava/util/function/Consumer;)V
 		COMMENT Damages this item stack. This method should be used when a non-entity, such as a
 		COMMENT dispenser, damages the stack. This does not damage {@linkplain #isDamageable non-damageable}
-		COMMENT stacks, and the {@linkplain net.minecraft.enchantment.UnbreakingEnchantment
-		COMMENT unbreaking enchantment} is applied to {@code amount} before damaging.
+		COMMENT stacks, and the enchantments are applied to {@code amount} before damaging.
 		COMMENT
 		COMMENT <p>If {@code player} is not {@code null}, this triggers {@link
 		COMMENT net.minecraft.advancement.criterion.Criteria#ITEM_DURABILITY_CHANGED}.
@@ -508,8 +507,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7970 damage (ILnet/minecraft/class_1309;Lnet/minecraft/class_1304;)V
 		COMMENT Damages this item stack. This method should be used when an entity, including a player,
 		COMMENT damages the stack. This does not damage {@linkplain #isDamageable non-damageable}
-		COMMENT stacks, and the {@linkplain net.minecraft.enchantment.UnbreakingEnchantment
-		COMMENT unbreaking enchantment} is applied to {@code amount} before damaging. Additionally,
+		COMMENT stacks, and the enchantments are applied to {@code amount} before damaging. Additionally,
 		COMMENT if {@code entity} is a player in creative mode, the stack will not be damaged.
 		COMMENT
 		COMMENT <p>If {@code entity} is a player, this triggers {@link
@@ -564,7 +562,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT the maximum}, unlike {@link #damage(int, LivingEntity, EquipmentSlot)}.
 		COMMENT
 		COMMENT @see #getDamage
-		COMMENT @see #damage(int, Random, ServerPlayerEntity, Runnable)
+		COMMENT @see #damage(int, ServerWorld, ServerPlayerEntity, Consumer)
 		COMMENT @see #damage(int, LivingEntity, EquipmentSlot)
 		ARG 1 damage
 	METHOD method_7976 getUseAction ()Lnet/minecraft/class_1839;

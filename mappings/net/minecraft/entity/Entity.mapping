@@ -139,7 +139,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_29992 DEFAULT_MIN_FREEZE_DAMAGE_TICKS I
 		COMMENT @see Entity#getMinFreezeDamageTicks
 	FIELD field_29993 FREEZING_DAMAGE_INTERVAL I
-		COMMENT @see LivingEntity#tickMovement
+		COMMENT @see net.minecraft.entity.LivingEntity#tickMovement
 	FIELD field_29994 UUID_KEY Ljava/lang/String;
 	FIELD field_33758 hasVisualFire Z
 	FIELD field_34927 collidedSoftly Z
@@ -421,7 +421,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT for the passenger. Check the implementation of the subclass for details.
 		COMMENT
 		COMMENT @see #getPassengerDismountOffset
-		COMMENT @see Dismounting
+		COMMENT @see net.minecraft.entity.Dismounting
 		ARG 1 passenger
 	METHOD method_24830 setOnGround (Z)V
 		ARG 1 onGround
@@ -473,7 +473,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT such as setting the stack count of {@linkplain LivingEntity#getEquippedItems equipped stacks}
 		COMMENT to zero.
 		COMMENT
-		COMMENT @see #moveToWorld
+		COMMENT @see #teleportTo
 	METHOD method_30229 resetPortalCooldown ()V
 		COMMENT Resets the entity's portal cooldown to the default.
 		COMMENT
@@ -671,7 +671,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT Requests the entity to teleport to the given position. If the entity is
 		COMMENT a player, this also dismounts the player.
 		COMMENT
-		COMMENT @see #teleport(double, double, double)
+		COMMENT @see #teleportTo
 		COMMENT @see #teleport(ServerWorld, double, double, double, Set, float, float)
 		COMMENT @see #requestTeleport
 		COMMENT @see #refreshPositionAndAngles(double, double, double, float, float)
@@ -704,7 +704,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT For living entities, {@link #refreshPositionAndAngles} should be used instead.
 		COMMENT
 		COMMENT @see #refreshPositionAndAngles
-		COMMENT @see #teleport(double, double, double)
+		COMMENT @see #teleportTo
 		ARG 1 pos
 	METHOD method_33724 isRegionUnloaded ()Z
 		COMMENT {@return whether any part of this entity's bounding box is in an unloaded
@@ -873,7 +873,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @see #requestTeleportAndDismount
 		COMMENT @see #requestTeleport
-		COMMENT @see #teleport(double, double, double)
+		COMMENT @see #teleportTo
 		COMMENT @see #refreshPositionAndAngles(double, double, double, float, float)
 		ARG 1 world
 		ARG 2 destX
@@ -983,7 +983,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT Called when the entity falls. Flying mobs should override this to do nothing.
 		COMMENT
 		COMMENT @implNote If on ground, this calls {@link net.minecraft.block.Block#onLandedUpon}, which can add or
-		COMMENT reduce fall damage, emits {@link GameEvent#HIT_GROUND}, then calls {@link #onLanding}.
+		COMMENT reduce fall damage, emits {@link net.minecraft.world.event.GameEvent#HIT_GROUND}, then calls {@link #onLanding}.
 		COMMENT Otherwise, if {@code heightDifference} is negative, it subtracts that value from
 		COMMENT {@link #fallDistance}.
 		ARG 1 heightDifference
@@ -1056,12 +1056,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5638 shouldSetPositionOnLoad ()Z
 	METHOD method_5639 setOnFireFor (F)V
 		COMMENT Sets the entity on fire for {@code seconds} seconds.
-		COMMENT
-		COMMENT @implNote The actual duration can be reduced using the
-		COMMENT {@linkplain net.minecraft.enchantment.ProtectionEnchantment.Type#FIRE
-		COMMENT fire protection} enchantment.
-		COMMENT
-		COMMENT @see net.minecraft.enchantment.ProtectionEnchantment#transformFireDuration
 		ARG 1 seconds
 	METHOD method_5640 shouldRender (D)Z
 		ARG 1 distance
@@ -1083,11 +1077,11 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5643 damage (Lnet/minecraft/class_1282;F)Z
 		COMMENT Applies a damage to this entity. The exact implementation differs between subclasses.
 		COMMENT
-		COMMENT <p>{@link LivingEntity} has health value, and damaging the entity decreases it. This
+		COMMENT <p>{@link net.minecraft.entity.LivingEntity} has health value, and damaging the entity decreases it. This
 		COMMENT also handles shields, extra damage to helmets for falling blocks, setting the attacker,
 		COMMENT playing hurt sound, etc.
 		COMMENT
-		COMMENT <p>Some entities like {@link ItemEntity} also have health value, which the overridden
+		COMMENT <p>Some entities like {@link net.minecraft.entity.ItemEntity} also have health value, which the overridden
 		COMMENT method decrements. There also exist several entities, like {@link
 		COMMENT net.minecraft.entity.decoration.EndCrystalEntity}, where any damage discards the entity
 		COMMENT (perhaps with an explosion).
@@ -1098,7 +1092,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @return whether the entity was actually damaged
 		COMMENT
 		COMMENT @see #isInvulnerableTo
-		COMMENT @see LivingEntity#modifyAppliedDamage
+		COMMENT @see net.minecraft.entity.LivingEntity#modifyAppliedDamage
 		ARG 1 source
 		ARG 2 amount
 	METHOD method_5644 onPassengerLookAround (Lnet/minecraft/class_1297;)V
@@ -1168,8 +1162,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5657 getPistonBehavior ()Lnet/minecraft/class_3619;
 		COMMENT {@return the behavior of the piston for this entity}
 		COMMENT
-		COMMENT <p>This is {@link PistonBehavior#NORMAL} by default. {@link AreaEffectCloudEntity},
-		COMMENT {@link MarkerEntity}, and marker {@link net.minecraft.entity.decoration.ArmorStandEntity}
+		COMMENT <p>This is {@link PistonBehavior#NORMAL} by default. {@link net.minecraft.entity.AreaEffectCloudEntity},
+		COMMENT {@link net.minecraft.entity.MarkerEntity}, and marker {@link net.minecraft.entity.decoration.ArmorStandEntity}
 		COMMENT return {@link PistonBehavior#IGNORE}, causing the piston to not affect the entity's
 		COMMENT position. Other piston behaviors are inapplicable to entities, and treated like
 		COMMENT {@link PistonBehavior#NORMAL}.
@@ -1503,7 +1497,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT {@return whether the entity can be attacked by players}
 		COMMENT
 		COMMENT <p>Note that this is not called for most entities defined in vanilla as unattackable
-		COMMENT (such as {@link ItemEntity} and {@link ExperienceOrbEntity}) as trying to attack them
+		COMMENT (such as {@link net.minecraft.entity.ItemEntity} and {@link net.minecraft.entity.ExperienceOrbEntity}) as trying to attack them
 		COMMENT kicks the player.
 		COMMENT
 		COMMENT @see net.minecraft.server.network.ServerPlayNetworkHandler#onPlayerInteractEntity
@@ -1672,7 +1666,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5768 kill ()V
 		COMMENT Kills the entity.
 		COMMENT
-		COMMENT <p>This drops loot when applicable, and emits the {@link GameEvent#ENTITY_DIE} game event.
+		COMMENT <p>This drops loot when applicable, and emits the {@link
+		COMMENT net.minecraft.world.event.GameEvent#ENTITY_DIE} game event.
 	METHOD method_5769 getHoverEvent ()Lnet/minecraft/class_2568;
 		COMMENT {@return the hover event referencing this entity}
 	METHOD method_5770 getEntityWorld ()Lnet/minecraft/class_1937;
@@ -1693,7 +1688,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @implNote By default, this delegates all logics to {@link #baseTick}.
 		COMMENT
-		COMMENT @see LivingEntity#tickMovement
+		COMMENT @see net.minecraft.entity.LivingEntity#tickMovement
 		COMMENT @see net.minecraft.entity.mob.MobEntity#mobTick
 	METHOD method_5774 getEffectiveExplosionResistance (Lnet/minecraft/class_1927;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_3610;F)F
 		COMMENT {@return the blast resistance of {@code blockState} for an explosion caused
@@ -1896,7 +1891,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT For living entities, {@link #refreshPositionAndAngles} should be used instead.
 		COMMENT
 		COMMENT @see #refreshPositionAndAngles
-		COMMENT @see #teleport(double, double, double)
+		COMMENT @see #teleportTo
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
@@ -2104,7 +2099,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT <p>For players, this sends the teleport packet. For other entities,
 		COMMENT this just sets the position of the entity and its passengers.
 		COMMENT
-		COMMENT @see #teleport(double, double, double)
+		COMMENT @see #teleportTo
 		COMMENT @see #teleport(ServerWorld, double, double, double, Set, float, float)
 		COMMENT @see #requestTeleportOffset(double, double, double)
 		COMMENT @see #requestTeleportAndDismount
@@ -2210,7 +2205,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT Copies serializable data and nether portal data from {@code original}.
 		COMMENT
 		COMMENT @see #readNbt
-		COMMENT @see #moveToWorld
+		COMMENT @see #teleportTo
 		ARG 1 original
 	METHOD method_5879 animateDamage (F)V
 		COMMENT Called on the client to animate the entity's damage (the wobble).
