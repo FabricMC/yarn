@@ -41,7 +41,12 @@ if (ENV.BRANCH_NAME) {
 }
 
 repositories {
-	mavenCentral()
+	mavenCentral {
+		content {
+			// Force LWJGL from Mojang's repo, as they have custom patched versions since 1.21-pre1
+			excludeGroupByRegex("org.lwjgl")
+		}
+	}
 	maven {
 		name "Fabric Repository"
 		url 'https://maven.fabricmc.net'
