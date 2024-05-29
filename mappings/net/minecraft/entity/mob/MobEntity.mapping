@@ -1,7 +1,6 @@
 CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	FIELD field_18074 positionTarget Lnet/minecraft/class_2338;
 	FIELD field_18075 positionTargetRange F
-	FIELD field_18279 holdingEntityId I
 	FIELD field_30083 DEFAULT_CAN_PICKUP_LOOT_CHANCE F
 		COMMENT Used by Zombies to control the chance that they spawn with the ability to pick up loot.
 		COMMENT
@@ -14,7 +13,6 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		COMMENT The base chance (before applying difficulty) that a mob's equipped item can become enchanted.
 		COMMENT
 		COMMENT @see MobEntity#enchantMainHandItem
-	FIELD field_30086 LEASH_KEY Ljava/lang/String;
 	FIELD field_30087 MINIMUM_DROPPED_XP_PER_EQUIPMENT I
 		COMMENT The minimum additional experience a mob will drop per item of equipment they have.
 		COMMENT
@@ -43,7 +41,6 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	FIELD field_6189 navigation Lnet/minecraft/class_1408;
 	FIELD field_6190 visibilityCache Lnet/minecraft/class_1413;
 	FIELD field_6191 ambientSoundChance I
-	FIELD field_6192 leashNbt Lcom/mojang/datafixers/util/Either;
 	FIELD field_6193 MOB_FLAGS Lnet/minecraft/class_2940;
 	FIELD field_6194 experiencePoints I
 	FIELD field_6195 handItems Lnet/minecraft/class_2371;
@@ -54,7 +51,6 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	FIELD field_6201 goalSelector Lnet/minecraft/class_1355;
 		COMMENT Contains actions the entity can perform. These may consume, for example, the target
 		COMMENT entity as determined during the {@link MobEntity#targetSelector}'s execution.
-	FIELD field_6202 holdingEntity Lnet/minecraft/class_1297;
 	FIELD field_6203 canPickUpLoot Z
 	FIELD field_6204 jumpControl Lnet/minecraft/class_1334;
 	FIELD field_6205 armorItems Lnet/minecraft/class_2371;
@@ -74,8 +70,6 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	METHOD method_18411 isInWalkTargetRange ()Z
 	METHOD method_18412 getPositionTarget ()Lnet/minecraft/class_2338;
 	METHOD method_18413 getPositionTargetRange ()F
-	METHOD method_18810 setHoldingEntityId (I)V
-		ARG 1 id
 	METHOD method_19540 setAttacking (Z)V
 		ARG 1 attacking
 	METHOD method_20240 getMaxLookYawChange ()I
@@ -155,13 +149,10 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	METHOD method_56677 isWearingBodyArmor ()Z
 	METHOD method_56678 equipBodyArmor (Lnet/minecraft/class_1799;)V
 		ARG 1 stack
-	METHOD method_56995 (Ljava/util/UUID;)Lnet/minecraft/class_2520;
-		ARG 0 uuid
 	METHOD method_57295 getAttackDamageWith (Lnet/minecraft/class_1799;)D
 		ARG 1 stack
 	METHOD method_57296 hasComponentsOtherThanDamage (Lnet/minecraft/class_1799;)Z
 		ARG 0 stack
-	METHOD method_58151 mightBeLeashed ()Z
 	METHOD method_58634 setEquipmentFromTable (Lnet/minecraft/class_9652;)V
 		ARG 1 equipmentTable
 	METHOD method_58635 createEquipmentLootParameters (Lnet/minecraft/class_3218;)Lnet/minecraft/class_8567;
@@ -170,13 +161,9 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 1 slot
 	METHOD method_5930 setForwardSpeed (F)V
 		ARG 1 forwardSpeed
-	METHOD method_5931 canBeLeashedBy (Lnet/minecraft/class_1657;)Z
-		ARG 1 player
-	METHOD method_5932 detachLeash (ZZ)V
+	METHOD method_5932 (ZZ)V
 		ARG 1 sendPacket
 		ARG 2 dropItem
-	METHOD method_5933 getHoldingEntity ()Lnet/minecraft/class_1297;
-	METHOD method_5934 isLeashed ()Z
 	METHOD method_5936 canPickUpLoot ()Z
 	METHOD method_5937 setLeftHanded (Z)V
 		ARG 1 leftHanded
@@ -184,7 +171,6 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 1 sidewaysSpeed
 	METHOD method_5939 canPickupItem (Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
-	METHOD method_5940 readLeashNbt ()V
 	METHOD method_5941 setPathfindingPenalty (Lnet/minecraft/class_7;F)V
 		ARG 1 nodeType
 		ARG 2 penalty
@@ -209,9 +195,6 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 3 maxPitchChange
 	METHOD method_5952 setCanPickUpLoot (Z)V
 		ARG 1 canPickUpLoot
-	METHOD method_5954 attachLeash (Lnet/minecraft/class_1297;Z)V
-		ARG 1 entity
-		ARG 2 sendPacket
 	METHOD method_5955 prefersNewEquipment (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 1 newStack
 		ARG 2 oldStack
@@ -295,7 +278,6 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	METHOD method_59928 playAttackSound ()V
 	METHOD method_5993 getJumpControl ()Lnet/minecraft/class_1334;
 	METHOD method_5994 getAmbientSound ()Lnet/minecraft/class_3414;
-	METHOD method_5995 updateLeash ()V
 	METHOD method_6510 isAttacking ()Z
 	METHOD method_6773 isHorseArmor (Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
