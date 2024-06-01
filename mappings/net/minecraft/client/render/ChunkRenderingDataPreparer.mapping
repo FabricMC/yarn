@@ -1,5 +1,57 @@
 CLASS net/minecraft/class_8679 net/minecraft/client/render/ChunkRenderingDataPreparer
 	FIELD field_45617 LOGGER Lorg/slf4j/Logger;
+	FIELD field_45618 DIRECTIONS [Lnet/minecraft/class_2350;
+	FIELD field_45621 dirty Z
+	FIELD field_45622 currentTask Ljava/util/concurrent/Future;
+	FIELD field_45623 builtChunkStorage Lnet/minecraft/class_769;
+	FIELD field_45626 finishedTask Ljava/util/concurrent/atomic/AtomicBoolean;
+	METHOD method_52817 markDirty ()V
+	METHOD method_52819 (Lnet/minecraft/class_1923;)V
+		ARG 1 chunksPos
+	METHOD method_52821 (Lnet/minecraft/class_4184;Ljava/util/Queue;)V
+		ARG 1 camera
+		ARG 2 queueOut
+	METHOD method_52822 (Lnet/minecraft/class_8679$class_8680;Lnet/minecraft/class_1923;)V
+		ARG 1 events
+		ARG 2 chunkPos
+	METHOD method_52824 (Lnet/minecraft/class_8679$class_8681;Lnet/minecraft/class_8679$class_762;)V
+		ARG 1 chunkInfo
+	METHOD method_52825 (Lnet/minecraft/class_8679$class_6600;Lnet/minecraft/class_243;Ljava/util/Queue;ZLjava/util/function/Consumer;)V
+		ARG 2 pos
+		ARG 4 cullingEnabled
+	METHOD method_52826 loadBuiltChunks (Lnet/minecraft/class_769;)V
+		ARG 1 builtChunkStorage
+	METHOD method_52827 addBuiltChunk (Lnet/minecraft/class_846$class_851;)V
+		ARG 1 chunk
+	METHOD method_52828 (Lnet/minecraft/class_4604;Ljava/util/List;)V
+		ARG 1 frustum
+		ARG 2 builtChunksOut
+	METHOD method_52829 (Lnet/minecraft/class_4604;Ljava/util/List;Lnet/minecraft/class_846$class_851;)V
+		ARG 2 chunk
+	METHOD method_52831 getRenderedChunkNeighboring (Lnet/minecraft/class_2338;Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_2350;)Lnet/minecraft/class_846$class_851;
+		ARG 1 center
+		ARG 2 target
+		ARG 3 dir
+	METHOD method_52832 isWithinViewDistance (Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)Z
+		ARG 1 center
+		ARG 2 pos
+	METHOD method_52833 (ZLnet/minecraft/class_4184;Lnet/minecraft/class_243;)V
+		ARG 1 cullingEnabled
+		ARG 2 camera
+		ARG 3 cameraPos
+	METHOD method_52834 (ZLnet/minecraft/class_4184;Lnet/minecraft/class_4604;Ljava/util/List;)V
+		ARG 1 cullingEnabled
+		ARG 2 camera
+		ARG 3 frustum
+		ARG 4 builtChunks
+	METHOD method_52835 (ZLnet/minecraft/class_4604;Ljava/util/List;Lnet/minecraft/class_243;)V
+		ARG 1 cullingEnabled
+		ARG 2 frustum
+		ARG 3 builtChunks
+		ARG 4 cameraPos
+	METHOD method_52836 tryWaitForTaskFinish ()Z
+	METHOD method_52837 (Lnet/minecraft/class_846$class_851;)Lnet/minecraft/class_8679$class_762;
+		ARG 1 builtChunk
 	CLASS class_5972 ChunkInfoList
 		FIELD field_29620 current [Lnet/minecraft/class_8679$class_762;
 		METHOD <init> (I)V
@@ -11,6 +63,8 @@ CLASS net/minecraft/class_8679 net/minecraft/client/render/ChunkRenderingDataPre
 			ARG 2 info
 	CLASS class_6600 RenderableChunks
 		FIELD field_34819 chunks Ljava/util/LinkedHashSet;
+		FIELD field_45627 chunkInfoList Lnet/minecraft/class_8679$class_5972;
+		FIELD field_45628 buildChunksByPos Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 		METHOD <init> (I)V
 			ARG 1 chunkCount
 	CLASS class_762 ChunkInfo
@@ -34,3 +88,7 @@ CLASS net/minecraft/class_8679 net/minecraft/client/render/ChunkRenderingDataPre
 			ARG 1 ordinal
 		METHOD method_34816 addDirection (Lnet/minecraft/class_2350;)V
 			ARG 1 direction
+	CLASS class_8680 Events
+	CLASS class_8681
+		METHOD <init> (I)V
+			ARG 1 chunkCount

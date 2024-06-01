@@ -14,7 +14,7 @@ CLASS net/minecraft/class_4597 net/minecraft/client/render/VertexConsumerProvide
 	METHOD method_22991 immediate (Lnet/minecraft/class_9799;)Lnet/minecraft/class_4597$class_4598;
 		COMMENT {@return a vertex consumer provider that immediately draws the current
 		COMMENT buffer builder when a different render layer is requested}.
-		ARG 0 buffer
+		ARG 0 allocator
 	METHOD method_22992 immediate (Ljava/util/SequencedMap;Lnet/minecraft/class_9799;)Lnet/minecraft/class_4597$class_4598;
 		COMMENT {@return a vertex consumer provider that immediately draws the current
 		COMMENT buffer builder when a different render layer is requested except {@code
@@ -26,8 +26,8 @@ CLASS net/minecraft/class_4597 net/minecraft/client/render/VertexConsumerProvide
 		COMMENT RenderLayer#TRANSLUCENT the translucent render layer} should be drawn in
 		COMMENT a later stage so the other things behind translucent objects are
 		COMMENT visible.
-		ARG 0 layerBuffers
-		ARG 1 fallbackBuffer
+		ARG 0 layerAllocators
+		ARG 1 fallbackAllocator
 	CLASS class_4598 Immediate
 		COMMENT A vertex consumer provider that immediately draws the current buffer
 		COMMENT builder when a different render layer is requested except for render
@@ -35,12 +35,13 @@ CLASS net/minecraft/class_4597 net/minecraft/client/render/VertexConsumerProvide
 		COMMENT
 		COMMENT @see VertexConsumerProvider#immediate(BufferAllocator)
 		COMMENT @see VertexConsumerProvider#immediate(Map, BufferAllocator)
-		FIELD field_20953 layerBuffers Ljava/util/SequencedMap;
-		FIELD field_52156 allocator Lnet/minecraft/class_9799;
+		FIELD field_20953 layerAllocators Ljava/util/SequencedMap;
+		FIELD field_52156 fallbackAllocator Lnet/minecraft/class_9799;
 		FIELD field_52157 pending Ljava/util/Map;
 		FIELD field_52158 currentLayer Lnet/minecraft/class_1921;
 		METHOD <init> (Lnet/minecraft/class_9799;Ljava/util/SequencedMap;)V
-			ARG 1 allocator
+			ARG 1 fallbackAllocator
+			ARG 2 layerAllocators
 		METHOD method_22993 draw ()V
 			COMMENT Draws all remaining render layers including {@code layerBuffers}
 			COMMENT specified in the constructor.
