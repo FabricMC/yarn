@@ -1,5 +1,7 @@
 CLASS net/minecraft/class_9288 net/minecraft/component/type/ContainerComponent
+	COMMENT A component that stores a list of item stacks.
 	FIELD field_49334 DEFAULT Lnet/minecraft/class_9288;
+		COMMENT An empty container component.
 	FIELD field_49335 CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_49336 PACKET_CODEC Lnet/minecraft/class_9139;
 	FIELD field_49337 MAX_SLOTS I
@@ -15,25 +17,47 @@ CLASS net/minecraft/class_9288 net/minecraft/component/type/ContainerComponent
 	METHOD equals (Ljava/lang/Object;)Z
 		ARG 1 o
 	METHOD method_57489 stream ()Ljava/util/stream/Stream;
+		COMMENT {@return a stream over copies of this component's stored item stacks}
 	METHOD method_57491 (Lnet/minecraft/class_9288;)Ljava/util/List;
 		ARG 0 component
 	METHOD method_57492 copyTo (Lnet/minecraft/class_2371;)V
+		COMMENT Copies the contents of this component to a list of item stacks.
+		COMMENT
+		COMMENT <p>If the list has a larger size than this component, the remaining slots
+		COMMENT will be filled with empty stacks.
 		ARG 1 stacks
+			COMMENT the target list of item stacks
 	METHOD method_57493 fromStacks (Ljava/util/List;)Lnet/minecraft/class_9288;
+		COMMENT Creates a container component from a list of item stacks.
+		COMMENT The stacks are copied into the component, which will contain copies of all stacks
+		COMMENT up to the last non-empty stack.
+		COMMENT
+		COMMENT @return the created component
 		ARG 0 stacks
+			COMMENT the list of stacks to copy
 	METHOD method_57494 collectSlots ()Ljava/util/List;
 	METHOD method_57496 fromSlots (Ljava/util/List;)Lnet/minecraft/class_9288;
 		ARG 0 slots
 	METHOD method_58114 copyFirstStack ()Lnet/minecraft/class_1799;
+		COMMENT {@return a copy of the first contained stack in this component}
+		COMMENT
+		COMMENT <p>If this component is empty, returns an empty stack.
 	METHOD method_59710 (Lnet/minecraft/class_1799;)Z
 		ARG 0 stack
 	METHOD method_59711 (Lnet/minecraft/class_1799;)Z
 		ARG 0 stack
 	METHOD method_59712 streamNonEmpty ()Ljava/util/stream/Stream;
-	METHOD method_59713 findFirstNonEmptyIndex (Ljava/util/List;)I
+		COMMENT {@return a stream over copies of this component's non-empty item stacks}
+	METHOD method_59713 findLastNonEmptyIndex (Ljava/util/List;)I
 		ARG 0 stacks
 	METHOD method_59714 iterateNonEmpty ()Ljava/lang/Iterable;
+		COMMENT {@return an iterable over this component's non-empty item stacks}
+		COMMENT
+		COMMENT <p>The stacks should not be modified to keep this component immutable.
+		COMMENT Use {@link #iterateNonEmptyCopy} or the stream methods for getting freely modifiable
+		COMMENT copies of the stacks.
 	METHOD method_59715 iterateNonEmptyCopy ()Ljava/lang/Iterable;
+		COMMENT {@return an iterable over copies of this component's non-empty item stacks}
 	CLASS class_9289 Slot
 		FIELD field_49339 CODEC Lcom/mojang/serialization/Codec;
 		METHOD method_57498 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
