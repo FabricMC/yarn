@@ -1,19 +1,44 @@
 CLASS net/minecraft/class_1269 net/minecraft/util/ActionResult
 	COMMENT An enum indicating the hand interaction's result. Methods called on hand interaction,
 	COMMENT such as {@link net.minecraft.block.AbstractBlock#onUse}, return this.
-	COMMENT
-	COMMENT @see TypedActionResult
-	FIELD field_21466 Lnet/minecraft/class_1269$class_9860;
+	FIELD field_21466 CONSUME Lnet/minecraft/class_1269$class_9860;
 		COMMENT Indicates an action is performed but no animation should accompany the
 		COMMENT performance.
-	FIELD field_5811 Lnet/minecraft/class_1269$class_9859;
+	FIELD field_52422 SUCCESS_SERVER Lnet/minecraft/class_1269$class_9860;
+		COMMENT Indicates an action is performed on the logical server only and the
+		COMMENT actor's hand should swing to indicate the performance.
+	FIELD field_52423 PASS_TO_DEFAULT_BLOCK_ACTION Lnet/minecraft/class_1269$class_9862;
+		COMMENT Indicates an action is not performed and the default block action
+		COMMENT should be performed instead.
+	FIELD field_5811 PASS Lnet/minecraft/class_1269$class_9859;
 		COMMENT Indicates an action is not performed but allows other actions to
 		COMMENT perform.
-	FIELD field_5812 Lnet/minecraft/class_1269$class_9860;
+	FIELD field_5812 SUCCESS Lnet/minecraft/class_1269$class_9860;
 		COMMENT Indicates an action is performed and the actor's hand should swing to
 		COMMENT indicate the performance.
-	FIELD field_5814 Lnet/minecraft/class_1269$class_9857;
+	FIELD field_5814 FAIL Lnet/minecraft/class_1269$class_9857;
 		COMMENT Indicates that an action is not performed and prevents other actions
 		COMMENT from performing.
 	METHOD method_23665 isAccepted ()Z
 		COMMENT {@return whether an action is performed}
+	CLASS class_9857 Fail
+	CLASS class_9858 ItemContext
+		FIELD comp_2907 incrementStat Z
+		FIELD comp_2908 newHandStack Lnet/minecraft/class_1799;
+			COMMENT the item stack that should replace the hand stack after an interaction, if any
+		FIELD field_52424 KEEP_HAND_STACK_NO_INCREMENT_STAT Lnet/minecraft/class_1269$class_9858;
+		FIELD field_52425 KEEP_HAND_STACK Lnet/minecraft/class_1269$class_9858;
+		METHOD comp_2907 incrementStat ()Z
+		METHOD comp_2908 newHandStack ()Lnet/minecraft/class_1799;
+	CLASS class_9859 Pass
+	CLASS class_9860 Success
+		METHOD method_61393 withNewHandStack (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1269$class_9860;
+			ARG 1 newHandStack
+		METHOD method_61394 noIncrementStat ()Lnet/minecraft/class_1269$class_9860;
+		METHOD method_61395 shouldIncrementStat ()Z
+		METHOD method_61396 getNewHandStack ()Lnet/minecraft/class_1799;
+			COMMENT {@return the item stack that should replace the hand stack after this interaction, if any}
+	CLASS class_9861 SwingSource
+		COMMENT Represents the side that should be considered the source of truth
+		COMMENT for an arm swing, if any.
+	CLASS class_9862 PassToDefaultBlockAction
