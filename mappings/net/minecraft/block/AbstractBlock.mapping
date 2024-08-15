@@ -353,10 +353,6 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
-	METHOD method_42326 isCullingShapeFullCube (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
-		ARG 1 state
-		ARG 2 world
-		ARG 3 pos
 	METHOD method_53969 getCodec ()Lcom/mojang/serialization/MapCodec;
 	METHOD method_54093 (Ljava/util/function/Function;Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
 		ARG 1 instance
@@ -364,15 +360,14 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 0 blockFromSettings
 	METHOD method_54095 getSettings ()Lnet/minecraft/class_4970$class_2251;
 	METHOD method_54096 createSettingsCodec ()Lcom/mojang/serialization/codecs/RecordCodecBuilder;
-	METHOD method_55124 onExploded (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1927;Ljava/util/function/BiConsumer;)V
+	METHOD method_55124 onExploded (Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1927;Ljava/util/function/BiConsumer;)V
 		ARG 1 state
-		ARG 2 world
 		ARG 3 pos
 		ARG 4 explosion
 		ARG 5 stackMerger
 	METHOD method_55224 (Ljava/util/function/BiConsumer;Lnet/minecraft/class_2338;Lnet/minecraft/class_1799;)V
 		ARG 2 stack
-	METHOD method_55765 onUseWithItem (Lnet/minecraft/class_1799;Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;Lnet/minecraft/class_3965;)Lnet/minecraft/class_9062;
+	METHOD method_55765 onUseWithItem (Lnet/minecraft/class_1799;Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;Lnet/minecraft/class_3965;)Lnet/minecraft/class_1269;
 		ARG 1 stack
 		ARG 2 state
 		ARG 3 world
@@ -403,11 +398,9 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT
 		COMMENT @see #getComparatorOutput
 		ARG 1 state
-	METHOD method_9505 getOpacity (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)I
+	METHOD method_9505 getOpacity (Lnet/minecraft/class_2680;)I
 		COMMENT @see AbstractBlockState#getOpacity
 		ARG 1 state
-		ARG 2 world
-		ARG 3 pos
 	METHOD method_9506 emitsRedstonePower (Lnet/minecraft/class_2680;)Z
 		COMMENT {@return whether the block is capable of emitting redstone power}
 		COMMENT
@@ -700,11 +693,9 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		COMMENT @see AbstractBlockState#mirror
 		ARG 1 state
 		ARG 2 mirror
-	METHOD method_9571 getCullingShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
+	METHOD method_9571 getCullingShape (Lnet/minecraft/class_2680;)Lnet/minecraft/class_265;
 		COMMENT @see AbstractBlockState#getCullingShape
 		ARG 1 state
-		ARG 2 world
-		ARG 3 pos
 	METHOD method_9572 getComparatorOutput (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)I
 		COMMENT {@return the comparator output of the block, from {@code 0} to {@code 15}}
 		COMMENT
@@ -722,10 +713,8 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
-	METHOD method_9579 isTransparent (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
+	METHOD method_9579 isTransparent (Lnet/minecraft/class_2680;)Z
 		ARG 1 state
-		ARG 2 world
-		ARG 3 pos
 	METHOD method_9584 getRaycastShape (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
 		COMMENT @see AbstractBlockState#getRaycastShape
 		ARG 1 state
@@ -822,7 +811,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 player
-	METHOD method_9612 neighborUpdate (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338;Z)V
+	METHOD method_9612 neighborUpdate (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_9904;Z)V
 		COMMENT Called when a neighboring block is updated. This method should be overridden
 		COMMENT to perform an action with a side effect, most notably an activation of a redstone
 		COMMENT component. This can also be used to perform an action changing block states of
@@ -842,7 +831,6 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 sourceBlock
-		ARG 5 sourcePos
 		ARG 6 notify
 	METHOD method_9615 onBlockAdded (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Z)V
 		COMMENT Called server-side on the new block when the block state is changed. This includes block
@@ -976,14 +964,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		METHOD method_45477 noBlockBreakParticles ()Lnet/minecraft/class_4970$class_2251;
 		METHOD method_49229 offset (Lnet/minecraft/class_4970$class_2250;)Lnet/minecraft/class_4970$class_2251;
 			ARG 1 offsetType
-		METHOD method_49230 (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
+		METHOD method_49230 (Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
 			ARG 0 state
-			ARG 1 world
-			ARG 2 pos
-		METHOD method_49231 (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
+		METHOD method_49231 (Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
 			ARG 0 state
-			ARG 1 world
-			ARG 2 pos
 		METHOD method_50012 pistonBehavior (Lnet/minecraft/class_3619;)Lnet/minecraft/class_4970$class_2251;
 			ARG 1 pistonBehavior
 		METHOD method_50013 burnable ()Lnet/minecraft/class_4970$class_2251;
@@ -1068,9 +1052,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 3 pos
 		METHOD method_26166 canReplace (Lnet/minecraft/class_1750;)Z
 			ARG 1 context
-		METHOD method_26167 isTransparent (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
-			ARG 1 world
-			ARG 2 pos
+		METHOD method_26167 isTransparent ()Z
 		METHOD method_26168 hasSolidTopSurface (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_1297;)Z
 			ARG 1 world
 			ARG 2 pos
@@ -1090,10 +1072,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 world
 			ARG 2 pos
 			ARG 3 context
-		METHOD method_26173 getCullingFace (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Lnet/minecraft/class_265;
-			ARG 1 world
-			ARG 2 pos
-			ARG 3 direction
+		METHOD method_26173 getCullingFace (Lnet/minecraft/class_2350;)Lnet/minecraft/class_265;
 		METHOD method_26175 onProjectileHit (Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_3965;Lnet/minecraft/class_1676;)V
 			ARG 1 world
 			ARG 2 state
@@ -1120,11 +1099,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 2 pos
 			ARG 3 tool
 			ARG 4 dropExperience
-		METHOD method_26181 neighborUpdate (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2338;Z)V
+		METHOD method_26181 neighborUpdate (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_9904;Z)V
 			ARG 1 world
 			ARG 2 pos
 			ARG 3 sourceBlock
-			ARG 4 sourcePos
 			ARG 5 notify
 		METHOD method_26182 onBlockAdded (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Z)V
 			ARG 1 world
@@ -1170,9 +1148,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 world
 			ARG 2 pos
 			ARG 3 random
-		METHOD method_26193 getOpacity (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)I
-			ARG 1 world
-			ARG 2 pos
+		METHOD method_26193 getOpacity ()I
 		METHOD method_26194 getCollisionShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
 			ARG 1 world
 			ARG 2 pos
@@ -1199,9 +1175,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 2 pos
 			ARG 3 random
 		METHOD method_26200 initShapeCache ()V
-		METHOD method_26201 getCullingShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
-			ARG 1 world
-			ARG 2 pos
+		METHOD method_26201 getCullingShape ()Lnet/minecraft/class_265;
 		METHOD method_26202 getCameraCollisionShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3726;)Lnet/minecraft/class_265;
 			ARG 1 world
 			ARG 2 pos
@@ -1235,9 +1209,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 world
 			ARG 2 pos
 		METHOD method_26215 isAir ()Z
-		METHOD method_26216 isOpaqueFullCube (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
-			ARG 1 world
-			ARG 2 pos
+		METHOD method_26216 isOpaqueFullCube ()Z
 		METHOD method_26217 getRenderType ()Lnet/minecraft/class_2464;
 		METHOD method_26218 getOutlineShape (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
 			ARG 1 world
@@ -1255,9 +1227,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 world
 			ARG 2 pos
 		METHOD method_26225 isOpaque ()Z
-		METHOD method_26226 getModelOffset (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
-			ARG 1 world
-			ARG 2 pos
+		METHOD method_26226 getModelOffset (Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
 		METHOD method_26227 getFluidState ()Lnet/minecraft/class_3610;
 		METHOD method_26228 shouldSuffocate (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
 			ARG 1 world
@@ -1314,12 +1284,11 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 blockEntry
 		METHOD method_54097 matchesKey (Lnet/minecraft/class_5321;)Z
 			ARG 1 key
-		METHOD method_55225 onExploded (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1927;Ljava/util/function/BiConsumer;)V
-			ARG 1 world
+		METHOD method_55225 onExploded (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1927;Ljava/util/function/BiConsumer;)V
 			ARG 2 pos
 			ARG 3 explosion
 			ARG 4 stackMerger
-		METHOD method_55780 onUseWithItem (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;Lnet/minecraft/class_3965;)Lnet/minecraft/class_9062;
+		METHOD method_55780 onUseWithItem (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;Lnet/minecraft/class_3965;)Lnet/minecraft/class_1269;
 			ARG 1 stack
 			ARG 2 world
 			ARG 3 player
@@ -1330,11 +1299,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 2 player
 			ARG 3 hit
 		CLASS class_3752 ShapeCache
-			FIELD field_16555 lightSubtracted I
-			FIELD field_16556 transparent Z
-			FIELD field_16557 fullOpaque Z
 			FIELD field_16559 DIRECTIONS [Lnet/minecraft/class_2350;
-			FIELD field_16560 extrudedFaces [Lnet/minecraft/class_265;
 			FIELD field_17651 exceedsCube Z
 			FIELD field_19360 collisionShape Lnet/minecraft/class_265;
 			FIELD field_19429 solidSides [Z
@@ -1362,7 +1327,5 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 2 world
 			ARG 3 pos
 	CLASS class_8176 Offsetter
-		METHOD evaluate (Lnet/minecraft/class_2680;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
+		METHOD evaluate (Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
 			ARG 1 state
-			ARG 2 world
-			ARG 3 pos
