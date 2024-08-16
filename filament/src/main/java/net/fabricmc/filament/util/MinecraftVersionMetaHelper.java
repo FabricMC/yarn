@@ -12,7 +12,7 @@ import org.gradle.api.provider.Property;
 
 import net.fabricmc.filament.FilamentExtension;
 import net.fabricmc.filament.FilamentGradlePlugin;
-import net.fabricmc.loom.configuration.providers.minecraft.ManifestVersion;
+import net.fabricmc.loom.configuration.providers.minecraft.VersionsManifest;
 import net.fabricmc.loom.configuration.providers.minecraft.MinecraftVersionMeta;
 import net.fabricmc.loom.util.download.Download;
 
@@ -42,9 +42,9 @@ public abstract class MinecraftVersionMetaHelper {
 				.defaultCache()
 				.downloadString(versionManifestPath);
 
-		final ManifestVersion mcManifest = FilamentGradlePlugin.OBJECT_MAPPER.readValue(versionManifest, ManifestVersion.class);
+		final VersionsManifest mcManifest = FilamentGradlePlugin.OBJECT_MAPPER.readValue(versionManifest, VersionsManifest.class);
 
-		ManifestVersion.Versions version = mcManifest.versions().stream()
+		VersionsManifest.Version version = mcManifest.versions().stream()
 				.filter(versions -> versions.id.equalsIgnoreCase(getMinecraftVersion().get()))
 				.findFirst()
 				.orElse(null);
