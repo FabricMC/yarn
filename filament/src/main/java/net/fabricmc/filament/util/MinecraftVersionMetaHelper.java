@@ -1,7 +1,6 @@
 package net.fabricmc.filament.util;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 
@@ -12,8 +11,8 @@ import org.gradle.api.provider.Property;
 
 import net.fabricmc.filament.FilamentExtension;
 import net.fabricmc.filament.FilamentGradlePlugin;
-import net.fabricmc.loom.configuration.providers.minecraft.VersionsManifest;
 import net.fabricmc.loom.configuration.providers.minecraft.MinecraftVersionMeta;
+import net.fabricmc.loom.configuration.providers.minecraft.VersionsManifest;
 import net.fabricmc.loom.util.download.Download;
 
 public abstract class MinecraftVersionMetaHelper {
