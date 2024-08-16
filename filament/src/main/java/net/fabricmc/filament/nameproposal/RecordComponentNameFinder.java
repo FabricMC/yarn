@@ -100,6 +100,11 @@ public final class RecordComponentNameFinder extends ClassVisitor {
 
 			for (int i = 2; i < bootstrapMethodArguments.length; i++) {
 				if (bootstrapMethodArguments[i] instanceof Handle handle) {
+					if (!handle.getName().startsWith("comp_")) {
+						// Valid record bytecode, but doesn't have an intermediary name, making it impossible to match up with the record field or method
+						continue;
+					}
+
 					if (handle.getTag() == Opcodes.H_GETFIELD && handle.getOwner().equals(recordClassName)) {
 						var argName = names[i - 2];
 						put(recordNames, handle.getName(), argName);
