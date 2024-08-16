@@ -21,7 +21,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_17439 worldGenerationProgressListenerFactory Lnet/minecraft/class_3950;
 	FIELD field_17601 serverId Ljava/lang/String;
 	FIELD field_17704 DEMO_LEVEL_INFO Lnet/minecraft/class_1940;
-	FIELD field_19249 waitingForNextTick Z
+	FIELD field_19249 hasJustExecutedTask Z
 	FIELD field_20850 dataCommandStorage Lnet/minecraft/class_4565;
 	FIELD field_22250 recorder Lnet/minecraft/class_5962;
 	FIELD field_23784 session Lnet/minecraft/class_32$class_5143;
@@ -88,6 +88,10 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_48775 waitTime J
 	FIELD field_51466 brewingRecipeRegistry Lnet/minecraft/class_1845;
 	FIELD field_51917 WORLD_GEN_EXCEPTION Ljava/util/concurrent/atomic/AtomicReference;
+	FIELD field_53715 fuelRegistry Lnet/minecraft/class_9895;
+	FIELD field_53716 idleTickCount I
+	FIELD field_53717 suppressedExceptionsTracker Lnet/minecraft/class_9843;
+	FIELD field_53718 waitingForNextTick Z
 	METHOD <init> (Ljava/lang/Thread;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_7497;Lnet/minecraft/class_3950;)V
 		ARG 1 serverThread
 		ARG 2 session
@@ -479,6 +483,13 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 report
 		ARG 2 pos
 		ARG 3 key
+	METHOD method_61254 tickNetworkIo ()V
+	METHOD method_61255 getPauseWhenEmptySeconds ()I
+	METHOD method_62733 onPacketException (Ljava/lang/Throwable;Lnet/minecraft/class_9145;)V
+		ARG 1 exception
+		ARG 2 type
+	METHOD method_62734 runAutosave ()V
+	METHOD method_62735 getFuelRegistry ()Lnet/minecraft/class_9895;
 	CLASS class_6414 DebugStart
 		FIELD field_33980 time J
 		FIELD field_33981 tick I
