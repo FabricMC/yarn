@@ -42,7 +42,7 @@ public abstract class MinecraftVersionMetaHelper {
 				.defaultCache()
 				.downloadString(versionManifestPath);
 
-		final VersionsManifest mcManifest = FilamentGradlePlugin.OBJECT_MAPPER.readValue(versionManifest, VersionsManifest.class);
+		final VersionsManifest mcManifest = FilamentGradlePlugin.GSON.fromJson(versionManifest, VersionsManifest.class);
 
 		VersionsManifest.Version version = mcManifest.versions().stream()
 				.filter(versions -> versions.id.equalsIgnoreCase(getMinecraftVersion().get()))
@@ -57,10 +57,6 @@ public abstract class MinecraftVersionMetaHelper {
 				.sha1(version.sha1)
 				.downloadString(versionMetadataPath);
 
-		try {
-			return FilamentGradlePlugin.OBJECT_MAPPER.readValue(versionMetadata, MinecraftVersionMeta.class);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
+		return FilamentGradlePlugin.GSON.fromJson(versionMetadata, MinecraftVersionMeta.class);
 	}
 }
