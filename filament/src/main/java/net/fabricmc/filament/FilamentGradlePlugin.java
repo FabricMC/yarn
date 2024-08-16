@@ -1,7 +1,7 @@
 package net.fabricmc.filament;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Dependency;
@@ -24,7 +24,7 @@ import net.fabricmc.loom.configuration.providers.minecraft.MinecraftVersionMeta;
 import net.fabricmc.loom.util.gradle.GradleUtils;
 
 public final class FilamentGradlePlugin implements Plugin<Project> {
-	public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 	@Override
 	public void apply(Project project) {
