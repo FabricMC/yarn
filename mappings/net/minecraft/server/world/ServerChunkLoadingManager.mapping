@@ -32,12 +32,14 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	FIELD field_51862 UNLOADED_CHUNKS Lnet/minecraft/class_9259;
 	FIELD field_51863 UNLOADED_CHUNKS_FUTURE Ljava/util/concurrent/CompletableFuture;
 	FIELD field_51864 loaders Ljava/util/List;
+	FIELD field_52353 chunkToNextSaveTimeMs Lit/unimi/dsi/fastutil/longs/Long2LongMap;
 	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_3949;Lnet/minecraft/class_5567;Ljava/util/function/Supplier;IZ)V
 		ARG 1 world
 		ARG 2 session
 		ARG 3 dataFixer
 		ARG 4 structureTemplateManager
 		ARG 5 executor
+		ARG 6 mainThreadExecutor
 		ARG 7 chunkProvider
 		ARG 8 chunkGenerator
 		ARG 9 worldGenerationProgressListener
@@ -138,6 +140,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	METHOD method_20605 unloadChunks (Ljava/util/function/BooleanSupplier;)V
 		ARG 1 shouldKeepTicking
 	METHOD method_20619 loadChunk (Lnet/minecraft/class_1923;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 pos
 	METHOD method_20726 updateWatchedSection (Lnet/minecraft/class_3222;)V
 		COMMENT Updates the watched chunk section position for the {@code player}, and sends a
 		COMMENT render distance update packet to the client.
@@ -187,6 +190,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 0 chunk
 	METHOD method_39925 save (Lnet/minecraft/class_3193;J)Z
 		ARG 1 chunkHolder
+		ARG 2 currentTime
 	METHOD method_39992 shouldDelayShutdown ()Z
 		COMMENT {@return whether the server shutdown should be delayed to process some tasks}
 	METHOD method_40067 crash (Ljava/lang/IllegalStateException;Ljava/lang/String;)Lnet/minecraft/class_148;
@@ -220,6 +224,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 1 chunks
 	METHOD method_49422 (Lnet/minecraft/class_3222;)Ljava/util/List;
 		ARG 0 player
+	METHOD method_51282 (Lnet/minecraft/class_9259;)Lnet/minecraft/class_9259;
+		ARG 0 chunk
 	METHOD method_51834 (Lnet/minecraft/class_9259;Ljava/lang/Throwable;)Ljava/lang/Object;
 		ARG 1 chunk
 		ARG 2 throwable
@@ -266,6 +272,12 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 2 throwable
 	METHOD method_60439 schedule (Lnet/minecraft/class_9759;)V
 		ARG 1 chunkLoader
+	METHOD method_60449 (Ljava/util/List;)Lnet/minecraft/class_9259;
+		ARG 1 chunks
+	METHOD method_61260 forEachTickedChunk (Ljava/util/function/Consumer;)V
+		ARG 1 callback
+	METHOD method_61261 isAnyPlayerTicking (Lnet/minecraft/class_1923;)Z
+		ARG 1 pos
 	CLASS class_3208 EntityTracker
 		COMMENT An entity tracker governs which players' clients can see an entity. Each
 		COMMENT tracker corresponds to one entity in a server world and is mapped from the
