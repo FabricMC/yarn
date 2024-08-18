@@ -362,6 +362,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	METHOD method_54096 createSettingsCodec ()Lcom/mojang/serialization/codecs/RecordCodecBuilder;
 	METHOD method_55124 onExploded (Lnet/minecraft/class_2680;Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1927;Ljava/util/function/BiConsumer;)V
 		ARG 1 state
+		ARG 2 world
 		ARG 3 pos
 		ARG 4 explosion
 		ARG 5 stackMerger
@@ -831,6 +832,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 sourceBlock
+		ARG 5 wireOrientation
 		ARG 6 notify
 	METHOD method_9615 onBlockAdded (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Z)V
 		COMMENT Called server-side on the new block when the block state is changed. This includes block
@@ -966,8 +968,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 offsetType
 		METHOD method_49230 (Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
 			ARG 0 state
+			ARG 1 pos
 		METHOD method_49231 (Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
 			ARG 0 state
+			ARG 1 pos
 		METHOD method_50012 pistonBehavior (Lnet/minecraft/class_3619;)Lnet/minecraft/class_4970$class_2251;
 			ARG 1 pistonBehavior
 		METHOD method_50013 burnable ()Lnet/minecraft/class_4970$class_2251;
@@ -1040,6 +1044,14 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		FIELD field_44624 solid Z
 		FIELD field_44625 instrument Lnet/minecraft/class_2766;
 		FIELD field_44626 replaceable Z
+		FIELD field_52639 opaqueFullCube Z
+		FIELD field_52640 cullingShape Lnet/minecraft/class_265;
+		FIELD field_52641 cullingFaces [Lnet/minecraft/class_265;
+		FIELD field_52642 transparent Z
+		FIELD field_52643 opacity I
+		FIELD field_52644 DIRECTIONS [Lnet/minecraft/class_2350;
+		FIELD field_52645 EMPTY_CULLING_FACES [Lnet/minecraft/class_265;
+		FIELD field_52646 FULL_CULLING_FACES [Lnet/minecraft/class_265;
 		METHOD <init> (Lnet/minecraft/class_2248;Lit/unimi/dsi/fastutil/objects/Reference2ObjectArrayMap;Lcom/mojang/serialization/MapCodec;)V
 			ARG 1 block
 			ARG 2 propertyMap
@@ -1073,6 +1085,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 2 pos
 			ARG 3 context
 		METHOD method_26173 getCullingFace (Lnet/minecraft/class_2350;)Lnet/minecraft/class_265;
+			ARG 1 direction
 		METHOD method_26175 onProjectileHit (Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_3965;Lnet/minecraft/class_1676;)V
 			ARG 1 world
 			ARG 2 state
@@ -1103,6 +1116,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 world
 			ARG 2 pos
 			ARG 3 sourceBlock
+			ARG 4 wireOrientation
 			ARG 5 notify
 		METHOD method_26182 onBlockAdded (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Z)V
 			ARG 1 world
@@ -1228,6 +1242,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 2 pos
 		METHOD method_26225 isOpaque ()Z
 		METHOD method_26226 getModelOffset (Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
+			ARG 1 pos
 		METHOD method_26227 getFluidState ()Lnet/minecraft/class_3610;
 		METHOD method_26228 shouldSuffocate (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
 			ARG 1 world
@@ -1285,6 +1300,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		METHOD method_54097 matchesKey (Lnet/minecraft/class_5321;)Z
 			ARG 1 key
 		METHOD method_55225 onExploded (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1927;Ljava/util/function/BiConsumer;)V
+			ARG 1 world
 			ARG 2 pos
 			ARG 3 explosion
 			ARG 4 stackMerger
@@ -1298,6 +1314,10 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 world
 			ARG 2 player
 			ARG 3 hit
+		METHOD method_61765 ([Lnet/minecraft/class_265;)V
+			ARG 0 direction
+		METHOD method_61766 ([Lnet/minecraft/class_265;)V
+			ARG 0 direction
 		CLASS class_3752 ShapeCache
 			FIELD field_16559 DIRECTIONS [Lnet/minecraft/class_2350;
 			FIELD field_17651 exceedsCube Z
@@ -1329,3 +1349,4 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	CLASS class_8176 Offsetter
 		METHOD evaluate (Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
 			ARG 1 state
+			ARG 2 pos
