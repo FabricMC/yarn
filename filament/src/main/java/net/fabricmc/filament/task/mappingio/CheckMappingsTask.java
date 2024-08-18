@@ -1,6 +1,5 @@
 package net.fabricmc.filament.task.mappingio;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -11,8 +10,8 @@ import java.util.Set;
 import net.fabricmc.mappingio.MappedElementKind;
 import net.fabricmc.mappingio.MappingVisitor;
 
-import org.gradle.api.provider.Property;
-import org.gradle.api.tasks.Input;
+import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.TaskAction;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -24,12 +23,12 @@ import net.fabricmc.mappingio.MappingReader;
 public abstract class CheckMappingsTask extends FilamentTask {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CheckMappingsTask.class);
 
-	@Input
-	abstract Property<File> getMappings();
+	@InputDirectory
+	abstract DirectoryProperty getInput();
 
 	@TaskAction
 	public final void run() throws IOException {
-		Path path = getMappings().get().toPath();
+		Path path = getInput().get().getAsFile().toPath();
 		List<String> errors = new ArrayList<>();
 
 		MappingReader.read(path, new MappingVisitor() {
