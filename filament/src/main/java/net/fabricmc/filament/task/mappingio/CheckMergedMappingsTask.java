@@ -84,7 +84,7 @@ public abstract class CheckMergedMappingsTask extends FilamentTask implements Wi
 			@Override
 			public boolean visitElementContent(MappedElementKind targetKind) throws IOException {
 				if (targetKind == MappedElementKind.METHOD) {
-					// Checking if the srcName is an intermediary name (like for classes) would be the more correct option,
+					// Checking if the srcName is an intermediary name (like for classes and fields) would be the more correct option,
 					// but Enigma's bridge method mapper behaves weirdly and injects copies of the mapping into the while hierarchy.
 					// We haven't been able to fix this yet, so in the meantime, we're using the following workaround,
 					// which ignores any Enigma-bridge-mapper generated mappings, but should still catch all other
