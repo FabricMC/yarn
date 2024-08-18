@@ -35,31 +35,34 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 	FIELD field_20638 DO_IMMEDIATE_RESPAWN Lnet/minecraft/class_1928$class_4313;
 		COMMENT A {@linkplain Rule game rule} which regulates whether a player should immediately respawn upon death.
 	FIELD field_30963 DEFAULT_RANDOM_TICK_SPEED I
+	FIELD field_52615 enabledFeatures Lnet/minecraft/class_7699;
 	FIELD field_9196 rules Ljava/util/Map;
 	FIELD field_9197 RULE_TYPES Ljava/util/Map;
-	METHOD <init> (Lcom/mojang/serialization/DynamicLike;)V
-		ARG 1 dynamic
-	METHOD <init> (Ljava/util/Map;)V
+	METHOD <init> (Ljava/util/Map;Lnet/minecraft/class_7699;)V
 		ARG 1 rules
+		ARG 2 enabledFeatures
+	METHOD <init> (Lnet/minecraft/class_7699;)V
+		ARG 1 enabledFeatures
+	METHOD <init> (Lnet/minecraft/class_7699;Lcom/mojang/serialization/DynamicLike;)V
+		ARG 1 enabledFeatures
+		ARG 2 values
 	METHOD method_20744 accept (Lnet/minecraft/class_1928$class_4311;)V
 		COMMENT Make the visitor visit all registered game rules.
 		COMMENT
 		COMMENT <p>The visitation involves calling both {@link Visitor#visit(GameRules.Key, GameRules.Type)} and {@code visitX} for every game rule, where X is the current rule's concrete type such as a boolean.
-		ARG 0 visitor
+		ARG 1 visitor
 	METHOD method_20745 accept (Lnet/minecraft/class_1928$class_4311;Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
-		ARG 0 consumer
-		ARG 1 key
-		ARG 2 type
+		ARG 1 visitor
+		ARG 2 key
+		ARG 3 type
 	METHOD method_20746 get (Lnet/minecraft/class_1928$class_4313;)Lnet/minecraft/class_1928$class_4315;
 		ARG 1 key
 	METHOD method_20747 (Lcom/mojang/serialization/DynamicLike;Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4315;)V
 		ARG 1 key
 		ARG 2 rule
-	METHOD method_20748 (Ljava/util/Map$Entry;)Lnet/minecraft/class_1928$class_4315;
-		ARG 0 e
 	METHOD method_20750 (Lnet/minecraft/class_1928$class_4311;Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V
-		ARG 1 key
-		ARG 2 type
+		ARG 2 key
+		ARG 3 type
 	METHOD method_20751 (Lnet/minecraft/class_2487;Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4315;)V
 		ARG 1 key
 		ARG 2 rule
@@ -75,8 +78,9 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 	METHOD method_27323 (Lnet/minecraft/class_1928;Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4313;)V
 		ARG 3 key
 	METHOD method_27324 (Ljava/util/Map$Entry;)Lnet/minecraft/class_1928$class_4315;
-		ARG 0 entry
-	METHOD method_27325 copy ()Lnet/minecraft/class_1928;
+		ARG 1 entry
+	METHOD method_27325 copy (Lnet/minecraft/class_7699;)Lnet/minecraft/class_1928;
+		ARG 1 enabledFeatures
 	METHOD method_53838 (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4310;)V
 		ARG 0 server
 		ARG 1 rule
@@ -86,12 +90,21 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 	METHOD method_56113 (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4312;)V
 		ARG 0 server
 		ARG 1 value
+	METHOD method_61724 (Lnet/minecraft/class_7699;Ljava/util/Map$Entry;)Z
+		ARG 1 entry
+	METHOD method_61725 streamAllRules (Lnet/minecraft/class_7699;)Ljava/util/stream/Stream;
+		ARG 0 enabledFeatures
+	METHOD method_61726 (Ljava/util/Map$Entry;)Lnet/minecraft/class_1928$class_4315;
+		ARG 0 entry
+	METHOD method_61727 (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4312;)V
+		ARG 0 server
+		ARG 1 value
 	METHOD method_8355 getBoolean (Lnet/minecraft/class_1928$class_4313;)Z
 		ARG 1 rule
 	METHOD method_8356 getInt (Lnet/minecraft/class_1928$class_4313;)I
 		ARG 1 rule
 	METHOD method_8357 load (Lcom/mojang/serialization/DynamicLike;)V
-		ARG 1 dynamic
+		ARG 1 values
 	METHOD method_8358 toNbt ()Lnet/minecraft/class_2487;
 	METHOD method_8359 register (Ljava/lang/String;Lnet/minecraft/class_1928$class_5198;Lnet/minecraft/class_1928$class_4314;)Lnet/minecraft/class_1928$class_4313;
 		ARG 0 name
@@ -165,11 +178,12 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		METHOD method_35236 set (ILnet/minecraft/server/MinecraftServer;)V
 			ARG 1 value
 			ARG 2 server
-		METHOD method_56115 create (IIILjava/util/function/BiConsumer;)Lnet/minecraft/class_1928$class_4314;
+		METHOD method_56115 create (IIILnet/minecraft/class_7699;Ljava/util/function/BiConsumer;)Lnet/minecraft/class_1928$class_4314;
 			ARG 0 initialValue
 			ARG 1 min
 			ARG 2 max
-			ARG 3 changeCallback
+			ARG 3 requiredFeatures
+			ARG 4 changeCallback
 		METHOD method_56116 (ILnet/minecraft/class_1928$class_4314;)Lnet/minecraft/class_1928$class_4312;
 			ARG 1 type
 	CLASS class_4313 Key
@@ -188,17 +202,20 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		FIELD field_19415 ruleFactory Ljava/util/function/Function;
 		FIELD field_19416 changeCallback Ljava/util/function/BiConsumer;
 		FIELD field_24104 ruleAcceptor Lnet/minecraft/class_1928$class_5199;
-		METHOD <init> (Ljava/util/function/Supplier;Ljava/util/function/Function;Ljava/util/function/BiConsumer;Lnet/minecraft/class_1928$class_5199;)V
+		FIELD field_52616 requiredFeatures Lnet/minecraft/class_7699;
+		METHOD <init> (Ljava/util/function/Supplier;Ljava/util/function/Function;Ljava/util/function/BiConsumer;Lnet/minecraft/class_1928$class_5199;Lnet/minecraft/class_7699;)V
 			ARG 1 argumentType
 			ARG 2 ruleFactory
 			ARG 3 changeCallback
 			ARG 4 ruleAcceptor
+			ARG 5 requiredFeatures
 		METHOD method_20773 createRule ()Lnet/minecraft/class_1928$class_4315;
 		METHOD method_20775 argument (Ljava/lang/String;)Lcom/mojang/brigadier/builder/RequiredArgumentBuilder;
 			ARG 1 name
 		METHOD method_27336 accept (Lnet/minecraft/class_1928$class_4311;Lnet/minecraft/class_1928$class_4313;)V
 			ARG 1 consumer
 			ARG 2 key
+		METHOD method_61728 getRequiredFeatures ()Lnet/minecraft/class_7699;
 	CLASS class_4315 Rule
 		FIELD field_19417 type Lnet/minecraft/class_1928$class_4314;
 		METHOD <init> (Lnet/minecraft/class_1928$class_4314;)V

@@ -9,7 +9,6 @@ buildscript {
 	}
 	dependencies {
 		classpath "cuchaz:enigma-cli:${project.enigma_version}"
-		classpath "net.fabricmc:name-proposal:${project.name_proposal_version}"
 	}
 }
 
@@ -20,7 +19,7 @@ plugins {
 	id 'net.fabricmc.filament'
 }
 
-def minecraft_version = "24w21b"
+def minecraft_version = "24w33a"
 
 filament {
 	minecraftVersion = minecraft_version
@@ -41,7 +40,12 @@ if (ENV.BRANCH_NAME) {
 }
 
 repositories {
-	mavenCentral()
+	mavenCentral {
+		content {
+			// Force LWJGL from Mojang's repo, as they have custom patched versions since 1.21-pre1
+			excludeGroupByRegex("org.lwjgl")
+		}
+	}
 	maven {
 		name "Fabric Repository"
 		url 'https://maven.fabricmc.net'
@@ -66,7 +70,6 @@ def unpickMetaFile = file("unpick-definitions/unpick.json")
 
 dependencies {
 	enigmaRuntime "cuchaz:enigma-swing:${project.enigma_version}"
-	enigmaRuntime "net.fabricmc:name-proposal:${project.name_proposal_version}"
 	enigmaRuntime "net.fabricmc:cfr:${project.cfr_version}"
 	javadocClasspath "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 	javadocClasspath "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
@@ -102,8 +105,8 @@ import net.fabricmc.filament.task.mappingio.ConvertMappingsTask
 import net.fabricmc.filament.task.mappingio.FormatMappingsTask
 import net.fabricmc.filament.task.mappingio.MergeMappingsTask
 import net.fabricmc.filament.task.mappingio.CheckMappingsTask
+import net.fabricmc.filament.nameproposal.MappingNameCompleter
 import net.fabricmc.mappingio.format.MappingFormat
-import net.fabricmc.nameproposal.MappingNameCompleter
 import org.gradle.work.DisableCachingByDefault
 import com.diffplug.spotless.LineEnding
 import groovy.xml.XmlSlurper
@@ -626,7 +629,13 @@ abstract class EnigmaTask extends JavaExec {
 	abstract Property<File> getMappings()
 
 	EnigmaTask() {
-		classpath = project.configurations.enigmaRuntime
+		def filamentCodeSource = MappingPoetTask.class.getProtectionDomain().getCodeSource()
+		def filamentJarFile = new File(filamentCodeSource.getLocation().getFile())
+		def runtimeClasspath = project.files()
+		runtimeClasspath.from(project.configurations.enigmaRuntime)
+		runtimeClasspath.from(filamentJarFile)
+
+		classpath = runtimeClasspath
 		mainClass.set('cuchaz.enigma.gui.Main')
 		jvmArgs "-Xmx2048m"
 	}

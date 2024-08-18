@@ -18,9 +18,10 @@ CLASS net/minecraft/class_2852 net/minecraft/world/ChunkSerializer
 		ARG 1 pos
 		ARG 2 starts
 		ARG 3 references
-	METHOD method_12386 getEntityLoadingCallback (Lnet/minecraft/class_3218;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2818$class_6829;
+	METHOD method_12386 getEntityLoadingCallback (Lnet/minecraft/class_3218;Ljava/util/List;Ljava/util/List;)Lnet/minecraft/class_2818$class_6829;
 		ARG 0 world
-		ARG 1 nbt
+		ARG 1 entities
+		ARG 2 blockEntities
 	METHOD method_12387 readStructureReferences (Lnet/minecraft/class_5455;Lnet/minecraft/class_1923;Lnet/minecraft/class_2487;)Ljava/util/Map;
 		ARG 0 registryManager
 		ARG 1 pos
@@ -31,14 +32,12 @@ CLASS net/minecraft/class_2852 net/minecraft/world/ChunkSerializer
 		ARG 2 worldSeed
 	METHOD method_12393 toNbt ([Lit/unimi/dsi/fastutil/shorts/ShortList;)Lnet/minecraft/class_2499;
 		ARG 0 lists
-	METHOD method_12395 deserialize (Lnet/minecraft/class_3218;Lnet/minecraft/class_4153;Lnet/minecraft/class_1923;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2839;
-		ARG 0 world
-		ARG 1 poiStorage
-		ARG 2 chunkPos
-		ARG 3 nbt
-	METHOD method_12410 serialize (Lnet/minecraft/class_3218;Lnet/minecraft/class_2791;)Lnet/minecraft/class_2487;
-		ARG 0 world
-		ARG 1 chunk
+	METHOD method_12395 deserialize (Lnet/minecraft/class_3218;Lnet/minecraft/class_4153;Lnet/minecraft/class_9240;Lnet/minecraft/class_1923;)Lnet/minecraft/class_2839;
+		ARG 1 world
+		ARG 2 poiStorage
+		ARG 3 key
+		ARG 4 expectedPos
+	METHOD method_12410 serialize ()Lnet/minecraft/class_2487;
 	METHOD method_24029 (Lnet/minecraft/class_1923;Lnet/minecraft/class_2960;J)Z
 		ARG 2 packedPos
 	METHOD method_39035 logRecoverableError (Lnet/minecraft/class_1923;ILjava/lang/String;)V
@@ -47,31 +46,44 @@ CLASS net/minecraft/class_2852 net/minecraft/world/ChunkSerializer
 		ARG 2 message
 	METHOD method_39036 createCodec (Lnet/minecraft/class_2378;)Lcom/mojang/serialization/Codec;
 		ARG 0 biomeRegistry
-	METHOD method_39037 (Lnet/minecraft/class_1923;ILjava/lang/String;)V
-		ARG 2 errorMessage
-	METHOD method_39038 (Lnet/minecraft/class_1923;ILjava/lang/String;)V
-		ARG 2 errorMessage
-	METHOD method_39311 serializeTicks (Lnet/minecraft/class_3218;Lnet/minecraft/class_2487;Lnet/minecraft/class_2791$class_6745;)V
-		ARG 0 world
-		ARG 1 nbt
-		ARG 2 tickSchedulers
+	METHOD method_39311 serializeTicks (Lnet/minecraft/class_2487;Lnet/minecraft/class_2791$class_6745;)V
+		ARG 0 nbt
+		ARG 1 schedulers
 	METHOD method_39312 (Lnet/minecraft/class_2248;)Ljava/lang/String;
 		ARG 0 block
 	METHOD method_39313 (Lnet/minecraft/class_3611;)Ljava/lang/String;
 		ARG 0 fluid
-	METHOD method_39314 (Ljava/lang/String;)Ljava/util/Optional;
+	METHOD method_39315 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
+		ARG 1 belowZeroRetrogen
+	METHOD method_39539 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
+		ARG 1 blendingData
+	METHOD method_61793 fromChunk (Lnet/minecraft/class_3218;Lnet/minecraft/class_2791;)Lnet/minecraft/class_2852;
+		ARG 0 world
+		ARG 1 chunk
+	METHOD method_61794 fromNbt (Lnet/minecraft/class_5539;Lnet/minecraft/class_5455;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2852;
+		ARG 0 world
+		ARG 1 registryManager
+		ARG 2 nbt
+	METHOD method_61795 (Lit/unimi/dsi/fastutil/shorts/ShortList;)Lit/unimi/dsi/fastutil/shorts/ShortArrayList;
+		ARG 0 postProcessings
+	METHOD method_61796 (Ljava/lang/String;)Ljava/util/Optional;
 		ARG 0 id
-	METHOD method_39316 (Ljava/lang/String;)Ljava/util/Optional;
-		ARG 0 id
-	METHOD method_39317 (Ljava/lang/String;)Ljava/util/Optional;
-		ARG 0 id
-	METHOD method_39318 (Ljava/lang/String;)Ljava/util/Optional;
-		ARG 0 id
-	METHOD method_39796 getList (Lnet/minecraft/class_2487;Ljava/lang/String;)Lnet/minecraft/class_2499;
-		ARG 0 nbt
-		ARG 1 key
-	METHOD method_39797 (Lnet/minecraft/class_2499;Lnet/minecraft/class_3218;Lnet/minecraft/class_2499;Lnet/minecraft/class_2818;)V
+	METHOD method_61797 (Ljava/util/List;Lnet/minecraft/class_3218;Ljava/util/List;Lnet/minecraft/class_2818;)V
 		ARG 3 chunk
+	METHOD method_61798 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2902$class_2903;[J)V
+		ARG 1 type
+		ARG 2 values
+	METHOD method_61799 (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2487;
+		ARG 0 blockEntity
+	METHOD method_61800 (Lnet/minecraft/class_1923;ILjava/lang/String;)V
+		ARG 2 error
+	METHOD method_61801 (Ljava/lang/String;)Ljava/util/Optional;
+		ARG 0 id
+	METHOD method_61802 (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2487;
+		ARG 0 entity
+	METHOD method_61803 (Lnet/minecraft/class_1923;ILjava/lang/String;)V
+		ARG 2 error
 	CLASS class_9314 ChunkLoadingException
 		METHOD <init> (Ljava/lang/String;)V
 			ARG 1 message
+	CLASS class_9898 SectionData

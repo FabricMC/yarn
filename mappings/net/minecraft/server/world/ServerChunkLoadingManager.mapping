@@ -9,7 +9,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	FIELD field_17222 chunkHolderListDirty Z
 	FIELD field_17223 chunkTaskPrioritySystem Lnet/minecraft/class_3900;
 	FIELD field_17224 worldGenExecutor Lnet/minecraft/class_3906;
-	FIELD field_17226 mainExecutor Lnet/minecraft/class_3906;
 	FIELD field_17228 ticketManager Lnet/minecraft/class_3898$class_3216;
 	FIELD field_17230 totalChunksLoadedCount Ljava/util/concurrent/atomic/AtomicInteger;
 	FIELD field_17442 worldGenerationProgressListener Lnet/minecraft/class_3949;
@@ -27,13 +26,13 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	FIELD field_29672 UNMARKED_CHUNK B
 	FIELD field_29673 LEVEL_CHUNK B
 	FIELD field_29675 DEFAULT_VIEW_DISTANCE I
-	FIELD field_36383 chunkToNextSaveTimeMs Lit/unimi/dsi/fastutil/longs/Long2LongMap;
 	FIELD field_37278 noiseConfig Lnet/minecraft/class_7138;
 	FIELD field_40856 structurePlacementCalculator Lnet/minecraft/class_7869;
 	FIELD field_51861 generationContext Lnet/minecraft/class_9312;
 	FIELD field_51862 UNLOADED_CHUNKS Lnet/minecraft/class_9259;
 	FIELD field_51863 UNLOADED_CHUNKS_FUTURE Ljava/util/concurrent/CompletableFuture;
 	FIELD field_51864 loaders Ljava/util/List;
+	FIELD field_52353 chunkToNextSaveTimeMs Lit/unimi/dsi/fastutil/longs/Long2LongMap;
 	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_3949;Lnet/minecraft/class_5567;Ljava/util/function/Supplier;IZ)V
 		ARG 1 world
 		ARG 2 session
@@ -123,8 +122,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		COMMENT tracking status of those entities to all players. It then checks if any player
 		COMMENT has changed chunk sections, and updates all entities tracking status to those
 		COMMENT players. This ensures all possible updates are accounted for.
-	METHOD method_19487 (Lnet/minecraft/class_3193;Ljava/lang/Runnable;)V
-		ARG 2 task
 	METHOD method_19488 getPointOfInterestStorage ()Lnet/minecraft/class_4153;
 	METHOD method_20458 tryUnloadChunk (JLnet/minecraft/class_3193;)V
 		ARG 1 pos
@@ -133,8 +130,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 0 optionalChunks
 	METHOD method_20578 (Lorg/apache/commons/lang3/mutable/MutableBoolean;Lnet/minecraft/class_2791;)V
 		ARG 1 chunk
-	METHOD method_20579 (Lnet/minecraft/class_3193;Ljava/lang/Runnable;)V
-		ARG 2 task
 	METHOD method_20582 (Lnet/minecraft/class_2791;)Z
 		ARG 0 chunk
 	METHOD method_20584 (Lnet/minecraft/class_3193;)Lnet/minecraft/class_2791;
@@ -193,8 +188,9 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 0 chunk
 	METHOD method_39221 (Lnet/minecraft/class_2818;)Ljava/lang/Integer;
 		ARG 0 chunk
-	METHOD method_39925 save (Lnet/minecraft/class_3193;)Z
+	METHOD method_39925 save (Lnet/minecraft/class_3193;J)Z
 		ARG 1 chunkHolder
+		ARG 2 currentTime
 	METHOD method_39992 shouldDelayShutdown ()Z
 		COMMENT {@return whether the server shutdown should be delayed to process some tasks}
 	METHOD method_40067 crash (Ljava/lang/IllegalStateException;Ljava/lang/String;)Lnet/minecraft/class_148;
@@ -204,10 +200,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 1 chunkHolder
 	METHOD method_40069 (Ljava/lang/StringBuilder;Lnet/minecraft/class_3193;Lcom/mojang/datafixers/util/Pair;)V
 		ARG 2 pair
-	METHOD method_41234 (Ljava/util/List;)Lnet/minecraft/class_2818;
-		ARG 0 cs
-	METHOD method_41235 (Lnet/minecraft/class_9259;)Lnet/minecraft/class_9259;
-		ARG 0 optionalChunks
 	METHOD method_41247 getNoiseConfig ()Lnet/minecraft/class_7138;
 	METHOD method_43374 (Lnet/minecraft/class_1923;Ljava/lang/Throwable;)Lnet/minecraft/class_2791;
 		ARG 2 throwable
@@ -218,12 +210,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 2 chunkPos
 	METHOD method_43377 (Ljava/util/Optional;)Ljava/util/Optional;
 		ARG 1 nbt
-	METHOD method_43378 (Lnet/minecraft/class_1923;Ljava/util/Optional;)Ljava/util/Optional;
-		ARG 1 nbt
-	METHOD method_43379 (Lnet/minecraft/class_1923;Lnet/minecraft/class_2487;)Z
-		ARG 1 nbt2
-	METHOD method_43380 containsStatus (Lnet/minecraft/class_2487;)Z
-		ARG 0 nbt
 	METHOD method_43381 updateChunkNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
 		ARG 1 nbt
 	METHOD method_43382 getProtoChunk (Lnet/minecraft/class_1923;)Lnet/minecraft/class_2791;
@@ -238,6 +224,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 1 chunks
 	METHOD method_49422 (Lnet/minecraft/class_3222;)Ljava/util/List;
 		ARG 0 player
+	METHOD method_51282 (Lnet/minecraft/class_9259;)Lnet/minecraft/class_9259;
+		ARG 0 chunk
 	METHOD method_51834 (Lnet/minecraft/class_9259;Ljava/lang/Throwable;)Ljava/lang/Object;
 		ARG 1 chunk
 		ARG 2 throwable
@@ -269,8 +257,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 2 chunkPos
 	METHOD method_53683 (Lnet/minecraft/class_3193;Lnet/minecraft/class_9259;)Lnet/minecraft/class_9259;
 		ARG 2 optionalChunk
-	METHOD method_53684 (Lnet/minecraft/class_3193;Lnet/minecraft/class_2818;)V
-		ARG 2 chunk
 	METHOD method_53685 forceLighting (Lnet/minecraft/class_1923;I)V
 		ARG 1 centerPos
 		ARG 2 radius
@@ -286,6 +272,12 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 2 throwable
 	METHOD method_60439 schedule (Lnet/minecraft/class_9759;)V
 		ARG 1 chunkLoader
+	METHOD method_60449 (Ljava/util/List;)Lnet/minecraft/class_9259;
+		ARG 1 chunks
+	METHOD method_61260 forEachTickedChunk (Ljava/util/function/Consumer;)V
+		ARG 1 callback
+	METHOD method_61261 isAnyPlayerTicking (Lnet/minecraft/class_1923;)Z
+		ARG 1 pos
 	CLASS class_3208 EntityTracker
 		COMMENT An entity tracker governs which players' clients can see an entity. Each
 		COMMENT tracker corresponds to one entity in a server world and is mapped from the

@@ -27,9 +27,10 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_49792 POTION_SWIRLS Lnet/minecraft/class_2940;
 	FIELD field_51569 riptideAttackDamage F
 	FIELD field_51570 riptideStack Lnet/minecraft/class_1799;
-	FIELD field_51571 locationBasedEnchantmentEffects Lit/unimi/dsi/fastutil/objects/Reference2ObjectMap;
+	FIELD field_51571 locationBasedEnchantmentEffects Ljava/util/EnumMap;
 	FIELD field_51995 ATTRIBUTES_NBT_KEY Ljava/lang/String;
 	FIELD field_51996 SPRINTING_SPEED_MODIFIER_ID Lnet/minecraft/class_2960;
+	FIELD field_52447 elytraFlightController Lnet/minecraft/class_9863;
 	FIELD field_6210 bodyTrackingIncrements I
 	FIELD field_6212 sidewaysSpeed F
 	FIELD field_6213 deathTime I
@@ -385,12 +386,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 source
 		ARG 2 amount
 		ARG 3 slots
-	METHOD method_57293 (Lnet/minecraft/class_5131;Lnet/minecraft/class_1799;Lnet/minecraft/class_1304;Lnet/minecraft/class_6880;Lnet/minecraft/class_1322;)V
-		ARG 4 attribute
-		ARG 5 modifier
-	METHOD method_57294 (Lnet/minecraft/class_5131;Lnet/minecraft/class_1799;Lnet/minecraft/class_1304;Lnet/minecraft/class_6880;Lnet/minecraft/class_1322;)V
-		ARG 4 attribute
-		ARG 5 modifier
 	METHOD method_58150 updatePotionSwirls ()V
 	METHOD method_5877 getHandItems ()Ljava/lang/Iterable;
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
@@ -403,7 +398,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 target
 		ARG 2 damageSource
 	METHOD method_59925 hasLandedInFluid ()Z
-	METHOD method_59926 getLocationBasedEnchantmentEffects ()Ljava/util/Map;
+	METHOD method_59926 getLocationBasedEnchantmentEffects (Lnet/minecraft/class_1304;)Ljava/util/Map;
 	METHOD method_5996 getAttributeInstance (Lnet/minecraft/class_6880;)Lnet/minecraft/class_1324;
 		ARG 1 attribute
 	METHOD method_5997 attackLivingEntity (Lnet/minecraft/class_1309;)V
@@ -483,8 +478,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT
 		COMMENT @apiNote Subclasses should override this to make the entity take reduced damage.
 		COMMENT
-		COMMENT @implNote This applies various {@linkplain net.minecraft.enchantment.ProtectionEnchantment
-		COMMENT protection enchantments} and the resistance effect. {@link
+		COMMENT @implNote This applies enchantments and the resistance effect. {@link
 		COMMENT net.minecraft.entity.mob.WitchEntity} uses this to negate their own damage and reduce the
 		COMMENT applied status effect damage.
 		ARG 1 source
@@ -493,7 +487,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 stack
 		ARG 2 count
 	METHOD method_6038 onDismounted (Lnet/minecraft/class_1297;)V
-		ARG 1 vehicle
 	METHOD method_6039 isBlocking ()Z
 	METHOD method_6040 consumeItem ()V
 	METHOD method_6041 getFallSound (I)Lnet/minecraft/class_3414;
@@ -520,7 +513,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT <p>If {@link #shouldAlwaysDropXp() shouldAlwaysDropXp()} returns {@code
 		COMMENT true}, this check is disregarded.
 		COMMENT
-		COMMENT @see #dropXp()
+		COMMENT @see #dropXp
 		COMMENT @see #shouldAlwaysDropXp()
 		COMMENT @see #getXpToDrop()
 	METHOD method_6055 getHandSwingProgress (F)F
@@ -552,7 +545,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT Returns if this entity may always drop experience, skipping any
 		COMMENT other checks.
 		COMMENT
-		COMMENT @see #dropXp()
+		COMMENT @see #dropXp
 		COMMENT @see #getXpToDrop()
 	METHOD method_6072 updateLeaningPitch ()V
 	METHOD method_6073 setAbsorptionAmount (F)V
@@ -640,7 +633,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT Called when this entity is killed and returns the amount of experience
 		COMMENT to drop.
 		COMMENT
-		COMMENT @see #dropXp()
+		COMMENT @see #dropXp
 		COMMENT @see #shouldAlwaysDropXp()
 		COMMENT @see #shouldDropXp()
 	METHOD method_6111 removeStatusEffectInternal (Lnet/minecraft/class_6880;)Lnet/minecraft/class_1293;
@@ -688,4 +681,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6132 applyArmorToDamage (Lnet/minecraft/class_1282;F)F
 		ARG 1 source
 		ARG 2 amount
+	METHOD method_61420 getStackInArm (Lnet/minecraft/class_1306;)Lnet/minecraft/class_1799;
+		ARG 1 arm
 	CLASS class_6823 FallSounds

@@ -2,14 +2,9 @@ CLASS net/minecraft/class_1688 net/minecraft/entity/vehicle/AbstractMinecartEnti
 	FIELD field_24464 DISMOUNT_FREE_Y_SPACES_NEEDED Lcom/google/common/collect/ImmutableMap;
 	FIELD field_30694 VELOCITY_SLOWDOWN_MULTIPLIER F
 	FIELD field_44917 onRail Z
-	FIELD field_45135 clientInterpolationSteps I
-	FIELD field_45136 clientX D
-	FIELD field_45137 clientY D
-	FIELD field_45138 clientZ D
-	FIELD field_45139 clientYaw D
-	FIELD field_45140 clientPitch D
-	FIELD field_45141 clientVelocity Lnet/minecraft/class_243;
 	FIELD field_47822 VILLAGER_PASSENGER_ATTACHMENT_POS Lnet/minecraft/class_243;
+	FIELD field_52516 movementVelocity Lnet/minecraft/class_243;
+	FIELD field_52517 controller Lnet/minecraft/class_9878;
 	FIELD field_7660 yawFlipped Z
 	FIELD field_7661 CUSTOM_BLOCK_OFFSET Lnet/minecraft/class_2940;
 	FIELD field_7664 ADJACENT_RAIL_POSITIONS_BY_SHAPE Ljava/util/Map;
@@ -29,29 +24,36 @@ CLASS net/minecraft/class_1688 net/minecraft/entity/vehicle/AbstractMinecartEnti
 		ARG 0 map
 	METHOD method_30340 (Lnet/minecraft/class_2338;)Lnet/minecraft/class_265;
 		ARG 1 pos
+	METHOD method_61560 getMovementVelocity ()Lnet/minecraft/class_243;
+	METHOD method_61561 handleMovementInput (Lnet/minecraft/class_1309;Lnet/minecraft/class_243;)V
+		ARG 1 passenger
+		ARG 2 movementInput
+	METHOD method_61562 (Lnet/minecraft/class_238;D)Z
+		ARG 1 box
+	METHOD method_61563 getLaunchDirection (Lnet/minecraft/class_2338;)Lnet/minecraft/class_243;
+		ARG 1 railPos
+	METHOD method_61565 setOnRail (Z)V
+		ARG 1 onRail
+	METHOD method_61566 areMinecartImprovementsEnabled (Lnet/minecraft/class_1937;)Z
+		ARG 0 world
+	METHOD method_61567 setYawFlipped (Z)V
+		ARG 1 yawFlipped
+	METHOD method_61568 setMovementVelocity (Lnet/minecraft/class_243;)V
+		ARG 1 movementVelocity
+	METHOD method_61569 getController ()Lnet/minecraft/class_9878;
+	METHOD method_61570 decelerateFromPoweredRail ()Lnet/minecraft/class_2338;
+	METHOD method_61571 isYawFlipped ()Z
 	METHOD method_7504 getMaxSpeed ()D
-	METHOD method_7505 snapPositionToRailWithOffset (DDDD)Lnet/minecraft/class_243;
-		COMMENT This method is used to determine the minecart's render orientation, by computing a position along the rail slightly before and slightly after the minecart's actual position.
-		ARG 1 x
-		ARG 3 y
-		ARG 5 z
-		ARG 7 offset
 	METHOD method_7506 onActivatorRail (IIIZ)V
 		ARG 1 x
 		ARG 2 y
 		ARG 3 z
 		ARG 4 powered
-	METHOD method_7508 snapPositionToRail (DDD)Lnet/minecraft/class_243;
-		ARG 1 x
-		ARG 3 y
-		ARG 5 z
 	METHOD method_7510 hasCustomBlock ()Z
 	METHOD method_7511 setCustomBlockPresent (Z)V
 		ARG 1 present
 	METHOD method_7512 moveOffRail ()V
-	METHOD method_7513 moveOnRail (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
-		ARG 1 pos
-		ARG 2 state
+	METHOD method_7513 moveOnRail ()V
 	METHOD method_7514 getBlockOffset ()I
 	METHOD method_7515 setCustomBlockOffset (I)V
 		ARG 1 offset
@@ -66,7 +68,8 @@ CLASS net/minecraft/class_1688 net/minecraft/entity/vehicle/AbstractMinecartEnti
 		ARG 7 type
 		ARG 8 stack
 		ARG 9 player
-	METHOD method_7525 applySlowdown ()V
+	METHOD method_7525 applySlowdown (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 1 velocity
 	METHOD method_7526 getDefaultBlockOffset ()I
 	METHOD method_7527 setCustomBlock (Lnet/minecraft/class_2680;)V
 		ARG 1 state

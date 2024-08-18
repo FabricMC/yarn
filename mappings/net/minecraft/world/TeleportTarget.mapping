@@ -1,21 +1,48 @@
 CLASS net/minecraft/class_5454 net/minecraft/world/TeleportTarget
 	COMMENT Represents the position that an entity takes after being
-	COMMENT {@linkplain net.minecraft.entity.Entity#moveToWorld moved between worlds}.
+	COMMENT {@linkplain net.minecraft.entity.Entity#teleportTo teleported}.
 	FIELD comp_2820 world Lnet/minecraft/class_3218;
 	FIELD comp_2822 velocity Lnet/minecraft/class_243;
 	FIELD comp_2823 yaw F
 	FIELD comp_2824 pitch F
-	METHOD <init> (Lnet/minecraft/class_3218;)V
+	FIELD field_52245 NO_OP Lnet/minecraft/class_5454$class_9823;
+	FIELD field_52246 SEND_TRAVEL_THROUGH_PORTAL_PACKET Lnet/minecraft/class_5454$class_9823;
+	FIELD field_52247 ADD_PORTAL_CHUNK_TICKET Lnet/minecraft/class_5454$class_9823;
+	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;Lnet/minecraft/class_5454$class_9823;)V
 		ARG 1 world
-	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_243;Lnet/minecraft/class_243;FF)V
+		ARG 2 entity
+		ARG 3 postDimensionTransition
+	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_243;Lnet/minecraft/class_243;FFLnet/minecraft/class_5454$class_9823;)V
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 velocity
 		ARG 4 yaw
 		ARG 5 pitch
+		ARG 6 postDimensionTransition
 	METHOD comp_2820 world ()Lnet/minecraft/class_3218;
 	METHOD comp_2822 velocity ()Lnet/minecraft/class_243;
 	METHOD comp_2823 yaw ()F
 	METHOD comp_2824 pitch ()F
-	METHOD method_60635 missingSpawnBlock (Lnet/minecraft/class_3218;)Lnet/minecraft/class_5454;
+	METHOD method_60635 missingSpawnBlock (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;Lnet/minecraft/class_5454$class_9823;)Lnet/minecraft/class_5454;
 		ARG 0 world
+		ARG 1 entity
+		ARG 2 postDimensionTransition
+	METHOD method_61023 getWorldSpawnPos (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)Lnet/minecraft/class_243;
+		ARG 0 world
+		ARG 1 entity
+	METHOD method_61024 sendTravelThroughPortalPacket (Lnet/minecraft/class_1297;)V
+		ARG 0 entity
+	METHOD method_61025 addPortalChunkTicket (Lnet/minecraft/class_1297;)V
+		ARG 0 entity
+	METHOD method_61026 (Lnet/minecraft/class_1297;)V
+		ARG 0 entity
+	METHOD method_61823 withRotation (FF)Lnet/minecraft/class_5454;
+		ARG 1 yaw
+		ARG 2 pitch
+	CLASS class_9823 PostDimensionTransition
+		METHOD method_61027 (Lnet/minecraft/class_5454$class_9823;Lnet/minecraft/class_1297;)V
+			ARG 2 entity
+		METHOD onTransition (Lnet/minecraft/class_1297;)V
+			ARG 1 entity
+		METHOD then (Lnet/minecraft/class_5454$class_9823;)Lnet/minecraft/class_5454$class_9823;
+			ARG 1 next

@@ -49,17 +49,19 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 	COMMENT <p>There are many ways to create a new identifier:
 	COMMENT
 	COMMENT <ul>
-	COMMENT <li>{@link Identifier(String)} creates an identifier from a string in
+	COMMENT <li>{@link #of(String)} creates an identifier from a string in
 	COMMENT {@code <namespace>:<path>} format. If the colon is missing, the created identifier
 	COMMENT has the namespace {@value #DEFAULT_NAMESPACE} and the argument is used as the path.
 	COMMENT When passed an invalid value, this throws {@link InvalidIdentifierException}.</li>
-	COMMENT <li>{@link Identifier(String, String)} creates an identifier from namespace and path.
+	COMMENT <li>{@link #of(String, String)} creates an identifier from namespace and path.
 	COMMENT When passed an invalid value, this throws {@link InvalidIdentifierException}.</li>
-	COMMENT <li>{@link #tryParse} creates an identifier from a string in
+	COMMENT <li>{@link #ofVanilla(String)} creates an identifier in the {@value #DEFAULT_NAMESPACE}
+	COMMENT namespace.
+	COMMENT <li>{@link #tryParse(String)} creates an identifier from a string in
 	COMMENT {@code <namespace>:<path>} format. If the colon is missing, the created identifier
 	COMMENT has the namespace {@value #DEFAULT_NAMESPACE} and the argument is used as the path.
 	COMMENT When passed an invalid value, this returns {@code null}.</li>
-	COMMENT <li>{@link #of} creates an identifier from namespace and path.
+	COMMENT <li>{@link #tryParse(String, String)} creates an identifier from namespace and path.
 	COMMENT When passed an invalid value, this returns {@code null}.</li>
 	COMMENT <li>{@link #fromCommandInput} reads an identifier from command input reader.
 	COMMENT When an invalid value is read, this throws {@link #COMMAND_EXCEPTION}.</li>
@@ -95,12 +97,6 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 	METHOD <init> (Ljava/lang/String;Ljava/lang/String;)V
 		ARG 1 namespace
 		ARG 2 path
-	METHOD <init> (Ljava/lang/String;Ljava/lang/String;Lnet/minecraft/class_2960$class_7658;)V
-		ARG 1 namespace
-		ARG 2 path
-		ARG 3 extraData
-	METHOD <init> ([Ljava/lang/String;)V
-		ARG 1 id
 	METHOD compareTo (Ljava/lang/Object;)I
 		ARG 1 other
 	METHOD equals (Ljava/lang/Object;)Z
@@ -108,12 +104,8 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 	METHOD method_12829 tryParse (Ljava/lang/String;)Lnet/minecraft/class_2960;
 		COMMENT {@return {@code id} parsed as an identifier, or {@code null} if it cannot be parsed}
 		COMMENT
-		COMMENT @see #of
+		COMMENT @see #tryParse(String, String)
 		ARG 0 id
-	METHOD method_12830 split (Ljava/lang/String;C)[Ljava/lang/String;
-		COMMENT Splits the {@code id} into an array of two strings at the first occurrence of {@code delimiter}, excluding the delimiter character, or uses {@value #DEFAULT_NAMESPACE} for the first string in the resulting array when the deliminator does not exist or is the first character.
-		ARG 0 id
-		ARG 1 delimiter
 	METHOD method_12831 isCharValid (C)Z
 		ARG 0 c
 	METHOD method_12832 getPath ()Ljava/lang/String;
@@ -127,9 +119,6 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 	METHOD method_12838 splitOn (Ljava/lang/String;C)Lnet/minecraft/class_2960;
 		ARG 0 id
 		ARG 1 delimiter
-	METHOD method_20207 isValid (Ljava/lang/String;)Z
-		COMMENT {@return whether {@code id} can be parsed as an identifier}
-		ARG 0 id
 	METHOD method_20208 isPathValid (Ljava/lang/String;)Z
 		COMMENT {@return whether {@code path} can be used as an identifier's path}
 		ARG 0 path
@@ -157,7 +146,7 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 		COMMENT {@return an identifier from the provided {@code namespace} and {@code path}, or
 		COMMENT {@code null} if either argument is invalid}
 		COMMENT
-		COMMENT @see #tryParse
+		COMMENT @see #tryParse(String)
 		ARG 0 namespace
 		ARG 1 path
 	METHOD method_43903 toShortTranslationKey ()Ljava/lang/String;
@@ -190,8 +179,14 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 	METHOD method_60655 of (Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/class_2960;
 		ARG 0 namespace
 		ARG 1 path
-	METHOD method_60656 ofDefaultNamespace (Ljava/lang/String;)Lnet/minecraft/class_2960;
+	METHOD method_60656 ofVanilla (Ljava/lang/String;)Lnet/minecraft/class_2960;
 		ARG 0 path
+	METHOD method_60935 trySplitOn (Ljava/lang/String;C)Lnet/minecraft/class_2960;
+		ARG 0 id
+		ARG 1 delimiter
+	METHOD method_60936 ofValidated (Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/class_2960;
+		ARG 0 namespace
+		ARG 1 path
 	CLASS class_2961 Serializer
 		METHOD deserialize (Lcom/google/gson/JsonElement;Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)Ljava/lang/Object;
 			ARG 1 json
@@ -201,6 +196,3 @@ CLASS net/minecraft/class_2960 net/minecraft/util/Identifier
 			ARG 1 id
 			ARG 2 type
 			ARG 3 context
-	CLASS class_7658 ExtraData
-		COMMENT A piece of extra data that a subclass may attach to an identifier. This is
-		COMMENT not used by {@link Identifier} itself.

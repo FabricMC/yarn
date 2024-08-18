@@ -57,6 +57,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_49776 spawnExtraParticlesOnFall Z
 	FIELD field_50088 startRaidPos Lnet/minecraft/class_2338;
 	FIELD field_51875 movement Lnet/minecraft/class_243;
+	FIELD field_52358 particlesMode Lnet/minecraft/class_4066;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_3218;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_8791;)V
 		ARG 1 server
 		ARG 2 world
@@ -81,11 +82,6 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14213 setClientOptions (Lnet/minecraft/class_8791;)V
 		ARG 1 clientOptions
 	METHOD method_14217 markHealthDirty ()V
-	METHOD method_14218 updateInput (FFZZ)V
-		ARG 1 sidewaysSpeed
-		ARG 2 forwardSpeed
-		ARG 3 jumping
-		ARG 4 sneaking
 	METHOD method_14219 getLastActionTime ()J
 	METHOD method_14221 (ILnet/minecraft/class_9014;)V
 		ARG 1 score
@@ -124,18 +120,17 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14242 getCameraEntity ()Lnet/minecraft/class_1297;
 	METHOD method_14244 calculateSpawnOffsetMultiplier (I)I
 		ARG 1 horizontalSpawnArea
-	METHOD method_14245 moveToSpawn (Lnet/minecraft/class_3218;)V
-		ARG 1 world
 	METHOD method_14248 getStatHandler ()Lnet/minecraft/class_3442;
 	METHOD method_14250 (ILnet/minecraft/class_9014;)V
 		ARG 1 innerScore
-	METHOD method_14251 teleport (Lnet/minecraft/class_3218;DDDFF)V
-		ARG 1 targetWorld
+	METHOD method_14251 teleport (Lnet/minecraft/class_3218;DDDFFZ)V
+		ARG 1 world
 		ARG 2 x
 		ARG 4 y
 		ARG 6 z
 		ARG 8 yaw
 		ARG 9 pitch
+		ARG 10 resetCamera
 	METHOD method_14252 setExperienceLevel (I)V
 		ARG 1 level
 	METHOD method_14253 getRecipeBook ()Lnet/minecraft/class_3441;
@@ -242,7 +237,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_51468 setServerWorld (Lnet/minecraft/class_3218;)V
 		ARG 1 world
 	METHOD method_51469 getServerWorld ()Lnet/minecraft/class_3218;
-	METHOD method_52208 setOnGround (Lnet/minecraft/class_243;)V
+	METHOD method_52208 setMovement (Lnet/minecraft/class_243;)V
 		ARG 1 movement
 	METHOD method_52371 getViewDistance ()I
 	METHOD method_52372 getChunkFilter ()Lnet/minecraft/class_8603;
@@ -284,13 +279,22 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 4 alive
 	METHOD method_60589 (Lnet/minecraft/class_2338;Lnet/minecraft/class_243;)Lnet/minecraft/class_3222$class_9773;
 		ARG 1 respawnPos
-	METHOD method_60590 getRespawnTarget (Z)Lnet/minecraft/class_5454;
+	METHOD method_60590 getRespawnTarget (ZLnet/minecraft/class_5454$class_9823;)Lnet/minecraft/class_5454;
 		ARG 1 alive
+		ARG 2 postDimensionTransition
 	METHOD method_60592 setSpawnPointFrom (Lnet/minecraft/class_3222;)V
 		ARG 1 player
 	METHOD method_60593 (Lnet/minecraft/class_2338;Lnet/minecraft/class_243;)Lnet/minecraft/class_3222$class_9773;
 		ARG 1 respawnPos
 	METHOD method_60594 detachForDimensionChange ()V
+	METHOD method_61272 getPlayerListOrder ()I
+	METHOD method_61274 canSpawnIn (Lnet/minecraft/class_3218;Lnet/minecraft/class_238;)Z
+		ARG 1 world
+		ARG 2 box
+	METHOD method_61277 dropPlayerItem (Lnet/minecraft/class_1799;ZZ)Lnet/minecraft/class_1542;
+		ARG 1 stack
+		ARG 2 throwRandomly
+		ARG 3 retainOwnership
 	METHOD method_7336 changeGameMode (Lnet/minecraft/class_1934;)Z
 		ARG 1 gameMode
 	CLASS 1

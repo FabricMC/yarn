@@ -78,8 +78,9 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 	METHOD method_60122 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1297;Lorg/apache/commons/lang3/mutable/MutableFloat;Lnet/minecraft/class_6880;I)V
 		ARG 4 enchantment
 		ARG 5 level
-	METHOD method_60123 getTridentSpinAttackStrength (Lnet/minecraft/class_1309;)F
-		ARG 0 user
+	METHOD method_60123 getTridentSpinAttackStrength (Lnet/minecraft/class_1799;Lnet/minecraft/class_1309;)F
+		ARG 0 stack
+		ARG 1 user
 	METHOD method_60124 onHitBlock (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1309;Lnet/minecraft/class_1297;Lnet/minecraft/class_1304;Lnet/minecraft/class_243;Lnet/minecraft/class_2680;Ljava/util/function/Consumer;)V
 		ARG 0 world
 		ARG 1 stack
@@ -87,20 +88,20 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 		ARG 3 enchantedEntity
 		ARG 4 slot
 		ARG 5 pos
+		ARG 6 state
 		ARG 7 onBreak
 	METHOD method_60125 applyLocationBasedEffects (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)V
 		ARG 0 world
 		ARG 1 stack
 		ARG 2 user
 		ARG 3 slot
-	METHOD method_60126 (Lnet/minecraft/class_1309;Lorg/apache/commons/lang3/mutable/MutableFloat;Lnet/minecraft/class_6880;ILnet/minecraft/class_9699;)V
+	METHOD method_60126 (Lnet/minecraft/class_1309;Lorg/apache/commons/lang3/mutable/MutableFloat;Lnet/minecraft/class_6880;I)V
 		ARG 2 enchantment
 		ARG 3 level
-		ARG 4 context
-	METHOD method_60127 onProjectileSpawned (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1665;Ljava/util/function/Consumer;)V
+	METHOD method_60127 onProjectileSpawned (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1676;Ljava/util/function/Consumer;)V
 		ARG 0 world
 		ARG 1 weaponStack
-		ARG 2 projectileEntity
+		ARG 2 projectile
 		ARG 3 onBreak
 	METHOD method_60128 getProjectilePiercing (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)I
 		ARG 0 world
@@ -111,14 +112,13 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 		ARG 1 rangedWeaponStack
 		ARG 2 projectileStack
 		ARG 3 baseAmmoUse
-	METHOD method_60130 (Lnet/minecraft/class_1309;Lorg/apache/commons/lang3/mutable/MutableFloat;Lnet/minecraft/class_6880;ILnet/minecraft/class_9699;)V
+	METHOD method_60130 (Lnet/minecraft/class_1309;Lorg/apache/commons/lang3/mutable/MutableFloat;Lnet/minecraft/class_6880;I)V
 		ARG 2 enchantment
 		ARG 3 level
-		ARG 4 context
 	METHOD method_60131 (Lnet/minecraft/class_3218;Lnet/minecraft/class_9699;Lnet/minecraft/class_1297;Lnet/minecraft/class_243;Lnet/minecraft/class_2680;Lnet/minecraft/class_6880;I)V
 		ARG 5 enchantment
 		ARG 6 level
-	METHOD method_60132 (Lnet/minecraft/class_3218;Lnet/minecraft/class_9699;Lnet/minecraft/class_1665;Lnet/minecraft/class_6880;I)V
+	METHOD method_60132 (Lnet/minecraft/class_3218;Lnet/minecraft/class_9699;Lnet/minecraft/class_1676;Lnet/minecraft/class_6880;I)V
 		ARG 3 enchantment
 		ARG 4 level
 	METHOD method_60133 enchant (Lnet/minecraft/class_5819;Lnet/minecraft/class_1799;ILnet/minecraft/class_5455;Ljava/util/Optional;)Lnet/minecraft/class_1799;
@@ -200,9 +200,10 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 		ARG 0 world
 		ARG 1 stack
 		ARG 2 user
-	METHOD method_60159 getCrossbowChargeTime (Lnet/minecraft/class_1309;F)F
-		ARG 0 user
-		ARG 1 baseCrossbowChargeTime
+	METHOD method_60159 getCrossbowChargeTime (Lnet/minecraft/class_1799;Lnet/minecraft/class_1309;F)F
+		ARG 0 stack
+		ARG 1 user
+		ARG 2 baseCrossbowChargeTime
 	METHOD method_60160 getSmashDamagePerFallenBlock (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;F)F
 		ARG 0 world
 		ARG 1 stack
@@ -254,7 +255,7 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 	METHOD method_60173 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lorg/apache/commons/lang3/mutable/MutableFloat;Lnet/minecraft/class_6880;I)V
 		ARG 3 enchantment
 		ARG 4 level
-	METHOD method_60174 getEffectListAndLevel (Lnet/minecraft/class_1799;Lnet/minecraft/class_9331;)Lcom/mojang/datafixers/util/Pair;
+	METHOD method_60174 getHighestLevelEffect (Lnet/minecraft/class_1799;Lnet/minecraft/class_9331;)Lcom/mojang/datafixers/util/Pair;
 		ARG 0 stack
 		ARG 1 componentType
 	METHOD method_60175 modifyKnockback (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;F)F
@@ -303,6 +304,8 @@ CLASS net/minecraft/class_1890 net/minecraft/enchantment/EnchantmentHelper
 		ARG 3 enchantment
 		ARG 4 level
 		ARG 5 context
+	METHOD method_61711 getEnchantedBookWith (Lnet/minecraft/class_1889;)Lnet/minecraft/class_1799;
+		ARG 0 entry
 	METHOD method_8201 isCompatible (Ljava/util/Collection;Lnet/minecraft/class_6880;)Z
 		COMMENT {@return whether the {@code candidate} enchantment is compatible with the
 		COMMENT {@code existing} enchantments}

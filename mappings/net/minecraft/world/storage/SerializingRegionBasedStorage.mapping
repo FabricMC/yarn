@@ -3,20 +3,27 @@ CLASS net/minecraft/class_4180 net/minecraft/world/storage/SerializingRegionBase
 	FIELD field_18692 loadedElements Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 	FIELD field_18693 unsavedElements Lit/unimi/dsi/fastutil/longs/LongLinkedOpenHashSet;
 	FIELD field_18695 factory Ljava/util/function/Function;
-	FIELD field_24750 codecFactory Ljava/util/function/Function;
+	FIELD field_24750 codec Lcom/mojang/serialization/Codec;
 	FIELD field_27240 world Lnet/minecraft/class_5539;
 	FIELD field_31427 SECTIONS_KEY Ljava/lang/String;
 	FIELD field_39315 registryManager Lnet/minecraft/class_5455;
 	FIELD field_48759 storageAccess Lnet/minecraft/class_9172;
-	METHOD <init> (Lnet/minecraft/class_9172;Ljava/util/function/Function;Ljava/util/function/Function;Lnet/minecraft/class_5455;Lnet/minecraft/class_5539;)V
+	FIELD field_52227 errorHandler Lnet/minecraft/class_9820;
+	FIELD field_52647 serializer Ljava/util/function/Function;
+	FIELD field_52648 deserializer Ljava/util/function/BiFunction;
+	FIELD field_52649 loadedChunks Lit/unimi/dsi/fastutil/longs/LongSet;
+	FIELD field_52650 pendingLoads Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
+	FIELD field_52651 lock Ljava/lang/Object;
+	METHOD <init> (Lnet/minecraft/class_9172;Lcom/mojang/serialization/Codec;Ljava/util/function/Function;Ljava/util/function/BiFunction;Ljava/util/function/Function;Lnet/minecraft/class_5455;Lnet/minecraft/class_9820;Lnet/minecraft/class_5539;)V
 		ARG 1 storageAccess
-		ARG 2 codecFactory
-		ARG 3 factory
-		ARG 4 registryManager
-		ARG 5 world
+		ARG 2 codec
+		ARG 3 serializer
+		ARG 4 deserializer
+		ARG 5 factory
+		ARG 6 registryManager
+		ARG 7 errorHandler
+		ARG 8 world
 	METHOD method_19288 onUpdate (J)V
-		ARG 1 pos
-	METHOD method_19289 loadDataAt (Lnet/minecraft/class_1923;)V
 		ARG 1 pos
 	METHOD method_19290 tick (Ljava/util/function/BooleanSupplier;)V
 		ARG 1 shouldKeepTicking
@@ -30,15 +37,9 @@ CLASS net/minecraft/class_4180 net/minecraft/world/storage/SerializingRegionBase
 		ARG 1 pos
 	METHOD method_19295 getOrCreate (J)Ljava/lang/Object;
 		ARG 1 pos
-	METHOD method_20366 (JZLjava/lang/Object;)V
-		ARG 4 sections
 	METHOD method_20367 serialize (Lnet/minecraft/class_1923;Lcom/mojang/serialization/DynamicOps;)Lcom/mojang/serialization/Dynamic;
 		ARG 1 chunkPos
 		ARG 2 ops
-	METHOD method_20368 update (Lnet/minecraft/class_1923;Lnet/minecraft/class_6903;Lnet/minecraft/class_2487;)V
-		ARG 1 pos
-		ARG 2 ops
-		ARG 3 nbt
 	METHOD method_20369 getDataVersion (Lcom/mojang/serialization/Dynamic;)I
 		ARG 0 dynamic
 	METHOD method_20370 save (Lnet/minecraft/class_1923;)V
@@ -46,14 +47,44 @@ CLASS net/minecraft/class_4180 net/minecraft/world/storage/SerializingRegionBase
 	METHOD method_20436 saveChunk (Lnet/minecraft/class_1923;)V
 		ARG 1 pos
 	METHOD method_20621 loadNbt (Lnet/minecraft/class_1923;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 pos
-	METHOD method_28511 (JLcom/mojang/serialization/Dynamic;)Ljava/util/Optional;
-		ARG 3 dynamic
-	METHOD method_28512 (Ljava/util/Map;Lcom/mojang/serialization/DynamicOps;Ljava/lang/String;Ljava/lang/Object;)V
-		ARG 3 object
+		ARG 1 chunkPos
 	METHOD method_33637 chunkSectionPosAsLong (Lnet/minecraft/class_1923;I)J
 		ARG 0 chunkPos
 		ARG 1 y
 	METHOD method_40020 hasUnsavedElements ()Z
 	METHOD method_43412 (Lnet/minecraft/class_1923;Ljava/lang/Throwable;)Ljava/util/Optional;
-		ARG 1 throwable
+		ARG 2 throwable
+	METHOD method_61775 save ()V
+	METHOD method_61776 (JLjava/lang/Object;)Ljava/lang/Object;
+		ARG 3 section
+	METHOD method_61778 (Lnet/minecraft/class_6903;Ljava/util/Optional;)Ljava/util/Optional;
+		ARG 2 chunkNbt
+	METHOD method_61779 (Lnet/minecraft/class_6903;Lnet/minecraft/class_2487;)Lnet/minecraft/class_4180$class_9897;
+		ARG 2 nbt
+	METHOD method_61780 load (Lnet/minecraft/class_1923;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 chunkPos
+	METHOD method_61781 (Lnet/minecraft/class_1923;J)Ljava/util/concurrent/CompletableFuture;
+		ARG 2 pos
+	METHOD method_61782 onLoad (Lnet/minecraft/class_1923;Lnet/minecraft/class_4180$class_9897;)V
+		ARG 1 chunkPos
+		ARG 2 result
+	METHOD method_61783 (Lnet/minecraft/class_1923;Ljava/lang/Throwable;)Ljava/lang/Void;
+		ARG 2 throwable
+	METHOD method_61784 (Ljava/util/Map;Lcom/mojang/serialization/DynamicOps;Ljava/lang/String;Ljava/lang/Object;)V
+		ARG 3 value
+	METHOD method_61785 (Lnet/minecraft/class_1923;J)Ljava/util/concurrent/CompletableFuture;
+		ARG 2 pos
+	METHOD method_61786 tickPendingLoads ()V
+	METHOD method_61787 loadAndWait (Lnet/minecraft/class_1923;)V
+		ARG 1 chunkPos
+	METHOD method_61789 (J)V
+		ARG 1 chunkPos
+	CLASS class_9897 LoadResult
+		METHOD method_61790 (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Dynamic;)Ljava/util/Optional;
+			ARG 1 section
+		METHOD method_61791 fromNbt (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_2520;Lnet/minecraft/class_9172;Lnet/minecraft/class_5539;)Lnet/minecraft/class_4180$class_9897;
+			ARG 0 sectionCodec
+			ARG 1 ops
+			ARG 2 nbt
+			ARG 3 storage
+			ARG 4 world

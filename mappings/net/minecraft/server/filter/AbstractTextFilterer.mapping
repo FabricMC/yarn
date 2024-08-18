@@ -1,0 +1,91 @@
+CLASS net/minecraft/class_9847 net/minecraft/server/filter/AbstractTextFilterer
+	FIELD field_52365 LOGGER Lorg/slf4j/Logger;
+	FIELD field_52366 WORKER_ID Ljava/util/concurrent/atomic/AtomicInteger;
+	FIELD field_52367 THREAD_FACTORY Ljava/util/concurrent/ThreadFactory;
+	FIELD field_52368 url Ljava/net/URL;
+	FIELD field_52369 messageEncoder Lnet/minecraft/class_9847$class_7242;
+	FIELD field_52370 hashIgnorer Lnet/minecraft/class_9847$class_5515;
+	FIELD field_52371 threadPool Ljava/util/concurrent/ExecutorService;
+	METHOD <init> (Ljava/net/URL;Lnet/minecraft/class_9847$class_7242;Lnet/minecraft/class_9847$class_5515;Ljava/util/concurrent/ExecutorService;)V
+		ARG 1 url
+		ARG 2 messageEncoder
+		ARG 3 hashIgnorer
+		ARG 4 threadPool
+	METHOD method_31297 createFilterer (Lcom/mojang/authlib/GameProfile;)Lnet/minecraft/class_5513;
+		ARG 1 profile
+	METHOD method_61281 filter (Ljava/lang/String;Lnet/minecraft/class_9847$class_5515;Lcom/google/gson/JsonObject;)Lnet/minecraft/class_5837;
+		ARG 1 raw
+		ARG 2 hashIgnorer
+		ARG 3 response
+	METHOD method_61284 addAuthentication (Ljava/net/HttpURLConnection;)V
+		ARG 1 connection
+	METHOD method_61285 getReadTimeout ()I
+	METHOD method_61291 newThreadPool (I)Ljava/util/concurrent/ExecutorService;
+		ARG 0 threadCount
+	METHOD method_61292 createTextFilter (Lnet/minecraft/class_3806;)Lnet/minecraft/class_9847;
+		ARG 0 properties
+	METHOD method_61293 getEndpointPath (Lcom/google/gson/JsonObject;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+		ARG 0 endpoints
+		ARG 1 key
+		ARG 2 defaultPath
+	METHOD method_61294 openConnection (Lcom/google/gson/JsonObject;Ljava/net/URL;)Ljava/net/HttpURLConnection;
+		ARG 1 request
+		ARG 2 url
+	METHOD method_61296 filter (Lcom/mojang/authlib/GameProfile;Ljava/lang/String;Lnet/minecraft/class_9847$class_5515;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 profile
+		ARG 2 raw
+		ARG 3 hashIgnorer
+		ARG 4 executor
+	METHOD method_61297 discardRestOfInput (Ljava/io/InputStream;)V
+		ARG 1 stream
+	METHOD method_61298 (Ljava/lang/Runnable;)Ljava/lang/Thread;
+		ARG 0 runnable
+	METHOD method_61299 createFilterMask (Ljava/lang/String;Lcom/google/gson/JsonArray;Lnet/minecraft/class_9847$class_5515;)Lnet/minecraft/class_7649;
+		ARG 1 raw
+		ARG 2 redactedTextIndex
+		ARG 3 hashIgnorer
+	METHOD method_61300 resolveEndpoint (Ljava/net/URI;Lcom/google/gson/JsonObject;Ljava/lang/String;Ljava/lang/String;)Ljava/net/URL;
+		ARG 0 uri
+		ARG 1 endpoints
+		ARG 2 key
+		ARG 3 defaultPath
+	METHOD method_61301 openConnection (Ljava/net/URL;)Ljava/net/HttpURLConnection;
+		ARG 1 url
+	METHOD method_61302 request (Lcom/google/gson/JsonObject;Ljava/net/URL;)Lcom/google/gson/JsonObject;
+		ARG 1 request
+		ARG 2 url
+	CLASS class_5515 HashIgnorer
+		FIELD field_26834 NEVER_IGNORE Lnet/minecraft/class_9847$class_5515;
+		FIELD field_26835 IGNORE_IF_MATCHES_ALL Lnet/minecraft/class_9847$class_5515;
+		METHOD method_31310 (Ljava/lang/String;I)Z
+			ARG 0 hashes
+			ARG 1 hashesSize
+		METHOD method_31312 (Ljava/lang/String;I)Z
+			ARG 0 hashes
+			ARG 1 hashesSize
+		METHOD method_33806 internalDropHashes (I)Lnet/minecraft/class_9847$class_5515;
+			ARG 0 hashesToDrop
+		METHOD method_33807 (ILjava/lang/String;I)Z
+			ARG 1 hashes
+			ARG 2 hashesSize
+		METHOD method_33808 dropHashes (I)Lnet/minecraft/class_9847$class_5515;
+			ARG 0 hashesToDrop
+		METHOD shouldIgnore (Ljava/lang/String;I)Z
+			ARG 1 hashes
+			ARG 2 hashesSize
+	CLASS class_5516 StreamImpl
+		FIELD field_26837 gameProfile Lcom/mojang/authlib/GameProfile;
+		FIELD field_26838 executor Ljava/util/concurrent/Executor;
+		METHOD <init> (Lnet/minecraft/class_9847;Lcom/mojang/authlib/GameProfile;)V
+			ARG 2 gameProfile
+		METHOD method_31315 (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 text
+		METHOD method_33809 (Ljava/lang/Throwable;)Ljava/util/List;
+			ARG 0 throwable
+	CLASS class_5517 FailedHttpRequestException
+		METHOD <init> (Ljava/lang/String;)V
+			ARG 1 message
+	CLASS class_7242 MessageEncoder
+		METHOD encode (Lcom/mojang/authlib/GameProfile;Ljava/lang/String;)Lcom/google/gson/JsonObject;
+			ARG 1 gameProfile
+			ARG 2 message

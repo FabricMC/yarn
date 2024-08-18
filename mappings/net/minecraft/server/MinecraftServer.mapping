@@ -21,7 +21,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_17439 worldGenerationProgressListenerFactory Lnet/minecraft/class_3950;
 	FIELD field_17601 serverId Ljava/lang/String;
 	FIELD field_17704 DEMO_LEVEL_INFO Lnet/minecraft/class_1940;
-	FIELD field_19249 waitingForNextTick Z
+	FIELD field_19249 hasJustExecutedTask Z
 	FIELD field_20850 dataCommandStorage Lnet/minecraft/class_4565;
 	FIELD field_22250 recorder Lnet/minecraft/class_5962;
 	FIELD field_23784 session Lnet/minecraft/class_32$class_5143;
@@ -88,6 +88,10 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_48775 waitTime J
 	FIELD field_51466 brewingRecipeRegistry Lnet/minecraft/class_1845;
 	FIELD field_51917 WORLD_GEN_EXCEPTION Ljava/util/concurrent/atomic/AtomicReference;
+	FIELD field_53715 fuelRegistry Lnet/minecraft/class_9895;
+	FIELD field_53716 idleTickCount I
+	FIELD field_53717 suppressedExceptionsTracker Lnet/minecraft/class_9843;
+	FIELD field_53718 waitingForNextTick Z
 	METHOD <init> (Ljava/lang/Thread;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_7497;Lnet/minecraft/class_3950;)V
 		ARG 1 serverThread
 		ARG 2 session
@@ -239,7 +243,6 @@ CLASS net/minecraft/server/MinecraftServer
 		COMMENT Gets the server's command manager.
 		COMMENT The command manager is responsible for parsing and dispatching commands.
 	METHOD method_3735 loadWorld ()V
-	METHOD method_3736 shouldSpawnNpcs ()Z
 	METHOD method_37370 (Ljava/nio/file/Path;)V
 		ARG 1 path
 	METHOD method_3738 getWorlds ()Ljava/lang/Iterable;
@@ -266,7 +269,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3750 isStopped ()Z
 	METHOD method_3754 isHardcore ()Z
 	METHOD method_3756 getServerPort ()I
-	METHOD method_3758 getFile (Ljava/lang/String;)Ljava/nio/file/Path;
+	METHOD method_3758 getPath (Ljava/lang/String;)Ljava/nio/file/Path;
 		ARG 1 path
 			COMMENT relative path from the run directory
 	METHOD method_3759 isUsingNativeTransport ()Z
@@ -311,7 +314,6 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3787 getNetworkIo ()Lnet/minecraft/class_3242;
 	METHOD method_3790 getDefaultGameMode ()Lnet/minecraft/class_1934;
 	METHOD method_3793 getUserCache ()Lnet/minecraft/class_3312;
-	METHOD method_3796 shouldSpawnAnimals ()Z
 	METHOD method_3798 getOpPermissionLevel ()I
 	METHOD method_3799 isDemo ()Z
 	METHOD method_3803 setPlayerIdleTimeout (I)V
@@ -461,10 +463,6 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 player
 		ARG 2 type
 	METHOD method_56626 shouldPushTickTimeLog ()Z
-	METHOD method_57821 onChunkLoadFailure (Lnet/minecraft/class_1923;)V
-		ARG 1 pos
-	METHOD method_57822 onChunkSaveFailure (Lnet/minecraft/class_1923;)V
-		ARG 1 pos
 	METHOD method_58576 getReloadableRegistries ()Lnet/minecraft/class_9383$class_9385;
 	METHOD method_59777 getBrewingRecipeRegistry ()Lnet/minecraft/class_1845;
 	METHOD method_59847 forceEnableRequestedFeatures (Lnet/minecraft/class_3283;Lnet/minecraft/class_7699;)V
@@ -481,6 +479,17 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_60671 isWorldAllowed (Lnet/minecraft/class_1937;)Z
 		ARG 1 world
 	METHOD method_60672 getServerLinks ()Lnet/minecraft/class_9782;
+	METHOD method_61089 writeChunkIoReport (Lnet/minecraft/class_128;Lnet/minecraft/class_1923;Lnet/minecraft/class_9240;)V
+		ARG 1 report
+		ARG 2 pos
+		ARG 3 key
+	METHOD method_61254 tickNetworkIo ()V
+	METHOD method_61255 getPauseWhenEmptySeconds ()I
+	METHOD method_62733 onPacketException (Ljava/lang/Throwable;Lnet/minecraft/class_9145;)V
+		ARG 1 exception
+		ARG 2 type
+	METHOD method_62734 runAutosave ()V
+	METHOD method_62735 getFuelRegistry ()Lnet/minecraft/class_9895;
 	CLASS class_6414 DebugStart
 		FIELD field_33980 time J
 		FIELD field_33981 tick I

@@ -17,6 +17,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		COMMENT as the format string. Example: {@code 2022-01-01_00.00.00}
 	FIELD field_46764 BACKUP_ATTEMPTS I
 	FIELD field_47571 DOWNLOAD_WORKER_EXECUTOR Ljava/util/concurrent/ExecutorService;
+	FIELD field_52196 SUPPORTED_URI_PROTOCOLS Ljava/util/Set;
 	METHOD method_17974 ifPresentOrElse (Ljava/util/Optional;Ljava/util/function/Consumer;Ljava/lang/Runnable;)Ljava/util/Optional;
 		COMMENT If {@code optional} has value, calls {@code presentAction} with the value,
 		COMMENT otherwise calls {@code elseAction}.
@@ -39,8 +40,19 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		COMMENT
 		COMMENT @throws IndexOutOfBoundsException if {@code list} is empty
 		ARG 0 list
-	METHOD method_22320 throwOrPause (Ljava/lang/Throwable;)Ljava/lang/Throwable;
+	METHOD method_22320 getFatalOrPause (Ljava/lang/Throwable;)Ljava/lang/Throwable;
+		COMMENT Returns the provided fatal throwable, or pauses the game if
+		COMMENT {@link net.minecraft.SharedConstants#isDevelopment SharedConstants.isDevelopment}
+		COMMENT is {@code true}.
+		COMMENT
+		COMMENT <p>This method is usually chained with a {@code throw} statement:
+		COMMENT {@snippet :
+		COMMENT throw Util.getFatalOrPause(theFatalException);
+		COMMENT }
+		COMMENT
+		COMMENT @return the provided throwable
 		ARG 0 t
+			COMMENT the throwable
 	METHOD method_22321 getInnermostMessage (Ljava/lang/Throwable;)Ljava/lang/String;
 		ARG 0 t
 	METHOD method_24155 throwUnchecked (Ljava/lang/Throwable;)V
@@ -143,8 +155,12 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_33141 decodeFixedLengthList (Ljava/util/List;I)Lcom/mojang/serialization/DataResult;
 		ARG 0 list
 		ARG 1 length
-	METHOD method_33559 error (Ljava/lang/String;)V
+	METHOD method_33559 logErrorOrPause (Ljava/lang/String;)V
+		COMMENT Logs an error-level message and pauses the game if
+		COMMENT {@link net.minecraft.SharedConstants#isDevelopment SharedConstants.isDevelopment}
+		COMMENT is {@code true}.
 		ARG 0 message
+			COMMENT the log message
 	METHOD method_33560 pause (Ljava/lang/String;)V
 		ARG 0 message
 	METHOD method_33787 debugRunnable (Ljava/lang/String;Ljava/lang/Runnable;)Ljava/lang/Runnable;
@@ -175,9 +191,14 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_38647 (Ljava/lang/String;)V
 		ARG 0 message
 	METHOD method_38648 getMaxBackgroundThreads ()I
-	METHOD method_39977 error (Ljava/lang/String;Ljava/lang/Throwable;)V
+	METHOD method_39977 logErrorOrPause (Ljava/lang/String;Ljava/lang/Throwable;)V
+		COMMENT Logs an error-level message and pauses the game if
+		COMMENT {@link net.minecraft.SharedConstants#isDevelopment SharedConstants.isDevelopment}
+		COMMENT is {@code true}.
 		ARG 0 message
+			COMMENT the log message
 		ARG 1 throwable
+			COMMENT a throwable related to the log message
 	METHOD method_40082 (Ljava/util/List;Ljava/lang/Void;)Ljava/util/List;
 		ARG 1 void_
 	METHOD method_40083 getRandomOrEmpty (Ljava/util/List;Lnet/minecraft/class_5819;)Ljava/util/Optional;
@@ -299,8 +320,14 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 2 allowPartial
 	METHOD method_55473 getDownloadWorkerExecutor ()Ljava/util/concurrent/ExecutorService;
 		COMMENT {@return the executor for download tasks}
+	METHOD method_56612 (Ljava/lang/Object;)Z
+		ARG 0 o
 	METHOD method_56613 allOf (Ljava/util/List;)Ljava/util/function/Predicate;
 		ARG 0 predicates
+	METHOD method_56614 ([Ljava/util/function/Predicate;Ljava/lang/Object;)Z
+		ARG 1 o
+	METHOD method_56615 (Ljava/lang/Object;)Z
+		ARG 0 o
 	METHOD method_56616 anyOf (Ljava/util/List;)Ljava/util/function/Predicate;
 		ARG 0 predicates
 	METHOD method_57107 registryValueToString (Lnet/minecraft/class_2378;Ljava/lang/Object;)Ljava/lang/String;
@@ -321,6 +348,72 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 width
 		ARG 1 height
 		ARG 2 list
+	METHOD method_60931 validateUri (Ljava/lang/String;)Ljava/net/URI;
+		ARG 0 uri
+	METHOD method_61189 and (Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+		ARG 0 a
+	METHOD method_61190 and (Ljava/util/function/Predicate;Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+		ARG 0 a
+		ARG 1 b
+	METHOD method_61191 (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/lang/Object;)Z
+		ARG 2 o
+	METHOD method_61192 and (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+		ARG 0 a
+		ARG 1 b
+		ARG 2 c
+	METHOD method_61193 (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/lang/Object;)Z
+		ARG 3 o
+	METHOD method_61194 and (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+		ARG 0 a
+		ARG 1 b
+		ARG 2 c
+		ARG 3 d
+	METHOD method_61195 (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/lang/Object;)Z
+		ARG 4 o
+	METHOD method_61196 and (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+		ARG 0 a
+		ARG 1 b
+		ARG 2 c
+		ARG 3 d
+		ARG 4 e
+	METHOD method_61197 (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/lang/Object;)Z
+		ARG 5 o
+	METHOD method_61198 and ([Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+		ARG 0 predicates
+	METHOD method_61199 or (Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+		ARG 0 a
+	METHOD method_61200 or (Ljava/util/function/Predicate;Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+		ARG 0 a
+		ARG 1 b
+	METHOD method_61201 (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/lang/Object;)Z
+		ARG 2 o
+	METHOD method_61202 or (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+		ARG 0 a
+		ARG 1 b
+		ARG 2 c
+	METHOD method_61203 (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/lang/Object;)Z
+		ARG 3 o
+	METHOD method_61204 or (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+		ARG 0 a
+		ARG 1 b
+		ARG 2 c
+		ARG 3 d
+	METHOD method_61205 (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/lang/Object;)Z
+		ARG 4 o
+	METHOD method_61206 or (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+		ARG 0 a
+		ARG 1 b
+		ARG 2 c
+		ARG 3 d
+		ARG 4 e
+	METHOD method_61207 (Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/util/function/Predicate;Ljava/lang/Object;)Z
+		ARG 5 o
+	METHOD method_61208 or ([Ljava/util/function/Predicate;)Ljava/util/function/Predicate;
+		ARG 0 predicates
+	METHOD method_61209 ([Ljava/util/function/Predicate;Ljava/lang/Object;)Z
+		ARG 1 o
+	METHOD method_61210 and ()Ljava/util/function/Predicate;
+	METHOD method_61211 or ()Ljava/util/function/Predicate;
 	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
 		COMMENT {@return the item preceding {@code object} in {@code iterable}}
 		COMMENT
@@ -441,13 +534,8 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
 			ARG 3 name
 		METHOD method_38649 getName ()Ljava/lang/String;
-		METHOD method_669 open (Ljava/net/URL;)V
-			COMMENT Opens {@code url}. If this points to an HTTP(S) URL, it is usually opened using
-			COMMENT the system's default browser. Otherwise, it is opened directly.
-			COMMENT
-			COMMENT <p><strong>Always validate the passed URL's schema</strong> as some values can
-			COMMENT execute code.
-			ARG 1 url
+		METHOD method_60932 open (Ljava/nio/file/Path;)V
+			ARG 1 path
 		METHOD method_670 open (Ljava/lang/String;)V
 			COMMENT Opens {@code uri}. If this points to an HTTP(S) URI, it is usually opened using
 			COMMENT the system's default browser. Otherwise, it is opened directly.
@@ -468,5 +556,5 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 			COMMENT <p><strong>Always validate the passed URI's schema</strong> as some values can
 			COMMENT execute code.
 			ARG 1 uri
-		METHOD method_674 getURLOpenCommand (Ljava/net/URL;)[Ljava/lang/String;
-			ARG 1 url
+		METHOD method_674 getURIOpenCommand (Ljava/net/URI;)[Ljava/lang/String;
+			ARG 1 uri

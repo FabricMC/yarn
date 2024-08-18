@@ -3,11 +3,11 @@ CLASS net/minecraft/class_897 net/minecraft/client/render/entity/EntityRenderer
 	FIELD field_4672 shadowOpacity F
 	FIELD field_4673 shadowRadius F
 	FIELD field_4676 dispatcher Lnet/minecraft/class_898;
+	FIELD field_53189 state Lnet/minecraft/class_10017;
 	METHOD <init> (Lnet/minecraft/class_5617$class_5618;)V
-		ARG 1 ctx
-	METHOD method_23169 getPositionOffset (Lnet/minecraft/class_1297;F)Lnet/minecraft/class_243;
-		ARG 1 entity
-		ARG 2 tickDelta
+		ARG 1 context
+	METHOD method_23169 getPositionOffset (Lnet/minecraft/class_10017;)Lnet/minecraft/class_243;
+		ARG 1 state
 	METHOD method_24087 getBlockLight (Lnet/minecraft/class_1297;Lnet/minecraft/class_2338;)I
 		ARG 1 entity
 		ARG 2 pos
@@ -17,20 +17,20 @@ CLASS net/minecraft/class_897 net/minecraft/client/render/entity/EntityRenderer
 	METHOD method_27950 getSkyLight (Lnet/minecraft/class_1297;Lnet/minecraft/class_2338;)I
 		ARG 1 entity
 		ARG 2 pos
-	METHOD method_3921 hasLabel (Lnet/minecraft/class_1297;)Z
+	METHOD method_3921 hasLabel (Lnet/minecraft/class_1297;D)Z
 		COMMENT Determines whether the passed entity should render with a nameplate above its head.
 		COMMENT
 		COMMENT <p>Checks for a custom nametag on living entities, and for teams/team visibilities for players.
 		ARG 1 entity
-	METHOD method_3926 renderLabelIfPresent (Lnet/minecraft/class_1297;Lnet/minecraft/class_2561;Lnet/minecraft/class_4587;Lnet/minecraft/class_4597;IF)V
-		ARG 1 entity
+		ARG 2 squaredDistanceToCamera
+	METHOD method_3926 renderLabelIfPresent (Lnet/minecraft/class_10017;Lnet/minecraft/class_2561;Lnet/minecraft/class_4587;Lnet/minecraft/class_4597;I)V
+		ARG 1 state
 		ARG 2 text
 		ARG 3 matrices
 		ARG 4 vertexConsumers
 		ARG 5 light
-		ARG 6 tickDelta
-	METHOD method_3931 getTexture (Lnet/minecraft/class_1297;)Lnet/minecraft/class_2960;
-		ARG 1 entity
+	METHOD method_3931 getTexture (Lnet/minecraft/class_10017;)Lnet/minecraft/class_2960;
+		ARG 1 state
 	METHOD method_3932 getTextRenderer ()Lnet/minecraft/class_327;
 	METHOD method_3933 shouldRender (Lnet/minecraft/class_1297;Lnet/minecraft/class_4604;DDD)Z
 		ARG 1 entity
@@ -38,12 +38,40 @@ CLASS net/minecraft/class_897 net/minecraft/client/render/entity/EntityRenderer
 		ARG 3 x
 		ARG 5 y
 		ARG 7 z
-	METHOD method_3936 render (Lnet/minecraft/class_1297;FFLnet/minecraft/class_4587;Lnet/minecraft/class_4597;I)V
+	METHOD method_3936 render (Lnet/minecraft/class_10017;Lnet/minecraft/class_4587;Lnet/minecraft/class_4597;I)V
+		ARG 1 state
+		ARG 2 matrices
+		ARG 3 vertexConsumers
+		ARG 4 light
+	METHOD method_55269 getRenderState ()Lnet/minecraft/class_10017;
+	METHOD method_55831 getShadowRadius (Lnet/minecraft/class_10017;)F
+		ARG 1 state
+	METHOD method_61049 renderLeash (Lnet/minecraft/class_4587;Lnet/minecraft/class_4597;Lnet/minecraft/class_10017$class_10018;)V
+		ARG 0 matrices
+		ARG 1 vertexConsumers
+		ARG 2 leashData
+	METHOD method_61050 renderLeashSegment (Lnet/minecraft/class_4588;Lorg/joml/Matrix4f;FFFIIIIFFFFIZ)V
+		ARG 0 vertexConsumer
+		ARG 1 matrix
+		ARG 2 leashedEntityX
+		ARG 3 leashedEntityY
+		ARG 4 leashedEntityZ
+		ARG 5 leashedEntityBlockLight
+		ARG 6 leashHolderBlockLight
+		ARG 7 leashedEntitySkyLight
+		ARG 8 leashHolderSkyLight
+		ARG 13 segmentIndex
+		ARG 14 isLeashKnot
+	METHOD method_62354 updateRenderState (Lnet/minecraft/class_1297;Lnet/minecraft/class_10017;F)V
 		ARG 1 entity
-		ARG 2 yaw
+		ARG 2 state
 		ARG 3 tickDelta
-		ARG 4 matrices
-		ARG 5 vertexConsumers
-		ARG 6 light
-	METHOD method_55831 getShadowRadius (Lnet/minecraft/class_1297;)F
+	METHOD method_62358 getBoundingBox (Lnet/minecraft/class_1297;)Lnet/minecraft/class_238;
+		ARG 1 entity
+	METHOD method_62406 canBeCulled (Lnet/minecraft/class_1297;)Z
+		ARG 1 entity
+	METHOD method_62425 getAndUpdateRenderState (Lnet/minecraft/class_1297;F)Lnet/minecraft/class_10017;
+		ARG 1 entity
+		ARG 2 tickDelta
+	METHOD method_62426 getDisplayName (Lnet/minecraft/class_1297;)Lnet/minecraft/class_2561;
 		ARG 1 entity

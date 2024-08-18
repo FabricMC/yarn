@@ -89,7 +89,8 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 			COMMENT whether to return early without doing anything
 	METHOD method_14177 isInBlockTick ()Z
 	METHOD method_14183 getStructureTemplateManager ()Lnet/minecraft/class_3485;
-	METHOD method_14188 saveLevel ()V
+	METHOD method_14188 savePersistentState (Z)V
+		ARG 1 flush
 	METHOD method_14189 tickBlock (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;)V
 		ARG 1 pos
 		ARG 2 block
@@ -188,13 +189,7 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_18769 onDimensionChanged (Lnet/minecraft/class_1297;)V
 		COMMENT Called on the destination world when an entity changed the dimension.
 		COMMENT
-		COMMENT <p>This does not get called for players changing dimensions.
-		COMMENT Use {@link #onPlayerChangeDimension} (for portals) or
-		COMMENT {@link #onPlayerTeleport} (for teleportation) instead.
-		COMMENT
-		COMMENT @see Entity#moveToWorld
-		COMMENT @see #onPlayerTeleport
-		COMMENT @see #onPlayerChangeDimension
+		COMMENT @see Entity#teleportTo
 		ARG 1 entity
 	METHOD method_18770 removePlayer (Lnet/minecraft/class_3222;Lnet/minecraft/class_1297$class_5529;)V
 		ARG 1 player
@@ -307,8 +302,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 id
 	METHOD method_31426 addEntities (Ljava/util/stream/Stream;)V
 		ARG 1 entities
-	METHOD method_31430 shouldCancelSpawn (Lnet/minecraft/class_1297;)Z
-		ARG 1 entity
 	METHOD method_31431 (Lnet/minecraft/class_1297;)Ljava/lang/String;
 		ARG 0 entity
 	METHOD method_32819 getLogicalHeight ()I
@@ -370,6 +363,8 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	METHOD method_52370 tickIceAndSnow (Lnet/minecraft/class_2338;)V
 		ARG 1 pos
 	METHOD method_57133 getPathNodeTypeCache ()Lnet/minecraft/class_9315;
+	METHOD method_61270 getDestructionType (Lnet/minecraft/class_1928$class_4313;)Lnet/minecraft/class_1927$class_4179;
+		ARG 1 decayRule
 	METHOD method_8448 updateSleepingPlayers ()V
 	METHOD method_8487 locateStructure (Lnet/minecraft/class_6862;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
 		COMMENT Tries to find the closest structure of a given type near a given block.

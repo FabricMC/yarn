@@ -2,7 +2,6 @@ CLASS net/minecraft/class_6749 net/minecraft/world/gen/chunk/BlendingData
 	FIELD field_35515 oldHeightLimit Lnet/minecraft/class_5539;
 	FIELD field_35518 HORIZONTAL_BIOME_COUNT I
 	FIELD field_35519 SURFACE_BLOCKS Ljava/util/List;
-	FIELD field_35682 CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_35683 BIOMES_PER_CHUNK I
 	FIELD field_35684 LAST_CHUNK_BIOME_INDEX I
 	FIELD field_35685 CHUNK_BIOME_END_INDEX I
@@ -11,7 +10,6 @@ CLASS net/minecraft/class_6749 net/minecraft/world/gen/chunk/BlendingData
 	FIELD field_35690 initializedBlendingData Z
 	FIELD field_35692 surfaceHeights [D
 	FIELD field_35693 collidableBlockDensities [[D
-	FIELD field_35695 DOUBLE_ARRAY_CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_36345 biomes Ljava/util/List;
 	METHOD <init> (IILjava/util/Optional;)V
 		ARG 1 oldBottomSectionY
@@ -56,21 +54,13 @@ CLASS net/minecraft/class_6749 net/minecraft/world/gen/chunk/BlendingData
 		ARG 2 chunkBlockX
 		ARG 3 chunkBlockZ
 		ARG 4 surfaceHeight
-	METHOD method_39567 (D)Z
-		ARG 0 height
 	METHOD method_39570 getBlendingData (Lnet/minecraft/class_3233;II)Lnet/minecraft/class_6749;
 		ARG 0 chunkRegion
 		ARG 1 chunkX
 		ARG 2 chunkZ
-	METHOD method_39571 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
-		ARG 0 instance
 	METHOD method_39572 initChunkBlendingData (Lnet/minecraft/class_2791;Ljava/util/Set;)V
 		ARG 1 chunk
 		ARG 2 newNoiseChunkDirections
-	METHOD method_39573 validate (Lnet/minecraft/class_6749;)Lcom/mojang/serialization/DataResult;
-		ARG 0 data
-	METHOD method_39574 ([D)V
-		ARG 0 heights2
 	METHOD method_39575 getCollidableBlockDensity ([DI)D
 		ARG 1 collidableBlockDensityColumn
 		ARG 2 halfSectionY
@@ -89,8 +79,6 @@ CLASS net/minecraft/class_6749 net/minecraft/world/gen/chunk/BlendingData
 		ARG 1 chunkX
 		ARG 2 chunkZ
 		ARG 3 oldNoise
-	METHOD method_39580 (Lnet/minecraft/class_6749;)Ljava/util/Optional;
-		ARG 0 blendingData
 	METHOD method_39581 getOneAboveBottomHalfSectionY ()I
 	METHOD method_39582 getSouthEastIndex (II)I
 		COMMENT Gets the south east index for the given chunk-local biome coordinates.
@@ -125,10 +113,9 @@ CLASS net/minecraft/class_6749 net/minecraft/world/gen/chunk/BlendingData
 		ARG 2 chunkBlockX
 		ARG 3 chunkBlockZ
 	METHOD method_41567 getVerticalBiomeCount ()I
-	METHOD method_41568 (Lnet/minecraft/class_6749;)Ljava/lang/Integer;
-		ARG 0 blendingData
-	METHOD method_41569 (Lnet/minecraft/class_6749;)Ljava/lang/Integer;
-		ARG 0 blendingData
+	METHOD method_61806 toSerialized ()Lnet/minecraft/class_6749$class_9899;
+	METHOD method_61807 fromSerialized (Lnet/minecraft/class_6749$class_9899;)Lnet/minecraft/class_6749;
+		ARG 0 serialized
 	CLASS class_6750 CollidableBlockDensityConsumer
 		METHOD consume (IIID)V
 			ARG 1 biomeX
@@ -145,3 +132,10 @@ CLASS net/minecraft/class_6749 net/minecraft/world/gen/chunk/BlendingData
 			ARG 1 biomeX
 			ARG 2 biomeZ
 			ARG 3 biome
+	CLASS class_9899 Serialized
+		FIELD field_52655 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_52656 DOUBLE_ARRAY_CODEC Lcom/mojang/serialization/Codec;
+		METHOD method_61810 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
+		METHOD method_61811 validate (Lnet/minecraft/class_6749$class_9899;)Lcom/mojang/serialization/DataResult;
+			ARG 0 serialized

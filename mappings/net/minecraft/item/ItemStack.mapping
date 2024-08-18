@@ -45,7 +45,6 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	FIELD field_40211 DISABLED_TEXT Lnet/minecraft/class_2561;
 	FIELD field_47312 ITEM_CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_48349 PACKET_CODEC Lnet/minecraft/class_9139;
-	FIELD field_48350 LIST_PACKET_CODEC Lnet/minecraft/class_9139;
 	FIELD field_49266 OPTIONAL_CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_49267 REGISTRY_ENTRY_CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_49268 OPTIONAL_PACKET_CODEC Lnet/minecraft/class_9139;
@@ -348,9 +347,9 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT <p>This should be used when serializing {@link ItemStack} in C2S packets.
 		COMMENT Encoding is unaffected.
 		ARG 0 basePacketCodec
-	METHOD method_59979 postDamageEntity (Lnet/minecraft/class_1309;Lnet/minecraft/class_1657;)V
+	METHOD method_59979 postDamageEntity (Lnet/minecraft/class_1309;Lnet/minecraft/class_1309;)V
 		ARG 1 target
-		ARG 2 player
+		ARG 2 user
 	METHOD method_60503 withItem (Lnet/minecraft/class_1935;)Lnet/minecraft/class_1799;
 		ARG 1 item
 	METHOD method_60504 splitUnlessCreative (ILnet/minecraft/class_1309;)Lnet/minecraft/class_1799;
@@ -359,6 +358,29 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_60617 applyAttributeModifier (Lnet/minecraft/class_9274;Ljava/util/function/BiConsumer;)V
 		ARG 1 slot
 		ARG 2 attributeModifierConsumer
+	METHOD method_60986 damage (ILnet/minecraft/class_1935;Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
+		ARG 1 amount
+		ARG 2 itemAfterBreaking
+		ARG 3 entity
+		ARG 4 slot
+	METHOD method_61650 getEnchantability ()I
+	METHOD method_61651 damage (ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;)I
+		ARG 1 amount
+		ARG 2 world
+		ARG 3 player
+	METHOD method_61652 onDurabilityChange (ILnet/minecraft/class_3222;Ljava/util/function/Consumer;)V
+		ARG 1 damage
+		ARG 2 player
+		ARG 3 breakCallback
+	METHOD method_61653 damage (ILnet/minecraft/class_1657;)V
+		ARG 1 amount
+		ARG 2 player
+	METHOD method_61654 (Lnet/minecraft/class_1792;)V
+		ARG 0 item
+	METHOD method_61655 canRepairWith (Lnet/minecraft/class_1799;)Z
+		ARG 1 ingredient
+	METHOD method_61656 clearComponentChanges ()V
+	METHOD method_61657 shouldBreak ()Z
 	METHOD method_7909 getItem ()Lnet/minecraft/class_1792;
 		COMMENT {@return the item of this stack}
 		COMMENT
@@ -368,7 +390,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 2 user
 	METHOD method_7912 setBobbingAnimationTime (I)V
 		ARG 1 bobbingAnimationTime
-	METHOD method_7913 use (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1271;
+	METHOD method_7913 use (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
 		ARG 1 world
 		ARG 2 user
 		ARG 3 hand
@@ -453,8 +475,8 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT Depending on block implementation, when combined together, the correct item and block may achieve a better mining speed and yield
 		COMMENT drops that would not be obtained when mining otherwise.
 		COMMENT
-		COMMENT @return values consistent with calls to {@link Item#isSuitableFor}
-		COMMENT @see Item#isSuitableFor(BlockState)
+		COMMENT @return values consistent with calls to {@link Item#isCorrectForDrops}
+		COMMENT @see Item#isCorrectForDrops(ItemStack, BlockState)
 		ARG 1 state
 	METHOD method_7952 postMine (Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)V
 		ARG 1 world
@@ -467,8 +489,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7956 damage (ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;Ljava/util/function/Consumer;)V
 		COMMENT Damages this item stack. This method should be used when a non-entity, such as a
 		COMMENT dispenser, damages the stack. This does not damage {@linkplain #isDamageable non-damageable}
-		COMMENT stacks, and the {@linkplain net.minecraft.enchantment.UnbreakingEnchantment
-		COMMENT unbreaking enchantment} is applied to {@code amount} before damaging.
+		COMMENT stacks, and the enchantments are applied to {@code amount} before damaging.
 		COMMENT
 		COMMENT <p>If {@code player} is not {@code null}, this triggers {@link
 		COMMENT net.minecraft.advancement.criterion.Criteria#ITEM_DURABILITY_CHANGED}.
@@ -479,7 +500,6 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 1 amount
 		ARG 2 world
 		ARG 3 player
-			COMMENT the player that damaged the stack, or {@code null} if no player is involved
 		ARG 4 breakCallback
 	METHOD method_7958 hasGlint ()Z
 	METHOD method_7960 isEmpty ()Z
@@ -508,8 +528,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	METHOD method_7970 damage (ILnet/minecraft/class_1309;Lnet/minecraft/class_1304;)V
 		COMMENT Damages this item stack. This method should be used when an entity, including a player,
 		COMMENT damages the stack. This does not damage {@linkplain #isDamageable non-damageable}
-		COMMENT stacks, and the {@linkplain net.minecraft.enchantment.UnbreakingEnchantment
-		COMMENT unbreaking enchantment} is applied to {@code amount} before damaging. Additionally,
+		COMMENT stacks, and the enchantments are applied to {@code amount} before damaging. Additionally,
 		COMMENT if {@code entity} is a player in creative mode, the stack will not be damaged.
 		COMMENT
 		COMMENT <p>If {@code entity} is a player, this triggers {@link
@@ -564,7 +583,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT the maximum}, unlike {@link #damage(int, LivingEntity, EquipmentSlot)}.
 		COMMENT
 		COMMENT @see #getDamage
-		COMMENT @see #damage(int, Random, ServerPlayerEntity, Runnable)
+		COMMENT @see #damage(int, ServerWorld, ServerPlayerEntity, Consumer)
 		COMMENT @see #damage(int, LivingEntity, EquipmentSlot)
 		ARG 1 damage
 	METHOD method_7976 getUseAction ()Lnet/minecraft/class_1839;
@@ -578,9 +597,9 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT @see net.minecraft.enchantment.EnchantmentHelper
 		ARG 1 enchantment
 		ARG 2 level
-	METHOD method_7979 postHit (Lnet/minecraft/class_1309;Lnet/minecraft/class_1657;)Z
+	METHOD method_7979 postHit (Lnet/minecraft/class_1309;Lnet/minecraft/class_1309;)Z
 		ARG 1 target
-		ARG 2 player
+		ARG 2 user
 	METHOD method_7981 useOnBlock (Lnet/minecraft/class_1838;)Lnet/minecraft/class_1269;
 		ARG 1 context
 	METHOD method_7982 onCraftByPlayer (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;I)V

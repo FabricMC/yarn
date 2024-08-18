@@ -1,7 +1,6 @@
 package net.fabricmc.filament.util;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 
@@ -12,8 +11,8 @@ import org.gradle.api.provider.Property;
 
 import net.fabricmc.filament.FilamentExtension;
 import net.fabricmc.filament.FilamentGradlePlugin;
-import net.fabricmc.loom.configuration.providers.minecraft.ManifestVersion;
 import net.fabricmc.loom.configuration.providers.minecraft.MinecraftVersionMeta;
+import net.fabricmc.loom.configuration.providers.minecraft.VersionsManifest;
 import net.fabricmc.loom.util.download.Download;
 
 public abstract class MinecraftVersionMetaHelper {
@@ -42,9 +41,9 @@ public abstract class MinecraftVersionMetaHelper {
 				.defaultCache()
 				.downloadString(versionManifestPath);
 
-		final ManifestVersion mcManifest = FilamentGradlePlugin.OBJECT_MAPPER.readValue(versionManifest, ManifestVersion.class);
+		final VersionsManifest mcManifest = FilamentGradlePlugin.GSON.fromJson(versionManifest, VersionsManifest.class);
 
-		ManifestVersion.Versions version = mcManifest.versions().stream()
+		VersionsManifest.Version version = mcManifest.versions().stream()
 				.filter(versions -> versions.id.equalsIgnoreCase(getMinecraftVersion().get()))
 				.findFirst()
 				.orElse(null);
@@ -57,10 +56,6 @@ public abstract class MinecraftVersionMetaHelper {
 				.sha1(version.sha1)
 				.downloadString(versionMetadataPath);
 
-		try {
-			return FilamentGradlePlugin.OBJECT_MAPPER.readValue(versionMetadata, MinecraftVersionMeta.class);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
+		return FilamentGradlePlugin.GSON.fromJson(versionMetadata, MinecraftVersionMeta.class);
 	}
 }
