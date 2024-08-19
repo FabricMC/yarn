@@ -105,6 +105,7 @@ import net.fabricmc.filament.task.mappingio.ConvertMappingsTask
 import net.fabricmc.filament.task.mappingio.FormatMappingsTask
 import net.fabricmc.filament.task.mappingio.MergeMappingsTask
 import net.fabricmc.filament.task.mappingio.CheckMappingsTask
+import net.fabricmc.filament.task.mappingio.CheckMergedMappingsTask
 import net.fabricmc.filament.nameproposal.MappingNameCompleter
 import net.fabricmc.mappingio.format.MappingFormat
 import org.gradle.work.DisableCachingByDefault
@@ -556,11 +557,16 @@ javadocLint {
 }
 
 def checkMappings = tasks.register("checkMappings", CheckMappingsTask) {
+	input = mappingsDir
+}
+
+def checkMergedMappings = tasks.register("checkMergedMappings", CheckMergedMappingsTask) {
 	input = mergeV2.output
 }
 
 check.dependsOn checkPackages
 check.dependsOn checkMappings
+check.dependsOn checkMergedMappings
 check.dependsOn javadocLint
 
 publishing {
