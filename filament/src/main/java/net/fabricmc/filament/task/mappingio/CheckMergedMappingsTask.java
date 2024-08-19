@@ -7,14 +7,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.fabricmc.filament.task.base.WithFileInput;
-
 import org.gradle.api.tasks.TaskAction;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.fabricmc.filament.task.base.FilamentTask;
+import net.fabricmc.filament.task.base.WithFileInput;
 import net.fabricmc.mappingio.MappedElementKind;
 import net.fabricmc.mappingio.MappingReader;
 import net.fabricmc.mappingio.MappingVisitor;

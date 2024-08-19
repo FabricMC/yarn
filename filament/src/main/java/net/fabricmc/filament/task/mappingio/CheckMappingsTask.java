@@ -7,9 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.fabricmc.mappingio.MappedElementKind;
-import net.fabricmc.mappingio.MappingVisitor;
-
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.TaskAction;
@@ -17,8 +14,10 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.fabricmc.filament.task.base.FilamentTask;
+import net.fabricmc.mappingio.MappedElementKind;
+import net.fabricmc.mappingio.MappingVisitor;
 import net.fabricmc.mappingio.MappingReader;
+import net.fabricmc.filament.task.base.FilamentTask;
 
 public abstract class CheckMappingsTask extends FilamentTask {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CheckMappingsTask.class);
