@@ -6,6 +6,8 @@ CLASS net/minecraft/class_3609 net/minecraft/fluid/FlowableFluid
 	METHOD method_15725 tryFlow (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_3610;)V
 		ARG 1 world
 		ARG 2 fluidPos
+		ARG 3 blockState
+		ARG 4 fluidState
 	METHOD method_15726 getSpread (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Ljava/util/Map;
 		ARG 1 world
 		ARG 2 pos
@@ -24,10 +26,21 @@ CLASS net/minecraft/class_3609 net/minecraft/fluid/FlowableFluid
 		ARG 2 pos
 		ARG 3 state
 	METHOD method_15732 receivesFlow (Lnet/minecraft/class_2350;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Z
+		ARG 0 face
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 state
+		ARG 4 fromPos
+		ARG 5 fromState
 	METHOD method_15733 getMaxFlowDistance (Lnet/minecraft/class_4538;)I
 		COMMENT {@return the maximum horizontal distance to check for holes the fluid can flow down into}
 		ARG 1 world
 	METHOD method_15736 canFlowDownTo (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Z
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 state
+		ARG 4 fromPos
+		ARG 5 fromState
 	METHOD method_15737 isInfinite (Lnet/minecraft/class_1937;)Z
 		ARG 1 world
 	METHOD method_15739 getLevelDecreasePerBlock (Lnet/minecraft/class_4538;)I
@@ -39,10 +52,12 @@ CLASS net/minecraft/class_3609 net/minecraft/fluid/FlowableFluid
 		ARG 0 state
 	METHOD method_15742 getMinFlowDownDistance (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;ILnet/minecraft/class_2350;Lnet/minecraft/class_2680;Lnet/minecraft/class_3609$class_9900;)I
 		COMMENT Finds the distance to the closest hole the fluid can flow down into starting with the direction specified.
+		ARG 1 world
 		ARG 2 pos
 		ARG 4 direction
 		ARG 5 state
 	METHOD method_15744 flowToSides (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_3610;Lnet/minecraft/class_2680;)V
+		ARG 1 world
 		ARG 2 pos
 		ARG 3 fluidState
 		ARG 4 blockState
@@ -77,9 +92,49 @@ CLASS net/minecraft/class_3609 net/minecraft/fluid/FlowableFluid
 		ARG 3 oldState
 		ARG 4 newState
 	METHOD method_15754 canFill (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_3611;)Z
+		ARG 0 world
+		ARG 1 pos
+		ARG 2 state
+		ARG 3 fluid
 	METHOD method_17773 (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_3610;)Lnet/minecraft/class_265;
 		ARG 2 state2
 	METHOD method_17774 isFluidAboveEqual (Lnet/minecraft/class_3610;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)Z
 		ARG 0 state
 		ARG 1 world
 		ARG 2 pos
+	METHOD method_61813 canFlowThrough (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2350;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_3610;)Z
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 state
+		ARG 4 face
+		ARG 5 fromPos
+		ARG 6 fromState
+		ARG 7 fluidState
+	METHOD method_61814 canFill (Lnet/minecraft/class_2680;)Z
+		ARG 0 state
+	METHOD method_61815 canFillWithFluid (Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_3611;)Z
+		ARG 0 world
+		ARG 1 pos
+		ARG 2 state
+		ARG 3 fluid
+	CLASS class_9900 SpreadCache
+		FIELD field_52660 world Lnet/minecraft/class_1922;
+		FIELD field_52661 startPos Lnet/minecraft/class_2338;
+		FIELD field_52662 stateCache Lit/unimi/dsi/fastutil/shorts/Short2ObjectMap;
+		FIELD field_52663 flowDownCache Lit/unimi/dsi/fastutil/shorts/Short2BooleanMap;
+		METHOD <init> (Lnet/minecraft/class_3609;Lnet/minecraft/class_1922;Lnet/minecraft/class_2338;)V
+			ARG 2 world
+			ARG 3 startPos
+		METHOD method_61816 getBlockState (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;
+			ARG 1 pos
+		METHOD method_61817 getBlockState (Lnet/minecraft/class_2338;S)Lnet/minecraft/class_2680;
+			ARG 1 pos
+			ARG 2 packed
+		METHOD method_61818 canFlowDownTo (Lnet/minecraft/class_2338;)Z
+			ARG 1 pos
+		METHOD method_61819 (Lnet/minecraft/class_2338;S)Z
+			ARG 2 packed
+		METHOD method_61820 pack (Lnet/minecraft/class_2338;)S
+			ARG 1 pos
+		METHOD method_61821 (Lnet/minecraft/class_2338;S)Lnet/minecraft/class_2680;
+			ARG 2 packedPos

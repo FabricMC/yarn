@@ -149,6 +149,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_44873 forceUpdateSupportingBlockPos Z
 	FIELD field_47742 stateAtPos Lnet/minecraft/class_2680;
 	FIELD field_51994 portalManager Lnet/minecraft/class_9787;
+	FIELD field_52442 collidedBlocks Ljava/util/Set;
 	FIELD field_5951 ridingCooldown I
 	FIELD field_5952 onGround Z
 	FIELD field_5953 firstUpdate Z
@@ -1443,6 +1444,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT {@return whether this entity and {@code other} are in the same team}
 		COMMENT
 		COMMENT <p>This returns {@code false} if this entity is not in any team.
+		ARG 1 other
 	METHOD method_5724 updateVelocity (FLnet/minecraft/class_243;)V
 		COMMENT Updates the entity's velocity to add a vector in the direction of the entity's yaw
 		COMMENT whose absolute value is {@code movementInput} normalized and multiplied by {@code speed}.
@@ -2237,7 +2239,10 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 previous
 	METHOD method_60491 addVelocity (Lnet/minecraft/class_243;)V
 		ARG 1 velocity
-	METHOD method_60607 setOnGround (ZZLnet/minecraft/class_243;)V
+	METHOD method_60607 setMovement (ZZLnet/minecraft/class_243;)V
+		ARG 1 onGround
+		ARG 2 horizontalCollision
+		ARG 3 movement
 	METHOD method_60608 setAngles (FF)V
 		ARG 1 yaw
 		ARG 2 pitch
@@ -2256,11 +2261,21 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_61113 canTeleportBetween (Lnet/minecraft/class_1937;Lnet/minecraft/class_1937;)Z
 		ARG 1 from
 		ARG 2 to
+	METHOD method_61408 checkBlockCollision (Ljava/util/Set;)V
+		ARG 1 result
+	METHOD method_61409 tickBlockCollision ()V
+	METHOD method_61410 shouldTickBlockCollision ()Z
 	METHOD method_61411 getLastRenderPos ()Lnet/minecraft/class_243;
+	METHOD method_61412 setPosition (Lnet/minecraft/class_5454;)V
+		ARG 1 teleportTarget
+	METHOD method_61413 (Lnet/minecraft/class_2680;)Z
+		ARG 0 state
 	METHOD method_61414 getLerpedPitch (F)F
 		ARG 1 tickDelta
 	METHOD method_61415 getLerpedYaw (F)F
 		ARG 1 tickDelta
+	METHOD method_61416 isInSameTeam (Lnet/minecraft/class_1297;)Z
+		ARG 1 other
 	METHOD method_7325 isSpectator ()Z
 		COMMENT {@return whether the entity is a spectator}
 		COMMENT
