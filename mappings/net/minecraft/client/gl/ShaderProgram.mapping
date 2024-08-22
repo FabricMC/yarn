@@ -4,7 +4,7 @@ CLASS net/minecraft/class_5944 net/minecraft/client/gl/ShaderProgram
 	COMMENT
 	COMMENT <p><strong>Warning:</strong> This class is referred to as a shader in
 	COMMENT strings. However, this does NOT represent a shader object that can be
-	COMMENT created with {@code glCreateShader}. {@link ShaderStage} is what
+	COMMENT created with {@code glCreateShader}. {@link CompiledShader} is what
 	COMMENT represents a shader object.
 	COMMENT
 	COMMENT @see <a href="https://www.khronos.org/opengl/wiki/GLSL_Object#Program_objects">
@@ -27,6 +27,12 @@ CLASS net/minecraft/class_5944 net/minecraft/client/gl/ShaderProgram
 	FIELD field_36373 fogShape Lnet/minecraft/class_284;
 	FIELD field_42231 glintAlpha Lnet/minecraft/class_284;
 	FIELD field_53139 modelOffset Lnet/minecraft/class_284;
+	FIELD field_53838 samplers Ljava/util/List;
+	FIELD field_53839 samplerTextures Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+	FIELD field_53840 samplerLocations Lit/unimi/dsi/fastutil/ints/IntList;
+	FIELD field_53841 uniformsByName Ljava/util/Map;
+	METHOD <init> (I)V
+		ARG 1 glRef
 	METHOD method_1270 getGlRef ()I
 	METHOD method_34582 getUniform (Ljava/lang/String;)Lnet/minecraft/class_284;
 		ARG 1 name
@@ -39,3 +45,17 @@ CLASS net/minecraft/class_5944 net/minecraft/client/gl/ShaderProgram
 		ARG 2 viewMatrix
 		ARG 3 projectionMatrix
 		ARG 4 window
+	METHOD method_62896 create (Lnet/minecraft/class_10141;Lnet/minecraft/class_10141;Lnet/minecraft/class_293;)Lnet/minecraft/class_5944;
+		ARG 0 vertexShader
+		ARG 1 fragmentShader
+		ARG 2 format
+	METHOD method_62897 addUniform (Lnet/minecraft/class_284;)V
+		ARG 1 uniform
+	METHOD method_62898 createGlUniform (Lnet/minecraft/class_10157$class_10159;)Lnet/minecraft/class_284;
+		ARG 1 uniform
+	METHOD method_62899 addSamplerTexture (Ljava/lang/String;I)V
+		ARG 1 name
+		ARG 2 texture
+	METHOD method_62900 set (Ljava/util/List;Ljava/util/List;)V
+		ARG 1 uniforms
+		ARG 2 samplers
