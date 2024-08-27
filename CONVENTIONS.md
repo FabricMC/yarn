@@ -115,6 +115,16 @@ front of the coordinate (`velocityX`, not `xVelocity`).
 
 Name screen coordinates `x` and `y`, rather than `left` and `top`.
 
+### Special classes
+
+Unless a more descriptive name is better, these Minecraft classes should get specific names as fields and parameters:
+
+| Class                                                  | Name              |
+| ------------------------------------------------------ | ----------------- |
+| `net.minecraft.client.render.VertexConsumerProvider`   | `vertexConsumers` |
+| `net.minecraft.client.util.math.MatrixStack`           | `matrices`        |
+| `net.minecraft.registry.RegistryWrapper.WrapperLookup` | `registries`      |
+
 ## Javadocs
 
 Write sentences for class, method and field javadocs, starting with an uppercase and ending with a period. Start method docs with verbs, like `Gets` or `Called`. Use HTML tags such as `<p>` if the docs have several paragraphs, as line wraps are converted to spaces in the generated documentation. Feel free to start a new line whenever you feel the current line is too long. Note that some ending tags such as `</p>` are not mandatory for Javadocs to render correctly.
