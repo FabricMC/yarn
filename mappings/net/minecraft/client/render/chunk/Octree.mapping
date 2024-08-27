@@ -1,0 +1,69 @@
+CLASS net/minecraft/class_10143 net/minecraft/client/render/chunk/Octree
+	FIELD field_53904 root Lnet/minecraft/class_10143$class_10145;
+	FIELD field_53905 centerPos Lnet/minecraft/class_2338;
+	METHOD <init> (Lnet/minecraft/class_4076;III)V
+		ARG 1 sectionPos
+		ARG 2 viewDistance
+		ARG 3 sizeY
+		ARG 4 bottomY
+	METHOD method_62911 visit (Lnet/minecraft/class_10143$class_10148;Lnet/minecraft/class_4604;)V
+		ARG 1 visitor
+		ARG 2 frustum
+	METHOD method_62912 add (Lnet/minecraft/class_846$class_851;)Z
+		ARG 1 chunk
+	CLASS class_10144 AxisOrder
+		FIELD field_53912 x I
+		FIELD field_53913 y I
+		FIELD field_53914 z I
+		METHOD <init> (Ljava/lang/String;IIII)V
+			ARG 3 x
+			ARG 4 y
+			ARG 5 z
+		METHOD method_62914 fromPos (III)Lnet/minecraft/class_10143$class_10144;
+			ARG 0 x
+			ARG 1 y
+			ARG 2 z
+	CLASS class_10145 Branch
+		FIELD field_53917 children [Lnet/minecraft/class_10143$class_10147;
+		FIELD field_53918 box Lnet/minecraft/class_3341;
+		FIELD field_53919 centerX I
+		FIELD field_53920 centerY I
+		FIELD field_53921 centerZ I
+		FIELD field_53922 axisOrder Lnet/minecraft/class_10143$class_10144;
+		FIELD field_53923 easternSide Z
+		FIELD field_53924 topSide Z
+		FIELD field_53925 southernSide Z
+		METHOD <init> (Lnet/minecraft/class_10143;Lnet/minecraft/class_3341;)V
+			ARG 2 box
+		METHOD method_62916 getIndex (Lnet/minecraft/class_10143$class_10144;ZZZ)I
+			ARG 0 axisOrder
+			ARG 1 sameRelativeSideX
+				COMMENT whether the side of the chunk relative to this branch's center
+				COMMENT equals the side of the branch relative to the player, on the X axis
+			ARG 2 sameRelativeSideY
+				COMMENT whether the side of the chunk relative to this branch's center
+				COMMENT equals the side of the branch relative to the player, on the Y axis
+			ARG 3 sameRelativeSideZ
+				COMMENT whether the side of the chunk relative to this branch's center
+				COMMENT equals the side of the branch relative to the player, on the Z axis
+		METHOD method_62918 add (Lnet/minecraft/class_846$class_851;)Z
+			ARG 1 chunk
+		METHOD method_62919 getChildBox (ZZZ)Lnet/minecraft/class_3341;
+			ARG 1 western
+			ARG 2 bottom
+			ARG 3 northern
+		METHOD method_62921 areChildrenLeaves ()Z
+	CLASS class_10146 Leaf
+	CLASS class_10147 Node
+		METHOD method_62915 getBuiltChunk ()Lnet/minecraft/class_846$class_851;
+		METHOD method_62917 visit (Lnet/minecraft/class_10143$class_10148;ZLnet/minecraft/class_4604;I)V
+			ARG 1 visitor
+			ARG 2 skipVisibilityCheck
+			ARG 3 frustum
+			ARG 4 depth
+		METHOD method_62920 getBoundingBox ()Lnet/minecraft/class_238;
+	CLASS class_10148 Visitor
+		METHOD visit (Lnet/minecraft/class_10143$class_10147;ZI)V
+			ARG 1 node
+			ARG 2 skipVisibilityCheck
+			ARG 3 depth
