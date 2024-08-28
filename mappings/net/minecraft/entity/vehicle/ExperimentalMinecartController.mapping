@@ -1,12 +1,16 @@
 CLASS net/minecraft/class_9879 net/minecraft/entity/vehicle/ExperimentalMinecartController
 	FIELD field_52529 lerpSteps Ljava/util/List;
-	METHOD method_61601 (Lnet/minecraft/class_243;Lnet/minecraft/class_9879$class_9882;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2768;)Lnet/minecraft/class_243;
+	METHOD method_61601 calcNewHorizontalVelocity (Lnet/minecraft/class_243;Lnet/minecraft/class_9879$class_9882;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2768;)Lnet/minecraft/class_243;
+		ARG 1 horizontalVelocity
+		ARG 2 iteration
+		ARG 3 pos
 		ARG 4 railState
 		ARG 5 railShape
 	METHOD method_61602 decelerateFromPoweredRail (Lnet/minecraft/class_243;Lnet/minecraft/class_2680;)Lnet/minecraft/class_243;
 		ARG 1 velocity
 		ARG 2 railState
-	METHOD method_61603 (Lnet/minecraft/class_243;Lnet/minecraft/class_2768;)Lnet/minecraft/class_243;
+	METHOD method_61603 applySlopeVelocity (Lnet/minecraft/class_243;Lnet/minecraft/class_2768;)Lnet/minecraft/class_243;
+		ARG 1 horizontalVelocity
 		ARG 2 railShape
 	METHOD method_61604 accelerateFromPoweredRail (Lnet/minecraft/class_243;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Lnet/minecraft/class_243;
 		ARG 1 velocity
@@ -22,12 +26,15 @@ CLASS net/minecraft/class_9879 net/minecraft/entity/vehicle/ExperimentalMinecart
 		ARG 1 tickDelta
 	METHOD method_61608 getLerpedYaw (F)F
 		ARG 1 tickDelta
+	METHOD method_61609 applyInitialVelocity (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 1 horizontalVelocity
 	METHOD method_61610 getLerpedPosition (F)Lnet/minecraft/class_243;
 		ARG 1 tickDelta
 	METHOD method_61611 getLerpedVelocity (F)Lnet/minecraft/class_243;
 		ARG 1 tickDelta
 	METHOD method_61612 (F)Lnet/minecraft/class_9879$class_9881;
 		ARG 1 tickDelta
+	METHOD method_61615 tickClient ()V
 	METHOD method_62828 restOnVShapedTrack (Lnet/minecraft/class_2768;Lnet/minecraft/class_2768;)Z
 		COMMENT Prevents otherwise stationary minecart from going back and forth on a V-shaped track.
 		ARG 1 currentRailShape
@@ -45,3 +52,10 @@ CLASS net/minecraft/class_9879 net/minecraft/entity/vehicle/ExperimentalMinecart
 		METHOD method_61617 degreesToByte (F)B
 			ARG 0 degrees
 	CLASS class_9881 InterpolatedStep
+	CLASS class_9882 MoveIteration
+		FIELD field_52542 remainingMovement D
+		FIELD field_52543 initial Z
+		FIELD field_52544 slopeVelocityApplied Z
+		FIELD field_52545 decelerated Z
+		FIELD field_52546 accelerated Z
+		METHOD method_61618 shouldContinue ()Z
