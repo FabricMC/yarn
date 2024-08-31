@@ -5,8 +5,11 @@ CLASS net/minecraft/class_10151 net/minecraft/client/gl/ShaderLoader
 	FIELD field_53938 SHADERS_FINDER Lnet/minecraft/class_7654;
 	FIELD field_53939 POST_EFFECT_FINDER Lnet/minecraft/class_7654;
 	FIELD field_53940 textureManager Lnet/minecraft/class_1060;
+	FIELD field_54019 onError Ljava/util/function/Consumer;
+	FIELD field_54020 cache Lnet/minecraft/class_10151$class_10170;
 	METHOD <init> (Lnet/minecraft/class_1060;Ljava/util/function/Consumer;)V
 		ARG 1 textureManager
+		ARG 2 onError
 	METHOD method_62937 isDefinition (Lnet/minecraft/class_2960;)Z
 		ARG 0 id
 	METHOD method_62938 loadDefinition (Lnet/minecraft/class_2960;Lnet/minecraft/class_3298;Lcom/google/common/collect/ImmutableMap$Builder;)V
@@ -33,6 +36,10 @@ CLASS net/minecraft/class_10151 net/minecraft/client/gl/ShaderLoader
 	METHOD method_62947 getOrCreateProgram (Lnet/minecraft/class_10156;)Lnet/minecraft/class_5944;
 		ARG 1 key
 	METHOD method_62948 createProgram (Lnet/minecraft/class_10156;Lnet/minecraft/class_10157;Lnet/minecraft/class_10141;Lnet/minecraft/class_10141;)Lnet/minecraft/class_5944;
+		ARG 0 key
+		ARG 1 definition
+		ARG 2 vertexShader
+		ARG 3 fragmentShader
 	METHOD method_62949 (Ljava/util/Map$Entry;)Ljava/lang/String;
 		ARG 0 entry
 	METHOD method_62950 createImportProcessor (Ljava/util/Map;Lnet/minecraft/class_2960;)Lnet/minecraft/class_5913;
@@ -57,3 +64,28 @@ CLASS net/minecraft/class_10151 net/minecraft/client/gl/ShaderLoader
 		FIELD field_53948 EMPTY Lnet/minecraft/class_10151$class_10153;
 	CLASS class_10154 ShaderKey
 	CLASS class_10155 ShaderSourceKey
+	CLASS class_10170 Cache
+		FIELD field_54022 definitions Lnet/minecraft/class_10151$class_10153;
+		FIELD field_54023 shaderPrograms Ljava/util/Map;
+		FIELD field_54024 compiledShaders Ljava/util/Map;
+		FIELD field_54025 postEffectProcessors Ljava/util/Map;
+		METHOD <init> (Lnet/minecraft/class_10151;Lnet/minecraft/class_10151$class_10153;)V
+			ARG 2 definitions
+		METHOD method_63522 loadShader (Lnet/minecraft/class_2960;Lnet/minecraft/class_10141$class_282;Lnet/minecraft/class_10149;)Lnet/minecraft/class_10141;
+			ARG 1 id
+			ARG 2 type
+			ARG 3 defines
+		METHOD method_63523 getOrLoadProcessor (Lnet/minecraft/class_2960;Ljava/util/Set;)Lnet/minecraft/class_279;
+			ARG 1 id
+			ARG 2 availableExternalTargets
+		METHOD method_63524 compileShader (Lnet/minecraft/class_10151$class_10154;)Lnet/minecraft/class_10141;
+			ARG 1 key
+		METHOD method_63525 getOrLoadProgram (Lnet/minecraft/class_10156;)Lnet/minecraft/class_5944;
+			ARG 1 key
+		METHOD method_63526 (Ljava/util/Optional;)V
+			ARG 0 program
+		METHOD method_63527 loadProcessor (Lnet/minecraft/class_2960;Ljava/util/Set;)Lnet/minecraft/class_279;
+			ARG 1 id
+			ARG 2 availableExternalTargets
+		METHOD method_63528 loadProgram (Lnet/minecraft/class_10156;)Lnet/minecraft/class_5944;
+			ARG 1 key

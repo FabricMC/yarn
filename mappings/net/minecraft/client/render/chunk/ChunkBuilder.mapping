@@ -9,11 +9,15 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 	FIELD field_4443 uploadQueue Ljava/util/Queue;
 	FIELD field_46907 buffersPool Lnet/minecraft/class_8901;
 	FIELD field_46908 stopped Z
+	FIELD field_52171 sectionBuilder Lnet/minecraft/class_9810;
+	FIELD field_53957 scheduler Lnet/minecraft/class_10160;
 	METHOD <init> (Lnet/minecraft/class_638;Lnet/minecraft/class_761;Ljava/util/concurrent/Executor;Lnet/minecraft/class_4599;Lnet/minecraft/class_776;Lnet/minecraft/class_824;)V
 		ARG 1 world
 		ARG 2 worldRenderer
 		ARG 3 executor
 		ARG 4 bufferBuilderStorage
+		ARG 5 blockRenderManager
+		ARG 6 blockEntityRenderDispatcher
 	METHOD method_19419 setCameraPosition (Lnet/minecraft/class_243;)V
 		ARG 1 cameraPosition
 	METHOD method_19420 getCameraPosition ()Lnet/minecraft/class_243;
@@ -42,6 +46,9 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		ARG 2 glBuffer
 	METHOD method_38555 (Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletionStage;
 		ARG 0 future
+	METHOD method_60906 scheduleIndexBufferUpload (Lnet/minecraft/class_9799$class_9800;Lnet/minecraft/class_291;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 indexBuffer
+		ARG 2 vertexBuffer
 	CLASS class_4690 Result
 	CLASS class_849 ChunkData
 		FIELD field_4450 nonEmptyLayers Ljava/util/Set;
@@ -55,6 +62,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		METHOD method_3650 isVisibleThrough (Lnet/minecraft/class_2350;Lnet/minecraft/class_2350;)Z
 			ARG 1 from
 			ARG 2 to
+		METHOD method_62972 hasNonEmptyLayers ()Z
 	CLASS class_851 BuiltChunk
 		FIELD field_20834 rebuildTask Lnet/minecraft/class_846$class_851$class_4578;
 		FIELD field_29641 index I
@@ -66,8 +74,10 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		FIELD field_4463 needsImportantRebuild Z
 		FIELD field_4464 needsRebuild Z
 		FIELD field_4467 origin Lnet/minecraft/class_2338$class_2339;
+		FIELD field_53958 sectionPos J
 		METHOD <init> (Lnet/minecraft/class_846;IJ)V
 			ARG 2 index
+			ARG 3 sectionPos
 		METHOD method_22773 scheduleSort (Lnet/minecraft/class_1921;Lnet/minecraft/class_846;)Z
 			ARG 1 layer
 			ARG 2 chunkRenderer
@@ -83,6 +93,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		METHOD method_22781 rebuild (Lnet/minecraft/class_6850;)V
 			ARG 1 builder
 		METHOD method_3651 isChunkNonEmpty (J)Z
+			ARG 1 sectionPos
 		METHOD method_3654 scheduleRebuild (Z)V
 			ARG 1 important
 		METHOD method_3656 getBuffer (Lnet/minecraft/class_1921;)Lnet/minecraft/class_291;
@@ -96,9 +107,22 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		METHOD method_3672 needsRebuild ()Z
 		METHOD method_3673 shouldBuild ()Z
 		METHOD method_3674 createRebuildTask (Lnet/minecraft/class_6850;)Lnet/minecraft/class_846$class_851$class_4577;
+			ARG 1 builder
 		METHOD method_3675 clear ()V
 		METHOD method_3677 getData ()Lnet/minecraft/class_846$class_849;
 		METHOD method_40051 getBoundingBox ()Lnet/minecraft/class_238;
+		METHOD method_52841 isAtPos (III)Z
+			ARG 1 sectionX
+			ARG 2 sectionY
+			ARG 3 sectionZ
+		METHOD method_60908 setData (Lnet/minecraft/class_846$class_849;)V
+			ARG 1 chunkData
+		METHOD method_60909 getVertexSorter ()Lnet/minecraft/class_8251;
+		METHOD method_62973 setSectionPos (J)V
+			ARG 1 sectionPos
+		METHOD method_62974 getOffsetSectionPos (Lnet/minecraft/class_2350;)J
+			ARG 1 direction
+		METHOD method_62975 getSectionPos ()J
 		CLASS class_4577 Task
 			FIELD field_20835 distance D
 			FIELD field_20836 cancelled Ljava/util/concurrent/atomic/AtomicBoolean;

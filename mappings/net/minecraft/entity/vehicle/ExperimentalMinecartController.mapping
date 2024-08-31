@@ -1,5 +1,13 @@
 CLASS net/minecraft/class_9879 net/minecraft/entity/vehicle/ExperimentalMinecartController
-	FIELD field_52529 lerpSteps Ljava/util/List;
+	FIELD field_52527 REFRESH_FREQUENCY I
+	FIELD field_52529 stagingLerpSteps Ljava/util/List;
+	FIELD field_52530 currentLerpSteps Ljava/util/List;
+	FIELD field_52531 totalWeight D
+	FIELD field_52532 initialStep Lnet/minecraft/class_9879$class_9880;
+	FIELD field_52533 lastReturnedInterpolatedStep Lnet/minecraft/class_9879$class_9881;
+	FIELD field_52534 lastQueriedTicksToNextRefresh I
+	FIELD field_52535 lastQueriedTickDelta F
+	FIELD field_52536 ticksToNextRefresh I
 	METHOD method_61601 calcNewHorizontalVelocity (Lnet/minecraft/class_243;Lnet/minecraft/class_9879$class_9882;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2768;)Lnet/minecraft/class_243;
 		ARG 1 horizontalVelocity
 		ARG 2 iteration
@@ -19,6 +27,7 @@ CLASS net/minecraft/class_9879 net/minecraft/entity/vehicle/ExperimentalMinecart
 	METHOD method_61605 adjustToRail (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Z)V
 		ARG 1 pos
 		ARG 2 blockState
+		ARG 3 ignoreWeight
 	METHOD method_61606 ascends (Lnet/minecraft/class_243;Lnet/minecraft/class_2768;)Z
 		ARG 1 velocity
 		ARG 2 railShape
@@ -32,9 +41,14 @@ CLASS net/minecraft/class_9879 net/minecraft/entity/vehicle/ExperimentalMinecart
 		ARG 1 tickDelta
 	METHOD method_61611 getLerpedVelocity (F)Lnet/minecraft/class_243;
 		ARG 1 tickDelta
-	METHOD method_61612 (F)Lnet/minecraft/class_9879$class_9881;
+	METHOD method_61612 getLerpedStep (F)Lnet/minecraft/class_9879$class_9881;
 		ARG 1 tickDelta
+	METHOD method_61613 setInitialStep ()V
+	METHOD method_61614 hasCurrentLerpSteps ()Z
 	METHOD method_61615 tickClient ()V
+	METHOD method_62827 setAngles (FF)V
+		ARG 1 yaw
+		ARG 2 pitch
 	METHOD method_62828 restOnVShapedTrack (Lnet/minecraft/class_2768;Lnet/minecraft/class_2768;)Z
 		COMMENT Prevents otherwise stationary minecart from going back and forth on a V-shaped track.
 		ARG 1 currentRailShape
