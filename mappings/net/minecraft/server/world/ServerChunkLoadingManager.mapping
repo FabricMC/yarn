@@ -31,6 +31,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	FIELD field_51863 UNLOADED_CHUNKS_FUTURE Ljava/util/concurrent/CompletableFuture;
 	FIELD field_51864 loaders Ljava/util/List;
 	FIELD field_52353 chunkToNextSaveTimeMs Lit/unimi/dsi/fastutil/longs/Long2LongMap;
+	FIELD field_54034 worldGenScheduler Lnet/minecraft/class_10171;
+	FIELD field_54035 lightScheduler Lnet/minecraft/class_10171;
 	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_3949;Lnet/minecraft/class_5567;Ljava/util/function/Supplier;IZ)V
 		ARG 1 world
 		ARG 2 session
@@ -123,6 +125,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	METHOD method_19488 getPointOfInterestStorage ()Lnet/minecraft/class_4153;
 	METHOD method_20458 tryUnloadChunk (JLnet/minecraft/class_3193;)V
 		ARG 1 pos
+		ARG 3 chunk
 	METHOD method_20577 (Lnet/minecraft/class_9259;)Lnet/minecraft/class_9259;
 		ARG 0 optionalChunks
 	METHOD method_20578 (Lorg/apache/commons/lang3/mutable/MutableBoolean;Lnet/minecraft/class_2791;)V
@@ -268,12 +271,20 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	METHOD method_57120 (Lnet/minecraft/class_1923;Ljava/lang/Throwable;)Ljava/lang/Void;
 		ARG 2 throwable
 	METHOD method_60439 schedule (Lnet/minecraft/class_9759;)V
+		ARG 1 loader
 	METHOD method_60449 (Ljava/util/List;)Lnet/minecraft/class_9259;
 		ARG 1 chunks
+	METHOD method_61257 (Lnet/minecraft/class_3193;Ljava/util/List;)Lnet/minecraft/class_2818;
+		ARG 2 chunks
 	METHOD method_61260 forEachTickedChunk (Ljava/util/function/Consumer;)V
 		ARG 1 callback
 	METHOD method_61261 isAnyPlayerTicking (Lnet/minecraft/class_1923;)Z
 		ARG 1 pos
+	METHOD method_63545 updateLevel (Lnet/minecraft/class_1923;Ljava/util/function/IntSupplier;ILjava/util/function/IntConsumer;)V
+		ARG 1 pos
+		ARG 2 levelGetter
+		ARG 3 targetLevel
+		ARG 4 levelSetter
 	CLASS class_3208 EntityTracker
 		COMMENT An entity tracker governs which players' clients can see an entity. Each
 		COMMENT tracker corresponds to one entity in a server world and is mapped from the
