@@ -43,7 +43,7 @@ Same as above, but unpicks the constants and launches Enigma with them. Can be a
 Same as `yarn`, but will only show common classes.
 
 ### `build`
-Build a GZip'd archive containing a tiny mapping between official (obfuscated), [intermediary](https://github.com/FabricMC/intermediary), and yarn names ("named") and packages enigma mappings into a zip archive..
+Build a GZip'd archive containing a tiny mapping between official (obfuscated), [intermediary](https://github.com/FabricMC/intermediary), and yarn names ("named") and packages enigma mappings into a zip archive.
 
 ### `mapNamedJar`
 Builds a deobfuscated jar with yarn mappings and automapped fields (enums, etc.). Unmapped names will be filled with [intermediary](https://github.com/FabricMC/Intermediary) names.
