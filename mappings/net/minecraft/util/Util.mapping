@@ -2,8 +2,8 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	COMMENT A class holding various utility methods.
 	FIELD field_1128 nanoTimeSupplier Lnet/minecraft/class_7576$class_7577;
 	FIELD field_1129 LOGGER Lorg/slf4j/Logger;
-	FIELD field_18035 MAIN_WORKER_EXECUTOR Ljava/util/concurrent/ExecutorService;
-	FIELD field_24477 IO_WORKER_EXECUTOR Ljava/util/concurrent/ExecutorService;
+	FIELD field_18035 MAIN_WORKER_EXECUTOR Lnet/minecraft/class_10207;
+	FIELD field_24477 IO_WORKER_EXECUTOR Lnet/minecraft/class_10207;
 	FIELD field_25140 NIL_UUID Ljava/util/UUID;
 		COMMENT The "nil UUID" that represents lack of a UUID.
 	FIELD field_33859 JAR_FILE_SYSTEM_PROVIDER Ljava/nio/file/spi/FileSystemProvider;
@@ -16,7 +16,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		COMMENT A locale-independent datetime formatter that uses {@code yyyy-MM-dd_HH.mm.ss}
 		COMMENT as the format string. Example: {@code 2022-01-01_00.00.00}
 	FIELD field_46764 BACKUP_ATTEMPTS I
-	FIELD field_47571 DOWNLOAD_WORKER_EXECUTOR Ljava/util/concurrent/ExecutorService;
+	FIELD field_47571 DOWNLOAD_WORKER_EXECUTOR Lnet/minecraft/class_10207;
 	FIELD field_52196 SUPPORTED_URI_PROTOCOLS Ljava/util/Set;
 	METHOD method_17974 ifPresentOrElse (Ljava/util/Optional;Ljava/util/function/Consumer;Ljava/lang/Runnable;)Ljava/util/Optional;
 		COMMENT If {@code optional} has value, calls {@code presentAction} with the value,
@@ -29,7 +29,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_18347 uncaughtExceptionHandler (Ljava/lang/Thread;Ljava/lang/Throwable;)V
 		ARG 0 thread
 		ARG 1 t
-	METHOD method_18349 getMainWorkerExecutor ()Ljava/util/concurrent/ExecutorService;
+	METHOD method_18349 getMainWorkerExecutor ()Lnet/minecraft/class_10207;
 		COMMENT {@return the main worker executor for miscellaneous asynchronous tasks}
 	METHOD method_18350 shutdownExecutors ()V
 	METHOD method_18839 debugRunnable (Ljava/lang/Runnable;Ljava/util/function/Supplier;)Ljava/lang/Runnable;
@@ -81,14 +81,12 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 2 delta
 	METHOD method_27956 (Ljava/lang/String;Ljava/util/concurrent/atomic/AtomicInteger;ZLjava/lang/Runnable;)Ljava/lang/Thread;
 		ARG 3 runnable
-	METHOD method_27957 attemptShutdown (Ljava/util/concurrent/ExecutorService;)V
-		ARG 0 service
-	METHOD method_27958 getIoWorkerExecutor ()Ljava/util/concurrent/ExecutorService;
+	METHOD method_27958 getIoWorkerExecutor ()Lnet/minecraft/class_10207;
 		COMMENT {@return the executor for disk or network IO tasks}
-	METHOD method_27959 createIoWorker (Ljava/lang/String;Z)Ljava/util/concurrent/ExecutorService;
+	METHOD method_27959 createIoWorker (Ljava/lang/String;Z)Lnet/minecraft/class_10207;
 		ARG 0 namePrefix
 		ARG 1 daemon
-	METHOD method_28122 createWorker (Ljava/lang/String;)Ljava/util/concurrent/ExecutorService;
+	METHOD method_28122 createWorker (Ljava/lang/String;)Lnet/minecraft/class_10207;
 		ARG 0 name
 	METHOD method_28123 (Ljava/lang/String;Ljava/util/concurrent/atomic/AtomicInteger;Ljava/util/concurrent/ForkJoinPool;)Ljava/util/concurrent/ForkJoinWorkerThread;
 		ARG 2 pool
@@ -163,9 +161,6 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 			COMMENT the log message
 	METHOD method_33560 pause (Ljava/lang/String;)V
 		ARG 0 message
-	METHOD method_33787 debugRunnable (Ljava/lang/String;Ljava/lang/Runnable;)Ljava/lang/Runnable;
-		ARG 0 activeThreadName
-		ARG 1 task
 	METHOD method_33791 combineSafe (Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
 		COMMENT Combines a list of {@code futures} into one future that holds a list
 		COMMENT of their results.
@@ -183,9 +178,6 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 function
 	METHOD method_37153 (Ljava/nio/file/spi/FileSystemProvider;)Z
 		ARG 0 fileSystemProvider
-	METHOD method_37910 debugSupplier (Ljava/lang/String;Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
-		ARG 0 activeThreadName
-		ARG 1 supplier
 	METHOD method_38646 setMissingBreakpointHandler (Ljava/util/function/Consumer;)V
 		ARG 0 missingBreakpointHandler
 	METHOD method_38647 (Ljava/lang/String;)V
@@ -318,7 +310,7 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 0 type
 		ARG 1 value
 		ARG 2 allowPartial
-	METHOD method_55473 getDownloadWorkerExecutor ()Ljava/util/concurrent/ExecutorService;
+	METHOD method_55473 getDownloadWorkerExecutor ()Lnet/minecraft/class_10207;
 		COMMENT {@return the executor for download tasks}
 	METHOD method_56612 (Ljava/lang/Object;)Z
 		ARG 0 o
