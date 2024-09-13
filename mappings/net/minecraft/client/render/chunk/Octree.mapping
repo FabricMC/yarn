@@ -9,8 +9,17 @@ CLASS net/minecraft/class_10143 net/minecraft/client/render/chunk/Octree
 	METHOD method_62911 visit (Lnet/minecraft/class_10143$class_10148;Lnet/minecraft/class_4604;I)V
 		ARG 1 visitor
 		ARG 2 frustum
+		ARG 3 margin
 	METHOD method_62912 add (Lnet/minecraft/class_846$class_851;)Z
 		ARG 1 chunk
+	METHOD method_64061 isCenterWithin (DDDDDDI)Z
+		ARG 1 minX
+		ARG 3 minY
+		ARG 5 minZ
+		ARG 7 maxX
+		ARG 9 maxY
+		ARG 11 maxZ
+		ARG 13 margin
 	CLASS class_10144 AxisOrder
 		FIELD field_53912 x I
 		FIELD field_53913 y I
@@ -54,6 +63,9 @@ CLASS net/minecraft/class_10143 net/minecraft/client/render/chunk/Octree
 			ARG 3 northern
 		METHOD method_62921 areChildrenLeaves ()Z
 	CLASS class_10146 Leaf
+		FIELD field_54166 chunk Lnet/minecraft/class_846$class_851;
+		METHOD <init> (Lnet/minecraft/class_10143;Lnet/minecraft/class_846$class_851;)V
+			ARG 2 chunk
 	CLASS class_10147 Node
 		METHOD method_62915 getBuiltChunk ()Lnet/minecraft/class_846$class_851;
 		METHOD method_62917 visit (Lnet/minecraft/class_10143$class_10148;ZLnet/minecraft/class_4604;IIZ)V
@@ -61,9 +73,13 @@ CLASS net/minecraft/class_10143 net/minecraft/client/render/chunk/Octree
 			ARG 2 skipVisibilityCheck
 			ARG 3 frustum
 			ARG 4 depth
+			ARG 5 margin
+			ARG 6 nearCenter
 		METHOD method_62920 getBoundingBox ()Lnet/minecraft/class_238;
 	CLASS class_10148 Visitor
 		METHOD visit (Lnet/minecraft/class_10143$class_10147;ZIZ)V
 			ARG 1 node
 			ARG 2 skipVisibilityCheck
 			ARG 3 depth
+			ARG 4 nearCenter
+				COMMENT whether the node is near octree's {@linkplain Octree#centerPos center}, that is, camera pos
