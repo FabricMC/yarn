@@ -16,12 +16,14 @@ CLASS net/minecraft/class_525 net/minecraft/client/gui/screen/world/CreateWorldS
 	FIELD field_45568 symlinkFinder Lnet/minecraft/class_8580;
 	FIELD field_49557 layout Lnet/minecraft/class_8132;
 	FIELD field_49902 TAB_HEADER_BACKGROUND_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_54390 callback Lnet/minecraft/class_10241;
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_437;Lnet/minecraft/class_7193;Ljava/util/Optional;Ljava/util/OptionalLong;Lnet/minecraft/class_10241;)V
 		ARG 1 client
 		ARG 2 parent
 		ARG 3 generatorOptionsHolder
 		ARG 4 defaultWorldType
 		ARG 5 seed
+		ARG 6 callback
 	METHOD method_19921 (Lnet/minecraft/class_4185;)V
 		ARG 1 button
 	METHOD method_19922 (Lnet/minecraft/class_4185;)V
@@ -44,7 +46,7 @@ CLASS net/minecraft/class_525 net/minecraft/client/gui/screen/world/CreateWorldS
 		ARG 2 dataPackFile
 	METHOD method_29689 (Ljava/nio/file/Path;)V
 		ARG 0 path
-	METHOD method_29693 getDataPackTempDir ()Ljava/nio/file/Path;
+	METHOD method_29693 getOrCreateDataPackTempDir ()Ljava/nio/file/Path;
 	METHOD method_29694 openPackScreen (Lnet/minecraft/class_7712;)V
 		ARG 1 dataConfiguration
 	METHOD method_29695 clearDataPackTempDir ()V
@@ -65,7 +67,12 @@ CLASS net/minecraft/class_525 net/minecraft/client/gui/screen/world/CreateWorldS
 	METHOD method_40213 createLevelInfo (Z)Lnet/minecraft/class_1940;
 		ARG 1 debugWorld
 	METHOD method_41847 startServer (Lnet/minecraft/class_7780;Lnet/minecraft/class_5219;)Z
+		ARG 1 combinedDynamicRegistries
+		ARG 2 saveProperties
 	METHOD method_41848 createSession (Lnet/minecraft/class_310;Ljava/lang/String;Ljava/nio/file/Path;)Ljava/util/Optional;
+		ARG 0 client
+		ARG 1 worldDirectoryName
+		ARG 2 dataPackTempDir
 	METHOD method_41849 createServerConfig (Lnet/minecraft/class_3283;Lnet/minecraft/class_7712;)Lnet/minecraft/class_7237$class_6906;
 		ARG 0 dataPackManager
 		ARG 1 dataConfiguration
@@ -120,6 +127,7 @@ CLASS net/minecraft/class_525 net/minecraft/client/gui/screen/world/CreateWorldS
 		ARG 2 settingsSupplier
 		ARG 3 generatorOptionsFactory
 		ARG 4 presetKey
+		ARG 5 callback
 	METHOD method_64245 (Lnet/minecraft/class_10221;Lnet/minecraft/class_6860;Lnet/minecraft/class_5350;Lnet/minecraft/class_7780;Lnet/minecraft/class_7749;)Lnet/minecraft/class_7193;
 		ARG 1 resourceManager
 		ARG 2 dataPackContents
@@ -132,6 +140,28 @@ CLASS net/minecraft/class_525 net/minecraft/client/gui/screen/world/CreateWorldS
 	METHOD method_64248 showTestWorld (Lnet/minecraft/class_310;Lnet/minecraft/class_437;)V
 		ARG 0 client
 		ARG 1 parent
+	METHOD method_64368 show (Lnet/minecraft/class_310;Lnet/minecraft/class_437;Lnet/minecraft/class_10241;)V
+		ARG 0 client
+		ARG 1 parent
+		ARG 2 callback
+	METHOD method_64369 (Lnet/minecraft/class_525;Lnet/minecraft/class_7780;Lnet/minecraft/class_31;Ljava/nio/file/Path;)Z
+		ARG 0 screen
+		ARG 1 combinedDynamicRegistries
+		ARG 2 levelProperties
+		ARG 3 dataPackTempDir
+	METHOD method_64370 createAndClearTempDir (Lnet/minecraft/class_7780;Lnet/minecraft/class_31;)V
+		ARG 1 combinedDynamicRegistries
+		ARG 2 levelProperties
+	METHOD method_64371 (Lnet/minecraft/class_525;Lnet/minecraft/class_7780;Lnet/minecraft/class_31;Ljava/nio/file/Path;)Z
+		ARG 0 screen
+		ARG 1 combinedDynamicRegistries
+		ARG 2 levelProperties
+		ARG 3 dataPackTempDir
+	METHOD method_64375 (Lnet/minecraft/class_525;Lnet/minecraft/class_7780;Lnet/minecraft/class_31;Ljava/nio/file/Path;)Z
+		ARG 0 screen
+		ARG 1 combinedDynamicRegistries
+		ARG 2 levelProperties
+		ARG 3 dataPackTempDir
 	CLASS class_8093 GameTab
 		FIELD field_42175 GAME_TAB_TITLE_TEXT Lnet/minecraft/class_2561;
 		FIELD field_42176 ALLOW_COMMANDS_TEXT Lnet/minecraft/class_2561;
