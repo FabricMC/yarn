@@ -744,6 +744,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT projectiles are always allowed to modify the world.
 		COMMENT
 		COMMENT @see World#canPlayerModifyAt
+		ARG 1 world
 		ARG 2 pos
 	METHOD method_36975 playExtinguishSound ()V
 		COMMENT Plays the {@link
@@ -1072,7 +1073,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #hasControllingPassenger
 		COMMENT @see #getPassengerList
 		COMMENT @see #getFirstPassenger
-	METHOD method_5643 damage (Lnet/minecraft/class_1282;)Z
+	METHOD method_5643 damageOnClient (Lnet/minecraft/class_1282;)Z
 		COMMENT Applies a damage to this entity. The exact implementation differs between subclasses.
 		COMMENT
 		COMMENT <p>{@link net.minecraft.entity.LivingEntity} has health value, and damaging the entity decreases it. This
@@ -1217,6 +1218,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5670 baseTick ()V
 	METHOD method_5671 getCommandSource (Lnet/minecraft/class_3218;)Lnet/minecraft/class_2168;
 		COMMENT {@return a command source which represents this entity}
+		ARG 1 world
 	METHOD method_5672 getHighSpeedSplashSound ()Lnet/minecraft/class_3414;
 	METHOD method_5675 isPushedByFluids ()Z
 		COMMENT {@return whether the entity is pushed by fluids}
@@ -1317,6 +1319,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #dropItem(ItemConvertible)
 		COMMENT @see #dropItem(ItemConvertible, int)
 		COMMENT @see #dropStack(ItemStack)
+		ARG 1 world
+		ARG 2 stack
+		ARG 3 offsetY
 	METHOD method_56990 applyGravity ()V
 	METHOD method_5700 onBubbleColumnSurfaceCollision (Z)V
 		COMMENT Called when the entity collides with a bubble column with an air above.
@@ -1356,6 +1361,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #dropItem(ItemConvertible, int)
 		COMMENT @see #dropStack(ItemStack)
 		COMMENT @see #dropStack(ItemStack, float)
+		ARG 1 world
+		ARG 2 item
 	METHOD method_5707 squaredDistanceTo (Lnet/minecraft/class_243;)D
 		COMMENT {@return the squared distance between this entity and the given position}
 		ARG 1 vector
@@ -1631,6 +1638,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT <p>This drops loot when applicable, and emits the {@link
 		COMMENT net.minecraft.world.event.GameEvent#ENTITY_DIE} game event.
+		ARG 1 world
 	METHOD method_5769 getHoverEvent ()Lnet/minecraft/class_2568;
 		COMMENT {@return the hover event referencing this entity}
 	METHOD method_5770 getEntityWorld ()Lnet/minecraft/class_1937;
@@ -1676,6 +1684,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #dropItem(ItemConvertible)
 		COMMENT @see #dropItem(ItemConvertible, int)
 		COMMENT @see #dropStack(ItemStack, float)
+		ARG 1 world
+		ARG 2 stack
 	METHOD method_5776 isFlappingWings ()Z
 		COMMENT {@return whether the entity is flapping their wings}
 		COMMENT
@@ -2109,6 +2119,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #dropItem(ItemConvertible)
 		COMMENT @see #dropStack(ItemStack)
 		COMMENT @see #dropStack(ItemStack, float)
+		ARG 1 world
+		ARG 2 item
+		ARG 3 offsetY
 	METHOD method_5871 getTargetingMargin ()F
 		COMMENT {@return the margin around the entity's bounding box where the entity
 		COMMENT targeting is still successful}
@@ -2179,7 +2192,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT <p>To despawn this entity, call {@link #discard}.
 		COMMENT
 		COMMENT @see #discard
-	METHOD method_5991 getLootTable ()Ljava/util/Optional;
+	METHOD method_5991 getLootTableKey ()Ljava/util/Optional;
 	METHOD method_59920 findCollisionsForMovement (Lnet/minecraft/class_1297;Lnet/minecraft/class_1937;Ljava/util/List;Lnet/minecraft/class_238;)Ljava/util/List;
 		ARG 0 entity
 		ARG 1 world
@@ -2228,6 +2241,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_61410 shouldTickBlockCollision ()Z
 	METHOD method_61411 getLastRenderPos ()Lnet/minecraft/class_243;
 	METHOD method_61412 setPosition (Lnet/minecraft/class_10182;Ljava/util/Set;)V
+		ARG 1 pos
+		ARG 2 flags
 	METHOD method_61414 getLerpedPitch (F)F
 		ARG 1 tickDelta
 	METHOD method_61415 getLerpedYaw (F)F
@@ -2262,6 +2277,18 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 oldPos
 		ARG 2 newPos
 	METHOD method_64270 shouldPlayBurnSoundInLava ()Z
+	METHOD method_64397 damage (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;F)Z
+		ARG 1 world
+		ARG 2 source
+		ARG 3 amount
+	METHOD method_64419 damage (Lnet/minecraft/class_1282;F)V
+		ARG 1 source
+		ARG 2 amount
+	METHOD method_64420 damageOnBothSides (Lnet/minecraft/class_1282;F)Z
+		ARG 1 source
+		ARG 2 amount
+	METHOD method_64421 isAlwaysInvulnerableTo (Lnet/minecraft/class_1282;)Z
+		ARG 1 source
 	METHOD method_7325 isSpectator ()Z
 		COMMENT {@return whether the entity is a spectator}
 		COMMENT

@@ -97,7 +97,11 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6285 effectsChanged Z
 	FIELD field_6287 movementSpeed F
 	METHOD method_16077 dropLoot (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;Z)V
+		ARG 1 world
+		ARG 2 damageSource
+		ARG 3 causedByPlayer
 	METHOD method_16078 dropInventory (Lnet/minecraft/class_3218;)V
+		ARG 1 world
 	METHOD method_16080 drop (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;)V
 		ARG 1 world
 		ARG 2 damageSource
@@ -168,6 +172,8 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT <p>To control the details of experience dropping, consider overriding
 		COMMENT {@link #shouldAlwaysDropXp()}, {@link #shouldDropXp()}, and
 		COMMENT {@link #getXpToDrop()}.
+		ARG 1 world
+		ARG 2 attacker
 	METHOD method_24518 isHolding (Lnet/minecraft/class_1792;)Z
 		COMMENT Checks if this entity is holding a certain item.
 		COMMENT
@@ -357,6 +363,8 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 slot
 		ARG 2 stack
 	METHOD method_5679 isInvulnerableTo (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;)Z
+		ARG 1 world
+		ARG 2 source
 	METHOD method_56991 canUseSlot (Lnet/minecraft/class_1304;)Z
 		ARG 1 slot
 	METHOD method_56992 isInCreativeMode ()Z
@@ -519,6 +527,8 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6068 getMainArm ()Lnet/minecraft/class_1306;
 	METHOD method_6069 clearPotionSwirls ()V
 	METHOD method_60699 onRemoval (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297$class_5529;)V
+		ARG 1 world
+		ARG 2 reason
 	METHOD method_6070 tickCramming ()V
 	METHOD method_6071 shouldAlwaysDropXp ()Z
 		COMMENT Returns if this entity may always drop experience, skipping any
@@ -530,6 +540,9 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6073 setAbsorptionAmount (F)V
 		ARG 1 absorptionAmount
 	METHOD method_6074 applyDamage (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;F)V
+		ARG 1 world
+		ARG 2 source
+		ARG 3 amount
 	METHOD method_6075 stopUsingItem ()V
 	METHOD method_6076 tickActiveItemStack ()V
 	METHOD method_6077 canEnterTrapdoor (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Z
@@ -610,6 +623,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT @see #dropXp
 		COMMENT @see #shouldAlwaysDropXp()
 		COMMENT @see #shouldDropXp()
+		ARG 1 world
 	METHOD method_6111 removeStatusEffectInternal (Lnet/minecraft/class_6880;)Lnet/minecraft/class_1293;
 		COMMENT Removes a status effect from this entity without calling any listener.
 		COMMENT
@@ -634,6 +648,8 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6119 tickHandSwing ()V
 	METHOD method_6120 getBaseMovementSpeedMultiplier ()F
 	METHOD method_6121 tryAttack (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)Z
+		ARG 1 world
+		ARG 2 target
 	METHOD method_6122 setStackInHand (Lnet/minecraft/class_1268;Lnet/minecraft/class_1799;)V
 		ARG 1 hand
 		ARG 2 stack
@@ -656,6 +672,10 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 2 amount
 	METHOD method_61417 travelGliding ()V
 	METHOD method_61419 forEachShearedItem (Lnet/minecraft/class_3218;Lnet/minecraft/class_5321;Lnet/minecraft/class_1799;Ljava/util/function/BiConsumer;)V
+		ARG 1 world
+		ARG 2 lootTableKey
+		ARG 3 tool
+		ARG 4 lootConsumer
 	METHOD method_61420 getStackInArm (Lnet/minecraft/class_1306;)Lnet/minecraft/class_1799;
 		ARG 1 arm
 	METHOD method_61421 (Lnet/minecraft/class_5131;Lnet/minecraft/class_6880;Lnet/minecraft/class_1322;)V
@@ -692,9 +712,22 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_63629 (Lnet/minecraft/class_1304;)Z
 		ARG 1 slot
 	METHOD method_64169 forEachGiftedItem (Lnet/minecraft/class_3218;Lnet/minecraft/class_5321;Ljava/util/function/BiConsumer;)Z
+		ARG 1 world
+		ARG 2 lootTableKey
+		ARG 3 lootConsumer
 	METHOD method_64170 forEachGeneratedItem (Lnet/minecraft/class_3218;Lnet/minecraft/class_5321;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Z
+		ARG 1 world
+		ARG 2 lootTableKey
+		ARG 3 lootContextParametersFactory
+		ARG 4 lootConsumer
 	METHOD method_64171 (Lnet/minecraft/class_1799;Lnet/minecraft/class_8567$class_8568;)Lnet/minecraft/class_8567;
 		ARG 2 parameterSetBuilder
 	METHOD method_64172 (Lnet/minecraft/class_8567$class_8568;)Lnet/minecraft/class_8567;
 		ARG 1 parameterSetBuilder
+	METHOD method_64399 insertOrDropStack (Lnet/minecraft/class_1799;)V
+		ARG 1 stack
+	METHOD method_64448 (Ljava/util/function/BiConsumer;Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;)V
+		ARG 2 stack
+	METHOD method_64449 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;)V
+		ARG 2 stack
 	CLASS class_6823 FallSounds
