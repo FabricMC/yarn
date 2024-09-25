@@ -732,7 +732,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 yaw
 	METHOD method_36457 setPitch (F)V
 		ARG 1 pitch
-	METHOD method_36971 canModifyAt (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)Z
+	METHOD method_36971 canModifyAt (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)Z
 		COMMENT {@return whether the entity can modify the world at {@code pos}}
 		COMMENT
 		COMMENT <p>This returns {@code true} for most entities. Players check {@link
@@ -744,7 +744,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT projectiles are always allowed to modify the world.
 		COMMENT
 		COMMENT @see World#canPlayerModifyAt
-		ARG 1 world
 		ARG 2 pos
 	METHOD method_36975 playExtinguishSound ()V
 		COMMENT Plays the {@link
@@ -1073,7 +1072,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #hasControllingPassenger
 		COMMENT @see #getPassengerList
 		COMMENT @see #getFirstPassenger
-	METHOD method_5643 damage (Lnet/minecraft/class_1282;F)Z
+	METHOD method_5643 damage (Lnet/minecraft/class_1282;)Z
 		COMMENT Applies a damage to this entity. The exact implementation differs between subclasses.
 		COMMENT
 		COMMENT <p>{@link net.minecraft.entity.LivingEntity} has health value, and damaging the entity decreases it. This
@@ -1093,7 +1092,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #isInvulnerableTo
 		COMMENT @see net.minecraft.entity.LivingEntity#modifyAppliedDamage
 		ARG 1 source
-		ARG 2 amount
 	METHOD method_5644 onPassengerLookAround (Lnet/minecraft/class_1297;)V
 		ARG 1 passenger
 	METHOD method_5645 isTeamPlayer (Lnet/minecraft/class_270;)Z
@@ -1217,7 +1215,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #setAir
 		COMMENT @see net.minecraft.entity.mob.WaterCreatureEntity#tickWaterBreathingAir
 	METHOD method_5670 baseTick ()V
-	METHOD method_5671 getCommandSource ()Lnet/minecraft/class_2168;
+	METHOD method_5671 getCommandSource (Lnet/minecraft/class_3218;)Lnet/minecraft/class_2168;
 		COMMENT {@return a command source which represents this entity}
 	METHOD method_5672 getHighSpeedSplashSound ()Lnet/minecraft/class_3414;
 	METHOD method_5675 isPushedByFluids ()Z
@@ -1226,24 +1224,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @apiNote Aquatic mobs should override this to return {@code false}.
 		COMMENT Players are not pushed by fluids if they can fly (e.g. because of game mode).
 	METHOD method_5676 getBurningDuration ()I
-	METHOD method_5679 isInvulnerableTo (Lnet/minecraft/class_1282;)Z
-		COMMENT {@return whether the entity is invulnerable to {@code damageSource}}
-		COMMENT
-		COMMENT <p>This can be overridden to make the entity invulnerable to some damages, but
-		COMMENT {@code super.isInvulnerableTo()} should be called in this case.
-		COMMENT
-		COMMENT @implNote Entity is invulnerable to all damages if it is {@linkplain #isRemoved
-		COMMENT removed}, and is invulnerable to all damages except {@link
-		COMMENT net.minecraft.entity.damage.DamageTypes#OUT_OF_WORLD}
-		COMMENT or damages from creative mode players if the entity is {@linkplain #isInvulnerable
-		COMMENT invulnerable}. This also checks {@link #isFireImmune}.
-		COMMENT
-		COMMENT @see net.minecraft.entity.damage.DamageSources
-		COMMENT @see net.minecraft.registry.tag.DamageTypeTags
-		COMMENT @see #isFireImmune
-		COMMENT @see #damage
-		COMMENT @see #isInvulnerable
-		ARG 1 damageSource
 	METHOD method_5680 canBeSpectated (Lnet/minecraft/class_3222;)Z
 		COMMENT {@return whether {@code spectator} can spectate this entity}
 		COMMENT
@@ -1283,25 +1263,12 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #streamSelfAndPassengers
 		COMMENT @see #streamPassengersAndSelf
 		COMMENT @see #getPassengersDeep
-	METHOD method_5687 hasPermissionLevel (I)Z
-		COMMENT {@return whether this entity has at least permission level {@code permissionLevel}}
-		COMMENT
-		COMMENT <p>This is always {@code false} for non-players.
-		COMMENT
-		COMMENT @see #getPermissionLevel
-		ARG 1 permissionLevel
 	METHOD method_5688 interact (Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
 		COMMENT Called when a player interacts with this entity.
 		ARG 1 player
 			COMMENT the player
 		ARG 2 hand
 			COMMENT the hand the player used to interact with this entity
-	METHOD method_5691 getPermissionLevel ()I
-		COMMENT {@return the permission level of this entity}
-		COMMENT
-		COMMENT <p>This is {@code 0} for non-players.
-		COMMENT
-		COMMENT @see #hasPermissionLevel
 	METHOD method_56918 onExplodedBy (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
 	METHOD method_5692 updateMovementInFluid (Lnet/minecraft/class_6862;D)Z
@@ -1341,7 +1308,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see World#canPlayerModifyAt
 		ARG 1 attacker
 	METHOD method_56989 getFinalGravity ()D
-	METHOD method_5699 dropStack (Lnet/minecraft/class_1799;F)Lnet/minecraft/class_1542;
+	METHOD method_5699 dropStack (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;F)Lnet/minecraft/class_1542;
 		COMMENT Drops {@code stack} at the entity's position with the given Y offset.
 		COMMENT
 		COMMENT @return the spawned item entity, or {@code null} if the stack is empty or if called
@@ -1350,8 +1317,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #dropItem(ItemConvertible)
 		COMMENT @see #dropItem(ItemConvertible, int)
 		COMMENT @see #dropStack(ItemStack)
-		ARG 1 stack
-		ARG 2 yOffset
 	METHOD method_56990 applyGravity ()V
 	METHOD method_5700 onBubbleColumnSurfaceCollision (Z)V
 		COMMENT Called when the entity collides with a bubble column with an air above.
@@ -1383,7 +1348,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 predicate
 	METHOD method_5705 getYaw (F)F
 		ARG 1 tickDelta
-	METHOD method_5706 dropItem (Lnet/minecraft/class_1935;)Lnet/minecraft/class_1542;
+	METHOD method_5706 dropItem (Lnet/minecraft/class_3218;Lnet/minecraft/class_1935;)Lnet/minecraft/class_1542;
 		COMMENT Drops one {@code item} at the entity's position.
 		COMMENT
 		COMMENT @return the spawned item entity, or {@code null} if called on the client
@@ -1391,7 +1356,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #dropItem(ItemConvertible, int)
 		COMMENT @see #dropStack(ItemStack)
 		COMMENT @see #dropStack(ItemStack, float)
-		ARG 1 item
 	METHOD method_5707 squaredDistanceTo (Lnet/minecraft/class_243;)D
 		COMMENT {@return the squared distance between this entity and the given position}
 		ARG 1 vector
@@ -1662,7 +1626,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @see #isInvisibleTo
 		COMMENT @see #setInvisible
-	METHOD method_5768 kill ()V
+	METHOD method_5768 kill (Lnet/minecraft/class_3218;)V
 		COMMENT Kills the entity.
 		COMMENT
 		COMMENT <p>This drops loot when applicable, and emits the {@link
@@ -1703,7 +1667,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 4 blockState
 		ARG 5 fluidState
 		ARG 6 max
-	METHOD method_5775 dropStack (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1542;
+	METHOD method_5775 dropStack (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;)Lnet/minecraft/class_1542;
 		COMMENT Drops {@code stack} at the entity's position.
 		COMMENT
 		COMMENT @return the spawned item entity, or {@code null} if the stack is empty or if called
@@ -1712,7 +1676,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #dropItem(ItemConvertible)
 		COMMENT @see #dropItem(ItemConvertible, int)
 		COMMENT @see #dropStack(ItemStack, float)
-		ARG 1 stack
 	METHOD method_5776 isFlappingWings ()Z
 		COMMENT {@return whether the entity is flapping their wings}
 		COMMENT
@@ -2138,7 +2101,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5867 calculateNextStepSoundDistance ()F
 	METHOD method_5869 isSubmergedInWater ()Z
 		COMMENT {@return whether this entity's hitbox is fully submerged in water}
-	METHOD method_5870 dropItem (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1542;
+	METHOD method_5870 dropItem (Lnet/minecraft/class_3218;Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1542;
 		COMMENT Drops one {@code item} at the entity's position with the given Y offset.
 		COMMENT
 		COMMENT @return the spawned item entity, or {@code null} if called on the client
@@ -2146,8 +2109,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #dropItem(ItemConvertible)
 		COMMENT @see #dropStack(ItemStack)
 		COMMENT @see #dropStack(ItemStack, float)
-		ARG 1 item
-		ARG 2 yOffset
 	METHOD method_5871 getTargetingMargin ()F
 		COMMENT {@return the margin around the entity's bounding box where the entity
 		COMMENT targeting is still successful}
@@ -2266,8 +2227,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_61409 tickBlockCollision ()V
 	METHOD method_61410 shouldTickBlockCollision ()Z
 	METHOD method_61411 getLastRenderPos ()Lnet/minecraft/class_243;
-	METHOD method_61412 setPosition (Lnet/minecraft/class_5454;)V
-		ARG 1 teleportTarget
+	METHOD method_61412 setPosition (Lnet/minecraft/class_10182;Ljava/util/Set;)V
 	METHOD method_61414 getLerpedPitch (F)F
 		ARG 1 tickDelta
 	METHOD method_61415 getLerpedYaw (F)F
