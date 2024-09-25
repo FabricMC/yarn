@@ -744,6 +744,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT projectiles are always allowed to modify the world.
 		COMMENT
 		COMMENT @see World#canPlayerModifyAt
+		ARG 1 world
 		ARG 2 pos
 	METHOD method_36975 playExtinguishSound ()V
 		COMMENT Plays the {@link
@@ -1072,25 +1073,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #hasControllingPassenger
 		COMMENT @see #getPassengerList
 		COMMENT @see #getFirstPassenger
-	METHOD method_5643 damage (Lnet/minecraft/class_1282;)Z
-		COMMENT Applies a damage to this entity. The exact implementation differs between subclasses.
-		COMMENT
-		COMMENT <p>{@link net.minecraft.entity.LivingEntity} has health value, and damaging the entity decreases it. This
-		COMMENT also handles shields, extra damage to helmets for falling blocks, setting the attacker,
-		COMMENT playing hurt sound, etc.
-		COMMENT
-		COMMENT <p>Some entities like {@link net.minecraft.entity.ItemEntity} also have health value, which the overridden
-		COMMENT method decrements. There also exist several entities, like {@link
-		COMMENT net.minecraft.entity.decoration.EndCrystalEntity}, where any damage discards the entity
-		COMMENT (perhaps with an explosion).
-		COMMENT
-		COMMENT <p>If this is overridden, it must check the result of {@link #isInvulnerableTo} and
-		COMMENT return early.
-		COMMENT
-		COMMENT @return whether the entity was actually damaged
-		COMMENT
-		COMMENT @see #isInvulnerableTo
-		COMMENT @see net.minecraft.entity.LivingEntity#modifyAppliedDamage
+	METHOD method_5643 clientDamage (Lnet/minecraft/class_1282;)Z
 		ARG 1 source
 	METHOD method_5644 onPassengerLookAround (Lnet/minecraft/class_1297;)V
 		ARG 1 passenger
@@ -1317,6 +1300,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #dropItem(ItemConvertible)
 		COMMENT @see #dropItem(ItemConvertible, int)
 		COMMENT @see #dropStack(ItemStack)
+		ARG 1 world
+		ARG 2 stack
+		ARG 3 yOffset
 	METHOD method_56990 applyGravity ()V
 	METHOD method_5700 onBubbleColumnSurfaceCollision (Z)V
 		COMMENT Called when the entity collides with a bubble column with an air above.
@@ -1631,6 +1617,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT <p>This drops loot when applicable, and emits the {@link
 		COMMENT net.minecraft.world.event.GameEvent#ENTITY_DIE} game event.
+		ARG 1 world
 	METHOD method_5769 getHoverEvent ()Lnet/minecraft/class_2568;
 		COMMENT {@return the hover event referencing this entity}
 	METHOD method_5770 getEntityWorld ()Lnet/minecraft/class_1937;
@@ -2262,6 +2249,36 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 oldPos
 		ARG 2 newPos
 	METHOD method_64270 shouldPlayBurnSoundInLava ()Z
+	METHOD method_64397 damage (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;F)Z
+		COMMENT Applies a damage to this entity. The exact implementation differs between subclasses.
+		COMMENT
+		COMMENT <p>{@link net.minecraft.entity.LivingEntity} has health value, and damaging the entity decreases it. This
+		COMMENT also handles shields, extra damage to helmets for falling blocks, setting the attacker,
+		COMMENT playing hurt sound, etc.
+		COMMENT
+		COMMENT <p>Some entities like {@link net.minecraft.entity.ItemEntity} also have health value, which the overridden
+		COMMENT method decrements. There also exist several entities, like {@link
+		COMMENT net.minecraft.entity.decoration.EndCrystalEntity}, where any damage discards the entity
+		COMMENT (perhaps with an explosion).
+		COMMENT
+		COMMENT <p>If this is overridden, it must check the result of {@link #isInvulnerableTo} and
+		COMMENT return early.
+		COMMENT
+		COMMENT @return whether the entity was actually damaged
+		COMMENT
+		COMMENT @see #isInvulnerableTo
+		COMMENT @see net.minecraft.entity.LivingEntity#modifyAppliedDamage
+		ARG 1 world
+		ARG 2 source
+		ARG 3 amount
+	METHOD method_64419 serverDamage (Lnet/minecraft/class_1282;F)V
+		ARG 1 source
+		ARG 2 amount
+	METHOD method_64420 sidedDamage (Lnet/minecraft/class_1282;F)Z
+		ARG 1 source
+		ARG 2 amount
+	METHOD method_64421 isInvulnerableTo (Lnet/minecraft/class_1282;)Z
+		ARG 1 damageSource
 	METHOD method_7325 isSpectator ()Z
 		COMMENT {@return whether the entity is a spectator}
 		COMMENT
