@@ -2,7 +2,13 @@ CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
 	COMMENT A recipe manager allows easier use of recipes, such as finding matches and
 	COMMENT remainders. It is also integrated with a recipe loader, which loads recipes
 	COMMENT from data packs' JSON files.
+	FIELD field_54637 registries Lnet/minecraft/class_7225$class_7874;
+	FIELD field_54638 preparedRecipes Lnet/minecraft/class_10289;
+	FIELD field_54639 propertySets Ljava/util/Map;
+	FIELD field_54640 stonecutterRecipes Lnet/minecraft/class_10291$class_10293;
 	FIELD field_9027 LOGGER Lorg/slf4j/Logger;
+	METHOD <init> (Lnet/minecraft/class_7225$class_7874;)V
+		ARG 1 registries
 	METHOD method_17720 deserialize (Lnet/minecraft/class_5321;Lcom/google/gson/JsonObject;Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_8786;
 		COMMENT Reads a recipe from a JSON object.
 		COMMENT
@@ -13,12 +19,14 @@ CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
 		COMMENT
 		COMMENT @throws com.google.gson.JsonParseException if the recipe JSON is invalid
 		COMMENT @return the read recipe
+		ARG 0 key
 		ARG 1 json
 		ARG 2 registries
 	METHOD method_42299 getFirstMatch (Lnet/minecraft/class_3956;Lnet/minecraft/class_9695;Lnet/minecraft/class_1937;Lnet/minecraft/class_5321;)Ljava/util/Optional;
 		ARG 1 type
 		ARG 2 input
 		ARG 3 world
+		ARG 4 recipe
 	METHOD method_42302 createCachedMatchGetter (Lnet/minecraft/class_3956;)Lnet/minecraft/class_1863$class_7266;
 		COMMENT Creates a cached match getter. This is optimized for getting matches of the same
 		COMMENT recipe repeatedly, such as furnaces.
@@ -27,11 +35,36 @@ CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
 		COMMENT {@return a recipe with the given {@code id} and {@code type}, or empty if there is no such recipe}
 		ARG 1 type
 			COMMENT the type of the desired recipe
+		ARG 2 key
 	METHOD method_59993 getFirstMatch (Lnet/minecraft/class_3956;Lnet/minecraft/class_9695;Lnet/minecraft/class_1937;Lnet/minecraft/class_8786;)Ljava/util/Optional;
 		ARG 1 type
 		ARG 2 input
 		ARG 3 world
 		ARG 4 recipe
+	METHOD method_64679 (Lnet/minecraft/class_5321;Ljava/util/function/Consumer;)V
+		ARG 1 key
+	METHOD method_64681 intitialize (Lnet/minecraft/class_7699;)V
+		ARG 1 features
+	METHOD method_64682 isEnabled (Lnet/minecraft/class_7699;Lnet/minecraft/class_1856;)Z
+		ARG 0 features
+		ARG 1 ingredient
+	METHOD method_64683 filterIngredients (Lnet/minecraft/class_7699;Ljava/util/List;)Ljava/util/List;
+		ARG 0 features
+		ARG 1 ingredients
+	METHOD method_64684 (Lnet/minecraft/class_7699;Lnet/minecraft/class_6880;)Z
+		ARG 1 entry
+	METHOD method_64688 (Ljava/lang/Iterable;Lnet/minecraft/class_7699;)Ljava/util/List;
+		ARG 0 recipes
+		ARG 1 features
+	METHOD method_64689 (Ljava/util/List;Lnet/minecraft/class_2960;Lnet/minecraft/class_1860;)V
+		ARG 1 id
+		ARG 2 recipe
+	METHOD method_64690 (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Lnet/minecraft/class_7699;Ljava/util/List;Lnet/minecraft/class_8786;)V
+		ARG 9 entry
+	METHOD method_64692 getPropertySets ()Ljava/util/Map;
+	METHOD method_64693 (Lnet/minecraft/class_7699;Lnet/minecraft/class_1856;)Z
+		ARG 1 ingredient
+	METHOD method_64694 getStonecutterRecipeForSync ()Lnet/minecraft/class_10291$class_10293;
 	METHOD method_8126 values ()Ljava/util/Collection;
 		COMMENT {@return all recipes in this manager}
 		COMMENT
@@ -39,6 +72,7 @@ CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
 		COMMENT returned set does not affect this manager.
 	METHOD method_8130 get (Lnet/minecraft/class_5321;)Ljava/util/Optional;
 		COMMENT {@return a recipe with the given {@code id}, or empty if there is no such recipe}
+		ARG 1 key
 	METHOD method_8132 getFirstMatch (Lnet/minecraft/class_3956;Lnet/minecraft/class_9695;Lnet/minecraft/class_1937;)Ljava/util/Optional;
 		COMMENT {@return a recipe of the given {@code type} that match the given
 		COMMENT {@code inventory} and {@code world}}
@@ -56,3 +90,4 @@ CLASS net/minecraft/class_1863 net/minecraft/recipe/RecipeManager
 	CLASS class_7266 MatchGetter
 		METHOD method_42303 getFirstMatch (Lnet/minecraft/class_9695;Lnet/minecraft/class_3218;)Ljava/util/Optional;
 			ARG 1 input
+			ARG 2 world
