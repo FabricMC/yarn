@@ -1,11 +1,20 @@
 CLASS net/minecraft/class_3441 net/minecraft/server/network/ServerRecipeBook
 	FIELD field_15303 LOGGER Lorg/slf4j/Logger;
 	FIELD field_29820 RECIPE_BOOK_KEY Ljava/lang/String;
+	FIELD field_54550 unlocked Ljava/util/Set;
+	FIELD field_54551 highlighted Ljava/util/Set;
+		COMMENT Contains recipes that play an animation when first viewed on the recipe book.
+		COMMENT
+		COMMENT <p>This is saved under {@code toBeDisplayed} key in the player NBT data.
+	FIELD field_54552 collector Lnet/minecraft/class_3441$class_10271;
+	METHOD <init> (Lnet/minecraft/class_3441$class_10271;)V
+		ARG 1 collector
 	METHOD method_14900 lockRecipes (Ljava/util/Collection;Lnet/minecraft/class_3222;)I
 		ARG 1 recipes
 		ARG 2 player
 	METHOD method_14901 readNbt (Lnet/minecraft/class_2487;Ljava/util/function/Predicate;)V
 		ARG 1 nbt
+		ARG 2 validPredicate
 	METHOD method_14902 toNbt ()Lnet/minecraft/class_2487;
 	METHOD method_14903 unlockRecipes (Ljava/util/Collection;Lnet/minecraft/class_3222;)I
 		ARG 1 recipes
@@ -15,4 +24,26 @@ CLASS net/minecraft/class_3441 net/minecraft/server/network/ServerRecipeBook
 	METHOD method_20732 handleList (Lnet/minecraft/class_2499;Ljava/util/function/Consumer;Ljava/util/function/Predicate;)V
 		ARG 1 list
 		ARG 2 handler
+		ARG 3 validPredicate
+	METHOD method_64588 unlock (Lnet/minecraft/class_5321;)V
+		ARG 1 recipeKey
 	METHOD method_64589 copyFrom (Lnet/minecraft/class_3441;)V
+		ARG 1 recipeBook
+	METHOD method_64590 (Ljava/util/List;Lnet/minecraft/class_5321;Lnet/minecraft/class_10297;)V
+		ARG 3 display
+	METHOD method_64591 (Ljava/util/List;Lnet/minecraft/class_8786;Lnet/minecraft/class_10297;)V
+		ARG 2 display
+	METHOD method_64592 (Ljava/util/List;Lnet/minecraft/class_10297;)V
+		ARG 1 display
+	METHOD method_64593 isUnlocked (Lnet/minecraft/class_5321;)Z
+		ARG 1 recipeKey
+	METHOD method_64594 lock (Lnet/minecraft/class_5321;)V
+		ARG 1 recipeKey
+	METHOD method_64595 unmarkHighlighted (Lnet/minecraft/class_5321;)V
+		ARG 1 recipeKey
+	METHOD method_64596 markHighlighted (Lnet/minecraft/class_5321;)V
+		ARG 1 recipeKey
+	CLASS class_10271 DisplayCollector
+		METHOD displaysForRecipe (Lnet/minecraft/class_5321;Ljava/util/function/Consumer;)V
+			ARG 1 recipeKey
+			ARG 2 adder
