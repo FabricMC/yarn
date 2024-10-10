@@ -151,6 +151,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_51994 portalManager Lnet/minecraft/class_9787;
 	FIELD field_52442 collidedBlocks Ljava/util/Set;
 	FIELD field_54946 onFire Z
+	FIELD field_54947 queuedCollisionChecks Ljava/util/List;
+	FIELD field_54948 collidedBlockPositions Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_5951 ridingCooldown I
 	FIELD field_5952 onGround Z
 	FIELD field_5953 firstUpdate Z
@@ -2252,7 +2254,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_64166 tickBlockCollision (Lnet/minecraft/class_243;Lnet/minecraft/class_243;)V
 		ARG 1 lastRenderPos
 		ARG 2 pos
-	METHOD method_64168 checkBlockCollision (Lnet/minecraft/class_243;Lnet/minecraft/class_243;)V
+	METHOD method_64168 queueBlockCollisionCheck (Lnet/minecraft/class_243;Lnet/minecraft/class_243;)V
 		ARG 1 oldPos
 		ARG 2 newPos
 	METHOD method_64270 shouldPlayBurnSoundInLava ()Z
@@ -2304,6 +2306,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_64615 onRemove (Lnet/minecraft/class_1297$class_5529;)V
 		COMMENT Called when the entity is about to be removed.
 		ARG 1 reason
+	METHOD method_65037 checkBlockCollision (Ljava/util/List;Ljava/util/Set;)V
+		ARG 1 queuedCollisionChecks
+		ARG 2 collidedBlocks
 	METHOD method_65038 isControlledByPlayer ()Z
 	METHOD method_65039 (Lnet/minecraft/class_2680;)Z
 		ARG 0 state
@@ -2312,6 +2317,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT <p>This returns {@code false} unless the entity is a player in spectator game mode.
 	METHOD method_7490 getGravity ()D
+	CLASS class_10365 QueuedCollisionCheck
 	CLASS class_4738 PositionUpdater
 		METHOD accept (Lnet/minecraft/class_1297;DDD)V
 			ARG 1 entity
