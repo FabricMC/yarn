@@ -1,15 +1,10 @@
 CLASS net/minecraft/class_1865 net/minecraft/recipe/RecipeSerializer
-	COMMENT The recipe serializer controls the serialization and deserialization of
-	COMMENT recipe content. The caller should handle the serialization of recipes' IDs.
+	COMMENT The recipe serializer controls the deserialization of recipe content during
+	COMMENT data pack loading.
 	COMMENT
 	COMMENT <p>Even though they are referred to by the {@code type} field in recipe
 	COMMENT JSON format, they are stored in a registry with key
 	COMMENT {@code minecraft:root/minecraft:recipe_serializer}, and is hence named.
-	COMMENT
-	COMMENT <p>If a recipe's serializer exists only on the server but not on the
-	COMMENT client, the client will disconnect upon receiving the recipe; if a
-	COMMENT recipe JSON intended for an absent recipe serializer is read, it is
-	COMMENT skipped.
 	FIELD field_17084 BLASTING Lnet/minecraft/class_1865;
 	FIELD field_17085 SMOKING Lnet/minecraft/class_1865;
 	FIELD field_17347 CAMPFIRE_COOKING Lnet/minecraft/class_1865;
@@ -32,3 +27,9 @@ CLASS net/minecraft/class_1865 net/minecraft/recipe/RecipeSerializer
 		ARG 1 serializer
 	METHOD method_53736 codec ()Lcom/mojang/serialization/MapCodec;
 	METHOD method_56104 packetCodec ()Lnet/minecraft/class_9139;
+		COMMENT {@return the packet codec for serializing recipes over the network}
+		COMMENT
+		COMMENT @deprecated {@link Recipe} is no longer synced to the clients, making this
+		COMMENT obsolete.
+		COMMENT
+		COMMENT @see RecipeDisplayEntry
