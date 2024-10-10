@@ -1,11 +1,17 @@
 CLASS net/minecraft/class_1860 net/minecraft/recipe/Recipe
-	COMMENT A recipe is an arrangement of item stacks in an inventory that can
-	COMMENT yield a product item stack.
+	COMMENT A recipe is an arrangement of items in an inventory that can
+	COMMENT yield a product item stack. <strong>Recipes are not used on the client side</strong>;
+	COMMENT the server syncs to the client a {@link RecipeDisplayEntry},
+	COMMENT which is used instead.
 	COMMENT
-	COMMENT <p>Recipes are loaded by and stored in the {@link RecipeManager}. They
-	COMMENT are part of the server's data packs and are sent to the client, governed
-	COMMENT by their {@linkplain #getSerializer() serializers}. Hence, recipes
-	COMMENT should not be stored, as they may become obsolete after reloads.
+	COMMENT <p>Recipes are loaded by and stored in the {@link ServerRecipeManager}. They
+	COMMENT are part of the server's data packs. Hence, recipes should not be stored,
+	COMMENT as they may become obsolete after reloads.
+	COMMENT
+	COMMENT <p>{@link RecipeEntry} is a pair of the recipe and its ID ({@linkplain
+	COMMENT net.minecraft.registry.RegistryKey a registry key}). The ID can be used to
+	COMMENT refer to recipes in saved data. However, the client does not receive the ID of
+	COMMENT recipes.
 	COMMENT
 	COMMENT <p>A few of the methods in this class are dedicated to crafting recipes
 	COMMENT or recipe books. Users can have stub implementations if they do not use
@@ -20,6 +26,10 @@ CLASS net/minecraft/class_1860 net/minecraft/recipe/Recipe
 	METHOD method_49188 showNotification ()Z
 	METHOD method_61671 getIngredientPlacement ()Lnet/minecraft/class_9887;
 	METHOD method_64664 getDisplays ()Ljava/util/List;
+		COMMENT {@link the list of recipe displays corresponding to the recipe}
+		COMMENT
+		COMMENT <p>Recipe displays are sent to the client and displayed in the recipe book.
+		COMMENT One recipe can have multiple displays.
 	METHOD method_64668 getRecipeBookTab ()Lnet/minecraft/class_10355;
 	METHOD method_8112 getGroup ()Ljava/lang/String;
 		COMMENT {@return a group this recipe belongs in, or an empty string} This is
