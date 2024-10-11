@@ -33,6 +33,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	FIELD field_52353 chunkToNextSaveTimeMs Lit/unimi/dsi/fastutil/longs/Long2LongMap;
 	FIELD field_54034 worldGenScheduler Lnet/minecraft/class_10171;
 	FIELD field_54035 lightScheduler Lnet/minecraft/class_10171;
+	FIELD field_54964 chunksToSave Lit/unimi/dsi/fastutil/longs/LongSet;
+	FIELD field_54965 chunksBeingSavedCount Ljava/util/concurrent/atomic/AtomicInteger;
 	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_3949;Lnet/minecraft/class_5567;Ljava/util/function/Supplier;IZ)V
 		ARG 1 world
 		ARG 2 session
@@ -268,6 +270,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 1 pos
 	METHOD method_53689 (Lnet/minecraft/class_1923;)V
 		ARG 1 pos
+	METHOD method_57120 (Lnet/minecraft/class_1923;Ljava/lang/Void;Ljava/lang/Throwable;)Ljava/lang/Object;
+		ARG 3 exception
 	METHOD method_60439 schedule (Lnet/minecraft/class_9759;)V
 		ARG 1 loader
 	METHOD method_60449 (Ljava/util/List;)Lnet/minecraft/class_9259;
@@ -283,6 +287,10 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 2 levelGetter
 		ARG 3 targetLevel
 		ARG 4 levelSetter
+	METHOD method_65055 saveChunks (Ljava/util/function/BooleanSupplier;)V
+		ARG 1 shouldKeepTicking
+	METHOD method_65056 markChunkNeedsSaving (Lnet/minecraft/class_1923;)V
+		ARG 1 pos
 	CLASS class_3208 EntityTracker
 		COMMENT An entity tracker governs which players' clients can see an entity. Each
 		COMMENT tracker corresponds to one entity in a server world and is mapped from the
