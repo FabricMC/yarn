@@ -36,6 +36,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_53900 TRANSPARENCY Lnet/minecraft/class_2960;
 	FIELD field_53901 ENTITY_OUTLINE Lnet/minecraft/class_2960;
 	FIELD field_54160 prevTranslucencySortCameraPos Lnet/minecraft/class_2338;
+	FIELD field_54161 chunkIndex I
 	FIELD field_54164 nearbyChunks Lit/unimi/dsi/fastutil/objects/ObjectArrayList;
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_898;Lnet/minecraft/class_824;Lnet/minecraft/class_4599;)V
 		ARG 1 client
@@ -66,6 +67,8 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 3 renderBlockOutline
 		ARG 4 camera
 		ARG 5 gameRenderer
+		ARG 6 positionMatrix
+		ARG 7 projectionMatrix
 	METHOD method_22712 drawBlockOutline (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;Lnet/minecraft/class_1297;DDDLnet/minecraft/class_2338;Lnet/minecraft/class_2680;I)V
 		ARG 1 matrices
 		ARG 2 vertexConsumer
@@ -146,7 +149,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	METHOD method_3281 isTerrainRenderComplete ()Z
 	METHOD method_3282 spawnParticle (Lnet/minecraft/class_2394;ZDDDDDD)Lnet/minecraft/class_703;
 		ARG 1 parameters
-		ARG 2 alwaysSpawn
+		ARG 2 force
 		ARG 3 x
 		ARG 5 y
 		ARG 7 z
@@ -155,7 +158,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 13 velocityZ
 	METHOD method_3288 spawnParticle (Lnet/minecraft/class_2394;ZZDDDDDD)Lnet/minecraft/class_703;
 		ARG 1 parameters
-		ARG 2 alwaysSpawn
+		ARG 2 force
 		ARG 3 canSpawnOnMinimal
 		ARG 4 x
 		ARG 6 y
@@ -203,6 +206,8 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	METHOD method_62201 renderParticles (Lnet/minecraft/class_9909;Lnet/minecraft/class_4184;FLnet/minecraft/class_9958;)V
 		ARG 1 frameGraphBuilder
 		ARG 2 camera
+		ARG 3 tickDelta
+		ARG 4 fog
 	METHOD method_62202 renderMain (Lnet/minecraft/class_9909;Lnet/minecraft/class_4604;Lnet/minecraft/class_4184;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lnet/minecraft/class_9958;ZZLnet/minecraft/class_9779;Lnet/minecraft/class_3695;)V
 		ARG 1 frameGraphBuilder
 		ARG 2 frustum
@@ -211,11 +216,14 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 5 projectionMatrix
 		ARG 6 fog
 		ARG 7 renderBlockOutline
-		ARG 8 hasEntitiesToRender
+		ARG 8 renderEntityOutlines
 		ARG 9 renderTickCounter
 		ARG 10 profiler
 	METHOD method_62203 renderWeather (Lnet/minecraft/class_9909;Lnet/minecraft/class_243;FLnet/minecraft/class_9958;)V
 		ARG 1 frameGraphBuilder
+		ARG 2 pos
+		ARG 3 tickDelta
+		ARG 4 fog
 	METHOD method_62204 renderClouds (Lnet/minecraft/class_9909;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lnet/minecraft/class_4063;Lnet/minecraft/class_243;FIF)V
 		ARG 1 frameGraphBuilder
 		ARG 2 positionMatrix
@@ -263,10 +271,18 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	METHOD method_62908 onChunkUnload (J)V
 		ARG 1 sectionPos
 	METHOD method_64059 clear ()V
+	METHOD method_64060 scheduleChunkTranslucencySort (Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_846$class_10196;Lnet/minecraft/class_243;ZZ)V
+		ARG 1 chunk
+		ARG 2 relativePos
+		ARG 3 cameraPos
+		ARG 4 needsUpdate
+		ARG 5 ingoreCameraAlignment
+	METHOD method_65201 scheduleNeighborUpdates (Lnet/minecraft/class_1923;)V
+		ARG 1 chunkPos
 	METHOD method_8563 addParticle (Lnet/minecraft/class_2394;ZZDDDDDD)V
 		ARG 1 parameters
-		ARG 2 shouldAlwaysSpawn
-		ARG 3 important
+		ARG 2 force
+		ARG 3 canSpawnOnMinimal
 		ARG 4 x
 		ARG 6 y
 		ARG 8 z
@@ -275,7 +291,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 14 velocityZ
 	METHOD method_8568 addParticle (Lnet/minecraft/class_2394;ZDDDDDD)V
 		ARG 1 parameters
-		ARG 2 shouldAlwaysSpawn
+		ARG 2 force
 		ARG 3 x
 		ARG 5 y
 		ARG 7 z

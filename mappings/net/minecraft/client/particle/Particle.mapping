@@ -89,8 +89,10 @@ CLASS net/minecraft/class_703 net/minecraft/client/particle/Particle
 	METHOD method_3070 tick ()V
 		COMMENT Called each game tick (20 times per second), and should be used to do core particle logic, such as movement and collision.
 	METHOD method_3072 repositionFromBoundingBox ()V
-	METHOD method_3074 buildGeometry (Lnet/minecraft/class_4588;Lnet/minecraft/class_4184;F)V
+	METHOD method_3074 render (Lnet/minecraft/class_4588;Lnet/minecraft/class_4184;F)V
 		COMMENT Renders this particle to the given {@link VertexConsumer} buffer.
+		COMMENT Particles using the {@link ParticleTextureSheet#CUSTOM} sheet should implement this
+		COMMENT with an empty method, and instead render in {@link #renderCustom}.
 		ARG 1 vertexConsumer
 			COMMENT the buffer to render to
 		ARG 2 camera
@@ -155,6 +157,13 @@ CLASS net/minecraft/class_703 net/minecraft/client/particle/Particle
 			COMMENT the new y-velocity of this particle
 		ARG 5 velocityZ
 			COMMENT the new z-velocity of this particle
+	METHOD method_65198 renderCustom (Lnet/minecraft/class_4587;Lnet/minecraft/class_4597;Lnet/minecraft/class_4184;F)V
+		COMMENT Renders this particle to the given {@link VertexConsumer} buffer.
+		COMMENT This is only used by particles using the {@link ParticleTextureSheet#CUSTOM} sheet.
+		ARG 1 matrices
+		ARG 2 vertexConsumers
+		ARG 3 camera
+		ARG 4 tickDelta
 	CLASS class_9213 DynamicAlpha
 		FIELD field_48941 OPAQUE Lnet/minecraft/class_703$class_9213;
 		METHOD method_56833 isOpaque ()Z
