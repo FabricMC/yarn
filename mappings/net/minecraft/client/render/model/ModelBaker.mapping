@@ -13,6 +13,16 @@ CLASS net/minecraft/class_1088 net/minecraft/client/render/model/ModelBaker
 	FIELD field_5391 WATER_FLOW Lnet/minecraft/class_4730;
 	FIELD field_5397 FIRE_0 Lnet/minecraft/class_4730;
 	FIELD field_5398 bakedModelCache Ljava/util/Map;
+	FIELD field_55463 entityModels Lnet/minecraft/class_5599;
+	FIELD field_55464 blockModels Ljava/util/Map;
+	FIELD field_55465 itemModels Ljava/util/Map;
+	FIELD field_55466 allModels Ljava/util/Map;
+	METHOD <init> (Lnet/minecraft/class_5599;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Lnet/minecraft/class_1100;)V
+		ARG 1 entityModels
+		ARG 2 blockModels
+		ARG 3 itemModels
+		ARG 4 allModels
+		ARG 5 missingModel
 	METHOD method_22820 (I)Lnet/minecraft/class_2960;
 		ARG 0 stage
 	METHOD method_23216 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_2960;
@@ -24,9 +34,19 @@ CLASS net/minecraft/class_1088 net/minecraft/client/render/model/ModelBaker
 	CLASS class_10524 BakedModels
 	CLASS class_7776 BakedModelCacheKey
 	CLASS class_7778 BakerImpl
+		FIELD field_55467 modelNameSupplier Lnet/minecraft/class_10525;
+		FIELD field_55468 spriteGetter Lnet/minecraft/class_10527;
 		METHOD <init> (Lnet/minecraft/class_1088;Lnet/minecraft/class_1088$class_9826;Lnet/minecraft/class_10525;)V
 			ARG 2 spriteGetter
+			ARG 3 modelNameSupplier
 		METHOD method_45872 getModel (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1100;
-	CLASS class_9826 SpriteGetter
+			ARG 1 id
+	CLASS class_9826 ErrorCollectingSpriteGetter
+		METHOD method_65738 toSpriteGetter (Lnet/minecraft/class_10525;)Lnet/minecraft/class_10527;
+			ARG 1 modelNameSupplier
 		METHOD method_65739 get (Lnet/minecraft/class_10525;Lnet/minecraft/class_4730;)Lnet/minecraft/class_1058;
+			ARG 1 modelNameSupplier
 			ARG 2 spriteId
+		METHOD method_65740 getMissing (Lnet/minecraft/class_10525;Ljava/lang/String;)Lnet/minecraft/class_1058;
+			ARG 1 modelNameSupplier
+			ARG 2 textureId

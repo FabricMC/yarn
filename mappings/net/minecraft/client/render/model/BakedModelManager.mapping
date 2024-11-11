@@ -9,7 +9,8 @@ CLASS net/minecraft/class_1092 net/minecraft/client/render/model/BakedModelManag
 	FIELD field_5410 blockModelCache Lnet/minecraft/class_773;
 	FIELD field_55471 bakedBlockModels Ljava/util/Map;
 	FIELD field_55472 bakedItemModels Ljava/util/Map;
-	FIELD field_55473 loadedEntityModels Lnet/minecraft/class_5599;
+	FIELD field_55473 entityModels Lnet/minecraft/class_5599;
+	FIELD field_55474 blockEntityModels Lnet/minecraft/class_10418;
 	FIELD field_55475 missingItemModel Lnet/minecraft/class_10439;
 	FIELD field_55476 modelGroups Lit/unimi/dsi/fastutil/objects/Object2IntMap;
 	METHOD <init> (Lnet/minecraft/class_1060;Lnet/minecraft/class_324;I)V
@@ -29,8 +30,15 @@ CLASS net/minecraft/class_1092 net/minecraft/client/render/model/BakedModelManag
 	METHOD method_45881 reloadModels (Lnet/minecraft/class_3300;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
 		ARG 0 resourceManager
 		ARG 1 executor
+	METHOD method_45882 (Lnet/minecraft/class_1092$class_7779;)V
+		ARG 1 bakingResult
 	METHOD method_45883 bake (Lnet/minecraft/class_3695;Ljava/util/Map;Lnet/minecraft/class_1088;Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lnet/minecraft/class_5599;Lnet/minecraft/class_10418;)Lnet/minecraft/class_1092$class_7779;
 		ARG 0 profiler
+		ARG 1 atlases
+		ARG 2 baker
+		ARG 3 groups
+		ARG 4 entityModels
+		ARG 5 specialBlockModelDispatcher
 	METHOD method_45886 (Lnet/minecraft/class_4730;)Ljava/lang/String;
 		ARG 0 spriteId
 	METHOD method_45887 (Lnet/minecraft/class_1092$class_7779;)Ljava/util/concurrent/CompletionStage;
@@ -41,6 +49,8 @@ CLASS net/minecraft/class_1092 net/minecraft/client/render/model/BakedModelManag
 		ARG 0 models
 	METHOD method_45899 (Ljava/util/concurrent/Executor;Ljava/util/Map;)Ljava/util/concurrent/CompletionStage;
 		ARG 1 models
+	METHOD method_45902 (Ljava/util/Map$Entry;)Lnet/minecraft/class_4724$class_7774;
+		ARG 0 entry
 	METHOD method_4742 getModel (Lnet/minecraft/class_1091;)Lnet/minecraft/class_1087;
 		ARG 1 id
 	METHOD method_4743 getBlockModels ()Lnet/minecraft/class_773;
@@ -48,8 +58,32 @@ CLASS net/minecraft/class_1092 net/minecraft/client/render/model/BakedModelManag
 	METHOD method_62654 group (Lnet/minecraft/class_324;Lnet/minecraft/class_9824$class_10095;)Lit/unimi/dsi/fastutil/objects/Object2IntMap;
 		ARG 0 colors
 		ARG 1 definition
+	METHOD method_62655 (Lnet/minecraft/class_9824$class_10095;)Lit/unimi/dsi/fastutil/objects/Object2IntMap;
+		ARG 1 definition
 	METHOD method_62657 collect (Lnet/minecraft/class_1100;Ljava/util/Map;Lnet/minecraft/class_9824$class_10095;Lnet/minecraft/class_10521$class_10522;)Lnet/minecraft/class_10097;
+		ARG 0 missingModel
+		ARG 1 models
+		ARG 2 blockStates
+		ARG 3 itemAssets
 	METHOD method_65746 getItemModel (Lnet/minecraft/class_2960;)Lnet/minecraft/class_10439;
 		ARG 1 id
+	METHOD method_65747 (Lnet/minecraft/class_1100;Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;Ljava/lang/Void;)Lnet/minecraft/class_10097;
+		ARG 4 v
+	METHOD method_65749 (Ljava/lang/String;Ljava/util/Collection;)V
+		ARG 0 modelName
+		ARG 1 textureIds
+	METHOD method_65751 toStateMap (Ljava/util/Map;Lnet/minecraft/class_1087;)Ljava/util/Map;
+		ARG 0 blockStateModels
+		ARG 1 missingModel
+	METHOD method_65752 (Ljava/util/Map;Ljava/util/Map;Lnet/minecraft/class_1087;Lnet/minecraft/class_2680;)V
+		ARG 3 state
+	METHOD method_65753 (Ljava/util/Map;Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/CompletableFuture;Lnet/minecraft/class_1100;Ljava/util/concurrent/CompletableFuture;Ljava/lang/Void;)Lnet/minecraft/class_1092$class_7779;
+		ARG 8 v
+	METHOD method_65754 (Ljava/lang/String;Ljava/util/Collection;)V
+		ARG 0 modelName
+		ARG 1 sprites
+	METHOD method_65755 (Lnet/minecraft/class_2960;)Ljava/lang/String;
+		ARG 0 id
+	METHOD method_65756 getBlockEntityModelsSupplier ()Ljava/util/function/Supplier;
 	METHOD method_65757 getEntityModelsSupplier ()Ljava/util/function/Supplier;
 	CLASS class_7779 BakingResult
