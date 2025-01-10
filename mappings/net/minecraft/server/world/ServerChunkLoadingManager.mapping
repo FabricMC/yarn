@@ -7,7 +7,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	FIELD field_17220 chunkHolders Lit/unimi/dsi/fastutil/longs/Long2ObjectLinkedOpenHashMap;
 	FIELD field_17221 unloadedChunks Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_17222 chunkHolderListDirty Z
-	FIELD field_17228 ticketManager Lnet/minecraft/class_3898$class_3216;
+	FIELD field_17228 levelManager Lnet/minecraft/class_3898$class_3216;
 	FIELD field_17230 totalChunksLoadedCount Ljava/util/concurrent/atomic/AtomicInteger;
 	FIELD field_17442 worldGenerationProgressListener Lnet/minecraft/class_3949;
 	FIELD field_17705 persistentStateManagerFactory Ljava/util/function/Supplier;
@@ -20,6 +20,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	FIELD field_19343 unloadTaskQueue Ljava/util/Queue;
 	FIELD field_23786 chunkToType Lit/unimi/dsi/fastutil/longs/Long2ByteMap;
 	FIELD field_26931 chunkStatusChangeListener Lnet/minecraft/class_5567;
+	FIELD field_29670 FORCED_CHUNK_LEVEL I
 	FIELD field_29671 PROTO_CHUNK B
 	FIELD field_29672 UNMARKED_CHUNK B
 	FIELD field_29673 LEVEL_CHUNK B
@@ -35,6 +36,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	FIELD field_54035 lightScheduler Lnet/minecraft/class_10171;
 	FIELD field_54964 chunksToSave Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_54965 chunksBeingSavedCount Ljava/util/concurrent/atomic/AtomicInteger;
+	FIELD field_55588 ticketManager Lnet/minecraft/class_10592;
 	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_3949;Lnet/minecraft/class_5567;Ljava/util/function/Supplier;Lnet/minecraft/class_10592;IZ)V
 		ARG 1 world
 		ARG 2 session
@@ -47,6 +49,9 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 9 worldGenerationProgressListener
 		ARG 10 chunkStatusChangeListener
 		ARG 11 persistentStateManagerFactory
+		ARG 12 ticketManager
+		ARG 13 viewDistance
+		ARG 14 dsync
 	METHOD method_17212 getLightingProvider ()Lnet/minecraft/class_3227;
 	METHOD method_17214 setViewDistance (I)V
 		ARG 1 watchDistance
@@ -87,7 +92,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	METHOD method_17255 getCurrentChunkHolder (J)Lnet/minecraft/class_3193;
 		ARG 1 pos
 	METHOD method_17260 getLoadedChunkCount ()I
-	METHOD method_17263 getTicketManager ()Lnet/minecraft/class_3204;
+	METHOD method_17263 getLevelManager ()Lnet/minecraft/class_3204;
 	METHOD method_17264 entryIterator ()Ljava/lang/Iterable;
 	METHOD method_17604 getCompletedLevelSupplier (J)Ljava/util/function/IntSupplier;
 		ARG 1 pos
@@ -333,6 +338,11 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		METHOD method_22844 getMaxTrackDistance ()I
 		METHOD method_27906 adjustTrackingDistance (I)I
 			ARG 1 initialDistance
-	CLASS class_3216 TicketManager
+		METHOD method_66006 sendToOtherNearbyPlayers (Lnet/minecraft/class_2596;Ljava/util/List;)V
+			ARG 1 packet
+			ARG 2 except
+	CLASS class_3216 LevelManager
 		METHOD <init> (Lnet/minecraft/class_3898;Lnet/minecraft/class_10592;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)V
-			ARG 3 mainThreadExecutor
+			ARG 2 ticketManager
+			ARG 3 executor
+			ARG 4 mainThreadExecutor

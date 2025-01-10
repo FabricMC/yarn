@@ -135,6 +135,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_43126 getSpawnPos ()Lnet/minecraft/class_2338;
 	METHOD method_43127 getSpawnAngle ()F
 	METHOD method_43128 playSound (Lnet/minecraft/class_1297;DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
+		ARG 1 source
 		ARG 2 x
 		ARG 4 y
 		ARG 6 z
@@ -143,6 +144,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 10 volume
 		ARG 11 pitch
 	METHOD method_43129 playSoundFromEntity (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
+		ARG 1 source
 		ARG 2 entity
 		ARG 3 sound
 		ARG 4 category
@@ -184,6 +186,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_47576 (Ljava/util/function/Predicate;Ljava/util/List;ILnet/minecraft/class_5575;Lnet/minecraft/class_1297;)Lnet/minecraft/class_7927$class_7928;
 		ARG 4 entity
 	METHOD method_47967 playSound (Lnet/minecraft/class_1297;DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFJ)V
+		ARG 1 source
 		ARG 2 x
 		ARG 4 y
 		ARG 6 z
@@ -198,6 +201,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_48963 getDamageSources ()Lnet/minecraft/class_8109;
 	METHOD method_54719 getTickManager ()Lnet/minecraft/class_8921;
 	METHOD method_54762 playSound (Lnet/minecraft/class_1297;DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;)V
+		ARG 1 source
 		ARG 2 x
 		ARG 4 y
 		ARG 6 z
@@ -221,6 +225,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 12 explosionSourceType
 	METHOD method_59547 getBrewingRecipeRegistry ()Lnet/minecraft/class_1845;
 	METHOD method_60511 playSound (Lnet/minecraft/class_1297;DDDLnet/minecraft/class_6880;Lnet/minecraft/class_3419;FF)V
+		ARG 1 source
 		ARG 2 x
 		ARG 4 y
 		ARG 6 z
@@ -231,6 +236,11 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_61269 getFuelRegistry ()Lnet/minecraft/class_9895;
 	METHOD method_63020 canHaveWeather ()Z
 	METHOD method_65097 getEnderDragonParts ()Ljava/util/Collection;
+	METHOD method_66016 onBlockStateChanged (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;)V
+		ARG 1 pos
+		ARG 2 oldState
+		ARG 3 newState
+	METHOD method_66346 isNightAndNatural ()Z
 	METHOD method_66349 getCrammedEntities (Lnet/minecraft/class_1297;Lnet/minecraft/class_238;)Ljava/util/List;
 		ARG 1 entity
 		ARG 2 box
@@ -382,13 +392,15 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8501 setBlockState (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)Z
 		ARG 1 pos
 		ARG 2 state
-	METHOD method_8505 canPlayerModifyAt (Lnet/minecraft/class_1297;Lnet/minecraft/class_2338;)Z
-		COMMENT {@return whether {@code player} can modify blocks at {@code pos}}
+	METHOD method_8505 canEntityModifyAt (Lnet/minecraft/class_1297;Lnet/minecraft/class_2338;)Z
+		COMMENT {@return whether {@code entity} can modify blocks at {@code pos}}
 		COMMENT
-		COMMENT @implNote This checks the spawn protection and the world border.
+		COMMENT @implNote For players, this checks the spawn protection and the world border.
+		COMMENT This is always {@code true} on the client and for non-player entities.
 		COMMENT
 		COMMENT @see #isInBuildLimit
 		COMMENT @see #isValid
+		ARG 1 entity
 		ARG 2 pos
 	METHOD method_8508 updateNeighborsExcept (Lnet/minecraft/class_2338;Lnet/minecraft/class_2248;Lnet/minecraft/class_2350;Lnet/minecraft/class_9904;)V
 		COMMENT Emits a neighbor update to neighboring blocks of {@code pos}, except
