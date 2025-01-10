@@ -44,7 +44,11 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 pos
 		ARG 2 old
 		ARG 3 updated
-	METHOD method_17452 addImportantParticle (Lnet/minecraft/class_2394;ZDDDDDD)V
+	METHOD method_17452 addImportantParticleClient (Lnet/minecraft/class_2394;ZDDDDDD)V
+		COMMENT Adds an important particle to the client's world renderer. Important particles get added even if the Particles graphics option is set to Minimal
+		COMMENT Does nothing on the server.
+		COMMENT
+		COMMENT @see ServerWorld#spawnParticles
 		ARG 1 parameters
 		ARG 2 force
 		ARG 3 x
@@ -135,7 +139,10 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_43126 getSpawnPos ()Lnet/minecraft/class_2338;
 	METHOD method_43127 getSpawnAngle ()F
 	METHOD method_43128 playSound (Lnet/minecraft/class_1297;DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
+		COMMENT Plays a sound caused by a source. On the client, the sound will only play if the source is the same as the client's player.
+		COMMENT On the server, sound packets will be sent to players around the source, excluding the source itself.
 		ARG 1 source
+			COMMENT the entity that caused this sound, or {@code null}
 		ARG 2 x
 		ARG 4 y
 		ARG 6 z
@@ -144,13 +151,16 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 10 volume
 		ARG 11 pitch
 	METHOD method_43129 playSoundFromEntity (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
+		COMMENT Plays a sound caused by a source at the provided entity's position. On the client, the sound will only play if the source is the same as the client's player.
+		COMMENT On the server, sound packets will be sent to players around the source, excluding the source itself.
 		ARG 1 source
+			COMMENT the entity that caused this sound, or {@code null}
 		ARG 2 entity
 		ARG 3 sound
 		ARG 4 category
 		ARG 5 volume
 		ARG 6 pitch
-	METHOD method_45446 playSoundAtBlockCenter (Lnet/minecraft/class_2338;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFZ)V
+	METHOD method_45446 playSoundAtBlockCenterClient (Lnet/minecraft/class_2338;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFZ)V
 		ARG 1 pos
 		ARG 2 sound
 		ARG 3 category
@@ -186,7 +196,10 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_47576 (Ljava/util/function/Predicate;Ljava/util/List;ILnet/minecraft/class_5575;Lnet/minecraft/class_1297;)Lnet/minecraft/class_7927$class_7928;
 		ARG 4 entity
 	METHOD method_47967 playSound (Lnet/minecraft/class_1297;DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFJ)V
+		COMMENT Plays a sound caused by a source. On the client, the sound will only play if the source is the same as the client's player.
+		COMMENT On the server, sound packets will be sent to players around the source, excluding the source itself.
 		ARG 1 source
+			COMMENT the entity that caused this sound, or {@code null}
 		ARG 2 x
 		ARG 4 y
 		ARG 6 z
@@ -207,7 +220,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 6 z
 		ARG 8 sound
 		ARG 9 category
-	METHOD method_55116 playSoundFromEntity (Lnet/minecraft/class_1297;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
+	METHOD method_55116 playSoundFromEntityClient (Lnet/minecraft/class_1297;Lnet/minecraft/class_3414;Lnet/minecraft/class_3419;FF)V
 		ARG 1 entity
 		ARG 2 sound
 		ARG 3 category
@@ -286,7 +299,10 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 	METHOD method_8442 getSkyAngleRadians (F)F
 		ARG 1 tickDelta
 	METHOD method_8449 playSoundFromEntity (Lnet/minecraft/class_1297;Lnet/minecraft/class_1297;Lnet/minecraft/class_6880;Lnet/minecraft/class_3419;FFJ)V
+		COMMENT Plays a sound caused by a source at the provided entity's position. On the client, the sound will only play if the source is the same as the client's player.
+		COMMENT On the server, sound packets will be sent to players around the source, excluding the source itself.
 		ARG 1 source
+			COMMENT the player that caused this sound, or {@code null}
 		ARG 2 entity
 		ARG 3 sound
 		ARG 4 category
@@ -324,7 +340,10 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 2 block
 	METHOD method_8458 isSavingDisabled ()Z
 	METHOD method_8465 playSound (Lnet/minecraft/class_1297;DDDLnet/minecraft/class_6880;Lnet/minecraft/class_3419;FFJ)V
+		COMMENT Plays a sound caused by a source. On the client, the sound will only play if the source is the same as the client's player.
+		COMMENT On the server, sound packets will be sent to players around the source, excluding the source itself.
 		ARG 1 source
+			COMMENT the player that caused this sound, or {@code null}
 		ARG 2 x
 		ARG 4 y
 		ARG 6 z
@@ -333,7 +352,11 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 10 volume
 		ARG 11 pitch
 		ARG 12 seed
-	METHOD method_8466 addParticle (Lnet/minecraft/class_2394;ZZDDDDDD)V
+	METHOD method_8466 addParticleClient (Lnet/minecraft/class_2394;ZZDDDDDD)V
+		COMMENT Adds a particle to the client's world renderer.
+		COMMENT Does nothing on the server.
+		COMMENT
+		COMMENT @see ServerWorld#spawnParticles
 		ARG 1 parameters
 		ARG 2 force
 		ARG 3 canSpawnOnMinimal
@@ -359,7 +382,7 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 pos
 	METHOD method_8478 getThunderGradient (F)F
 		ARG 1 delta
-	METHOD method_8486 playSound (DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFZ)V
+	METHOD method_8486 playSoundClient (DDDLnet/minecraft/class_3414;Lnet/minecraft/class_3419;FFZ)V
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
@@ -376,7 +399,11 @@ CLASS net/minecraft/class_1937 net/minecraft/world/World
 		ARG 1 pos
 		ARG 2 sourceBlock
 		ARG 3 orientation
-	METHOD method_8494 addImportantParticle (Lnet/minecraft/class_2394;DDDDDD)V
+	METHOD method_8494 addImportantParticleClient (Lnet/minecraft/class_2394;DDDDDD)V
+		COMMENT Adds an important particle to the client's world renderer. Important particles get added even if the Particles graphics option is set to Minimal
+		COMMENT Does nothing on the server.
+		COMMENT
+		COMMENT @see ServerWorld#spawnParticles
 		ARG 1 parameters
 		ARG 2 x
 		ARG 4 y
