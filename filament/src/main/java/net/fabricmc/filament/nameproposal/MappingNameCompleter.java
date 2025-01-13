@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.jar.JarEntry;
@@ -77,7 +78,7 @@ public class MappingNameCompleter {
 
 			if (yarnFieldName == null || yarnFieldName.startsWith("field_") || yarnFieldName.startsWith("comp_")) {
 				// Set a new dst name if it doesn't have one, or matches intermediary
-				yarn.visitDstName(MappedElementKind.FIELD, yarnNamedNs, entry.getValue());
+				fieldMapping.setDstName(entry.getValue(), yarnNamedNs);
 			}
 		}
 
@@ -95,7 +96,7 @@ public class MappingNameCompleter {
 
 			if (yarnFieldName == null || yarnFieldName.startsWith("method_") || yarnFieldName.startsWith("comp_")) {
 				// Set a new dst name if it doesn't have one, or matches intermediary
-				yarn.visitDstName(MappedElementKind.METHOD, yarnNamedNs, entry.getValue());
+				methodMapping.setDstName(entry.getValue(), yarnNamedNs);
 			}
 		}
 
@@ -135,9 +136,6 @@ public class MappingNameCompleter {
 	 */
 	private static void inheritMappedNamesOfEnclosingClasses(MemoryMappingTree tree) {
 		int namedIdx = tree.getNamespaceId("named");
-
-		// The tree does not have an index by intermediary names by default
-		tree.setIndexByDstNames(true);
 
 		for (MappingTree.ClassMapping classEntry : tree.getClasses()) {
 			String intermediaryName = Objects.requireNonNull(classEntry.getSrcName());
