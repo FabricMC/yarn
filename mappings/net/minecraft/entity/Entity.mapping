@@ -152,6 +152,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_54946 onFire Z
 	FIELD field_54947 queuedCollisionChecks Ljava/util/List;
 	FIELD field_54948 collidedBlockPositions Lit/unimi/dsi/fastutil/longs/LongSet;
+	FIELD field_55940 fireState Lnet/minecraft/class_1297$class_10628;
 	FIELD field_5951 ridingCooldown I
 	FIELD field_5952 onGround Z
 	FIELD field_5953 firstUpdate Z
@@ -2257,6 +2258,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 reason
 	METHOD method_65037 checkBlockCollision (Ljava/util/List;Lnet/minecraft/class_1297$class_10629;)V
 		ARG 1 queuedCollisionChecks
+		ARG 2 state
 	METHOD method_65038 isControlledByPlayer ()Z
 	METHOD method_65341 calculateDefaultBoundingBox (Lnet/minecraft/class_243;)Lnet/minecraft/class_238;
 		ARG 1 pos
@@ -2279,6 +2281,11 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_66249 canMoveVoluntarily ()Z
 	METHOD method_66250 spawnBubbleColumnParticles (Lnet/minecraft/class_2338;)V
 		ARG 1 pos
+	METHOD method_66648 collidesWithFluid (Lnet/minecraft/class_3610;Lnet/minecraft/class_2338;Lnet/minecraft/class_243;Lnet/minecraft/class_243;)Z
+		ARG 1 state
+		ARG 2 fluidPos
+		ARG 3 oldPos
+		ARG 4 newPos
 	METHOD method_66649 copyComponentsFrom (Lnet/minecraft/class_9473;)V
 		ARG 1 from
 	METHOD method_66650 copyComponentFrom (Lnet/minecraft/class_9473;Lnet/minecraft/class_9331;)Z
@@ -2301,6 +2308,16 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT <p>This returns {@code false} unless the entity is a player in spectator game mode.
 	METHOD method_7490 getGravity ()D
 	CLASS class_10365 QueuedCollisionCheck
+	CLASS class_10628 FireState
+		FIELD field_55941 onFire Z
+		FIELD field_55942 inLava Z
+		METHOD method_66656 setOnFire (Z)V
+			ARG 1 onFIre
+	CLASS class_10629 CollisionState
+		METHOD method_66655 update (Lnet/minecraft/class_2680;ZZ)V
+			ARG 1 state
+			ARG 2 blockCollision
+			ARG 3 fluidCollision
 	CLASS class_4738 PositionUpdater
 		METHOD accept (Lnet/minecraft/class_1297;DDD)V
 			ARG 1 entity
