@@ -1,14 +1,21 @@
 CLASS net/minecraft/class_9123 net/minecraft/server/command/TestFinder
 	FIELD field_48507 NOOP_TEST_FUNCTION_FINDER Lnet/minecraft/class_10674;
-	FIELD field_48508 NOOP_STRUCTURE_BLOCK_FINDER Lnet/minecraft/class_10675;
+	FIELD field_48508 NOOP_TEST_INSTANCE_BLOCK_FINDER Lnet/minecraft/class_10675;
 	FIELD field_48511 commandSource Lnet/minecraft/class_2168;
+	FIELD field_56218 instanceFinder Lnet/minecraft/class_10674;
+	FIELD field_56219 blockFinder Lnet/minecraft/class_10675;
 	METHOD <init> (Lnet/minecraft/class_2168;Lnet/minecraft/class_10674;Lnet/minecraft/class_10675;)V
 		ARG 1 commandSource
+		ARG 2 instanceFinder
+		ARG 3 blockFinder
 	METHOD method_56305 getCommandSource ()Lnet/minecraft/class_2168;
-	CLASS class_9124 Runners
-		FIELD field_49664 structurePosSupplierMapper Ljava/util/function/UnaryOperator;
+	METHOD method_67070 builder ()Lnet/minecraft/class_9123$class_9124;
+	CLASS class_9124 Builder
+		FIELD field_49664 testInstanceBlockFinderMapper Ljava/util/function/UnaryOperator;
+		FIELD field_56220 testInstanceFinderMapper Ljava/util/function/UnaryOperator;
 		METHOD <init> (Ljava/util/function/UnaryOperator;Ljava/util/function/UnaryOperator;)V
-			ARG 2 testFunctionsSupplierMapper
+			ARG 1 testInstanceFinderMapper
+			ARG 2 testInstanceBlockFinderMapper
 		METHOD method_56309 nearest (Lcom/mojang/brigadier/context/CommandContext;)Lnet/minecraft/class_9123;
 			ARG 1 context
 		METHOD method_56310 surface (Lcom/mojang/brigadier/context/CommandContext;I)Lnet/minecraft/class_9123;
@@ -27,7 +34,18 @@ CLASS net/minecraft/class_9123 net/minecraft/server/command/TestFinder
 			ARG 1 count
 		METHOD method_57966 (ILjava/util/function/Supplier;)Ljava/util/function/Supplier;
 			ARG 1 supplier
-		METHOD method_57967 createRunner (Lnet/minecraft/class_2168;Lnet/minecraft/class_10674;Lnet/minecraft/class_10675;)Lnet/minecraft/class_9123;
+		METHOD method_57967 build (Lnet/minecraft/class_2168;Lnet/minecraft/class_10674;Lnet/minecraft/class_10675;)Lnet/minecraft/class_9123;
 			ARG 1 source
+			ARG 2 instanceFinder
+			ARG 3 blockFinder
 		METHOD method_57970 repeating (I)Ljava/util/function/UnaryOperator;
 			ARG 0 count
+		METHOD method_67071 selector (Lcom/mojang/brigadier/context/CommandContext;Ljava/util/Collection;)Lnet/minecraft/class_9123;
+			ARG 1 context
+			ARG 2 selected
+		METHOD method_67072 (Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
+			ARG 0 finder
+		METHOD method_67073 (ZLnet/minecraft/class_6880$class_6883;)Z
+			ARG 1 instance
+		METHOD method_67074 (Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
+			ARG 0 finder
