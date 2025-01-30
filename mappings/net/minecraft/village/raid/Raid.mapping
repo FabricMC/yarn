@@ -11,7 +11,7 @@ CLASS net/minecraft/class_3765 net/minecraft/village/raid/Raid
 	FIELD field_16618 waveToRaiders Ljava/util/Map;
 	FIELD field_16620 totalHealth F
 	FIELD field_16621 wavesSpawned I
-	FIELD field_16623 badOmenLevel I
+	FIELD field_16623 raidOmenLevel I
 	FIELD field_19016 EVENT_TEXT Lnet/minecraft/class_2561;
 	FIELD field_19019 VICTORY_TITLE Lnet/minecraft/class_2561;
 	FIELD field_19020 DEFEAT_TITLE Lnet/minecraft/class_2561;
@@ -27,7 +27,28 @@ CLASS net/minecraft/class_3765 net/minecraft/village/raid/Raid
 	FIELD field_30686 DEFAULT_PRE_RAID_TICKS I
 	FIELD field_30689 MAX_ACTIVE_TICKS I
 	FIELD field_53976 RAVAGER_SPAWN_LOCATION Lnet/minecraft/class_9168;
+	FIELD field_56439 CODEC Lcom/mojang/serialization/MapCodec;
+	METHOD <init> (Lnet/minecraft/class_2338;Lnet/minecraft/class_1267;)V
+		ARG 1 center
+		ARG 2 difficulty
+	METHOD <init> (ZZJIIIIFILnet/minecraft/class_3765$class_4259;Lnet/minecraft/class_2338;Ljava/util/Set;)V
+		ARG 1 started
+		ARG 2 active
+		ARG 3 ticksActive
+		ARG 5 raidOmenLevel
+		ARG 6 wavesSpawned
+		ARG 7 preRaidTicks
+		ARG 8 postRaidTicks
+		ARG 9 totalHealth
+		ARG 10 waveCount
+		ARG 11 status
+		ARG 12 center
+		ARG 13 heroesOfTheVillage
 	METHOD method_16487 addToWave (Lnet/minecraft/class_3218;ILnet/minecraft/class_3763;Z)Z
+		ARG 1 world
+		ARG 2 wave
+		ARG 3 raider
+		ARG 4 countHealth
 	METHOD method_16490 getGroupsSpawned ()I
 	METHOD method_16491 setWaveCaptain (ILnet/minecraft/class_3763;)V
 		ARG 1 wave
@@ -37,32 +58,53 @@ CLASS net/minecraft/class_3765 net/minecraft/village/raid/Raid
 	METHOD method_16496 getCaptain (I)Lnet/minecraft/class_3763;
 		ARG 1 wave
 	METHOD method_16499 updateBarToPlayers (Lnet/minecraft/class_3218;)V
+		ARG 1 world
 	METHOD method_16500 removeLeader (I)V
 		ARG 1 wave
 	METHOD method_16501 isInRaidDistance ()Ljava/util/function/Predicate;
 	METHOD method_16504 isActive ()Z
 	METHOD method_16505 addToWave (Lnet/minecraft/class_3218;ILnet/minecraft/class_3763;)Z
+		ARG 1 world
+		ARG 2 wave
+		ARG 3 raider
 	METHOD method_16506 invalidate ()V
 	METHOD method_16508 (Ljava/lang/Integer;)Ljava/util/Set;
 		ARG 0 wavex
 	METHOD method_16509 tick (Lnet/minecraft/class_3218;)V
+		ARG 1 world
 	METHOD method_16510 removeFromWave (Lnet/minecraft/class_3218;Lnet/minecraft/class_3763;Z)V
+		ARG 1 world
+		ARG 2 raider
+		ARG 3 countHealth
 	METHOD method_16513 getCurrentRaiderHealth ()F
 	METHOD method_16514 getMaxAcceptableBadOmenLevel ()I
 	METHOD method_16516 addRaider (Lnet/minecraft/class_3218;ILnet/minecraft/class_3763;Lnet/minecraft/class_2338;Z)V
+		ARG 1 world
+		ARG 2 wave
+		ARG 3 raider
+		ARG 4 pos
+		ARG 5 existing
 	METHOD method_16517 getRaiderCount ()I
 	METHOD method_16518 start (Lnet/minecraft/class_3222;)Z
 		ARG 1 player
 	METHOD method_16519 canSpawnRaiders ()Z
 	METHOD method_16520 markDirty (Lnet/minecraft/class_3218;)V
+		ARG 1 world
 	METHOD method_16521 playRaidHorn (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)V
+		ARG 1 world
+		ARG 2 pos
 	METHOD method_16522 spawnNextWave (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;)V
+		ARG 1 world
+		ARG 2 pos
 	METHOD method_16523 updateBar ()V
 	METHOD method_16524 hasStarted ()Z
 	METHOD method_16525 findRandomRaidersSpawnLocation (Lnet/minecraft/class_3218;I)Lnet/minecraft/class_2338;
+		ARG 1 world
+		ARG 2 proximity
 	METHOD method_16832 isFinished ()Z
 	METHOD method_16833 shouldSpawnMoreGroups ()Z
 	METHOD method_16834 removeObsoleteRaiders (Lnet/minecraft/class_3218;)V
+		ARG 1 world
 	METHOD method_20012 hasSpawnedFinalWave ()Z
 	METHOD method_20013 hasExtraWave ()Z
 	METHOD method_20014 hasSpawnedExtraWave ()Z
@@ -88,17 +130,47 @@ CLASS net/minecraft/class_3765 net/minecraft/village/raid/Raid
 	METHOD method_20024 hasLost ()Z
 	METHOD method_20025 getEnchantmentChance ()F
 	METHOD method_20267 getRaidersSpawnLocation (Lnet/minecraft/class_3218;)Ljava/util/Optional;
+		ARG 1 world
 	METHOD method_20509 setCenter (Lnet/minecraft/class_2338;)V
 		ARG 1 center
 	METHOD method_20510 (Lnet/minecraft/class_2338;)D
 		ARG 1 pos
 	METHOD method_20511 moveRaidCenter (Lnet/minecraft/class_3218;)V
+		ARG 1 world
 	METHOD method_35211 setBadOmenLevel (I)V
 		ARG 1 badOmenLevel
 	METHOD method_35212 getTotalHealth ()F
 	METHOD method_35213 getAllRaiders ()Ljava/util/Set;
 	METHOD method_61558 createOminousBanner (Lnet/minecraft/class_7871;)Lnet/minecraft/class_1799;
 		ARG 0 bannerPatternLookup
+	METHOD method_67361 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 0 instance
+	METHOD method_67362 (Lnet/minecraft/class_3765;)Ljava/util/Set;
+		ARG 0 raid
+	METHOD method_67363 (Lnet/minecraft/class_3222;)Z
+		ARG 1 player
+	METHOD method_67364 (Lnet/minecraft/class_3765;)Lnet/minecraft/class_2338;
+		ARG 0 raid
+	METHOD method_67365 (Lnet/minecraft/class_3765;)Lnet/minecraft/class_3765$class_4259;
+		ARG 0 raid
+	METHOD method_67366 (Lnet/minecraft/class_3765;)Ljava/lang/Integer;
+		ARG 0 raid
+	METHOD method_67367 (Lnet/minecraft/class_3765;)Ljava/lang/Float;
+		ARG 0 raid
+	METHOD method_67368 (Lnet/minecraft/class_3765;)Ljava/lang/Integer;
+		ARG 0 raid
+	METHOD method_67370 (Lnet/minecraft/class_3765;)Ljava/lang/Integer;
+		ARG 0 raid
+	METHOD method_67371 (Lnet/minecraft/class_3765;)Ljava/lang/Integer;
+		ARG 0 raid
+	METHOD method_67372 (Lnet/minecraft/class_3765;)Ljava/lang/Integer;
+		ARG 0 raid
+	METHOD method_67373 (Lnet/minecraft/class_3765;)Ljava/lang/Long;
+		ARG 0 raid
+	METHOD method_67374 (Lnet/minecraft/class_3765;)Ljava/lang/Boolean;
+		ARG 0 raid
+	METHOD method_67375 (Lnet/minecraft/class_3765;)Ljava/lang/Boolean;
+		ARG 0 raid
 	CLASS class_3766 Member
 		FIELD field_16628 countInWave [I
 		FIELD field_16629 type Lnet/minecraft/class_1299;
@@ -107,3 +179,7 @@ CLASS net/minecraft/class_3765 net/minecraft/village/raid/Raid
 			ARG 3 type
 			ARG 4 countInWave
 	CLASS class_4259 Status
+		FIELD field_56440 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_56441 id Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
+			ARG 3 id
