@@ -10,8 +10,10 @@ flag set_block_state_flags net/minecraft/block/Block FORCE_STATE
 flag set_block_state_flags net/minecraft/block/Block SKIP_DROPS
 flag set_block_state_flags net/minecraft/block/Block MOVED
 flag set_block_state_flags net/minecraft/block/Block SKIP_REDSTONE_WIRE_STATE_REPLACEMENT
-flag set_block_state_flags net/minecraft/block/Block SKIP_CALLBACKS
-flag set_block_state_flags net/minecraft/block/Block SKIP_REDRAW_AND_CALLBACKS
+flag set_block_state_flags net/minecraft/block/Block SKIP_ON_STATE_REPLACED
+flag set_block_state_flags net/minecraft/block/Block SKIP_ON_BLOCK_ADDED
+flag set_block_state_flags net/minecraft/block/Block SKIP_REDRAW_AND_ON_STATE_REPLACED
+flag set_block_state_flags net/minecraft/block/Block FORCE_STATE_AND_SKIP_CALLBACKS_AND_DROPS
 
 target_method net/minecraft/world/ModifiableWorld setBlockState (Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z
 	param 2 set_block_state_flags
@@ -19,6 +21,8 @@ target_method net/minecraft/world/ModifiableWorld setBlockState (Lnet/minecraft/
 	param 2 set_block_state_flags
 target_method net/minecraft/world/World updateListeners (Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;I)V
 	param 3 set_block_state_flags
+target_method net/minecraft/block/AbstractBlock$AbstractBlockState prepare (Lnet/minecraft/world/WorldAccess;Lnet/minecraft/util/math/BlockPos;I)V
+	param 2 set_block_state_flags
 target_method net/minecraft/block/AbstractBlock$AbstractBlockState prepare (Lnet/minecraft/world/WorldAccess;Lnet/minecraft/util/math/BlockPos;II)V
 	param 2 set_block_state_flags
 target_method net/minecraft/block/AbstractBlock$AbstractBlockState updateNeighbors (Lnet/minecraft/world/WorldAccess;Lnet/minecraft/util/math/BlockPos;I)V
