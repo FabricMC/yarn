@@ -1,7 +1,7 @@
 v2
 
 flag set_block_state_flags net/minecraft/block/Block FORCE_STATE_AND_SKIP_CALLBACKS_AND_DROPS
-flag set_block_state_flags net/minecraft/block/Block SKIP_REDRAW_AND_ON_STATE_REPLACED
+flag set_block_state_flags net/minecraft/block/Block SKIP_REDRAW_AND_BLOCK_ENTITY_REPLACED_CALLBACK
 flag set_block_state_flags net/minecraft/block/Block NOTIFY_ALL_AND_REDRAW
 flag set_block_state_flags net/minecraft/block/Block NOTIFY_ALL
 flag set_block_state_flags net/minecraft/block/Block NOTIFY_NEIGHBORS
@@ -12,8 +12,8 @@ flag set_block_state_flags net/minecraft/block/Block FORCE_STATE
 flag set_block_state_flags net/minecraft/block/Block SKIP_DROPS
 flag set_block_state_flags net/minecraft/block/Block MOVED
 flag set_block_state_flags net/minecraft/block/Block SKIP_REDSTONE_WIRE_STATE_REPLACEMENT
-flag set_block_state_flags net/minecraft/block/Block SKIP_ON_STATE_REPLACED
-flag set_block_state_flags net/minecraft/block/Block SKIP_ON_BLOCK_ADDED
+flag set_block_state_flags net/minecraft/block/Block SKIP_BLOCK_ENTITY_REPLACED_CALLBACK
+flag set_block_state_flags net/minecraft/block/Block SKIP_BLOCK_ADDED_CALLBACK
 
 target_method net/minecraft/world/ModifiableWorld setBlockState (Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z
 	param 2 set_block_state_flags
@@ -43,10 +43,6 @@ target_method net/minecraft/client/network/ClientPlayNetworkHandler method_34007
 	param 0 set_block_state_flags
 target_method net/minecraft/command/argument/BlockStateArgument setBlockState (Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;I)Z
 	param 2 set_block_state_flags
-target_method net/minecraft/structure/Structure place (Lnet/minecraft/world/ServerWorldAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/structure/StructurePlacementData;Ljava/util/Random;I)Z
-	param 5 set_block_state_flags
-target_method net/minecraft/structure/Structure updateCorner (Lnet/minecraft/world/WorldAccess;ILnet/minecraft/util/shape/VoxelSet;III)V
-	param 1 set_block_state_flags
 target_method net/minecraft/world/block/NeighborUpdater replaceWithStateForNeighborUpdate (Lnet/minecraft/util/math/Direction;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;II)V
 	param 4 set_block_state_flags
 target_method net/minecraft/world/block/NeighborUpdater replaceWithStateForNeighborUpdate (Lnet/minecraft/world/WorldAccess;Lnet/minecraft/util/math/Direction;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;II)V
@@ -69,3 +65,9 @@ target_method net/minecraft/world/chunk/Chunk setBlockState (Lnet/minecraft/util
 	param 2 set_block_state_flags
 target_method net/minecraft/world/chunk/EmptyChunk setBlockState (Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Lnet/minecraft/block/BlockState;
 	param 2 set_block_state_flags
+target_method net/minecraft/structure/StructureTemplate place (Lnet/minecraft/world/ServerWorldAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/structure/StructurePlacementData;Lnet/minecraft/util/math/random/Random;I)Z
+	param 5 set_block_state_flags
+target_method net/minecraft/structure/StructureTemplate updateCorner (Lnet/minecraft/world/WorldAccess;ILnet/minecraft/util/shape/VoxelSet;Lnet/minecraft/util/math/BlockPos;)V
+	param 1 set_block_state_flags
+target_method net/minecraft/structure/StructureTemplate updateCorner (Lnet/minecraft/world/WorldAccess;ILnet/minecraft/util/shape/VoxelSet;III)V
+	param 1 set_block_state_flags
