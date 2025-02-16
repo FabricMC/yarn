@@ -17,6 +17,9 @@ CLASS net/minecraft/class_4014 net/minecraft/resource/SimpleResourceReload
 		COMMENT calculation. Has value {@value}.
 	FIELD field_29786 RELOADER_WEIGHT I
 		COMMENT The weight of reloaders' progress in the total progress calculation. Has value {@value}.
+	FIELD field_56609 preparedCount Ljava/util/concurrent/atomic/AtomicInteger;
+	METHOD <init> (Ljava/util/List;)V
+		ARG 1 waitingReloaders
 	METHOD method_18369 create (Lnet/minecraft/class_3300;Ljava/util/List;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Ljava/util/concurrent/CompletableFuture;)Lnet/minecraft/class_4011;
 		COMMENT Creates a simple resource reload without additional results.
 		ARG 0 manager
@@ -42,12 +45,45 @@ CLASS net/minecraft/class_4014 net/minecraft/resource/SimpleResourceReload
 			COMMENT the initial stage, must be completed before the reloaders can prepare resources
 		ARG 5 profiled
 			COMMENT whether to profile this reload and log the statistics
+	METHOD method_67571 startAsync (Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Lnet/minecraft/class_3300;Ljava/util/List;Lnet/minecraft/class_4014$class_4047;Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletableFuture;
+		ARG 1 prepareExecutor
+		ARG 2 applyExecutor
+		ARG 3 manager
+		ARG 4 reloaders
+		ARG 5 factory
+		ARG 6 initialStage
+	METHOD method_67572 toWeighted (III)I
+		ARG 0 prepare
+		ARG 1 apply
+		ARG 2 total
+	METHOD method_67573 createSynchronizer (Lnet/minecraft/class_3302;Ljava/util/concurrent/CompletableFuture;Ljava/util/concurrent/Executor;)Lnet/minecraft/class_3302$class_4045;
+		ARG 1 reloader
+		ARG 2 future
+		ARG 3 applyExecutor
+	METHOD method_67575 (Ljava/util/concurrent/Executor;Ljava/lang/Runnable;)V
+		ARG 2 runnable
+	METHOD method_67577 (Ljava/util/concurrent/Executor;Ljava/lang/Runnable;)V
+		ARG 2 runnable
+	METHOD method_67578 start (Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Lnet/minecraft/class_3300;Ljava/util/List;Lnet/minecraft/class_4014$class_4047;Ljava/util/concurrent/CompletableFuture;)V
+		ARG 1 prepareExecutor
+		ARG 2 applyExecutor
+		ARG 3 manager
+		ARG 4 reloaders
+		ARG 5 factory
+		ARG 6 initialStage
 	CLASS class_4047 Factory
 		COMMENT A factory that creates a completable future for each reloader in the
 		COMMENT resource reload.
+		FIELD field_56610 SIMPLE Lnet/minecraft/class_4014$class_4047;
 		METHOD create (Lnet/minecraft/class_3302$class_4045;Lnet/minecraft/class_3300;Lnet/minecraft/class_3302;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
 			ARG 1 synchronizer
 			ARG 2 manager
 			ARG 3 reloader
 			ARG 4 prepareExecutor
 			ARG 5 applyExecutor
+		METHOD method_67579 (Lnet/minecraft/class_3302$class_4045;Lnet/minecraft/class_3300;Lnet/minecraft/class_3302;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+			ARG 0 synchronizer
+			ARG 1 manager
+			ARG 2 reloader
+			ARG 3 prepareExecutor
+			ARG 4 applyExecutor

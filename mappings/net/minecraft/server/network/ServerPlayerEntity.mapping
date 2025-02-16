@@ -58,6 +58,8 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_54209 ENDER_PEARLS_KEY Ljava/lang/String;
 	FIELD field_54210 ENDER_PEARLS_DIMENSION_KEY Ljava/lang/String;
 	FIELD field_54402 commandOutput Lnet/minecraft/class_2165;
+	FIELD field_56606 SET_SPAWN_TEXT Lnet/minecraft/class_2561;
+	FIELD field_56607 respawn Lnet/minecraft/class_3222$class_10766;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_3218;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_8791;)V
 		ARG 1 server
 		ARG 2 world
@@ -137,6 +139,8 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 1 entity
 	METHOD method_26284 setSpawnPoint (Lnet/minecraft/class_3222$class_10766;Z)V
 		COMMENT Sets the player's spawn point.
+		ARG 1 respawn
+		ARG 2 sendMessage
 	METHOD method_26285 isBedWithinRange (Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)Z
 		ARG 1 pos
 		ARG 2 direction
@@ -290,6 +294,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 2 adder
 	METHOD method_64580 (Lnet/minecraft/class_5321;)Z
 		ARG 1 recipeKey
+	METHOD method_67564 getRespawn ()Lnet/minecraft/class_3222$class_10766;
 	METHOD method_7336 changeGameMode (Lnet/minecraft/class_1934;)Z
 		ARG 1 gameMode
 	CLASS 1
@@ -297,6 +302,14 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 			ARG 1 handler
 			ARG 2 property
 			ARG 3 value
+	CLASS class_10766 Respawn
+		FIELD field_56608 CODEC Lcom/mojang/serialization/Codec;
+		METHOD method_67565 posEquals (Lnet/minecraft/class_3222$class_10766;)Z
+			ARG 1 respawn
+		METHOD method_67566 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
+		METHOD method_67567 getDimension (Lnet/minecraft/class_3222$class_10766;)Lnet/minecraft/class_5321;
+			ARG 0 respawn
 	CLASS class_9773 RespawnPos
 		FIELD comp_2811 pos Lnet/minecraft/class_243;
 		METHOD comp_2811 pos ()Lnet/minecraft/class_243;
