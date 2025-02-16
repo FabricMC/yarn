@@ -58,8 +58,15 @@ CLASS net/minecraft/class_1921 net/minecraft/client/render/RenderLayer
 	FIELD field_55149 CELESTIAL Ljava/util/function/Function;
 	FIELD field_55150 BLOCK_SCREEN_EFFECT Ljava/util/function/Function;
 	FIELD field_55151 FIRE_SCREEN_EFFECT Ljava/util/function/Function;
+	FIELD field_56918 DEBUG_LINE Ljava/util/function/Function;
+	FIELD field_56920 PANORAMA Ljava/util/function/Function;
 	METHOD <init> (Ljava/lang/String;IZZLjava/lang/Runnable;Ljava/lang/Runnable;)V
 		ARG 1 name
+		ARG 2 size
+		ARG 3 hasCrumbling
+		ARG 4 tranclucent
+		ARG 5 begin
+		ARG 6 end
 	METHOD method_22720 getBlockLayers ()Ljava/util/List;
 	METHOD method_22722 getExpectedBufferSize ()I
 	METHOD method_23018 getEnergySwirl (Lnet/minecraft/class_2960;FF)Lnet/minecraft/class_1921;
@@ -112,8 +119,16 @@ CLASS net/minecraft/class_1921 net/minecraft/client/render/RenderLayer
 	METHOD method_23594 getLines ()Lnet/minecraft/class_1921;
 	METHOD method_24048 of (Ljava/lang/String;ILnet/minecraft/class_10785;Lnet/minecraft/class_1921$class_4688;)Lnet/minecraft/class_1921$class_4687;
 		ARG 0 name
+		ARG 1 size
+		ARG 2 shaderLayer
+		ARG 3 params
 	METHOD method_24049 of (Ljava/lang/String;IZZLnet/minecraft/class_10785;Lnet/minecraft/class_1921$class_4688;)Lnet/minecraft/class_1921$class_4687;
 		ARG 0 name
+		ARG 1 size
+		ARG 2 hasCrumbling
+		ARG 3 translucent
+		ARG 4 shaderLayer
+		ARG 5 params
 	METHOD method_24293 getEntityCutoutNoCull (Lnet/minecraft/class_2960;Z)Lnet/minecraft/class_1921;
 		ARG 0 texture
 		ARG 1 affectsOutline
@@ -217,6 +232,7 @@ CLASS net/minecraft/class_1921 net/minecraft/client/render/RenderLayer
 	METHOD method_55252 getEntityTranslucentEmissiveNoOutline (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
 		ARG 0 texture
 	METHOD method_56848 getClouds (Lnet/minecraft/class_10785;)Lnet/minecraft/class_1921$class_4687;
+		ARG 0 shaderLayer
 	METHOD method_56849 getFastClouds ()Lnet/minecraft/class_1921;
 	METHOD method_56850 getFancyClouds ()Lnet/minecraft/class_1921;
 	METHOD method_60894 isTranslucent ()Z
@@ -272,26 +288,67 @@ CLASS net/minecraft/class_1921 net/minecraft/client/render/RenderLayer
 	METHOD method_65228 (Lnet/minecraft/class_10785;Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
 		ARG 1 texture
 	METHOD method_65230 createWeather (Lnet/minecraft/class_10785;)Ljava/util/function/Function;
+		ARG 0 shaderLayer
 	METHOD method_65231 getWeather (Lnet/minecraft/class_2960;Z)Lnet/minecraft/class_1921;
 		ARG 0 texture
 		ARG 1 allMask
+	METHOD method_67891 getPanorama (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
+		ARG 0 id
+	METHOD method_67892 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
+		ARG 0 texture
+	METHOD method_67893 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
+		ARG 0 texture
+	METHOD method_67894 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
+		ARG 0 texture
+	METHOD method_67895 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
+		ARG 0 texture
+	METHOD method_67896 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
+		ARG 0 texture
+	METHOD method_67897 getEntityOutlines ()Lnet/minecraft/class_1921;
+	METHOD method_67898 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
+		ARG 0 texture
+	METHOD method_67899 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
+		ARG 0 texture
+	METHOD method_67900 getLightmap ()Lnet/minecraft/class_1921;
+	METHOD method_67901 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
+		ARG 0 texture
+	METHOD method_67902 getShaderProgram ()Lnet/minecraft/class_5944;
+	METHOD method_67903 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
+		ARG 0 texture
+	METHOD method_67906 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
+		ARG 0 texture
+	METHOD method_67907 getDebugCrosshair (D)Lnet/minecraft/class_1921;
 	CLASS class_4687 MultiPhase
 		FIELD field_21403 phases Lnet/minecraft/class_1921$class_4688;
 		FIELD field_21697 affectedOutline Ljava/util/Optional;
 		FIELD field_21851 outline Z
 		FIELD field_29640 CULLING_LAYERS Ljava/util/function/BiFunction;
+		FIELD field_56922 shaderLayer Lnet/minecraft/class_10785;
 		METHOD <init> (Ljava/lang/String;IZZLnet/minecraft/class_10785;Lnet/minecraft/class_1921$class_4688;)V
 			ARG 1 name
+			ARG 2 size
+			ARG 3 hasCrumbling
+			ARG 4 translucent
+			ARG 5 shaderLayer
+			ARG 6 params
 		METHOD method_34843 (Lnet/minecraft/class_10785;Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
 			ARG 1 texture
 		METHOD method_34844 (Lnet/minecraft/class_2960;Ljava/lang/Boolean;)Lnet/minecraft/class_1921;
 			ARG 0 texture
+			ARG 1 hasCulling
 	CLASS class_4688 MultiPhaseParameters
 		FIELD field_21406 texture Lnet/minecraft/class_4668$class_5939;
 		FIELD field_21422 phases Lcom/google/common/collect/ImmutableList;
 		FIELD field_21852 outlineMode Lnet/minecraft/class_1921$class_4750;
 		METHOD <init> (Lnet/minecraft/class_4668$class_5939;Lnet/minecraft/class_4668$class_4676;Lnet/minecraft/class_4668$class_4679;Lnet/minecraft/class_4668$class_4675;Lnet/minecraft/class_4668$class_4678;Lnet/minecraft/class_4668$class_4684;Lnet/minecraft/class_4668$class_4677;Lnet/minecraft/class_1921$class_4750;)V
 			ARG 1 texture
+			ARG 2 lightMap
+			ARG 3 overlay
+			ARG 4 layering
+			ARG 5 target
+			ARG 6 texturing
+			ARG 7 lineWidth
+			ARG 8 outlineMode
 		METHOD method_23598 builder ()Lnet/minecraft/class_1921$class_4688$class_4689;
 		CLASS class_4689 Builder
 			FIELD field_21430 lightmap Lnet/minecraft/class_4668$class_4676;

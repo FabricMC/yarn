@@ -2,7 +2,9 @@ CLASS net/minecraft/class_10097 net/minecraft/client/render/model/ReferencedMode
 	FIELD field_53664 LOGGER Lorg/slf4j/Logger;
 	FIELD field_56989 modelCache Lit/unimi/dsi/fastutil/objects/Object2ObjectMap;
 	FIELD field_56990 missingModel Lnet/minecraft/class_10097$class_10814;
+	FIELD field_56991 holder Lit/unimi/dsi/fastutil/objects/Object2ObjectFunction;
 	FIELD field_56992 resolver Lnet/minecraft/class_10526$class_10103;
+	FIELD field_56993 queue Ljava/util/Queue;
 	METHOD <init> (Ljava/util/Map;Lnet/minecraft/class_1100;)V
 		ARG 1 unbakedModels
 		ARG 2 missingModel
@@ -19,10 +21,12 @@ CLASS net/minecraft/class_10097 net/minecraft/client/render/model/ReferencedMode
 		ARG 0 model
 	METHOD method_68027 (Ljava/util/Map;Ljava/lang/Object;)Lnet/minecraft/class_10097$class_10814;
 		ARG 2 id
-	METHOD method_68029 (Lnet/minecraft/class_2960;Lnet/minecraft/class_1100;)Lnet/minecraft/class_10097$class_10814;
+	METHOD method_68028 collectModels ()Ljava/util/Map;
+	METHOD method_68029 schedule (Lnet/minecraft/class_2960;Lnet/minecraft/class_1100;)Lnet/minecraft/class_10097$class_10814;
 		ARG 1 id
 		ARG 2 model
-	CLASS class_10814
+	METHOD method_68030 checkIfValid (Ljava/util/List;)V
+	CLASS class_10814 Holder
 		FIELD field_56994 AMBIENT_OCCLUSION_PROPERTY Lnet/minecraft/class_10097$class_10815;
 		FIELD field_56995 GUI_LIGHT_PROPERTY Lnet/minecraft/class_10097$class_10815;
 		FIELD field_56996 GEOMETRY_PROPERTY Lnet/minecraft/class_10097$class_10815;
@@ -32,6 +36,7 @@ CLASS net/minecraft/class_10097 net/minecraft/client/render/model/ReferencedMode
 		FIELD field_57000 BAKED_GEOMETRY_PROPERTY Lnet/minecraft/class_10097$class_10815;
 		FIELD field_57001 PROPERTY_COUNT I
 		FIELD field_57002 id Lnet/minecraft/class_2960;
+		FIELD field_57003 valid Z
 		FIELD field_57004 parent Lnet/minecraft/class_10097$class_10814;
 		FIELD field_57005 model Lnet/minecraft/class_1100;
 		FIELD field_57006 properties Ljava/util/concurrent/atomic/AtomicReferenceArray;
@@ -39,6 +44,7 @@ CLASS net/minecraft/class_10097 net/minecraft/client/render/model/ReferencedMode
 		METHOD <init> (Lnet/minecraft/class_2960;Lnet/minecraft/class_1100;Z)V
 			ARG 1 id
 			ARG 2 model
+			ARG 3 valid
 		METHOD method_68032 createProperty (I)Lnet/minecraft/class_10097$class_10815;
 		METHOD method_68035 getProperty (Lnet/minecraft/class_10097$class_10815;)Ljava/lang/Object;
 			ARG 1 property
