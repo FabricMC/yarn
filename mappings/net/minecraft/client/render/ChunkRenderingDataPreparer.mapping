@@ -1,23 +1,27 @@
 CLASS net/minecraft/class_8679 net/minecraft/client/render/ChunkRenderingDataPreparer
 	FIELD field_45617 LOGGER Lorg/slf4j/Logger;
 	FIELD field_45618 DIRECTIONS [Lnet/minecraft/class_2350;
+	FIELD field_45619 DEFAULT_SECTION_DISTANCE I
 	FIELD field_45620 CHUNK_INNER_DIAGONAL_LENGTH D
 	FIELD field_45621 terrainUpdateScheduled Z
 	FIELD field_45622 terrainUpdateFuture Ljava/util/concurrent/Future;
 	FIELD field_45623 builtChunkStorage Lnet/minecraft/class_769;
 	FIELD field_45624 state Ljava/util/concurrent/atomic/AtomicReference;
 	FIELD field_45625 events Ljava/util/concurrent/atomic/AtomicReference;
+	FIELD field_45626 needsUpdate Ljava/util/concurrent/atomic/AtomicBoolean;
+	FIELD field_55873 sectionDistance I
 	METHOD method_52817 scheduleTerrainUpdate ()V
 	METHOD method_52819 addNeighbors (Lnet/minecraft/class_1923;)V
 		ARG 1 chunkPos
-	METHOD method_52821 (Lnet/minecraft/class_4184;Ljava/util/Queue;)V
+	METHOD method_52821 scheduleLater (Lnet/minecraft/class_4184;Ljava/util/Queue;)V
 		ARG 1 camera
 	METHOD method_52822 addNeighbors (Lnet/minecraft/class_8679$class_8680;Lnet/minecraft/class_1923;)V
 		ARG 1 events
 		ARG 2 chunkPos
+	METHOD method_52823 scheduleNew (Lnet/minecraft/class_8679$class_8681;)V
 	METHOD method_52824 (Lnet/minecraft/class_8679$class_8681;Lnet/minecraft/class_8679$class_762;)V
 		ARG 1 info
-	METHOD method_52825 (Lnet/minecraft/class_8679$class_6600;Lnet/minecraft/class_243;Ljava/util/Queue;ZLjava/util/function/Consumer;Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;)V
+	METHOD method_52825 update (Lnet/minecraft/class_8679$class_6600;Lnet/minecraft/class_243;Ljava/util/Queue;ZLjava/util/function/Consumer;Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;)V
 		ARG 2 pos
 		ARG 4 cullChunks
 	METHOD method_52826 setStorage (Lnet/minecraft/class_769;)V
@@ -46,11 +50,12 @@ CLASS net/minecraft/class_8679 net/minecraft/client/render/ChunkRenderingDataPre
 		ARG 3 frustum
 		ARG 4 builtChunk
 		ARG 5 activeSections
-	METHOD method_52835 (ZLnet/minecraft/class_4604;Ljava/util/List;Lnet/minecraft/class_243;Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;)V
+	METHOD method_52835 updateNow (ZLnet/minecraft/class_4604;Ljava/util/List;Lnet/minecraft/class_243;Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;)V
 		ARG 2 frustum
 		ARG 3 builtChunks
 		ARG 4 cameraPos
 		ARG 5 activeSections
+	METHOD method_52836 updateFrustum ()Z
 	METHOD method_52837 getInfo (Lnet/minecraft/class_846$class_851;)Lnet/minecraft/class_8679$class_762;
 		ARG 1 chunk
 	METHOD method_62924 (Ljava/util/List;Ljava/util/List;Lnet/minecraft/class_10143$class_10147;ZIZ)V
@@ -70,6 +75,7 @@ CLASS net/minecraft/class_8679 net/minecraft/client/render/ChunkRenderingDataPre
 			ARG 2 info
 	CLASS class_6600 RenderableChunks
 		FIELD field_45627 infoList Lnet/minecraft/class_8679$class_5972;
+		FIELD field_45628 queue Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 		FIELD field_53929 octree Lnet/minecraft/class_10143;
 		METHOD <init> (Lnet/minecraft/class_769;)V
 			ARG 1 storage
