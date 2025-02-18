@@ -8,6 +8,23 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 	FIELD field_28552 VARIANT_POOL_FUNCTIONS Ljava/util/Map;
 	FIELD field_41526 CHISELED_BOOKSHELF_MODEL_CACHE Ljava/util/Map;
 	FIELD field_55238 itemModelOutput Lnet/minecraft/class_10405;
+	FIELD field_56780 NO_OP Lnet/minecraft/class_10804;
+	FIELD field_56781 UV_LOCK Lnet/minecraft/class_10804;
+	FIELD field_56782 ROTATE_X_90 Lnet/minecraft/class_10804;
+	FIELD field_56783 ROTATE_X_180 Lnet/minecraft/class_10804;
+	FIELD field_56784 ROTATE_X_270 Lnet/minecraft/class_10804;
+	FIELD field_56785 ROTATE_Y_90 Lnet/minecraft/class_10804;
+	FIELD field_56786 ROTATE_Y_180 Lnet/minecraft/class_10804;
+	FIELD field_56787 ROTATE_Y_270 Lnet/minecraft/class_10804;
+	FIELD field_56788 WEIGHT_2 Lnet/minecraft/class_10804;
+	FIELD field_56789 UNORIENTABLE_TRAPDOORS Ljava/util/List;
+	FIELD field_56790 BASE_WITH_CUSTOM_GENERATOR Ljava/util/Map;
+	FIELD field_56791 NORTH_DEFAULT_ROTATION_OPERATIONS Lnet/minecraft/class_4926;
+	FIELD field_56792 UP_DEFAULT_ROTATION_OPERATIONS Lnet/minecraft/class_4926;
+	FIELD field_56793 EAST_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS Lnet/minecraft/class_4926;
+	FIELD field_56794 SOUTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS Lnet/minecraft/class_4926;
+	FIELD field_56795 NORTH_DEFAULT_HORIZONTAL_ROTATION_OPERATIONS Lnet/minecraft/class_4926;
+	FIELD field_56796 TEXTURED_MODELS Ljava/util/Map;
 	METHOD <init> (Ljava/util/function/Consumer;Lnet/minecraft/class_10405;Ljava/util/function/BiConsumer;)V
 		ARG 1 blockStateCollector
 		ARG 2 itemModelOutput
@@ -39,6 +56,7 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 	METHOD method_25533 registerSnows ()V
 	METHOD method_25534 register ()V
 	METHOD method_25535 getBambooBlockStateVariants (I)Lnet/minecraft/class_807;
+		ARG 0 age
 	METHOD method_25536 getTurtleEggModel (ILjava/lang/String;Lnet/minecraft/class_4944;)Lnet/minecraft/class_813;
 		ARG 1 eggs
 		ARG 2 prefix
@@ -70,6 +88,7 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 3 texturesFactory
 	METHOD method_25547 registerCrop (Lnet/minecraft/class_2248;Lnet/minecraft/class_2769;[I)V
 		ARG 1 crop
+		ARG 2 ageProperty
 		ARG 3 ageTextureIndices
 	METHOD method_25548 registerTintableCross (Lnet/minecraft/class_2248;Lnet/minecraft/class_4910$class_4913;)V
 		ARG 1 block
@@ -107,9 +126,13 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 3 textures
 	METHOD method_25565 createBooleanModelMap (Lnet/minecraft/class_2746;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4926;
 		ARG 0 property
+		ARG 1 trueModel
+		ARG 2 falseModel
 	METHOD method_25566 createValueFencedModelMap (Lnet/minecraft/class_2769;Ljava/lang/Comparable;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4926;
 		ARG 0 property
 		ARG 1 fence
+		ARG 2 aboveFenceModel
+		ARG 3 belowFenceModel
 	METHOD method_25576 registerRandomHorizontalRotations (Lnet/minecraft/class_4946$class_4947;[Lnet/minecraft/class_2248;)V
 		ARG 1 modelFactory
 		ARG 2 blocks
@@ -143,6 +166,14 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 2 modelFactory
 	METHOD method_25609 createDoorBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4917;
 		ARG 0 doorBlock
+		ARG 1 bottomLeftClosedModel
+		ARG 2 bottomLeftOpenModel
+		ARG 3 bottomRightClosedModel
+		ARG 4 bottomRightOpenModel
+		ARG 5 topLeftClosedModel
+		ARG 6 topLeftOpenModel
+		ARG 7 topRightClosedModel
+		ARG 8 topRightOpenModel
 	METHOD method_25614 registerSouthDefaultHorizontalFacing (Lnet/minecraft/class_4946$class_4947;[Lnet/minecraft/class_2248;)V
 		ARG 1 modelFactory
 		ARG 2 blocks
@@ -162,11 +193,18 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 2 parentModelId
 	METHOD method_25626 createFenceGateBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Z)Lnet/minecraft/class_4917;
 		ARG 0 fenceGateBlock
+		ARG 1 openModel
+		ARG 2 closedModel
+		ARG 3 openWallModel
+		ARG 4 closedWallModel
 		ARG 5 uvlock
 	METHOD method_25631 registerRotatable (Lnet/minecraft/class_2248;)V
 		ARG 1 block
 	METHOD method_25636 createWallBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4917;
 		ARG 0 wallBlock
+		ARG 1 postModel
+		ARG 2 lowSideModel
+		ARG 3 tallSideModel
 	METHOD method_25641 registerSimpleCubeAll (Lnet/minecraft/class_2248;)V
 		ARG 1 block
 	METHOD method_25642 registerWoolAndCarpet (Lnet/minecraft/class_2248;Lnet/minecraft/class_2248;)V
@@ -174,8 +212,12 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 2 carpet
 	METHOD method_25644 createSingletonBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;)Lnet/minecraft/class_4925;
 		ARG 0 block
+		ARG 1 model
 	METHOD method_25646 createStairsBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4917;
 		ARG 0 stairsBlock
+		ARG 1 innerModel
+		ARG 2 straightModel
+		ARG 3 outerModel
 	METHOD method_25649 createAxisRotatedVariantMap ()Lnet/minecraft/class_4926;
 	METHOD method_25650 registerCubeAllModelTexturePool (Lnet/minecraft/class_2248;)Lnet/minecraft/class_4910$class_4912;
 		ARG 1 block
@@ -187,10 +229,16 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 2 modelFactory
 	METHOD method_25653 createAxisRotatedBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;)Lnet/minecraft/class_4917;
 		ARG 0 block
+		ARG 1 model
 	METHOD method_25654 createButtonBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4917;
 		ARG 0 buttonBlock
+		ARG 1 unpressedModel
+		ARG 2 pressedModel
 	METHOD method_25655 createOrientableTrapdoorBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4917;
 		ARG 0 trapdoorBlock
+		ARG 1 topModel
+		ARG 2 bottomModel
+		ARG 3 openModel
 	METHOD method_25657 registerSunflower ()V
 	METHOD method_25658 registerDoor (Lnet/minecraft/class_2248;)V
 		ARG 1 doorBlock
@@ -199,8 +247,13 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 2 particleSource
 	METHOD method_25661 createFenceBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4917;
 		ARG 0 fenceBlock
+		ARG 1 postModel
+		ARG 2 sideModel
 	METHOD method_25662 createTrapdoorBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4917;
 		ARG 0 trapdoorBlock
+		ARG 1 topModel
+		ARG 2 bottomModel
+		ARG 3 openModel
 	METHOD method_25664 registerTallSeagrass ()V
 	METHOD method_25665 registerOrientableTrapdoor (Lnet/minecraft/class_2248;)V
 		ARG 1 trapdoorBlock
@@ -209,8 +262,13 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 2 textureSource
 	METHOD method_25667 createAxisRotatedBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4917;
 		ARG 0 block
+		ARG 1 verticalModel
+		ARG 2 horizontalModel
 	METHOD method_25668 createSlabBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4917;
 		ARG 0 slabBlock
+		ARG 1 bottomModel
+		ARG 2 topModel
+		ARG 3 doubleModel
 	METHOD method_25670 registerBamboo ()V
 	METHOD method_25671 registerTrapdoor (Lnet/minecraft/class_2248;)V
 		ARG 1 trapdoorBlock
@@ -220,6 +278,8 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 2 child
 	METHOD method_25673 createPressurePlateBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4917;
 		ARG 0 pressurePlateBlock
+		ARG 1 upModel
+		ARG 2 downModel
 	METHOD method_25676 registerLog (Lnet/minecraft/class_2248;)Lnet/minecraft/class_4910$class_4914;
 		ARG 1 logBlock
 	METHOD method_25677 registerTorch (Lnet/minecraft/class_2248;Lnet/minecraft/class_2248;)V
@@ -227,6 +287,8 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 2 wallTorch
 	METHOD method_25678 registerDoubleBlock (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)V
 		ARG 1 block
+		ARG 2 upperModel
+		ARG 3 lowerModel
 	METHOD method_25680 registerBarrel ()V
 	METHOD method_25681 registerSimpleState (Lnet/minecraft/class_2248;)V
 		ARG 1 block
@@ -271,15 +333,18 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 	METHOD method_25709 registerCauldrons ()V
 	METHOD method_25710 registerShulkerBox (Lnet/minecraft/class_2248;Lnet/minecraft/class_1767;)V
 		ARG 1 shulkerBox
+		ARG 2 color
 	METHOD method_25711 registerChorusFlower ()V
 	METHOD method_25712 registerEndPortalFrame ()V
 	METHOD method_26279 registerRespawnAnchor ()V
 	METHOD method_26433 addJigsawOrientationToVariant (Lnet/minecraft/class_5000;)Lnet/minecraft/class_10804;
+		ARG 0 orientation
 	METHOD method_26434 registerJigsaw ()V
 	METHOD method_27166 registerCampfire ([Lnet/minecraft/class_2248;)V
 		ARG 1 blocks
 	METHOD method_31063 registerAxisRotated (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;)V
 		ARG 1 block
+		ARG 2 model
 	METHOD method_31064 registerRod (Lnet/minecraft/class_2248;)V
 		ARG 1 block
 	METHOD method_32227 registerAmethysts ()V
@@ -287,6 +352,7 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 1 candle
 		ARG 2 cake
 	METHOD method_32229 registerAmethyst (Lnet/minecraft/class_2248;)V
+		ARG 1 block
 	METHOD method_32802 registerPointedDripstone ()V
 	METHOD method_32803 getDripstoneVariant (Lnet/minecraft/class_2350;Lnet/minecraft/class_5691;)Lnet/minecraft/class_807;
 		ARG 1 direction
@@ -300,16 +366,21 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 	METHOD method_33712 registerSmallDripleaf ()V
 	METHOD method_33713 registerAzalea (Lnet/minecraft/class_2248;)V
 		ARG 1 block
+	METHOD method_34604 (Lnet/minecraft/class_2248;I)Lnet/minecraft/class_2960;
+		ARG 2 stage
 	METHOD method_34606 (Lnet/minecraft/class_2248;Lnet/minecraft/class_4944;Ljava/lang/Integer;)Lnet/minecraft/class_807;
 		ARG 3 age
 	METHOD method_34608 createStoneState (Lnet/minecraft/class_2248;Lnet/minecraft/class_813;Lnet/minecraft/class_4944;Ljava/util/function/BiConsumer;)Lnet/minecraft/class_4917;
 		ARG 0 block
+		ARG 1 variant
 		ARG 2 textures
 		ARG 3 modelCollector
 	METHOD method_34610 (Lnet/minecraft/class_2776;)Lnet/minecraft/class_807;
 		ARG 1 mode
 	METHOD method_34612 (Lnet/minecraft/class_5794;)V
 		ARG 1 family
+	METHOD method_34617 (Ljava/lang/Comparable;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Ljava/lang/Comparable;)Lnet/minecraft/class_807;
+		ARG 3 value
 	METHOD method_34618 (Ljava/lang/Integer;)Lnet/minecraft/class_807;
 		ARG 1 stage
 	METHOD method_34619 (Ljava/lang/Integer;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lnet/minecraft/class_807;
@@ -322,6 +393,7 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 1 textures
 	METHOD method_34631 createDeepslateState (Lnet/minecraft/class_2248;Lnet/minecraft/class_813;Lnet/minecraft/class_4944;Ljava/util/function/BiConsumer;)Lnet/minecraft/class_4917;
 		ARG 0 block
+		ARG 1 variant
 		ARG 2 textures
 		ARG 3 modelCollector
 	METHOD method_34637 (Lnet/minecraft/class_4944;Lnet/minecraft/class_2960;)Lnet/minecraft/class_4944;
@@ -330,6 +402,8 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 1 textures
 	METHOD method_34645 (Lnet/minecraft/class_2960;Lnet/minecraft/class_4944;)V
 		ARG 1 textures
+	METHOD method_34650 (Lnet/minecraft/class_2960;Lnet/minecraft/class_4944;)V
+		ARG 1 textureMap
 	METHOD method_34852 registerLightningRod ()V
 	METHOD method_36440 registerInfestedDeepslate ()V
 	METHOD method_37317 registerPottedAzaleaBush (Lnet/minecraft/class_2248;)V
@@ -342,10 +416,16 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 	METHOD method_42038 registerSculkCatalyst ()V
 	METHOD method_42039 createMudBrickState (Lnet/minecraft/class_2248;Lnet/minecraft/class_813;Lnet/minecraft/class_4944;Ljava/util/function/BiConsumer;)Lnet/minecraft/class_4917;
 		ARG 0 block
+		ARG 1 variant
 		ARG 2 textures
 		ARG 3 modelCollector
 	METHOD method_46189 createCustomFenceBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4917;
 		ARG 0 customFenceBlock
+		ARG 1 postModel
+		ARG 2 northSideModel
+		ARG 3 eastSideModel
+		ARG 4 southSideModel
+		ARG 5 westSideModel
 	METHOD method_46190 registerHangingSign (Lnet/minecraft/class_2248;Lnet/minecraft/class_2248;Lnet/minecraft/class_2248;)V
 		ARG 1 base
 		ARG 2 hangingSign
@@ -373,6 +453,7 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 	METHOD method_49374 registerTintableCrossBlockStateWithStages (Lnet/minecraft/class_2248;Lnet/minecraft/class_4910$class_4913;Lnet/minecraft/class_2769;[I)V
 		ARG 1 block
 		ARG 2 tintType
+		ARG 3 stageProperty
 		ARG 4 stages
 	METHOD method_49375 ([ILnet/minecraft/class_2248;Lnet/minecraft/class_4910$class_4913;Ljava/lang/Integer;)Lnet/minecraft/class_807;
 		ARG 4 stage
@@ -390,6 +471,11 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 		ARG 1 block
 	METHOD method_54654 registerCrafter ()V
 	METHOD method_54822 createCopperBulbBlockState (Lnet/minecraft/class_2248;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)Lnet/minecraft/class_4917;
+		ARG 0 block
+		ARG 1 unlitUnpoweredModel
+		ARG 2 litUnpoweredModel
+		ARG 3 unlitPoweredModel
+		ARG 4 litPoweredModel
 	METHOD method_54823 registerParentedDoor (Lnet/minecraft/class_2248;Lnet/minecraft/class_2248;)V
 		ARG 1 parent
 		ARG 2 doorBlock
@@ -495,6 +581,10 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 	METHOD method_66526 registerSegmentedBlock (Lnet/minecraft/class_2248;Lnet/minecraft/class_2758;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;)V
 		ARG 1 block
 		ARG 2 amountProperty
+		ARG 3 firstSegmentModel
+		ARG 4 secondSegmentModel
+		ARG 5 thirdSegmentModel
+		ARG 6 fourthSegmentModel
 	METHOD method_66527 (Lnet/minecraft/class_2248;Ljava/lang/String;Lnet/minecraft/class_4944;)V
 		ARG 2 textureMap
 	METHOD method_66528 createCreakingHeartModel (Lnet/minecraft/class_4946$class_4947;Lnet/minecraft/class_2248;Ljava/lang/String;)Lnet/minecraft/class_2960;
@@ -504,6 +594,72 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 	METHOD method_66529 registerLeafLitter (Lnet/minecraft/class_2248;)V
 		ARG 1 leafLitter
 	METHOD method_66791 registerTestBlock ()V
+	METHOD method_67806 createModelVariant (Lnet/minecraft/class_2960;)Lnet/minecraft/class_813;
+		ARG 0 id
+	METHOD method_67808 (Lnet/minecraft/class_2248;Ljava/lang/Integer;Lnet/minecraft/class_2756;)Lnet/minecraft/class_807;
+		ARG 1 age
+		ARG 2 half
+	METHOD method_67809 collectMultifaceOperators (Lnet/minecraft/class_2688;Ljava/util/function/Function;)Ljava/util/Map;
+		ARG 0 state
+		ARG 1 propertyGetter
+	METHOD method_67810 (Lnet/minecraft/class_10795;Lnet/minecraft/class_2769;Lnet/minecraft/class_10804;)V
+		ARG 1 property
+		ARG 2 operator
+	METHOD method_67812 (Lnet/minecraft/class_4922;Lnet/minecraft/class_807;Lnet/minecraft/class_10795;Lnet/minecraft/class_2769;Lnet/minecraft/class_10804;)V
+		ARG 3 property
+		ARG 4 operator
+	METHOD method_67813 (Lnet/minecraft/class_4922;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_10795;Lnet/minecraft/class_2769;Lnet/minecraft/class_10804;)V
+		ARG 4 property
+		ARG 5 operator
+	METHOD method_67814 (Lnet/minecraft/class_4944;)V
+		ARG 0 textureMap
+	METHOD method_67818 (Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Ljava/lang/Boolean;Lnet/minecraft/class_2768;)Lnet/minecraft/class_807;
+		ARG 6 powered
+		ARG 7 shape
+	METHOD method_67819 (Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Lnet/minecraft/class_807;Ljava/lang/Boolean;Ljava/lang/Boolean;)Lnet/minecraft/class_807;
+		ARG 4 lit
+		ARG 5 powered
+	METHOD method_67820 (Lnet/minecraft/class_807;Lnet/minecraft/class_807;Ljava/lang/Boolean;)Lnet/minecraft/class_807;
+		ARG 2 bloom
+	METHOD method_67822 createModel (Lnet/minecraft/class_813;)Lnet/minecraft/class_807;
+		ARG 0 variant
+	METHOD method_67823 modelWithMirroring (Lnet/minecraft/class_813;Lnet/minecraft/class_813;)Lnet/minecraft/class_807;
+		ARG 0 variant
+		ARG 1 mirroredVariant
+	METHOD method_67825 (Ljava/lang/Integer;)Lnet/minecraft/class_807;
+		ARG 1 hatch
+	METHOD method_67826 (Ljava/lang/Integer;Ljava/lang/Integer;)Lnet/minecraft/class_807;
+		ARG 1 eggs
+		ARG 2 hatch
+	METHOD method_67829 (Ljava/util/function/Function;Lnet/minecraft/class_2688;Lcom/google/common/collect/ImmutableMap$Builder;Lnet/minecraft/class_2350;Lnet/minecraft/class_10804;)V
+		ARG 3 direction
+		ARG 4 operator
+	METHOD method_67830 ([ILit/unimi/dsi/fastutil/ints/Int2ObjectMap;Lnet/minecraft/class_2248;Ljava/lang/Integer;)Lnet/minecraft/class_807;
+		ARG 4 age
+	METHOD method_67831 ([Lnet/minecraft/class_2960;Ljava/lang/Integer;)Lnet/minecraft/class_807;
+		ARG 1 charges
+	METHOD method_67832 or ([Lnet/minecraft/class_10795;)Lnet/minecraft/class_815;
+		ARG 0 conditionBuilders
+	METHOD method_67833 createModel ([Lnet/minecraft/class_813;)Lnet/minecraft/class_807;
+		ARG 0 variants
+	METHOD method_67834 createMultipartConditionBuilder ()Lnet/minecraft/class_10795;
+	METHOD method_67835 createModel (Lnet/minecraft/class_2960;)Lnet/minecraft/class_807;
+		ARG 0 id
+	METHOD method_67836 (Lnet/minecraft/class_10795;Lnet/minecraft/class_2769;Lnet/minecraft/class_10804;)V
+		ARG 1 property
+		ARG 2 operator
+	METHOD method_67837 (Lnet/minecraft/class_4944;)V
+		ARG 0 textureMap
+	METHOD method_67839 modelWithYRotation (Lnet/minecraft/class_813;)Lnet/minecraft/class_807;
+		ARG 0 variant
+	METHOD method_67840 (Lnet/minecraft/class_4944;)V
+		ARG 0 textureMap
+	METHOD method_67841 (Lnet/minecraft/class_813;)Lnet/minecraft/class_813;
+		ARG 0 variant
+	METHOD method_67842 (Lnet/minecraft/class_4944;)V
+		ARG 0 textureMap
+	METHOD method_67843 (Lnet/minecraft/class_4944;)V
+		ARG 0 textureMap
 	CLASS class_4912 BlockTexturePool
 		FIELD field_22837 textures Lnet/minecraft/class_4944;
 		FIELD field_22838 baseModelId Lnet/minecraft/class_813;
@@ -586,6 +742,7 @@ CLASS net/minecraft/class_4910 net/minecraft/client/data/BlockStateModelGenerato
 	CLASS class_5879 StateFactory
 		METHOD create (Lnet/minecraft/class_2248;Lnet/minecraft/class_813;Lnet/minecraft/class_4944;Ljava/util/function/BiConsumer;)Lnet/minecraft/class_4917;
 			ARG 1 block
+			ARG 2 variant
 			ARG 3 textures
 			ARG 4 modelCollector
 	CLASS class_7987 ChiseledBookshelfModelCacheKey
