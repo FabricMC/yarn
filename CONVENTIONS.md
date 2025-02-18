@@ -145,7 +145,7 @@ This also applies to positions of screen widgets if they are specified using the
 Use "world" to describe the world with blocks and entities. Use "dimension" to describe the types of worlds that can be defined by data packs.
 
 There is no single convention on what to call the world save (a save data that contains multiple worlds, like the Overworld, the Nether, and the End). In many places this is referred to as "level", especially in `level.dat`-related code. (Examples: `LevelLoadingScreen`, `LevelProperties`, `LevelStorage`)
-In client GUI-related code, however, "world" is also used. (Examples: `CreateWorldScreen`, `SelectWorldScreen`, `WorldCreationSettings`).
+In client GUI-related code, however, "world" is also used. (Examples: `CreateWorldScreen`, `SelectWorldScreen`, `WorldCreationSettings`)
 Server-side code generally refers to them as "save". (Examples: `SaveLoading`)
 
 ### Special classes
