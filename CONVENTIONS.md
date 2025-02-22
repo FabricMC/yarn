@@ -93,7 +93,7 @@ Use the word "last" for the value that something had last tick (`lastX`, `lastWi
 Use "get" for non-boolean getters and other methods that calculate some property with no side effects other than caching a value
 in a private field. For boolean getters, use "is", "can", "should", and similar verbs (like "requires").
 
-Exception: record components should always be prefix-less, even if it means droppng the "get" prefix from the implementing interface.
+Exception: record components should always be prefix-less, even if it means dropping the "get" prefix from the implementing interface.
 
 For more complex computations, "find" and "calc" are frequently used.
 
