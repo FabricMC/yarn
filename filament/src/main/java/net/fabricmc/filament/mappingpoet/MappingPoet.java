@@ -74,9 +74,7 @@ public class MappingPoet {
 		Map<String, Environment.NestedClassInfo> nestedClasses = new ConcurrentHashMap<>();
 		Map<String, ClassNamePointer> classNames = new ConcurrentHashMap<>();
 
-		if (libraries.isEmpty()) {
-			scanNestedClasses(classNames, nestedClasses, libraries);
-		}
+		scanNestedClasses(classNames, nestedClasses, libraries);
 
 		try (JarFile jarFile = new JarFile(jar.toFile())) {
 			Enumeration<JarEntry> entryEnumerator = jarFile.entries();
