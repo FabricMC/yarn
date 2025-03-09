@@ -29,11 +29,14 @@ CLASS net/minecraft/class_757 net/minecraft/client/render/GameRenderer
 	FIELD field_4017 lastWorldIconUpdate J
 	FIELD field_4018 resourceManager Lnet/minecraft/class_3300;
 	FIELD field_4019 fovMultiplier F
-	FIELD field_4025 viewDistance F
+	FIELD field_4025 viewDistanceBlocks F
 	FIELD field_4028 lightmapTextureManager Lnet/minecraft/class_765;
 	FIELD field_4029 floatingItemWidth F
 	FIELD field_53066 pool Lnet/minecraft/class_9920;
 	FIELD field_53898 postProcessorId Lnet/minecraft/class_2960;
+	FIELD field_53899 BLUR_ID Lnet/minecraft/class_2960;
+	FIELD field_55871 nauseaEffectTime F
+	FIELD field_55872 nauseaEffectSpeed F
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_759;Lnet/minecraft/class_3300;Lnet/minecraft/class_4599;)V
 		ARG 1 client
 		ARG 2 heldItemRenderer
@@ -51,38 +54,40 @@ CLASS net/minecraft/class_757 net/minecraft/client/render/GameRenderer
 		ARG 2 height
 	METHOD method_3171 renderFloatingItem (Lnet/minecraft/class_332;F)V
 		ARG 1 context
-		ARG 2 tickDelta
+		ARG 2 tickProgress
 	METHOD method_3172 renderHand (Lnet/minecraft/class_4184;FLorg/joml/Matrix4f;)V
 		ARG 1 camera
-		ARG 2 tickDelta
+		ARG 2 tickProgress
+		ARG 3 positionMatrix
 	METHOD method_3174 getNightVisionStrength (Lnet/minecraft/class_1309;F)F
 		ARG 0 entity
-		ARG 1 tickDelta
+		ARG 1 tickProgress
 	METHOD method_3176 updateWorldIcon (Ljava/nio/file/Path;)V
 		ARG 1 path
 	METHOD method_3182 tick ()V
 	METHOD method_3184 togglePostProcessorEnabled ()V
 	METHOD method_3186 bobView (Lnet/minecraft/class_4587;F)V
 		ARG 1 matrices
-		ARG 2 tickDelta
+		ARG 2 tickProgress
 	METHOD method_3188 renderWorld (Lnet/minecraft/class_9779;)V
 		ARG 1 renderTickCounter
 	METHOD method_3189 showFloatingItem (Lnet/minecraft/class_1799;)V
 		ARG 1 floatingItem
 	METHOD method_3190 updateCrosshairTarget (F)V
-		ARG 1 tickDelta
+		ARG 1 tickProgress
 	METHOD method_3192 render (Lnet/minecraft/class_9779;Z)V
 		ARG 1 tickCounter
 		ARG 2 tick
-	METHOD method_3193 getViewDistance ()F
+	METHOD method_3193 getViewDistanceBlocks ()F
 	METHOD method_3195 getSkyDarkness (F)F
-		ARG 1 tickDelta
+		ARG 1 tickProgress
 	METHOD method_3196 getFov (Lnet/minecraft/class_4184;FZ)F
-		ARG 2 tickDelta
+		ARG 1 camera
+		ARG 2 tickProgress
 		ARG 3 changingFov
 	METHOD method_3198 tiltViewWhenHurt (Lnet/minecraft/class_4587;F)V
 		ARG 1 matrices
-		ARG 2 tickDelta
+		ARG 2 tickProgress
 	METHOD method_3199 updateFovMultiplier ()V
 	METHOD method_3202 shouldRenderBlockOutline ()Z
 	METHOD method_3203 reset ()V
@@ -108,7 +113,7 @@ CLASS net/minecraft/class_757 net/minecraft/client/render/GameRenderer
 		ARG 1 camera
 		ARG 2 blockInteractionRange
 		ARG 4 entityInteractionRange
-		ARG 6 tickDelta
+		ARG 6 tickProgress
 	METHOD method_56154 ensureTargetInRange (Lnet/minecraft/class_239;Lnet/minecraft/class_243;D)Lnet/minecraft/class_239;
 		ARG 0 hitResult
 		ARG 1 cameraPos
@@ -120,3 +125,5 @@ CLASS net/minecraft/class_757 net/minecraft/client/render/GameRenderer
 	METHOD method_62906 getPostProcessorId ()Lnet/minecraft/class_2960;
 	METHOD method_64055 (Lnet/minecraft/class_4587;Lnet/minecraft/class_4597;)V
 		ARG 2 vertexConsumers
+	METHOD method_68478 (FLnet/minecraft/class_10883;)V
+		ARG 1 pass

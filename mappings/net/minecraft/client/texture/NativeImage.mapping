@@ -23,22 +23,8 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		ARG 3 height
 		ARG 4 useStb
 		ARG 5 pointer
-	METHOD method_22619 upload (IIIIIIIZ)V
-		ARG 1 level
-		ARG 2 offsetX
-		ARG 3 offsetY
-		ARG 4 unpackSkipPixels
-		ARG 5 unpackSkipRows
-		ARG 6 width
-		ARG 7 height
-		ARG 8 blur
 	METHOD method_24032 write (Ljava/nio/channels/WritableByteChannel;)Z
 		ARG 1 channel
-	METHOD method_35620 readDepthComponent (F)V
-		ARG 1 unused
-	METHOD method_35627 drawPixels ()V
-		COMMENT Use {@code upload} to upload this image to GL so it can be used later. This
-		COMMENT method is not used in vanilla, and its side effects are not yet known.
 	METHOD method_36559 isOutOfBounds (II)Z
 		ARG 1 x
 		ARG 2 y
@@ -48,11 +34,6 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		ARG 3 width
 		ARG 4 height
 		ARG 5 targetImage
-	METHOD method_4301 upload (IIIZ)V
-		ARG 1 level
-		ARG 2 offsetX
-		ARG 3 offsetY
-		ARG 4 close
 	METHOD method_4302 untrack ()V
 	METHOD method_4303 read (Lnet/minecraft/class_1011$class_1012;Ljava/nio/ByteBuffer;)Lnet/minecraft/class_1011;
 		ARG 0 format
@@ -104,17 +85,7 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 	METHOD method_4317 copyFrom (Lnet/minecraft/class_1011;)V
 		ARG 1 image
 	METHOD method_4318 getFormat ()Lnet/minecraft/class_1011$class_1012;
-	METHOD method_4319 mirrorVertically ()V
 	METHOD method_4320 checkAllocated ()V
-	METHOD method_4321 uploadInternal (IIIIIIIZ)V
-		ARG 1 level
-		ARG 2 offsetX
-		ARG 3 offsetY
-		ARG 4 unpackSkipPixels
-		ARG 5 unpackSkipRows
-		ARG 6 width
-		ARG 7 height
-		ARG 8 blur
 	METHOD method_4322 makePixelArray ()[I
 	METHOD method_4323 getHeight ()I
 	METHOD method_4324 read (Ljava/nio/ByteBuffer;)Lnet/minecraft/class_1011;
@@ -127,9 +98,6 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		ARG 3 width
 		ARG 4 height
 		ARG 5 color
-	METHOD method_4327 loadFromTextureImage (IZ)V
-		ARG 1 level
-		ARG 2 removeAlpha
 	METHOD method_47594 copyRect (Lnet/minecraft/class_1011;IIIIIIZZ)V
 		ARG 1 image
 		ARG 2 x
@@ -145,8 +113,6 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 	METHOD method_48463 copyPixelsAbgr ()[I
 	METHOD method_49277 read ([B)Lnet/minecraft/class_1011;
 		ARG 0 bytes
-	METHOD method_51596 apply (Ljava/util/function/IntUnaryOperator;)V
-		ARG 1 operator
 	METHOD method_61940 getColorArgb (II)I
 		ARG 1 x
 		ARG 2 y
@@ -158,8 +124,8 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 	METHOD method_65806 putAndRead (Ljava/nio/ByteBuffer;[B)Lnet/minecraft/class_1011;
 		ARG 0 buffer
 		ARG 1 bytes
+	METHOD method_67769 imageId ()J
 	CLASS class_1012 Format
-		FIELD field_4993 glFormat I
 		FIELD field_4994 channelCount I
 		FIELD field_4996 writeable Z
 		FIELD field_4997 RGBA Lnet/minecraft/class_1011$class_1012;
@@ -181,20 +147,19 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		FIELD field_5008 blueOffset I
 		FIELD field_5009 greenOffset I
 		FIELD field_5010 redOffset I
-		METHOD <init> (Ljava/lang/String;IIIZZZZZIIIIIZ)V
+		METHOD <init> (Ljava/lang/String;IIZZZZZIIIIIZ)V
 			ARG 3 channelCount
-			ARG 4 glFormat
-			ARG 5 hasRed
-			ARG 6 hasGreen
-			ARG 7 hasBlue
-			ARG 8 hasLuminance
-			ARG 9 hasAlpha
-			ARG 10 redOffset
-			ARG 11 greenOffset
-			ARG 12 blueOffset
-			ARG 13 luminanceOffset
-			ARG 14 alphaOffset
-			ARG 15 writeable
+			ARG 4 hasRed
+			ARG 5 hasGreen
+			ARG 6 hasBlue
+			ARG 7 hasLuminance
+			ARG 8 hasAlpha
+			ARG 9 redOffset
+			ARG 10 greenOffset
+			ARG 11 blueOffset
+			ARG 12 luminanceOffset
+			ARG 13 alphaOffset
+			ARG 14 writeable
 		METHOD method_35628 hasRed ()Z
 		METHOD method_35629 hasGreen ()Z
 		METHOD method_35630 hasBlue ()Z
@@ -214,24 +179,11 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 			COMMENT @apiNote For luminance-alpha format, this would return the luminance offset
 			COMMENT than the alpha offset.
 		METHOD method_4332 getAlphaOffset ()I
-		METHOD method_4333 toGl ()I
 		METHOD method_4335 getChannelCount ()I
 		METHOD method_4336 fromChannelCount (I)Lnet/minecraft/class_1011$class_1012;
 			ARG 0 glFormat
 		METHOD method_4337 hasOpacityChannel ()Z
 		METHOD method_4338 isWriteable ()Z
-		METHOD method_4339 setPackAlignment ()V
-		METHOD method_4340 setUnpackAlignment ()V
-	CLASS class_1013 InternalFormat
-		COMMENT Represents the internal formats sent to {@code glTexImage2D}, representing the
-		COMMENT number of color channels present in an image to prepare.
-		COMMENT
-		COMMENT @see <a href="http://docs.gl/gl4/glTexImage2D#idm2352">Base Internal Formats</a>
-		COMMENT @see com.mojang.blaze3d.platform.TextureUtil#prepareImage(InternalFormat, int, int, int, int)
-		FIELD field_5015 value I
-		METHOD <init> (Ljava/lang/String;II)V
-			ARG 3 value
-		METHOD method_4341 getValue ()I
 	CLASS class_1014 WriteCallback
 		FIELD field_5018 channel Ljava/nio/channels/WritableByteChannel;
 		FIELD field_5019 exception Ljava/io/IOException;

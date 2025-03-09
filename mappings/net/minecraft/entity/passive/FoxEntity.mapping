@@ -1,5 +1,5 @@
 CLASS net/minecraft/class_4019 net/minecraft/entity/passive/FoxEntity
-	FIELD field_17949 TYPE Lnet/minecraft/class_2940;
+	FIELD field_17949 VARIANT Lnet/minecraft/class_2940;
 	FIELD field_17950 FOX_FLAGS Lnet/minecraft/class_2940;
 	FIELD field_17951 OWNER Lnet/minecraft/class_2940;
 	FIELD field_17952 OTHER_TRUSTED Lnet/minecraft/class_2940;
@@ -24,6 +24,10 @@ CLASS net/minecraft/class_4019 net/minecraft/entity/passive/FoxEntity
 	FIELD field_30334 AGGRESSIVE_FLAG I
 	FIELD field_30335 EATING_DURATION I
 	FIELD field_47772 BABY_BASE_DIMENSIONS Lnet/minecraft/class_4048;
+	FIELD field_56652 TRUSTED_ENTITIES_CODEC Lcom/mojang/serialization/Codec;
+	FIELD field_57607 DEFAULT_SLEEPING Z
+	FIELD field_57608 DEFAULT_SITTING Z
+	FIELD field_57609 DEFAULT_CROUCHING Z
 	METHOD method_18253 (Lnet/minecraft/class_1297;)Z
 		ARG 0 entity
 	METHOD method_18254 (Lnet/minecraft/class_1309;Lnet/minecraft/class_3218;)Z
@@ -69,11 +73,11 @@ CLASS net/minecraft/class_4019 net/minecraft/entity/passive/FoxEntity
 	METHOD method_18297 setCrouching (Z)V
 		ARG 1 crouching
 	METHOD method_18298 getHeadRoll (F)F
-		ARG 1 tickDelta
+		ARG 1 tickProgress
 	METHOD method_18299 setRollingHead (Z)V
 		ARG 1 rollingHead
 	METHOD method_18300 getBodyRotationHeightOffset (F)F
-		ARG 1 tickDelta
+		ARG 1 tickProgress
 	METHOD method_18301 setAggressive (Z)V
 		ARG 1 aggressive
 	METHOD method_18302 setSleeping (Z)V
@@ -99,15 +103,17 @@ CLASS net/minecraft/class_4019 net/minecraft/entity/passive/FoxEntity
 		ARG 2 spawnReason
 		ARG 3 pos
 		ARG 4 random
+	METHOD method_47844 setVariant (Lnet/minecraft/class_4019$class_4039;)V
+		ARG 1 variant
+	METHOD method_47845 getVariant ()Lnet/minecraft/class_4019$class_4039;
 	METHOD method_66290 trust (Lnet/minecraft/class_10583;)V
 		ARG 1 entity
 	METHOD method_66291 (Lnet/minecraft/class_1309;Lnet/minecraft/class_10583;)Z
 		ARG 1 trusted
-	METHOD method_66292 (Lnet/minecraft/class_2499;Ljava/util/UUID;)V
-		ARG 1 uuid
 	METHOD method_66293 getTrustedEntities ()Ljava/util/stream/Stream;
 	METHOD method_66294 trust (Lnet/minecraft/class_1309;)V
 		ARG 1 entity
+	METHOD method_67659 clearTrusted ()V
 	CLASS class_4020 DefendFriendGoal
 		FIELD field_17966 offender Lnet/minecraft/class_1309;
 		FIELD field_17967 friend Lnet/minecraft/class_1309;
@@ -176,21 +182,21 @@ CLASS net/minecraft/class_4019 net/minecraft/entity/passive/FoxEntity
 		FIELD field_30337 MAX_CALM_DOWN_TIME I
 		METHOD method_18432 canNotCalmDown ()Z
 	CLASS class_4038 MoveToHuntGoal
-	CLASS class_4039 Type
-		FIELD field_17998 BY_ID Ljava/util/function/IntFunction;
-		FIELD field_18000 id I
-		FIELD field_18001 key Ljava/lang/String;
+	CLASS class_4039 Variant
+		FIELD field_17998 INDEX_MAPPER Ljava/util/function/IntFunction;
+		FIELD field_18000 index I
+		FIELD field_18001 id Ljava/lang/String;
 		FIELD field_41548 CODEC Lnet/minecraft/class_3542$class_7292;
+		FIELD field_55960 PACKET_CODEC Lnet/minecraft/class_9139;
+		FIELD field_57610 DEFAULT Lnet/minecraft/class_4019$class_4039;
 		METHOD <init> (Ljava/lang/String;IILjava/lang/String;)V
-			ARG 3 id
-			ARG 4 key
-		METHOD method_18311 fromId (I)Lnet/minecraft/class_4019$class_4039;
-			ARG 0 id
+			ARG 3 index
+			ARG 4 id
+		METHOD method_18311 byIndex (I)Lnet/minecraft/class_4019$class_4039;
+			ARG 0 index
 		METHOD method_18313 fromBiome (Lnet/minecraft/class_6880;)Lnet/minecraft/class_4019$class_4039;
 			ARG 0 biome
-		METHOD method_18314 byName (Ljava/lang/String;)Lnet/minecraft/class_4019$class_4039;
-			ARG 0 name
-		METHOD method_18317 getId ()I
+		METHOD method_18317 getIndex ()I
 	CLASS class_4052 FollowParentGoal
 		FIELD field_18104 fox Lnet/minecraft/class_4019;
 		METHOD <init> (Lnet/minecraft/class_4019;D)V

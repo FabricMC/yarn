@@ -22,7 +22,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_42108 limbAnimator Lnet/minecraft/class_8080;
 	FIELD field_45123 serverHeadYaw D
 	FIELD field_45740 ACTIVE_EFFECTS_NBT_KEY Ljava/lang/String;
-	FIELD field_48826 syncedBodyArmorStack Lnet/minecraft/class_1799;
 	FIELD field_49792 POTION_SWIRLS Lnet/minecraft/class_2940;
 	FIELD field_51569 riptideAttackDamage F
 	FIELD field_51570 riptideStack Lnet/minecraft/class_1799;
@@ -33,6 +32,8 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_54564 NOT_WEARING_GAZE_DISGUISE_PREDICATE Ljava/util/function/Predicate;
 	FIELD field_55674 attackerReference Lnet/minecraft/class_10583;
 	FIELD field_55675 interpolator Lnet/minecraft/class_10584;
+	FIELD field_55951 lastEquipmentStacks Ljava/util/Map;
+	FIELD field_56535 equipment Lnet/minecraft/class_10630;
 	FIELD field_6212 sidewaysSpeed F
 	FIELD field_6213 deathTime I
 	FIELD field_6214 POTION_SWIRLS_AMBIENT Lnet/minecraft/class_2940;
@@ -46,7 +47,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6229 lastHandSwingProgress F
 	FIELD field_6230 lastAttackedTime I
 	FIELD field_6231 SPRINTING_SPEED_BOOST Lnet/minecraft/class_1322;
-	FIELD field_6234 syncedHandStacks Lnet/minecraft/class_2371;
 	FIELD field_6235 hurtTime I
 	FIELD field_6236 attacking Lnet/minecraft/class_1309;
 	FIELD field_6238 playerHitTimer I
@@ -55,7 +55,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6243 leaningPitch F
 	FIELD field_6246 absorptionAmount F
 	FIELD field_6247 HEALTH Lnet/minecraft/class_2940;
-	FIELD field_6248 syncedArmorStacks Lnet/minecraft/class_2371;
 	FIELD field_6250 forwardSpeed F
 	FIELD field_6251 handSwingProgress F
 	FIELD field_6252 handSwinging Z
@@ -142,9 +141,9 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_21755 setStingerCount (I)V
 		ARG 1 stingerCount
 	METHOD method_23328 playBlockFallSound ()V
-	METHOD method_23329 computeFallDamage (FF)I
+	METHOD method_23329 computeFallDamage (DF)I
 		ARG 1 fallDistance
-		ARG 2 damageMultiplier
+		ARG 3 damagePerDistance
 	METHOD method_23667 swingHand (Lnet/minecraft/class_1268;Z)V
 		ARG 1 hand
 		ARG 2 fromServerPlayer
@@ -219,27 +218,14 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 attackingPlayer
 		ARG 2 playerHitTimer
 	METHOD method_29920 shouldSwimInFluids ()Z
-	METHOD method_30120 (Ljava/util/List;Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
-		ARG 2 slot
-		ARG 3 stack
 	METHOD method_30121 checkHandStackSwap (Ljava/util/Map;)V
 		COMMENT Notifies nearby players if the stacks in the hands have been swapped.
 		ARG 1 equipmentChanges
-	METHOD method_30122 setSyncedArmorStack (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
-		ARG 1 slot
-		ARG 2 armor
 	METHOD method_30123 sendEquipmentChanges (Ljava/util/Map;)V
 		COMMENT Sends equipment changes to nearby players.
 		COMMENT
 		COMMENT @see #sendEquipmentChanges()
 		ARG 1 equipmentChanges
-	METHOD method_30124 setSyncedHandStack (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
-		ARG 1 slot
-		ARG 2 stack
-	METHOD method_30125 getSyncedArmorStack (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
-		ARG 1 slot
-	METHOD method_30126 getSyncedHandStack (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
-		ARG 1 slot
 	METHOD method_30127 swapHandStacks ()V
 	METHOD method_30128 sendEquipmentChanges ()V
 		COMMENT Sends equipment changes to nearby players.
@@ -282,13 +268,10 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 			COMMENT the effect to add
 		ARG 2 source
 			COMMENT the source entity or {@code null} for non-entity sources
-	METHOD method_37410 processEquippedStack (Lnet/minecraft/class_1799;)V
-		ARG 1 stack
 	METHOD method_37416 getJumpBoostVelocityModifier ()F
 	METHOD method_39760 getFallSounds ()Lnet/minecraft/class_1309$class_6823;
 	METHOD method_41329 disableExperienceDropping ()V
 	METHOD method_41330 isExperienceDroppingDisabled ()Z
-	METHOD method_42149 disablesShield ()Z
 	METHOD method_44201 isArmorSlot (Lnet/minecraft/class_1304;)Z
 		ARG 1 slot
 	METHOD method_45324 areItemsDifferent (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
@@ -345,9 +328,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 sound
 	METHOD method_56079 getSlotForHand (Lnet/minecraft/class_1268;)Lnet/minecraft/class_1304;
 		ARG 0 hand
-	METHOD method_5661 getArmorItems ()Ljava/lang/Iterable;
-	METHOD method_56674 getAllArmorItems ()Ljava/lang/Iterable;
-	METHOD method_56675 getEquippedItems ()Ljava/lang/Iterable;
 	METHOD method_5673 equipStack (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
 		ARG 1 slot
 		ARG 2 stack
@@ -366,14 +346,13 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 2 amount
 		ARG 3 slots
 	METHOD method_58150 updatePotionSwirls ()V
-	METHOD method_5877 getHandItems ()Ljava/lang/Iterable;
 	METHOD method_5936 canPickUpLoot ()Z
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
 	METHOD method_59923 getExperienceToDrop (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)I
 		ARG 1 world
 		ARG 2 attacker
-	METHOD method_59924 getKnockbackAgainst (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;)F
+	METHOD method_59924 getAttackKnockbackAgainst (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;)F
 		ARG 1 target
 		ARG 2 damageSource
 	METHOD method_59925 hasLandedInFluid ()Z
@@ -431,7 +410,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6022 getStuckArrowCount ()I
 	METHOD method_6023 tickNewAi ()V
 	METHOD method_6024 getLeaningPitch (F)F
-		ARG 1 tickDelta
+		ARG 1 tickProgress
 	METHOD method_6025 heal (F)V
 		COMMENT Heals this entity by the given {@code amount} of half-hearts.
 		COMMENT
@@ -494,9 +473,7 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		COMMENT @see #shouldAlwaysDropExperience()
 		COMMENT @see #getExperienceToDrop()
 	METHOD method_6055 getHandSwingProgress (F)F
-		ARG 1 tickDelta
-	METHOD method_6056 damageShield (F)V
-		ARG 1 amount
+		ARG 1 tickProgress
 	METHOD method_6057 canSee (Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
 	METHOD method_6058 getActiveHand ()Lnet/minecraft/class_1268;
@@ -504,8 +481,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 1 effect
 	METHOD method_6060 knockback (Lnet/minecraft/class_1309;)V
 		ARG 1 target
-	METHOD method_6061 blockedByShield (Lnet/minecraft/class_1282;)Z
-		ARG 1 source
 	METHOD method_6062 isImmobile ()Z
 	METHOD method_6063 getMaxHealth ()F
 	METHOD method_6064 getNextAirOnLand (I)I
@@ -558,8 +533,9 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6088 getActiveStatusEffects ()Ljava/util/Map;
 	METHOD method_6089 containsOnlyAmbientEffects (Ljava/util/Collection;)Z
 		ARG 0 effects
-	METHOD method_6090 takeShieldHit (Lnet/minecraft/class_1309;)V
-		ARG 1 attacker
+	METHOD method_6090 takeShieldHit (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)V
+		ARG 1 world
+		ARG 2 attacker
 	METHOD method_6091 travel (Lnet/minecraft/class_243;)V
 		COMMENT Allows you to do certain speed and velocity calculations. This is useful for custom vehicle behavior, or custom entity movement. This is not to be confused with AI.
 		COMMENT
@@ -749,11 +725,42 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 		ARG 2 playerHitTimer
 	METHOD method_66279 getEffectFadeFactor (Lnet/minecraft/class_6880;F)F
 		ARG 1 effect
-		ARG 2 tickDelta
+		ARG 2 tickProgress
 	METHOD method_66280 getAttackingPlayer ()Lnet/minecraft/class_1657;
 	METHOD method_66281 stopGliding ()V
 	METHOD method_66282 tickMovementInput ()V
 	METHOD method_66283 playThornsSound (Lnet/minecraft/class_1282;)V
 		ARG 1 damageSource
+	METHOD method_66667 getEquipSound (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;Lnet/minecraft/class_10192;)Lnet/minecraft/class_6880;
+		ARG 1 slot
+		ARG 2 stack
+		ARG 3 equippableComponent
+	METHOD method_66668 (Ljava/util/List;Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
+		ARG 2 slot
+		ARG 3 stack
+	METHOD method_66669 getUnsafeFallDistance (D)D
+		ARG 1 fallDistance
+	METHOD method_66670 (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
+		ARG 0 slot
+	METHOD method_67125 getWeaponDisableBlockingForSeconds ()F
+	METHOD method_67346 getDamageBlockedAmount (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;F)F
+		ARG 1 world
+		ARG 2 source
+		ARG 3 amount
+	METHOD method_67517 createItemEntity (Lnet/minecraft/class_1799;ZZ)Lnet/minecraft/class_1542;
+		ARG 1 stack
+		ARG 2 atSelf
+		ARG 3 retainOwnership
+	METHOD method_67518 createEquipment ()Lnet/minecraft/class_10630;
+	METHOD method_67650 (Lnet/minecraft/class_2338;)V
+		ARG 1 pos
+	METHOD method_68264 (Ljava/lang/String;)V
+		ARG 1 team
+	METHOD method_68265 (Lnet/minecraft/class_2487;)V
+		ARG 1 brain
 	METHOD method_7292 getLuck ()F
+	METHOD method_7329 dropItem (Lnet/minecraft/class_1799;ZZ)Lnet/minecraft/class_1542;
+		ARG 1 stack
+		ARG 2 dropAtSelf
+		ARG 3 retainOwnership
 	CLASS class_6823 FallSounds

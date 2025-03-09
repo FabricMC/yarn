@@ -10,6 +10,7 @@ CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 	FIELD field_33226 RIGHT_CURLY_BRACKET C
 	FIELD field_33227 COMMA Ljava/lang/String;
 	FIELD field_33228 COLON C
+	FIELD field_57978 BLOCK_KEY_CODEC Lcom/mojang/serialization/Codec;
 	METHOD method_10681 toBlockState (Lnet/minecraft/class_7871;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2680;
 		COMMENT {@return the block state from the {@code nbt}}
 		COMMENT
@@ -59,31 +60,6 @@ CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 			COMMENT the element to test
 		ARG 2 ignoreListOrder
 			COMMENT whether to ignore ordering for {@link NbtList}
-	METHOD method_10691 toBlockPos (Lnet/minecraft/class_2487;Ljava/lang/String;)Ljava/util/Optional;
-		COMMENT {@return the block position from the {@code nbt}}
-		COMMENT
-		COMMENT @see #fromBlockPos(BlockPos)
-		ARG 0 nbt
-		ARG 1 key
-	METHOD method_10692 fromBlockPos (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2520;
-		COMMENT {@return the serialized block position}
-		COMMENT
-		COMMENT @see #toBlockPos(NbtCompound, String)
-		ARG 0 pos
-	METHOD method_25929 fromUuid (Ljava/util/UUID;)Lnet/minecraft/class_2495;
-		COMMENT Serializes a {@link UUID} into its equivalent NBT representation.
-		COMMENT
-		COMMENT @since 20w10a
-		COMMENT @see #toUuid(NbtElement)
-		ARG 0 uuid
-	METHOD method_25930 toUuid (Lnet/minecraft/class_2520;)Ljava/util/UUID;
-		COMMENT Deserializes an NBT element into a {@link UUID}.
-		COMMENT The NBT element's data must have the same structure as the output of {@link #fromUuid}.
-		COMMENT
-		COMMENT @throws IllegalArgumentException if {@code element} is not a valid representation of a UUID
-		COMMENT @since 20w10a
-		COMMENT @see #fromUuid(UUID)
-		ARG 0 element
 	METHOD method_32260 fromNbtProviderString (Ljava/lang/String;)Lnet/minecraft/class_2487;
 		COMMENT {@return the {@code string} parsed as an NBT provider-formatted
 		COMMENT NBT compound}
@@ -97,8 +73,8 @@ CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 		ARG 0 string
 	METHOD method_32261 (Ljava/util/Map;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2499;
 		ARG 1 nbt
-	METHOD method_32262 (Lnet/minecraft/class_2487;Ljava/lang/String;)Ljava/lang/String;
-		ARG 1 key
+	METHOD method_32262 (Ljava/lang/StringBuilder;Lnet/minecraft/class_2487;)V
+		ARG 1 properties
 	METHOD method_32263 (Lnet/minecraft/class_2487;Ljava/lang/String;Ljava/lang/String;)V
 		ARG 2 property
 	METHOD method_32264 (Lnet/minecraft/class_2499;)D
@@ -143,9 +119,9 @@ CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 		ARG 0 nbt
 	METHOD method_32277 toNbtProviderFormattedPalette (Lnet/minecraft/class_2487;)Ljava/lang/String;
 		ARG 0 compound
-	METHOD method_32278 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2499;
+	METHOD method_32278 (Lnet/minecraft/class_2487;)Ljava/util/Optional;
 		ARG 0 nbt
-	METHOD method_32279 (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2499;
+	METHOD method_32279 (Lnet/minecraft/class_2487;)Ljava/util/Optional;
 		ARG 0 nbt
 	METHOD method_36114 appendIndent (ILjava/lang/StringBuilder;)Ljava/lang/StringBuilder;
 		ARG 0 depth
@@ -181,4 +157,15 @@ CLASS net/minecraft/class_2512 net/minecraft/nbt/NbtHelper
 		ARG 0 nbt
 		ARG 1 fallback
 	METHOD method_48310 putDataVersion (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
+		ARG 0 nbt
+	METHOD method_68084 getDataVersion (Lcom/mojang/serialization/Dynamic;I)I
+		ARG 0 dynamic
+		ARG 1 fallback
+	METHOD method_68595 (Ljava/util/Map$Entry;)Ljava/lang/String;
+		ARG 0 entry
+	METHOD method_68596 (Lnet/minecraft/class_2487;Ljava/lang/String;)Ljava/lang/String;
+		ARG 1 key
+	METHOD method_68597 (Lnet/minecraft/class_2520;)Ljava/util/stream/Stream;
+		ARG 0 nbt
+	METHOD method_68598 (Lnet/minecraft/class_2520;)Ljava/util/stream/Stream;
 		ARG 0 nbt

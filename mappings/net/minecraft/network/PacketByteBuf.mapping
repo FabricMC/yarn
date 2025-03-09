@@ -287,8 +287,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @see #readLongArray()
 		COMMENT @return this buf, for chaining
-		ARG 1 array
-			COMMENT the array to write
+		ARG 1 values
 	METHOD method_10790 readUuid ()Ljava/util/UUID;
 		COMMENT Reads a UUID (universally unique identifier) from this buf. A UUID is
 		COMMENT represented by two regular longs.
@@ -387,7 +386,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #writeString(String, int)
 		ARG 1 maxLength
 			COMMENT the maximum length of the string read
-	METHOD method_10801 readLongArray ([J)[J
+	METHOD method_10801 readLongArray (Lio/netty/buffer/ByteBuf;)[J
 		COMMENT Reads an array of primitive longs from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the regular long (not var
 		COMMENT long) values. The array does not have a length limit.
@@ -401,8 +400,7 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readLongArray()
 		COMMENT @see #readLongArray(long[], int)
 		COMMENT @return the read long array
-		ARG 1 toArray
-			COMMENT the array to reuse
+		ARG 0 buf
 	METHOD method_10802 readDate ()Ljava/util/Date;
 		COMMENT Reads a date from this buf. A date is represented by its time, a regular
 		COMMENT long.
@@ -453,26 +451,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readBlockPos()
 		ARG 1 pos
 			COMMENT the pos to write
-	METHOD method_10809 readLongArray ([JI)[J
-		COMMENT Reads an array of primitive longs from this buf. The array first has a
-		COMMENT var int indicating its length, followed by the regular long (not var
-		COMMENT long) values. The array has a length limit of {@code maxSize}.
-		COMMENT
-		COMMENT <p>Only when {@code toArray} is not {@code null} and {@code
-		COMMENT toArray.length} equals to the length var int read will the {@code
-		COMMENT toArray} be reused and returned; otherwise, a new array
-		COMMENT of proper size is created.
-		COMMENT
-		COMMENT @see #writeLongArray(long[])
-		COMMENT @see #readLongArray()
-		COMMENT @see #readLongArray(long[])
-		COMMENT @return the read long array
-		COMMENT @throws io.netty.handler.codec.DecoderException if the read array has a
-		COMMENT length over {@code maxSize}
-		ARG 1 toArray
-			COMMENT the array to reuse
-		ARG 2 maxSize
-			COMMENT the max length of the read array
 	METHOD method_10810 readIdentifier ()Lnet/minecraft/class_2960;
 		COMMENT Reads an identifier from this buf. An identifier is represented by its
 		COMMENT string form. The read identifier's string form can have a max length of
@@ -1026,6 +1004,19 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 pos
 	METHOD method_64264 readChunkPos (Lio/netty/buffer/ByteBuf;)Lnet/minecraft/class_1923;
 		ARG 0 buf
+	METHOD method_68085 writeLongArray (Lio/netty/buffer/ByteBuf;[J)V
+		ARG 0 buf
+		ARG 1 values
+	METHOD method_68086 writeFixedLengthLongArray (Lio/netty/buffer/ByteBuf;[J)V
+		ARG 0 buf
+		ARG 1 values
+	METHOD method_68087 writeFixedLengthLongArray ([J)Lnet/minecraft/class_2540;
+		ARG 1 values
+	METHOD method_68088 readFixedLengthLongArray (Lio/netty/buffer/ByteBuf;[J)[J
+		ARG 0 buf
+		ARG 1 values
+	METHOD method_68089 readFixedLengthLongArray ([J)[J
+		ARG 1 values
 	METHOD nioBuffer (II)Ljava/nio/ByteBuffer;
 		ARG 1 index
 		ARG 2 length

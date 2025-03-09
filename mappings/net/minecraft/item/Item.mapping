@@ -31,6 +31,7 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	FIELD field_49998 MAX_MAX_COUNT I
 	FIELD field_54952 ENTRY_CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_55708 ENTRY_PACKET_CODEC Lnet/minecraft/class_9139;
+	FIELD field_56296 DEFAULT_BLOCKS_ATTACKS_MAX_USE_TIME I
 	FIELD field_8001 BASE_ATTACK_SPEED_MODIFIER_ID Lnet/minecraft/class_2960;
 	FIELD field_8003 BLOCK_ITEMS Ljava/util/Map;
 	FIELD field_8006 BASE_ATTACK_DAMAGE_MODIFIER_ID Lnet/minecraft/class_2960;
@@ -119,7 +120,6 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 1 stack
 		ARG 2 world
 		ARG 3 player
-	METHOD method_57336 getBreakSound ()Lnet/minecraft/class_3414;
 	METHOD method_57347 getComponents ()Lnet/minecraft/class_9323;
 	METHOD method_58403 getBonusAttackDamage (Lnet/minecraft/class_1297;FLnet/minecraft/class_1282;)F
 		ARG 1 target
@@ -143,6 +143,12 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	METHOD method_65353 shouldShowOperatorBlockWarnings (Lnet/minecraft/class_1799;Lnet/minecraft/class_1657;)Z
 		ARG 1 stack
 		ARG 2 player
+	METHOD method_67187 appendTooltip (Lnet/minecraft/class_1799;Lnet/minecraft/class_1792$class_9635;Lnet/minecraft/class_10712;Ljava/util/function/Consumer;Lnet/minecraft/class_1836;)V
+		ARG 1 stack
+		ARG 2 context
+		ARG 3 displayComponent
+		ARG 4 textConsumer
+		ARG 5 type
 	METHOD method_7836 use (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
 		COMMENT Called when the player uses (or starts using) the item.
 		COMMENT The use action, by default, is bound to the right mouse button.
@@ -201,14 +207,6 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 2 user
 		ARG 3 entity
 		ARG 4 hand
-	METHOD method_7851 appendTooltip (Lnet/minecraft/class_1799;Lnet/minecraft/class_1792$class_9635;Ljava/util/List;Lnet/minecraft/class_1836;)V
-		COMMENT Called by the client to append tooltips to an item. Subclasses can override
-		COMMENT this and add custom tooltips to {@code tooltip} list.
-		ARG 1 stack
-		ARG 2 context
-		ARG 3 tooltip
-			COMMENT the list of tooltips to show
-		ARG 4 type
 	METHOD method_7852 usageTick (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;Lnet/minecraft/class_1799;I)V
 		COMMENT Called on both the server and the client every tick while an entity uses
 		COMMENT the item. Currently used by {@link CrossbowItem} to charge the crossbow.
@@ -326,8 +324,8 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		COMMENT
 		COMMENT <p>By default, returns true if the item has enchantments.
 		ARG 1 stack
-	METHOD method_7888 inventoryTick (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;IZ)V
-		COMMENT Called on both the client and the server every tick if the item is in the player's inventory.
+	METHOD method_7888 inventoryTick (Lnet/minecraft/class_1799;Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;Lnet/minecraft/class_1304;)V
+		COMMENT Called on both the client and the server every tick if the item is in a player or other entity's inventory.
 		COMMENT
 		COMMENT <p>This method is called on both the logical client and logical server, so take caution
 		COMMENT when overriding this method. The logical side can be checked using {@link
@@ -335,10 +333,8 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 1 stack
 		ARG 2 world
 		ARG 3 entity
-			COMMENT the entity holding the item; usually a player
+			COMMENT the entity holding the item
 		ARG 4 slot
-		ARG 5 selected
-			COMMENT whether the item is in the selected hotbar slot
 	CLASS class_1793 Settings
 		COMMENT Item settings configure behaviors common to all items, such as the stack's max
 		COMMENT count. An instance of this must be passed to the constructor
@@ -406,16 +402,34 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 			ARG 1 material
 			ARG 2 attackDamage
 			ARG 3 attackSpeed
-		METHOD method_66331 tool (Lnet/minecraft/class_9886;Lnet/minecraft/class_6862;FFZ)Lnet/minecraft/class_1792$class_1793;
+		METHOD method_66331 tool (Lnet/minecraft/class_9886;Lnet/minecraft/class_6862;FFF)Lnet/minecraft/class_1792$class_1793;
 			ARG 1 material
 			ARG 2 effectiveBlocks
 			ARG 3 attackDamage
 			ARG 4 attackSpeed
-			ARG 5 canDisableBlocking
+			ARG 5 disableBlockingForSeconds
 		METHOD method_66332 armor (Lnet/minecraft/class_1741;Lnet/minecraft/class_8051;)Lnet/minecraft/class_1792$class_1793;
 			ARG 1 material
 			ARG 2 type
 		METHOD method_66333 sword (Lnet/minecraft/class_9886;FF)Lnet/minecraft/class_1792$class_1793;
+			ARG 1 material
+			ARG 2 attackDamage
+			ARG 3 attackSpeed
+		METHOD method_67188 wolfArmor (Lnet/minecraft/class_1741;)Lnet/minecraft/class_1792$class_1793;
+			ARG 1 material
+		METHOD method_67189 trimMaterial (Lnet/minecraft/class_5321;)Lnet/minecraft/class_1792$class_1793;
+			ARG 1 trimMaterial
+		METHOD method_67190 axe (Lnet/minecraft/class_9886;FF)Lnet/minecraft/class_1792$class_1793;
+			ARG 1 material
+			ARG 2 attackDamage
+			ARG 3 attackSpeed
+		METHOD method_67191 horseArmor (Lnet/minecraft/class_1741;)Lnet/minecraft/class_1792$class_1793;
+			ARG 1 material
+		METHOD method_67192 hoe (Lnet/minecraft/class_9886;FF)Lnet/minecraft/class_1792$class_1793;
+			ARG 1 material
+			ARG 2 attackDamage
+			ARG 3 attackSpeed
+		METHOD method_67193 shovel (Lnet/minecraft/class_9886;FF)Lnet/minecraft/class_1792$class_1793;
 			ARG 1 material
 			ARG 2 attackDamage
 			ARG 3 attackSpeed

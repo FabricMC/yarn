@@ -43,15 +43,15 @@ CLASS net/minecraft/class_4516 net/minecraft/test/TestContext
 	METHOD method_35955 expectEntityAt (Lnet/minecraft/class_1297;Lnet/minecraft/class_2338;)V
 		ARG 1 entity
 		ARG 2 pos
-	METHOD method_35957 testEntityProperty (Lnet/minecraft/class_1297;Ljava/util/function/Function;Ljava/lang/String;Ljava/lang/Object;)V
+	METHOD method_35957 testEntityProperty (Lnet/minecraft/class_1297;Ljava/util/function/Function;Ljava/lang/Object;Lnet/minecraft/class_2561;)V
 		ARG 1 entity
 		ARG 2 propertyGetter
-		ARG 3 propertyName
-		ARG 4 expectedValue
-	METHOD method_35958 testEntity (Lnet/minecraft/class_1297;Ljava/util/function/Predicate;Ljava/lang/String;)V
+		ARG 3 value
+		ARG 4 message
+	METHOD method_35958 testEntity (Lnet/minecraft/class_1297;Ljava/util/function/Predicate;Lnet/minecraft/class_2561;)V
 		ARG 1 entity
 		ARG 2 predicate
-		ARG 3 testName
+		ARG 3 message
 	METHOD method_35959 expectEntity (Lnet/minecraft/class_1299;)V
 		ARG 1 type
 	METHOD method_35960 expectEntityToTouch (Lnet/minecraft/class_1299;DDD)V
@@ -107,8 +107,6 @@ CLASS net/minecraft/class_4516 net/minecraft/test/TestContext
 	METHOD method_35972 expectBlock (Lnet/minecraft/class_2248;Lnet/minecraft/class_2338;)V
 		ARG 1 block
 		ARG 2 pos
-	METHOD method_35973 (Lnet/minecraft/class_2680;)Z
-		ARG 0 state
 	METHOD method_35974 (Lnet/minecraft/class_2680;Lnet/minecraft/class_2248;Lnet/minecraft/class_2248;)Z
 		ARG 2 block1
 	METHOD method_35977 expectSameStates (Lnet/minecraft/class_3341;Lnet/minecraft/class_2338;)V
@@ -143,34 +141,30 @@ CLASS net/minecraft/class_4516 net/minecraft/test/TestContext
 		ARG 1 pos
 		ARG 2 property
 		ARG 3 value
-	METHOD method_35988 checkBlockProperty (Lnet/minecraft/class_2338;Lnet/minecraft/class_2769;Ljava/util/function/Predicate;Ljava/lang/String;)V
+	METHOD method_35988 checkBlockProperty (Lnet/minecraft/class_2338;Lnet/minecraft/class_2769;Ljava/util/function/Predicate;Lnet/minecraft/class_2561;)V
 		ARG 1 pos
 		ARG 2 property
 		ARG 3 predicate
-		ARG 4 errorMessage
+		ARG 4 message
 	METHOD method_35989 (Lnet/minecraft/class_2338;Lnet/minecraft/class_3341;Lnet/minecraft/class_2338;)V
 		ARG 3 checkedPos
 	METHOD method_35990 expectSameStates (Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;)V
 		ARG 1 checkedPos
 		ARG 2 correctStatePos
-	METHOD method_35991 checkBlock (Lnet/minecraft/class_2338;Ljava/util/function/Predicate;Ljava/lang/String;)V
+	METHOD method_35992 checkBlock (Lnet/minecraft/class_2338;Ljava/util/function/Predicate;Ljava/util/function/Function;)V
 		ARG 1 pos
 		ARG 2 predicate
-		ARG 3 errorMessage
-	METHOD method_35992 checkBlock (Lnet/minecraft/class_2338;Ljava/util/function/Predicate;Ljava/util/function/Supplier;)V
-		ARG 1 pos
-		ARG 2 predicate
-		ARG 3 errorMessageSupplier
+		ARG 3 messageGetter
 	METHOD method_35993 addFinalTask (Ljava/lang/Runnable;)V
 		ARG 1 runnable
 	METHOD method_35994 (Ljava/lang/Runnable;J)V
 		ARG 2 tick
-	METHOD method_35995 throwGameTestException (Ljava/lang/String;)V
+	METHOD method_35995 throwGameTestException (Lnet/minecraft/class_2561;)V
 		ARG 1 message
-	METHOD method_35996 throwPositionedException (Ljava/lang/String;Lnet/minecraft/class_1297;)V
+	METHOD method_35996 throwPositionedException (Lnet/minecraft/class_2561;Lnet/minecraft/class_1297;)V
 		ARG 1 message
 		ARG 2 entity
-	METHOD method_35997 throwPositionedException (Ljava/lang/String;Lnet/minecraft/class_2338;)V
+	METHOD method_35997 throwPositionedException (Lnet/minecraft/class_2561;Lnet/minecraft/class_2338;)V
 		ARG 1 message
 		ARG 2 pos
 	METHOD method_35998 forEachRelativePos (Ljava/util/function/Consumer;)V
@@ -220,17 +214,18 @@ CLASS net/minecraft/class_4516 net/minecraft/test/TestContext
 		ARG 2 pos
 	METHOD method_36013 (Lnet/minecraft/class_243;Lnet/minecraft/class_1297;)Z
 		ARG 1 entity
-	METHOD method_36014 getBlockEntity (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2586;
+	METHOD method_36014 getBlockEntity (Lnet/minecraft/class_2338;Ljava/lang/Class;)Lnet/minecraft/class_2586;
 		ARG 1 pos
+		ARG 2 clazz
 	METHOD method_36015 expectEntityWithDataEnd (Lnet/minecraft/class_2338;Lnet/minecraft/class_1299;Ljava/util/function/Function;Ljava/lang/Object;)V
 		ARG 1 pos
 		ARG 2 type
 		ARG 3 entityDataGetter
 		ARG 4 data
-	METHOD method_36017 checkBlockState (Lnet/minecraft/class_2338;Ljava/util/function/Predicate;Ljava/util/function/Supplier;)V
+	METHOD method_36017 checkBlockState (Lnet/minecraft/class_2338;Ljava/util/function/Predicate;Ljava/util/function/Function;)V
 		ARG 1 pos
 		ARG 2 predicate
-		ARG 3 errorMessageSupplier
+		ARG 3 messageGetter
 	METHOD method_36018 addInstantFinalTask (Ljava/lang/Runnable;)V
 		ARG 1 runnable
 	METHOD method_36019 (Ljava/lang/Runnable;J)V
@@ -330,7 +325,7 @@ CLASS net/minecraft/class_4516 net/minecraft/test/TestContext
 	METHOD method_46225 spawnItem (Lnet/minecraft/class_1792;Lnet/minecraft/class_2338;)Lnet/minecraft/class_1542;
 		ARG 1 item
 		ARG 2 pos
-	METHOD method_46226 assertTrue (ZLjava/lang/String;)V
+	METHOD method_46226 assertTrue (ZLnet/minecraft/class_2561;)V
 		ARG 1 condition
 		ARG 2 message
 	METHOD method_46227 getRelative (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
@@ -358,7 +353,7 @@ CLASS net/minecraft/class_4516 net/minecraft/test/TestContext
 		ARG 1 pos
 		ARG 2 entityType
 		ARG 3 item
-	METHOD method_49994 assertFalse (ZLjava/lang/String;)V
+	METHOD method_49994 assertFalse (ZLnet/minecraft/class_2561;)V
 		ARG 1 condition
 		ARG 2 message
 	METHOD method_51821 setHealthLow (Lnet/minecraft/class_1309;)Lnet/minecraft/class_1309;
@@ -372,7 +367,7 @@ CLASS net/minecraft/class_4516 net/minecraft/test/TestContext
 		ARG 1 pos
 		ARG 2 direction
 		ARG 3 powerPredicate
-		ARG 4 errorMessage
+		ARG 4 messageGetter
 	METHOD method_52889 expectEntityHasEffect (Lnet/minecraft/class_1309;Lnet/minecraft/class_6880;I)V
 		ARG 1 entity
 		ARG 2 effect
@@ -414,10 +409,10 @@ CLASS net/minecraft/class_4516 net/minecraft/test/TestContext
 		ARG 5 margin
 	METHOD method_56208 getEntities (Lnet/minecraft/class_1299;)Ljava/util/List;
 		ARG 1 type
-	METHOD method_56606 assertEquals (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
+	METHOD method_56606 assertEquals (Ljava/lang/Object;Ljava/lang/Object;Lnet/minecraft/class_2561;)V
 		ARG 1 value
 		ARG 2 expected
-		ARG 3 name
+		ARG 3 message
 	METHOD method_57099 setEntityPos (Lnet/minecraft/class_1308;FFF)V
 		ARG 1 entity
 		ARG 2 x
@@ -429,12 +424,13 @@ CLASS net/minecraft/class_4516 net/minecraft/test/TestContext
 	METHOD method_59872 dontExpectEntityBetween (Lnet/minecraft/class_1299;Lnet/minecraft/class_238;)V
 		ARG 1 type
 		ARG 2 box
-	METHOD method_60651 checkBlockEntity (Lnet/minecraft/class_2338;Ljava/util/function/Predicate;Ljava/util/function/Supplier;)V
+	METHOD method_60651 checkBlockEntity (Lnet/minecraft/class_2338;Ljava/lang/Class;Ljava/util/function/Predicate;Ljava/util/function/Supplier;)V
 		ARG 1 pos
-		ARG 2 predicate
-		ARG 3 errorMessageSupplier
+		ARG 2 clazz
+		ARG 3 predicate
+		ARG 4 messageGetter
 	METHOD method_61093 getRotation ()Lnet/minecraft/class_2470;
-	METHOD method_61173 expectEntityIn (Lnet/minecraft/class_1297;Lnet/minecraft/class_238;Ljava/lang/String;)V
+	METHOD method_61173 expectEntityIn (Lnet/minecraft/class_1297;Lnet/minecraft/class_238;Lnet/minecraft/class_2561;)V
 		ARG 1 entity
 		ARG 2 box
 		ARG 3 message
@@ -456,3 +452,36 @@ CLASS net/minecraft/class_4516 net/minecraft/test/TestContext
 		ARG 1 entity
 	METHOD method_66562 forceScheduledTick (Lnet/minecraft/class_2338;)V
 		ARG 1 pos
+	METHOD method_66934 (Lnet/minecraft/class_6862;Lnet/minecraft/class_2680;)Lnet/minecraft/class_2561;
+		ARG 1 state
+	METHOD method_66935 expectBlockIn (Lnet/minecraft/class_6862;Lnet/minecraft/class_2338;)V
+		ARG 1 tag
+		ARG 2 pos
+	METHOD method_66936 (Lnet/minecraft/class_2248;Lnet/minecraft/class_2248;)Lnet/minecraft/class_2561;
+		ARG 1 actualBlock
+	METHOD method_66937 createError (Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/class_4512;
+		ARG 1 translationKey
+		ARG 2 args
+	METHOD method_66938 (Ljava/util/function/Function;Lnet/minecraft/class_2680;)Lnet/minecraft/class_2561;
+		ARG 1 state
+	METHOD method_66940 expectContainerWithSingle (Lnet/minecraft/class_2338;Lnet/minecraft/class_1792;)V
+		ARG 1 pos
+		ARG 2 item
+	METHOD method_66941 createError (Lnet/minecraft/class_2338;Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/class_4513;
+		ARG 1 pos
+		ARG 2 translationKey
+		ARG 3 args
+	METHOD method_66942 createError (Lnet/minecraft/class_2338;Lnet/minecraft/class_2561;)Lnet/minecraft/class_4513;
+		ARG 1 pos
+		ARG 2 message
+	METHOD method_66943 createError (Lnet/minecraft/class_2561;)Lnet/minecraft/class_4512;
+		ARG 1 message
+	METHOD method_66944 (Lnet/minecraft/class_2561;Lnet/minecraft/class_2680;)Lnet/minecraft/class_2561;
+		ARG 1 state
+	METHOD method_66945 (Lnet/minecraft/class_6862;Lnet/minecraft/class_2680;)Z
+		ARG 1 state
+	METHOD method_66946 (Lnet/minecraft/class_2248;Lnet/minecraft/class_2248;)Lnet/minecraft/class_2561;
+		ARG 1 actualBlock
+	METHOD method_66947 expectBlockState (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
+		ARG 1 pos
+		ARG 2 state
