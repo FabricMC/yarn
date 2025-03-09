@@ -16,6 +16,26 @@ v2
 # too big and target methods become harder to maintain.
 # Only constants that need unpicking in vanilla are listed.
 
+# GlConst
+constant gl_depth_test_state com/mojang/blaze3d/platform/GlConst GL_EQUAL
+constant gl_depth_test_state com/mojang/blaze3d/platform/GlConst GL_LEQUAL
+constant gl_depth_test_state com/mojang/blaze3d/platform/GlConst GL_LESS
+constant gl_depth_test_state com/mojang/blaze3d/platform/GlConst GL_GREATER
+constant gl_depth_test_state com/mojang/blaze3d/platform/GlConst GL_GEQUAL
+constant gl_depth_test_state com/mojang/blaze3d/platform/GlConst GL_ALWAYS
+
+constant gl_polygon_mode com/mojang/blaze3d/platform/GlConst GL_LINE
+constant gl_polygon_mode com/mojang/blaze3d/platform/GlConst GL_FILL
+
+constant gl_draw_mode com/mojang/blaze3d/platform/GlConst GL_LINES
+constant gl_draw_mode com/mojang/blaze3d/platform/GlConst GL_LINE_STRIP
+constant gl_draw_mode com/mojang/blaze3d/platform/GlConst GL_TRIANGLE_STRIP
+constant gl_draw_mode com/mojang/blaze3d/platform/GlConst GL_TRIANGLE_FAN
+constant gl_draw_mode com/mojang/blaze3d/platform/GlConst GL_TRIANGLES
+
+constant gl_texture_clamp_mode com/mojang/blaze3d/platform/GlConst GL_CLAMP_TO_EDGE
+constant gl_texture_clamp_mode com/mojang/blaze3d/platform/GlConst GL_REPEAT
+
 # Framebuffer
 
 constant gl_framebuffer_target com/mojang/blaze3d/platform/GlConst GL_FRAMEBUFFER
@@ -38,6 +58,8 @@ constant gl_tex_parameter_pname org/lwjgl/opengl/GL12 GL_TEXTURE_MAX_LOD
 constant gl_tex_parameter_pname org/lwjgl/opengl/GL12 GL_TEXTURE_MIN_LOD
 constant gl_tex_parameter_pname org/lwjgl/opengl/GL14 GL_TEXTURE_LOD_BIAS
 
+constant gl_tex_level_parameter_pname com/mojang/blaze3d/platform/GlConst GL_TEXTURE_WIDTH
+
 constant gl_tex_parameter_value com/mojang/blaze3d/platform/GlConst GL_NEAREST
 constant gl_tex_parameter_value com/mojang/blaze3d/platform/GlConst GL_LINEAR
 constant gl_tex_parameter_value com/mojang/blaze3d/platform/GlConst GL_CLAMP_TO_EDGE
@@ -45,10 +67,12 @@ constant gl_tex_parameter_value com/mojang/blaze3d/platform/GlConst GL_NEAREST_M
 constant gl_tex_parameter_value com/mojang/blaze3d/platform/GlConst GL_LINEAR_MIPMAP_LINEAR
 
 constant gl_tex_format com/mojang/blaze3d/platform/GlConst GL_DEPTH_COMPONENT
+constant gl_tex_format com/mojang/blaze3d/platform/GlConst GL_DEPTH_COMPONENT32
 constant gl_tex_format com/mojang/blaze3d/platform/GlConst GL_RGBA8
 constant gl_tex_format com/mojang/blaze3d/platform/GlConst GL_RGBA
 constant gl_tex_format com/mojang/blaze3d/platform/GlConst GL_BGR
 constant gl_tex_format com/mojang/blaze3d/platform/GlConst GL_RG
+constant gl_tex_format com/mojang/blaze3d/platform/GlConst GL_R8
 constant gl_tex_format com/mojang/blaze3d/platform/GlConst GL_RGB
 constant gl_tex_format com/mojang/blaze3d/platform/GlConst GL_RED
 constant gl_tex_format org/lwjgl/opengl/GL12 GL_BGRA
@@ -60,6 +84,10 @@ constant gl_type com/mojang/blaze3d/platform/GlConst GL_UNSIGNED_SHORT
 constant gl_type com/mojang/blaze3d/platform/GlConst GL_INT
 constant gl_type com/mojang/blaze3d/platform/GlConst GL_UNSIGNED_INT
 constant gl_type com/mojang/blaze3d/platform/GlConst GL_FLOAT
+constant gl_type org/lwjgl/opengl/GL20 GL_FLOAT_VEC2
+constant gl_type org/lwjgl/opengl/GL20 GL_FLOAT_VEC3
+constant gl_type org/lwjgl/opengl/GL20 GL_FLOAT_VEC4
+constant gl_type org/lwjgl/opengl/GL20 GL_FLOAT_MAT4
 
 constant gl_framebuffer_attachment com/mojang/blaze3d/platform/GlConst GL_COLOR_ATTACHMENT0
 constant gl_framebuffer_attachment com/mojang/blaze3d/platform/GlConst GL_DEPTH_ATTACHMENT
@@ -79,6 +107,19 @@ constant gl_blend_equation_mode com/mojang/blaze3d/platform/GlConst GL_MIN
 constant gl_blend_equation_mode com/mojang/blaze3d/platform/GlConst GL_MAX
 constant gl_blend_equation_mode com/mojang/blaze3d/platform/GlConst GL_FUNC_SUBTRACT
 constant gl_blend_equation_mode com/mojang/blaze3d/platform/GlConst GL_FUNC_REVERSE_SUBTRACT
+
+# DebugLabelManager
+constant gl_khr_label_identifier org/lwjgl/opengl/KHRDebug GL_BUFFER
+constant gl_khr_label_identifier org/lwjgl/opengl/KHRDebug GL_SHADER
+constant gl_khr_label_identifier org/lwjgl/opengl/KHRDebug GL_PROGRAM
+constant gl_khr_label_identifier org/lwjgl/opengl/GL11 GL_VERTEX_ARRAY
+constant gl_khr_label_identifier org/lwjgl/opengl/GL11 GL_TEXTURE
+
+constant gl_ext_label_identifier org/lwjgl/opengl/EXTDebugLabel GL_BUFFER_OBJECT_EXT
+constant gl_ext_label_identifier org/lwjgl/opengl/EXTDebugLabel GL_SHADER_OBJECT_EXT
+constant gl_ext_label_identifier org/lwjgl/opengl/EXTDebugLabel GL_PROGRAM_OBJECT_EXT
+constant gl_ext_label_identifier org/lwjgl/opengl/GL11 GL_VERTEX_ARRAY
+constant gl_ext_label_identifier org/lwjgl/opengl/GL11 GL_TEXTURE
 
 # GlDebug - Does not have blaze3d const
 constant gl_debug_source org/lwjgl/opengl/GL43 GL_DEBUG_SOURCE_API
@@ -112,10 +153,20 @@ constant gl_enable_state org/lwjgl/opengl/GL43 GL_DEBUG_OUTPUT_SYNCHRONOUS
 
 constant gl_hint_mode org/lwjgl/opengl/GL11 GL_DONT_CARE
 
+# GlFenceSync
+constant gl_client_wait_sync_result com/mojang/blaze3d/platform/GlConst GL_TIMEOUT_EXPIRED
+constant gl_client_wait_sync_result com/mojang/blaze3d/platform/GlConst GL_WAIT_FAILED
+
+# GlResourceManager
+constant gl_draw_buffer_buf com/mojang/blaze3d/platform/GlConst GL_COLOR_ATTACHMENT0
+
+constant gl_polygon_mode_face com/mojang/blaze3d/platform/GlConst GL_FRONT_AND_BACK
+
 # GlProgramManager
 
 constant gl_program_pname com/mojang/blaze3d/platform/GlConst GL_LINK_STATUS
 constant gl_program_pname com/mojang/blaze3d/platform/GlConst GL_COMPILE_STATUS
+constant gl_program_pname org/lwjgl/opengl/GL20 GL_ACTIVE_UNIFORMS
 
 # note: glGetProgramInfoLog 32768 is not a const or flag
 
@@ -136,11 +187,23 @@ constant gl_program_type com/mojang/blaze3d/platform/GlConst GL_VERTEX_SHADER
 constant gl_program_type com/mojang/blaze3d/platform/GlConst GL_FRAGMENT_SHADER
 
 # VertexBuffer
-constant gl_bind_buffer_target com/mojang/blaze3d/platform/GlConst GL_ARRAY_BUFFER
-constant gl_bind_buffer_target com/mojang/blaze3d/platform/GlConst GL_ELEMENT_ARRAY_BUFFER
+constant gl_buffer_target com/mojang/blaze3d/platform/GlConst GL_ARRAY_BUFFER
+constant gl_buffer_target com/mojang/blaze3d/platform/GlConst GL_ELEMENT_ARRAY_BUFFER
+constant gl_buffer_target com/mojang/blaze3d/platform/GlConst GL_PIXEL_PACK_BUFFER
+constant gl_buffer_target com/mojang/blaze3d/platform/GlConst GL_COPY_READ_BUFFER
+constant gl_buffer_target com/mojang/blaze3d/platform/GlConst GL_COPY_WRITE_BUFFER
+constant gl_buffer_target com/mojang/blaze3d/platform/GlConst GL_PIXEL_UNPACK_BUFFER
+constant gl_buffer_target com/mojang/blaze3d/platform/GlConst GL_UNIFORM_BUFFER
 
 constant gl_buffer_data_usage com/mojang/blaze3d/platform/GlConst GL_STATIC_DRAW
 constant gl_buffer_data_usage com/mojang/blaze3d/platform/GlConst GL_DYNAMIC_DRAW
+constant gl_buffer_data_usage com/mojang/blaze3d/platform/GlConst GL_STREAM_DRAW
+constant gl_buffer_data_usage com/mojang/blaze3d/platform/GlConst GL_STATIC_READ
+constant gl_buffer_data_usage com/mojang/blaze3d/platform/GlConst GL_DYNAMIC_READ
+constant gl_buffer_data_usage com/mojang/blaze3d/platform/GlConst GL_STREAM_READ
+constant gl_buffer_data_usage com/mojang/blaze3d/platform/GlConst GL_STATIC_COPY
+constant gl_buffer_data_usage com/mojang/blaze3d/platform/GlConst GL_DYNAMIC_COPY
+constant gl_buffer_data_usage com/mojang/blaze3d/platform/GlConst GL_STREAM_COPY
 
 constant gl_error com/mojang/blaze3d/platform/GlConst GL_OUT_OF_MEMORY
 
@@ -153,6 +216,7 @@ constant gl_get_string_name org/lwjgl/opengl/GL11 GL_EXTENSIONS
 # GlStateManager
 
 constant gl_get_integer_pname org/lwjgl/opengl/GL11 GL_MAX_TEXTURE_SIZE
+constant gl_get_integer_pname org/lwjgl/opengl/KHRDebug GL_MAX_LABEL_LENGTH
 
 constant gl_logic_op org/lwjgl/opengl/GL11 GL_CLEAR
 constant gl_logic_op org/lwjgl/opengl/GL11 GL_AND
@@ -171,10 +235,13 @@ constant gl_logic_op org/lwjgl/opengl/GL11 GL_OR_INVERTED
 constant gl_logic_op org/lwjgl/opengl/GL11 GL_NAND
 constant gl_logic_op org/lwjgl/opengl/GL11 GL_SET
 
+constant gl_blend_func_factor org/lwjgl/opengl/GL11 GL_SRC_ALPHA_SATURATE
 constant gl_blend_func_factor org/lwjgl/opengl/GL14 GL_CONSTANT_ALPHA
 constant gl_blend_func_factor org/lwjgl/opengl/GL14 GL_CONSTANT_COLOR
 constant gl_blend_func_factor org/lwjgl/opengl/GL14 GL_ONE_MINUS_CONSTANT_ALPHA
 constant gl_blend_func_factor org/lwjgl/opengl/GL14 GL_ONE_MINUS_CONSTANT_COLOR
+constant gl_blend_func_factor com/mojang/blaze3d/platform/GlConst GL_ZERO
+constant gl_blend_func_factor com/mojang/blaze3d/platform/GlConst GL_ONE
 constant gl_blend_func_factor com/mojang/blaze3d/platform/GlConst GL_DST_ALPHA
 constant gl_blend_func_factor com/mojang/blaze3d/platform/GlConst GL_DST_COLOR
 constant gl_blend_func_factor com/mojang/blaze3d/platform/GlConst GL_ONE_MINUS_DST_ALPHA
@@ -192,14 +259,56 @@ constant gl_pixel_store_pname com/mojang/blaze3d/platform/GlConst GL_UNPACK_SKIP
 constant gl_pixel_store_pname com/mojang/blaze3d/platform/GlConst GL_UNPACK_SKIP_PIXELS
 constant gl_pixel_store_pname com/mojang/blaze3d/platform/GlConst GL_UNPACK_ALIGNMENT
 constant gl_pixel_store_pname com/mojang/blaze3d/platform/GlConst GL_PACK_ALIGNMENT
+constant gl_pixel_store_pname com/mojang/blaze3d/platform/GlConst GL_PACK_ROW_LENGTH
 
 constant gl_map_buffer_access com/mojang/blaze3d/platform/GlConst GL_WRITE_ONLY
 
 # MinecraftClient
-flag gl_clear_mask com/mojang/blaze3d/platform/GlConst GL_DEPTH_BUFFER_BIT
-flag gl_clear_mask com/mojang/blaze3d/platform/GlConst GL_COLOR_BUFFER_BIT
+flag gl_buffer_mask com/mojang/blaze3d/platform/GlConst GL_DEPTH_BUFFER_BIT
+flag gl_buffer_mask com/mojang/blaze3d/platform/GlConst GL_COLOR_BUFFER_BIT
 
 # Target definition
+
+target_method com/mojang/blaze3d/platform/GlConst toGl (Lnet/minecraft/client/render/DepthTestState;)I
+	return gl_depth_test_state
+
+target_method com/mojang/blaze3d/platform/GlConst toGl (Lnet/minecraft/client/render/PolygonMode;)I
+	return gl_polygon_mode
+
+target_method com/mojang/blaze3d/platform/GlConst toGl (Lcom/mojang/blaze3d/platform/DestFactor;)I
+	return gl_blend_func_factor
+target_method com/mojang/blaze3d/platform/GlConst toGl (Lcom/mojang/blaze3d/platform/SourceFactor;)I
+	return gl_blend_func_factor
+
+target_method com/mojang/blaze3d/platform/GlConst toGl (Lnet/minecraft/client/gl/GlBufferTarget;)I
+	return gl_buffer_target
+
+target_method com/mojang/blaze3d/platform/GlConst toGl (Lnet/minecraft/client/render/VertexFormat$DrawMode;)I
+	return gl_draw_mode
+
+target_method com/mojang/blaze3d/platform/GlConst toGl (Lnet/minecraft/client/render/VertexFormat$IndexType;)I
+	return gl_type
+target_method com/mojang/blaze3d/platform/GlConst toGl (Lnet/minecraft/client/render/VertexFormatElement$ComponentType;)I
+	return gl_type
+target_method com/mojang/blaze3d/platform/GlConst toGlType (Lnet/minecraft/client/texture/TextureType;)I
+	return gl_type
+
+target_method com/mojang/blaze3d/platform/GlConst toGl (Lnet/minecraft/client/texture/NativeImage$Format;)I
+	return gl_tex_format
+
+target_method com/mojang/blaze3d/platform/GlConst toGl (Lnet/minecraft/client/gl/GlUsage;)I
+	return gl_buffer_data_usage
+
+target_method com/mojang/blaze3d/platform/GlConst toGl (Lnet/minecraft/client/texture/TextureClampMode;)I
+	return gl_texture_clamp_mode
+
+target_method com/mojang/blaze3d/platform/GlConst toGlInternalId (Lnet/minecraft/client/texture/TextureType;)I
+	return gl_tex_format
+target_method com/mojang/blaze3d/platform/GlConst toGlExternalId (Lnet/minecraft/client/texture/TextureType;)I
+	return gl_tex_format
+
+target_method com/mojang/blaze3d/platform/GlConst toGl (Lnet/minecraft/client/gl/ShaderType;)I
+	return gl_program_type
 
 target_method com/mojang/blaze3d/platform/GlStateManager _glBindFramebuffer (II)V
 	param 0 gl_framebuffer_target
@@ -207,40 +316,34 @@ target_method com/mojang/blaze3d/platform/GlStateManager _glFramebufferTexture2D
 	param 0 gl_framebuffer_target
 	param 1 gl_framebuffer_attachment
 	param 2 gl_tex_target
-target_method com/mojang/blaze3d/platform/GlStateManager glCheckFramebufferStatus (I)I
-	param 0 gl_framebuffer_target
-	return gl_framebuffer_status
+target_method org/lwjgl/opengl/ARBDirectStateAccess glNamedFramebufferTexture (IIII)V
+	param 1 gl_framebuffer_attachment
 
 target_method com/mojang/blaze3d/platform/GlStateManager _glBlitFrameBuffer (IIIIIIIIII)V
+	param 8 gl_buffer_mask
 	param 9 gl_filter
-target_method net/minecraft/client/gl/Framebuffer setTexFilter (I)V
-	param 0 gl_filter
-target_method net/minecraft/client/gl/Framebuffer setTexFilter (IZ)V
-	param 0 gl_filter
 
 target_method com/mojang/blaze3d/platform/GlStateManager _texParameter (III)V
 	param 0 gl_tex_target
 	param 1 gl_tex_parameter_pname
 	param 2 gl_tex_parameter_value
-target_method com/mojang/blaze3d/platform/GlStateManager _texParameter (IIF)V
-	param 0 gl_tex_target
-	param 1 gl_tex_parameter_pname
 target_method com/mojang/blaze3d/platform/GlStateManager _texImage2D (IIIIIIIILjava/nio/IntBuffer;)V
 	param 0 gl_tex_target
 	param 2 gl_tex_format
 	param 6 gl_tex_format
 	param 7 gl_type
 
-target_method com/mojang/blaze3d/systems/RenderSystem texParameter (III)V
-	param 0 gl_tex_target
-	param 1 gl_tex_parameter_pname
-	param 2 gl_tex_parameter_value
 target_method com/mojang/blaze3d/platform/GlStateManager _texSubImage2D (IIIIIIIIJ)V
 	param 0 gl_tex_target
 	param 6 gl_tex_format
 	param 7 gl_type
-target_method com/mojang/blaze3d/platform/GlStateManager _getTexImage (IIIIJ)V
+target_method com/mojang/blaze3d/platform/GlStateManager _texSubImage2D (IIIIIIIILjava/nio/IntBuffer;)V
 	param 0 gl_tex_target
+	param 6 gl_tex_format
+	param 7 gl_type
+target_method com/mojang/blaze3d/platform/GlStateManager _getTexLevelParameter (III)I
+	param 0 gl_tex_target
+	param 2 gl_tex_level_parameter_pname
 target_method org/lwjgl/opengl/GL11 glBindTexture (II)V
 	param 0 gl_tex_target
 target_method org/lwjgl/opengl/GL11 glTexImage2D (IIIIIIIILjava/nio/IntBuffer;)V
@@ -253,29 +356,12 @@ target_method org/lwjgl/opengl/GL11 glTexParameteri (III)V
 target_method com/mojang/blaze3d/platform/GlStateManager _readPixels (IIIIIIJ)V
 	param 4 gl_tex_format
 	param 5 gl_type
-target_method com/mojang/blaze3d/platform/GlStateManager _glDrawPixels (IIIIJ)V
-	param 2 gl_tex_format
-	param 3 gl_type
-target_method net/minecraft/client/texture/NativeImage$Format <init> (Ljava/lang/String;IIIZZZZZIIIIIZ)V
-	param 3 gl_tex_format
-target_method net/minecraft/client/texture/NativeImage$InternalFormat <init> (Ljava/lang/String;II)V
-	param 2 gl_tex_format
-
-target_method net/minecraft/client/render/VertexFormatElement$ComponentType <init> (Ljava/lang/String;IILjava/lang/String;I)V
-	param 4 gl_type
-target_method net/minecraft/client/render/VertexFormat$IndexType <init> (Ljava/lang/String;III)V
-	param 2 gl_type
-
-target_method net/minecraft/client/gl/GlBlendState <init> (ZZIIIII)V
-	param 6 gl_blend_equation_mode
-target_method net/minecraft/client/gl/GlBlendState <init> (III)V
-	param 2 gl_blend_equation_mode
-target_method net/minecraft/client/gl/GlBlendState getModeFromString (Ljava/lang/String;)I
-	return gl_blend_equation_mode
+target_method net/minecraft/client/gl/ShaderProgram getType (I)Lnet/minecraft/client/gl/UniformType;
+	param 0 gl_type
 
 target_method net/minecraft/client/gl/GlDebug getSource (I)Ljava/lang/String;
 	param 0 gl_debug_source
-target_method net/minecraft/client/gl/GlDebug info (IIIIIJJ)V
+target_method net/minecraft/client/gl/GlDebug onDebugMessage (IIIIIJJ)V
 	param 0 gl_debug_source
 	param 1 gl_debug_type
 	param 3 gl_debug_severity
@@ -302,6 +388,15 @@ target_method org/lwjgl/opengl/ARBDebugOutput glDebugMessageControlARB (III[IZ)V
 	param 0 gl_hint_mode
 	param 1 gl_hint_mode
 
+target_method com/mojang/blaze3d/platform/GlStateManager _glClientWaitSync (JIJ)I
+	return gl_client_wait_sync_result
+
+target_method org/lwjgl/opengl/GL11 glDrawBuffer (I)V
+	param 0 gl_draw_buffer_buf
+
+target_method com/mojang/blaze3d/platform/GlStateManager _polygonMode (II)V
+	param 0 gl_polygon_mode_face
+
 target_method com/mojang/blaze3d/platform/GlStateManager glGetProgrami (II)I
 	param 1 gl_program_pname
 target_method com/mojang/blaze3d/platform/GlStateManager glGetShaderi (II)I
@@ -322,26 +417,20 @@ target_method com/mojang/blaze3d/platform/GlStateManager _activeTexture (I)V
 target_method com/mojang/blaze3d/systems/RenderSystem activeTexture (I)V
 	param 0 gl_texture
 
-target_method net/minecraft/client/gl/Program$Type <init> (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;I)V
-	param 4 gl_program_type
-
 target_method com/mojang/blaze3d/platform/GlStateManager _glBindBuffer (II)V
-	param 0 gl_bind_buffer_target
+	param 0 gl_buffer_target
 target_method com/mojang/blaze3d/platform/GlStateManager _glBufferData (IJI)V
-	param 0 gl_bind_buffer_target
+	param 0 gl_buffer_target
 	param 2 gl_buffer_data_usage
 target_method com/mojang/blaze3d/platform/GlStateManager mapBuffer (II)Ljava/nio/ByteBuffer;
-	param 0 gl_bind_buffer_target
+	param 0 gl_buffer_target
 	param 1 gl_map_buffer_access
 target_method com/mojang/blaze3d/platform/GlStateManager _glUnmapBuffer (I)V
-	param 0 gl_bind_buffer_target
-target_method com/mojang/blaze3d/systems/RenderSystem glBufferData (ILjava/nio/ByteBuffer;I)V
-	param 0 gl_bind_buffer_target
-	param 2 gl_buffer_data_usage
+	param 0 gl_buffer_target
 target_method org/lwjgl/opengl/GL32C glBindBuffer (II)V
-	param 0 gl_bind_buffer_target
+	param 0 gl_buffer_target
 target_method org/lwjgl/opengl/GL32C glBufferData (IJI)V
-	param 0 gl_bind_buffer_target
+	param 0 gl_buffer_target
 	param 2 gl_buffer_data_usage
 
 target_method com/mojang/blaze3d/platform/GlStateManager _getError ()I
@@ -352,16 +441,11 @@ target_method com/mojang/blaze3d/platform/GlStateManager _getString (I)Ljava/lan
 
 target_method com/mojang/blaze3d/platform/GlStateManager _getInteger (I)I
 	param 0 gl_get_integer_pname
+target_method org/lwjgl/opengl/GL11 glGetInteger (I)I
+	param 0 gl_get_integer_pname
 
-target_method com/mojang/blaze3d/platform/GlStateManager$LogicOp <init> (Ljava/lang/String;II)V
-	param 2 gl_logic_op
-
-target_method com/mojang/blaze3d/platform/GlStateManager$SrcFactor <init> (Ljava/lang/String;II)V
-	param 2 gl_blend_func_factor
-target_method com/mojang/blaze3d/platform/GlStateManager$DstFactor <init> (Ljava/lang/String;II)V
-	param 2 gl_blend_func_factor
-target_method net/minecraft/client/gl/GlBlendState getFactorFromString (Ljava/lang/String;)I
-	return gl_blend_func_factor
+target_method com/mojang/blaze3d/platform/GlStateManager _logicOp (I)V
+	param 0 gl_logic_op
 
 target_method com/mojang/blaze3d/platform/GlStateManager _pixelStore (II)V
 	param 0 gl_pixel_store_pname
@@ -369,9 +453,13 @@ target_method org/lwjgl/opengl/GL11 glPixelStorei (II)V
 	param 0 gl_pixel_store_pname
 
 target_method com/mojang/blaze3d/systems/RenderSystem clear (IZ)V
-	param 0 gl_clear_mask
+	param 0 gl_buffer_mask
+target_method com/mojang/blaze3d/platform/GlStateManager _clear (I)V
+	param 0 gl_buffer_mask
 
-target_method net/minecraft/client/gl/PostEffectPass getTexFilter ()V
-	return gl_filter
-target_method net/minecraft/client/gl/PostEffectProcessor setTexFilter (I)V
-	param 0 gl_filter
+target_method org/lwjgl/opengl/KHRDebug glObjectLabel (IILjava/lang/CharSequence;)V
+	param 0 gl_khr_label_identifier
+
+target_method org/lwjgl/opengl/EXTDebugLabel glLabelObjectEXT (IILjava/lang/CharSequence;)V
+	param 0 gl_ext_label_identifier
+

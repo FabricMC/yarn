@@ -1,28 +1,6 @@
 CLASS com/mojang/blaze3d/systems/RenderSystem
 	METHOD activeTexture (I)V
 		ARG 0 texture
-	METHOD bindTexture (I)V
-		ARG 0 texture
-	METHOD clear (I)V
-		ARG 0 mask
-	METHOD clearColor (FFFF)V
-		ARG 0 red
-		ARG 1 green
-		ARG 2 blue
-		ARG 3 alpha
-	METHOD colorMask (ZZZZ)V
-		ARG 0 red
-		ARG 1 green
-		ARG 2 blue
-		ARG 3 alpha
-	METHOD depthFunc (I)V
-		ARG 0 func
-	METHOD depthMask (Z)V
-		ARG 0 mask
-	METHOD drawElements (III)V
-		ARG 0 mode
-		ARG 1 count
-		ARG 2 type
 	METHOD enableScissor (IIII)V
 		ARG 0 x
 		ARG 1 y
@@ -35,37 +13,12 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		ARG 0 drawMode
 	METHOD getShaderTexture (I)Lnet/minecraft/class_10792;
 		ARG 0 texture
-	METHOD getString (ILjava/util/function/Consumer;)V
-		ARG 0 name
-		ARG 1 consumer
-	METHOD glDeleteVertexArrays (I)V
-		ARG 0 array
-	METHOD glUniform1 (ILjava/nio/FloatBuffer;)V
-		ARG 0 location
-		ARG 1 value
-	METHOD glUniform1 (ILjava/nio/IntBuffer;)V
-		ARG 0 location
-		ARG 1 value
-	METHOD glUniform1i (II)V
-		ARG 0 location
-		ARG 1 value
-	METHOD glUniform2 (ILjava/nio/FloatBuffer;)V
-		ARG 0 location
-		ARG 1 value
-	METHOD glUniform3 (ILjava/nio/FloatBuffer;)V
-		ARG 0 location
-		ARG 1 value
-	METHOD glUniform3 (ILjava/nio/IntBuffer;)V
-		ARG 0 location
-		ARG 1 value
-	METHOD glUniform4 (ILjava/nio/FloatBuffer;)V
-		ARG 0 location
-		ARG 1 value
-	METHOD glUniformMatrix4 (ILjava/nio/FloatBuffer;)V
-		ARG 0 location
-	METHOD initRenderer (IZ)V
-		ARG 0 debugVerbosity
-		ARG 1 debugSync
+	METHOD initRenderer (JIZLjava/util/function/BiFunction;Z)V
+		ARG 0 windowHandle
+		ARG 2 debugVerbosity
+		ARG 3 sync
+		ARG 4 shaderSourceGetter
+		ARG 5 renderDebugLabels
 	METHOD lambda$static$0 (Lit/unimi/dsi/fastutil/ints/IntConsumer;I)V
 		ARG 0 indexConsumer
 		ARG 1 firstVertexIndex
@@ -76,25 +29,8 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		ARG 0 fps
 	METHOD lineWidth (F)V
 		ARG 0 width
-	METHOD logicOp (Lcom/mojang/blaze3d/platform/GlStateManager$class_1030;)V
-		ARG 0 op
-	METHOD pixelStore (II)V
-		ARG 0 pname
-		ARG 1 param
-	METHOD polygonMode (II)V
-		ARG 0 face
-		ARG 1 mode
-	METHOD polygonOffset (FF)V
-		ARG 0 factor
-		ARG 1 units
-	METHOD readPixels (IIIIIILjava/nio/ByteBuffer;)V
-		ARG 0 x
-		ARG 1 y
-		ARG 2 width
-		ARG 3 height
-		ARG 4 format
-		ARG 5 type
-		ARG 6 pixels
+	METHOD queueFencedTask (Ljava/lang/Runnable;)V
+		ARG 0 task
 	METHOD setErrorCallback (Lorg/lwjgl/glfw/GLFWErrorCallbackI;)V
 		ARG 0 callback
 	METHOD setProjectionMatrix (Lorg/joml/Matrix4f;Lnet/minecraft/class_10366;)V
@@ -105,28 +41,23 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		ARG 1 green
 		ARG 2 blue
 		ARG 3 alpha
+	METHOD setShaderFog (Lnet/minecraft/class_9958;)V
+		ARG 0 shaderFog
 	METHOD setShaderGameTime (JF)V
 		ARG 0 time
 		ARG 2 tickProgress
+	METHOD setShaderGlintAlpha (D)V
+		ARG 0 shaderGlintAlpha
+	METHOD setShaderGlintAlpha (F)V
+		ARG 0 shaderGlintAlpha
 	METHOD setShaderTexture (ILnet/minecraft/class_10792;)V
-		ARG 0 texture
-	METHOD setShaderTexture (ILnet/minecraft/class_2960;)V
-		ARG 0 texture
-		ARG 1 id
+		ARG 0 textureId
+		ARG 1 texture
 	METHOD setTextureMatrix (Lorg/joml/Matrix4f;)V
 		ARG 0 textureMatrix
-	METHOD setupDefaultState (IIII)V
-		ARG 0 x
-		ARG 1 y
-		ARG 2 width
-		ARG 3 height
-	METHOD setupShaderLights (Lnet/minecraft/class_5944;)V
-		ARG 0 shader
-	METHOD viewport (IIII)V
-		ARG 0 x
-		ARG 1 y
-		ARG 2 width
-		ARG 3 height
+	METHOD setupOverlayColor (Lnet/minecraft/class_10792;)V
+		ARG 0 texture
+	CLASS class_10827 Task
 	CLASS class_5590 ShapeIndexBuffer
 		COMMENT An index buffer that holds a pre-made indices for a specific shape. If
 		COMMENT this buffer is not large enough for the required number of indices when
@@ -154,9 +85,7 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		METHOD method_31924 getIndexType ()Lnet/minecraft/class_293$class_5595;
 		METHOD method_43409 isLargeEnough (I)Z
 			ARG 1 requiredSize
-		METHOD method_43410 bindAndGrow (I)V
-			COMMENT Binds this buffer as a current index buffer. If necessary, it grows this
-			COMMENT buffer in size and uploads indices to the corresponding buffer in GPU.
+		METHOD method_68274 getIndexBuffer (I)Lnet/minecraft/class_10227;
 			ARG 1 requiredSize
 		CLASS class_5591 Triangulator
 			COMMENT A functional interface that decomposes a shape into triangles.

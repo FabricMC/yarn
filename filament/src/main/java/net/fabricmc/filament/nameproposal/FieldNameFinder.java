@@ -24,7 +24,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -39,19 +38,6 @@ import org.objectweb.asm.tree.analysis.SourceInterpreter;
 import org.objectweb.asm.tree.analysis.SourceValue;
 
 public class FieldNameFinder {
-	public Map<MappingEntry, String> findNames(Iterable<byte[]> classes) throws Exception {
-		Map<String, List<MethodNode>> methods = new HashMap<>();
-		Map<String, Set<String>> enumFields = new HashMap<>();
-
-		for (byte[] data : classes) {
-			ClassReader reader = new ClassReader(data);
-			NameFinderVisitor vClass = new NameFinderVisitor(Constants.ASM_VERSION, enumFields, methods);
-			reader.accept(vClass, ClassReader.SKIP_FRAMES);
-		}
-
-		return findNames(enumFields, methods);
-	}
-
 	public Map<MappingEntry, String> findNames(Map<String, Set<String>> allEnumFields, Map<String, List<MethodNode>> classes) {
 		Analyzer<SourceValue> analyzer = new Analyzer<>(new SourceInterpreter());
 		Map<MappingEntry, String> fieldNames = new HashMap<>();
@@ -151,6 +137,11 @@ public class FieldNameFinder {
 							}
 
 							if (usedNames.contains(s)) {
+								if (s.equals(((FieldInsnNode) instr2).name)) {
+									// No need to map names that are already named what we want to name it.
+									continue;
+								}
+
 								fieldNames.put(new MappingEntry(((FieldInsnNode) instr2).owner, ((FieldInsnNode) instr2).name, ((FieldInsnNode) instr2).desc), s);
 							}
 						}
