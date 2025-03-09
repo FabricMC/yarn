@@ -5,10 +5,11 @@ jobs:
   publish:
     if: ${{ github.repository_owner == 'FabricMC' }}
     runs-on: ubuntu-24.04
-    container:
-      image: eclipse-temurin:21-jdk
-      options: --user root
     steps:
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'microsoft'
       - uses: actions/checkout@v4
       # Generate the build number based on tags to allow per branch build numbers, not something github provides by default.
       - name: Generate build number
