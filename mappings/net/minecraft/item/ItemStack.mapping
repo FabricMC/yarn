@@ -40,6 +40,16 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	COMMENT </tr>
 	COMMENT </table>
 	COMMENT </div>
+	FIELD field_8030 bobbingAnimationTime I
+	FIELD field_8031 count I
+	FIELD field_8033 LOGGER Lorg/slf4j/Logger;
+	FIELD field_8037 EMPTY Lnet/minecraft/class_1799;
+		COMMENT The empty item stack that holds no item.
+		COMMENT
+		COMMENT <p>This should never be mutated.
+		COMMENT
+		COMMENT @see ItemStack#isEmpty
+	FIELD field_8038 item Lnet/minecraft/class_1792;
 	FIELD field_24093 holder Lnet/minecraft/class_1297;
 	FIELD field_24671 CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_40211 DISABLED_TEXT Lnet/minecraft/class_2561;
@@ -55,16 +65,6 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	FIELD field_55546 OPERATOR_WARNINGS Ljava/util/List;
 	FIELD field_55709 MAP_CODEC Lcom/mojang/serialization/MapCodec;
 	FIELD field_56297 UNBREAKABLE_TEXT Lnet/minecraft/class_2561;
-	FIELD field_8030 bobbingAnimationTime I
-	FIELD field_8031 count I
-	FIELD field_8033 LOGGER Lorg/slf4j/Logger;
-	FIELD field_8037 EMPTY Lnet/minecraft/class_1799;
-		COMMENT The empty item stack that holds no item.
-		COMMENT
-		COMMENT <p>This should never be mutated.
-		COMMENT
-		COMMENT @see ItemStack#isEmpty
-	FIELD field_8038 item Lnet/minecraft/class_1792;
 	METHOD <init> (Ljava/lang/Void;)V
 		ARG 1 v
 	METHOD <init> (Lnet/minecraft/class_1935;)V
@@ -85,6 +85,241 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 1 item
 		ARG 2 count
 		ARG 3 changes
+	METHOD method_7909 getItem ()Lnet/minecraft/class_1792;
+		COMMENT {@return the item of this stack}
+		COMMENT
+		COMMENT @see #isOf(Item)
+	METHOD method_7910 finishUsing (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)Lnet/minecraft/class_1799;
+		ARG 1 world
+		ARG 2 user
+	METHOD method_7912 setBobbingAnimationTime (I)V
+		ARG 1 bobbingAnimationTime
+	METHOD method_7913 use (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
+		ARG 1 world
+		ARG 2 user
+		ARG 3 hand
+	METHOD method_7914 getMaxCount ()I
+	METHOD method_7917 inventoryTick (Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;Lnet/minecraft/class_1304;)V
+		ARG 1 world
+		ARG 2 entity
+		ARG 3 slot
+	METHOD method_7919 getDamage ()I
+		COMMENT {@return the damage (lost durability) of the item stack}
+		COMMENT
+		COMMENT <p>Note that this method does not check if the item is {@linkplain #isDamageable
+		COMMENT damageable}, unlike {@link #isDamaged}.
+		COMMENT
+		COMMENT @see #isDamageable
+		COMMENT @see #isDamaged
+		COMMENT @see #setDamage
+	METHOD method_7920 useOnEntity (Lnet/minecraft/class_1657;Lnet/minecraft/class_1309;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
+		ARG 1 user
+		ARG 2 entity
+		ARG 3 hand
+	METHOD method_7923 isEnchantable ()Z
+		COMMENT {@return whether this item stack can be enchanted with an enchanting table}
+		COMMENT
+		COMMENT <p>This is not used for other methods of enchanting like anvils.
+	METHOD method_7924 getMiningSpeedMultiplier (Lnet/minecraft/class_2680;)F
+		ARG 1 state
+	METHOD method_7930 onStoppedUsing (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;I)V
+		ARG 1 world
+		ARG 2 user
+		ARG 3 remainingUseTicks
+	METHOD method_7932 getRarity ()Lnet/minecraft/class_1814;
+	METHOD method_7933 increment (I)V
+		COMMENT Increments the count of items in this item stack.
+		ARG 1 amount
+			COMMENT the amount to increment
+	METHOD method_7934 decrement (I)V
+		COMMENT Decrements the count of items in this item stack.
+		ARG 1 amount
+			COMMENT the amount to decrement
+	METHOD method_7935 getMaxUseTime (Lnet/minecraft/class_1309;)I
+		ARG 1 user
+	METHOD method_7936 getMaxDamage ()I
+	METHOD method_7939 setCount (I)V
+		COMMENT Sets the count of items in this item stack.
+		ARG 1 count
+			COMMENT the count of items
+	METHOD method_7942 hasEnchantments ()Z
+		COMMENT {@return whether the item stack has any enchantments}
+		COMMENT
+		COMMENT <p>This will return {@code false} for enchanted books, as the book itself is not
+		COMMENT enchanted and therefore does not store enchantments under {@link
+		COMMENT net.minecraft.component.DataComponentTypes#ENCHANTMENTS}.
+		COMMENT
+		COMMENT @see net.minecraft.enchantment.EnchantmentHelper#getEnchantments
+	METHOD method_7945 getFrame ()Lnet/minecraft/class_1533;
+		COMMENT {@return the item frame that holds the stack, or {@code null} if inapplicable}
+		COMMENT
+		COMMENT @see #isInFrame
+		COMMENT @see #setHolder
+		COMMENT @see #getHolder
+	METHOD method_7946 isStackable ()Z
+		COMMENT {@return whether the item stack can have item count above {@code 1}}
+		COMMENT
+		COMMENT <p>Stackable items must have {@linkplain Item#getMaxCount the maximum count} that is more
+		COMMENT than {@code 1} and cannot be damaged.
+	METHOD method_7947 getCount ()I
+		COMMENT {@return the count of items in this item stack}
+	METHOD method_7949 usageTick (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;I)V
+		ARG 1 world
+		ARG 2 user
+		ARG 3 remainingUseTicks
+	METHOD method_7950 getTooltip (Lnet/minecraft/class_1792$class_9635;Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;)Ljava/util/List;
+		ARG 1 context
+		ARG 2 player
+		ARG 3 type
+	METHOD method_7951 isSuitableFor (Lnet/minecraft/class_2680;)Z
+		COMMENT Determines whether this item can be used as a suitable tool for mining the specified block.
+		COMMENT <p>
+		COMMENT Depending on block implementation, when combined together, the correct item and block may achieve a better mining speed and yield
+		COMMENT drops that would not be obtained when mining otherwise.
+		COMMENT
+		COMMENT @return values consistent with calls to {@link Item#isCorrectForDrops}
+		COMMENT @see Item#isCorrectForDrops(ItemStack, BlockState)
+		ARG 1 state
+	METHOD method_7952 postMine (Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)V
+		ARG 1 world
+		ARG 2 state
+		ARG 3 pos
+		ARG 4 miner
+	METHOD method_7954 toHoverableText ()Lnet/minecraft/class_2561;
+		COMMENT {@return a text consisting of the bracketed {@linkplain #getName stack name} that
+		COMMENT can be hovered to show the item stack's tooltip}
+	METHOD method_7956 damage (ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;Ljava/util/function/Consumer;)V
+		COMMENT Damages this item stack. This method should be used when a non-entity, such as a
+		COMMENT dispenser, damages the stack. This does not damage {@linkplain #isDamageable non-damageable}
+		COMMENT stacks, and the enchantments are applied to {@code amount} before damaging.
+		COMMENT
+		COMMENT <p>If {@code player} is not {@code null}, this triggers {@link
+		COMMENT net.minecraft.advancement.criterion.Criteria#ITEM_DURABILITY_CHANGED}.
+		COMMENT
+		COMMENT <p>When the item "breaks", that is, the stack's damage is equal to or above
+		COMMENT {@linkplain #getMaxDamage the maximum damage}, {@code breakCallback} is run.
+		COMMENT Note that this method automatically decrements the stack size.
+		ARG 1 amount
+		ARG 2 world
+		ARG 3 player
+		ARG 4 breakCallback
+	METHOD method_7958 hasGlint ()Z
+	METHOD method_7960 isEmpty ()Z
+		COMMENT {@return whether this item stack is empty}
+	METHOD method_7961 isInFrame ()Z
+		COMMENT {@return whether the item stack is in an item frame}
+		COMMENT
+		COMMENT @see #setHolder
+		COMMENT @see #getFrame
+		COMMENT @see #getHolder
+	METHOD method_7963 isDamageable ()Z
+		COMMENT {@return whether the item can be damaged (lose durability)}
+		COMMENT
+		COMMENT <p>Items with {@linkplain #getMaxDamage 0 max damage} or item stacks with {@link
+		COMMENT net.minecraft.component.DataComponentTypes#UNBREAKABLE} component cannot be damaged.
+		COMMENT
+		COMMENT @see #getMaxDamage
+		COMMENT @see #isDamaged
+		COMMENT @see #getDamage
+	METHOD method_7964 getName ()Lnet/minecraft/class_2561;
+		COMMENT {@return the custom name of the stack if it exists, or the item's name}
+	METHOD method_7965 getBobbingAnimationTime ()I
+	METHOD method_7966 (Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
+		ARG 1 style
+	METHOD method_7967 isUsedOnRelease ()Z
+	METHOD method_7970 damage (ILnet/minecraft/class_1309;Lnet/minecraft/class_1304;)V
+		COMMENT Damages this item stack. This method should be used when an entity, including a player,
+		COMMENT damages the stack. This does not damage {@linkplain #isDamageable non-damageable}
+		COMMENT stacks, and the enchantments are applied to {@code amount} before damaging. Additionally,
+		COMMENT if {@code entity} is a player in creative mode, the stack will not be damaged.
+		COMMENT
+		COMMENT <p>If {@code entity} is a player, this triggers {@link
+		COMMENT net.minecraft.advancement.criterion.Criteria#ITEM_DURABILITY_CHANGED}.
+		COMMENT
+		COMMENT <p>If the stack's damage is equal to or above {@linkplain #getMaxDamage the maximum
+		COMMENT damage} (i.e. the item is "broken"), this will {@linkplain
+		COMMENT LivingEntity#sendEquipmentBreakStatus send the equipment break status}, decrement the
+		COMMENT stack, and increment {@link net.minecraft.stat.Stats#BROKEN} if the stack is held
+		COMMENT by a player.
+		ARG 1 amount
+		ARG 2 entity
+		ARG 3 slot
+			COMMENT the slot in which the stack is held
+	METHOD method_7971 split (I)Lnet/minecraft/class_1799;
+		COMMENT {@return the copy of the stack "split" from the current stack with item count
+		COMMENT being at most {@code amount}}
+		COMMENT
+		COMMENT <p>Splitting an item stack mutates this stack so that the sum of the stacks' item
+		COMMENT counts does not change. See the example below:
+		COMMENT
+		COMMENT <pre>{@code
+		COMMENT ItemStack stack = new ItemStack(Items.APPLE, 64);
+		COMMENT ItemStack newStack = stack.split(10);
+		COMMENT // stack has 54 apples
+		COMMENT // newStack has 10 apples
+		COMMENT
+		COMMENT ItemStack smallStack = new ItemStack(Items.APPLE, 4);
+		COMMENT ItemStack newSmallStack = smallStack.split(10);
+		COMMENT // smallStack is now empty
+		COMMENT // newSmallStack has 4 apples
+		COMMENT }</pre>
+		ARG 1 amount
+	METHOD method_7972 copy ()Lnet/minecraft/class_1799;
+		COMMENT {@return a copy of this item stack, including the item count, components, and
+		COMMENT {@linkplain #getBobbingAnimationTime bobbing animation time}}
+		COMMENT
+		COMMENT @see #copyWithCount
+		COMMENT @see #copyComponentsToNewStack
+		COMMENT @see #copyComponentsToNewStackIgnoreEmpty
+	METHOD method_7973 areEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+		COMMENT {@return whether the given item stacks are equal, including the item count and components}
+		COMMENT
+		COMMENT @see #areItemsEqual
+		COMMENT @see #areItemsAndComponentsEqual
+		ARG 0 left
+		ARG 1 right
+	METHOD method_7974 setDamage (I)V
+		COMMENT Sets the stack's damage to {@code damage}.
+		COMMENT
+		COMMENT <p>This does not break the item if the damage reaches {@linkplain #getMaxDamage
+		COMMENT the maximum}, unlike {@link #damage(int, LivingEntity, EquipmentSlot)}.
+		COMMENT
+		COMMENT @see #getDamage
+		COMMENT @see #damage(int, ServerWorld, ServerPlayerEntity, Consumer)
+		COMMENT @see #damage(int, LivingEntity, EquipmentSlot)
+		ARG 1 damage
+	METHOD method_7976 getUseAction ()Lnet/minecraft/class_1839;
+	METHOD method_7978 addEnchantment (Lnet/minecraft/class_6880;I)V
+		COMMENT Enchants this item with the given enchantment and level.
+		COMMENT
+		COMMENT <p>This should not be used with enchanted books, as the book itself is not
+		COMMENT enchanted and therefore does not store enchantments under {@link
+		COMMENT net.minecraft.component.DataComponentTypes#ENCHANTMENTS}.
+		COMMENT
+		COMMENT @see net.minecraft.enchantment.EnchantmentHelper
+		ARG 1 enchantment
+		ARG 2 level
+	METHOD method_7979 postHit (Lnet/minecraft/class_1309;Lnet/minecraft/class_1309;)Z
+		ARG 1 target
+		ARG 2 user
+	METHOD method_7981 useOnBlock (Lnet/minecraft/class_1838;)Lnet/minecraft/class_1269;
+		ARG 1 context
+	METHOD method_7982 onCraftByPlayer (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;I)V
+		ARG 1 world
+		ARG 2 player
+		ARG 3 amount
+	METHOD method_7984 areItemsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+		COMMENT {@return whether the given item stacks contain the same item, regardless of item count or components}
+		COMMENT
+		COMMENT @see #areEqual
+		COMMENT @see #areItemsAndComponentsEqual
+		ARG 0 left
+		ARG 1 right
+	METHOD method_7986 isDamaged ()Z
+		COMMENT {@return whether the item stack is {@linkplain #isDamageable damageable} and has damage}
+		COMMENT
+		COMMENT @see #isDamageable
+		COMMENT @see #getDamage
 	METHOD method_27319 getHolder ()Lnet/minecraft/class_1297;
 		COMMENT {@return the entity that holds the stack, or {@code null} if inapplicable}
 		COMMENT
@@ -400,239 +635,4 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 3 player
 		ARG 4 type
 		ARG 5 textConsumer
-	METHOD method_7909 getItem ()Lnet/minecraft/class_1792;
-		COMMENT {@return the item of this stack}
-		COMMENT
-		COMMENT @see #isOf(Item)
-	METHOD method_7910 finishUsing (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;)Lnet/minecraft/class_1799;
-		ARG 1 world
-		ARG 2 user
-	METHOD method_7912 setBobbingAnimationTime (I)V
-		ARG 1 bobbingAnimationTime
-	METHOD method_7913 use (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
-		ARG 1 world
-		ARG 2 user
-		ARG 3 hand
-	METHOD method_7914 getMaxCount ()I
-	METHOD method_7917 inventoryTick (Lnet/minecraft/class_1937;Lnet/minecraft/class_1297;Lnet/minecraft/class_1304;)V
-		ARG 1 world
-		ARG 2 entity
-		ARG 3 slot
-	METHOD method_7919 getDamage ()I
-		COMMENT {@return the damage (lost durability) of the item stack}
-		COMMENT
-		COMMENT <p>Note that this method does not check if the item is {@linkplain #isDamageable
-		COMMENT damageable}, unlike {@link #isDamaged}.
-		COMMENT
-		COMMENT @see #isDamageable
-		COMMENT @see #isDamaged
-		COMMENT @see #setDamage
-	METHOD method_7920 useOnEntity (Lnet/minecraft/class_1657;Lnet/minecraft/class_1309;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
-		ARG 1 user
-		ARG 2 entity
-		ARG 3 hand
-	METHOD method_7923 isEnchantable ()Z
-		COMMENT {@return whether this item stack can be enchanted with an enchanting table}
-		COMMENT
-		COMMENT <p>This is not used for other methods of enchanting like anvils.
-	METHOD method_7924 getMiningSpeedMultiplier (Lnet/minecraft/class_2680;)F
-		ARG 1 state
-	METHOD method_7930 onStoppedUsing (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;I)V
-		ARG 1 world
-		ARG 2 user
-		ARG 3 remainingUseTicks
-	METHOD method_7932 getRarity ()Lnet/minecraft/class_1814;
-	METHOD method_7933 increment (I)V
-		COMMENT Increments the count of items in this item stack.
-		ARG 1 amount
-			COMMENT the amount to increment
-	METHOD method_7934 decrement (I)V
-		COMMENT Decrements the count of items in this item stack.
-		ARG 1 amount
-			COMMENT the amount to decrement
-	METHOD method_7935 getMaxUseTime (Lnet/minecraft/class_1309;)I
-		ARG 1 user
-	METHOD method_7936 getMaxDamage ()I
-	METHOD method_7939 setCount (I)V
-		COMMENT Sets the count of items in this item stack.
-		ARG 1 count
-			COMMENT the count of items
-	METHOD method_7942 hasEnchantments ()Z
-		COMMENT {@return whether the item stack has any enchantments}
-		COMMENT
-		COMMENT <p>This will return {@code false} for enchanted books, as the book itself is not
-		COMMENT enchanted and therefore does not store enchantments under {@link
-		COMMENT net.minecraft.component.DataComponentTypes#ENCHANTMENTS}.
-		COMMENT
-		COMMENT @see net.minecraft.enchantment.EnchantmentHelper#getEnchantments
-	METHOD method_7945 getFrame ()Lnet/minecraft/class_1533;
-		COMMENT {@return the item frame that holds the stack, or {@code null} if inapplicable}
-		COMMENT
-		COMMENT @see #isInFrame
-		COMMENT @see #setHolder
-		COMMENT @see #getHolder
-	METHOD method_7946 isStackable ()Z
-		COMMENT {@return whether the item stack can have item count above {@code 1}}
-		COMMENT
-		COMMENT <p>Stackable items must have {@linkplain Item#getMaxCount the maximum count} that is more
-		COMMENT than {@code 1} and cannot be damaged.
-	METHOD method_7947 getCount ()I
-		COMMENT {@return the count of items in this item stack}
-	METHOD method_7949 usageTick (Lnet/minecraft/class_1937;Lnet/minecraft/class_1309;I)V
-		ARG 1 world
-		ARG 2 user
-		ARG 3 remainingUseTicks
-	METHOD method_7950 getTooltip (Lnet/minecraft/class_1792$class_9635;Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;)Ljava/util/List;
-		ARG 1 context
-		ARG 2 player
-		ARG 3 type
-	METHOD method_7951 isSuitableFor (Lnet/minecraft/class_2680;)Z
-		COMMENT Determines whether this item can be used as a suitable tool for mining the specified block.
-		COMMENT <p>
-		COMMENT Depending on block implementation, when combined together, the correct item and block may achieve a better mining speed and yield
-		COMMENT drops that would not be obtained when mining otherwise.
-		COMMENT
-		COMMENT @return values consistent with calls to {@link Item#isCorrectForDrops}
-		COMMENT @see Item#isCorrectForDrops(ItemStack, BlockState)
-		ARG 1 state
-	METHOD method_7952 postMine (Lnet/minecraft/class_1937;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)V
-		ARG 1 world
-		ARG 2 state
-		ARG 3 pos
-		ARG 4 miner
-	METHOD method_7954 toHoverableText ()Lnet/minecraft/class_2561;
-		COMMENT {@return a text consisting of the bracketed {@linkplain #getName stack name} that
-		COMMENT can be hovered to show the item stack's tooltip}
-	METHOD method_7956 damage (ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;Ljava/util/function/Consumer;)V
-		COMMENT Damages this item stack. This method should be used when a non-entity, such as a
-		COMMENT dispenser, damages the stack. This does not damage {@linkplain #isDamageable non-damageable}
-		COMMENT stacks, and the enchantments are applied to {@code amount} before damaging.
-		COMMENT
-		COMMENT <p>If {@code player} is not {@code null}, this triggers {@link
-		COMMENT net.minecraft.advancement.criterion.Criteria#ITEM_DURABILITY_CHANGED}.
-		COMMENT
-		COMMENT <p>When the item "breaks", that is, the stack's damage is equal to or above
-		COMMENT {@linkplain #getMaxDamage the maximum damage}, {@code breakCallback} is run.
-		COMMENT Note that this method automatically decrements the stack size.
-		ARG 1 amount
-		ARG 2 world
-		ARG 3 player
-		ARG 4 breakCallback
-	METHOD method_7958 hasGlint ()Z
-	METHOD method_7960 isEmpty ()Z
-		COMMENT {@return whether this item stack is empty}
-	METHOD method_7961 isInFrame ()Z
-		COMMENT {@return whether the item stack is in an item frame}
-		COMMENT
-		COMMENT @see #setHolder
-		COMMENT @see #getFrame
-		COMMENT @see #getHolder
-	METHOD method_7963 isDamageable ()Z
-		COMMENT {@return whether the item can be damaged (lose durability)}
-		COMMENT
-		COMMENT <p>Items with {@linkplain #getMaxDamage 0 max damage} or item stacks with {@link
-		COMMENT net.minecraft.component.DataComponentTypes#UNBREAKABLE} component cannot be damaged.
-		COMMENT
-		COMMENT @see #getMaxDamage
-		COMMENT @see #isDamaged
-		COMMENT @see #getDamage
-	METHOD method_7964 getName ()Lnet/minecraft/class_2561;
-		COMMENT {@return the custom name of the stack if it exists, or the item's name}
-	METHOD method_7965 getBobbingAnimationTime ()I
-	METHOD method_7966 (Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
-		ARG 1 style
-	METHOD method_7967 isUsedOnRelease ()Z
-	METHOD method_7970 damage (ILnet/minecraft/class_1309;Lnet/minecraft/class_1304;)V
-		COMMENT Damages this item stack. This method should be used when an entity, including a player,
-		COMMENT damages the stack. This does not damage {@linkplain #isDamageable non-damageable}
-		COMMENT stacks, and the enchantments are applied to {@code amount} before damaging. Additionally,
-		COMMENT if {@code entity} is a player in creative mode, the stack will not be damaged.
-		COMMENT
-		COMMENT <p>If {@code entity} is a player, this triggers {@link
-		COMMENT net.minecraft.advancement.criterion.Criteria#ITEM_DURABILITY_CHANGED}.
-		COMMENT
-		COMMENT <p>If the stack's damage is equal to or above {@linkplain #getMaxDamage the maximum
-		COMMENT damage} (i.e. the item is "broken"), this will {@linkplain
-		COMMENT LivingEntity#sendEquipmentBreakStatus send the equipment break status}, decrement the
-		COMMENT stack, and increment {@link net.minecraft.stat.Stats#BROKEN} if the stack is held
-		COMMENT by a player.
-		ARG 1 amount
-		ARG 2 entity
-		ARG 3 slot
-			COMMENT the slot in which the stack is held
-	METHOD method_7971 split (I)Lnet/minecraft/class_1799;
-		COMMENT {@return the copy of the stack "split" from the current stack with item count
-		COMMENT being at most {@code amount}}
-		COMMENT
-		COMMENT <p>Splitting an item stack mutates this stack so that the sum of the stacks' item
-		COMMENT counts does not change. See the example below:
-		COMMENT
-		COMMENT <pre>{@code
-		COMMENT ItemStack stack = new ItemStack(Items.APPLE, 64);
-		COMMENT ItemStack newStack = stack.split(10);
-		COMMENT // stack has 54 apples
-		COMMENT // newStack has 10 apples
-		COMMENT
-		COMMENT ItemStack smallStack = new ItemStack(Items.APPLE, 4);
-		COMMENT ItemStack newSmallStack = smallStack.split(10);
-		COMMENT // smallStack is now empty
-		COMMENT // newSmallStack has 4 apples
-		COMMENT }</pre>
-		ARG 1 amount
-	METHOD method_7972 copy ()Lnet/minecraft/class_1799;
-		COMMENT {@return a copy of this item stack, including the item count, components, and
-		COMMENT {@linkplain #getBobbingAnimationTime bobbing animation time}}
-		COMMENT
-		COMMENT @see #copyWithCount
-		COMMENT @see #copyComponentsToNewStack
-		COMMENT @see #copyComponentsToNewStackIgnoreEmpty
-	METHOD method_7973 areEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
-		COMMENT {@return whether the given item stacks are equal, including the item count and components}
-		COMMENT
-		COMMENT @see #areItemsEqual
-		COMMENT @see #areItemsAndComponentsEqual
-		ARG 0 left
-		ARG 1 right
-	METHOD method_7974 setDamage (I)V
-		COMMENT Sets the stack's damage to {@code damage}.
-		COMMENT
-		COMMENT <p>This does not break the item if the damage reaches {@linkplain #getMaxDamage
-		COMMENT the maximum}, unlike {@link #damage(int, LivingEntity, EquipmentSlot)}.
-		COMMENT
-		COMMENT @see #getDamage
-		COMMENT @see #damage(int, ServerWorld, ServerPlayerEntity, Consumer)
-		COMMENT @see #damage(int, LivingEntity, EquipmentSlot)
-		ARG 1 damage
-	METHOD method_7976 getUseAction ()Lnet/minecraft/class_1839;
-	METHOD method_7978 addEnchantment (Lnet/minecraft/class_6880;I)V
-		COMMENT Enchants this item with the given enchantment and level.
-		COMMENT
-		COMMENT <p>This should not be used with enchanted books, as the book itself is not
-		COMMENT enchanted and therefore does not store enchantments under {@link
-		COMMENT net.minecraft.component.DataComponentTypes#ENCHANTMENTS}.
-		COMMENT
-		COMMENT @see net.minecraft.enchantment.EnchantmentHelper
-		ARG 1 enchantment
-		ARG 2 level
-	METHOD method_7979 postHit (Lnet/minecraft/class_1309;Lnet/minecraft/class_1309;)Z
-		ARG 1 target
-		ARG 2 user
-	METHOD method_7981 useOnBlock (Lnet/minecraft/class_1838;)Lnet/minecraft/class_1269;
-		ARG 1 context
-	METHOD method_7982 onCraftByPlayer (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;I)V
-		ARG 1 world
-		ARG 2 player
-		ARG 3 amount
-	METHOD method_7984 areItemsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
-		COMMENT {@return whether the given item stacks contain the same item, regardless of item count or components}
-		COMMENT
-		COMMENT @see #areEqual
-		COMMENT @see #areItemsAndComponentsEqual
-		ARG 0 left
-		ARG 1 right
-	METHOD method_7986 isDamaged ()Z
-		COMMENT {@return whether the item stack is {@linkplain #isDamageable damageable} and has damage}
-		COMMENT
-		COMMENT @see #isDamageable
-		COMMENT @see #getDamage
 	CLASS 1

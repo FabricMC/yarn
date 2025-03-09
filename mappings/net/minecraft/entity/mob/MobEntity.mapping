@@ -1,4 +1,26 @@
 CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
+	FIELD field_6184 lootTableSeed J
+	FIELD field_6185 targetSelector Lnet/minecraft/class_1355;
+		COMMENT Contains goals used to select this entity's target.
+		COMMENT Actions in this queue are executed first so the selected target is available
+		COMMENT to the rest of the AI's goals.
+	FIELD field_6188 bodyControl Lnet/minecraft/class_1330;
+	FIELD field_6189 navigation Lnet/minecraft/class_1408;
+	FIELD field_6190 visibilityCache Lnet/minecraft/class_1413;
+	FIELD field_6191 ambientSoundChance I
+	FIELD field_6193 MOB_FLAGS Lnet/minecraft/class_2940;
+	FIELD field_6194 experiencePoints I
+	FIELD field_6196 pathfindingPenalties Ljava/util/Map;
+	FIELD field_6198 lootTable Ljava/util/Optional;
+	FIELD field_6199 target Lnet/minecraft/class_1309;
+	FIELD field_6200 persistent Z
+	FIELD field_6201 goalSelector Lnet/minecraft/class_1355;
+		COMMENT Contains actions the entity can perform. These may consume, for example, the target
+		COMMENT entity as determined during the {@link MobEntity#targetSelector}'s execution.
+	FIELD field_6203 canPickUpLoot Z
+	FIELD field_6204 jumpControl Lnet/minecraft/class_1334;
+	FIELD field_6206 lookControl Lnet/minecraft/class_1333;
+	FIELD field_6207 moveControl Lnet/minecraft/class_1335;
 	FIELD field_18074 positionTarget Lnet/minecraft/class_2338;
 	FIELD field_18075 positionTargetRange F
 	FIELD field_30083 DEFAULT_CAN_PICKUP_LOOT_CHANCE F
@@ -34,28 +56,115 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	FIELD field_57592 DEFAULT_PERSISTENCE_REQUIRED Z
 	FIELD field_57593 DEFAULT_LEFT_HANDED Z
 	FIELD field_57594 DEFAULT_NO_AI Z
-	FIELD field_6184 lootTableSeed J
-	FIELD field_6185 targetSelector Lnet/minecraft/class_1355;
-		COMMENT Contains goals used to select this entity's target.
-		COMMENT Actions in this queue are executed first so the selected target is available
-		COMMENT to the rest of the AI's goals.
-	FIELD field_6188 bodyControl Lnet/minecraft/class_1330;
-	FIELD field_6189 navigation Lnet/minecraft/class_1408;
-	FIELD field_6190 visibilityCache Lnet/minecraft/class_1413;
-	FIELD field_6191 ambientSoundChance I
-	FIELD field_6193 MOB_FLAGS Lnet/minecraft/class_2940;
-	FIELD field_6194 experiencePoints I
-	FIELD field_6196 pathfindingPenalties Ljava/util/Map;
-	FIELD field_6198 lootTable Ljava/util/Optional;
-	FIELD field_6199 target Lnet/minecraft/class_1309;
-	FIELD field_6200 persistent Z
-	FIELD field_6201 goalSelector Lnet/minecraft/class_1355;
-		COMMENT Contains actions the entity can perform. These may consume, for example, the target
-		COMMENT entity as determined during the {@link MobEntity#targetSelector}'s execution.
-	FIELD field_6203 canPickUpLoot Z
-	FIELD field_6204 jumpControl Lnet/minecraft/class_1334;
-	FIELD field_6206 lookControl Lnet/minecraft/class_1333;
-	FIELD field_6207 moveControl Lnet/minecraft/class_1335;
+	METHOD method_5930 setForwardSpeed (F)V
+		ARG 1 forwardSpeed
+	METHOD method_5937 setLeftHanded (Z)V
+		ARG 1 leftHanded
+	METHOD method_5938 setSidewaysSpeed (F)V
+		ARG 1 sidewaysSpeed
+	METHOD method_5939 canPickupItem (Lnet/minecraft/class_1799;)Z
+		ARG 1 stack
+	METHOD method_5941 setPathfindingPenalty (Lnet/minecraft/class_7;F)V
+		ARG 1 nodeType
+		ARG 2 penalty
+	METHOD method_5942 getNavigation ()Lnet/minecraft/class_1408;
+	METHOD method_5943 initialize (Lnet/minecraft/class_5425;Lnet/minecraft/class_1266;Lnet/minecraft/class_3730;Lnet/minecraft/class_1315;)Lnet/minecraft/class_1315;
+		ARG 1 world
+		ARG 2 difficulty
+		ARG 3 spawnReason
+		ARG 4 entityData
+	METHOD method_5944 getPathfindingPenalty (Lnet/minecraft/class_7;)F
+		ARG 1 nodeType
+	METHOD method_5945 getLimitPerChunk ()I
+	METHOD method_5947 isPersistent ()Z
+	METHOD method_5948 getEquipmentForSlot (Lnet/minecraft/class_1304;I)Lnet/minecraft/class_1792;
+		ARG 0 equipmentSlot
+		ARG 1 equipmentLevel
+	METHOD method_5949 loot (Lnet/minecraft/class_3218;Lnet/minecraft/class_1542;)V
+		ARG 1 world
+		ARG 2 itemEntity
+	METHOD method_5951 lookAtEntity (Lnet/minecraft/class_1297;FF)V
+		ARG 1 targetEntity
+		ARG 2 maxYawChange
+		ARG 3 maxPitchChange
+	METHOD method_5952 setCanPickUpLoot (Z)V
+		ARG 1 canPickUpLoot
+	METHOD method_5955 prefersNewEquipment (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1304;)Z
+		ARG 1 newStack
+		ARG 2 currentStack
+		ARG 3 slot
+	METHOD method_5957 canSpawn (Lnet/minecraft/class_4538;)Z
+		ARG 1 world
+	METHOD method_5958 mobTick (Lnet/minecraft/class_3218;)V
+		ARG 1 world
+	METHOD method_5959 initGoals ()V
+	METHOD method_5960 changeAngle (FFF)F
+		COMMENT Changes the angle from {@code from} to {@code to}, or by {@code max} degrees
+		COMMENT if {@code to} is too big a change.
+		COMMENT
+		COMMENT <p>This is the same as {@link LookControl#changeAngle(float, float, float)}.
+		ARG 1 from
+		ARG 2 to
+		ARG 3 max
+	METHOD method_5961 isLeftHanded ()Z
+	METHOD method_5962 getMoveControl ()Lnet/minecraft/class_1335;
+	METHOD method_5963 createBodyControl ()Lnet/minecraft/class_1330;
+	METHOD method_5964 initEquipment (Lnet/minecraft/class_5819;Lnet/minecraft/class_1266;)V
+		ARG 1 random
+		ARG 2 localDifficulty
+	METHOD method_5965 createNavigation (Lnet/minecraft/class_1937;)Lnet/minecraft/class_1408;
+		ARG 1 world
+	METHOD method_5966 playAmbientSound ()V
+	METHOD method_5969 spawnsTooManyForEachTry (I)Z
+		ARG 1 count
+	METHOD method_5970 getMinAmbientSoundDelay ()I
+	METHOD method_5971 setPersistent ()V
+	METHOD method_5972 isAffectedByDaylight ()Z
+	METHOD method_5974 canImmediatelyDespawn (D)Z
+		ARG 1 distanceSquared
+	METHOD method_5975 resetSoundDelay ()V
+	METHOD method_5976 setUpwardSpeed (F)V
+		ARG 1 upwardSpeed
+	METHOD method_5977 setAiDisabled (Z)V
+		ARG 1 aiDisabled
+	METHOD method_5978 getMaxLookPitchChange ()I
+		COMMENT {@return the maximum degrees which the pitch can change when looking}
+		COMMENT
+		COMMENT <p>This is used by the look control.
+		COMMENT
+		COMMENT <p>It can return from {@code 1} for entities that can hardly raise their head,
+		COMMENT like axolotls or dolphins, or {@code 180} for entities that can freely raise
+		COMMENT and lower their head, like guardians. The default return value is {@code 40}.
+	METHOD method_5979 canSpawn (Lnet/minecraft/class_1936;Lnet/minecraft/class_3730;)Z
+		ARG 1 world
+		ARG 2 spawnReason
+	METHOD method_5980 setTarget (Lnet/minecraft/class_1309;)V
+		ARG 1 target
+	METHOD method_5983 onEatingGrass ()V
+	METHOD method_5984 updateEnchantments (Lnet/minecraft/class_5425;Lnet/minecraft/class_5819;Lnet/minecraft/class_1266;)V
+		ARG 1 world
+		ARG 2 random
+		ARG 3 localDifficulty
+	METHOD method_5985 getVisibilityCache ()Lnet/minecraft/class_1413;
+	METHOD method_5986 getMaxHeadRotation ()I
+		COMMENT {@return the maximum degrees which the head yaw can differ from the body yaw}
+		COMMENT
+		COMMENT <p>This is used by the body control.
+		COMMENT
+		COMMENT <p>It can return from {@code 1} for entities that can hardly rotate their head,
+		COMMENT like axolotls or dolphins, or {@code 180} for entities that can freely rotate
+		COMMENT their head, like shulkers. The default return value is {@code 75}.
+	METHOD method_5987 isAiDisabled ()Z
+	METHOD method_5988 getLookControl ()Lnet/minecraft/class_1333;
+	METHOD method_5990 playSpawnEffects ()V
+	METHOD method_5992 interactMob (Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
+		ARG 1 player
+		ARG 2 hand
+	METHOD method_5993 getJumpControl ()Lnet/minecraft/class_1334;
+	METHOD method_5994 getAmbientSound ()Lnet/minecraft/class_3414;
+	METHOD method_6510 isAttacking ()Z
+	METHOD method_7217 setBaby (Z)V
+		ARG 1 baby
 	METHOD method_17326 cannotDespawn ()Z
 	METHOD method_18249 onPlayerSpawnedChild (Lnet/minecraft/class_1657;Lnet/minecraft/class_1308;)V
 		ARG 1 player
@@ -153,114 +262,10 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 1 equipmentTable
 	METHOD method_58635 createEquipmentLootParameters (Lnet/minecraft/class_3218;)Lnet/minecraft/class_8567;
 		ARG 1 world
-	METHOD method_5930 setForwardSpeed (F)V
-		ARG 1 forwardSpeed
-	METHOD method_5937 setLeftHanded (Z)V
-		ARG 1 leftHanded
-	METHOD method_5938 setSidewaysSpeed (F)V
-		ARG 1 sidewaysSpeed
-	METHOD method_5939 canPickupItem (Lnet/minecraft/class_1799;)Z
-		ARG 1 stack
-	METHOD method_5941 setPathfindingPenalty (Lnet/minecraft/class_7;F)V
-		ARG 1 nodeType
-		ARG 2 penalty
-	METHOD method_5942 getNavigation ()Lnet/minecraft/class_1408;
-	METHOD method_5943 initialize (Lnet/minecraft/class_5425;Lnet/minecraft/class_1266;Lnet/minecraft/class_3730;Lnet/minecraft/class_1315;)Lnet/minecraft/class_1315;
-		ARG 1 world
-		ARG 2 difficulty
-		ARG 3 spawnReason
-		ARG 4 entityData
-	METHOD method_5944 getPathfindingPenalty (Lnet/minecraft/class_7;)F
-		ARG 1 nodeType
-	METHOD method_5945 getLimitPerChunk ()I
-	METHOD method_5947 isPersistent ()Z
-	METHOD method_5948 getEquipmentForSlot (Lnet/minecraft/class_1304;I)Lnet/minecraft/class_1792;
-		ARG 0 equipmentSlot
-		ARG 1 equipmentLevel
-	METHOD method_5949 loot (Lnet/minecraft/class_3218;Lnet/minecraft/class_1542;)V
-		ARG 1 world
-		ARG 2 itemEntity
-	METHOD method_5951 lookAtEntity (Lnet/minecraft/class_1297;FF)V
-		ARG 1 targetEntity
-		ARG 2 maxYawChange
-		ARG 3 maxPitchChange
-	METHOD method_5952 setCanPickUpLoot (Z)V
-		ARG 1 canPickUpLoot
-	METHOD method_5955 prefersNewEquipment (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1304;)Z
-		ARG 1 newStack
-		ARG 2 currentStack
-		ARG 3 slot
-	METHOD method_5957 canSpawn (Lnet/minecraft/class_4538;)Z
-		ARG 1 world
-	METHOD method_5958 mobTick (Lnet/minecraft/class_3218;)V
-		ARG 1 world
-	METHOD method_5959 initGoals ()V
-	METHOD method_5960 changeAngle (FFF)F
-		COMMENT Changes the angle from {@code from} to {@code to}, or by {@code max} degrees
-		COMMENT if {@code to} is too big a change.
-		COMMENT
-		COMMENT <p>This is the same as {@link LookControl#changeAngle(float, float, float)}.
-		ARG 1 from
-		ARG 2 to
-		ARG 3 max
-	METHOD method_5961 isLeftHanded ()Z
-	METHOD method_5962 getMoveControl ()Lnet/minecraft/class_1335;
-	METHOD method_5963 createBodyControl ()Lnet/minecraft/class_1330;
-	METHOD method_5964 initEquipment (Lnet/minecraft/class_5819;Lnet/minecraft/class_1266;)V
-		ARG 1 random
-		ARG 2 localDifficulty
-	METHOD method_5965 createNavigation (Lnet/minecraft/class_1937;)Lnet/minecraft/class_1408;
-		ARG 1 world
-	METHOD method_5966 playAmbientSound ()V
 	METHOD method_59664 getTargetInBrain ()Lnet/minecraft/class_1309;
 	METHOD method_59665 setEquipmentFromTable (Lnet/minecraft/class_5321;Ljava/util/Map;)V
 		ARG 1 lootTable
 		ARG 2 slotDropChances
-	METHOD method_5969 spawnsTooManyForEachTry (I)Z
-		ARG 1 count
-	METHOD method_5970 getMinAmbientSoundDelay ()I
-	METHOD method_5971 setPersistent ()V
-	METHOD method_5972 isAffectedByDaylight ()Z
-	METHOD method_5974 canImmediatelyDespawn (D)Z
-		ARG 1 distanceSquared
-	METHOD method_5975 resetSoundDelay ()V
-	METHOD method_5976 setUpwardSpeed (F)V
-		ARG 1 upwardSpeed
-	METHOD method_5977 setAiDisabled (Z)V
-		ARG 1 aiDisabled
-	METHOD method_5978 getMaxLookPitchChange ()I
-		COMMENT {@return the maximum degrees which the pitch can change when looking}
-		COMMENT
-		COMMENT <p>This is used by the look control.
-		COMMENT
-		COMMENT <p>It can return from {@code 1} for entities that can hardly raise their head,
-		COMMENT like axolotls or dolphins, or {@code 180} for entities that can freely raise
-		COMMENT and lower their head, like guardians. The default return value is {@code 40}.
-	METHOD method_5979 canSpawn (Lnet/minecraft/class_1936;Lnet/minecraft/class_3730;)Z
-		ARG 1 world
-		ARG 2 spawnReason
-	METHOD method_5980 setTarget (Lnet/minecraft/class_1309;)V
-		ARG 1 target
-	METHOD method_5983 onEatingGrass ()V
-	METHOD method_5984 updateEnchantments (Lnet/minecraft/class_5425;Lnet/minecraft/class_5819;Lnet/minecraft/class_1266;)V
-		ARG 1 world
-		ARG 2 random
-		ARG 3 localDifficulty
-	METHOD method_5985 getVisibilityCache ()Lnet/minecraft/class_1413;
-	METHOD method_5986 getMaxHeadRotation ()I
-		COMMENT {@return the maximum degrees which the head yaw can differ from the body yaw}
-		COMMENT
-		COMMENT <p>This is used by the body control.
-		COMMENT
-		COMMENT <p>It can return from {@code 1} for entities that can hardly rotate their head,
-		COMMENT like axolotls or dolphins, or {@code 180} for entities that can freely rotate
-		COMMENT their head, like shulkers. The default return value is {@code 75}.
-	METHOD method_5987 isAiDisabled ()Z
-	METHOD method_5988 getLookControl ()Lnet/minecraft/class_1333;
-	METHOD method_5990 playSpawnEffects ()V
-	METHOD method_5992 interactMob (Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
-		ARG 1 player
-		ARG 2 hand
 	METHOD method_59927 enchantEquipment (Lnet/minecraft/class_5425;Lnet/minecraft/class_1304;Lnet/minecraft/class_5819;FLnet/minecraft/class_1266;)V
 		ARG 1 world
 		ARG 2 slot
@@ -268,8 +273,6 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 4 power
 		ARG 5 localDifficulty
 	METHOD method_59928 playAttackSound ()V
-	METHOD method_5993 getJumpControl ()Lnet/minecraft/class_1334;
-	METHOD method_5994 getAmbientSound ()Lnet/minecraft/class_3414;
 	METHOD method_60972 dropForeignEquipment (Lnet/minecraft/class_3218;Ljava/util/function/Predicate;)Ljava/util/Set;
 		COMMENT Drops all foreign equipment (equipment which this entity picked up from the world and should be always dropped undamaged).
 		COMMENT
@@ -289,7 +292,6 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 		ARG 1 stack
 		ARG 2 attribute
 		ARG 3 slot
-	METHOD method_6510 isAttacking ()Z
 	METHOD method_65345 getPreferredWeapons ()Lnet/minecraft/class_6862;
 	METHOD method_65346 prefersNewArmor (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1304;)Z
 		ARG 1 newStack
@@ -303,5 +305,3 @@ CLASS net/minecraft/class_1308 net/minecraft/entity/mob/MobEntity
 	METHOD method_66672 hasSaddleEquipped ()Z
 	METHOD method_66674 createEquipmentInventory (Lnet/minecraft/class_1304;)Lnet/minecraft/class_1263;
 		ARG 1 slot
-	METHOD method_7217 setBaby (Z)V
-		ARG 1 baby

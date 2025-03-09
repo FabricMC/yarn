@@ -2,6 +2,17 @@ CLASS net/minecraft/class_1662 net/minecraft/recipe/RecipeMatcher
 	COMMENT Matching class that matches a recipe to its required resources.
 	COMMENT This specifically does not check patterns (See {@link ShapedRecipe} for that).
 	FIELD field_52504 available Lit/unimi/dsi/fastutil/objects/Reference2IntOpenHashMap;
+	METHOD method_7401 addInput (Ljava/lang/Object;I)V
+		COMMENT Adds an input to be used for recipe matching.
+		ARG 1 input
+		ARG 2 count
+			COMMENT the item's count
+	METHOD method_7409 clear ()V
+	METHOD method_7411 consume (Ljava/lang/Object;I)V
+		COMMENT Consumes a resource from the pool of available items.
+		ARG 1 input
+		ARG 2 count
+			COMMENT the number of times that item must be consumed
 	METHOD method_61501 add (Ljava/lang/Object;I)V
 		ARG 1 input
 		ARG 2 count
@@ -23,17 +34,6 @@ CLASS net/minecraft/class_1662 net/minecraft/recipe/RecipeMatcher
 		ARG 1 item
 	METHOD method_65796 getMaximumCrafts (Ljava/util/List;)I
 		ARG 1 ingredients
-	METHOD method_7401 addInput (Ljava/lang/Object;I)V
-		COMMENT Adds an input to be used for recipe matching.
-		ARG 1 input
-		ARG 2 count
-			COMMENT the item's count
-	METHOD method_7409 clear ()V
-	METHOD method_7411 consume (Ljava/lang/Object;I)V
-		COMMENT Consumes a resource from the pool of available items.
-		ARG 1 input
-		ARG 2 count
-			COMMENT the number of times that item must be consumed
 	CLASS class_1663 Matcher
 		FIELD field_7551 requiredItems Ljava/util/List;
 		FIELD field_7552 ingredients Ljava/util/List;
@@ -43,6 +43,23 @@ CLASS net/minecraft/class_1662 net/minecraft/recipe/RecipeMatcher
 		FIELD field_7558 bits Ljava/util/BitSet;
 		METHOD <init> (Lnet/minecraft/class_1662;Ljava/util/List;)V
 			ARG 2 ingredients
+		METHOD method_7416 getRequirement (I)Z
+			ARG 1 itemId
+		METHOD method_7417 match (ILnet/minecraft/class_1662$class_9874;)Z
+			ARG 1 quantity
+			ARG 2 itemCallback
+		METHOD method_7418 matches (II)Z
+			ARG 1 itemIndex
+			ARG 2 ingredientIndex
+		METHOD method_7419 getRequirementIndex (I)I
+			ARG 1 itemId
+		METHOD method_7421 unfulfillRequirement (I)V
+			ARG 1 itemId
+		METHOD method_7426 isRequirementUnfulfilled (I)Z
+			ARG 1 index
+		METHOD method_7427 countCrafts (ILnet/minecraft/class_1662$class_9874;)I
+			ARG 1 max
+			ARG 2 itemCallback
 		METHOD method_61505 initItemMatch ()V
 		METHOD method_61506 isItem (I)Z
 			ARG 0 index
@@ -93,23 +110,6 @@ CLASS net/minecraft/class_1662 net/minecraft/recipe/RecipeMatcher
 			ARG 1 index
 		METHOD method_61532 clearRequirements ()V
 		METHOD method_61533 clearVisited ()V
-		METHOD method_7416 getRequirement (I)Z
-			ARG 1 itemId
-		METHOD method_7417 match (ILnet/minecraft/class_1662$class_9874;)Z
-			ARG 1 quantity
-			ARG 2 itemCallback
-		METHOD method_7418 matches (II)Z
-			ARG 1 itemIndex
-			ARG 2 ingredientIndex
-		METHOD method_7419 getRequirementIndex (I)I
-			ARG 1 itemId
-		METHOD method_7421 unfulfillRequirement (I)V
-			ARG 1 itemId
-		METHOD method_7426 isRequirementUnfulfilled (I)Z
-			ARG 1 index
-		METHOD method_7427 countCrafts (ILnet/minecraft/class_1662$class_9874;)I
-			ARG 1 max
-			ARG 2 itemCallback
 	CLASS class_9874 ItemCallback
 		METHOD accept (Ljava/lang/Object;)V
 			ARG 1 item

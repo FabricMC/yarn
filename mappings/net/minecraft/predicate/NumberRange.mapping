@@ -1,6 +1,19 @@
 CLASS net/minecraft/class_2096 net/minecraft/predicate/NumberRange
 	FIELD field_9700 EXCEPTION_EMPTY Lcom/mojang/brigadier/exceptions/SimpleCommandExceptionType;
 	FIELD field_9701 EXCEPTION_SWAPPED Lcom/mojang/brigadier/exceptions/SimpleCommandExceptionType;
+	METHOD method_9037 fromStringReader (Lcom/mojang/brigadier/StringReader;Ljava/util/function/Function;Ljava/util/function/Supplier;)Ljava/util/Optional;
+		ARG 0 reader
+		ARG 1 converter
+		ARG 2 exceptionTypeSupplier
+	METHOD method_9040 isNextCharValid (Lcom/mojang/brigadier/StringReader;)Z
+		ARG 0 reader
+	METHOD method_9041 isDummy ()Z
+	METHOD method_9043 parse (Lcom/mojang/brigadier/StringReader;Lnet/minecraft/class_2096$class_2098;Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/util/function/Function;)Lnet/minecraft/class_2096;
+		ARG 0 commandReader
+		ARG 1 commandFactory
+		ARG 2 converter
+		ARG 3 exceptionTypeSupplier
+		ARG 4 mapper
 	METHOD method_53188 (Lnet/minecraft/class_2096$class_2097;Lcom/mojang/datafixers/util/Either;)Lnet/minecraft/class_2096;
 		ARG 1 either
 	METHOD method_53189 (Lnet/minecraft/class_2096$class_2097;Ljava/lang/Number;)Lnet/minecraft/class_2096;
@@ -18,19 +31,6 @@ CLASS net/minecraft/class_2096 net/minecraft/predicate/NumberRange
 	METHOD method_67180 createPacketCodec (Lnet/minecraft/class_9139;Lnet/minecraft/class_2096$class_2097;)Lnet/minecraft/class_9139;
 		ARG 0 valuePacketCodec
 		ARG 1 rangeFactory
-	METHOD method_9037 fromStringReader (Lcom/mojang/brigadier/StringReader;Ljava/util/function/Function;Ljava/util/function/Supplier;)Ljava/util/Optional;
-		ARG 0 reader
-		ARG 1 converter
-		ARG 2 exceptionTypeSupplier
-	METHOD method_9040 isNextCharValid (Lcom/mojang/brigadier/StringReader;)Z
-		ARG 0 reader
-	METHOD method_9041 isDummy ()Z
-	METHOD method_9043 parse (Lcom/mojang/brigadier/StringReader;Lnet/minecraft/class_2096$class_2098;Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/util/function/Function;)Lnet/minecraft/class_2096;
-		ARG 0 commandReader
-		ARG 1 commandFactory
-		ARG 2 converter
-		ARG 3 exceptionTypeSupplier
-		ARG 4 mapper
 	CLASS class_2097 Factory
 		METHOD create (Ljava/util/Optional;Ljava/util/Optional;)Lnet/minecraft/class_2096;
 			ARG 1 min
@@ -43,23 +43,14 @@ CLASS net/minecraft/class_2096 net/minecraft/predicate/NumberRange
 	CLASS class_2099 DoubleRange
 		FIELD comp_1807 squaredMin Ljava/util/Optional;
 		FIELD comp_1808 squaredMax Ljava/util/Optional;
+		FIELD field_9705 ANY Lnet/minecraft/class_2096$class_2099;
 		FIELD field_45762 CODEC Lcom/mojang/serialization/Codec;
 		FIELD field_56293 PACKET_CODEC Lnet/minecraft/class_9139;
-		FIELD field_9705 ANY Lnet/minecraft/class_2096$class_2099;
 		METHOD <init> (Ljava/util/Optional;Ljava/util/Optional;)V
 			ARG 1 min
 			ARG 2 max
 		METHOD comp_1807 squaredMin ()Ljava/util/Optional;
 		METHOD comp_1808 squaredMax ()Ljava/util/Optional;
-		METHOD method_35284 exactly (D)Lnet/minecraft/class_2096$class_2099;
-			ARG 0 value
-		METHOD method_35285 between (DD)Lnet/minecraft/class_2096$class_2099;
-			ARG 0 min
-			ARG 2 max
-		METHOD method_35286 atMost (D)Lnet/minecraft/class_2096$class_2099;
-			ARG 0 value
-		METHOD method_53195 (Ljava/lang/Double;)Ljava/lang/Double;
-			ARG 0 d
 		METHOD method_9044 square (Ljava/util/Optional;)Ljava/util/Optional;
 			ARG 0 value
 		METHOD method_9045 testSqrt (D)Z
@@ -79,28 +70,26 @@ CLASS net/minecraft/class_2096 net/minecraft/predicate/NumberRange
 			ARG 0 value
 		METHOD method_9052 (Ljava/lang/Double;)Ljava/lang/Double;
 			ARG 0 value
+		METHOD method_35284 exactly (D)Lnet/minecraft/class_2096$class_2099;
+			ARG 0 value
+		METHOD method_35285 between (DD)Lnet/minecraft/class_2096$class_2099;
+			ARG 0 min
+			ARG 2 max
+		METHOD method_35286 atMost (D)Lnet/minecraft/class_2096$class_2099;
+			ARG 0 value
+		METHOD method_53195 (Ljava/lang/Double;)Ljava/lang/Double;
+			ARG 0 d
 	CLASS class_2100 IntRange
 		FIELD comp_1809 minSquared Ljava/util/Optional;
 		FIELD comp_1810 maxSquared Ljava/util/Optional;
+		FIELD field_9708 ANY Lnet/minecraft/class_2096$class_2100;
 		FIELD field_45763 CODEC Lcom/mojang/serialization/Codec;
 		FIELD field_56294 PACKET_CODEC Lnet/minecraft/class_9139;
-		FIELD field_9708 ANY Lnet/minecraft/class_2096$class_2100;
 		METHOD <init> (Ljava/util/Optional;Ljava/util/Optional;)V
 			ARG 1 min
 			ARG 2 max
 		METHOD comp_1809 minSquared ()Ljava/util/Optional;
 		METHOD comp_1810 maxSquared ()Ljava/util/Optional;
-		METHOD method_35287 between (II)Lnet/minecraft/class_2096$class_2100;
-			ARG 0 min
-			ARG 1 max
-		METHOD method_35288 testSqrt (J)Z
-			ARG 1 value
-		METHOD method_35289 atMost (I)Lnet/minecraft/class_2096$class_2100;
-			ARG 0 value
-		METHOD method_53197 (Ljava/lang/Integer;)Ljava/lang/Long;
-			ARG 0 i
-		METHOD method_53198 (Ljava/lang/Integer;)Ljava/lang/Long;
-			ARG 0 i
 		METHOD method_9053 atLeast (I)Lnet/minecraft/class_2096$class_2100;
 			ARG 0 value
 		METHOD method_9054 test (I)Z
@@ -120,3 +109,14 @@ CLASS net/minecraft/class_2096 net/minecraft/predicate/NumberRange
 			ARG 0 reader
 		METHOD method_9061 (Ljava/lang/Integer;)Ljava/lang/Integer;
 			ARG 0 value
+		METHOD method_35287 between (II)Lnet/minecraft/class_2096$class_2100;
+			ARG 0 min
+			ARG 1 max
+		METHOD method_35288 testSqrt (J)Z
+			ARG 1 value
+		METHOD method_35289 atMost (I)Lnet/minecraft/class_2096$class_2100;
+			ARG 0 value
+		METHOD method_53197 (Ljava/lang/Integer;)Ljava/lang/Long;
+			ARG 0 i
+		METHOD method_53198 (Ljava/lang/Integer;)Ljava/lang/Long;
+			ARG 0 i

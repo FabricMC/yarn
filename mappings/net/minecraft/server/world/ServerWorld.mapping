@@ -50,6 +50,31 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 11 spawners
 		ARG 12 shouldTickTime
 		ARG 13 randomSequencesState
+	METHOD method_8448 updateSleepingPlayers ()V
+	METHOD method_8487 locateStructure (Lnet/minecraft/class_6862;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
+		COMMENT Tries to find the closest structure of a given type near a given block.
+		COMMENT <p>
+		COMMENT New chunks will only be generated up to the {@link net.minecraft.world.chunk.ChunkStatus#STRUCTURE_STARTS} phase by this method.
+		COMMENT <p>
+		COMMENT The radius is ignored for strongholds.
+		COMMENT
+		COMMENT @return the position of the structure, or {@code null} if no structure could be found within the given search radius
+		COMMENT
+		COMMENT @see net.minecraft.world.gen.chunk.ChunkGenerator#locateStructure(ServerWorld, RegistryEntryList, BlockPos, int, boolean)
+		ARG 1 structureTag
+		ARG 2 pos
+			COMMENT the position to start the searching at
+		ARG 3 radius
+			COMMENT the search radius in chunks around the chunk the given block position is in; a radius of 0 will only search in the given chunk
+		ARG 4 skipReferencedStructures
+			COMMENT whether to exclude structures that were previously located (has positive
+			COMMENT {@link net.minecraft.structure.StructureStart#references})
+	METHOD method_8554 setSpawnPos (Lnet/minecraft/class_2338;F)V
+		COMMENT Sets the world spawn point.
+		ARG 1 pos
+			COMMENT the position of the spawn point
+		ARG 2 angle
+			COMMENT the angle of the spawned entity
 	METHOD method_14166 spawnParticles (Lnet/minecraft/class_3222;Lnet/minecraft/class_2394;ZZDDDIDDDD)Z
 		COMMENT Spawns a particle visible to {@code viewer}, if the viewer is near the provided
 		COMMENT coordinates.
@@ -382,29 +407,4 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 pos
 	METHOD method_67506 shouldTickBlockAt (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
-	METHOD method_8448 updateSleepingPlayers ()V
-	METHOD method_8487 locateStructure (Lnet/minecraft/class_6862;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
-		COMMENT Tries to find the closest structure of a given type near a given block.
-		COMMENT <p>
-		COMMENT New chunks will only be generated up to the {@link net.minecraft.world.chunk.ChunkStatus#STRUCTURE_STARTS} phase by this method.
-		COMMENT <p>
-		COMMENT The radius is ignored for strongholds.
-		COMMENT
-		COMMENT @return the position of the structure, or {@code null} if no structure could be found within the given search radius
-		COMMENT
-		COMMENT @see net.minecraft.world.gen.chunk.ChunkGenerator#locateStructure(ServerWorld, RegistryEntryList, BlockPos, int, boolean)
-		ARG 1 structureTag
-		ARG 2 pos
-			COMMENT the position to start the searching at
-		ARG 3 radius
-			COMMENT the search radius in chunks around the chunk the given block position is in; a radius of 0 will only search in the given chunk
-		ARG 4 skipReferencedStructures
-			COMMENT whether to exclude structures that were previously located (has positive
-			COMMENT {@link net.minecraft.structure.StructureStart#references})
-	METHOD method_8554 setSpawnPos (Lnet/minecraft/class_2338;F)V
-		COMMENT Sets the world spawn point.
-		ARG 1 pos
-			COMMENT the position of the spawn point
-		ARG 2 angle
-			COMMENT the angle of the spawned entity
 	CLASS class_5526 ServerEntityHandler

@@ -123,6 +123,14 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 	COMMENT @see Slot
 	COMMENT @see Inventory
 	COMMENT @see net.minecraft.client.gui.screen.ingame.HandledScreen
+	FIELD field_7757 quickCraftSlots Ljava/util/Set;
+	FIELD field_7759 quickCraftStage I
+	FIELD field_7761 slots Lnet/minecraft/class_2371;
+	FIELD field_7762 quickCraftButton I
+	FIELD field_7763 syncId I
+	FIELD field_7764 trackedStacks Lnet/minecraft/class_2371;
+		COMMENT A list of item stacks that is used for tracking changes in {@link #sendContentUpdates()}.
+	FIELD field_7765 listeners Ljava/util/List;
 	FIELD field_17285 properties Ljava/util/List;
 	FIELD field_17493 type Lnet/minecraft/class_3917;
 	FIELD field_29205 cursorStack Lnet/minecraft/class_1799;
@@ -136,152 +144,9 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		COMMENT of a screen. Used for dropping the cursor stack.
 	FIELD field_34024 revision I
 	FIELD field_36534 LOGGER Lorg/slf4j/Logger;
-	FIELD field_7757 quickCraftSlots Ljava/util/Set;
-	FIELD field_7759 quickCraftStage I
-	FIELD field_7761 slots Lnet/minecraft/class_2371;
-	FIELD field_7762 quickCraftButton I
-	FIELD field_7763 syncId I
-	FIELD field_7764 trackedStacks Lnet/minecraft/class_2371;
-		COMMENT A list of item stacks that is used for tracking changes in {@link #sendContentUpdates()}.
-	FIELD field_7765 listeners Ljava/util/List;
 	METHOD <init> (Lnet/minecraft/class_3917;I)V
 		ARG 1 type
 		ARG 2 syncId
-	METHOD method_17358 getType ()Lnet/minecraft/class_3917;
-		COMMENT {@return the screen handler type}
-		COMMENT
-		COMMENT <p>A screen handler must have associated screen handler type to open it.
-		COMMENT
-		COMMENT @throws UnsupportedOperationException if the type is not passed in the constructor
-	METHOD method_17359 checkSize (Lnet/minecraft/class_1263;I)V
-		COMMENT Checks that the size of the provided inventory is at least as large as the {@code expectedSize}.
-		COMMENT
-		COMMENT @throws IllegalArgumentException if the inventory size is smaller than {@code expectedSize}
-		ARG 0 inventory
-		ARG 1 expectedSize
-	METHOD method_17360 addProperties (Lnet/minecraft/class_3913;)V
-		COMMENT Adds properties of {@code propertyDelegate} to this screen handler.
-		COMMENT This must be called inside the subclass's constructor.
-		COMMENT
-		COMMENT @see #addProperty
-		ARG 1 propertyDelegate
-	METHOD method_17361 checkDataCount (Lnet/minecraft/class_3913;I)V
-		COMMENT Checks that the size of the {@code data} is at least as large as the {@code expectedCount}.
-		COMMENT
-		COMMENT @throws IllegalArgumentException if the {@code data} has a smaller size than {@code expectedCount}
-		ARG 0 data
-		ARG 1 expectedCount
-	METHOD method_17362 addProperty (Lnet/minecraft/class_3915;)Lnet/minecraft/class_3915;
-		COMMENT Adds {@code property} to this screen handler. This must be called inside the
-		COMMENT subclass's constructor.
-		COMMENT
-		COMMENT <p>If the property relies on external objects (such as a block entity instance),
-		COMMENT it should instead use property delegates and {@link #addProperties}.
-		COMMENT
-		COMMENT @return the added property
-		COMMENT
-		COMMENT @see #addProperties
-		ARG 1 property
-	METHOD method_17695 canUse (Lnet/minecraft/class_3914;Lnet/minecraft/class_1657;Lnet/minecraft/class_2248;)Z
-		COMMENT {@return whether the screen handler can be used}
-		COMMENT
-		COMMENT @apiNote This should be called inside {@link #canUse(PlayerEntity)}.
-		COMMENT
-		COMMENT @implNote On the server, this checks that the block at the position is
-		COMMENT {@code block} and the player is within 8 blocks from the block's center.
-		COMMENT
-		COMMENT @see #canUse(PlayerEntity)
-		ARG 0 context
-		ARG 1 player
-		ARG 2 block
-	METHOD method_17696 (Lnet/minecraft/class_2248;Lnet/minecraft/class_1657;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)Ljava/lang/Boolean;
-		ARG 2 world
-		ARG 3 pos
-	METHOD method_30010 internalOnSlotClick (IILnet/minecraft/class_1713;Lnet/minecraft/class_1657;)V
-		COMMENT The actual logic that handles a slot click. Called by {@link #onSlotClick
-		COMMENT (int, int, SlotActionType, PlayerEntity)} in a try-catch block that wraps
-		COMMENT exceptions from this method into a crash report.
-		ARG 1 slotIndex
-		ARG 2 button
-		ARG 3 actionType
-		ARG 4 player
-	METHOD method_34245 setPreviousTrackedSlot (ILnet/minecraft/class_1799;)V
-		ARG 1 slot
-		ARG 2 stack
-	METHOD method_34246 updateTrackedSlot (ILnet/minecraft/class_1799;Ljava/util/function/Supplier;)V
-		ARG 1 slot
-		ARG 2 stack
-		ARG 3 copySupplier
-	METHOD method_34247 copySharedSlots (Lnet/minecraft/class_1703;)V
-		ARG 1 handler
-	METHOD method_34248 updateSyncHandler (Lnet/minecraft/class_5916;)V
-		ARG 1 handler
-	METHOD method_34249 (Lnet/minecraft/class_1735;Lnet/minecraft/class_1657;Lnet/minecraft/class_1799;)V
-		ARG 3 stack
-	METHOD method_34250 setPreviousCursorStack (Lnet/minecraft/class_1799;)V
-		ARG 1 stack
-	METHOD method_34251 (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_1657;Lnet/minecraft/class_1799;)V
-		ARG 3 stack
-	METHOD method_34252 syncState ()V
-	METHOD method_34253 checkSlotUpdates (ILnet/minecraft/class_1799;Ljava/util/function/Supplier;)V
-		ARG 1 slot
-		ARG 2 stack
-		ARG 3 copySupplier
-	METHOD method_34254 setCursorStack (Lnet/minecraft/class_1799;)V
-		ARG 1 stack
-	METHOD method_34255 getCursorStack ()Lnet/minecraft/class_1799;
-	METHOD method_34256 disableSyncing ()V
-	METHOD method_34257 enableSyncing ()V
-	METHOD method_34258 checkCursorStackUpdates ()V
-	METHOD method_34259 getCursorStackReference ()Lnet/minecraft/class_5630;
-		COMMENT {@return a reference to the cursor's stack}
-	METHOD method_34715 checkPropertyUpdates (II)V
-		ARG 1 id
-		ARG 2 value
-	METHOD method_37418 getSlotIndex (Lnet/minecraft/class_1263;I)Ljava/util/OptionalInt;
-		ARG 1 inventory
-		ARG 2 index
-	METHOD method_37419 notifyPropertyUpdate (II)V
-		ARG 1 index
-		ARG 2 value
-	METHOD method_37420 updateToClient ()V
-	METHOD method_37421 getRevision ()I
-	METHOD method_37422 nextRevision ()I
-	METHOD method_37449 setPreviousTrackedSlotMutable (ILnet/minecraft/class_1799;)V
-		ARG 1 slot
-		ARG 2 stack
-	METHOD method_40442 isValid (I)Z
-		COMMENT {@return whether the given slot index is valid}
-		COMMENT
-		COMMENT <p>This returns {@code true} for all added slots, {@value #EMPTY_SPACE_SLOT_INDEX},
-		COMMENT and {@code -1}.
-		ARG 1 slot
-	METHOD method_45409 handleSlotClick (Lnet/minecraft/class_1657;Lnet/minecraft/class_5536;Lnet/minecraft/class_1735;Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
-		ARG 1 player
-		ARG 2 clickType
-		ARG 3 slot
-		ARG 4 stack
-		ARG 5 cursorStack
-	METHOD method_61621 selectBundleStack (II)V
-		ARG 1 slot
-		ARG 2 selectedStack
-	METHOD method_61622 addPlayerHotbarSlots (Lnet/minecraft/class_1263;II)V
-		ARG 1 playerInventory
-		ARG 2 left
-		ARG 3 y
-	METHOD method_61623 addPlayerInventorySlots (Lnet/minecraft/class_1263;II)V
-		ARG 1 playerInventory
-		ARG 2 left
-		ARG 3 top
-	METHOD method_61624 addPlayerSlots (Lnet/minecraft/class_1263;II)V
-		COMMENT Adds the slots for the player inventory and hotbar. Subclasses should call this
-		COMMENT within the constructor.
-		ARG 1 playerInventory
-		ARG 2 left
-		ARG 3 top
-	METHOD method_64192 offerOrDropStack (Lnet/minecraft/class_1657;Lnet/minecraft/class_1799;)V
-		ARG 0 player
-		ARG 1 stack
 	METHOD method_7591 packQuickCraftData (II)I
 		ARG 0 quickCraftStage
 		ARG 1 buttonId
@@ -437,3 +302,138 @@ CLASS net/minecraft/class_1703 net/minecraft/screen/ScreenHandler
 		ARG 1 slot
 	METHOD method_7623 sendContentUpdates ()V
 		COMMENT Sends updates to listeners if any properties or slot stacks have changed.
+	METHOD method_17358 getType ()Lnet/minecraft/class_3917;
+		COMMENT {@return the screen handler type}
+		COMMENT
+		COMMENT <p>A screen handler must have associated screen handler type to open it.
+		COMMENT
+		COMMENT @throws UnsupportedOperationException if the type is not passed in the constructor
+	METHOD method_17359 checkSize (Lnet/minecraft/class_1263;I)V
+		COMMENT Checks that the size of the provided inventory is at least as large as the {@code expectedSize}.
+		COMMENT
+		COMMENT @throws IllegalArgumentException if the inventory size is smaller than {@code expectedSize}
+		ARG 0 inventory
+		ARG 1 expectedSize
+	METHOD method_17360 addProperties (Lnet/minecraft/class_3913;)V
+		COMMENT Adds properties of {@code propertyDelegate} to this screen handler.
+		COMMENT This must be called inside the subclass's constructor.
+		COMMENT
+		COMMENT @see #addProperty
+		ARG 1 propertyDelegate
+	METHOD method_17361 checkDataCount (Lnet/minecraft/class_3913;I)V
+		COMMENT Checks that the size of the {@code data} is at least as large as the {@code expectedCount}.
+		COMMENT
+		COMMENT @throws IllegalArgumentException if the {@code data} has a smaller size than {@code expectedCount}
+		ARG 0 data
+		ARG 1 expectedCount
+	METHOD method_17362 addProperty (Lnet/minecraft/class_3915;)Lnet/minecraft/class_3915;
+		COMMENT Adds {@code property} to this screen handler. This must be called inside the
+		COMMENT subclass's constructor.
+		COMMENT
+		COMMENT <p>If the property relies on external objects (such as a block entity instance),
+		COMMENT it should instead use property delegates and {@link #addProperties}.
+		COMMENT
+		COMMENT @return the added property
+		COMMENT
+		COMMENT @see #addProperties
+		ARG 1 property
+	METHOD method_17695 canUse (Lnet/minecraft/class_3914;Lnet/minecraft/class_1657;Lnet/minecraft/class_2248;)Z
+		COMMENT {@return whether the screen handler can be used}
+		COMMENT
+		COMMENT @apiNote This should be called inside {@link #canUse(PlayerEntity)}.
+		COMMENT
+		COMMENT @implNote On the server, this checks that the block at the position is
+		COMMENT {@code block} and the player is within 8 blocks from the block's center.
+		COMMENT
+		COMMENT @see #canUse(PlayerEntity)
+		ARG 0 context
+		ARG 1 player
+		ARG 2 block
+	METHOD method_17696 (Lnet/minecraft/class_2248;Lnet/minecraft/class_1657;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)Ljava/lang/Boolean;
+		ARG 2 world
+		ARG 3 pos
+	METHOD method_30010 internalOnSlotClick (IILnet/minecraft/class_1713;Lnet/minecraft/class_1657;)V
+		COMMENT The actual logic that handles a slot click. Called by {@link #onSlotClick
+		COMMENT (int, int, SlotActionType, PlayerEntity)} in a try-catch block that wraps
+		COMMENT exceptions from this method into a crash report.
+		ARG 1 slotIndex
+		ARG 2 button
+		ARG 3 actionType
+		ARG 4 player
+	METHOD method_34245 setPreviousTrackedSlot (ILnet/minecraft/class_1799;)V
+		ARG 1 slot
+		ARG 2 stack
+	METHOD method_34246 updateTrackedSlot (ILnet/minecraft/class_1799;Ljava/util/function/Supplier;)V
+		ARG 1 slot
+		ARG 2 stack
+		ARG 3 copySupplier
+	METHOD method_34247 copySharedSlots (Lnet/minecraft/class_1703;)V
+		ARG 1 handler
+	METHOD method_34248 updateSyncHandler (Lnet/minecraft/class_5916;)V
+		ARG 1 handler
+	METHOD method_34249 (Lnet/minecraft/class_1735;Lnet/minecraft/class_1657;Lnet/minecraft/class_1799;)V
+		ARG 3 stack
+	METHOD method_34250 setPreviousCursorStack (Lnet/minecraft/class_1799;)V
+		ARG 1 stack
+	METHOD method_34251 (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_1657;Lnet/minecraft/class_1799;)V
+		ARG 3 stack
+	METHOD method_34252 syncState ()V
+	METHOD method_34253 checkSlotUpdates (ILnet/minecraft/class_1799;Ljava/util/function/Supplier;)V
+		ARG 1 slot
+		ARG 2 stack
+		ARG 3 copySupplier
+	METHOD method_34254 setCursorStack (Lnet/minecraft/class_1799;)V
+		ARG 1 stack
+	METHOD method_34255 getCursorStack ()Lnet/minecraft/class_1799;
+	METHOD method_34256 disableSyncing ()V
+	METHOD method_34257 enableSyncing ()V
+	METHOD method_34258 checkCursorStackUpdates ()V
+	METHOD method_34259 getCursorStackReference ()Lnet/minecraft/class_5630;
+		COMMENT {@return a reference to the cursor's stack}
+	METHOD method_34715 checkPropertyUpdates (II)V
+		ARG 1 id
+		ARG 2 value
+	METHOD method_37418 getSlotIndex (Lnet/minecraft/class_1263;I)Ljava/util/OptionalInt;
+		ARG 1 inventory
+		ARG 2 index
+	METHOD method_37419 notifyPropertyUpdate (II)V
+		ARG 1 index
+		ARG 2 value
+	METHOD method_37420 updateToClient ()V
+	METHOD method_37421 getRevision ()I
+	METHOD method_37422 nextRevision ()I
+	METHOD method_37449 setPreviousTrackedSlotMutable (ILnet/minecraft/class_1799;)V
+		ARG 1 slot
+		ARG 2 stack
+	METHOD method_40442 isValid (I)Z
+		COMMENT {@return whether the given slot index is valid}
+		COMMENT
+		COMMENT <p>This returns {@code true} for all added slots, {@value #EMPTY_SPACE_SLOT_INDEX},
+		COMMENT and {@code -1}.
+		ARG 1 slot
+	METHOD method_45409 handleSlotClick (Lnet/minecraft/class_1657;Lnet/minecraft/class_5536;Lnet/minecraft/class_1735;Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+		ARG 1 player
+		ARG 2 clickType
+		ARG 3 slot
+		ARG 4 stack
+		ARG 5 cursorStack
+	METHOD method_61621 selectBundleStack (II)V
+		ARG 1 slot
+		ARG 2 selectedStack
+	METHOD method_61622 addPlayerHotbarSlots (Lnet/minecraft/class_1263;II)V
+		ARG 1 playerInventory
+		ARG 2 left
+		ARG 3 y
+	METHOD method_61623 addPlayerInventorySlots (Lnet/minecraft/class_1263;II)V
+		ARG 1 playerInventory
+		ARG 2 left
+		ARG 3 top
+	METHOD method_61624 addPlayerSlots (Lnet/minecraft/class_1263;II)V
+		COMMENT Adds the slots for the player inventory and hotbar. Subclasses should call this
+		COMMENT within the constructor.
+		ARG 1 playerInventory
+		ARG 2 left
+		ARG 3 top
+	METHOD method_64192 offerOrDropStack (Lnet/minecraft/class_1657;Lnet/minecraft/class_1799;)V
+		ARG 0 player
+		ARG 1 stack

@@ -18,6 +18,104 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	FIELD field_46764 BACKUP_ATTEMPTS I
 	FIELD field_47571 DOWNLOAD_WORKER_EXECUTOR Lnet/minecraft/class_10207;
 	FIELD field_52196 SUPPORTED_URI_PROTOCOLS Ljava/util/Set;
+	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
+		COMMENT {@return the item preceding {@code object} in {@code iterable}}
+		COMMENT
+		COMMENT <p>If {@code object} is not in {@code iterable}, this returns the last item of the iterable.
+		COMMENT {@code object} is compared using the {@code ==} operator.
+		ARG 0 iterable
+		ARG 1 object
+	METHOD method_646 createTranslationKey (Ljava/lang/String;Lnet/minecraft/class_2960;)Ljava/lang/String;
+		COMMENT {@return the translation key constructed from {@code type} and {@code id}}
+		COMMENT
+		COMMENT <p>If {@code id} is {@code null}, {@code unregistered_sadface} is used as the ID.
+		COMMENT
+		COMMENT @see Identifier#toTranslationKey(String)
+		ARG 0 type
+		ARG 1 id
+	METHOD method_648 getMeasuringTimeNano ()J
+		COMMENT {@return the current time in nanoseconds, to be used for measuring a duration}
+		COMMENT
+		COMMENT <p>This is not the Unix epoch time, and can only be used to determine the duration
+		COMMENT between two calls of this method.
+		COMMENT
+		COMMENT @see #getMeasuringTimeMs
+		COMMENT @see #getEpochTimeMs
+	METHOD method_650 getValueAsString (Lnet/minecraft/class_2769;Ljava/lang/Object;)Ljava/lang/String;
+		ARG 0 property
+		ARG 1 value
+	METHOD method_651 getJVMFlags ()Ljava/util/stream/Stream;
+		COMMENT {@return a stream of JVM flags passed when launching}
+		COMMENT
+		COMMENT <p>The streamed strings include the {@code -X} prefix.
+	METHOD method_652 combine (Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
+		COMMENT Combines a list of {@code futures} into one future that holds a list
+		COMMENT of their results.
+		COMMENT
+		COMMENT <p>The returned future is fail-fast; if any of the input futures fails,
+		COMMENT this returned future will be immediately completed exceptionally than
+		COMMENT waiting for other input futures.
+		COMMENT
+		COMMENT @return the combined future
+		COMMENT @see #combineCancellable(List)
+		COMMENT @see #combineSafe(List)
+		ARG 0 futures
+			COMMENT the completable futures to combine
+	METHOD method_654 make (Ljava/lang/Object;Ljava/util/function/Consumer;)Ljava/lang/Object;
+		COMMENT {@return {@code object} initialized with {@code initializer}}
+		COMMENT
+		COMMENT <p>This is useful when initializing static fields:
+		COMMENT <pre>{@code
+		COMMENT private static final Map<String, String> MAP = Util.make(new HashMap<>(), (map) -> {
+		COMMENT     map.put("example", "hello");
+		COMMENT });
+		COMMENT }</pre>
+		ARG 0 object
+		ARG 1 initializer
+	METHOD method_656 make (Ljava/util/function/Supplier;)Ljava/lang/Object;
+		COMMENT {@return the value supplied from {@code factory}}
+		COMMENT
+		COMMENT <p>This is useful when initializing static fields:
+		COMMENT <pre>{@code
+		COMMENT private static final Map<String, String> MAP = Util.make(() -> {
+		COMMENT     Map<String, String> map = new HashMap<>();
+		COMMENT     map.put("example", "hello");
+		COMMENT     return map;
+		COMMENT });
+		COMMENT }</pre>
+		ARG 0 factory
+	METHOD method_658 getMeasuringTimeMs ()J
+		COMMENT {@return the current time in milliseconds, to be used for measuring a duration}
+		COMMENT
+		COMMENT <p>This is not the Unix epoch time, and can only be used to determine the duration
+		COMMENT between two calls of this method.
+		COMMENT
+		COMMENT @see #getMeasuringTimeNano
+		COMMENT @see #getEpochTimeMs
+	METHOD method_659 getEpochTimeMs ()J
+		COMMENT {@return the milliseconds passed since the Unix epoch}
+		COMMENT
+		COMMENT <p>This should be used to display or store the current time. {@link #getMeasuringTimeMs}
+		COMMENT should be used for determining the duration between two calls.
+		COMMENT
+		COMMENT @see #getMeasuringTimeMs
+		COMMENT @see #getMeasuringTimeNano
+	METHOD method_660 next (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
+		COMMENT {@return the item succeeding {@code object} in {@code iterable}}
+		COMMENT
+		COMMENT @implNote If {@code object} is {@code null}, this returns the first item of the iterable.
+		COMMENT If {@code object} is not in {@code iterable}, this enters into an infinite loop.
+		COMMENT {@code object} is compared using the {@code ==} operator.
+		ARG 0 iterable
+		ARG 1 object
+	METHOD method_664 toMap ()Ljava/util/stream/Collector;
+	METHOD method_666 (Ljava/lang/String;)Z
+		ARG 0 runtimeArg
+	METHOD method_668 getOperatingSystem ()Lnet/minecraft/class_156$class_158;
+		COMMENT {@return the operating system instance for the current platform}
+		COMMENT
+		COMMENT @implNote This uses the {@code os.name} system property to determine the operating system.
+		COMMENT @apiNote This is used for opening links.
 	METHOD method_17974 ifPresentOrElse (Ljava/util/Optional;Ljava/util/function/Consumer;Ljava/lang/Runnable;)Ljava/util/Optional;
 		COMMENT If {@code optional} has value, calls {@code presentAction} with the value,
 		COMMENT otherwise calls {@code elseAction}.
@@ -412,88 +510,6 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 	METHOD method_64122 runInNamedZone (Ljava/lang/Runnable;Ljava/lang/String;)V
 		ARG 0 runnable
 		ARG 1 name
-	METHOD method_645 previous (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
-		COMMENT {@return the item preceding {@code object} in {@code iterable}}
-		COMMENT
-		COMMENT <p>If {@code object} is not in {@code iterable}, this returns the last item of the iterable.
-		COMMENT {@code object} is compared using the {@code ==} operator.
-		ARG 0 iterable
-		ARG 1 object
-	METHOD method_646 createTranslationKey (Ljava/lang/String;Lnet/minecraft/class_2960;)Ljava/lang/String;
-		COMMENT {@return the translation key constructed from {@code type} and {@code id}}
-		COMMENT
-		COMMENT <p>If {@code id} is {@code null}, {@code unregistered_sadface} is used as the ID.
-		COMMENT
-		COMMENT @see Identifier#toTranslationKey(String)
-		ARG 0 type
-		ARG 1 id
-	METHOD method_648 getMeasuringTimeNano ()J
-		COMMENT {@return the current time in nanoseconds, to be used for measuring a duration}
-		COMMENT
-		COMMENT <p>This is not the Unix epoch time, and can only be used to determine the duration
-		COMMENT between two calls of this method.
-		COMMENT
-		COMMENT @see #getMeasuringTimeMs
-		COMMENT @see #getEpochTimeMs
-	METHOD method_650 getValueAsString (Lnet/minecraft/class_2769;Ljava/lang/Object;)Ljava/lang/String;
-		ARG 0 property
-		ARG 1 value
-	METHOD method_651 getJVMFlags ()Ljava/util/stream/Stream;
-		COMMENT {@return a stream of JVM flags passed when launching}
-		COMMENT
-		COMMENT <p>The streamed strings include the {@code -X} prefix.
-	METHOD method_652 combine (Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
-		COMMENT Combines a list of {@code futures} into one future that holds a list
-		COMMENT of their results.
-		COMMENT
-		COMMENT <p>The returned future is fail-fast; if any of the input futures fails,
-		COMMENT this returned future will be immediately completed exceptionally than
-		COMMENT waiting for other input futures.
-		COMMENT
-		COMMENT @return the combined future
-		COMMENT @see #combineCancellable(List)
-		COMMENT @see #combineSafe(List)
-		ARG 0 futures
-			COMMENT the completable futures to combine
-	METHOD method_654 make (Ljava/lang/Object;Ljava/util/function/Consumer;)Ljava/lang/Object;
-		COMMENT {@return {@code object} initialized with {@code initializer}}
-		COMMENT
-		COMMENT <p>This is useful when initializing static fields:
-		COMMENT <pre>{@code
-		COMMENT private static final Map<String, String> MAP = Util.make(new HashMap<>(), (map) -> {
-		COMMENT     map.put("example", "hello");
-		COMMENT });
-		COMMENT }</pre>
-		ARG 0 object
-		ARG 1 initializer
-	METHOD method_656 make (Ljava/util/function/Supplier;)Ljava/lang/Object;
-		COMMENT {@return the value supplied from {@code factory}}
-		COMMENT
-		COMMENT <p>This is useful when initializing static fields:
-		COMMENT <pre>{@code
-		COMMENT private static final Map<String, String> MAP = Util.make(() -> {
-		COMMENT     Map<String, String> map = new HashMap<>();
-		COMMENT     map.put("example", "hello");
-		COMMENT     return map;
-		COMMENT });
-		COMMENT }</pre>
-		ARG 0 factory
-	METHOD method_658 getMeasuringTimeMs ()J
-		COMMENT {@return the current time in milliseconds, to be used for measuring a duration}
-		COMMENT
-		COMMENT <p>This is not the Unix epoch time, and can only be used to determine the duration
-		COMMENT between two calls of this method.
-		COMMENT
-		COMMENT @see #getMeasuringTimeNano
-		COMMENT @see #getEpochTimeMs
-	METHOD method_659 getEpochTimeMs ()J
-		COMMENT {@return the milliseconds passed since the Unix epoch}
-		COMMENT
-		COMMENT <p>This should be used to display or store the current time. {@link #getMeasuringTimeMs}
-		COMMENT should be used for determining the duration between two calls.
-		COMMENT
-		COMMENT @see #getMeasuringTimeMs
-		COMMENT @see #getMeasuringTimeNano
 	METHOD method_65951 getAvailableBackgroundThreads ()I
 	METHOD method_65967 transformMapValuesLazy (Ljava/util/Map;Lcom/google/common/base/Function;)Ljava/util/Map;
 		ARG 0 map
@@ -503,22 +519,6 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		ARG 1 transformer
 	METHOD method_65969 (Ljava/util/function/Function;Ljava/util/Map$Entry;)Ljava/lang/Object;
 		ARG 1 entry
-	METHOD method_660 next (Ljava/lang/Iterable;Ljava/lang/Object;)Ljava/lang/Object;
-		COMMENT {@return the item succeeding {@code object} in {@code iterable}}
-		COMMENT
-		COMMENT @implNote If {@code object} is {@code null}, this returns the first item of the iterable.
-		COMMENT If {@code object} is not in {@code iterable}, this enters into an infinite loop.
-		COMMENT {@code object} is compared using the {@code ==} operator.
-		ARG 0 iterable
-		ARG 1 object
-	METHOD method_664 toMap ()Ljava/util/stream/Collector;
-	METHOD method_666 (Ljava/lang/String;)Z
-		ARG 0 runtimeArg
-	METHOD method_668 getOperatingSystem ()Lnet/minecraft/class_156$class_158;
-		COMMENT {@return the operating system instance for the current platform}
-		COMMENT
-		COMMENT @implNote This uses the {@code os.name} system property to determine the operating system.
-		COMMENT @apiNote This is used for opening links.
 	METHOD method_68172 nextCapacity (II)I
 		COMMENT {@return the optimal capacity of a collection given the current capacity}
 		ARG 0 current
@@ -544,9 +544,6 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 		FIELD field_34894 name Ljava/lang/String;
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
 			ARG 3 name
-		METHOD method_38649 getName ()Ljava/lang/String;
-		METHOD method_60932 open (Ljava/nio/file/Path;)V
-			ARG 1 path
 		METHOD method_670 open (Ljava/lang/String;)V
 			COMMENT Opens {@code uri}. If this points to an HTTP(S) URI, it is usually opened using
 			COMMENT the system's default browser. Otherwise, it is opened directly.
@@ -569,3 +566,6 @@ CLASS net/minecraft/class_156 net/minecraft/util/Util
 			ARG 1 uri
 		METHOD method_674 getURIOpenCommand (Ljava/net/URI;)[Ljava/lang/String;
 			ARG 1 uri
+		METHOD method_38649 getName ()Ljava/lang/String;
+		METHOD method_60932 open (Ljava/nio/file/Path;)V
+			ARG 1 path

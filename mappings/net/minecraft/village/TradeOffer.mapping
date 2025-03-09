@@ -1,16 +1,16 @@
 CLASS net/minecraft/class_1914 net/minecraft/village/TradeOffer
-	FIELD field_18676 specialPrice I
-	FIELD field_18677 demandBonus I
-	FIELD field_18678 priceMultiplier F
-	FIELD field_18679 merchantExperience I
-	FIELD field_48371 PACKET_CODEC Lnet/minecraft/class_9139;
-	FIELD field_48849 CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_9143 secondBuyItem Ljava/util/Optional;
 	FIELD field_9144 maxUses I
 	FIELD field_9145 rewardingPlayerExperience Z
 	FIELD field_9146 firstBuyItem Lnet/minecraft/class_9306;
 	FIELD field_9147 uses I
 	FIELD field_9148 sellItem Lnet/minecraft/class_1799;
+	FIELD field_18676 specialPrice I
+	FIELD field_18677 demandBonus I
+	FIELD field_18678 priceMultiplier F
+	FIELD field_18679 merchantExperience I
+	FIELD field_48371 PACKET_CODEC Lnet/minecraft/class_9139;
+	FIELD field_48849 CODEC Lcom/mojang/serialization/Codec;
 	METHOD <init> (Lnet/minecraft/class_1914;)V
 		ARG 1 offer
 	METHOD <init> (Lnet/minecraft/class_9306;Ljava/util/Optional;Lnet/minecraft/class_1799;IIF)V
@@ -54,6 +54,37 @@ CLASS net/minecraft/class_1914 net/minecraft/village/TradeOffer
 		ARG 3 maxUses
 		ARG 4 merchantExperience
 		ARG 5 priceMultiplier
+	METHOD method_8244 use ()V
+		COMMENT Increments the number of times this trade offer has been used.
+	METHOD method_8245 increaseSpecialPrice (I)V
+		COMMENT Increases the special price of this trade offer by {@code increment}.
+		COMMENT
+		COMMENT <p>A negative {@code increment} value will decrease the special price.
+		ARG 1 increment
+	METHOD method_8246 getOriginalFirstBuyItem ()Lnet/minecraft/class_1799;
+		COMMENT Returns the first buy item of this trade offer.
+	METHOD method_8247 getDisplayedSecondBuyItem ()Lnet/minecraft/class_1799;
+		COMMENT Returns the second buy item of this trade offer.
+		COMMENT
+		COMMENT <p>If there is no second buy item, this returns the {@linkplain ItemStack#EMPTY empty
+		COMMENT item stack}.
+	METHOD method_8248 getMaxUses ()I
+		COMMENT Returns the maximum number of times this trade offer can be used.
+	METHOD method_8249 getUses ()I
+		COMMENT Returns the number of times this trade offer has been used.
+	METHOD method_8250 getSellItem ()Lnet/minecraft/class_1799;
+		COMMENT Returns the sell item of this trade offer.
+	METHOD method_8254 disable ()V
+		COMMENT Sets the number of times this trade offer has been used to
+		COMMENT its maximum uses, making it disabled.
+	METHOD method_8255 isDisabled ()Z
+		COMMENT Returns whether this trade offer is disabled.
+		COMMENT
+		COMMENT <p>Checks if the number of times this trade offer has been used
+		COMMENT is greater or equal to its maximum uses.
+	METHOD method_8256 shouldRewardPlayerExperience ()Z
+		COMMENT Returns whether experience should be given to a player when
+		COMMENT they use this trade offer.
 	METHOD method_16952 matchesBuyItems (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		ARG 1 stack
 		ARG 2 buyItem
@@ -134,34 +165,3 @@ CLASS net/minecraft/class_1914 net/minecraft/village/TradeOffer
 		ARG 1 firstBuyItem
 	METHOD method_57556 getFirstBuyItem ()Lnet/minecraft/class_9306;
 	METHOD method_57557 getSecondBuyItem ()Ljava/util/Optional;
-	METHOD method_8244 use ()V
-		COMMENT Increments the number of times this trade offer has been used.
-	METHOD method_8245 increaseSpecialPrice (I)V
-		COMMENT Increases the special price of this trade offer by {@code increment}.
-		COMMENT
-		COMMENT <p>A negative {@code increment} value will decrease the special price.
-		ARG 1 increment
-	METHOD method_8246 getOriginalFirstBuyItem ()Lnet/minecraft/class_1799;
-		COMMENT Returns the first buy item of this trade offer.
-	METHOD method_8247 getDisplayedSecondBuyItem ()Lnet/minecraft/class_1799;
-		COMMENT Returns the second buy item of this trade offer.
-		COMMENT
-		COMMENT <p>If there is no second buy item, this returns the {@linkplain ItemStack#EMPTY empty
-		COMMENT item stack}.
-	METHOD method_8248 getMaxUses ()I
-		COMMENT Returns the maximum number of times this trade offer can be used.
-	METHOD method_8249 getUses ()I
-		COMMENT Returns the number of times this trade offer has been used.
-	METHOD method_8250 getSellItem ()Lnet/minecraft/class_1799;
-		COMMENT Returns the sell item of this trade offer.
-	METHOD method_8254 disable ()V
-		COMMENT Sets the number of times this trade offer has been used to
-		COMMENT its maximum uses, making it disabled.
-	METHOD method_8255 isDisabled ()Z
-		COMMENT Returns whether this trade offer is disabled.
-		COMMENT
-		COMMENT <p>Checks if the number of times this trade offer has been used
-		COMMENT is greater or equal to its maximum uses.
-	METHOD method_8256 shouldRewardPlayerExperience ()Z
-		COMMENT Returns whether experience should be given to a player when
-		COMMENT they use this trade offer.

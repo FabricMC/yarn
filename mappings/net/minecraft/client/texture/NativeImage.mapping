@@ -1,5 +1,4 @@
 CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
-	FIELD field_21684 LOGGER Lorg/slf4j/Logger;
 	FIELD field_4986 format Lnet/minecraft/class_1011$class_1012;
 	FIELD field_4987 sizeBytes J
 	FIELD field_4988 pointer J
@@ -7,6 +6,7 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 	FIELD field_4990 isStbImage Z
 	FIELD field_4991 width I
 	FIELD field_4992 WRITE_TO_FILE_OPEN_OPTIONS Ljava/util/Set;
+	FIELD field_21684 LOGGER Lorg/slf4j/Logger;
 	FIELD field_54265 MEMORY_POOL Lcom/mojang/jtracy/MemoryPool;
 	METHOD <init> (IIZ)V
 		ARG 1 width
@@ -23,11 +23,6 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		ARG 3 height
 		ARG 4 useStb
 		ARG 5 pointer
-	METHOD method_24032 write (Ljava/nio/channels/WritableByteChannel;)Z
-		ARG 1 channel
-	METHOD method_36559 isOutOfBounds (II)Z
-		ARG 1 x
-		ARG 2 y
 	METHOD method_4300 resizeSubRectTo (IIIILnet/minecraft/class_1011;)V
 		ARG 1 x
 		ARG 2 y
@@ -98,6 +93,11 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		ARG 3 width
 		ARG 4 height
 		ARG 5 color
+	METHOD method_24032 write (Ljava/nio/channels/WritableByteChannel;)Z
+		ARG 1 channel
+	METHOD method_36559 isOutOfBounds (II)Z
+		ARG 1 x
+		ARG 2 y
 	METHOD method_47594 copyRect (Lnet/minecraft/class_1011;IIIIIIZZ)V
 		ARG 1 image
 		ARG 2 x
@@ -160,6 +160,16 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 			ARG 12 luminanceOffset
 			ARG 13 alphaOffset
 			ARG 14 writeable
+		METHOD method_4329 hasAlpha ()Z
+		METHOD method_4330 getOpacityChannelOffset ()I
+			COMMENT @apiNote For luminance-alpha format, this would return the luminance offset
+			COMMENT than the alpha offset.
+		METHOD method_4332 getAlphaOffset ()I
+		METHOD method_4335 getChannelCount ()I
+		METHOD method_4336 fromChannelCount (I)Lnet/minecraft/class_1011$class_1012;
+			ARG 0 glFormat
+		METHOD method_4337 hasOpacityChannel ()Z
+		METHOD method_4338 isWriteable ()Z
 		METHOD method_35628 hasRed ()Z
 		METHOD method_35629 hasGreen ()Z
 		METHOD method_35630 hasBlue ()Z
@@ -174,16 +184,6 @@ CLASS net/minecraft/class_1011 net/minecraft/client/texture/NativeImage
 		METHOD method_35639 getRedChannelOffset ()I
 		METHOD method_35640 getGreenChannelOffset ()I
 		METHOD method_35641 getBlueChannelOffset ()I
-		METHOD method_4329 hasAlpha ()Z
-		METHOD method_4330 getOpacityChannelOffset ()I
-			COMMENT @apiNote For luminance-alpha format, this would return the luminance offset
-			COMMENT than the alpha offset.
-		METHOD method_4332 getAlphaOffset ()I
-		METHOD method_4335 getChannelCount ()I
-		METHOD method_4336 fromChannelCount (I)Lnet/minecraft/class_1011$class_1012;
-			ARG 0 glFormat
-		METHOD method_4337 hasOpacityChannel ()Z
-		METHOD method_4338 isWriteable ()Z
 	CLASS class_1014 WriteCallback
 		FIELD field_5018 channel Ljava/nio/channels/WritableByteChannel;
 		FIELD field_5019 exception Ljava/io/IOException;

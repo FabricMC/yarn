@@ -3,9 +3,6 @@ CLASS net/minecraft/class_2168 net/minecraft/server/command/ServerCommandSource
 	COMMENT
 	COMMENT @see MinecraftServer#getCommandSource()
 	COMMENT @see Entity#getCommandSource()
-	FIELD field_39183 signedArguments Lnet/minecraft/class_7448;
-	FIELD field_39834 messageChainTaskQueue Lnet/minecraft/class_7620;
-	FIELD field_47159 returnValueConsumer Lnet/minecraft/class_8935;
 	FIELD field_9815 level I
 	FIELD field_9816 entityAnchor Lnet/minecraft/class_2183$class_2184;
 	FIELD field_9817 position Lnet/minecraft/class_243;
@@ -19,6 +16,9 @@ CLASS net/minecraft/class_2168 net/minecraft/server/command/ServerCommandSource
 	FIELD field_9826 name Ljava/lang/String;
 	FIELD field_9827 REQUIRES_ENTITY_EXCEPTION Lcom/mojang/brigadier/exceptions/SimpleCommandExceptionType;
 	FIELD field_9828 world Lnet/minecraft/class_3218;
+	FIELD field_39183 signedArguments Lnet/minecraft/class_7448;
+	FIELD field_39834 messageChainTaskQueue Lnet/minecraft/class_7620;
+	FIELD field_47159 returnValueConsumer Lnet/minecraft/class_8935;
 	METHOD <init> (Lnet/minecraft/class_2165;Lnet/minecraft/class_243;Lnet/minecraft/class_241;Lnet/minecraft/class_3218;ILjava/lang/String;Lnet/minecraft/class_2561;Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1297;)V
 		ARG 1 output
 		ARG 2 pos
@@ -44,37 +44,6 @@ CLASS net/minecraft/class_2168 net/minecraft/server/command/ServerCommandSource
 		ARG 12 entityAnchor
 		ARG 13 signedArguments
 		ARG 14 messageChainTaskQueue
-	METHOD method_36321 withOutput (Lnet/minecraft/class_2165;)Lnet/minecraft/class_2168;
-		ARG 1 output
-	METHOD method_41212 (Lnet/minecraft/class_2172$class_7078;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
-		ARG 3 registry
-	METHOD method_43735 withSignedArguments (Lnet/minecraft/class_7448;Lnet/minecraft/class_7620;)Lnet/minecraft/class_2168;
-		ARG 1 signedArguments
-		ARG 2 messageChainTaskQueue
-	METHOD method_43737 isExecutedByPlayer ()Z
-	METHOD method_43738 getSignedArguments ()Lnet/minecraft/class_7448;
-	METHOD method_44023 getPlayer ()Lnet/minecraft/class_3222;
-		COMMENT {@return the player from this command source, or {@code null} if the source is not a player}
-	METHOD method_44749 sendChatMessage (Lnet/minecraft/class_7604;ZLnet/minecraft/class_2556$class_7602;)V
-		COMMENT Sends {@code message} as a chat message to the command's executor, or to the server's log
-		COMMENT if the command is not executed by a player.
-		ARG 1 message
-		ARG 2 filterMaskEnabled
-		ARG 3 params
-	METHOD method_44909 getMessageChainTaskQueue ()Lnet/minecraft/class_7620;
-	METHOD method_45067 shouldFilterText (Lnet/minecraft/class_3222;)Z
-		COMMENT {@return whether to filter text sent to {@code recipient}}
-		COMMENT
-		COMMENT <p>This returns {@code true} if either of the command executor or the recipient
-		COMMENT requires text filtering, unless {@code recipient} executed the command, where
-		COMMENT {@code false} is always returned.
-		ARG 1 recipient
-	METHOD method_45068 sendMessage (Lnet/minecraft/class_2561;)V
-		COMMENT Sends {@code message} as the feedback to the command's executor, or to the server's log
-		COMMENT if the command is not executed by a player.
-		ARG 1 message
-	METHOD method_64830 (Lnet/minecraft/class_8786;)Lnet/minecraft/class_2960;
-		ARG 0 recipe
 	METHOD method_9206 withLevel (I)Lnet/minecraft/class_2168;
 		ARG 1 level
 	METHOD method_9207 getPlayerOrThrow ()Lnet/minecraft/class_3222;
@@ -120,3 +89,34 @@ CLASS net/minecraft/class_2168 net/minecraft/server/command/ServerCommandSource
 		ARG 1 level
 	METHOD method_9232 withEntity (Lnet/minecraft/class_1297;)Lnet/minecraft/class_2168;
 		ARG 1 entity
+	METHOD method_36321 withOutput (Lnet/minecraft/class_2165;)Lnet/minecraft/class_2168;
+		ARG 1 output
+	METHOD method_41212 (Lnet/minecraft/class_2172$class_7078;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/class_2378;)Ljava/util/concurrent/CompletableFuture;
+		ARG 3 registry
+	METHOD method_43735 withSignedArguments (Lnet/minecraft/class_7448;Lnet/minecraft/class_7620;)Lnet/minecraft/class_2168;
+		ARG 1 signedArguments
+		ARG 2 messageChainTaskQueue
+	METHOD method_43737 isExecutedByPlayer ()Z
+	METHOD method_43738 getSignedArguments ()Lnet/minecraft/class_7448;
+	METHOD method_44023 getPlayer ()Lnet/minecraft/class_3222;
+		COMMENT {@return the player from this command source, or {@code null} if the source is not a player}
+	METHOD method_44749 sendChatMessage (Lnet/minecraft/class_7604;ZLnet/minecraft/class_2556$class_7602;)V
+		COMMENT Sends {@code message} as a chat message to the command's executor, or to the server's log
+		COMMENT if the command is not executed by a player.
+		ARG 1 message
+		ARG 2 filterMaskEnabled
+		ARG 3 params
+	METHOD method_44909 getMessageChainTaskQueue ()Lnet/minecraft/class_7620;
+	METHOD method_45067 shouldFilterText (Lnet/minecraft/class_3222;)Z
+		COMMENT {@return whether to filter text sent to {@code recipient}}
+		COMMENT
+		COMMENT <p>This returns {@code true} if either of the command executor or the recipient
+		COMMENT requires text filtering, unless {@code recipient} executed the command, where
+		COMMENT {@code false} is always returned.
+		ARG 1 recipient
+	METHOD method_45068 sendMessage (Lnet/minecraft/class_2561;)V
+		COMMENT Sends {@code message} as the feedback to the command's executor, or to the server's log
+		COMMENT if the command is not executed by a player.
+		ARG 1 message
+	METHOD method_64830 (Lnet/minecraft/class_8786;)Lnet/minecraft/class_2960;
+		ARG 0 recipe

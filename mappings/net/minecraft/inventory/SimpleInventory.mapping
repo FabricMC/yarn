@@ -19,10 +19,40 @@ CLASS net/minecraft/class_1277 net/minecraft/inventory/SimpleInventory
 	FIELD field_5828 heldStacks Lnet/minecraft/class_2371;
 	FIELD field_5829 listeners Ljava/util/List;
 	FIELD field_5831 size I
-	METHOD <init> (I)V
-		ARG 1 size
 	METHOD <init> ([Lnet/minecraft/class_1799;)V
 		ARG 1 items
+	METHOD <init> (I)V
+		ARG 1 size
+	METHOD method_5488 removeListener (Lnet/minecraft/class_1265;)V
+		COMMENT Removes a {@code listener} previously added by {@code #addListener}.
+		COMMENT Does nothing when the listener was not found.
+		ARG 1 listener
+	METHOD method_5489 addListener (Lnet/minecraft/class_1265;)V
+		COMMENT Adds a {@code listener} for inventory modifications. If a listener is
+		COMMENT added multiple times, it will also be triggered multiple times.
+		ARG 1 listener
+	METHOD method_5491 addStack (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1799;
+		COMMENT Adds {@code stack} to this inventory as much as possible. It is possible
+		COMMENT that the item stack gets inserted into a non-empty slot or spread across
+		COMMENT several slots, if it can combine with other stack(s) in this inventory.
+		COMMENT
+		COMMENT @return the leftover part of the stack, or {@code ItemStack#EMPTY} if the entire
+		COMMENT stack fit inside the inventory
+		ARG 1 stack
+	METHOD method_7659 readNbtList (Lnet/minecraft/class_2499;Lnet/minecraft/class_7225$class_7874;)V
+		COMMENT Reads the item stacks from {@code nbtList}.
+		COMMENT
+		COMMENT @see #toNbtList
+		ARG 1 list
+		ARG 2 registries
+	METHOD method_7660 toNbtList (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2499;
+		COMMENT {@return an NBT list of non-empty {@linkplain ItemStack#encode(RegistryWrapper.WrapperLookup) item stacks}}
+		COMMENT
+		COMMENT <p>Unlike {@link Inventories#writeNbt(NbtCompound, DefaultedList, boolean, RegistryWrapper.WrapperLookup)},
+		COMMENT this does not serialize the slots.
+		COMMENT
+		COMMENT @see #readNbtList
+		ARG 1 registries
 	METHOD method_20631 removeItem (Lnet/minecraft/class_1792;I)Lnet/minecraft/class_1799;
 		COMMENT Searches this inventory for the specified item and removes the given amount from this inventory.
 		COMMENT
@@ -48,35 +78,5 @@ CLASS net/minecraft/class_1277 net/minecraft/inventory/SimpleInventory
 		COMMENT {@return whether {@code stack} can be inserted into this inventory}
 		ARG 1 stack
 	METHOD method_54454 getHeldStacks ()Lnet/minecraft/class_2371;
-	METHOD method_5488 removeListener (Lnet/minecraft/class_1265;)V
-		COMMENT Removes a {@code listener} previously added by {@code #addListener}.
-		COMMENT Does nothing when the listener was not found.
-		ARG 1 listener
-	METHOD method_5489 addListener (Lnet/minecraft/class_1265;)V
-		COMMENT Adds a {@code listener} for inventory modifications. If a listener is
-		COMMENT added multiple times, it will also be triggered multiple times.
-		ARG 1 listener
-	METHOD method_5491 addStack (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1799;
-		COMMENT Adds {@code stack} to this inventory as much as possible. It is possible
-		COMMENT that the item stack gets inserted into a non-empty slot or spread across
-		COMMENT several slots, if it can combine with other stack(s) in this inventory.
-		COMMENT
-		COMMENT @return the leftover part of the stack, or {@code ItemStack#EMPTY} if the entire
-		COMMENT stack fit inside the inventory
-		ARG 1 stack
 	METHOD method_68258 (Lnet/minecraft/class_7225$class_7874;Lnet/minecraft/class_2487;)Ljava/util/stream/Stream;
 		ARG 1 nbt
-	METHOD method_7659 readNbtList (Lnet/minecraft/class_2499;Lnet/minecraft/class_7225$class_7874;)V
-		COMMENT Reads the item stacks from {@code nbtList}.
-		COMMENT
-		COMMENT @see #toNbtList
-		ARG 1 list
-		ARG 2 registries
-	METHOD method_7660 toNbtList (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2499;
-		COMMENT {@return an NBT list of non-empty {@linkplain ItemStack#encode(RegistryWrapper.WrapperLookup) item stacks}}
-		COMMENT
-		COMMENT <p>Unlike {@link Inventories#writeNbt(NbtCompound, DefaultedList, boolean, RegistryWrapper.WrapperLookup)},
-		COMMENT this does not serialize the slots.
-		COMMENT
-		COMMENT @see #readNbtList
-		ARG 1 registries

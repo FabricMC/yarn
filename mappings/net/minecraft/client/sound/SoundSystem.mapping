@@ -1,4 +1,15 @@
 CLASS net/minecraft/class_1140 net/minecraft/client/sound/SoundSystem
+	FIELD field_5550 ticks I
+	FIELD field_5551 preloadedSounds Ljava/util/List;
+	FIELD field_5552 loader Lnet/minecraft/class_1144;
+	FIELD field_5553 MARKER Lorg/slf4j/Marker;
+	FIELD field_5555 settings Lnet/minecraft/class_315;
+	FIELD field_5557 tickingSounds Ljava/util/List;
+	FIELD field_5558 listeners Ljava/util/List;
+	FIELD field_5559 LOGGER Lorg/slf4j/Logger;
+	FIELD field_5561 UNKNOWN_SOUNDS Ljava/util/Set;
+	FIELD field_5563 started Z
+	FIELD field_5566 soundStartTicks Ljava/util/Map;
 	FIELD field_18945 soundEngine Lnet/minecraft/class_4225;
 	FIELD field_18946 listener Lnet/minecraft/class_4227;
 	FIELD field_18947 soundLoader Lnet/minecraft/class_4237;
@@ -18,21 +29,42 @@ CLASS net/minecraft/class_1140 net/minecraft/client/sound/SoundSystem
 	FIELD field_34966 MIN_TIME_INTERVAL_TO_RELOAD_SOUNDS J
 	FIELD field_34967 lastSoundDeviceCheckTime J
 	FIELD field_35083 deviceChangeStatus Ljava/util/concurrent/atomic/AtomicReference;
-	FIELD field_5550 ticks I
-	FIELD field_5551 preloadedSounds Ljava/util/List;
-	FIELD field_5552 loader Lnet/minecraft/class_1144;
-	FIELD field_5553 MARKER Lorg/slf4j/Marker;
-	FIELD field_5555 settings Lnet/minecraft/class_315;
-	FIELD field_5557 tickingSounds Ljava/util/List;
-	FIELD field_5558 listeners Ljava/util/List;
-	FIELD field_5559 LOGGER Lorg/slf4j/Logger;
-	FIELD field_5561 UNKNOWN_SOUNDS Ljava/util/Set;
-	FIELD field_5563 started Z
-	FIELD field_5566 soundStartTicks Ljava/util/Map;
 	METHOD <init> (Lnet/minecraft/class_1144;Lnet/minecraft/class_315;Lnet/minecraft/class_5912;)V
 		ARG 1 loader
 		ARG 2 settings
 		ARG 3 resourceFactory
+	METHOD method_4835 isPlaying (Lnet/minecraft/class_1113;)Z
+		ARG 1 sound
+	METHOD method_4837 reloadSounds ()V
+	METHOD method_4838 stopSounds (Lnet/minecraft/class_2960;Lnet/minecraft/class_3419;)V
+		ARG 1 id
+		ARG 2 category
+	METHOD method_4840 updateListenerPosition (Lnet/minecraft/class_4184;)V
+		ARG 1 camera
+	METHOD method_4843 stopAll ()V
+	METHOD method_4844 updateSoundVolume (Lnet/minecraft/class_3419;F)V
+		ARG 1 category
+		ARG 2 volume
+	METHOD method_4846 start ()V
+	METHOD method_4847 unregisterListener (Lnet/minecraft/class_1145;)V
+		ARG 1 listener
+	METHOD method_4849 getAdjustedPitch (Lnet/minecraft/class_1113;)F
+		ARG 1 sound
+	METHOD method_4850 getSoundVolume (Lnet/minecraft/class_3419;)F
+		ARG 1 category
+	METHOD method_4851 addPreloadedSound (Lnet/minecraft/class_1111;)V
+		ARG 1 sound
+	METHOD method_4852 play (Lnet/minecraft/class_1113;I)V
+		ARG 1 sound
+		ARG 2 delay
+	METHOD method_4853 getAdjustedVolume (Lnet/minecraft/class_1113;)F
+		ARG 1 sound
+	METHOD method_4854 play (Lnet/minecraft/class_1113;)V
+		ARG 1 sound
+	METHOD method_4855 registerListener (Lnet/minecraft/class_1145;)V
+		ARG 1 listener
+	METHOD method_4856 stop ()V
+	METHOD method_4857 tick ()V
 	METHOD method_19748 (FFLnet/minecraft/class_243;Lnet/minecraft/class_4224;)V
 		ARG 3 source
 	METHOD method_19749 (FFLnet/minecraft/class_1113$class_1114;FZZLnet/minecraft/class_243;ZLnet/minecraft/class_4224;)V
@@ -76,38 +108,6 @@ CLASS net/minecraft/class_1140 net/minecraft/client/sound/SoundSystem
 	METHOD method_43222 getAdjustedVolume (FLnet/minecraft/class_3419;)F
 		ARG 1 volume
 		ARG 2 category
-	METHOD method_4835 isPlaying (Lnet/minecraft/class_1113;)Z
-		ARG 1 sound
-	METHOD method_4837 reloadSounds ()V
-	METHOD method_4838 stopSounds (Lnet/minecraft/class_2960;Lnet/minecraft/class_3419;)V
-		ARG 1 id
-		ARG 2 category
-	METHOD method_4840 updateListenerPosition (Lnet/minecraft/class_4184;)V
-		ARG 1 camera
-	METHOD method_4843 stopAll ()V
-	METHOD method_4844 updateSoundVolume (Lnet/minecraft/class_3419;F)V
-		ARG 1 category
-		ARG 2 volume
-	METHOD method_4846 start ()V
-	METHOD method_4847 unregisterListener (Lnet/minecraft/class_1145;)V
-		ARG 1 listener
-	METHOD method_4849 getAdjustedPitch (Lnet/minecraft/class_1113;)F
-		ARG 1 sound
-	METHOD method_4850 getSoundVolume (Lnet/minecraft/class_3419;)F
-		ARG 1 category
-	METHOD method_4851 addPreloadedSound (Lnet/minecraft/class_1111;)V
-		ARG 1 sound
-	METHOD method_4852 play (Lnet/minecraft/class_1113;I)V
-		ARG 1 sound
-		ARG 2 delay
-	METHOD method_4853 getAdjustedVolume (Lnet/minecraft/class_1113;)F
-		ARG 1 sound
-	METHOD method_4854 play (Lnet/minecraft/class_1113;)V
-		ARG 1 sound
-	METHOD method_4855 registerListener (Lnet/minecraft/class_1145;)V
-		ARG 1 listener
-	METHOD method_4856 stop ()V
-	METHOD method_4857 tick ()V
 	METHOD method_54648 stopAbruptly ()V
 	METHOD method_55592 getListenerTransform ()Lnet/minecraft/class_9054;
 	METHOD method_65256 (FLnet/minecraft/class_1113;Lnet/minecraft/class_4224;)V

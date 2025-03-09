@@ -22,6 +22,11 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	COMMENT @see BlockItem
 	COMMENT @see ItemStack
 	COMMENT @see net.minecraft.inventory.Inventory
+	FIELD field_8001 BASE_ATTACK_SPEED_MODIFIER_ID Lnet/minecraft/class_2960;
+	FIELD field_8003 BLOCK_ITEMS Ljava/util/Map;
+	FIELD field_8006 BASE_ATTACK_DAMAGE_MODIFIER_ID Lnet/minecraft/class_2960;
+	FIELD field_8008 recipeRemainder Lnet/minecraft/class_1792;
+	FIELD field_8014 translationKey Ljava/lang/String;
 	FIELD field_27017 LOGGER Lorg/slf4j/Logger;
 	FIELD field_30887 DEFAULT_MAX_COUNT I
 	FIELD field_30889 ITEM_BAR_STEPS I
@@ -32,123 +37,8 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 	FIELD field_54952 ENTRY_CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_55708 ENTRY_PACKET_CODEC Lnet/minecraft/class_9139;
 	FIELD field_56296 DEFAULT_BLOCKS_ATTACKS_MAX_USE_TIME I
-	FIELD field_8001 BASE_ATTACK_SPEED_MODIFIER_ID Lnet/minecraft/class_2960;
-	FIELD field_8003 BLOCK_ITEMS Ljava/util/Map;
-	FIELD field_8006 BASE_ATTACK_DAMAGE_MODIFIER_ID Lnet/minecraft/class_2960;
-	FIELD field_8008 recipeRemainder Lnet/minecraft/class_1792;
-	FIELD field_8014 translationKey Ljava/lang/String;
 	METHOD <init> (Lnet/minecraft/class_1792$class_1793;)V
 		ARG 1 settings
-	METHOD method_31565 onStackClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;)Z
-		COMMENT Called when the item at the cursor is clicked at {@code slot}.
-		COMMENT
-		COMMENT <p>While this method is usually called on the logical server, it can also be called on
-		COMMENT the logical client, so take caution when overriding this method. The logical side can be
-		COMMENT checked using {@link World#isClient}.
-		COMMENT
-		COMMENT <p>For example, this is called on {@link BundleItem} when the cursor holds
-		COMMENT a bundle and the player clicks on the slot.
-		COMMENT
-		COMMENT @return whether the action was successful
-		ARG 1 stack
-			COMMENT the stack the cursor holds
-		ARG 2 slot
-			COMMENT the clicked slot
-		ARG 3 clickType
-		ARG 4 player
-	METHOD method_31566 onClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;Lnet/minecraft/class_5630;)Z
-		COMMENT Called when the item at {@code slot} gets clicked by the cursor
-		COMMENT holding {@code otherStack}.
-		COMMENT
-		COMMENT <p>While this method is usually called on the logical server, it can also be called on
-		COMMENT the logical client, so take caution when overriding this method. The logical side can be
-		COMMENT checked using {@link World#isClient}.
-		COMMENT
-		COMMENT <p>For example, this is called on {@link BundleItem} when the cursor holds
-		COMMENT an item and the player clicks on the slot that has a bundle.
-		COMMENT
-		COMMENT @return whether the action was successful
-		ARG 1 stack
-			COMMENT the slot's stack
-		ARG 2 otherStack
-			COMMENT the stack the cursor holds
-		ARG 3 slot
-			COMMENT the clicked slot
-		ARG 4 clickType
-		ARG 5 player
-		ARG 6 cursorStackReference
-	METHOD method_31567 isItemBarVisible (Lnet/minecraft/class_1799;)Z
-		COMMENT {@return whether to show the item bar for {@code stack}}
-		COMMENT
-		COMMENT <p>Item bar is usually used to display durability of the stack.
-		COMMENT
-		COMMENT <p>When overriding this, {@link #getItemBarStep} and {@link #getItemBarColor} should
-		COMMENT also be overridden.
-		ARG 1 stack
-	METHOD method_31568 canBeNested ()Z
-		COMMENT @return true if the item can be placed inside of shulker boxes or bundles.
-	METHOD method_31569 getItemBarStep (Lnet/minecraft/class_1799;)I
-		COMMENT {@return the step, or the length of the colored area of the item bar, for
-		COMMENT {@code stack}}
-		COMMENT
-		COMMENT <p>This is between {@code 0.0f} and {code 13.0f}. By default, this is
-		COMMENT {@code durability * 13.0f / maxDurability}.
-		COMMENT
-		COMMENT <p>When overriding this, {@link #isItemBarVisible} and {@link #getItemBarColor} should
-		COMMENT also be overridden.
-		ARG 1 stack
-	METHOD method_31571 getItemBarColor (Lnet/minecraft/class_1799;)I
-		COMMENT {@return the RGB color of the item bar, usually used for durability display}
-		COMMENT
-		COMMENT <p>When overriding this, {@link #isItemBarVisible} and {@link #getItemBarStep} should
-		COMMENT also be overridden.
-		ARG 1 stack
-	METHOD method_32346 getTooltipData (Lnet/minecraft/class_1799;)Ljava/util/Optional;
-		ARG 1 stack
-	METHOD method_33261 onItemEntityDestroyed (Lnet/minecraft/class_1542;)V
-		COMMENT Called on the server when an {@link ItemEntity} holding this item gets destroyed.
-		COMMENT This can happen due to fire, lava, cactus, explosion, etc. Items that can hold
-		COMMENT other items should override this to drop its contents.
-		COMMENT
-		COMMENT @see ItemUsage#spawnItemContents
-		ARG 1 entity
-	METHOD method_40131 getRegistryEntry ()Lnet/minecraft/class_6880$class_6883;
-	METHOD method_54465 onCraftByPlayer (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;)V
-		COMMENT Called when a player acquires the item by crafting, smelting, smithing, etc.
-		COMMENT
-		COMMENT <p>Not called when the item is automatically created, such as via a crafter.
-		ARG 1 stack
-		ARG 2 world
-		ARG 3 player
-	METHOD method_57347 getComponents ()Lnet/minecraft/class_9323;
-	METHOD method_58403 getBonusAttackDamage (Lnet/minecraft/class_1297;FLnet/minecraft/class_1282;)F
-		ARG 1 target
-		ARG 2 baseAttackDamage
-		ARG 3 damageSource
-	METHOD method_58404 getMiningSpeed (Lnet/minecraft/class_1799;Lnet/minecraft/class_2680;)F
-		ARG 1 stack
-		ARG 2 state
-	METHOD method_58405 isCorrectForDrops (Lnet/minecraft/class_1799;Lnet/minecraft/class_2680;)Z
-		ARG 1 stack
-		ARG 2 state
-	METHOD method_59978 postDamageEntity (Lnet/minecraft/class_1799;Lnet/minecraft/class_1309;Lnet/minecraft/class_1309;)V
-		ARG 1 stack
-		ARG 2 target
-		ARG 3 attacker
-	METHOD method_63680 getName ()Lnet/minecraft/class_2561;
-	METHOD method_64193 getDamageSource (Lnet/minecraft/class_1309;)Lnet/minecraft/class_1282;
-		ARG 1 user
-	METHOD method_65043 (Lnet/minecraft/class_6880;)Lcom/mojang/serialization/DataResult;
-		ARG 0 entry
-	METHOD method_65353 shouldShowOperatorBlockWarnings (Lnet/minecraft/class_1799;Lnet/minecraft/class_1657;)Z
-		ARG 1 stack
-		ARG 2 player
-	METHOD method_67187 appendTooltip (Lnet/minecraft/class_1799;Lnet/minecraft/class_1792$class_9635;Lnet/minecraft/class_10712;Ljava/util/function/Consumer;Lnet/minecraft/class_1836;)V
-		ARG 1 stack
-		ARG 2 context
-		ARG 3 displayComponent
-		ARG 4 textConsumer
-		ARG 5 type
 	METHOD method_7836 use (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
 		COMMENT Called when the player uses (or starts using) the item.
 		COMMENT The use action, by default, is bound to the right mouse button.
@@ -335,10 +225,121 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		ARG 3 entity
 			COMMENT the entity holding the item
 		ARG 4 slot
+	METHOD method_31565 onStackClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;)Z
+		COMMENT Called when the item at the cursor is clicked at {@code slot}.
+		COMMENT
+		COMMENT <p>While this method is usually called on the logical server, it can also be called on
+		COMMENT the logical client, so take caution when overriding this method. The logical side can be
+		COMMENT checked using {@link World#isClient}.
+		COMMENT
+		COMMENT <p>For example, this is called on {@link BundleItem} when the cursor holds
+		COMMENT a bundle and the player clicks on the slot.
+		COMMENT
+		COMMENT @return whether the action was successful
+		ARG 1 stack
+			COMMENT the stack the cursor holds
+		ARG 2 slot
+			COMMENT the clicked slot
+		ARG 3 clickType
+		ARG 4 player
+	METHOD method_31566 onClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;Lnet/minecraft/class_5630;)Z
+		COMMENT Called when the item at {@code slot} gets clicked by the cursor
+		COMMENT holding {@code otherStack}.
+		COMMENT
+		COMMENT <p>While this method is usually called on the logical server, it can also be called on
+		COMMENT the logical client, so take caution when overriding this method. The logical side can be
+		COMMENT checked using {@link World#isClient}.
+		COMMENT
+		COMMENT <p>For example, this is called on {@link BundleItem} when the cursor holds
+		COMMENT an item and the player clicks on the slot that has a bundle.
+		COMMENT
+		COMMENT @return whether the action was successful
+		ARG 1 stack
+			COMMENT the slot's stack
+		ARG 2 otherStack
+			COMMENT the stack the cursor holds
+		ARG 3 slot
+			COMMENT the clicked slot
+		ARG 4 clickType
+		ARG 5 player
+		ARG 6 cursorStackReference
+	METHOD method_31567 isItemBarVisible (Lnet/minecraft/class_1799;)Z
+		COMMENT {@return whether to show the item bar for {@code stack}}
+		COMMENT
+		COMMENT <p>Item bar is usually used to display durability of the stack.
+		COMMENT
+		COMMENT <p>When overriding this, {@link #getItemBarStep} and {@link #getItemBarColor} should
+		COMMENT also be overridden.
+		ARG 1 stack
+	METHOD method_31568 canBeNested ()Z
+		COMMENT @return true if the item can be placed inside of shulker boxes or bundles.
+	METHOD method_31569 getItemBarStep (Lnet/minecraft/class_1799;)I
+		COMMENT {@return the step, or the length of the colored area of the item bar, for
+		COMMENT {@code stack}}
+		COMMENT
+		COMMENT <p>This is between {@code 0.0f} and {code 13.0f}. By default, this is
+		COMMENT {@code durability * 13.0f / maxDurability}.
+		COMMENT
+		COMMENT <p>When overriding this, {@link #isItemBarVisible} and {@link #getItemBarColor} should
+		COMMENT also be overridden.
+		ARG 1 stack
+	METHOD method_31571 getItemBarColor (Lnet/minecraft/class_1799;)I
+		COMMENT {@return the RGB color of the item bar, usually used for durability display}
+		COMMENT
+		COMMENT <p>When overriding this, {@link #isItemBarVisible} and {@link #getItemBarStep} should
+		COMMENT also be overridden.
+		ARG 1 stack
+	METHOD method_32346 getTooltipData (Lnet/minecraft/class_1799;)Ljava/util/Optional;
+		ARG 1 stack
+	METHOD method_33261 onItemEntityDestroyed (Lnet/minecraft/class_1542;)V
+		COMMENT Called on the server when an {@link ItemEntity} holding this item gets destroyed.
+		COMMENT This can happen due to fire, lava, cactus, explosion, etc. Items that can hold
+		COMMENT other items should override this to drop its contents.
+		COMMENT
+		COMMENT @see ItemUsage#spawnItemContents
+		ARG 1 entity
+	METHOD method_40131 getRegistryEntry ()Lnet/minecraft/class_6880$class_6883;
+	METHOD method_54465 onCraftByPlayer (Lnet/minecraft/class_1799;Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;)V
+		COMMENT Called when a player acquires the item by crafting, smelting, smithing, etc.
+		COMMENT
+		COMMENT <p>Not called when the item is automatically created, such as via a crafter.
+		ARG 1 stack
+		ARG 2 world
+		ARG 3 player
+	METHOD method_57347 getComponents ()Lnet/minecraft/class_9323;
+	METHOD method_58403 getBonusAttackDamage (Lnet/minecraft/class_1297;FLnet/minecraft/class_1282;)F
+		ARG 1 target
+		ARG 2 baseAttackDamage
+		ARG 3 damageSource
+	METHOD method_58404 getMiningSpeed (Lnet/minecraft/class_1799;Lnet/minecraft/class_2680;)F
+		ARG 1 stack
+		ARG 2 state
+	METHOD method_58405 isCorrectForDrops (Lnet/minecraft/class_1799;Lnet/minecraft/class_2680;)Z
+		ARG 1 stack
+		ARG 2 state
+	METHOD method_59978 postDamageEntity (Lnet/minecraft/class_1799;Lnet/minecraft/class_1309;Lnet/minecraft/class_1309;)V
+		ARG 1 stack
+		ARG 2 target
+		ARG 3 attacker
+	METHOD method_63680 getName ()Lnet/minecraft/class_2561;
+	METHOD method_64193 getDamageSource (Lnet/minecraft/class_1309;)Lnet/minecraft/class_1282;
+		ARG 1 user
+	METHOD method_65043 (Lnet/minecraft/class_6880;)Lcom/mojang/serialization/DataResult;
+		ARG 0 entry
+	METHOD method_65353 shouldShowOperatorBlockWarnings (Lnet/minecraft/class_1799;Lnet/minecraft/class_1657;)Z
+		ARG 1 stack
+		ARG 2 player
+	METHOD method_67187 appendTooltip (Lnet/minecraft/class_1799;Lnet/minecraft/class_1792$class_9635;Lnet/minecraft/class_10712;Ljava/util/function/Consumer;Lnet/minecraft/class_1836;)V
+		ARG 1 stack
+		ARG 2 context
+		ARG 3 displayComponent
+		ARG 4 textConsumer
+		ARG 5 type
 	CLASS class_1793 Settings
 		COMMENT Item settings configure behaviors common to all items, such as the stack's max
 		COMMENT count. An instance of this must be passed to the constructor
 		COMMENT of {@link Item} (or most of its subclasses).
+		FIELD field_8018 recipeRemainder Lnet/minecraft/class_1792;
 		FIELD field_40210 requiredFeatures Lnet/minecraft/class_7699;
 		FIELD field_49265 components Lnet/minecraft/class_9323$class_9324;
 		FIELD field_54115 BLOCK_PREFIXED_TRANSLATION_KEY Lnet/minecraft/class_10162;
@@ -346,7 +347,39 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 		FIELD field_54117 registryKey Lnet/minecraft/class_5321;
 		FIELD field_54118 translationKey Lnet/minecraft/class_10162;
 		FIELD field_54119 modelId Lnet/minecraft/class_10162;
-		FIELD field_8018 recipeRemainder Lnet/minecraft/class_1792;
+		METHOD method_7889 maxCount (I)Lnet/minecraft/class_1792$class_1793;
+			COMMENT Sets the maximum stack count of any ItemStack with an Item using this Settings instance.
+			COMMENT
+			COMMENT <p>Note that a count over 64 leads to unreliable behavior in GUIs.
+			COMMENT Damageable items can not have a maximum stack count (they default to 1).
+			COMMENT An Item.Settings' max count defaults to 64.
+			COMMENT
+			COMMENT @throws RuntimeException if this Settings instance also has a max damage value set
+			COMMENT @return this instance
+			ARG 1 maxCount
+				COMMENT maximum stack count of any ItemStack with an item using this Settings instance
+		METHOD method_7894 rarity (Lnet/minecraft/class_1814;)Lnet/minecraft/class_1792$class_1793;
+			COMMENT Sets the {@link Rarity} of any item configured with this Settings instance, which changes the color of its name.
+			COMMENT
+			COMMENT <p>An item's rarity defaults to {@link Rarity#COMMON}.
+			COMMENT
+			COMMENT @return this instance
+			ARG 1 rarity
+				COMMENT rarity to apply to items using this Settings instance
+		METHOD method_7895 maxDamage (I)Lnet/minecraft/class_1792$class_1793;
+			COMMENT Sets the maximum durability of any item configured with this Settings instance.
+			COMMENT
+			COMMENT <p>Note that max stack count is set to 1 when this method is called.
+			COMMENT
+			COMMENT @return this instance
+			ARG 1 maxDamage
+				COMMENT maximum durability of an ItemStack using an item with this Item.Settings instance
+		METHOD method_7896 recipeRemainder (Lnet/minecraft/class_1792;)Lnet/minecraft/class_1792$class_1793;
+			COMMENT Sets the recipe remainder for any item configured with this Settings instance.
+			COMMENT When an item with a recipe remainder is used in a crafting recipe, the remainder is left in the table or returned to the player.
+			COMMENT
+			COMMENT @return this instance
+			ARG 1 recipeRemainder
 		METHOD method_19265 food (Lnet/minecraft/class_4174;)Lnet/minecraft/class_1792$class_1793;
 			COMMENT When set, any item configured with this Settings instance will be edible based on the provided {@link FoodComponent}.
 			COMMENT
@@ -433,39 +466,6 @@ CLASS net/minecraft/class_1792 net/minecraft/item/Item
 			ARG 1 material
 			ARG 2 attackDamage
 			ARG 3 attackSpeed
-		METHOD method_7889 maxCount (I)Lnet/minecraft/class_1792$class_1793;
-			COMMENT Sets the maximum stack count of any ItemStack with an Item using this Settings instance.
-			COMMENT
-			COMMENT <p>Note that a count over 64 leads to unreliable behavior in GUIs.
-			COMMENT Damageable items can not have a maximum stack count (they default to 1).
-			COMMENT An Item.Settings' max count defaults to 64.
-			COMMENT
-			COMMENT @throws RuntimeException if this Settings instance also has a max damage value set
-			COMMENT @return this instance
-			ARG 1 maxCount
-				COMMENT maximum stack count of any ItemStack with an item using this Settings instance
-		METHOD method_7894 rarity (Lnet/minecraft/class_1814;)Lnet/minecraft/class_1792$class_1793;
-			COMMENT Sets the {@link Rarity} of any item configured with this Settings instance, which changes the color of its name.
-			COMMENT
-			COMMENT <p>An item's rarity defaults to {@link Rarity#COMMON}.
-			COMMENT
-			COMMENT @return this instance
-			ARG 1 rarity
-				COMMENT rarity to apply to items using this Settings instance
-		METHOD method_7895 maxDamage (I)Lnet/minecraft/class_1792$class_1793;
-			COMMENT Sets the maximum durability of any item configured with this Settings instance.
-			COMMENT
-			COMMENT <p>Note that max stack count is set to 1 when this method is called.
-			COMMENT
-			COMMENT @return this instance
-			ARG 1 maxDamage
-				COMMENT maximum durability of an ItemStack using an item with this Item.Settings instance
-		METHOD method_7896 recipeRemainder (Lnet/minecraft/class_1792;)Lnet/minecraft/class_1792$class_1793;
-			COMMENT Sets the recipe remainder for any item configured with this Settings instance.
-			COMMENT When an item with a recipe remainder is used in a crafting recipe, the remainder is left in the table or returned to the player.
-			COMMENT
-			COMMENT @return this instance
-			ARG 1 recipeRemainder
 	CLASS class_9635 TooltipContext
 		FIELD field_51353 DEFAULT Lnet/minecraft/class_1792$class_9635;
 		METHOD method_59527 getRegistryLookup ()Lnet/minecraft/class_7225$class_7874;

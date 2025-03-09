@@ -1,4 +1,6 @@
 CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
+	FIELD field_9324 FOLIAGE_NOISE Lnet/minecraft/class_3543;
+	FIELD field_9335 TEMPERATURE_NOISE Lnet/minecraft/class_3543;
 	FIELD field_20335 temperatureCache Ljava/lang/ThreadLocal;
 	FIELD field_22039 effects Lnet/minecraft/class_4763;
 	FIELD field_24677 REGISTRY_CODEC Lcom/mojang/serialization/Codec;
@@ -10,13 +12,32 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	FIELD field_26635 generationSettings Lnet/minecraft/class_5485;
 	FIELD field_26750 REGISTRY_ENTRY_LIST_CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_30978 MAX_TEMPERATURE_CACHE_SIZE I
-	FIELD field_9324 FOLIAGE_NOISE Lnet/minecraft/class_3543;
-	FIELD field_9335 TEMPERATURE_NOISE Lnet/minecraft/class_3543;
 	METHOD <init> (Lnet/minecraft/class_1959$class_5482;Lnet/minecraft/class_4763;Lnet/minecraft/class_5485;Lnet/minecraft/class_5483;)V
 		ARG 1 weather
 		ARG 2 effects
 		ARG 3 generationSettings
 		ARG 4 spawnSettings
+	METHOD method_8685 canSetIce (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;Z)Z
+		ARG 1 world
+		ARG 2 pos
+		ARG 3 doWaterCheck
+	METHOD method_8687 getWaterColor ()I
+	METHOD method_8696 canSetSnow (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z
+		ARG 1 world
+		ARG 2 pos
+	METHOD method_8697 getSkyColor ()I
+	METHOD method_8698 getFoliageColor ()I
+	METHOD method_8705 canSetIce (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z
+		ARG 1 world
+		ARG 2 blockPos
+	METHOD method_8707 computeTemperature (Lnet/minecraft/class_2338;I)F
+		ARG 1 pos
+		ARG 2 seaLevel
+	METHOD method_8711 getGrassColorAt (DD)I
+		ARG 1 x
+		ARG 3 z
+	METHOD method_8712 getTemperature ()F
+	METHOD method_8713 getWaterFogColor ()I
 	METHOD method_21740 getTemperature (Lnet/minecraft/class_2338;I)F
 		ARG 1 blockPos
 		ARG 2 seaLevel
@@ -67,38 +88,21 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	METHOD method_66386 getGrassColor ()I
 	METHOD method_68145 getDryFoliageColor ()I
 	METHOD method_68146 getDefaultDryFoliageColor ()I
-	METHOD method_8685 canSetIce (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;Z)Z
-		ARG 1 world
-		ARG 2 pos
-		ARG 3 doWaterCheck
-	METHOD method_8687 getWaterColor ()I
-	METHOD method_8696 canSetSnow (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z
-		ARG 1 world
-		ARG 2 pos
-	METHOD method_8697 getSkyColor ()I
-	METHOD method_8698 getFoliageColor ()I
-	METHOD method_8705 canSetIce (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z
-		ARG 1 world
-		ARG 2 blockPos
-	METHOD method_8707 computeTemperature (Lnet/minecraft/class_2338;I)F
-		ARG 1 pos
-		ARG 2 seaLevel
-	METHOD method_8711 getGrassColorAt (DD)I
-		ARG 1 x
-		ARG 3 z
-	METHOD method_8712 getTemperature ()F
-	METHOD method_8713 getWaterFogColor ()I
 	CLASS 1
 		METHOD rehash (I)V
 			ARG 1 n
 	CLASS class_1960 Builder
+		FIELD field_9349 temperature Ljava/lang/Float;
+		FIELD field_9351 downfall Ljava/lang/Float;
 		FIELD field_22042 specialEffects Lnet/minecraft/class_4763;
 		FIELD field_26396 temperatureModifier Lnet/minecraft/class_1959$class_5484;
 		FIELD field_26636 spawnSettings Lnet/minecraft/class_5483;
 		FIELD field_26637 generationSettings Lnet/minecraft/class_5485;
 		FIELD field_41767 precipitation Z
-		FIELD field_9349 temperature Ljava/lang/Float;
-		FIELD field_9351 downfall Ljava/lang/Float;
+		METHOD method_8727 downfall (F)Lnet/minecraft/class_1959$class_1960;
+			ARG 1 downfall
+		METHOD method_8747 temperature (F)Lnet/minecraft/class_1959$class_1960;
+			ARG 1 temperature
 		METHOD method_24379 effects (Lnet/minecraft/class_4763;)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 effects
 		METHOD method_30777 temperatureModifier (Lnet/minecraft/class_1959$class_5484;)Lnet/minecraft/class_1959$class_1960;
@@ -110,10 +114,6 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 			ARG 1 spawnSettings
 		METHOD method_48164 precipitation (Z)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 precipitation
-		METHOD method_8727 downfall (F)Lnet/minecraft/class_1959$class_1960;
-			ARG 1 downfall
-		METHOD method_8747 temperature (F)Lnet/minecraft/class_1959$class_1960;
-			ARG 1 temperature
 	CLASS class_1963 Precipitation
 		FIELD field_46251 CODEC Lcom/mojang/serialization/Codec;
 		FIELD field_46252 name Ljava/lang/String;
