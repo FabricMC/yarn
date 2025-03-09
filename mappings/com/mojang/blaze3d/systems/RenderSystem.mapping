@@ -16,6 +16,8 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 	METHOD initRenderer (JIZLjava/util/function/BiFunction;Z)V
 		ARG 0 windowHandle
 		ARG 2 debugVerbosity
+		ARG 3 sync
+		ARG 4 shaderSourceGetter
 		ARG 5 renderDebugLabels
 	METHOD lambda$static$0 (Lit/unimi/dsi/fastutil/ints/IntConsumer;I)V
 		ARG 0 indexConsumer
@@ -27,6 +29,8 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		ARG 0 fps
 	METHOD lineWidth (F)V
 		ARG 0 width
+	METHOD queueFencedTask (Ljava/lang/Runnable;)V
+		ARG 0 task
 	METHOD setErrorCallback (Lorg/lwjgl/glfw/GLFWErrorCallbackI;)V
 		ARG 0 callback
 	METHOD setProjectionMatrix (Lorg/joml/Matrix4f;Lnet/minecraft/class_10366;)V
@@ -37,13 +41,22 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		ARG 1 green
 		ARG 2 blue
 		ARG 3 alpha
+	METHOD setShaderFog (Lnet/minecraft/class_9958;)V
+		ARG 0 shaderFog
 	METHOD setShaderGameTime (JF)V
 		ARG 0 time
 		ARG 2 tickProgress
+	METHOD setShaderGlintAlpha (D)V
+		ARG 0 shaderGlintAlpha
+	METHOD setShaderGlintAlpha (F)V
+		ARG 0 shaderGlintAlpha
 	METHOD setShaderTexture (ILnet/minecraft/class_10792;)V
-		ARG 0 texture
+		ARG 0 textureId
+		ARG 1 texture
 	METHOD setTextureMatrix (Lorg/joml/Matrix4f;)V
 		ARG 0 textureMatrix
+	METHOD setupOverlayColor (Lnet/minecraft/class_10792;)V
+		ARG 0 texture
 	CLASS class_10827 Task
 	CLASS class_5590 ShapeIndexBuffer
 		COMMENT An index buffer that holds a pre-made indices for a specific shape. If
@@ -73,6 +86,7 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		METHOD method_43409 isLargeEnough (I)Z
 			ARG 1 requiredSize
 		METHOD method_68274 getIndexBuffer (I)Lnet/minecraft/class_10227;
+			ARG 1 requiredSize
 		CLASS class_5591 Triangulator
 			COMMENT A functional interface that decomposes a shape into triangles.
 			COMMENT
