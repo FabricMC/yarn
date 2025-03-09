@@ -15,6 +15,7 @@ import org.gradle.api.tasks.InputFile;
 
 import net.fabricmc.filament.task.base.WithFileOutput;
 
+@Deprecated(forRemoval = true)
 public abstract class MapSpecializedMethodsTask extends EnigmaCommandTask implements WithFileOutput {
 	@InputFile
 	public abstract RegularFileProperty getIntermediaryJarFile();

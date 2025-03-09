@@ -3,9 +3,7 @@ package net.fabricmc.filament.task.mappingio;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.gradle.api.tasks.TaskAction;
 import org.jetbrains.annotations.Nullable;
@@ -27,10 +25,7 @@ public abstract class CheckMergedMappingsTask extends FilamentTask implements Wi
 		List<String> errors = new ArrayList<>();
 
 		MappingReader.read(path, new MappingVisitor() {
-			private final Set<String> mthDstNames = new HashSet<>();
 			private String clsSrcName;
-			private String mthSrcName;
-			private String mthSrcDesc;
 
 			@Override
 			public void visitNamespaces(String srcNamespace, List<String> dstNamespaces) throws IOException {
@@ -57,9 +52,10 @@ public abstract class CheckMergedMappingsTask extends FilamentTask implements Wi
 
 			@Override
 			public boolean visitMethod(String srcName, @Nullable String srcDesc) throws IOException {
-				mthSrcName = srcName;
-				mthSrcDesc = srcDesc;
-				mthDstNames.clear();
+				if (srcName.startsWith("method_")) {
+					errors.add("Encountered mapping for non-existent method " + clsSrcName + "#" + srcName + srcDesc);
+				}
+				
 				return true;
 			}
 
@@ -75,25 +71,6 @@ public abstract class CheckMergedMappingsTask extends FilamentTask implements Wi
 
 			@Override
 			public void visitDstName(MappedElementKind targetKind, int namespace, String name) throws IOException {
-				if (targetKind == MappedElementKind.METHOD) {
-					mthDstNames.add(name);
-				}
-			}
-
-			@Override
-			public boolean visitElementContent(MappedElementKind targetKind) throws IOException {
-				if (targetKind == MappedElementKind.METHOD) {
-					// Checking if the srcName is an intermediary name (like for classes and fields) would be the more correct option,
-					// but Enigma's bridge method mapper behaves weirdly and injects copies of the mapping into the whole hierarchy.
-					// We haven't been able to fix this yet, so in the meantime, we're using the following workaround,
-					// which ignores any Enigma-bridge-mapper generated mappings, but should still catch all other
-					// mappings without official names.
-					if (mthDstNames.size() == 1 && mthDstNames.contains(mthSrcName) && mthSrcName.startsWith("method_")) {
-						errors.add("Encountered mapping for non-existent method " + clsSrcName + "#" + mthSrcName + mthSrcDesc);
-					}
-				}
-
-				return true;
 			}
 
 			@Override

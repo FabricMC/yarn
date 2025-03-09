@@ -107,6 +107,7 @@ import net.fabricmc.filament.task.mappingio.FormatMappingsTask
 import net.fabricmc.filament.task.mappingio.MergeMappingsTask
 import net.fabricmc.filament.task.mappingio.CheckMappingsTask
 import net.fabricmc.filament.task.mappingio.CheckMergedMappingsTask
+import net.fabricmc.filament.task.mappingio.PropagateHierarchyTask
 import net.fabricmc.filament.nameproposal.MappingNameCompleter
 import net.fabricmc.mappingio.format.MappingFormat
 import org.gradle.work.DisableCachingByDefault
@@ -186,14 +187,24 @@ tasks.register('mapSpecializedMethods', MapSpecializedMethodsTask) {
 	outputMappingsFormat = "tinyv2:intermediary:named"
 }
 
+tasks.register('propagateNames', PropagateHierarchyTask) {
+	intermediaryJarFile = mapIntermediaryJar.output
+	mappingsDirectory = mappingsDir
+	srcNamespace = "intermediary"
+	dstNamespace = "named"
+	classpath.from minecraftLibraries
+	output = new File(tempDir, "yarn-propagated-v2.tiny")
+	outputFormat = MappingFormat.TINY_2_FILE
+}
+
 tasks.register('completeMappings', CompleteMappingsTask) {
-	input = mapSpecializedMethods.output
+	input = propagateNames.output
 	output = new File(tempDir, "yarn-mappings-v2.tiny")
 	outputFormat = MappingFormat.TINY_2_FILE
 }
 
 tasks.register('convertToV1', ConvertMappingsTask) {
-	input = mapSpecializedMethods.output
+	input = propagateNames.output
 	output = new File(tempDir, "yarn-mappings.tiny")
 	outputFormat = MappingFormat.TINY_FILE
 }
