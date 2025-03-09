@@ -135,6 +135,9 @@ public class MappingNameCompleter {
 	private static void inheritMappedNamesOfEnclosingClasses(MemoryMappingTree tree) {
 		int namedIdx = tree.getNamespaceId("named");
 
+		// The tree does not have an index by intermediary names by default
+		tree.setIndexByDstNames(true);
+
 		for (MappingTree.ClassMapping classEntry : tree.getClasses()) {
 			String intermediaryName = Objects.requireNonNull(classEntry.getSrcName());
 			String namedName = classEntry.getDstName(namedIdx);
