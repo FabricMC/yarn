@@ -105,6 +105,8 @@ public abstract class PropagateHierarchyTask extends MappingOutputTask {
 				List<Pair<Collection<? extends MethodMapping>, Integer>> conflictsByNs = new ArrayList<>();
 
 				for (int ns = 0; ns < dstNames.length; ns++) {
+					boolean duplicateFound = false;
+
 					for (MethodMapping m : hierarchyMethods) {
 						String existingName = dstNames[ns];
 						String currentName = m.getDstName(ns);
@@ -112,7 +114,11 @@ public abstract class PropagateHierarchyTask extends MappingOutputTask {
 						if (currentName != null) {
 							if (existingName != null) {
 								if (existingName.equals(currentName)) {
-									duplicatesByNs.add(new Pair<>(hierarchyMethods, ns));
+									if (!duplicateFound) {
+										duplicatesByNs.add(new Pair<>(hierarchyMethods, ns));
+										duplicateFound = true;
+									}
+
 									continue;
 								} else {
 									conflictsByNs.add(new Pair<>(hierarchyMethods, ns));
