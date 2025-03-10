@@ -536,9 +536,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @return the spawned item entity, or {@code null} if the stack is empty or if called
 		COMMENT on the client
 		COMMENT
-		COMMENT @see #dropItem(ItemConvertible)
-		COMMENT @see #dropItem(ItemConvertible, int)
-		COMMENT @see #dropStack(ItemStack)
+		COMMENT @see #dropItem(ServerWorld, ItemConvertible)
+		COMMENT @see #dropItem(ServerWorld, ItemConvertible, int)
+		COMMENT @see #dropStack(ServerWorld, ItemStack)
 		ARG 1 world
 		ARG 2 stack
 		ARG 3 yOffset
@@ -578,9 +578,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @return the spawned item entity, or {@code null} if called on the client
 		COMMENT
-		COMMENT @see #dropItem(ItemConvertible, int)
-		COMMENT @see #dropStack(ItemStack)
-		COMMENT @see #dropStack(ItemStack, float)
+		COMMENT @see #dropItem(ServerWorld, ItemConvertible, int)
+		COMMENT @see #dropStack(ServerWorld, ItemStack)
+		COMMENT @see #dropStack(ServerWorld, ItemStack, float)
 		ARG 1 world
 		ARG 2 item
 	METHOD method_5707 squaredDistanceTo (Lnet/minecraft/class_243;)D
@@ -628,8 +628,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @see net.minecraft.entity.Entity#isTouchingWater()
 		COMMENT @see net.minecraft.entity.Entity#isBeingRainedOn()
-		COMMENT @see net.minecraft.entity.Entity#isWet()
-		COMMENT @see net.minecraft.entity.Entity#isInsideWaterOrBubbleColumn()
+		COMMENT @see net.minecraft.entity.Entity#isInFluid()
 	METHOD method_5722 isTeammate (Lnet/minecraft/class_1297;)Z
 		COMMENT {@return whether this entity and {@code other} are in the same team}
 		COMMENT
@@ -891,9 +890,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @return the spawned item entity, or {@code null} if the stack is empty or if called
 		COMMENT on the client
 		COMMENT
-		COMMENT @see #dropItem(ItemConvertible)
-		COMMENT @see #dropItem(ItemConvertible, int)
-		COMMENT @see #dropStack(ItemStack, float)
+		COMMENT @see #dropItem(ServerWorld, ItemConvertible)
+		COMMENT @see #dropItem(ServerWorld, ItemConvertible, int)
+		COMMENT @see #dropStack(ServerWorld, ItemStack, float)
 		ARG 1 world
 		ARG 2 stack
 	METHOD method_5776 isFlappingWings ()Z
@@ -1299,9 +1298,9 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @return the spawned item entity, or {@code null} if called on the client
 		COMMENT
-		COMMENT @see #dropItem(ItemConvertible)
-		COMMENT @see #dropStack(ItemStack)
-		COMMENT @see #dropStack(ItemStack, float)
+		COMMENT @see #dropItem(ServerWorld, ItemConvertible)
+		COMMENT @see #dropStack(ServerWorld, ItemStack)
+		COMMENT @see #dropStack(ServerWorld, ItemStack, float)
 		ARG 1 world
 		ARG 2 item
 		ARG 3 offsetY
@@ -2224,12 +2223,13 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT net.minecraft.entity.decoration.EndCrystalEntity}, where any damage discards the entity
 		COMMENT (perhaps with an explosion).
 		COMMENT
-		COMMENT <p>If this is overridden, it must check the result of {@link #isInvulnerableTo} and
+		COMMENT <p>If this is overridden, it must check the result of {@link net.minecraft.entity.LivingEntity#isInvulnerableTo} and
 		COMMENT return early.
 		COMMENT
 		COMMENT @return whether the entity was actually damaged
 		COMMENT
-		COMMENT @see #isInvulnerableTo
+		COMMENT @see #isAlwaysInvulnerableTo
+		COMMENT @see net.minecraft.entity.LivingEntity#isInvulnerableTo
 		COMMENT @see net.minecraft.entity.LivingEntity#modifyAppliedDamage
 		ARG 1 world
 		ARG 2 source
