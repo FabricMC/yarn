@@ -26,6 +26,8 @@ CLASS net/minecraft/class_5379 net/minecraft/util/dynamic/ForwardingDynamicOps
 		ARG 1 l
 	METHOD createLongList (Ljava/util/stream/LongStream;)Ljava/lang/Object;
 		ARG 1 stream
+	METHOD createMap (Ljava/util/Map;)Ljava/lang/Object;
+		ARG 1 map
 	METHOD createMap (Ljava/util/stream/Stream;)Ljava/lang/Object;
 		ARG 1 map
 	METHOD createNumeric (Ljava/lang/Number;)Ljava/lang/Object;
@@ -69,6 +71,67 @@ CLASS net/minecraft/class_5379 net/minecraft/util/dynamic/ForwardingDynamicOps
 		ARG 1 map
 		ARG 2 key
 		ARG 3 value
+	METHOD mergeToMap (Ljava/lang/Object;Ljava/util/Map;)Lcom/mojang/serialization/DataResult;
+		ARG 1 map
+		ARG 2 values
+	METHOD mergeToPrimitive (Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+		ARG 1 prefix
+		ARG 2 value
 	METHOD remove (Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
 		ARG 1 input
 		ARG 2 key
+	CLASS class_10920 ForwardingListBuilder
+		FIELD field_58072 delegate Lcom/mojang/serialization/ListBuilder;
+		METHOD <init> (Lnet/minecraft/class_5379;Lcom/mojang/serialization/ListBuilder;)V
+			ARG 2 delegate
+		METHOD add (Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/ListBuilder;
+			ARG 1 value
+		METHOD add (Ljava/lang/Object;)Lcom/mojang/serialization/ListBuilder;
+			ARG 1 value
+		METHOD add (Ljava/lang/Object;Lcom/mojang/serialization/Encoder;)Lcom/mojang/serialization/ListBuilder;
+			ARG 1 value
+			ARG 2 encoder
+		METHOD addAll (Ljava/lang/Iterable;Lcom/mojang/serialization/Encoder;)Lcom/mojang/serialization/ListBuilder;
+			ARG 1 values
+			ARG 2 encoder
+		METHOD build (Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
+			ARG 1 prefix
+		METHOD build (Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 prefix
+		METHOD mapError (Ljava/util/function/UnaryOperator;)Lcom/mojang/serialization/ListBuilder;
+			ARG 1 onError
+		METHOD withErrorsFrom (Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/ListBuilder;
+			ARG 1 result
+	CLASS class_10921 ForwardingRecordBuilder
+		FIELD field_58074 delegate Lcom/mojang/serialization/RecordBuilder;
+		METHOD <init> (Lnet/minecraft/class_5379;Lcom/mojang/serialization/RecordBuilder;)V
+			ARG 2 delegate
+		METHOD add (Lcom/mojang/serialization/DataResult;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 key
+			ARG 2 value
+		METHOD add (Ljava/lang/Object;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 key
+			ARG 2 value
+		METHOD add (Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 key
+			ARG 2 value
+		METHOD add (Ljava/lang/String;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 key
+			ARG 2 value
+		METHOD add (Ljava/lang/String;Ljava/lang/Object;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 key
+			ARG 2 value
+		METHOD add (Ljava/lang/String;Ljava/lang/Object;Lcom/mojang/serialization/Encoder;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 key
+			ARG 2 value
+			ARG 3 encoder
+		METHOD build (Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
+			ARG 1 prefix
+		METHOD build (Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+			ARG 1 prefix
+		METHOD mapError (Ljava/util/function/UnaryOperator;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 onError
+		METHOD setLifecycle (Lcom/mojang/serialization/Lifecycle;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 lifecycle
+		METHOD withErrorsFrom (Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/RecordBuilder;
+			ARG 1 result
