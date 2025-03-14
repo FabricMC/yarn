@@ -7,6 +7,10 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 	METHOD flipFrame (JLnet/minecraft/class_10219;)V
 		ARG 0 window
 		ARG 2 capturer
+	METHOD getSequentialBuffer (Lcom/mojang/blaze3d/vertex/VertexFormat$class_5596;)Lcom/mojang/blaze3d/systems/RenderSystem$class_5590;
+		ARG 0 drawMode
+	METHOD getShaderTexture (I)Lcom/mojang/blaze3d/textures/GpuTexture;
+		ARG 0 index
 	METHOD initRenderer (JIZLjava/util/function/BiFunction;Z)V
 		ARG 0 windowHandle
 		ARG 2 debugVerbosity
@@ -27,6 +31,10 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		ARG 0 task
 	METHOD setErrorCallback (Lorg/lwjgl/glfw/GLFWErrorCallbackI;)V
 		ARG 0 callback
+	METHOD setModelOffset (FFF)V
+		ARG 0 offsetX
+		ARG 1 offsetY
+		ARG 2 offsetZ
 	METHOD setProjectionMatrix (Lorg/joml/Matrix4f;Lnet/minecraft/class_10366;)V
 		ARG 0 projectionMatrix
 		ARG 1 projectionType
@@ -44,8 +52,13 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		ARG 0 shaderGlintAlpha
 	METHOD setShaderGlintAlpha (F)V
 		ARG 0 shaderGlintAlpha
+	METHOD setShaderTexture (ILcom/mojang/blaze3d/textures/GpuTexture;)V
+		ARG 0 index
+		ARG 1 texture
 	METHOD setTextureMatrix (Lorg/joml/Matrix4f;)V
 		ARG 0 textureMatrix
+	METHOD setupOverlayColor (Lcom/mojang/blaze3d/textures/GpuTexture;)V
+		ARG 0 texture
 	CLASS class_5590 ShapeIndexBuffer
 		COMMENT An index buffer that holds a pre-made indices for a specific shape. If
 		COMMENT this buffer is not large enough for the required number of indices when
@@ -74,6 +87,7 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		METHOD method_43409 isLargeEnough (I)Z
 			ARG 1 requiredSize
 		METHOD method_68274 getIndexBuffer (I)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+			ARG 1 requiredSize
 		CLASS class_5591 Triangulator
 			COMMENT A functional interface that decomposes a shape into triangles.
 			COMMENT
