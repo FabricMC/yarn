@@ -1,6 +1,8 @@
 name: Publish
 on: [push]
 concurrency: ci-${{ github.ref }}
+permissions:
+  contents: write
 jobs:
   publish:
     if: ${{ github.repository_owner == 'FabricMC' }}
@@ -14,7 +16,7 @@ jobs:
       # Generate the build number based on tags to allow per branch build numbers, not something github provides by default.
       - name: Generate build number
         id: buildnumber
-        uses: onyxmueller/build-tag-number@v1
+        uses: FabricMCBot/build-tag-number@7d8df195c4691e1681d458016f75e8bbccdb3375
         with:
           token: ${{ secrets.github_token }}
           prefix: "build/${{ github.ref }}"
