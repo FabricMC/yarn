@@ -77,6 +77,9 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_53717 suppressedExceptionsTracker Lnet/minecraft/class_9843;
 	FIELD field_53718 waitingForNextTick Z
 	FIELD field_54275 discontinuousFrame Lcom/mojang/jtracy/DiscontinuousFrame;
+	FIELD field_59585 reloadNetworkFuture Ljava/util/concurrent/CompletableFuture;
+	FIELD field_59588 gameInstance Lnet/minecraft/class_10961;
+	FIELD field_59589 gameInstanceForPreparingStartRegion Lnet/minecraft/class_10961;
 	METHOD <init> (Ljava/lang/Thread;Lnet/minecraft/class_32$class_5143;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_7497;)V
 		ARG 1 serverThread
 		ARG 2 session
@@ -125,6 +128,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3749 getMaxWorldBorderRadius ()I
 	METHOD method_3750 isStopped ()Z
 	METHOD method_3754 isHardcore (Lnet/minecraft/class_10961;)Z
+		ARG 1 gameInstance
 	METHOD method_3756 getServerPort ()I
 	METHOD method_3758 getPath (Ljava/lang/String;)Ljava/nio/file/Path;
 		ARG 1 path
@@ -147,7 +151,9 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3780 getTicks ()I
 		COMMENT Gets the amount of ticks the server has been running for.
 	METHOD method_3782 shutdown (Lnet/minecraft/class_10961;)V
+		ARG 1 gameInstance
 	METHOD method_3783 isMonsterSpawningEnabled (Lnet/minecraft/class_10961;)Z
+		ARG 1 gameInstance
 	METHOD method_3785 isSpawnProtected (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)Z
 		ARG 1 world
 		ARG 2 pos
@@ -193,6 +199,8 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3835 getPermissionLevel (Lcom/mojang/authlib/GameProfile;)I
 		ARG 1 profile
 	METHOD method_3838 setDefaultGameMode (Lnet/minecraft/class_10961;Lnet/minecraft/class_1934;)V
+		ARG 1 gameInstance
+		ARG 2 gameMode
 	METHOD method_3841 getSpawnProtectionRadius ()I
 	METHOD method_3842 setServerIp (Ljava/lang/String;)V
 		ARG 1 serverIp
@@ -247,6 +255,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_27903 adjustTrackingDistance (I)I
 		ARG 1 initialDistance
 	METHOD method_29740 startServer (Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Lnet/minecraft/server/MinecraftServer$class_11170;Lnet/minecraft/class_3950;Ljava/util/function/Function;)Lnet/minecraft/server/MinecraftServer;
+		ARG 0 world
 	METHOD method_29741 runServer (Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Lnet/minecraft/server/MinecraftServer$class_11170;Lnet/minecraft/class_3950;)V
 	METHOD method_30612 getRateLimit ()I
 	METHOD method_31371 createFilterer (Lnet/minecraft/class_3222;)Lnet/minecraft/class_5513;
@@ -277,6 +286,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_38584 dumpNativeModules (Ljava/nio/file/Path;)V
 		ARG 1 path
 	METHOD method_39218 saveAll (Lnet/minecraft/class_10961;ZZZ)Z
+		ARG 1 gameInstance
 	METHOD method_39219 isSaving ()Z
 	METHOD method_39424 hideOnlinePlayers ()Z
 	METHOD method_40376 createCrashReport (Ljava/lang/Throwable;)Lnet/minecraft/class_128;
@@ -342,6 +352,16 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_62734 runAutosave (Lnet/minecraft/class_10961;)V
 	METHOD method_64261 (Ljava/nio/file/Path;)V
 		ARG 1 path
+	METHOD method_70552 waitForPrepareStartRegion ()V
+	METHOD method_70553 reloadNetworkForEveryone ()Ljava/util/concurrent/CompletableFuture;
+	METHOD method_70558 (Lnet/minecraft/class_3218;)Z
+		ARG 0 world
+	METHOD method_70559 stopGameInstance (Lnet/minecraft/class_10961;)V
+		ARG 1 gameInstance
+	METHOD method_70560 finishNetworkReloading (Lnet/minecraft/class_10961;)V
+		ARG 1 gameInstance
+	METHOD method_70562 getGameInstance ()Lnet/minecraft/class_10961;
+	METHOD method_70563 getWorkerExecutor ()Ljava/util/concurrent/Executor;
 	CLASS class_6414 DebugStart
 		FIELD field_33980 time J
 		FIELD field_33981 tick I
