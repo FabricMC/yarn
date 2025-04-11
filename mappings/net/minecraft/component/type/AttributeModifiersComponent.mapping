@@ -19,6 +19,9 @@ CLASS net/minecraft/class_9285 net/minecraft/component/type/AttributeModifiersCo
 	METHOD method_60618 applyModifiers (Lnet/minecraft/class_9274;Ljava/util/function/BiConsumer;)V
 		ARG 1 slot
 		ARG 2 attributeConsumer
+	METHOD method_70727 applyModifiers (Lnet/minecraft/class_9274;Lorg/apache/commons/lang3/function/TriConsumer;)V
+		ARG 1 slot
+		ARG 2 attributeConsumer
 	CLASS class_9286 Builder
 		FIELD field_49331 entries Lcom/google/common/collect/ImmutableList$Builder;
 		METHOD method_57486 build ()Lnet/minecraft/class_9285;
@@ -26,11 +29,65 @@ CLASS net/minecraft/class_9285 net/minecraft/component/type/AttributeModifiersCo
 			ARG 1 attribute
 			ARG 2 modifier
 			ARG 3 slot
+		METHOD method_70728 add (Lnet/minecraft/class_6880;Lnet/minecraft/class_1322;Lnet/minecraft/class_9274;Lnet/minecraft/class_9285$class_11193;)Lnet/minecraft/class_9285$class_9286;
+			ARG 1 attribute
+			ARG 2 modifier
+			ARG 3 slot
+			ARG 4 display
 	CLASS class_9287 Entry
 		FIELD field_49332 CODEC Lcom/mojang/serialization/Codec;
 		FIELD field_49333 PACKET_CODEC Lnet/minecraft/class_9139;
+		METHOD <init> (Lnet/minecraft/class_6880;Lnet/minecraft/class_1322;Lnet/minecraft/class_9274;)V
+			ARG 1 attribute
+			ARG 2 modifier
+			ARG 3 slot
 		METHOD method_57488 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
 			ARG 0 instance
 		METHOD method_60767 matches (Lnet/minecraft/class_6880;Lnet/minecraft/class_2960;)Z
 			ARG 1 attribute
 			ARG 2 modifierId
+	CLASS class_11193 Display
+		FIELD field_59729 CODEC Lcom/mojang/serialization/Codec;
+		FIELD field_59730 PACKET_CODEC Lnet/minecraft/class_9139;
+		METHOD method_70729 getDefault ()Lnet/minecraft/class_9285$class_11193;
+		METHOD method_70730 (Lnet/minecraft/class_9285$class_11193$class_11197;)Lcom/mojang/serialization/MapCodec;
+			ARG 0 type
+		METHOD method_70731 addTooltip (Ljava/util/function/Consumer;Lnet/minecraft/class_1657;Lnet/minecraft/class_6880;Lnet/minecraft/class_1322;)V
+			ARG 1 textConsumer
+			ARG 2 player
+			ARG 3 attribute
+			ARG 4 modifier
+		METHOD method_70732 createOverride (Lnet/minecraft/class_2561;)Lnet/minecraft/class_9285$class_11193;
+			ARG 0 text
+		METHOD method_70733 getHidden ()Lnet/minecraft/class_9285$class_11193;
+		METHOD method_70734 getType ()Lnet/minecraft/class_9285$class_11193$class_11197;
+		CLASS class_11194 Default
+			FIELD field_59731 INSTANCE Lnet/minecraft/class_9285$class_11193$class_11194;
+			FIELD field_59732 CODEC Lcom/mojang/serialization/MapCodec;
+			FIELD field_59733 PACKET_CODEC Lnet/minecraft/class_9139;
+		CLASS class_11195 Hidden
+			FIELD field_59734 INSTANCE Lnet/minecraft/class_9285$class_11193$class_11195;
+			FIELD field_59735 CODEC Lcom/mojang/serialization/MapCodec;
+			FIELD field_59736 PACKET_CODEC Lnet/minecraft/class_9139;
+		CLASS class_11196 Override
+			FIELD comp_4035 value Lnet/minecraft/class_2561;
+			FIELD field_59737 CODEC Lcom/mojang/serialization/MapCodec;
+			FIELD field_59738 PACKET_CODEC Lnet/minecraft/class_9139;
+			METHOD comp_4035 value ()Lnet/minecraft/class_2561;
+			METHOD method_70735 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+				ARG 0 instance
+		CLASS class_11197 Type
+			FIELD field_59742 CODEC Lcom/mojang/serialization/Codec;
+			FIELD field_59743 INDEX_MAPPER Ljava/util/function/IntFunction;
+			FIELD field_59744 PACKET_CODEC Lnet/minecraft/class_9139;
+			FIELD field_59745 id Ljava/lang/String;
+			FIELD field_59746 index I
+			FIELD field_59747 codec Lcom/mojang/serialization/MapCodec;
+			FIELD field_59748 packetCodec Lnet/minecraft/class_9139;
+			METHOD <init> (Ljava/lang/String;ILjava/lang/String;ILcom/mojang/serialization/MapCodec;Lnet/minecraft/class_9139;)V
+				ARG 3 id
+				ARG 4 index
+				ARG 5 codec
+				ARG 6 packetCodec
+			METHOD method_70736 getIndex ()I
+			METHOD method_70737 getPacketCodec ()Lnet/minecraft/class_9139;
