@@ -12,44 +12,44 @@ CLASS net/minecraft/class_1304 net/minecraft/entity/EquipmentSlot
 	COMMENT An equipment slot can be used to quickly access the item held by an inventory slot in a {@link LivingEntity} through
 	COMMENT methods such as {@link LivingEntity#getEquippedStack(EquipmentSlot)}, which will return the {@link net.minecraft.item.ItemStack}
 	COMMENT held in the entity's inventory slot pointed at by the target slot.
-	FIELD field_6168 entityId I
+	FIELD field_6168 entityIndex I
 	FIELD field_6170 type Lnet/minecraft/class_1304$class_1305;
-	FIELD field_6175 name Ljava/lang/String;
+	FIELD field_6175 id Ljava/lang/String;
 	FIELD field_45739 CODEC Lnet/minecraft/class_3542$class_7292;
 	FIELD field_51935 NO_MAX_COUNT I
 	FIELD field_51936 maxCount I
 	FIELD field_54086 VALUES Ljava/util/List;
-	FIELD field_54087 FROM_INDEX Ljava/util/function/IntFunction;
+	FIELD field_54087 INDEX_MAPPER Ljava/util/function/IntFunction;
 	FIELD field_54088 PACKET_CODEC Lnet/minecraft/class_9139;
 	FIELD field_54089 index I
 	METHOD <init> (Ljava/lang/String;ILnet/minecraft/class_1304$class_1305;IIILjava/lang/String;)V
 		ARG 3 type
-		ARG 4 entityId
+		ARG 4 entityIndex
 		ARG 5 maxCount
 		ARG 6 index
-		ARG 7 name
+		ARG 7 id
 	METHOD <init> (Ljava/lang/String;ILnet/minecraft/class_1304$class_1305;IILjava/lang/String;)V
 		ARG 3 type
-		ARG 4 entityId
+		ARG 4 entityIndex
 		ARG 5 index
-		ARG 6 name
-	METHOD method_5923 getName ()Ljava/lang/String;
+		ARG 6 id
+	METHOD method_5923 getId ()Ljava/lang/String;
 		COMMENT {@return the unique name of this equipment slot}
 		COMMENT
 		COMMENT <p>The returned value will be a lower-case string (such as "chest" for {@link #CHEST}).
-	METHOD method_5924 byName (Ljava/lang/String;)Lnet/minecraft/class_1304;
-		COMMENT {@return the slot where {@linkplain #getName the name} is equal to {@code name}}
-		COMMENT If no slot matching the input name is found, this throws {@link IllegalArgumentException}.
+	METHOD method_5924 byId (Ljava/lang/String;)Lnet/minecraft/class_1304;
+		COMMENT {@return the slot where {@linkplain #getId the id} is equal to {@code id}}
+		COMMENT If no slot matching the input id is found, this throws {@link IllegalArgumentException}.
 		COMMENT
-		COMMENT @throws IllegalArgumentException if no slot type could be found matching {@code name}
-		ARG 0 name
+		COMMENT @throws IllegalArgumentException if no slot type could be found matching {@code id}
+		ARG 0 id
 	METHOD method_5925 getType ()Lnet/minecraft/class_1304$class_1305;
 		COMMENT {@return the target {@link EquipmentSlot.Type} that this slot targets}
 		COMMENT
 		COMMENT <p>
 		COMMENT An equipment slot either targets the hand or body type, which can be used to determine whether a request
 		COMMENT to manipulate slot data on an entity should be applied to an armor inventory or general item inventory.
-	METHOD method_5927 getEntitySlotId ()I
+	METHOD method_5927 getEntitySlotIndex ()I
 		COMMENT {@return the index of the inventory slot this slot should occupy}
 		COMMENT
 		COMMENT <p>
@@ -59,7 +59,7 @@ CLASS net/minecraft/class_1304 net/minecraft/entity/EquipmentSlot
 		COMMENT <p>
 		COMMENT To calculate the target index of an inventory slot for a slot relative to the offset index of an entire
 		COMMENT inventory, visit {@link #getOffsetEntitySlotId(int)}.
-	METHOD method_32320 getOffsetEntitySlotId (I)I
+	METHOD method_32320 getOffsetEntitySlotIndex (I)I
 		COMMENT {@return the index of the inventory slot this slot  should occupy, plus the passed in {@code offset} amount}
 		ARG 1 offset
 	METHOD method_46643 isArmorSlot ()Z
