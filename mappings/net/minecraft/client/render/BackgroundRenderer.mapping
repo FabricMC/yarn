@@ -6,7 +6,11 @@ CLASS net/minecraft/class_758 net/minecraft/client/render/BackgroundRenderer
 	FIELD field_32685 WATER_FOG_LENGTH I
 	FIELD field_38338 FOG_MODIFIERS Ljava/util/List;
 	FIELD field_54018 fogEnabled Z
+	FIELD field_60097 emptyBuffer Lcom/mojang/blaze3d/buffers/GpuBuffer;
+	FIELD field_60098 fogBuffer Lnet/minecraft/class_11285;
 	METHOD method_3211 applyFog (Lnet/minecraft/class_4184;Lorg/joml/Vector4f;FZF)V
+		ARG 1 camera
+		ARG 2 fogColor
 		ARG 3 viewDistance
 		ARG 4 thickenFog
 		ARG 5 tickProgress
@@ -21,7 +25,21 @@ CLASS net/minecraft/class_758 net/minecraft/client/render/BackgroundRenderer
 		ARG 2 world
 		ARG 3 clampedViewDistance
 		ARG 4 skyDarkness
+	METHOD method_62186 (Lnet/minecraft/class_638;Lnet/minecraft/class_4543;FIII)Lnet/minecraft/class_243;
+		ARG 3 biomeX
+		ARG 4 biomeY
+		ARG 5 biomeZ
 	METHOD method_63521 toggleFog ()Z
+	METHOD method_71109 getBufferSlice (Lnet/minecraft/class_758$class_4596;)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;
+		ARG 1 fogType
+	METHOD method_71110 applyFog (Ljava/nio/ByteBuffer;ILorg/joml/Vector4f;Lnet/minecraft/class_6854;FFFF)V
+		ARG 1 buffer
+		ARG 3 fogColor
+		ARG 4 fogShape
+		ARG 5 fogStart
+		ARG 6 fogEnd
+		ARG 7 skyEnd
+		ARG 8 cloudEnd
 	CLASS class_4596 FogType
 	CLASS class_7283 BlindnessFogModifier
 	CLASS class_7284 DarknessFogModifier
@@ -29,6 +47,8 @@ CLASS net/minecraft/class_758 net/minecraft/client/render/BackgroundRenderer
 		FIELD field_38340 fogStart F
 		FIELD field_38341 fogEnd F
 		FIELD field_38342 fogShape Lnet/minecraft/class_6854;
+		FIELD field_60099 skyEnd F
+		FIELD field_60100 cloudEnd F
 	CLASS class_7286 StatusEffectFogModifier
 		METHOD method_42590 getStatusEffect ()Lnet/minecraft/class_6880;
 		METHOD method_42591 applyStartEndModifier (Lnet/minecraft/class_758$class_7285;Lnet/minecraft/class_1309;Lnet/minecraft/class_1293;FF)V
