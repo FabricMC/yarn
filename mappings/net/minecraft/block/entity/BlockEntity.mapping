@@ -64,7 +64,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT
 		COMMENT @throws RuntimeException if the block entity type is not registered in
 		COMMENT the registry
-		ARG 1 data
+		ARG 1 view
 	METHOD method_11002 hasWorld ()Z
 	METHOD method_11003 populateCrashReport (Lnet/minecraft/class_129;)V
 		ARG 1 crashReportSection
@@ -85,7 +85,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		ARG 1 state
 		ARG 2 nbt
 		ARG 3 registries
-	METHOD method_11007 writeNbt (Lnet/minecraft/class_11372;)V
+	METHOD method_11007 writeData (Lnet/minecraft/class_11372;)V
 		COMMENT Writes data to {@code nbt}. Subclasses should override this if they
 		COMMENT store a persistent data.
 		COMMENT
@@ -94,13 +94,13 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT of the NBT. The data is written back to NBT when saving the block entity.
 		COMMENT
 		COMMENT @see #readNbt
-		ARG 1 data
+		ARG 1 view
 	METHOD method_11010 getCachedState ()Lnet/minecraft/class_2680;
 		COMMENT {@return the cached block state at the block entity's position}
 		COMMENT
 		COMMENT <p>This is faster than calling {@link World#getBlockState}.
 	METHOD method_11012 markRemoved ()V
-	METHOD method_11014 readNbt (Lnet/minecraft/class_11368;)V
+	METHOD method_11014 readData (Lnet/minecraft/class_11368;)V
 		COMMENT Reads data from {@code nbt}. Subclasses should override this if they
 		COMMENT store a persistent data.
 		COMMENT
@@ -114,7 +114,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT exception.
 		COMMENT
 		COMMENT @see #writeNbt
-		ARG 1 data
+		ARG 1 view
 	METHOD method_11015 isRemoved ()Z
 	METHOD method_11016 getPos ()Lnet/minecraft/class_2338;
 		COMMENT {@return the block entity's position}
@@ -165,9 +165,9 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT serverWorld.getChunkManager().markForUpdate(this.getPos());}.
 		COMMENT
 		COMMENT @see #toInitialChunkDataNbt
-	METHOD method_38238 writeIdToNbt (Lnet/minecraft/class_11372;Lnet/minecraft/class_2591;)V
+	METHOD method_38238 writeId (Lnet/minecraft/class_11372;Lnet/minecraft/class_2591;)V
 		COMMENT Writes the ID of {@code type} to {@code nbt} under the {@code id} key.
-		ARG 0 data
+		ARG 0 view
 		ARG 1 type
 	METHOD method_38239 posFromNbt (Lnet/minecraft/class_1923;Lnet/minecraft/class_2487;)Lnet/minecraft/class_2338;
 		COMMENT {@return the block position from {@code nbt}}
@@ -177,12 +177,12 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT net.minecraft.nbt.NbtHelper#fromBlockPos} that use uppercase keys.
 		ARG 0 chunkPos
 		ARG 1 nbt
-	METHOD method_38241 writeIdToNbt (Lnet/minecraft/class_11372;)V
+	METHOD method_38241 writeId (Lnet/minecraft/class_11372;)V
 		COMMENT Writes the block entity type ID to {@code nbt} under the {@code id} key.
 		COMMENT
 		COMMENT @throws RuntimeException if the block entity type is not registered in
 		COMMENT the registry
-		ARG 1 data
+		ARG 1 view
 	METHOD method_38242 createNbtWithIdentifyingData (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;
 		COMMENT {@return the block entity's NBT data with identifying data}
 		COMMENT
@@ -193,7 +193,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT @see #createNbt
 		COMMENT @see #createNbtWithId
 		ARG 1 registries
-	METHOD method_38243 createNbtWithId (Lnet/minecraft/class_11372;)V
+	METHOD method_38243 writeDataWithId (Lnet/minecraft/class_11372;)V
 		COMMENT {@return the block entity's NBT data with block entity type ID}
 		COMMENT
 		COMMENT <p>In addition to data written at {@link #writeNbt}, this also
@@ -201,7 +201,7 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		COMMENT
 		COMMENT @see #createNbt
 		COMMENT @see #createNbtWithIdentifyingData
-		ARG 1 data
+		ARG 1 view
 	METHOD method_38244 createNbt (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;
 		COMMENT {@return the block entity's NBT data}
 		COMMENT
@@ -216,8 +216,8 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		ARG 1 builder
 	METHOD method_57568 readComponents (Lnet/minecraft/class_9473;)V
 		ARG 1 components
-	METHOD method_57569 removeFromCopiedStackNbt (Lnet/minecraft/class_11372;)V
-		ARG 1 data
+	METHOD method_57569 removeFromCopiedStackData (Lnet/minecraft/class_11372;)V
+		ARG 1 view
 	METHOD method_57590 createComponentMap ()Lnet/minecraft/class_9323;
 	METHOD method_58683 readComponents (Lnet/minecraft/class_1799;)V
 		ARG 1 stack
@@ -227,14 +227,14 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 		ARG 1 defaultComponents
 		ARG 2 components
 	METHOD method_58690 read (Lnet/minecraft/class_11368;)V
-		ARG 1 data
-	METHOD method_58691 readComponentlessNbt (Lnet/minecraft/class_11368;)V
-		ARG 1 data
+		ARG 1 view
+	METHOD method_58691 readComponentlessData (Lnet/minecraft/class_11368;)V
+		ARG 1 view
 	METHOD method_58692 createComponentlessNbt (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2487;
 		ARG 1 registries
 	METHOD method_58693 getComponents ()Lnet/minecraft/class_9323;
 	METHOD method_59894 tryParseCustomName (Lnet/minecraft/class_11368;Ljava/lang/String;)Lnet/minecraft/class_2561;
-		ARG 0 data
+		ARG 0 view
 		ARG 1 key
 	METHOD method_61175 validateSupports (Lnet/minecraft/class_2680;)V
 		ARG 1 state
@@ -244,7 +244,11 @@ CLASS net/minecraft/class_2586 net/minecraft/block/entity/BlockEntity
 	METHOD method_66473 onBlockReplaced (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 1 pos
 		ARG 2 oldState
-	METHOD method_71400 (Lnet/minecraft/class_11372;)V
+	METHOD method_71399 writeFullData (Lnet/minecraft/class_11372;)V
+		ARG 1 view
+	METHOD method_71400 writeDataWithoutId (Lnet/minecraft/class_11372;)V
 		ARG 1 data
+	METHOD method_71401 writeComponentlessData (Lnet/minecraft/class_11372;)V
+		ARG 1 view
 	METHOD method_71402 getReporterContext ()Lnet/minecraft/class_8942$class_11336;
 	CLASS class_11348 ReporterContext

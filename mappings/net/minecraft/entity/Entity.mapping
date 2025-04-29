@@ -219,6 +219,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_58050 CUSTOM_DATA_NBT_KEY Ljava/lang/String;
 	FIELD field_58051 customData Lnet/minecraft/class_9279;
 	FIELD field_59667 alwaysSyncAbsolute Z
+	FIELD field_60355 LOGGER Lorg/slf4j/Logger;
 	METHOD <init> (Lnet/minecraft/class_1299;Lnet/minecraft/class_1937;)V
 		ARG 1 type
 		ARG 2 world
@@ -330,7 +331,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @apiNote This is used by water, {@link net.minecraft.block.LeveledCauldronBlock},
 		COMMENT and splash water bottles in vanilla.
-	METHOD method_5647 writeNbt (Lnet/minecraft/class_11372;)V
+	METHOD method_5647 writeData (Lnet/minecraft/class_11372;)V
+		ARG 1 view
 	METHOD method_5648 setInvisible (Z)V
 		COMMENT Sets whether the entity is invisible to everyone.
 		COMMENT
@@ -352,15 +354,10 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #kill
 		COMMENT @see #discard
 		ARG 1 reason
-	METHOD method_5651 readNbt (Lnet/minecraft/class_11368;)V
-	METHOD method_5652 writeCustomDataToNbt (Lnet/minecraft/class_11372;)V
-		COMMENT Writes custom data to {@code nbt}. Subclasses have to implement this.
-		COMMENT
-		COMMENT <p>NBT is a storage format; therefore, a data from NBT is loaded to an entity instance's
-		COMMENT fields, which are used for other operations instead of the NBT. The data is written
-		COMMENT back to NBT when saving the entity.
-		COMMENT
-		COMMENT @see #readCustomDataFromNbt
+	METHOD method_5651 readData (Lnet/minecraft/class_11368;)V
+		ARG 1 view
+	METHOD method_5652 writeCustomData (Lnet/minecraft/class_11372;)V
+		ARG 1 view
 	METHOD method_5653 getSavedEntityId ()Ljava/lang/String;
 	METHOD method_5654 doesNotCollide (DDD)Z
 		COMMENT {@return whether the bounding box with the given offsets do not collide with
@@ -400,7 +397,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #isSneaking
 		COMMENT @see #isInSneakingPose
 		ARG 1 sneaking
-	METHOD method_5662 saveNbt (Lnet/minecraft/class_11372;)Z
+	METHOD method_5662 saveData (Lnet/minecraft/class_11372;)Z
+		ARG 1 view
 	METHOD method_5663 getRotationVecClient ()Lnet/minecraft/class_243;
 	METHOD method_5664 interactAt (Lnet/minecraft/class_1657;Lnet/minecraft/class_243;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
 		COMMENT Called when the player interacts with the entity at the specific position.
@@ -757,18 +755,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @see #getAir
 		COMMENT @see #setAir
-	METHOD method_5749 readCustomDataFromNbt (Lnet/minecraft/class_11368;)V
-		COMMENT Reads custom data from {@code nbt}. Subclasses have to implement this.
-		COMMENT
-		COMMENT <p>NBT is a storage format; therefore, a data from NBT is loaded to an entity instance's
-		COMMENT fields, which are used for other operations instead of the NBT. The data is written
-		COMMENT back to NBT when saving the entity.
-		COMMENT
-		COMMENT <p>{@code nbt} might not have all expected keys, or might have a key whose value
-		COMMENT does not meet the requirement (such as the type or the range). This method should
-		COMMENT fall back to a reasonable default value instead of throwing an exception.
-		COMMENT
-		COMMENT @see #writeCustomDataToNbt
+	METHOD method_5749 readCustomData (Lnet/minecraft/class_11368;)V
+		ARG 1 view
 	METHOD method_5750 setVelocityClient (DDD)V
 		ARG 1 x
 		ARG 3 y
@@ -938,7 +926,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 type
 		ARG 2 movement
 	METHOD method_5785 scheduleVelocityUpdate ()V
-	METHOD method_5786 saveSelfNbt (Lnet/minecraft/class_11372;)Z
+	METHOD method_5786 saveSelfData (Lnet/minecraft/class_11372;)Z
+		ARG 1 view
 	METHOD method_5790 updateSwimming ()V
 	METHOD method_5791 getHeadYaw ()F
 		COMMENT {@return the head yaw of the entity}
@@ -1352,6 +1341,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @see #readNbt
 		COMMENT @see #teleportTo
+		ARG 1 other
 	METHOD method_5879 animateDamage (F)V
 		COMMENT Called on the client to animate the entity's damage (the wobble).
 		ARG 1 yaw
@@ -2330,6 +2320,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_70987 isFlyingVehicle ()Z
 	METHOD method_70988 detachAllHeldLeashes (Lnet/minecraft/class_1657;)Z
 		ARG 1 player
+	METHOD method_71370 getErrorReporterContext ()Lnet/minecraft/class_8942$class_11336;
 	CLASS class_4738 PositionUpdater
 		METHOD accept (Lnet/minecraft/class_1297;DDD)V
 			ARG 1 entity
@@ -2382,3 +2373,4 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		METHOD method_33578 playsSounds ()Z
 			COMMENT Returns whether this means an entity may play sounds as it moves.
 	CLASS class_10365 QueuedCollisionCheck
+	CLASS class_11344 ErrorReporterContext
