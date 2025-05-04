@@ -1,5 +1,15 @@
 v2
 
+flag c2s_player_move_flag net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket CHANGE_POSITION_FLAG
+flag c2s_player_move_flag net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket CHANGE_LOOK_FLAG
+
+target_method net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket toFlag (ZZ)I
+	return c2s_player_move_flag
+target_method net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket changePosition (I)Z
+	param 0 c2s_player_move_flag
+target_method net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket changeLook (I)Z
+	param 0 c2s_player_move_flag
+
 constant s2c_animation_id net/minecraft/network/packet/s2c/play/EntityAnimationS2CPacket SWING_MAIN_HAND
 constant s2c_animation_id net/minecraft/network/packet/s2c/play/EntityAnimationS2CPacket WAKE_UP
 constant s2c_animation_id net/minecraft/network/packet/s2c/play/EntityAnimationS2CPacket SWING_OFF_HAND
@@ -43,14 +53,6 @@ target_method net/minecraft/network/packet/s2c/play/ScoreboardObjectiveUpdateS2C
 target_method net/minecraft/network/packet/s2c/play/ScoreboardObjectiveUpdateS2CPacket getMode ()I
 	return s2c_scoreboard_objective_update_mode
 
-constant s2c_screen_handler_slot_sync_id net/minecraft/network/packet/s2c/play/ScreenHandlerSlotUpdateS2CPacket UPDATE_CURSOR_SYNC_ID
-constant s2c_screen_handler_slot_sync_id net/minecraft/network/packet/s2c/play/ScreenHandlerSlotUpdateS2CPacket UPDATE_PLAYER_INVENTORY_SYNC_ID
-
-target_method net/minecraft/network/packet/s2c/play/ScreenHandlerSlotUpdateS2CPacket <init> (IILnet/minecraft/item/ItemStack;)V
-	param 0 s2c_screen_handler_slot_sync_id
-target_method net/minecraft/network/packet/s2c/play/ScreenHandlerSlotUpdateS2CPacket getSyncId ()I
-	return s2c_screen_handler_slot_sync_id
-
 constant s2c_team_packet_type net/minecraft/network/packet/s2c/play/TeamS2CPacket ADD
 constant s2c_team_packet_type net/minecraft/network/packet/s2c/play/TeamS2CPacket REMOVE
 constant s2c_team_packet_type net/minecraft/network/packet/s2c/play/TeamS2CPacket UPDATE
@@ -63,9 +65,3 @@ target_method net/minecraft/network/packet/s2c/play/TeamS2CPacket containsPlayer
 	param 0 s2c_team_packet_type
 target_method net/minecraft/network/packet/s2c/play/TeamS2CPacket containsTeamInfo (I)Z
 	param 0 s2c_team_packet_type
-
-flag s2c_recipe_book_setting_flags net/minecraft/network/packet/s2c/play/RecipeBookSettingsS2CPacket$Entry SHOW_NOTIFICATION
-flag s2c_recipe_book_setting_flags net/minecraft/network/packet/s2c/play/RecipeBookSettingsS2CPacket$Entry HIGHLIGHTED
-
-target_method net/minecraft/network/packet/s2c/play/RecipeBookSettingsS2CPacket$Entry <init> (Lnet/minecraft/recipe/RecipeDisplayEntry;B)V
-	param 1 s2c_recipe_book_setting_flags
