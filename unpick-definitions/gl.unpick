@@ -76,6 +76,7 @@ constant gl_tex_format com/mojang/blaze3d/opengl/GlConst GL_R8
 constant gl_tex_format com/mojang/blaze3d/opengl/GlConst GL_RGB
 constant gl_tex_format com/mojang/blaze3d/opengl/GlConst GL_RED
 constant gl_tex_format org/lwjgl/opengl/GL12 GL_BGRA
+constant gl_tex_format org/lwjgl/opengl/GL30 GL_R8I
 
 constant gl_type com/mojang/blaze3d/opengl/GlConst GL_BYTE
 constant gl_type com/mojang/blaze3d/opengl/GlConst GL_UNSIGNED_BYTE
@@ -99,6 +100,24 @@ constant gl_framebuffer_status com/mojang/blaze3d/opengl/GlConst GL_FRAMEBUFFER_
 constant gl_framebuffer_status com/mojang/blaze3d/opengl/GlConst GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER
 constant gl_framebuffer_status com/mojang/blaze3d/opengl/GlConst GL_FRAMEBUFFER_UNSUPPORTED
 constant gl_framebuffer_status com/mojang/blaze3d/opengl/GlConst GL_OUT_OF_MEMORY
+
+flag gl_arb_buffer_flags org/lwjgl/opengl/GL30 GL_MAP_READ_BIT
+flag gl_arb_buffer_flags org/lwjgl/opengl/GL30 GL_MAP_WRITE_BIT
+flag gl_arb_buffer_flags org/lwjgl/opengl/ARBBufferStorage GL_DYNAMIC_STORAGE_BIT
+flag gl_arb_buffer_flags org/lwjgl/opengl/ARBBufferStorage GL_CLIENT_STORAGE_BIT
+flag gl_arb_buffer_flags org/lwjgl/opengl/ARBBufferStorage GL_MAP_PERSISTENT_BIT
+flag gl_arb_buffer_flags org/lwjgl/opengl/ARBBufferStorage GL_MAP_COHERENT_BIT
+
+# These appear to be Mojang-defined, not in GL.
+flag gpu_buffer_flags com/mojang/blaze3d/buffers/GpuBuffer USAGE_MAP_READ
+flag gpu_buffer_flags com/mojang/blaze3d/buffers/GpuBuffer USAGE_MAP_WRITE
+flag gpu_buffer_flags com/mojang/blaze3d/buffers/GpuBuffer USAGE_HINT_CLIENT_STORAGE
+flag gpu_buffer_flags com/mojang/blaze3d/buffers/GpuBuffer USAGE_COPY_DST
+flag gpu_buffer_flags com/mojang/blaze3d/buffers/GpuBuffer USAGE_COPY_SRC
+flag gpu_buffer_flags com/mojang/blaze3d/buffers/GpuBuffer USAGE_VERTEX
+flag gpu_buffer_flags com/mojang/blaze3d/buffers/GpuBuffer USAGE_INDEX
+flag gpu_buffer_flags com/mojang/blaze3d/buffers/GpuBuffer USAGE_UNIFORM
+flag gpu_buffer_flags com/mojang/blaze3d/buffers/GpuBuffer USAGE_UNIFORM_TEXEL_BUFFER
 
 # GlBlendState
 
@@ -159,7 +178,7 @@ constant gl_fence_sync_condition com/mojang/blaze3d/opengl/GlConst GL_SYNC_GPU_C
 constant gl_client_wait_sync_result com/mojang/blaze3d/opengl/GlConst GL_TIMEOUT_EXPIRED
 constant gl_client_wait_sync_result com/mojang/blaze3d/opengl/GlConst GL_WAIT_FAILED
 
-# GlResourceManager
+# GlCommandEncoder
 constant gl_draw_buffer_buf com/mojang/blaze3d/opengl/GlConst GL_COLOR_ATTACHMENT0
 
 constant gl_polygon_mode_face com/mojang/blaze3d/opengl/GlConst GL_FRONT_AND_BACK
@@ -169,6 +188,7 @@ constant gl_polygon_mode_face com/mojang/blaze3d/opengl/GlConst GL_FRONT_AND_BAC
 constant gl_program_pname com/mojang/blaze3d/opengl/GlConst GL_LINK_STATUS
 constant gl_program_pname com/mojang/blaze3d/opengl/GlConst GL_COMPILE_STATUS
 constant gl_program_pname org/lwjgl/opengl/GL20 GL_ACTIVE_UNIFORMS
+constant gl_program_pname org/lwjgl/opengl/GL31 GL_ACTIVE_UNIFORM_BLOCKS
 
 # note: glGetProgramInfoLog 32768 is not a const or flag
 
@@ -219,6 +239,7 @@ constant gl_get_string_name org/lwjgl/opengl/GL11 GL_EXTENSIONS
 
 constant gl_get_integer_pname org/lwjgl/opengl/GL11 GL_MAX_TEXTURE_SIZE
 constant gl_get_integer_pname org/lwjgl/opengl/KHRDebug GL_MAX_LABEL_LENGTH
+constant gl_get_integer_pname org/lwjgl/opengl/GL31 GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT
 
 constant gl_logic_op org/lwjgl/opengl/GL11 GL_CLEAR
 constant gl_logic_op org/lwjgl/opengl/GL11 GL_AND
@@ -263,7 +284,12 @@ constant gl_pixel_store_pname com/mojang/blaze3d/opengl/GlConst GL_UNPACK_ALIGNM
 constant gl_pixel_store_pname com/mojang/blaze3d/opengl/GlConst GL_PACK_ALIGNMENT
 constant gl_pixel_store_pname com/mojang/blaze3d/opengl/GlConst GL_PACK_ROW_LENGTH
 
-constant gl_map_buffer_access com/mojang/blaze3d/opengl/GlConst GL_WRITE_ONLY
+constant gl_map_buffer_access org/lwjgl/opengl/GL30 GL_MAP_READ_BIT
+constant gl_map_buffer_access org/lwjgl/opengl/GL30 GL_MAP_WRITE_BIT
+constant gl_map_buffer_access org/lwjgl/opengl/GL30 GL_MAP_INVALIDATE_RANGE_BIT
+constant gl_map_buffer_access org/lwjgl/opengl/GL30 GL_MAP_INVALIDATE_BUFFER_BIT
+constant gl_map_buffer_access org/lwjgl/opengl/GL30 GL_MAP_FLUSH_EXPLICIT_BIT
+constant gl_map_buffer_access org/lwjgl/opengl/GL30 GL_MAP_UNSYNCHRONIZED_BIT
 
 # MinecraftClient
 flag gl_buffer_mask com/mojang/blaze3d/opengl/GlConst GL_DEPTH_BUFFER_BIT
@@ -298,9 +324,6 @@ target_method com/mojang/blaze3d/opengl/GlConst toGlType (Lcom/mojang/blaze3d/te
 target_method com/mojang/blaze3d/opengl/GlConst toGl (Lnet/minecraft/client/texture/NativeImage$Format;)I
 	return gl_tex_format
 
-target_method com/mojang/blaze3d/opengl/GlConst toGl (Lcom/mojang/blaze3d/buffers/BufferUsage;)I
-	return gl_buffer_data_usage
-
 target_method com/mojang/blaze3d/opengl/GlConst toGl (Lcom/mojang/blaze3d/textures/AddressMode;)I
 	return gl_address_mode
 
@@ -311,6 +334,21 @@ target_method com/mojang/blaze3d/opengl/GlConst toGlExternalId (Lcom/mojang/blaz
 
 target_method com/mojang/blaze3d/opengl/GlConst toGl (Lcom/mojang/blaze3d/shaders/ShaderType;)I
 	return gl_program_type
+
+target_method com/mojang/blaze3d/opengl/GlConst bufferUsageToGlEnum (I)I
+	param 0 gpu_buffer_flags
+	return gl_buffer_data_usage
+target_method com/mojang/blaze3d/opengl/GlConst bufferUsageToGlFlag (I)I
+	param 0 gpu_buffer_flags
+	return gl_arb_buffer_flags
+target_method org/lwjgl/opengl/ARBDirectStateAccess glNamedBufferStorage (IJI)V
+	param 2 gl_arb_buffer_flags
+target_method org/lwjgl/opengl/ARBDirectStateAccess glNamedBufferStorage (ILjava/nio/ByteBuffer;I)V
+	param 2 gl_arb_buffer_flags
+target_method net/minecraft/client/gl/BufferManager setBufferStorage (IJI)V
+	param 2 gl_arb_buffer_flags
+target_method net/minecraft/client/gl/BufferManager setBufferStorage (ILjava/nio/ByteBuffer;I)V
+	param 2 gl_arb_buffer_flags
 
 target_method org/lwjgl/opengl/GL30 glBindFramebuffer (II)V
 	param 0 gl_framebuffer_target
@@ -324,10 +362,15 @@ target_method com/mojang/blaze3d/opengl/GlStateManager _glFramebufferTexture2D (
 	param 2 gl_tex_target
 target_method org/lwjgl/opengl/ARBDirectStateAccess glNamedFramebufferTexture (IIII)V
 	param 1 gl_framebuffer_attachment
+target_method net/minecraft/client/gl/BufferManager setupFramebuffer (IIIII)V
+	param 4 gl_framebuffer_target
 
 target_method com/mojang/blaze3d/opengl/GlStateManager _glBlitFrameBuffer (IIIIIIIIII)V
 	param 8 gl_buffer_mask
 	param 9 gl_filter
+target_method net/minecraft/client/gl/BufferManager setupBlitFramebuffer (IIIIIIIIIIII)V
+	param 10 gl_buffer_mask
+	param 11 gl_filter
 
 target_method com/mojang/blaze3d/opengl/GlStateManager _texParameter (III)V
 	param 0 gl_tex_target
@@ -352,11 +395,15 @@ target_method com/mojang/blaze3d/opengl/GlStateManager _getTexLevelParameter (II
 	param 2 gl_tex_level_parameter_pname
 target_method org/lwjgl/opengl/GL11 glBindTexture (II)V
 	param 0 gl_tex_target
+target_method org/lwjgl/opengl/GL11C glBindTexture (II)V
+	param 0 gl_tex_target
 target_method org/lwjgl/opengl/GL11 glTexImage2D (IIIIIIIILjava/nio/IntBuffer;)V
 	param 0 gl_tex_target
 	param 2 gl_tex_format
 	param 6 gl_tex_format
 target_method org/lwjgl/opengl/GL11 glTexParameteri (III)V
+	param 0 gl_tex_target
+target_method org/lwjgl/opengl/GL31 glTexBuffer (III)V
 	param 0 gl_tex_target
 
 target_method com/mojang/blaze3d/opengl/GlStateManager _readPixels (IIIIIIJ)V
@@ -375,6 +422,8 @@ target_method net/minecraft/client/gl/GlDebug$DebugMessage <init> (IIIILjava/lan
 	param 0 gl_debug_source
 	param 1 gl_debug_type
 	param 3 gl_debug_severity
+target_method org/lwjgl/opengl/KHRDebug glPushDebugGroup (IILjava/lang/CharSequence;)V
+	param 0 gl_debug_source
 
 target_method net/minecraft/client/gl/GlDebug getType (I)Ljava/lang/String;
 	param 0 gl_debug_type
@@ -431,16 +480,51 @@ target_method com/mojang/blaze3d/opengl/GlStateManager _glBindBuffer (II)V
 target_method com/mojang/blaze3d/opengl/GlStateManager _glBufferData (IJI)V
 	param 0 gl_buffer_target
 	param 2 gl_buffer_data_usage
-target_method com/mojang/blaze3d/opengl/GlStateManager mapBuffer (II)Ljava/nio/ByteBuffer;
-	param 0 gl_buffer_target
-	param 1 gl_map_buffer_access
-target_method com/mojang/blaze3d/opengl/GlStateManager _glUnmapBuffer (I)V
-	param 0 gl_buffer_target
-target_method org/lwjgl/opengl/GL32C glBindBuffer (II)V
-	param 0 gl_buffer_target
-target_method org/lwjgl/opengl/GL32C glBufferData (IJI)V
+target_method com/mojang/blaze3d/opengl/GlStateManager _glBufferData (ILjava/nio/ByteBuffer;I)V
 	param 0 gl_buffer_target
 	param 2 gl_buffer_data_usage
+target_method com/mojang/blaze3d/opengl/GlStateManager _glBufferSubData (IILjava/nio/ByteBuffer;)V
+	param 0 gl_buffer_target
+target_method com/mojang/blaze3d/opengl/GlStateManager _glMapBufferRange (IIII)Ljava/nio/ByteBuffer;
+	param 0 gl_buffer_target
+	param 3 gl_map_buffer_access
+target_method com/mojang/blaze3d/opengl/GlStateManager _glUnmapBuffer (I)V
+	param 0 gl_buffer_target
+target_method org/lwjgl/opengl/GL15 glBindBuffer (II)V
+	param 0 gl_buffer_target
+target_method org/lwjgl/opengl/GL15 glBufferData (IJI)V
+	param 0 gl_buffer_target
+	param 2 gl_buffer_data_usage
+target_method org/lwjgl/opengl/GL15 glBufferData (ILjava/nio/ByteBuffer;I)V
+	param 0 gl_buffer_target
+	param 2 gl_buffer_data_usage
+target_method org/lwjgl/opengl/GL30 glMapBufferRange (IJJI)Ljava/nio/ByteBuffer;
+	param 0 gl_buffer_target
+	param 3 gl_map_buffer_access
+target_method org/lwjgl/opengl/GL32 glBindBufferRange (IIIJJ)V
+	param 0 gl_buffer_target
+target_method org/lwjgl/opengl/GL30 glFlushMappedBufferRange (IJJ)V
+	param 0 gl_buffer_target
+target_method net/minecraft/client/gl/BufferManager setBufferData (IJI)V
+	param 2 gl_buffer_data_usage
+target_method net/minecraft/client/gl/BufferManager setBufferData (ILjava/nio/ByteBuffer;I)V
+	param 2 gl_buffer_data_usage
+target_method net/minecraft/client/gl/BufferManager mapBufferRange (IIII)Ljava/nio/ByteBuffer;
+	param 3 gl_map_buffer_access
+
+target_method org/lwjgl/opengl/ARBBufferStorage glBufferStorage (IJI)V
+	param 0 gl_buffer_target
+	param 2 gl_arb_buffer_flags
+target_method org/lwjgl/opengl/ARBBufferStorage glBufferStorage (ILjava/nio/ByteBuffer;I)V
+	param 0 gl_buffer_target
+	param 2 gl_arb_buffer_flags
+
+target_method com/mojang/blaze3d/buffers/GpuBuffer <init> (II)V
+	param 0 gpu_buffer_flags
+target_method com/mojang/blaze3d/buffers/GpuBuffer usage ()I
+	return gpu_buffer_flags
+target_method net/minecraft/client/gl/GlGpuBuffer <init> (Ljava/util/function/Supplier;Lnet/minecraft/client/gl/BufferManager;IIILjava/nio/ByteBuffer;)V
+	param 2 gpu_buffer_flags
 
 target_method com/mojang/blaze3d/opengl/GlStateManager _getError ()I
 	return gl_error
