@@ -115,6 +115,8 @@ CLASS net/minecraft/class_327 net/minecraft/client/font/TextRenderer
 			COMMENT the text color in 0xAARRGGBB
 		ARG 5 outlineColor
 			COMMENT the outline color in 0xAARRGGBB
+		ARG 6 matrix
+		ARG 7 vertexConsumers
 		ARG 8 light
 	METHOD method_37297 (Lnet/minecraft/class_327$class_5232;[FIFIIILnet/minecraft/class_2583;I)Z
 		ARG 7 index
@@ -126,6 +128,19 @@ CLASS net/minecraft/class_327 net/minecraft/client/font/TextRenderer
 		COMMENT @see #getWrappedLinesHeight(String, int)
 		ARG 1 text
 		ARG 2 maxWidth
+	METHOD method_71795 prepare (Lnet/minecraft/class_5481;FFIZI)Lnet/minecraft/class_327$class_11465;
+		ARG 1 text
+		ARG 2 x
+		ARG 3 y
+		ARG 4 color
+		ARG 5 shadow
+		ARG 6 backgroundColor
+	METHOD method_71796 prepare (Ljava/lang/String;FFIZI)Lnet/minecraft/class_327$class_11465;
+		ARG 2 x
+		ARG 3 y
+		ARG 4 color
+		ARG 5 shadow
+		ARG 6 backgroundColor
 	CLASS class_5232 Drawer
 		FIELD field_24241 shadow Z
 		FIELD field_24250 x F
@@ -133,6 +148,15 @@ CLASS net/minecraft/class_327 net/minecraft/client/font/TextRenderer
 		FIELD field_24252 rectangles Ljava/util/List;
 		FIELD field_54817 color I
 		FIELD field_54818 backgroundColor I
+		FIELD field_60699 minX F
+		FIELD field_60700 minY F
+		FIELD field_60701 maxX F
+		FIELD field_60702 maxY F
+		FIELD field_60703 minBackgroundX F
+		FIELD field_60704 minBackgroundY F
+		FIELD field_60705 maxBackgroundX F
+		FIELD field_60706 maxBackgroundY F
+		FIELD field_60707 drawnGlyphs Ljava/util/List;
 		METHOD <init> (Lnet/minecraft/class_327;FFIIZ)V
 			ARG 2 x
 			ARG 3 y
@@ -151,4 +175,30 @@ CLASS net/minecraft/class_327 net/minecraft/client/font/TextRenderer
 			ARG 2 textColor
 		METHOD method_65178 getRenderColor (Lnet/minecraft/class_5251;)I
 			ARG 1 override
+		METHOD method_71802 updateBackgroundBounds (FFF)V
+			ARG 1 x
+			ARG 2 y
+			ARG 3 width
+		METHOD method_71803 updateTextBounds (FFFF)V
+			ARG 1 minX
+			ARG 2 minY
+			ARG 3 maxX
+			ARG 4 maxY
+		METHOD method_71804 addGlyph (Lnet/minecraft/class_382$class_10364;)V
+			ARG 1 glyph
 	CLASS class_6415 TextLayerType
+	CLASS class_11464 GlyphDrawer
+		METHOD method_71797 drawGlyph (Lnet/minecraft/class_382$class_10364;)V
+			ARG 1 glyph
+		METHOD method_71798 drawRectangle (Lnet/minecraft/class_382;Lnet/minecraft/class_382$class_328;)V
+			ARG 1 bakedGlyph
+			ARG 2 rect
+		METHOD method_71799 drawing (Lnet/minecraft/class_4597;Lorg/joml/Matrix4f;Lnet/minecraft/class_327$class_6415;I)Lnet/minecraft/class_327$class_11464;
+			ARG 0 vertexConsumers
+			ARG 1 matrix
+			ARG 2 layerType
+			ARG 3 light
+	CLASS class_11465 GlyphDrawable
+		METHOD method_71800 getScreenRect ()Lnet/minecraft/class_8030;
+		METHOD method_71801 draw (Lnet/minecraft/class_327$class_11464;)V
+			ARG 1 glyphDrawer
