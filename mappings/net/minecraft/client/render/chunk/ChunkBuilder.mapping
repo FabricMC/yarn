@@ -38,6 +38,8 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 	METHOD method_34847 getFreeBufferCount ()I
 	METHOD method_38555 (Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletionStage;
 		ARG 0 future
+	METHOD method_72045 cancelAllTasks ()V
+	METHOD method_72046 getScheduledTaskCount ()I
 	CLASS class_851 BuiltChunk
 		FIELD field_4458 boundingBox Lnet/minecraft/class_238;
 		FIELD field_4461 sortTask Lnet/minecraft/class_846$class_851$class_4579;
@@ -48,6 +50,8 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		FIELD field_29641 index I
 		FIELD field_32832 CHUNK_SIZE I
 		FIELD field_53958 sectionPos J
+		FIELD field_60151 renderIndex I
+		FIELD field_60949 currentRenderData Ljava/util/concurrent/atomic/AtomicReference;
 		METHOD <init> (Lnet/minecraft/class_846;IJ)V
 			ARG 2 index
 			ARG 3 sectionPos
@@ -67,6 +71,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		METHOD method_22773 scheduleSort (Lnet/minecraft/class_846;)V
 			ARG 1 builder
 		METHOD method_22777 scheduleRebuild (Lnet/minecraft/class_6850;)V
+			ARG 1 builder
 		METHOD method_22781 rebuild (Lnet/minecraft/class_6850;)V
 			ARG 1 builder
 		METHOD method_40051 getBoundingBox ()Lnet/minecraft/class_238;
@@ -80,6 +85,21 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 		METHOD method_64065 hasTranslucentLayer ()Z
 		METHOD method_64066 isCurrentlySorting ()Z
 		METHOD method_68531 uploadIndices (Lnet/minecraft/class_11516;Lnet/minecraft/class_9799$class_9800;Lnet/minecraft/class_11515;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 data
+			ARG 2 buffer
+			ARG 3 layer
+		METHOD method_71136 setRenderIndex (I)V
+			ARG 1 index
+		METHOD method_71137 getRenderIndex ()I
+		METHOD method_72048 (Lnet/minecraft/class_11516;Lnet/minecraft/class_11515;Lnet/minecraft/class_9801;)V
+			ARG 2 layer
+			ARG 3 buffer
+		METHOD method_72049 setCurrentRenderData (Lnet/minecraft/class_11517;)V
+			ARG 1 data
+		METHOD method_72050 uploadLayer (Ljava/util/Map;Lnet/minecraft/class_11516;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 buffersByLayer
+			ARG 2 renderData
+		METHOD method_72052 getCurrentRenderData ()Lnet/minecraft/class_11517;
 		CLASS class_4577 Task
 			FIELD field_20836 cancelled Ljava/util/concurrent/atomic/AtomicBoolean;
 			FIELD field_53959 prioritized Z
@@ -98,6 +118,7 @@ CLASS net/minecraft/class_846 net/minecraft/client/render/chunk/ChunkBuilder
 				ARG 2 region
 				ARG 3 prioritized
 		CLASS class_4579 SortTask
+			FIELD field_60950 renderData Lnet/minecraft/class_11516;
 			METHOD <init> (Lnet/minecraft/class_846$class_851;Lnet/minecraft/class_11516;)V
 				ARG 2 data
 	CLASS class_4690 Result
