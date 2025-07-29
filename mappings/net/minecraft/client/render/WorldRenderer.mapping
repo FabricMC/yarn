@@ -36,10 +36,21 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_54161 chunkIndex I
 	FIELD field_54164 nearbyChunks Lit/unimi/dsi/fastutil/objects/ObjectArrayList;
 	FIELD field_61060 ENTITY_COMPARATOR Ljava/util/Comparator;
+	FIELD field_61737 entityRenderStates Lnet/minecraft/class_11658;
+	FIELD field_61738 entityRenderCommandQueue Lnet/minecraft/class_11661;
+	FIELD field_61739 entityRenderCommandRenderer Lnet/minecraft/class_11684;
+	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_898;Lnet/minecraft/class_824;Lnet/minecraft/class_4599;Lnet/minecraft/class_11658;Lnet/minecraft/class_11684;)V
+		ARG 1 client
+		ARG 2 entityRenderDispatcher
+		ARG 3 blockEntityRenderDispatcher
+		ARG 4 bufferBuilders
+		ARG 5 entityRenderStates
+		ARG 6 entityRenderCommandRenderer
 	METHOD method_3242 onResized (II)V
 		ARG 1 width
 		ARG 2 height
 	METHOD method_3244 setWorld (Lnet/minecraft/class_638;)V
+		ARG 1 world
 	METHOD method_3246 getCompletedChunkCount ()I
 	METHOD method_3252 tick ()V
 	METHOD method_3254 drawEntityOutlinesFramebuffer ()V
@@ -225,6 +236,7 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 4 positionMatrix
 		ARG 5 fog
 		ARG 6 renderBlockOutline
+		ARG 7 entityRenderStates
 		ARG 8 tickCounter
 		ARG 9 profiler
 	METHOD method_62203 renderWeather (Lnet/minecraft/class_9909;Lnet/minecraft/class_243;FLcom/mojang/blaze3d/buffers/GpuBufferSlice;)V
@@ -282,8 +294,23 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 1 chunkPos
 	METHOD method_71118 rotate ()V
 	METHOD method_72157 renderBlockLayers (Lorg/joml/Matrix4fc;DDD)Lnet/minecraft/class_11532;
-	METHOD method_72916 (Lnet/minecraft/class_4587;Lnet/minecraft/class_4184;Lnet/minecraft/class_11658;Lnet/minecraft/class_11659;)V
+		ARG 1 matrix
+		ARG 2 cameraX
+		ARG 4 cameraY
+		ARG 6 cameraZ
+	METHOD method_72914 getAndUpdateRenderState (Lnet/minecraft/class_1297;F)Lnet/minecraft/class_10017;
+		ARG 1 entity
+		ARG 2 tickProgress
+	METHOD method_72916 pushEntityRenders (Lnet/minecraft/class_4587;Lnet/minecraft/class_4184;Lnet/minecraft/class_11658;Lnet/minecraft/class_11659;)V
+		ARG 1 matrices
 		ARG 2 camera
+		ARG 3 renderStates
+		ARG 4 queue
+	METHOD method_72917 fillEntityRenderStates (Lnet/minecraft/class_4184;Lnet/minecraft/class_4604;Lnet/minecraft/class_9779;Lnet/minecraft/class_11658;)V
+		ARG 1 camera
+		ARG 2 frustum
+		ARG 3 tickCounter
+		ARG 4 entityRenderStates
 	CLASS class_10948 BrightnessGetter
 		FIELD field_58200 DEFAULT Lnet/minecraft/class_761$class_10948;
 		METHOD method_68890 (Lnet/minecraft/class_1920;Lnet/minecraft/class_2338;)I
