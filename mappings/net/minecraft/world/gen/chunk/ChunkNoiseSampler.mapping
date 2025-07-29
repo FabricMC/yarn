@@ -43,12 +43,16 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 	FIELD field_36593 isSamplingForCaches Z
 	FIELD field_36594 startBlockX I
 	FIELD field_37113 beardifying Lnet/minecraft/class_6916$class_7050;
+	FIELD field_61471 surfaceHeightEstimateCache Lit/unimi/dsi/fastutil/longs/Long2IntMap;
+	FIELD field_61472 preliminarySurfaceLevel Lnet/minecraft/class_6910;
 	METHOD <init> (ILnet/minecraft/class_7138;IILnet/minecraft/class_5309;Lnet/minecraft/class_6916$class_7050;Lnet/minecraft/class_5284;Lnet/minecraft/class_6350$class_6565;Lnet/minecraft/class_6748;)V
 		ARG 1 horizontalCellCount
+		ARG 2 noiseConfig
 		ARG 3 startBlockX
 		ARG 4 startBlockZ
 		ARG 5 generationShapeConfig
 		ARG 6 beardifying
+		ARG 7 chunkGeneratorSettings
 		ARG 8 fluidLevelSampler
 		ARG 9 blender
 	METHOD method_38336 sampleStartDensity ()V
@@ -137,6 +141,11 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 		COMMENT Stops the interpolation loop for this chunk.
 	METHOD method_42361 getHorizontalCellBlockCount ()I
 	METHOD method_42362 getVerticalCellBlockCount ()I
+	METHOD method_72685 estimateHighestSurfaceLevel (IIII)I
+		ARG 1 minX
+		ARG 2 minZ
+		ARG 3 maxX
+		ARG 4 maxZ
 	CLASS class_5917 DensityInterpolator
 		FIELD field_29227 startDensityBuffer [[D
 		FIELD field_29228 endDensityBuffer [[D
@@ -205,6 +214,8 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 	CLASS class_6951 FlatCache
 		FIELD field_36612 delegate Lnet/minecraft/class_6910;
 		FIELD field_36613 cache [D
+		FIELD field_61473 horizontalCacheSize I
 		METHOD <init> (Lnet/minecraft/class_6568;Lnet/minecraft/class_6910;Z)V
+			ARG 2 delegate
 			ARG 3 sample
 	CLASS class_6952 ParentedNoiseType
