@@ -91,6 +91,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_53717 suppressedExceptionsTracker Lnet/minecraft/class_9843;
 	FIELD field_53718 waitingForNextTick Z
 	FIELD field_54275 discontinuousFrame Lcom/mojang/jtracy/DiscontinuousFrame;
+	FIELD field_61872 chunkLoadProgress Lnet/minecraft/class_11545;
 	METHOD <init> (Ljava/lang/Thread;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_7497;Lnet/minecraft/class_11545;)V
 		ARG 1 serverThread
 		ARG 2 session
@@ -98,7 +99,8 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 4 saveLoader
 		ARG 5 proxy
 		ARG 6 dataFixer
-		ARG 8 worldGenerationProgressListenerFactory
+		ARG 7 apiServices
+		ARG 8 chunkLoadProgress
 	METHOD method_3716 getKeyPair ()Ljava/security/KeyPair;
 	METHOD method_3718 isFlightEnabled ()Z
 	METHOD method_3719 getGameProfileRepo ()Lcom/mojang/authlib/GameProfileRepository;
@@ -323,6 +325,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 worldProperties
 		ARG 2 bonusChest
 		ARG 3 debugWorld
+		ARG 4 loadProgress
 	METHOD method_27902 acceptsStatusQuery ()Z
 	METHOD method_27903 adjustTrackingDistance (I)I
 		ARG 1 initialDistance
@@ -483,6 +486,15 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_71943 handleCustomClickAction (Lnet/minecraft/class_2960;Ljava/util/Optional;)V
 		ARG 1 id
 		ARG 2 payload
+	METHOD method_73041 getSpawnPos ()Lnet/minecraft/class_4208;
+	METHOD method_73044 createChunkLoadMap (I)Lnet/minecraft/class_11544;
+		COMMENT {@return a {@link ChunkLoadMap} to visualize chunk loading in singleplayer}
+		ARG 1 radius
+	METHOD method_73045 getNameToIdCache ()Lnet/minecraft/class_11561;
+	CLASS 1
+		FIELD field_61875 chunkLoadingManager Lnet/minecraft/class_3898;
+		FIELD field_61876 spawnChunkX I
+		FIELD field_61877 spawnChunkZ I
 	CLASS class_6414 DebugStart
 		FIELD field_33980 time J
 		FIELD field_33981 tick I

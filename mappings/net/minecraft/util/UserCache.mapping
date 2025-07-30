@@ -8,10 +8,12 @@ CLASS net/minecraft/class_3312 net/minecraft/util/UserCache
 	FIELD field_25805 LOGGER Lorg/slf4j/Logger;
 	FIELD field_29788 MAX_SAVED_ENTRIES I
 	FIELD field_33860 pendingRequests Ljava/util/Map;
+	FIELD field_61163 offlineMode Z
 	METHOD <init> (Lcom/mojang/authlib/GameProfileRepository;Ljava/io/File;)V
 		ARG 1 profileRepository
 		ARG 2 cacheFile
 	METHOD method_14509 findProfileByName (Lcom/mojang/authlib/GameProfileRepository;Ljava/lang/String;)Ljava/util/Optional;
+		ARG 1 repository
 	METHOD method_14516 getLastAccessedEntries (I)Ljava/util/stream/Stream;
 		ARG 1 limit
 	METHOD method_14517 load ()Ljava/util/List;
@@ -29,13 +31,20 @@ CLASS net/minecraft/class_3312 net/minecraft/util/UserCache
 		ARG 2 json
 	METHOD method_30169 incrementAndGetAccessCount ()J
 	METHOD method_30170 getDateFormat ()Ljava/text/DateFormat;
+	METHOD method_37155 (Ljava/lang/String;Ljava/util/concurrent/CompletableFuture;Ljava/util/Optional;Ljava/lang/Throwable;)V
+		ARG 3 player
 	METHOD method_53912 getOfflinePlayerProfile (Ljava/lang/String;)Ljava/util/Optional;
+	METHOD method_72368 addToCache (Lnet/minecraft/class_11560;)Lnet/minecraft/class_3312$class_3313;
+		ARG 1 player
 	CLASS class_3313 Entry
 		FIELD field_14319 expirationDate Ljava/util/Date;
 		FIELD field_25726 lastAccessed J
+		FIELD field_61164 player Lnet/minecraft/class_11560;
 		METHOD <init> (Lnet/minecraft/class_11560;Ljava/util/Date;)V
+			ARG 1 player
 			ARG 2 expirationDate
 		METHOD method_14520 getExpirationDate ()Ljava/util/Date;
 		METHOD method_30171 setLastAccessed (J)V
 			ARG 1 lastAccessed
 		METHOD method_30172 getLastAccessed ()J
+		METHOD method_72369 getPlayer ()Lnet/minecraft/class_11560;
