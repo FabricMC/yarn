@@ -46,7 +46,6 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4604 pvpEnabled Z
 	FIELD field_16257 serverThread Ljava/lang/Thread;
 	FIELD field_17200 workerExecutor Ljava/util/concurrent/Executor;
-	FIELD field_17439 worldGenerationProgressListenerFactory Lnet/minecraft/class_3950;
 	FIELD field_17601 serverId Ljava/lang/String;
 	FIELD field_17704 DEMO_LEVEL_INFO Lnet/minecraft/class_1940;
 	FIELD field_19249 hasJustExecutedTask Z
@@ -92,7 +91,8 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_53717 suppressedExceptionsTracker Lnet/minecraft/class_9843;
 	FIELD field_53718 waitingForNextTick Z
 	FIELD field_54275 discontinuousFrame Lcom/mojang/jtracy/DiscontinuousFrame;
-	METHOD <init> (Ljava/lang/Thread;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_7497;Lnet/minecraft/class_3950;)V
+	FIELD field_61872 chunkLoadProgress Lnet/minecraft/class_11545;
+	METHOD <init> (Ljava/lang/Thread;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_7497;Lnet/minecraft/class_11545;)V
 		ARG 1 serverThread
 		ARG 2 session
 		ARG 3 dataPackManager
@@ -100,7 +100,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 5 proxy
 		ARG 6 dataFixer
 		ARG 7 apiServices
-		ARG 8 worldGenerationProgressListenerFactory
+		ARG 8 chunkLoadProgress
 	METHOD method_3716 getKeyPair ()Ljava/security/KeyPair;
 	METHOD method_3718 isFlightEnabled ()Z
 	METHOD method_3719 getGameProfileRepo ()Lcom/mojang/authlib/GameProfileRepository;
@@ -191,8 +191,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3767 getGameRules ()Lnet/minecraft/class_1928;
 	METHOD method_3772 getRecipeManager ()Lnet/minecraft/class_1863;
 	METHOD method_3773 getNetworkCompressionThreshold ()I
-	METHOD method_3774 prepareStartRegion (Lnet/minecraft/class_3949;)V
-		ARG 1 worldGenerationProgressListener
+	METHOD method_3774 prepareStartRegion ()V
 	METHOD method_3775 shouldPreventProxyConnections ()Z
 	METHOD method_3776 setDifficulty (Lnet/minecraft/class_1267;Z)V
 		ARG 1 difficulty
@@ -207,11 +206,9 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 player
-	METHOD method_3786 createWorlds (Lnet/minecraft/class_3949;)V
-		ARG 1 worldGenerationProgressListener
+	METHOD method_3786 createWorlds ()V
 	METHOD method_3787 getNetworkIo ()Lnet/minecraft/class_3242;
 	METHOD method_3790 getDefaultGameMode ()Lnet/minecraft/class_1934;
-	METHOD method_3793 getUserCache ()Lnet/minecraft/class_3312;
 	METHOD method_3798 getOpPermissionLevel ()I
 	METHOD method_3799 isDemo ()Z
 	METHOD method_3803 setPlayerIdleTimeout (I)V
@@ -244,14 +241,11 @@ CLASS net/minecraft/server/MinecraftServer
 		COMMENT accept unauthenticated players; otherwise, it disconnects such players.
 		COMMENT
 		COMMENT @see net.minecraft.server.network.ServerLoginNetworkHandler
-	METHOD method_3829 getSpawnRadius (Lnet/minecraft/class_3218;)I
-		ARG 1 world
 	METHOD method_3831 getRunDirectory ()Ljava/nio/file/Path;
 	METHOD method_3832 startDebug ()V
 	METHOD method_3834 setMotd (Ljava/lang/String;)V
 		ARG 1 motd
-	METHOD method_3835 getPermissionLevel (Lcom/mojang/authlib/GameProfile;)I
-		ARG 1 profile
+	METHOD method_3835 getPermissionLevel (Lnet/minecraft/class_11560;)I
 	METHOD method_3836 getDataPackManager ()Lnet/minecraft/class_3283;
 	METHOD method_3837 getBossBarManager ()Lnet/minecraft/class_3004;
 	METHOD method_3838 setDefaultGameMode (Lnet/minecraft/class_1934;)V
@@ -299,8 +293,7 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 properties
 	METHOD method_19465 sendDifficulty (Lnet/minecraft/class_3222;)V
 		ARG 1 player
-	METHOD method_19466 isHost (Lcom/mojang/authlib/GameProfile;)Z
-		ARG 1 profile
+	METHOD method_19466 isHost (Lnet/minecraft/class_11560;)Z
 	METHOD method_19467 setDifficultyLocked (Z)V
 		ARG 1 locked
 	METHOD method_20415 runOneTask ()Z
@@ -327,11 +320,12 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_27728 getSaveProperties ()Lnet/minecraft/class_5219;
 	METHOD method_27729 updateMobSpawnOptions ()V
 	METHOD method_27731 updateDifficulty ()V
-	METHOD method_27901 setupSpawn (Lnet/minecraft/class_3218;Lnet/minecraft/class_5268;ZZ)V
+	METHOD method_27901 setupSpawn (Lnet/minecraft/class_3218;Lnet/minecraft/class_5268;ZZLnet/minecraft/class_11545;)V
 		ARG 0 world
 		ARG 1 worldProperties
 		ARG 2 bonusChest
 		ARG 3 debugWorld
+		ARG 4 loadProgress
 	METHOD method_27902 acceptsStatusQuery ()Z
 	METHOD method_27903 adjustTrackingDistance (I)I
 		ARG 1 initialDistance
@@ -489,6 +483,18 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_62735 getFuelRegistry ()Lnet/minecraft/class_9895;
 	METHOD method_64261 (Ljava/nio/file/Path;)V
 		ARG 1 path
+	METHOD method_71943 handleCustomClickAction (Lnet/minecraft/class_2960;Ljava/util/Optional;)V
+		ARG 1 id
+		ARG 2 payload
+	METHOD method_73041 getSpawnPos ()Lnet/minecraft/class_4208;
+	METHOD method_73044 createChunkLoadMap (I)Lnet/minecraft/class_11544;
+		COMMENT {@return a {@link ChunkLoadMap} to visualize chunk loading in singleplayer}
+		ARG 1 radius
+	METHOD method_73045 getNameToIdCache ()Lnet/minecraft/class_11561;
+	CLASS 1
+		FIELD field_61875 chunkLoadingManager Lnet/minecraft/class_3898;
+		FIELD field_61876 spawnChunkX I
+		FIELD field_61877 spawnChunkZ I
 	CLASS class_6414 DebugStart
 		FIELD field_33980 time J
 		FIELD field_33981 tick I

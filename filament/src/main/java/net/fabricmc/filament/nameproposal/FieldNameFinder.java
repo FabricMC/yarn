@@ -142,6 +142,11 @@ public class FieldNameFinder {
 									continue;
 								}
 
+								if (Character.isDigit(s.charAt(0))) {
+									// Java doesn't allow fields to start with a digit
+									continue;
+								}
+
 								fieldNames.put(new MappingEntry(((FieldInsnNode) instr2).owner, ((FieldInsnNode) instr2).name, ((FieldInsnNode) instr2).desc), s);
 							}
 						}

@@ -567,7 +567,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 	METHOD method_9571 getCullingShape (Lnet/minecraft/class_2680;)Lnet/minecraft/class_265;
 		COMMENT @see AbstractBlockState#getCullingShape
 		ARG 1 state
-	METHOD method_9572 getComparatorOutput (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)I
+	METHOD method_9572 getComparatorOutput (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)I
 		COMMENT {@return the comparator output of the block, from {@code 0} to {@code 15}}
 		COMMENT
 		COMMENT <p>When overriding this, {@link #hasComparatorOutput} must also be overridden.
@@ -577,6 +577,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 1 state
 		ARG 2 world
 		ARG 3 pos
+		ARG 4 direction
 	METHOD method_9573 getSoundGroup (Lnet/minecraft/class_2680;)Lnet/minecraft/class_2498;
 		ARG 1 state
 	METHOD method_9574 getPickStack (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;Z)Lnet/minecraft/class_1799;
@@ -669,9 +670,6 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 4 direction
 	METHOD method_9604 getRenderType (Lnet/minecraft/class_2680;)Lnet/minecraft/class_2464;
 		COMMENT {@return the block's render type (invisible, animated, model)}
-		COMMENT
-		COMMENT @apiNote {@link BlockWithEntity} overrides this to return {@link BlockRenderType#INVISIBLE};
-		COMMENT therefore, custom blocks extending that class must override it again to render the block.
 		COMMENT
 		COMMENT @see AbstractBlockState#getRenderType
 		ARG 1 state
@@ -869,6 +867,8 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 		ARG 2 world
 		ARG 3 pos
 		ARG 4 moved
+	METHOD method_72600 keepBlockEntityWhenReplacedWith (Lnet/minecraft/class_2680;)Z
+		ARG 1 state
 	CLASS class_2250 OffsetType
 	CLASS class_2251 Settings
 		FIELD field_10660 resistance F
@@ -1100,7 +1100,7 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 2 state
 			ARG 3 hit
 			ARG 4 projectile
-		METHOD method_26176 getComparatorOutput (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)I
+		METHOD method_26176 getComparatorOutput (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_2350;)I
 			ARG 1 world
 			ARG 2 pos
 		METHOD method_26177 onSyncedBlockEvent (Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;II)Z
@@ -1334,6 +1334,8 @@ CLASS net/minecraft/class_4970 net/minecraft/block/AbstractBlock
 			ARG 1 world
 			ARG 2 pos
 			ARG 3 moved
+		METHOD method_72668 keepBlockEntityWhenReplacedWith (Lnet/minecraft/class_2680;)Z
+			ARG 1 state
 		CLASS class_3752 ShapeCache
 			FIELD field_16559 DIRECTIONS [Lnet/minecraft/class_2350;
 			FIELD field_17651 exceedsCube Z

@@ -1,16 +1,15 @@
 CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
+	FIELD field_44655 BACKGROUND_MARGIN I
 	FIELD field_44656 client Lnet/minecraft/class_310;
 	FIELD field_44657 matrices Lorg/joml/Matrix3x2fStack;
 	FIELD field_44659 scissorStack Lnet/minecraft/class_332$class_8214;
-	FIELD field_45337 guiAtlasManager Lnet/minecraft/class_8658;
 	FIELD field_59826 state Lnet/minecraft/class_11246;
+	FIELD field_60305 tooltipDrawer Ljava/lang/Runnable;
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_11246;)V
 		ARG 1 client
 		ARG 2 state
 	METHOD <init> (Lnet/minecraft/class_310;Lorg/joml/Matrix3x2fStack;Lnet/minecraft/class_11246;)V
-		ARG 1 client
 		ARG 2 matrices
-		ARG 3 state
 	METHOD method_25290 drawTexture (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_2960;IIFFIIII)V
 		COMMENT Draws a textured rectangle from a region in a texture.
 		COMMENT
@@ -149,7 +148,7 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 3 y1
 		ARG 4 x2
 		ARG 5 y2
-		ARG 6 z
+		ARG 6 color
 	METHOD method_49601 drawBorder (IIIII)V
 		ARG 1 x
 		ARG 2 y
@@ -209,7 +208,7 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 2 text
 		ARG 3 x
 		ARG 4 y
-	METHOD method_51435 drawTooltip (Lnet/minecraft/class_327;Ljava/util/List;IILnet/minecraft/class_8000;Lnet/minecraft/class_2960;)V
+	METHOD method_51435 drawTooltipImmediately (Lnet/minecraft/class_327;Ljava/util/List;IILnet/minecraft/class_8000;Lnet/minecraft/class_2960;)V
 		ARG 1 textRenderer
 		ARG 2 components
 		ARG 3 x
@@ -222,6 +221,7 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 3 positioner
 		ARG 4 x
 		ARG 5 y
+		ARG 6 focused
 	METHOD method_51437 drawTooltip (Lnet/minecraft/class_327;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/class_2960;)V
 		ARG 1 textRenderer
 		ARG 2 text
@@ -469,7 +469,7 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 8 y
 		ARG 9 width
 		ARG 10 height
-	METHOD method_70847 drawTexturedQuad (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lcom/mojang/blaze3d/textures/GpuTexture;IIIIFFFFI)V
+	METHOD method_70847 drawTexturedQuad (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lcom/mojang/blaze3d/textures/GpuTextureView;IIIIFFFFI)V
 		ARG 1 pipeline
 		ARG 2 texture
 		ARG 3 x1
@@ -490,10 +490,6 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 6 y2
 		ARG 7 color
 		ARG 8 color2
-	METHOD method_70851 drawText (Lnet/minecraft/class_11248;II)V
-		ARG 1 state
-		ARG 2 x
-		ARG 3 y
 	METHOD method_70852 addBookModel (Lnet/minecraft/class_557;Lnet/minecraft/class_2960;FFFIIII)V
 		ARG 1 bookModel
 		ARG 2 texture
@@ -504,8 +500,7 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 7 y1
 		ARG 8 x2
 		ARG 9 y2
-	METHOD method_70853 addSign (Lnet/minecraft/class_3879;FLnet/minecraft/class_4719;IIII)V
-		ARG 1 signModel
+	METHOD method_70853 addSign (Lnet/minecraft/class_3879$class_9948;FLnet/minecraft/class_4719;IIII)V
 		ARG 2 scale
 		ARG 3 woodType
 		ARG 4 x1
@@ -549,15 +544,42 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 3 y1
 		ARG 4 x2
 		ARG 5 y2
-	METHOD method_71045 popLayers (I)V
-		ARG 1 count
-	METHOD method_71046 goUpLayer ()V
-	METHOD method_71047 goTopLayer ()V
 	METHOD method_71048 createNewRootLayer ()V
-	METHOD method_71049 goDownLayer ()V
-	METHOD method_71050 popLayer ()V
-	METHOD method_71051 pushCheckpoint ()V
-	METHOD method_71052 popCheckpoint ()V
+	METHOD method_71273 drawTooltip (Lnet/minecraft/class_327;Ljava/util/List;IILnet/minecraft/class_8000;Lnet/minecraft/class_2960;Z)V
+		ARG 1 textRenderer
+		ARG 2 components
+		ARG 3 x
+		ARG 4 y
+		ARG 5 positioner
+		ARG 6 texture
+		ARG 7 focused
+	METHOD method_71274 drawTooltip (Ljava/util/List;II)V
+		ARG 1 text
+		ARG 2 x
+		ARG 3 y
+	METHOD method_71275 (Ljava/util/List;Lnet/minecraft/class_5632;)V
+		ARG 1 datax
+	METHOD method_71276 drawTooltip (Lnet/minecraft/class_2561;II)V
+		ARG 1 text
+		ARG 2 x
+		ARG 3 y
+	METHOD method_71278 applyBlur ()V
+	METHOD method_71279 renderTooltip ()V
+	METHOD method_71501 drawGuiTexture (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_2960;IIIIF)V
+		ARG 1 pipeline
+		ARG 2 sprite
+		ARG 3 x
+		ARG 4 y
+		ARG 5 width
+		ARG 6 height
+		ARG 7 alpha
+	METHOD method_72238 drawSelection (IIII)V
+		ARG 1 x1
+		ARG 2 y1
+		ARG 3 x2
+		ARG 4 y2
+	METHOD method_72740 getScaling (Lnet/minecraft/class_1058;)Lnet/minecraft/class_8690;
+		ARG 0 sprite
 	CLASS class_8214 ScissorStack
 		FIELD field_43099 stack Ljava/util/Deque;
 		METHOD method_49699 pop ()Lnet/minecraft/class_8030;

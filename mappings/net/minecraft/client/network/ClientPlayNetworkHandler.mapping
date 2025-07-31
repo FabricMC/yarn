@@ -29,7 +29,6 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	FIELD field_45946 pingMeasurer Lnet/minecraft/class_8761;
 	FIELD field_45947 displayedUnsecureChatWarning Z
 	FIELD field_46187 worldCleared Z
-	FIELD field_46578 worldLoadingState Lnet/minecraft/class_8819;
 	FIELD field_47878 scoreboard Lnet/minecraft/class_269;
 	FIELD field_48403 secureChatEnforced Z
 	FIELD field_48933 debugSampleSubscriber Lnet/minecraft/class_9211;
@@ -45,6 +44,11 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	FIELD field_58156 globalChatMessageIndex I
 	FIELD field_58157 BAD_CHAT_INDEX_TEXT Lnet/minecraft/class_2561;
 	FIELD field_59963 waypointHandler Lnet/minecraft/class_11264;
+	FIELD field_60782 restrictedCommandSource Lnet/minecraft/class_637;
+		COMMENT A {@link CommandSource} that always has a permission level of 0.
+	FIELD field_60783 CONFIRM_COMMAND_TITLE_TEXT Lnet/minecraft/class_2561;
+	FIELD field_60784 COMMAND_NODE_FACTORY Lnet/minecraft/class_2641$class_11408;
+	FIELD field_61723 chunkLoadProgress Lnet/minecraft/class_11653;
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_2535;Lnet/minecraft/class_8675;)V
 		ARG 1 client
 	METHOD method_2869 getAdvancementHandler ()Lnet/minecraft/class_632;
@@ -56,6 +60,7 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 5 inited
 		ARG 6 uninited
 		ARG 7 nibbles
+		ARG 8 scheduleBlockRenders
 	METHOD method_2871 getPlayerListEntry (Ljava/util/UUID;)Lnet/minecraft/class_640;
 		ARG 1 uuid
 	METHOD method_2874 getPlayerListEntry (Ljava/lang/String;)Lnet/minecraft/class_640;
@@ -93,6 +98,7 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 1 x
 		ARG 2 z
 		ARG 3 data
+		ARG 4 scheduleBlockRenders
 	METHOD method_43209 playSpawnSound (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
 	METHOD method_44940 acknowledge (Lnet/minecraft/class_7469;Z)V
@@ -113,11 +119,7 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 1 content
 	METHOD method_45730 sendChatCommand (Ljava/lang/String;)V
 		ARG 1 command
-	METHOD method_45731 sendCommand (Ljava/lang/String;)Z
-		ARG 1 command
 	METHOD method_45732 getListedPlayerListEntries ()Ljava/util/Collection;
-	METHOD method_45733 parse (Ljava/lang/String;)Lcom/mojang/brigadier/ParseResults;
-		ARG 1 command
 	METHOD method_45734 getServerInfo ()Lnet/minecraft/class_642;
 	METHOD method_45735 getEnabledFeatures ()Lnet/minecraft/class_7699;
 	METHOD method_45737 sendAcknowledgment ()V
@@ -132,20 +134,19 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 		ARG 1 payload
 	METHOD method_53876 createEntity (Lnet/minecraft/class_2604;)Lnet/minecraft/class_1297;
 		ARG 1 packet
-	METHOD method_54133 startWorldLoading (Lnet/minecraft/class_746;Lnet/minecraft/class_638;Lnet/minecraft/class_434$class_9678;)V
+	METHOD method_54133 startWorldLoading (Lnet/minecraft/class_746;Lnet/minecraft/class_638;Lnet/minecraft/class_3928$class_9678;)V
 		ARG 1 player
 		ARG 2 world
-		ARG 3 worldEntryReason
+		ARG 3 reason
 	METHOD method_54134 clearWorld ()V
 	METHOD method_55823 getScoreboard ()Lnet/minecraft/class_269;
 	METHOD method_59754 getBrewingRecipeRegistry ()Lnet/minecraft/class_1845;
-	METHOD method_59842 getWorldEntryReason (ZLnet/minecraft/class_5321;Lnet/minecraft/class_5321;)Lnet/minecraft/class_434$class_9678;
+	METHOD method_59842 getWorldEntryReason (ZLnet/minecraft/class_5321;Lnet/minecraft/class_5321;)Lnet/minecraft/class_3928$class_9678;
 		ARG 1 dead
 		ARG 2 from
 		ARG 3 to
 	METHOD method_60346 refreshSearchManager ()V
 	METHOD method_60347 getSearchManager ()Lnet/minecraft/class_1124;
-	METHOD method_60885 getServerLinks ()Lnet/minecraft/class_9782;
 	METHOD method_62147 getFuelRegistry ()Lnet/minecraft/class_9895;
 	METHOD method_62148 startTagReload (Lnet/minecraft/class_5321;Lnet/minecraft/class_6864$class_5748;)Lnet/minecraft/class_2378$class_10106;
 		ARG 1 registryRef
@@ -174,3 +175,20 @@ CLASS net/minecraft/class_634 net/minecraft/client/network/ClientPlayNetworkHand
 	METHOD method_68825 (Lnet/minecraft/class_9336;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
 		ARG 1 error
 	METHOD method_70936 getWaypointHandler ()Lnet/minecraft/class_11264;
+	METHOD method_71925 validate (Lcom/mojang/brigadier/ParseResults;)Z
+		ARG 0 parseResults
+	METHOD method_71926 openConfirmCommandScreen (Ljava/lang/String;Ljava/lang/String;Lnet/minecraft/class_437;)V
+		ARG 1 command
+		ARG 2 message
+		ARG 3 screenAfterRun
+	METHOD method_71927 runClickEventCommand (Ljava/lang/String;Lnet/minecraft/class_437;)V
+		ARG 1 command
+		ARG 2 afterActionScreen
+	METHOD method_71928 (Ljava/lang/String;Lnet/minecraft/class_437;Lnet/minecraft/class_437;Z)V
+		ARG 4 confirmed
+	METHOD method_71929 parseCommand (Ljava/lang/String;)Lnet/minecraft/class_634$class_11503;
+		ARG 1 command
+	CLASS 1
+		METHOD method_71930 (Lcom/mojang/brigadier/context/CommandContext;)I
+			ARG 0 context
+	CLASS class_11503 CommandRunResult

@@ -116,21 +116,14 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_1766 server Lnet/minecraft/class_1132;
 	FIELD field_1768 dataFixer Lcom/mojang/datafixers/DataFixer;
 	FIELD field_1769 worldRenderer Lnet/minecraft/class_761;
-	FIELD field_1770 fpsDebugString Ljava/lang/String;
 	FIELD field_1771 attackCooldown I
 	FIELD field_1772 textRenderer Lnet/minecraft/class_327;
 	FIELD field_1773 gameRenderer Lnet/minecraft/class_757;
 	FIELD field_1774 keyboard Lnet/minecraft/class_309;
-	FIELD field_17404 renderTaskQueue Ljava/util/Queue;
-	FIELD field_17405 worldGenProgressTracker Ljava/util/concurrent/atomic/AtomicReference;
 	FIELD field_17763 splashTextLoader Lnet/minecraft/class_4008;
-	FIELD field_18008 paintingManager Lnet/minecraft/class_4044;
 	FIELD field_18009 COMPLETED_UNIT_FUTURE Ljava/util/concurrent/CompletableFuture;
-	FIELD field_18173 statusEffectSpriteManager Lnet/minecraft/class_4074;
 	FIELD field_18174 resourceReloadFuture Ljava/util/concurrent/CompletableFuture;
 	FIELD field_18175 overlay Lnet/minecraft/class_4071;
-	FIELD field_20907 debugChunkInfo Z
-	FIELD field_20908 debugChunkOcclusion Z
 	FIELD field_20909 bufferBuilders Lnet/minecraft/class_4599;
 	FIELD field_22224 trackingTick I
 	FIELD field_22225 tickTimeTracker Lnet/minecraft/class_4757;
@@ -168,7 +161,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_41332 renderTime J
 	FIELD field_41782 navigationType Lnet/minecraft/class_8015;
 	FIELD field_44539 quickPlayLogger Lnet/minecraft/class_8497;
-	FIELD field_45293 guiAtlasManager Lnet/minecraft/class_8658;
 	FIELD field_45294 commandHistoryManager Lnet/minecraft/class_8657;
 	FIELD field_45295 symlinkFinder Lnet/minecraft/class_8580;
 	FIELD field_45899 gameProfileFuture Ljava/util/concurrent/CompletableFuture;
@@ -178,7 +170,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_46552 startTime J
 	FIELD field_46553 uptimeInTicks J
 	FIELD field_47680 userPropertiesFuture Ljava/util/concurrent/CompletableFuture;
-	FIELD field_50035 mapDecorationsAtlasManager Lnet/minecraft/class_9443;
 	FIELD field_52750 renderTickCounter Lnet/minecraft/class_9779$class_9781;
 	FIELD field_52751 mapRenderer Lnet/minecraft/class_330;
 	FIELD field_52752 mapTextureManager Lnet/minecraft/class_10093;
@@ -186,14 +177,17 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	FIELD field_53831 shaderLoader Lnet/minecraft/class_10151;
 	FIELD field_54267 tracyFrameCapturer Lnet/minecraft/class_10219;
 	FIELD field_55226 itemModelManager Lnet/minecraft/class_10442;
+	FIELD field_60302 waypointStyleAssetManager Lnet/minecraft/class_11327;
+	FIELD field_60984 SAVING_LEVEL_TEXT Lnet/minecraft/class_2561;
+	FIELD field_61503 offlineDeveloperMode Z
+	FIELD field_61504 debugHudEntryList Lnet/minecraft/class_11633;
 	METHOD <init> (Lnet/minecraft/class_542;)V
 		ARG 1 args
 	METHOD method_1478 getResourceManager ()Lnet/minecraft/class_3300;
 	METHOD method_1479 getResourcePackDir ()Ljava/nio/file/Path;
 	METHOD method_1480 getItemRenderer ()Lnet/minecraft/class_918;
-	METHOD method_1481 joinWorld (Lnet/minecraft/class_638;Lnet/minecraft/class_434$class_9678;)V
+	METHOD method_1481 joinWorld (Lnet/minecraft/class_638;)V
 		ARG 1 world
-		ARG 2 worldEntryReason
 	METHOD method_1483 getSoundManager ()Lnet/minecraft/class_1144;
 	METHOD method_1487 getNetworkProxy ()Ljava/net/Proxy;
 	METHOD method_1490 stop ()V
@@ -248,8 +242,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_1544 getMusicInstance ()Lnet/minecraft/class_10383;
 	METHOD method_1547 getVersionType ()Ljava/lang/String;
 	METHOD method_1548 getSession ()Lnet/minecraft/class_320;
-	METHOD method_1549 getSpriteAtlas (Lnet/minecraft/class_2960;)Ljava/util/function/Function;
-		ARG 1 id
 	METHOD method_1551 getInstance ()Lnet/minecraft/class_310;
 	METHOD method_1554 getBakedModelManager ()Lnet/minecraft/class_1092;
 	METHOD method_1555 hasReducedDebugInfo ()Z
@@ -281,8 +273,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 1 breaking
 	METHOD method_1592 scheduleStop ()V
 	METHOD method_17044 checkGameData ()V
-	METHOD method_17533 (I)Lnet/minecraft/class_3949;
-		ARG 1 spawnChunkRadius
 	METHOD method_18095 getSplashTextLoader ()Lnet/minecraft/class_4008;
 	METHOD method_18096 disconnect (Lnet/minecraft/class_437;Z)V
 		ARG 1 disconnectionScreen
@@ -291,11 +281,8 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 1 world
 	METHOD method_18098 reset (Lnet/minecraft/class_437;)V
 		ARG 1 resettingScreen
-	METHOD method_18099 disconnect ()V
-	METHOD method_18321 getPaintingManager ()Lnet/minecraft/class_4044;
 	METHOD method_18502 setOverlay (Lnet/minecraft/class_4071;)V
 		ARG 1 overlay
-	METHOD method_18505 getStatusEffectSpriteManager ()Lnet/minecraft/class_4074;
 	METHOD method_18506 getOverlay ()Lnet/minecraft/class_4071;
 	METHOD method_18507 (Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletionStage;
 		ARG 0 future
@@ -346,8 +333,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		COMMENT them.
 		ARG 1 sender
 	METHOD method_29043 isMultiplayerEnabled ()Z
-	METHOD method_29603 (Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Lnet/minecraft/class_7497;Ljava/lang/Thread;)Lnet/minecraft/class_1132;
-		ARG 5 thread
 	METHOD method_29610 startIntegratedServer (Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Z)V
 		ARG 1 session
 		ARG 2 dataPackManager
@@ -374,17 +359,14 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 		ARG 1 chatMessageSender
 	METHOD method_34746 (Ljava/util/function/Consumer;Lnet/minecraft/class_3696;)V
 		ARG 2 result
-	METHOD method_35698 takePanorama (Ljava/io/File;II)Lnet/minecraft/class_2561;
+	METHOD method_35698 takePanorama (Ljava/io/File;)Lnet/minecraft/class_2561;
 		COMMENT Takes a panorama. The panorama is stored in the given {@code directory}, in
 		COMMENT where 6 screenshots of size {@code width} and {@code height} will be taken.
 		COMMENT
 		COMMENT @return a user-oriented piece of text for screenshot result
 		ARG 1 directory
-		ARG 2 width
-		ARG 3 height
 	METHOD method_35701 (Lnet/minecraft/class_2561;)V
 		ARG 0 message
-	METHOD method_35703 getWorldGenerationProgressTracker ()Lnet/minecraft/class_3953;
 	METHOD method_35704 (Ljava/io/File;Lnet/minecraft/class_2583;)Lnet/minecraft/class_2583;
 		ARG 1 style
 	METHOD method_35706 isRealmsEnabled ()Z
@@ -455,7 +437,6 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_51253 getQuickPlayLogger ()Lnet/minecraft/class_8497;
 	METHOD method_51736 collectLoadTimes (Lnet/minecraft/class_310$class_8764;)V
 		ARG 1 loadingContext
-	METHOD method_52699 getGuiAtlasManager ()Lnet/minecraft/class_8658;
 	METHOD method_52700 getCommandHistoryManager ()Lnet/minecraft/class_8657;
 	METHOD method_52701 uuidEquals (Ljava/util/UUID;)Z
 		ARG 1 uuid
@@ -497,10 +478,7 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_55505 onDisconnected ()V
 	METHOD method_55606 providesProfileKeys ()Z
 	METHOD method_55607 getUserProperties ()Lcom/mojang/authlib/minecraft/UserApiService$UserProperties;
-	METHOD method_56134 disconnect (Lnet/minecraft/class_437;)V
-		ARG 1 disconnectionScreen
 	METHOD method_57017 onFontOptionsChanged ()V
-	METHOD method_58476 getMapDecorationsAtlasManager ()Lnet/minecraft/class_9443;
 	METHOD method_60320 (Lnet/minecraft/class_1078;)V
 		ARG 1 translationStorage
 	METHOD method_60647 shouldTick ()Z
@@ -520,6 +498,15 @@ CLASS net/minecraft/class_310 net/minecraft/client/MinecraftClient
 	METHOD method_68467 (Lnet/minecraft/class_2960;Lcom/mojang/blaze3d/shaders/ShaderType;)Ljava/lang/String;
 		ARG 1 id
 		ARG 2 type
+	METHOD method_71267 getWaypointStyleAssetManager ()Lnet/minecraft/class_11327;
+	METHOD method_72096 (Lnet/minecraft/class_6880;)V
+		ARG 1 dialog
+	METHOD method_72097 (Lnet/minecraft/class_2378;Lnet/minecraft/class_6885$class_6888;)Ljava/util/Optional;
+		ARG 1 quickActionsDialogs
+	METHOD method_72098 getQuickActionsDialog ()Ljava/util/Optional;
+	METHOD method_72099 disconnectWithSavingScreen ()V
+	METHOD method_72100 disconnectWithProgressScreen ()V
+	METHOD method_72704 isOfflineDeveloperMode ()Z
 	CLASS 1
 		FIELD field_52756 closed Z
 	CLASS class_5859 ChatRestriction

@@ -166,10 +166,6 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 		COMMENT <p>Internally, the data is serialized as an NBT element of up to {@code 200000L}
 		COMMENT bytes.
 		ARG 0 codec
-	METHOD method_56369 (Lcom/mojang/serialization/Codec;Ljava/lang/Object;)Lnet/minecraft/class_2520;
-		ARG 1 value
-	METHOD method_56370 (Lcom/mojang/serialization/Codec;Lnet/minecraft/class_2520;)Ljava/lang/Object;
-		ARG 1 nbt
 	METHOD method_56371 entryOf (Lnet/minecraft/class_2359;)Lnet/minecraft/class_9139;
 		COMMENT {@return a codec for an entry of {@code iterable}}
 		COMMENT
@@ -177,8 +173,6 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 		ARG 0 iterable
 	METHOD method_56372 (Lnet/minecraft/class_2378;)Lnet/minecraft/class_2359;
 		ARG 0 registry
-	METHOD method_56373 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException;
-		ARG 1 error
 	METHOD method_56374 toCollection (Ljava/util/function/IntFunction;)Lnet/minecraft/class_9139$class_9140;
 		COMMENT Used to make a codec for a collection of values using {@link PacketCodec#collect}.
 		COMMENT
@@ -227,8 +221,6 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 		COMMENT @see net.minecraft.network.PacketByteBuf#readNbt(NbtSizeTracker)
 		COMMENT @see net.minecraft.network.PacketByteBuf#writeNbt(NbtElement)
 		ARG 0 sizeTracker
-	METHOD method_56381 (Lnet/minecraft/class_2520;Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
-		ARG 1 error
 	METHOD method_56382 optional (Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
 		COMMENT {@return a codec wrapping another codec, the value of which is optional}
 		COMMENT
@@ -317,10 +309,20 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 		ARG 1 bufWrapper
 	METHOD method_68862 (ILjava/util/function/BiFunction;Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
 		ARG 2 codec
-	METHOD method_68863 (Lnet/minecraft/class_9129;Lio/netty/buffer/ByteBuf;)Lnet/minecraft/class_9129;
-		ARG 0 originalBuf
+	METHOD method_68863 (Lio/netty/buffer/ByteBuf;Lio/netty/buffer/ByteBuf;)Lio/netty/buffer/ByteBuf;
 		ARG 1 bufToWrap
 	METHOD method_68864 lengthPrepended (I)Lnet/minecraft/class_9139$class_9140;
+		ARG 0 maxSize
+	METHOD method_71570 (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
+		ARG 2 codec
+	METHOD method_71571 fromCodec (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Codec;)Lnet/minecraft/class_9139$class_9140;
+		ARG 0 ops
+		ARG 1 codec
+	METHOD method_71572 lenientJson (I)Lnet/minecraft/class_9139;
+		ARG 0 maxLength
+	METHOD method_72185 nbtElement (Ljava/util/function/Supplier;)Lnet/minecraft/class_9139;
+		ARG 0 sizeTrackerSupplier
+	METHOD method_72187 lengthPrependedRegistry (I)Lnet/minecraft/class_9139$class_9140;
 		ARG 0 maxSize
 	CLASS 3
 		METHOD method_59799 decode (Lio/netty/buffer/ByteBuf;)[B
@@ -340,38 +342,40 @@ CLASS net/minecraft/class_9135 net/minecraft/network/codec/PacketCodecs
 		METHOD method_68116 encode (Lio/netty/buffer/ByteBuf;[J)V
 			ARG 1 buf
 			ARG 2 values
-	CLASS 8
-		METHOD method_68121 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException;
+	CLASS 9
+		METHOD method_71604 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException;
 			ARG 1 error
-		METHOD method_68122 (Lnet/minecraft/class_2520;Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
+		METHOD method_71605 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
 			ARG 1 error
-	CLASS 15
-	CLASS 16
-		METHOD method_68096 (Lnet/minecraft/class_9139;Lio/netty/buffer/ByteBuf;Lnet/minecraft/class_9139;Ljava/lang/Object;Ljava/lang/Object;)V
-			ARG 3 k
-			ARG 4 v
+	CLASS 10
+		METHOD method_71606 (Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException;
+			ARG 1 error
+		METHOD method_71607 (Lnet/minecraft/class_2520;Ljava/lang/String;)Lio/netty/handler/codec/DecoderException;
+			ARG 1 error
 	CLASS 17
-		METHOD method_68099 (Lio/netty/buffer/ByteBuf;Lnet/minecraft/class_9139;Ljava/lang/Object;)V
-			ARG 2 r
-		METHOD method_68100 (Lio/netty/buffer/ByteBuf;Lnet/minecraft/class_9139;Ljava/lang/Object;)V
-			ARG 2 l
-	CLASS 20
-		METHOD method_68105 getValues (Lnet/minecraft/class_9129;)Lnet/minecraft/class_2359;
-			ARG 1 buf
-	CLASS 21
-		FIELD field_58184 DIRECT_ENTRY_MARKER I
-		METHOD method_68867 getEntries (Lnet/minecraft/class_9129;)Lnet/minecraft/class_2359;
-			ARG 1 buf
+	CLASS 18
+	CLASS 19
+		METHOD method_71582 (Lio/netty/buffer/ByteBuf;Lnet/minecraft/class_9139;Ljava/lang/Object;)V
+			ARG 2 value
+		METHOD method_71583 (Lio/netty/buffer/ByteBuf;Lnet/minecraft/class_9139;Ljava/lang/Object;)V
+			ARG 2 value
 	CLASS 22
-		FIELD field_58185 DIRECT_MARKER I
-		FIELD field_58186 entryPacketCodec Lnet/minecraft/class_9139;
+		METHOD method_71590 getRegistryOrThrow (Lnet/minecraft/class_9129;)Lnet/minecraft/class_2359;
+			ARG 1 buf
 	CLASS 24
-		FIELD field_57064 NAME_MAX_LENGTH I
-		FIELD field_57065 VALUE_MAX_LENGTH I
-		FIELD field_57066 SIGNATURE_MAX_LENGTH I
-		FIELD field_57067 MAP_MAX_SIZE I
-		METHOD method_68111 (Lio/netty/buffer/ByteBuf;Ljava/lang/String;)V
-			ARG 0 buf2
+		METHOD method_72191 getIndexedEntries (Lnet/minecraft/class_9129;)Lnet/minecraft/class_2359;
+			ARG 1 buf
+	CLASS 25
+		FIELD field_61047 entryCodec Lnet/minecraft/class_9139;
+	CLASS 26
+		FIELD field_60509 NAME_MAX_LENGTH I
+		FIELD field_60510 VALUE_MAX_LENGTH I
+		FIELD field_60511 SIGNATURE_MAX_LENGTH I
+		FIELD field_60512 MAP_MAX_SIZE I
+		METHOD method_71596 (Lio/netty/buffer/ByteBuf;Ljava/lang/String;)V
+			ARG 0 bufx
 			ARG 1 signature
-		METHOD method_68112 (Lio/netty/buffer/ByteBuf;)Ljava/lang/String;
-			ARG 0 buf2
+		METHOD method_71597 (Lio/netty/buffer/ByteBuf;)Ljava/lang/String;
+			ARG 0 bufx
+	CLASS 29
+		FIELD field_60514 GSON Lcom/google/gson/Gson;

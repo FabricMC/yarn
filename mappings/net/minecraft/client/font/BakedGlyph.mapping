@@ -8,8 +8,9 @@ CLASS net/minecraft/class_382 net/minecraft/client/font/BakedGlyph
 	FIELD field_2279 minY F
 	FIELD field_2280 maxX F
 	FIELD field_44760 textRenderLayers Lnet/minecraft/class_8538;
-	FIELD field_59862 gpuTexture Lcom/mojang/blaze3d/textures/GpuTexture;
-	METHOD <init> (Lnet/minecraft/class_8538;Lcom/mojang/blaze3d/textures/GpuTexture;FFFFFFFF)V
+	FIELD field_55098 Z_OFFSET F
+	FIELD field_60569 gpuTexture Lcom/mojang/blaze3d/textures/GpuTextureView;
+	METHOD <init> (Lnet/minecraft/class_8538;Lcom/mojang/blaze3d/textures/GpuTextureView;FFFFFFFF)V
 		ARG 1 textRenderLayers
 		ARG 2 gpuTexture
 		ARG 3 minU
@@ -30,18 +31,20 @@ CLASS net/minecraft/class_382 net/minecraft/client/font/BakedGlyph
 		ARG 7 color
 		ARG 8 bold
 		ARG 9 light
-	METHOD method_22944 drawRectangle (Lnet/minecraft/class_382$class_328;Lorg/joml/Matrix4f;Lnet/minecraft/class_4588;I)V
+	METHOD method_22944 drawRectangle (Lnet/minecraft/class_382$class_328;Lorg/joml/Matrix4f;Lnet/minecraft/class_4588;IZ)V
 		ARG 1 rectangle
 		ARG 2 matrix
 		ARG 3 vertexConsumer
 		ARG 4 light
+		ARG 5 fixedZ
 	METHOD method_24045 getLayer (Lnet/minecraft/class_327$class_6415;)Lnet/minecraft/class_1921;
 		ARG 1 layerType
-	METHOD method_65025 draw (Lnet/minecraft/class_382$class_10364;Lorg/joml/Matrix4f;Lnet/minecraft/class_4588;I)V
+	METHOD method_65025 draw (Lnet/minecraft/class_382$class_10364;Lorg/joml/Matrix4f;Lnet/minecraft/class_4588;IZ)V
 		ARG 1 glyph
 		ARG 2 matrix
 		ARG 3 vertexConsumer
 		ARG 4 light
+		ARG 5 fixedZ
 	METHOD method_65181 drawRectangle (Lnet/minecraft/class_382$class_328;FFILnet/minecraft/class_4588;ILorg/joml/Matrix4f;)V
 		ARG 1 rectangle
 		ARG 2 shadowOffset
@@ -50,42 +53,20 @@ CLASS net/minecraft/class_382 net/minecraft/client/font/BakedGlyph
 		ARG 5 vertexConsumer
 		ARG 6 light
 		ARG 7 matrix
-	METHOD method_65182 draw (ZFFLorg/joml/Matrix4f;Lnet/minecraft/class_4588;IZI)V
-		ARG 1 italic
-		ARG 2 x
-		ARG 3 y
-		ARG 4 matrix
-		ARG 5 vertexConsumer
-		ARG 6 color
-		ARG 7 bold
-		ARG 8 light
-	METHOD method_70874 addBackgroundToGui (Lnet/minecraft/class_11246;Lnet/minecraft/class_1921;Lnet/minecraft/class_382$class_328;Lnet/minecraft/class_11247;)V
-		ARG 1 guiState
-		ARG 2 layer
-		ARG 3 rect
-		ARG 4 textElementState
-	METHOD method_70875 addEffectToGui (Lnet/minecraft/class_11246;Lnet/minecraft/class_1921;Lnet/minecraft/class_382$class_328;ZLnet/minecraft/class_11247;)V
-		ARG 1 guiState
-		ARG 2 layer
-		ARG 3 rect
-		ARG 4 shadow
-		ARG 5 textElementState
-	METHOD method_70876 addGlyphToGui (Lnet/minecraft/class_11246;Lnet/minecraft/class_1921;Lnet/minecraft/class_382$class_10364;ZLnet/minecraft/class_11247;)V
-		ARG 1 guiState
-		ARG 2 layer
-		ARG 3 drawnGlyph
-		ARG 4 shadow
-		ARG 5 textElementState
-	METHOD method_70877 addGlyphToGui (Lnet/minecraft/class_11246;Lnet/minecraft/class_1921;ZFFIZZLnet/minecraft/class_11247;)V
-		ARG 1 guiState
-		ARG 2 layer
-		ARG 3 italic
-		ARG 4 x
-		ARG 5 y
-		ARG 6 color
-		ARG 7 shadow
-		ARG 8 bold
-		ARG 9 textElementState
+	METHOD method_71820 getTexture ()Lcom/mojang/blaze3d/textures/GpuTextureView;
+	METHOD method_71821 getEffectiveMinX (Lnet/minecraft/class_382$class_10364;)F
+		ARG 1 glyph
+	METHOD method_71822 getXExpansion (Z)F
+		ARG 0 bold
+	METHOD method_71823 getPipeline ()Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+	METHOD method_71824 getEffectiveMinY (Lnet/minecraft/class_382$class_10364;)F
+		ARG 1 glyph
+	METHOD method_71825 getItalicOffsetAtMaxY ()F
+	METHOD method_71826 getEffectiveMaxX (Lnet/minecraft/class_382$class_10364;)F
+		ARG 1 glyph
+	METHOD method_71827 getItalicOffsetAtMinY ()F
+	METHOD method_71828 getEffectiveMaxY (Lnet/minecraft/class_382$class_10364;)F
+		ARG 1 glyph
 	CLASS class_328 Rectangle
 		FIELD comp_3307 minX F
 		FIELD comp_3308 minY F
@@ -107,5 +88,13 @@ CLASS net/minecraft/class_382 net/minecraft/client/font/BakedGlyph
 		METHOD comp_3311 zIndex ()F
 		METHOD comp_3312 color ()I
 		METHOD method_65183 hasShadow ()Z
+		METHOD method_71829 getEffectiveMinX ()F
+		METHOD method_71830 getEffectiveMinY ()F
+		METHOD method_71831 getEffectiveMaxX ()F
+		METHOD method_71832 getEffectiveMaxY ()F
 	CLASS class_10364 DrawnGlyph
 		METHOD method_65184 hasShadow ()Z
+		METHOD method_71833 getEffectiveMinX ()F
+		METHOD method_71834 getEffectiveMinY ()F
+		METHOD method_71835 getEffectiveMaxX ()F
+		METHOD method_71836 getEffectiveMaxY ()F

@@ -8,8 +8,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	FIELD field_17221 unloadedChunks Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_17222 chunkHolderListDirty Z
 	FIELD field_17228 levelManager Lnet/minecraft/class_3898$class_3216;
-	FIELD field_17230 totalChunksLoadedCount Ljava/util/concurrent/atomic/AtomicInteger;
-	FIELD field_17442 worldGenerationProgressListener Lnet/minecraft/class_3949;
 	FIELD field_17705 persistentStateManagerFactory Ljava/util/function/Supplier;
 	FIELD field_17707 saveDir Ljava/lang/String;
 	FIELD field_18241 playerChunkWatchingManager Lnet/minecraft/class_3210;
@@ -37,7 +35,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	FIELD field_54964 chunksToSave Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_54965 chunksBeingSavedCount Ljava/util/concurrent/atomic/AtomicInteger;
 	FIELD field_55588 ticketManager Lnet/minecraft/class_10592;
-	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_3949;Lnet/minecraft/class_5567;Ljava/util/function/Supplier;Lnet/minecraft/class_10592;IZ)V
+	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_5567;Ljava/util/function/Supplier;Lnet/minecraft/class_10592;IZ)V
 		ARG 1 world
 		ARG 2 session
 		ARG 3 dataFixer
@@ -46,12 +44,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 6 mainThreadExecutor
 		ARG 7 chunkProvider
 		ARG 8 chunkGenerator
-		ARG 9 worldGenerationProgressListener
-		ARG 10 chunkStatusChangeListener
-		ARG 11 persistentStateManagerFactory
-		ARG 12 ticketManager
-		ARG 13 viewDistance
-		ARG 14 dsync
 	METHOD method_17212 getLightingProvider ()Lnet/minecraft/class_3227;
 	METHOD method_17214 setViewDistance (I)V
 		ARG 1 watchDistance
@@ -86,7 +78,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 0 distance
 	METHOD method_17247 makeChunkEntitiesTickable (Lnet/minecraft/class_3193;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 holder
-	METHOD method_17253 getTotalChunksLoadedCount ()I
 	METHOD method_17254 (I)Lnet/minecraft/class_2806;
 		ARG 0 distance
 	METHOD method_17255 getCurrentChunkHolder (J)Lnet/minecraft/class_3193;
@@ -230,9 +221,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 0 player
 	METHOD method_51282 (Lnet/minecraft/class_9259;)Lnet/minecraft/class_9259;
 		ARG 0 chunk
-	METHOD method_51834 (Lnet/minecraft/class_9259;Ljava/lang/Throwable;)Ljava/lang/Object;
-		ARG 1 chunk
-		ARG 2 throwable
 	METHOD method_52345 isTracked (Lnet/minecraft/class_3222;II)Z
 		ARG 1 player
 		ARG 2 chunkX
@@ -296,6 +284,13 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 1 chunkConsumer
 	METHOD method_67499 (Ljava/util/function/Consumer;J)V
 		ARG 2 chunkPos
+	METHOD method_72252 (ILnet/minecraft/class_3193;)Z
+		ARG 1 holder
+	METHOD method_72253 getChunkHolders (Lnet/minecraft/class_2806;)Ljava/util/stream/Stream;
+		COMMENT {@return chunk holders with a level less than or equal to {@code status}}
+		ARG 1 status
+	METHOD method_72254 getStatus (J)Lnet/minecraft/class_2806;
+		ARG 1 chunkPos
 	CLASS class_3208 EntityTracker
 		COMMENT An entity tracker governs which players' clients can see an entity. Each
 		COMMENT tracker corresponds to one entity in a server world and is mapped from the

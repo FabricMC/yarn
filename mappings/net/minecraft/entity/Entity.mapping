@@ -209,19 +209,43 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	FIELD field_44873 forceUpdateSupportingBlockPos Z
 	FIELD field_47742 stateAtPos Lnet/minecraft/class_2680;
 	FIELD field_51994 portalManager Lnet/minecraft/class_9787;
-	FIELD field_54947 queuedCollisionChecks Ljava/util/List;
+	FIELD field_54947 queuedCollisionChecks Ljava/util/ArrayDeque;
 	FIELD field_54948 collidedBlockPositions Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_56630 collisionHandler Lnet/minecraft/class_10774$class_10775;
 	FIELD field_56631 TAG_LIST_CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_57579 currentlyCheckedCollisions Ljava/util/List;
 	FIELD field_57580 X_THEN_Z Lcom/google/common/collect/ImmutableList;
 	FIELD field_57581 Z_THEN_X Lcom/google/common/collect/ImmutableList;
-	FIELD field_58050 CUSTOM_DATA_NBT_KEY Ljava/lang/String;
+	FIELD field_58050 CUSTOM_DATA_KEY Ljava/lang/String;
 	FIELD field_58051 customData Lnet/minecraft/class_9279;
 	FIELD field_59667 alwaysSyncAbsolute Z
+	FIELD field_60355 LOGGER Lorg/slf4j/Logger;
+	FIELD field_60524 MOTION_KEY Ljava/lang/String;
+	FIELD field_60525 ROTATION_KEY Ljava/lang/String;
+	FIELD field_60526 PORTAL_COOLDOWN_KEY Ljava/lang/String;
+	FIELD field_60527 NO_GRAVITY_KEY Ljava/lang/String;
+	FIELD field_60528 AIR_KEY Ljava/lang/String;
+	FIELD field_60529 ON_GROUND_KEY Ljava/lang/String;
+	FIELD field_60530 FALL_DISTANCE_KEY Ljava/lang/String;
+	FIELD field_60531 FIRE_KEY Ljava/lang/String;
+	FIELD field_60532 SILENT_KEY Ljava/lang/String;
+	FIELD field_60533 GLOWING_KEY Ljava/lang/String;
+	FIELD field_60534 INVULNERABLE_KEY Ljava/lang/String;
+	FIELD field_60535 POS_KEY Ljava/lang/String;
+	FIELD field_60858 MAX_QUEUED_COLLISION_CHECKS I
 	METHOD <init> (Lnet/minecraft/class_1299;Lnet/minecraft/class_1937;)V
 		ARG 1 type
 		ARG 2 world
+	METHOD comp_4424 ()Lnet/minecraft/class_243;
+		COMMENT {@return the exact position of the entity}
+		COMMENT
+		COMMENT @see #getSyncedPos
+		COMMENT @see #getBlockPos
+		COMMENT @see #getChunkPos
+	METHOD comp_4425 ()F
+		COMMENT {@return the body yaw of the entity}
+		COMMENT
+		COMMENT @see #setBodyYaw
 	METHOD equals (Ljava/lang/Object;)Z
 		ARG 1 o
 	METHOD method_5622 onBlockCollision (Lnet/minecraft/class_2680;)V
@@ -330,8 +354,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @apiNote This is used by water, {@link net.minecraft.block.LeveledCauldronBlock},
 		COMMENT and splash water bottles in vanilla.
-	METHOD method_5647 writeNbt (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2487;
-		ARG 1 nbt
+	METHOD method_5647 writeData (Lnet/minecraft/class_11372;)V
+		ARG 1 view
 	METHOD method_5648 setInvisible (Z)V
 		COMMENT Sets whether the entity is invisible to everyone.
 		COMMENT
@@ -353,17 +377,10 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #kill
 		COMMENT @see #discard
 		ARG 1 reason
-	METHOD method_5651 readNbt (Lnet/minecraft/class_2487;)V
-		ARG 1 nbt
-	METHOD method_5652 writeCustomDataToNbt (Lnet/minecraft/class_2487;)V
-		COMMENT Writes custom data to {@code nbt}. Subclasses have to implement this.
-		COMMENT
-		COMMENT <p>NBT is a storage format; therefore, a data from NBT is loaded to an entity instance's
-		COMMENT fields, which are used for other operations instead of the NBT. The data is written
-		COMMENT back to NBT when saving the entity.
-		COMMENT
-		COMMENT @see #readCustomDataFromNbt
-		ARG 1 nbt
+	METHOD method_5651 readData (Lnet/minecraft/class_11368;)V
+		ARG 1 view
+	METHOD method_5652 writeCustomData (Lnet/minecraft/class_11372;)V
+		ARG 1 view
 	METHOD method_5653 getSavedEntityId ()Ljava/lang/String;
 	METHOD method_5654 doesNotCollide (DDD)Z
 		COMMENT {@return whether the bounding box with the given offsets do not collide with
@@ -403,8 +420,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #isSneaking
 		COMMENT @see #isInSneakingPose
 		ARG 1 sneaking
-	METHOD method_5662 saveNbt (Lnet/minecraft/class_2487;)Z
-		ARG 1 nbt
+	METHOD method_5662 saveData (Lnet/minecraft/class_11372;)Z
+		ARG 1 view
 	METHOD method_5663 getRotationVecClient ()Lnet/minecraft/class_243;
 	METHOD method_5664 interactAt (Lnet/minecraft/class_1657;Lnet/minecraft/class_243;Lnet/minecraft/class_1268;)Lnet/minecraft/class_1269;
 		COMMENT Called when the player interacts with the entity at the specific position.
@@ -761,19 +778,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT
 		COMMENT @see #getAir
 		COMMENT @see #setAir
-	METHOD method_5749 readCustomDataFromNbt (Lnet/minecraft/class_2487;)V
-		COMMENT Reads custom data from {@code nbt}. Subclasses have to implement this.
-		COMMENT
-		COMMENT <p>NBT is a storage format; therefore, a data from NBT is loaded to an entity instance's
-		COMMENT fields, which are used for other operations instead of the NBT. The data is written
-		COMMENT back to NBT when saving the entity.
-		COMMENT
-		COMMENT <p>{@code nbt} might not have all expected keys, or might have a key whose value
-		COMMENT does not meet the requirement (such as the type or the range). This method should
-		COMMENT fall back to a reasonable default value instead of throwing an exception.
-		COMMENT
-		COMMENT @see #writeCustomDataToNbt
-		ARG 1 nbt
+	METHOD method_5749 readCustomData (Lnet/minecraft/class_11368;)V
+		ARG 1 view
 	METHOD method_5750 setVelocityClient (DDD)V
 		ARG 1 x
 		ARG 3 y
@@ -851,7 +857,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 world
 	METHOD method_5769 getHoverEvent ()Lnet/minecraft/class_2568;
 		COMMENT {@return the hover event referencing this entity}
-	METHOD method_5770 getEntityWorld ()Lnet/minecraft/class_1937;
 	METHOD method_5771 isInLava ()Z
 		COMMENT {@return whether the entity is in lava}
 	METHOD method_5772 removeAllPassengers ()V
@@ -943,8 +948,8 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 type
 		ARG 2 movement
 	METHOD method_5785 scheduleVelocityUpdate ()V
-	METHOD method_5786 saveSelfNbt (Lnet/minecraft/class_2487;)Z
-		ARG 1 nbt
+	METHOD method_5786 saveSelfData (Lnet/minecraft/class_11372;)Z
+		ARG 1 view
 	METHOD method_5790 updateSwimming ()V
 	METHOD method_5791 getHeadYaw ()F
 		COMMENT {@return the head yaw of the entity}
@@ -1294,17 +1299,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5867 calculateNextStepSoundDistance ()F
 	METHOD method_5869 isSubmergedInWater ()Z
 		COMMENT {@return whether this entity's hitbox is fully submerged in water}
-	METHOD method_5870 dropItem (Lnet/minecraft/class_3218;Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1542;
-		COMMENT Drops one {@code item} at the entity's position with the given Y offset.
-		COMMENT
-		COMMENT @return the spawned item entity, or {@code null} if called on the client
-		COMMENT
-		COMMENT @see #dropItem(ServerWorld, ItemConvertible)
-		COMMENT @see #dropStack(ServerWorld, ItemStack)
-		COMMENT @see #dropStack(ServerWorld, ItemStack, float)
-		ARG 1 world
-		ARG 2 item
-		ARG 3 offsetY
 	METHOD method_5871 getTargetingMargin ()F
 		COMMENT {@return the margin around the entity's bounding box where the entity
 		COMMENT targeting is still successful}
@@ -1315,7 +1309,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_5872 changeLookDirection (DD)V
 		ARG 1 cursorDeltaX
 		ARG 3 cursorDeltaY
-	METHOD method_5873 startRiding (Lnet/minecraft/class_1297;Z)Z
+	METHOD method_5873 startRiding (Lnet/minecraft/class_1297;ZZ)Z
 		COMMENT Starts riding {@code entity}.
 		COMMENT
 		COMMENT <p>For example, {@code player.startRiding(horse)} causes the player to ride a
@@ -1337,7 +1331,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 entity
 		ARG 2 force
 			COMMENT whether to bypass the entity's rideability check
-	METHOD method_5874 onKilledOther (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;)Z
+	METHOD method_5874 onKilledOther (Lnet/minecraft/class_3218;Lnet/minecraft/class_1309;Lnet/minecraft/class_1282;)Z
 		COMMENT Called when this entity kills {@code other}.
 		COMMENT
 		COMMENT @apiNote {@link net.minecraft.entity.mob.ZombieEntity} overrides this to convert the
@@ -1451,12 +1445,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 2 yaw
 	METHOD method_18864 getOppositeRotationVector (F)Lnet/minecraft/class_243;
 		ARG 1 tickProgress
-	METHOD method_19538 getPos ()Lnet/minecraft/class_243;
-		COMMENT {@return the exact position of the entity}
-		COMMENT
-		COMMENT @see #getSyncedPos
-		COMMENT @see #getBlockPos
-		COMMENT @see #getChunkPos
 	METHOD method_20232 isInSwimmingPose ()Z
 		COMMENT {@return whether the entity is in swimming pose}
 		COMMENT
@@ -1651,7 +1639,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 1 x
 		ARG 3 y
 		ARG 5 z
-	METHOD method_30948 isCollidable ()Z
+	METHOD method_30948 isCollidable (Lnet/minecraft/class_1297;)Z
 		COMMENT {@return whether other entities cannot occupy the same space with this entity}
 		COMMENT
 		COMMENT <p>If {@code true}, other entities can stand on this entity without falling.
@@ -1659,6 +1647,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT net.minecraft.entity.mob.ShulkerEntity} has this behavior.
 		COMMENT
 		COMMENT @see #collidesWith
+		ARG 1 entity
 	METHOD method_30949 collidesWith (Lnet/minecraft/class_1297;)Z
 		COMMENT {@return whether this entity cannot occupy the same space with {@code other}}
 		COMMENT
@@ -1908,7 +1897,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		ARG 0 player
 	METHOD method_37217 (Lnet/minecraft/class_1297;)Z
 		ARG 0 passenger
-	METHOD method_37908 getWorld ()Lnet/minecraft/class_1937;
 	METHOD method_38785 onLanding ()V
 		COMMENT Called when the entity lands on a block.
 	METHOD method_39759 hasCollidedSoftly (Lnet/minecraft/class_243;)Z
@@ -1952,10 +1940,6 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		COMMENT @see #getFirstPassenger
 	METHOD method_43077 playSoundIfNotSilent (Lnet/minecraft/class_3414;)V
 		ARG 1 event
-	METHOD method_43078 getBodyYaw ()F
-		COMMENT {@return the body yaw of the entity}
-		COMMENT
-		COMMENT @see #setBodyYaw
 	METHOD method_43258 getPosWithYOffset (F)Lnet/minecraft/class_2338;
 		ARG 1 offset
 	METHOD method_43259 isInRange (Lnet/minecraft/class_1297;DD)Z
@@ -2246,7 +2230,7 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_64615 onRemove (Lnet/minecraft/class_1297$class_5529;)V
 		COMMENT Called when the entity is about to be removed.
 		ARG 1 reason
-	METHOD method_65037 checkBlockCollision (Ljava/util/List;Lnet/minecraft/class_10774$class_10775;)V
+	METHOD method_65037 checkBlockCollisions (Ljava/util/List;Lnet/minecraft/class_10774$class_10775;)V
 		ARG 1 queuedCollisionChecks
 		ARG 2 collisionHandler
 	METHOD method_65038 isControlledByPlayer ()Z
@@ -2337,6 +2321,28 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 	METHOD method_70987 isFlyingVehicle ()Z
 	METHOD method_70988 detachAllHeldLeashes (Lnet/minecraft/class_1657;)Z
 		ARG 1 player
+	METHOD method_71370 getErrorReporterContext ()Lnet/minecraft/class_8942$class_11336;
+	METHOD method_71764 dropStack (Lnet/minecraft/class_3218;Lnet/minecraft/class_1799;Lnet/minecraft/class_243;)Lnet/minecraft/class_1542;
+		ARG 1 world
+		ARG 2 stack
+		ARG 3 offset
+	METHOD method_71765 shearEquipment (Lnet/minecraft/class_1657;Lnet/minecraft/class_1268;Lnet/minecraft/class_1799;Lnet/minecraft/class_1308;)Z
+		ARG 1 player
+		ARG 2 hand
+		ARG 3 shears
+		ARG 4 entity
+	METHOD method_71965 clearQueuedCollisionChecks ()V
+	METHOD method_71966 addQueuedCollisionChecks (Lnet/minecraft/class_1297$class_10365;)V
+		ARG 1 queuedCollisionCheck
+	METHOD method_72084 checkBlockCollision (Lnet/minecraft/class_243;Lnet/minecraft/class_243;Lnet/minecraft/class_10774$class_10775;Lit/unimi/dsi/fastutil/longs/LongSet;)V
+		ARG 1 from
+		ARG 2 to
+		ARG 3 collisionHandler
+		ARG 4 collidedBlockPositions
+	METHOD method_72085 afterCollisionCheck (Lnet/minecraft/class_2338;ZZ)V
+		ARG 1 pos
+		ARG 2 blockCollision
+		ARG 3 fluidCollision
 	CLASS class_4738 PositionUpdater
 		METHOD accept (Lnet/minecraft/class_1297;DDD)V
 			ARG 1 entity
@@ -2389,3 +2395,4 @@ CLASS net/minecraft/class_1297 net/minecraft/entity/Entity
 		METHOD method_33578 playsSounds ()Z
 			COMMENT Returns whether this means an entity may play sounds as it moves.
 	CLASS class_10365 QueuedCollisionCheck
+	CLASS class_11344 ErrorReporterContext
