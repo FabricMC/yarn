@@ -11,8 +11,15 @@ CLASS net/minecraft/class_11697 net/minecraft/client/texture/AtlasManager
 		ARG 1 mipmapLevels
 	METHOD method_73025 getAtlasTexture (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1059;
 		ARG 1 id
+	METHOD method_73026 (Lnet/minecraft/class_3300;Ljava/util/concurrent/Executor;Lnet/minecraft/class_11697$class_11699;)V
+		ARG 3 entry
 	METHOD method_73027 (Lnet/minecraft/class_1060;Lnet/minecraft/class_11697$class_11698;)Lnet/minecraft/class_11697$class_7772;
 		ARG 1 metadata
+	METHOD method_73028 (Lnet/minecraft/class_11697$class_11699;Lnet/minecraft/class_7766$class_7767;Ljava/lang/Throwable;)V
+		ARG 1 stitchResult
+	METHOD method_73031 (Ljava/util/Map;Ljava/util/List;Ljava/util/List;Lnet/minecraft/class_2960;Lnet/minecraft/class_11697$class_7772;)V
+		ARG 3 textureId
+		ARG 4 metadata
 	METHOD method_73033 getEntry (Lnet/minecraft/class_2960;)Lnet/minecraft/class_11697$class_7772;
 		ARG 1 id
 	CLASS class_7772 Entry
@@ -29,11 +36,22 @@ CLASS net/minecraft/class_11697 net/minecraft/client/texture/AtlasManager
 			ARG 2 definitionId
 			ARG 3 createMipmaps
 		METHOD comp_4554 definitionId ()Lnet/minecraft/class_2960;
-	CLASS class_11699
-		METHOD method_73035 (Ljava/util/Map;)V
+	CLASS class_11699 CompletableEntry
+		METHOD method_73035 fillSpriteMap (Ljava/util/Map;)V
 			ARG 1 sprites
 		METHOD method_73036 (Ljava/util/Map;Lnet/minecraft/class_2960;Lnet/minecraft/class_1058;)V
 			ARG 2 id
 			ARG 3 sprite
 	CLASS class_11700 Stitch
-		FIELD field_61867 stitchResults Ljava/util/Map;
+		FIELD field_61866 entries Ljava/util/List;
+		FIELD field_61867 preparations Ljava/util/Map;
+		FIELD field_61868 readyForUpload Ljava/util/concurrent/CompletableFuture;
+		METHOD <init> (Ljava/util/List;Ljava/util/Map;Ljava/util/concurrent/CompletableFuture;)V
+			ARG 1 entries
+			ARG 2 preparations
+			ARG 3 readyForUpload
+		METHOD method_73037 createSpriteMap ()Ljava/util/Map;
+		METHOD method_73038 getPreparations (Lnet/minecraft/class_2960;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 atlasTextureId
+		METHOD method_73039 (Ljava/util/Map;Lnet/minecraft/class_11697$class_11699;)V
+			ARG 1 entry

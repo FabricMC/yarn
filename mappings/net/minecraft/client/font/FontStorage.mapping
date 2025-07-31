@@ -6,11 +6,21 @@ CLASS net/minecraft/class_377 net/minecraft/client/font/FontStorage
 	FIELD field_39934 MAX_ADVANCE F
 	FIELD field_49120 allFonts Ljava/util/List;
 	FIELD field_49121 availableFonts Ljava/util/List;
-	FIELD field_54820 glyphBaker Ljava/util/function/IntFunction;
+	FIELD field_54820 findGlyph Ljava/util/function/IntFunction;
+	FIELD field_61611 glyphBaker Lnet/minecraft/class_11642;
+	FIELD field_61612 bakedGlyphCache Lnet/minecraft/class_8532;
+	FIELD field_61613 blankBakedGlyphPair Lnet/minecraft/class_377$class_11640;
+	FIELD field_61614 anyGlyphs Lnet/minecraft/class_11603;
+	FIELD field_61615 advanceValidatingGlyphs Lnet/minecraft/class_11603;
+	METHOD <init> (Lnet/minecraft/class_11642;Lnet/minecraft/class_2960;)V
+		ARG 1 baker
+		ARG 2 id
 	METHOD method_2004 setFonts (Ljava/util/List;Ljava/util/Set;)V
 		ARG 1 allFonts
 		ARG 2 activeFilters
 	METHOD method_2013 getObfuscatedBakedGlyph (Lnet/minecraft/class_5819;I)Lnet/minecraft/class_11643;
+		ARG 1 random
+		ARG 2 width
 	METHOD method_2014 getBaked (I)Lnet/minecraft/class_377$class_11640;
 		ARG 1 codePoint
 	METHOD method_22943 getRectangleBakedGlyph ()Lnet/minecraft/class_11643;
@@ -32,3 +42,21 @@ CLASS net/minecraft/class_377 net/minecraft/client/font/FontStorage
 		ARG 1 allFonts
 		ARG 2 activeFilters
 	METHOD method_57038 clear ()V
+	METHOD method_72788 getGlyphs (Z)Lnet/minecraft/class_11603;
+		ARG 1 advanceValidating
+	CLASS class_11639 CachedGlyph
+		FIELD field_61617 glyph Lnet/minecraft/class_379;
+		FIELD field_61618 bakedGlyph Lnet/minecraft/class_382;
+		METHOD <init> (Lnet/minecraft/class_377;Lnet/minecraft/class_379;)V
+			ARG 2 glyph
+		METHOD method_72792 rebake ()V
+		METHOD method_72793 bake ()Lnet/minecraft/class_382;
+	CLASS class_11640 GlyphPair
+		FIELD comp_4460 advanceValidating Lnet/minecraft/class_377$class_11639;
+		METHOD comp_4460 advanceValidating ()Lnet/minecraft/class_377$class_11639;
+		METHOD method_72794 get (Z)Lnet/minecraft/class_377$class_11639;
+			ARG 1 advanceValidating
+	CLASS class_11641 Glyphs
+		FIELD field_61620 advanceValidating Z
+		METHOD <init> (Lnet/minecraft/class_377;Z)V
+			ARG 2 advanceValidating

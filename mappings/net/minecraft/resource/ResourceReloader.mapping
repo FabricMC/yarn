@@ -29,7 +29,13 @@ CLASS net/minecraft/class_3302 net/minecraft/resource/ResourceReloader
 		COMMENT @return a future for the reload
 		COMMENT @see net.minecraft.resource.ReloadableResourceManagerImpl#reload(Executor, Executor,
 		COMMENT CompletableFuture, List)
+		ARG 1 store
+		ARG 2 prepareExecutor
+		ARG 3 reloadSynchronizer
 		ARG 4 applyExecutor
+	METHOD prepareSharedState (Lnet/minecraft/class_3302$class_11558;)V
+		COMMENT Inserts state that should be shared between reloaders into the provided data store.
+		ARG 1 store
 	CLASS class_4045 Synchronizer
 		COMMENT A synchronizer to indicate completion of a reloader's prepare stage and
 		COMMENT to allow start of the apply stage only if all reloaders have finished
@@ -52,4 +58,24 @@ CLASS net/minecraft/class_3302 net/minecraft/resource/ResourceReloader
 			COMMENT @return a completable future as the precondition for the apply stage
 			ARG 1 preparedObject
 				COMMENT the result of the prepare stage
+	CLASS class_11558 Store
+		COMMENT A data store that can be used for sharing state between resource reloaders.
+		COMMENT
+		COMMENT Values can be inserted during {@link ResourceReloader#prepareSharedState prepareSharedState}
+		COMMENT and retrieved during {@link ResourceReloader#reload reload}.
+		FIELD field_61161 resourceManager Lnet/minecraft/class_3300;
+		FIELD field_61162 store Ljava/util/Map;
+		METHOD <init> (Lnet/minecraft/class_3300;)V
+			ARG 1 resourceManager
+		METHOD method_72361 getResourceManager ()Lnet/minecraft/class_3300;
+		METHOD method_72362 getOrThrow (Lnet/minecraft/class_3302$class_11559;)Ljava/lang/Object;
+			COMMENT {@return the value associated with the given key}. This is safe to call during
+			COMMENT {@link ResourceReloader#reload reload} if any resource reloader has previously
+			COMMENT inserted a value with the same key object during {@link ResourceReloader#prepareSharedState prepareSharedState}.
+			ARG 1 key
+		METHOD method_72363 put (Lnet/minecraft/class_3302$class_11559;Ljava/lang/Object;)V
+			COMMENT Inserts a value associated with the given key into the data store.
+			ARG 1 key
+			ARG 2 value
 	CLASS class_11559 Key
+		COMMENT Type used as a key for {@link Store}.
