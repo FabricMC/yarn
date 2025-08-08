@@ -3,6 +3,7 @@ package net.fabricmc.filament.task;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -11,7 +12,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -226,7 +226,6 @@ public abstract class RemapUnpickDefinitionsTask extends DefaultTask {
 			});
 
 			List<ZipFile> zips = new ArrayList<>(jarFiles.size());
-			List<CompletableFuture<Void>> futures = new ArrayList<>();
 
 			try (ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())) {
 				for (File jarFile : jarFiles) {
@@ -240,52 +239,14 @@ public abstract class RemapUnpickDefinitionsTask extends DefaultTask {
 						ZipEntry entry = entries.nextElement();
 
 						if (entry.getName().endsWith(".class")) {
-							futures.add(CompletableFuture.runAsync(() -> {
-								ClassReader reader;
-
-								try {
-									reader = new ClassReader(zip.getInputStream(entry));
-								} catch (IOException e) {
-									throw new UncheckedIOException(e);
+							executor.submit(new ClassIndexTask(mappingTree, classpathM, fromM, localJarIndex) {
+								@Override
+								protected InputStream getInputStream() throws IOException {
+									return zip.getInputStream(entry);
 								}
-
-								reader.accept(new ClassVisitor(Opcodes.ASM9) {
-									private String className;
-									private String mappedClassName;
-
-									@Override
-									public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-										this.className = name;
-										mappedClassName = mappingTree.mapClassName(name, classpathM, fromM);
-										int slashIdx = name.lastIndexOf('/');
-										String packageName = slashIdx == -1 ? "" : mappedClassName.substring(0, slashIdx);
-
-										localJarIndex.get().classesInPackages
-														.computeIfAbsent(packageName.replace('/', '.'), k -> new ArrayList<>())
-														.add(mappedClassName.replace('/', '.'));
-									}
-
-									@Override
-									public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
-										String mappedName = name;
-										MappingTree.FieldMapping fieldMapping = mappingTree.getField(className, name, descriptor, classpathM);
-
-										if (fieldMapping != null) {
-											mappedName = fieldMapping.getName(fromM);
-										}
-
-										String mappedDesc = mappingTree.mapDesc(descriptor, classpathM, fromM);
-										localJarIndex.get().fieldDescs.put(mappedClassName.replace('/', '.') + "." + mappedName, mappedDesc);
-										return null;
-									}
-								}, ClassReader.SKIP_CODE);
-							}, executor));
+							});
 						}
 					}
-				}
-
-				for (CompletableFuture<Void> future : futures) {
-					future.join();
 				}
 			} finally {
 				for (ZipFile zip : zips) {
@@ -302,6 +263,75 @@ public abstract class RemapUnpickDefinitionsTask extends DefaultTask {
 			}
 
 			return indexes.getFirst();
+		}
+	}
+
+	private abstract static class ClassIndexTask implements Runnable {
+		private final MemoryMappingTree mappingTree;
+		private final int classpathM;
+		private final int fromM;
+		private final ThreadLocal<JarIndex> localJarIndex;
+
+		private ClassIndexTask(
+				MemoryMappingTree mappingTree,
+				int classpathM,
+				int fromM,
+				ThreadLocal<JarIndex> localJarIndex
+		) {
+			this.mappingTree = mappingTree;
+			this.classpathM = classpathM;
+			this.fromM = fromM;
+			this.localJarIndex = localJarIndex;
+		}
+
+		protected abstract InputStream getInputStream() throws IOException;
+
+		@Override
+		public void run() {
+			ClassReader reader;
+
+			try {
+				reader = new ClassReader(getInputStream());
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+
+			reader.accept(new IndexClassVisitor(), ClassReader.SKIP_CODE);
+		}
+
+		private class IndexClassVisitor extends ClassVisitor {
+			private String className;
+			private String mappedClassName;
+
+			IndexClassVisitor() {
+				super(Opcodes.ASM9);
+			}
+
+			@Override
+			public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+				this.className = name;
+				mappedClassName = mappingTree.mapClassName(name, classpathM, fromM);
+				int slashIdx = name.lastIndexOf('/');
+				String packageName = slashIdx == -1 ? "" : mappedClassName.substring(0, slashIdx);
+
+				localJarIndex.get().classesInPackages
+								.computeIfAbsent(packageName.replace('/', '.'), k -> new ArrayList<>())
+								.add(mappedClassName.replace('/', '.'));
+			}
+
+			@Override
+			public FieldVisitor visitField(int access, String name, String descriptor, String signature, Object value) {
+				String mappedName = name;
+				MappingTree.FieldMapping fieldMapping = mappingTree.getField(className, name, descriptor, classpathM);
+
+				if (fieldMapping != null) {
+					mappedName = fieldMapping.getName(fromM);
+				}
+
+				String mappedDesc = mappingTree.mapDesc(descriptor, classpathM, fromM);
+				localJarIndex.get().fieldDescs.put(mappedClassName.replace('/', '.') + "." + mappedName, mappedDesc);
+				return null;
+			}
 		}
 	}
 

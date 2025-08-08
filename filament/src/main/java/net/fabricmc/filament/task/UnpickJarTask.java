@@ -1,12 +1,10 @@
 package net.fabricmc.filament.task;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
@@ -83,7 +81,7 @@ public abstract class UnpickJarTask extends FilamentTask implements WithFileInpu
 			try {
 				FileUtil.deleteIfExists(outputFile);
 			} catch (IOException e) {
-				throw new RuntimeException(e);
+				throw new UncheckedIOException(e);
 			}
 
 			List<ZipFile> classpathZips = new ArrayList<>();
@@ -122,7 +120,7 @@ public abstract class UnpickJarTask extends FilamentTask implements WithFileInpu
 								if (entry.isDirectory()) {
 									return new PendingOutputEntry(entry.getName(), null);
 								} else if (!entry.getName().endsWith(".class")) {
-									return new PendingOutputEntry(entry.getName(), readAllBytes(inputZip.getInputStream(entry)));
+									return new PendingOutputEntry(entry.getName(), inputZip.getInputStream(entry).readAllBytes());
 								} else {
 									ClassNode clazz = new ClassNode();
 									new ClassReader(inputZip.getInputStream(entry)).accept(clazz, 0);
@@ -149,7 +147,7 @@ public abstract class UnpickJarTask extends FilamentTask implements WithFileInpu
 					}
 				}
 			} catch (IOException e) {
-				throw new RuntimeException(e);
+				throw new UncheckedIOException(e);
 			} finally {
 				for (ZipFile classpathZip : classpathZips) {
 					try {
@@ -159,18 +157,6 @@ public abstract class UnpickJarTask extends FilamentTask implements WithFileInpu
 					}
 				}
 			}
-		}
-
-		private static byte[] readAllBytes(InputStream in) throws IOException {
-			byte[] buffer = new byte[8192];
-			int n;
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-			while ((n = in.read(buffer)) != -1) {
-				out.write(buffer, 0, n);
-			}
-
-			return out.toByteArray();
 		}
 
 		private record PendingOutputEntry(String name, byte @Nullable [] data) {
