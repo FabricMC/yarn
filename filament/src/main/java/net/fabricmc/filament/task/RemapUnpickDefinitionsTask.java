@@ -194,7 +194,7 @@ public abstract class RemapUnpickDefinitionsTask extends DefaultTask {
 							Class<?> clazz;
 
 							try {
-								clazz = Class.forName(className);
+								clazz = Class.forName(className, false, null);
 							} catch (ClassNotFoundException e) {
 								return null;
 							}
