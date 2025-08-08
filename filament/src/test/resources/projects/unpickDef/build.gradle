@@ -3,8 +3,43 @@ plugins {
 	id 'net.fabricmc.filament'
 }
 
+import net.fabricmc.filament.task.MapJarTask
+import net.fabricmc.filament.task.DownloadTask
+
+def mcVersion = "1.19.2"
+def tempDir = file("build/temp/yarn")
+def cacheFilesMinecraft = new File(tempDir, "minecraft")
+
+repositories {
+	mavenCentral {
+		content {
+			// Force LWJGL from Mojang's repo, as they have custom patched versions since 1.21-pre1
+			excludeGroupByRegex("org.lwjgl")
+		}
+	}
+	maven {
+		name = "Mojang"
+		url = 'https://libraries.minecraft.net/'
+	}
+}
+
 filament {
-	minecraftVersion = "1.19.2"
+	minecraftVersion = mcVersion
+}
+
+tasks.register('downloadIntermediary', DownloadTask) {
+	url = "https://github.com/FabricMC/intermediary/raw/master/mappings/${mcVersion}.tiny"
+	output = new File(cacheFilesMinecraft, "${mcVersion}-intermediary.tiny")
+}
+
+tasks.register('mapIntermediaryJar', MapJarTask) {
+	dependsOn downloadIntermediary, mergeMinecraftJars
+	output = layout.buildDirectory.file("${mcVersion}-intermediary.jar")
+	input = mergeMinecraftJars.output
+	mappings = downloadIntermediary.output
+	classpath.from configurations.minecraftLibraries
+	from = 'official'
+	to = 'intermediary'
 }
 
 combineUnpickDefinitions {
@@ -14,5 +49,6 @@ combineUnpickDefinitions {
 
 remapUnpickDefinitionsIntermediary {
 	output = file('intermediary_definitions.unpick')
+	classpath.from(mapIntermediaryJar, configurations.minecraftLibraries)
 	mappings = file('yarn-mappings-v2.tiny')
 }

@@ -17,6 +17,7 @@ abstract class ProjectTest {
 	protected final void setupProject(String name, String... extraFiles) {
 		try {
 			copyProjectFile(name, "build.gradle");
+			copyProjectFile(name, "gradle.properties");
 			copyProjectFile(name, "settings.gradle");
 
 			for (String file : extraFiles) {
