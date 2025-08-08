@@ -1,13 +1,30 @@
 package net.fabricmc.filament.task;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import javax.inject.Inject;
 
-import daomephsta.unpick.cli.Main;
+import daomephsta.unpick.api.ConstantUninliner;
+import daomephsta.unpick.api.classresolvers.ClassResolvers;
+import daomephsta.unpick.api.classresolvers.IClassResolver;
+import daomephsta.unpick.api.constantgroupers.ConstantGroupers;
 import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.tasks.InputFile;
@@ -17,10 +34,15 @@ import org.gradle.workers.WorkAction;
 import org.gradle.workers.WorkParameters;
 import org.gradle.workers.WorkQueue;
 import org.gradle.workers.WorkerExecutor;
+import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.tree.ClassNode;
 
 import net.fabricmc.filament.task.base.FilamentTask;
 import net.fabricmc.filament.task.base.WithFileInput;
 import net.fabricmc.filament.task.base.WithFileOutput;
+import net.fabricmc.filament.util.FileUtil;
 
 public abstract class UnpickJarTask extends FilamentTask implements WithFileInput, WithFileOutput {
 	@InputFile
@@ -56,25 +78,102 @@ public abstract class UnpickJarTask extends FilamentTask implements WithFileInpu
 	public abstract static class UnpickAction implements WorkAction<UnpickParameters> {
 		@Override
 		public void execute() {
-			List<String> args = new ArrayList<>();
-			args.add(getPath(getParameters().getInput()));
-			args.add(getPath(getParameters().getOutput()));
-			args.add(getPath(getParameters().getUnpickDefinition()));
-			args.add(getPath(getParameters().getConstantJar()));
-
-			for (File file : getParameters().getClasspath().getFiles()) {
-				args.add(file.getAbsolutePath());
-			}
+			File outputFile = getParameters().getOutput().get().getAsFile();
 
 			try {
-				Main.main(args.toArray(String[]::new));
+				FileUtil.deleteIfExists(outputFile);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
+
+			List<ZipFile> classpathZips = new ArrayList<>();
+
+			try (
+					ZipFile inputZip = new ZipFile(getParameters().getInput().get().getAsFile());
+					Reader mappingsReader = new BufferedReader(new FileReader(getParameters().getUnpickDefinition().get().getAsFile()));
+					ZipOutputStream outputZip = new ZipOutputStream(new FileOutputStream(outputFile))
+			) {
+				IClassResolver classResolver = ClassResolvers.jar(inputZip);
+
+				for (File file : getParameters().getClasspath().getFiles()) {
+					ZipFile zip = new ZipFile(file);
+					classpathZips.add(zip);
+					classResolver = classResolver.chain(ClassResolvers.jar(zip));
+				}
+
+				classResolver = classResolver.chain(ClassResolvers.classpath());
+
+				ConstantUninliner uninliner = ConstantUninliner.builder()
+						.classResolver(classResolver)
+						.grouper(ConstantGroupers.dataDriven()
+								.classResolver(classResolver)
+								.mappingSource(mappingsReader)
+								.build())
+						.build();
+
+				try (ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())) {
+					List<CompletableFuture<PendingOutputEntry>> entryFutures = new ArrayList<>();
+					Enumeration<? extends ZipEntry> inputEntries = inputZip.entries();
+
+					while (inputEntries.hasMoreElements()) {
+						ZipEntry entry = inputEntries.nextElement();
+						entryFutures.add(CompletableFuture.supplyAsync(() -> {
+							try {
+								if (entry.isDirectory()) {
+									return new PendingOutputEntry(entry.getName(), null);
+								} else if (!entry.getName().endsWith(".class")) {
+									return new PendingOutputEntry(entry.getName(), readAllBytes(inputZip.getInputStream(entry)));
+								} else {
+									ClassNode clazz = new ClassNode();
+									new ClassReader(inputZip.getInputStream(entry)).accept(clazz, 0);
+									uninliner.transform(clazz);
+									ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+									clazz.accept(writer);
+									return new PendingOutputEntry(entry.getName(), writer.toByteArray());
+								}
+							} catch (IOException e) {
+								throw new UncheckedIOException(e);
+							}
+						}, executor));
+					}
+
+					for (CompletableFuture<PendingOutputEntry> entryFuture : entryFutures) {
+						PendingOutputEntry entry = entryFuture.join();
+						outputZip.putNextEntry(new ZipEntry(entry.name));
+
+						if (entry.data != null) {
+							outputZip.write(entry.data);
+						}
+
+						outputZip.closeEntry();
+					}
+				}
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			} finally {
+				for (ZipFile classpathZip : classpathZips) {
+					try {
+						classpathZip.close();
+					} catch (IOException e) {
+						// ignore
+					}
+				}
+			}
 		}
 
-		private String getPath(RegularFileProperty fileProperty) {
-			return fileProperty.get().getAsFile().getAbsolutePath();
+		private static byte[] readAllBytes(InputStream in) throws IOException {
+			byte[] buffer = new byte[8192];
+			int n;
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+			while ((n = in.read(buffer)) != -1) {
+				out.write(buffer, 0, n);
+			}
+
+			return out.toByteArray();
+		}
+
+		private record PendingOutputEntry(String name, byte @Nullable [] data) {
 		}
 	}
 }
