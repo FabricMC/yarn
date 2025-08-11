@@ -1,6 +1,6 @@
 package net.fabricmc.filament.util;
 
-import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Writer;
+import daomephsta.unpick.constantmappers.datadriven.parser.v3.UnpickV3Writer;
 
 public final class UnpickUtil {
 	private UnpickUtil() {
@@ -13,7 +13,7 @@ public final class UnpickUtil {
 	 * @param writer the writer
 	 * @return the output using LF as the line separator
 	 */
-	public static String getLfOutput(UnpickV2Writer writer) {
+	public static String getLfOutput(UnpickV3Writer writer) {
 		return writer.getOutput().replace(System.lineSeparator(), "\n");
 	}
 }

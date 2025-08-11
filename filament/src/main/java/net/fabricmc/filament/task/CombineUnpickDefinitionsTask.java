@@ -1,7 +1,7 @@
 package net.fabricmc.filament.task;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Reader;
-import daomephsta.unpick.constantmappers.datadriven.parser.v2.UnpickV2Writer;
+import daomephsta.unpick.constantmappers.datadriven.parser.v3.UnpickV3Reader;
+import daomephsta.unpick.constantmappers.datadriven.parser.v3.UnpickV3Writer;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.file.RegularFileProperty;
@@ -64,7 +64,7 @@ public abstract class CombineUnpickDefinitionsTask extends DefaultTask {
 				File output = getParameters().getOutput().getAsFile().get();
 				FileUtil.deleteIfExists(output);
 
-				UnpickV2Writer writer = new UnpickV2Writer();
+				UnpickV3Writer writer = new UnpickV3Writer();
 
 				// Sort inputs to get reproducible outputs (also for testing)
 				List<File> files = new ArrayList<>(getParameters().getInput().getAsFileTree().getFiles());
@@ -75,7 +75,7 @@ public abstract class CombineUnpickDefinitionsTask extends DefaultTask {
 						continue;
 					}
 
-					try (UnpickV2Reader reader = new UnpickV2Reader(new FileInputStream(file))) {
+					try (UnpickV3Reader reader = new UnpickV3Reader(new FileReader(file))) {
 						reader.accept(writer);
 					}
 				}

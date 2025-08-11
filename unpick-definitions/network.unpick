@@ -1,22 +1,26 @@
-v2
+unpick v3
 
-# value and desc specified because unpick is too dumb to handle auto conversions (short -> int, int -> long)
-constant max_string_length net/minecraft/network/PacketByteBuf DEFAULT_MAX_STRING_LENGTH 32767 I
-constant max_string_length net/minecraft/network/PacketByteBuf MAX_TEXT_LENGTH
-#constant max_nbt_size net/minecraft/network/PacketByteBuf MAX_READ_NBT_SIZE 2097152 J
-constant max_var_int_length net/minecraft/network/encoding/VarInts MAX_BYTES
-constant max_var_long_length net/minecraft/network/encoding/VarLongs MAX_BYTES
+group int max_string_length
+	net.minecraft.network.PacketByteBuf.DEFAULT_MAX_STRING_LENGTH
+	net.minecraft.network.PacketByteBuf.MAX_TEXT_LENGTH
+group long max_nbt_size
+	net.minecraft.network.PacketByteBuf.MAX_READ_NBT_SIZE
+group int max_var_int_length
+	net.minecraft.network.encoding.VarInts.MAX_BYTES
+group int max_var_long_length
+	net.minecraft.network.encoding.VarLongs.MAX_BYTES
 
-target_method net/minecraft/network/PacketByteBuf readString (I)Ljava/lang/String;
+target_method net.minecraft.network.PacketByteBuf readString (I)Ljava/lang/String;
 	param 0 max_string_length
-target_method net/minecraft/network/PacketByteBuf writeString (Ljava/lang/String;I)Lnet/minecraft/network/PacketByteBuf;
+target_method net.minecraft.network.PacketByteBuf writeString (Ljava/lang/String;I)Lnet/minecraft/network/PacketByteBuf;
 	param 1 max_string_length
-# somehow does not work
-#target_method net/minecraft/nbt/NbtSizeTracker <init> (J)V
-#	param 0 max_nbt_size
-target_method net/minecraft/network/encoding/VarInts getSizeInBytes (I)I
+target_method net.minecraft.nbt.NbtSizeTracker <init> (J)V
+	param 0 max_nbt_size
+target_method net.minecraft.network.encoding.VarInts getSizeInBytes (I)I
 	return max_var_int_length
-target_method net/minecraft/network/encoding/VarLongs getSizeInBytes (J)I
+target_method net.minecraft.network.encoding.VarLongs getSizeInBytes (J)I
 	return max_var_long_length
+
+# todo: do this with unpick v3: 
 # var int/long length also used in readVarXx method body, but unpick cannot replace them
 
