@@ -45,8 +45,6 @@ import net.fabricmc.filament.util.FileUtil;
 public abstract class UnpickJarTask extends FilamentTask implements WithFileInput, WithFileOutput {
 	@InputFile
 	public abstract RegularFileProperty getUnpickDefinition();
-	@InputFile
-	public abstract RegularFileProperty getConstantsJarFile();
 	@InputFiles
 	public abstract ConfigurableFileCollection getClasspath();
 
@@ -60,7 +58,6 @@ public abstract class UnpickJarTask extends FilamentTask implements WithFileInpu
 			parameters.getInput().set(getInput());
 			parameters.getOutput().set(getOutput());
 			parameters.getUnpickDefinition().set(getUnpickDefinition());
-			parameters.getConstantJar().set(getConstantsJarFile());
 			parameters.getClasspath().from(getClasspath());
 		});
 	}
@@ -69,7 +66,6 @@ public abstract class UnpickJarTask extends FilamentTask implements WithFileInpu
 		RegularFileProperty getInput();
 		RegularFileProperty getOutput();
 		RegularFileProperty getUnpickDefinition();
-		RegularFileProperty getConstantJar();
 		ConfigurableFileCollection getClasspath();
 	}
 
