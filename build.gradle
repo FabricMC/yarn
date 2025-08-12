@@ -19,7 +19,7 @@ plugins {
 	id 'net.fabricmc.filament'
 }
 
-def minecraft_version = "25w32a"
+def minecraft_version = "25w33a"
 
 filament {
 	minecraftVersion = minecraft_version
@@ -391,7 +391,6 @@ tasks.register('mapNamedJar', MapJarTask) {
 	output = layout.buildDirectory.file("${minecraft_version}-named.jar")
 	input = unpickIntermediaryJar.output
 	mappings = mergeV2.output
-	classpath.from minecraftLibraries
 	from = 'intermediary'
 	to = 'named'
 	classMappings = [
@@ -400,6 +399,18 @@ tasks.register('mapNamedJar', MapJarTask) {
 		"javax/annotation/concurrent/Immutable": "org/jetbrains/annotations/Unmodifiable"
 	]
 }
+
+// Test that we can remap back to intermediary.
+tasks.register('remapIntermediaryJar', MapJarTask) {
+	group = mapJarGroup
+	output = layout.buildDirectory.file("${minecraft_version}-remapped.jar")
+	input = mapNamedJar.output
+	mappings = mergeV2.output
+	from = 'named'
+	to = 'intermediary'
+}
+
+check.dependsOn remapIntermediaryJar
 
 def mcLibsDir = file('build/tmp/mclibs')
 
