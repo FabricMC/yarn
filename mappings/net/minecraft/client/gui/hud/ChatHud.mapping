@@ -16,6 +16,8 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 	FIELD field_40390 REMOVAL_QUEUE_TICKS I
 	FIELD field_40391 DELETED_MARKER_TEXT Lnet/minecraft/class_2561;
 	FIELD field_40392 removalQueue Ljava/util/List;
+	FIELD field_62002 draft Lnet/minecraft/class_338$class_11733;
+	FIELD field_62003 screen Lnet/minecraft/class_408;
 	METHOD <init> (Lnet/minecraft/class_310;)V
 		ARG 1 client
 	METHOD method_1802 scroll (I)V
@@ -111,6 +113,38 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 	METHOD method_58744 addMessage (Lnet/minecraft/class_303;)V
 		ARG 1 message
 	METHOD method_58745 toChatState ()Lnet/minecraft/class_338$class_9477;
+	METHOD method_71990 forEachVisibleLine (IIZILnet/minecraft/class_338$class_11511;)I
+		ARG 1 visibleLineCount
+		ARG 2 currentTick
+		ARG 3 focused
+		ARG 4 windowHeight
+		ARG 5 consumer
+	METHOD method_71991 (ILnet/minecraft/class_332;FIIILnet/minecraft/class_303$class_7590;IF)V
+		ARG 4 x1
+		ARG 5 y1
+		ARG 6 y2
+		ARG 7 line
+		ARG 8 messageIndex
+		ARG 9 backgroundOpacity
+	METHOD method_71992 (Lnet/minecraft/class_332;IFFIIIIILnet/minecraft/class_303$class_7590;IF)V
+		ARG 7 x1
+		ARG 8 y1
+		ARG 9 y2
+		ARG 10 line
+		ARG 11 messageIndex
+		ARG 12 backgroundOpacity
+	METHOD method_73201 createScreen (Lnet/minecraft/class_338$class_11732;Lnet/minecraft/class_408$class_11738;)Lnet/minecraft/class_408;
+		ARG 1 method
+		ARG 2 factory
+	METHOD method_73202 setClientScreen (Lnet/minecraft/class_338$class_11732;Lnet/minecraft/class_408$class_11738;)V
+		ARG 1 method
+		ARG 2 factory
+	METHOD method_73203 saveDraft (Ljava/lang/String;)V
+		ARG 1 text
+	METHOD method_73204 discardDraft ()V
+	METHOD method_73205 setScreen ()V
+	METHOD method_73206 removeScreen ()Lnet/minecraft/class_408;
+		COMMENT @return the previous screen
 	CLASS class_7731 RemovalQueuedMessage
 	CLASS class_9477 ChatState
 		FIELD field_50218 messages Ljava/util/List;
@@ -120,3 +154,26 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 			ARG 1 messages
 			ARG 2 messageHistory
 			ARG 3 removalQueue
+	CLASS class_11511 LineConsumer
+		METHOD accept (IIILnet/minecraft/class_303$class_7590;IF)V
+			ARG 1 x1
+			ARG 2 y1
+			ARG 3 y2
+			ARG 4 line
+			ARG 5 messageIndex
+			ARG 6 backgroundOpacity
+	CLASS class_11732 ChatMethod
+		FIELD field_62006 replacement Ljava/lang/String;
+		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
+			ARG 3 replacement
+		METHOD method_73207 getReplacement ()Ljava/lang/String;
+		METHOD method_73208 shouldKeepDraft (Lnet/minecraft/class_338$class_11733;)Z
+			COMMENT {@return whether the saved draft should be shown} when opening the chat screen.
+			COMMENT
+			COMMENT <p>This depends on the method used to open it (represented by {@code this}).
+			COMMENT Using the normal chat key, all drafts can still be used. When opening the chat screen
+			COMMENT using the command key instead, only a saved command can be retained, not a
+			COMMENT chat message.
+			ARG 1 draft
+				COMMENT the saved draft
+	CLASS class_11733 Draft
