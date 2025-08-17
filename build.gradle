@@ -94,10 +94,11 @@ def libs = new File("build/libs/")
 def minecraftLibraries = configurations.minecraftLibraries
 
 import cuchaz.enigma.command.CheckMappingsCommand
-import net.fabricmc.filament.task.MapJarTask
+import net.fabricmc.filament.task.CheckUnpickDefinitionsTask
 import net.fabricmc.filament.task.DownloadTask
+import net.fabricmc.filament.task.MapJarTask
 import net.fabricmc.filament.task.UnpickJarTask
-import net.fabricmc.filament.task.MappingPoetTask;
+import net.fabricmc.filament.task.MappingPoetTask
 import net.fabricmc.filament.task.base.WithFileInput
 import net.fabricmc.filament.task.base.WithFileOutput
 import net.fabricmc.filament.task.enigma.MapSpecializedMethodsTask
@@ -411,6 +412,26 @@ tasks.register('remapIntermediaryJar', MapJarTask) {
 }
 
 check.dependsOn remapIntermediaryJar
+
+tasks.register('mapNamedNoUnpickJar', MapJarTask) {
+	dependsOn mergeV2
+	group = mapJarGroup
+	output = layout.buildDirectory.file("${minecraft_version}-named-no-unpick.jar")
+	input = mapIntermediaryJar.output
+	mappings = mergeV2.output
+	classpath.from minecraftLibraries
+	from = 'intermediary'
+	to = 'named'
+}
+
+tasks.register('checkUnpickDefinitions', CheckUnpickDefinitionsTask) {
+	group = 'unpick'
+	input = file('unpick-definitions')
+	classpath.from(mapNamedNoUnpickJar.output, minecraftLibraries)
+}
+
+check.dependsOn checkUnpickDefinitions
+unpickIntermediaryJar.mustRunAfter checkUnpickDefinitions // the check will give nicer error messages (not in intermediary)
 
 def mcLibsDir = file('build/tmp/mclibs')
 

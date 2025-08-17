@@ -55,7 +55,7 @@ target_method net.minecraft.util.math.ColorHelper withAlpha (FI)I
 	return argb_color
 target_method net.minecraft.util.math.ColorHelper getWhite (F)I
 	return argb_color
-target_method net.minecraft.util.math.ColorHelper getArgb (FFFF)I
+target_method net.minecraft.util.math.ColorHelper fromFloats (FFFF)I
 	return argb_color
 target_method net.minecraft.util.math.ColorHelper average (II)I
 	param 0 argb_color
@@ -68,13 +68,11 @@ target_method net.minecraft.util.math.ColorHelper fromAbgr (I)I
 
 # These accept ARGB (TextRenderer)
 
-target_method net.minecraft.client.font.TextRenderer draw (Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)I
+target_method net.minecraft.client.font.TextRenderer draw (Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)V
 	param 3 argb_color
-target_method net.minecraft.client.font.TextRenderer draw (Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;IIZ)I
+target_method net.minecraft.client.font.TextRenderer draw (Lnet/minecraft/text/Text;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)V
 	param 3 argb_color
-target_method net.minecraft.client.font.TextRenderer draw (Lnet/minecraft/text/Text;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)I
-	param 3 argb_color
-target_method net.minecraft.client.font.TextRenderer draw (Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)I
+target_method net.minecraft.client.font.TextRenderer draw (Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)V
 	param 3 argb_color
 target_method net.minecraft.client.font.TextRenderer drawWithOutline (Lnet/minecraft/text/OrderedText;FFIILorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;I)V
 	param 3 argb_color
@@ -103,7 +101,9 @@ target_method net.minecraft.client.gui.DrawContext drawTextWithShadow (Lnet/mine
 	param 4 argb_color
 target_method net.minecraft.client.gui.DrawContext drawText (Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;IIIZ)V
 	param 4 argb_color
-target_method net.minecraft.client.gui.DrawContext drawTextWrapped (Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/StringVisitable;IIII)V
+target_method net.minecraft.client.gui.DrawContext drawWrappedText (Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/StringVisitable;IIIIZ)V
+	param 5 argb_color
+target_method net.minecraft.client.gui.DrawContext drawWrappedTextWithShadow (Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/StringVisitable;IIII)V
 	param 5 argb_color
 
 target_method net.minecraft.client.gui.widget.AbstractTextWidget setTextColor (I)Lnet/minecraft/client/gui/widget/AbstractTextWidget;
@@ -112,30 +112,16 @@ target_method net.minecraft.client.gui.widget.AbstractTextWidget setTextColor (I
 # Accepts ARGB (non-TextRenderer)
 target_method net.minecraft.client.gui.DrawContext drawHorizontalLine (IIII)V
 	param 3 argb_color
-target_method net.minecraft.client.gui.DrawContext drawHorizontalLine (Lnet/minecraft/client/render/RenderLayer;IIII)V
-	param 4 argb_color
 target_method net.minecraft.client.gui.DrawContext drawVerticalLine (IIII)V
 	param 3 argb_color
-target_method net.minecraft.client.gui.DrawContext drawVerticalLine (Lnet/minecraft/client/render/RenderLayer;IIII)V
-	param 4 argb_color
 target_method net.minecraft.client.gui.DrawContext fill (IIIII)V
 	param 4 argb_color
-target_method net.minecraft.client.gui.DrawContext fill (IIIIII)V
+target_method net.minecraft.client.gui.DrawContext fill (Lcom/mojang/blaze3d/pipeline/RenderPipeline;IIIII)V
 	param 5 argb_color
-target_method net.minecraft.client.gui.DrawContext fill (Lnet/minecraft/client/render/RenderLayer;IIIII)V
-	param 5 argb_color
-target_method net.minecraft.client.gui.DrawContext fill (Lnet/minecraft/client/render/RenderLayer;IIIIII)V
-	param 6 argb_color
 target_method net.minecraft.client.gui.DrawContext fillGradient (IIIIII)V
 	param 4 argb_color
 	param 5 argb_color
-target_method net.minecraft.client.gui.DrawContext fillGradient (IIIIIII)V
-	param 5 argb_color
-	param 6 argb_color
-target_method net.minecraft.client.gui.DrawContext fillGradient (Lnet/minecraft/client/render/RenderLayer;IIIIIII)V
-	param 5 argb_color
-	param 6 argb_color
-target_method net.minecraft.client.gui.DrawContext drawBorder (IIIII)V
+target_method net.minecraft.client.gui.DrawContext method_73198 (IIIII)V
 	param 4 argb_color
 
 target_method net.minecraft.client.render.VertexConsumer color (I)Lnet/minecraft/client/render/VertexConsumer;
