@@ -34,7 +34,7 @@ target_method net.minecraft.client.model.ModelPart render (Lnet/minecraft/client
 target_method net.minecraft.client.model.ModelPart renderCuboids (Lnet/minecraft/client/util/math/MatrixStack$Entry;Lnet/minecraft/client/render/VertexConsumer;III)V
 	param 2 lightmap_coordinates
 
-target_method net.minecraft.client.render.MapRenderer draw (Lnet/minecraft/client/render/MapRenderState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/entity/command/EntityRenderCommandQueue;ZI)V
+target_method net.minecraft.client.render.MapRenderer draw (Lnet/minecraft/client/render/MapRenderState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;ZI)V
 	param 4 lightmap_coordinates
 
 target_method net.minecraft.client.render.VertexConsumer light (I)Lnet/minecraft/client/render/VertexConsumer;
@@ -57,10 +57,33 @@ target_method net.minecraft.client.render.block.FluidRenderer vertex (Lnet/minec
 target_method net.minecraft.client.render.block.FluidRenderer getLight (Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/util/math/BlockPos;)I
 	return lightmap_coordinates
 
+target_method net.minecraft.client.render.command.RenderCommandQueue submitLabel (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/text/Text;ZID)V
+	param 4 lightmap_coordinates
+target_method net.minecraft.client.render.command.RenderCommandQueue submitText (Lnet/minecraft/client/util/math/MatrixStack;FFLnet/minecraft/text/OrderedText;ZLnet/minecraft/client/font/TextRenderer$TextLayerType;IIII)V
+	param 6 lightmap_coordinates
+target_method net.minecraft.client.render.command.RenderCommandQueue submitModel (Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/RenderLayer;IIILnet/minecraft/client/texture/Sprite;ILnet/minecraft/client/render/command/ModelCommandRenderer$CrumblingOverlayCommand;)V
+	param 4 lightmap_coordinates
+target_method net.minecraft.client.render.command.RenderCommandQueue submitModel (Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/RenderLayer;IIILnet/minecraft/client/render/command/ModelCommandRenderer$CrumblingOverlayCommand;)V
+	param 4 lightmap_coordinates
+target_method net.minecraft.client.render.command.RenderCommandQueue submitModelPart (Lnet/minecraft/client/model/ModelPart;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/RenderLayer;IILnet/minecraft/client/texture/Sprite;)V
+	param 3 lightmap_coordinates
+target_method net.minecraft.client.render.command.RenderCommandQueue submitModelPart (Lnet/minecraft/client/model/ModelPart;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/RenderLayer;IILnet/minecraft/client/texture/Sprite;I)V
+	param 3 lightmap_coordinates
+target_method net.minecraft.client.render.command.RenderCommandQueue submitModelPart (Lnet/minecraft/client/model/ModelPart;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/RenderLayer;IILnet/minecraft/client/texture/Sprite;ZZ)V
+	param 3 lightmap_coordinates
+target_method net.minecraft.client.render.command.RenderCommandQueue submitModelPart (Lnet/minecraft/client/model/ModelPart;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/RenderLayer;IILnet/minecraft/client/texture/Sprite;ZZI)V
+	param 3 lightmap_coordinates
+target_method net.minecraft.client.render.command.RenderCommandQueue submitBlock (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/block/BlockState;III)V
+	param 2 lightmap_coordinates
+target_method net.minecraft.client.render.command.RenderCommandQueue submitBlockStateModel (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/RenderLayer;Lnet/minecraft/client/render/model/BlockStateModel;FFFIII)V
+	param 6 lightmap_coordinates
+target_method net.minecraft.client.render.command.RenderCommandQueue submitItem (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/render/RenderLayer;Lnet/minecraft/client/render/item/ItemRenderState$Glint;)V
+	param 2 lightmap_coordinates
+
 target_method net.minecraft.client.render.entity.DragonFireballEntityRenderer produceVertex (Lnet/minecraft/client/render/VertexConsumer;Lnet/minecraft/client/util/math/MatrixStack$Entry;IFIII)V
 	param 2 lightmap_coordinates
 
-target_method net.minecraft.client.render.entity.EnderDragonEntityRenderer renderCrystalBeam (FFFFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/entity/command/EntityRenderCommandQueue;I)V
+target_method net.minecraft.client.render.entity.EnderDragonEntityRenderer renderCrystalBeam (FFFFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;I)V
 	param 6 lightmap_coordinates
 
 
@@ -78,29 +101,29 @@ target_method net.minecraft.client.render.entity.ItemFrameEntityRenderer getLigh
 	param 2 lightmap_coordinates
 	return lightmap_coordinates
 
-target_method net.minecraft.client.render.entity.AbstractMinecartEntityRenderer renderBlock (Lnet/minecraft/client/render/entity/state/MinecartEntityRenderState;Lnet/minecraft/block/BlockState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/entity/command/EntityRenderCommandQueue;I)V
+target_method net.minecraft.client.render.entity.AbstractMinecartEntityRenderer renderBlock (Lnet/minecraft/client/render/entity/state/MinecartEntityRenderState;Lnet/minecraft/block/BlockState;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;I)V
 	param 4 lightmap_coordinates
 
 target_method net.minecraft.client.render.entity.PaintingEntityRenderer vertex (Lnet/minecraft/client/util/math/MatrixStack$Entry;Lnet/minecraft/client/render/VertexConsumer;FFFFFIIII)V
 	param 10 lightmap_coordinates
 
-target_method net.minecraft.client.render.entity.feature.ArmorFeatureRenderer renderArmor (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/entity/command/EntityRenderCommandQueue;Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/EquipmentSlot;ILnet/minecraft/client/render/entity/state/BipedEntityRenderState;)V
+target_method net.minecraft.client.render.entity.feature.ArmorFeatureRenderer renderArmor (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/EquipmentSlot;ILnet/minecraft/client/render/entity/state/BipedEntityRenderState;)V
 	param 4 lightmap_coordinates
 
-target_method net.minecraft.client.render.entity.feature.FeatureRenderer render (Lnet/minecraft/client/model/Model;Lnet/minecraft/util/Identifier;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/entity/command/EntityRenderCommandQueue;ILnet/minecraft/client/render/entity/state/LivingEntityRenderState;II)V
+target_method net.minecraft.client.render.entity.feature.FeatureRenderer render (Lnet/minecraft/client/model/Model;Lnet/minecraft/util/Identifier;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;ILnet/minecraft/client/render/entity/state/LivingEntityRenderState;II)V
 	param 4 lightmap_coordinates
-target_method net.minecraft.client.render.entity.feature.FeatureRenderer renderModel (Lnet/minecraft/client/model/Model;Lnet/minecraft/util/Identifier;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/entity/command/EntityRenderCommandQueue;ILnet/minecraft/client/render/entity/state/LivingEntityRenderState;II)V
+target_method net.minecraft.client.render.entity.feature.FeatureRenderer renderModel (Lnet/minecraft/client/model/Model;Lnet/minecraft/util/Identifier;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;ILnet/minecraft/client/render/entity/state/LivingEntityRenderState;II)V
 	param 4 lightmap_coordinates
-target_method net.minecraft.client.render.entity.feature.FeatureRenderer render (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/entity/command/EntityRenderCommandQueue;ILnet/minecraft/client/render/entity/state/EntityRenderState;FF)V
+target_method net.minecraft.client.render.entity.feature.FeatureRenderer render (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;ILnet/minecraft/client/render/entity/state/EntityRenderState;FF)V
 	param 2 lightmap_coordinates
 
-target_method net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer renderItem (Lnet/minecraft/client/render/entity/state/ArmedEntityRenderState;Lnet/minecraft/client/render/item/ItemRenderState;Lnet/minecraft/util/Arm;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/entity/command/EntityRenderCommandQueue;I)V
+target_method net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer renderItem (Lnet/minecraft/client/render/entity/state/ArmedEntityRenderState;Lnet/minecraft/client/render/item/ItemRenderState;Lnet/minecraft/util/Arm;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;I)V
 	param 5 lightmap_coordinates
 
-target_method net.minecraft.client.render.entity.feature.ShoulderParrotFeatureRenderer render (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/entity/command/EntityRenderCommandQueue;ILnet/minecraft/client/render/entity/state/PlayerEntityRenderState;Lnet/minecraft/entity/passive/ParrotEntity$Variant;FFZ)V
+target_method net.minecraft.client.render.entity.feature.ShoulderParrotFeatureRenderer render (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;ILnet/minecraft/client/render/entity/state/PlayerEntityRenderState;Lnet/minecraft/entity/passive/ParrotEntity$Variant;FFZ)V
 	param 2 lightmap_coordinates
 
-target_method net.minecraft.client.render.entity.feature.StuckObjectsFeatureRenderer renderObject (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/entity/command/EntityRenderCommandQueue;IFFFI)V
+target_method net.minecraft.client.render.entity.feature.StuckObjectsFeatureRenderer renderObject (Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;IFFFI)V
 	param 2 lightmap_coordinates
 
 target_method net.minecraft.client.render.item.ItemRenderer renderItem (Lnet/minecraft/item/ItemDisplayContext;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;II[ILjava/util/List;Lnet/minecraft/client/render/RenderLayer;Lnet/minecraft/client/render/item/ItemRenderState$Glint;)V
