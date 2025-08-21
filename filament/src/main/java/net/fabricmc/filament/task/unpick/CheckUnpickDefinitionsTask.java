@@ -85,6 +85,7 @@ public abstract class CheckUnpickDefinitionsTask extends DefaultTask {
 					}
 
 					List<UnpickSyntaxException> errors;
+
 					try {
 						errors = validateUnpickFile(unpickFile, classResolver, classpathJars);
 					} catch (IOException e) {
@@ -93,9 +94,11 @@ public abstract class CheckUnpickDefinitionsTask extends DefaultTask {
 
 					if (!errors.isEmpty()) {
 						Path relativePath = getParameters().getInput().getAsFile().get().toPath().relativize(unpickFile.toPath());
+
 						for (UnpickSyntaxException error : errors) {
 							LOGGER.error("{}: {}", relativePath, error.getMessage());
 						}
+
 						failureCount.addAndGet(errors.size());
 					}
 				});
