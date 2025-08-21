@@ -1,4 +1,4 @@
-package net.fabricmc.filament.task;
+package net.fabricmc.filament.task.unpick;
 
 import java.io.File;
 import java.io.FileReader;

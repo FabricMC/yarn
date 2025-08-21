@@ -1,4 +1,4 @@
-package net.fabricmc.filament.task;
+package net.fabricmc.filament.task.unpick;
 
 import java.io.File;
 import java.io.FileReader;
@@ -84,14 +84,19 @@ public abstract class CheckUnpickDefinitionsTask extends DefaultTask {
 						return;
 					}
 
+					List<UnpickSyntaxException> errors;
 					try {
-						validateUnpickFile(unpickFile, classResolver, classpathJars);
-					} catch (UnpickSyntaxException e) {
-						Path relativePath = getParameters().getInput().getAsFile().get().toPath().relativize(unpickFile.toPath());
-						LOGGER.error("{}: {}", relativePath, e.getMessage());
-						failureCount.incrementAndGet();
+						errors = validateUnpickFile(unpickFile, classResolver, classpathJars);
 					} catch (IOException e) {
 						throw new UncheckedIOException(e);
+					}
+
+					if (!errors.isEmpty()) {
+						Path relativePath = getParameters().getInput().getAsFile().get().toPath().relativize(unpickFile.toPath());
+						for (UnpickSyntaxException error : errors) {
+							LOGGER.error("{}: {}", relativePath, error.getMessage());
+						}
+						failureCount.addAndGet(errors.size());
 					}
 				});
 
@@ -123,14 +128,16 @@ public abstract class CheckUnpickDefinitionsTask extends DefaultTask {
 			return result;
 		}
 
-		private static void validateUnpickFile(File file, IClassResolver classResolver, List<FileSystemUtil.Delegate> classpathJars) throws IOException {
+		private static List<UnpickSyntaxException> validateUnpickFile(File file, IClassResolver classResolver, List<FileSystemUtil.Delegate> classpathJars) throws IOException {
 			try (UnpickV3Reader reader = new UnpickV3Reader(new FileReader(file))) {
-				reader.accept(new ValidatingUnpickV3Visitor(classResolver) {
+				ValidatingUnpickV3Visitor validator = new ValidatingUnpickV3Visitor(classResolver) {
 					@Override
 					public boolean packageExists(String packageName) {
 						return CheckAction.packageExists(classpathJars, packageName);
 					}
-				});
+				};
+				reader.accept(validator);
+				return validator.finishValidation();
 			}
 		}
 
