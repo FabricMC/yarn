@@ -1,5 +1,6 @@
 package net.fabricmc.filament.task;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -57,8 +58,10 @@ public abstract class JavadocLintTask extends DefaultTask {
 
 	@TaskAction
 	public void run(InputChanges changes) {
-		List<FileChange> fileChanges = StreamSupport.stream(changes.getFileChanges(mappingDirectory).spliterator(), false)
-				.filter(change -> change.getChangeType() != ChangeType.REMOVED && change.getFileType() == FileType.FILE).toList();
+		List<File> fileChanges = StreamSupport.stream(changes.getFileChanges(mappingDirectory).spliterator(), false)
+				.filter(change -> change.getChangeType() != ChangeType.REMOVED && change.getFileType() == FileType.FILE)
+				.map(FileChange::getFile)
+				.toList();
 
 		if (fileChanges.isEmpty()) {
 			// Nothing changed, nothing to do!
