@@ -6,8 +6,13 @@ CLASS net/minecraft/class_350 net/minecraft/client/gui/widget/EntryListWidget
 	FIELD field_33780 hoveredEntry Lnet/minecraft/class_350$class_351;
 	FIELD field_49478 MENU_LIST_BACKGROUND_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_49892 INWORLD_MENU_LIST_BACKGROUND_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_62109 itemHeight I
+	FIELD field_62110 SPACER_HEIGHT I
 	METHOD <init> (Lnet/minecraft/class_310;IIII)V
 		ARG 1 client
+		ARG 2 width
+		ARG 3 height
+		ARG 4 y
 		ARG 5 itemHeight
 	METHOD method_25308 getEntryAtPosition (DD)Lnet/minecraft/class_350$class_351;
 		ARG 1 x
@@ -22,13 +27,16 @@ CLASS net/minecraft/class_350 net/minecraft/client/gui/widget/EntryListWidget
 	METHOD method_25313 setSelected (Lnet/minecraft/class_350$class_351;)V
 		ARG 1 entry
 	METHOD method_25314 replaceEntries (Ljava/util/Collection;)V
+		ARG 1 collection
 	METHOD method_25319 getRowBottom (I)I
 		ARG 1 index
 	METHOD method_25321 addEntry (Lnet/minecraft/class_350$class_351;)I
 		ARG 1 entry
 	METHOD method_25322 getRowWidth ()I
 	METHOD method_25324 centerScrollOn (Lnet/minecraft/class_350$class_351;)V
+		ARG 1 entry
 	METHOD method_25330 removeEntry (Lnet/minecraft/class_350$class_351;)V
+		ARG 1 entry
 	METHOD method_25334 getSelectedOrNull ()Lnet/minecraft/class_350$class_351;
 		COMMENT {@return the selected entry of this entry list, or {@code null} if there is none}
 	METHOD method_25337 getRowTop (I)I
@@ -48,8 +56,11 @@ CLASS net/minecraft/class_350 net/minecraft/client/gui/widget/EntryListWidget
 		ARG 2 mouseX
 		ARG 3 mouseY
 		ARG 4 delta
+		ARG 5 entry
 	METHOD method_44398 drawSelectionHighlight (Lnet/minecraft/class_332;Lnet/minecraft/class_350$class_351;I)V
 		ARG 1 context
+		ARG 2 entry
+		ARG 3 color
 	METHOD method_44399 addEntryToTop (Lnet/minecraft/class_350$class_351;)V
 		ARG 1 entry
 	METHOD method_44650 removeEntryWithoutScrolling (Lnet/minecraft/class_350$class_351;)V
@@ -78,15 +89,60 @@ CLASS net/minecraft/class_350 net/minecraft/client/gui/widget/EntryListWidget
 		ARG 3 y
 	METHOD method_57715 drawMenuListBackground (Lnet/minecraft/class_332;)V
 		ARG 1 context
+	METHOD method_73367 recalculateAllChildrenPositions ()V
+	METHOD method_73368 swapEntriesOnPositions (II)V
+		ARG 1 pos1
+		ARG 2 pos2
+	METHOD method_73369 position (IIII)V
+		ARG 1 width
+		ARG 2 height
+		ARG 3 x
+		ARG 4 y
+	METHOD method_73370 addEntry (Lnet/minecraft/class_350$class_351;I)I
+		ARG 1 entry
+		ARG 2 entryHeight
+	METHOD method_73371 (Lnet/minecraft/class_350$class_351;Lnet/minecraft/class_350$class_351;)Z
+		ARG 1 entry
+	METHOD method_73372 sort (Ljava/util/Comparator;)V
+		ARG 1 comparator
+	METHOD method_73373 removeEntries (Ljava/util/List;)V
+		ARG 1 entries
+	METHOD method_73374 clearEntriesExcept (Lnet/minecraft/class_350$class_351;)V
+		ARG 1 entryToKeep
+	METHOD method_73375 addEntryToTop (Lnet/minecraft/class_350$class_351;I)V
+		ARG 1 entry
+		ARG 2 entryHeight
+	METHOD method_73376 getYOfFirstEntry ()I
+	METHOD method_73377 scrollTo (Lnet/minecraft/class_350$class_351;)V
+		ARG 1 entry
+	METHOD method_73378 getYOfNextEntry ()I
+	METHOD method_73379 isEntrySelectionAllowed ()Z
 	CLASS class_351 Entry
 		FIELD field_22752 parentList Lnet/minecraft/class_350;
+		FIELD field_62111 x I
+		FIELD field_62112 y I
+		FIELD field_62113 width I
+		FIELD field_62114 height I
+		FIELD field_62115 PADDING I
 		METHOD method_25343 render (Lnet/minecraft/class_332;IIZF)V
 			COMMENT Renders an entry in a list.
 			ARG 1 context
-			ARG 2 index
-				COMMENT the index of the entry
-			ARG 3 y
-				COMMENT the Y coordinate of the entry
+			ARG 2 mouseX
+			ARG 3 mouseY
+			ARG 4 hovered
+			ARG 5 deltaTicks
+		METHOD method_73380 getContentX ()I
+		METHOD method_73381 setWidth (I)V
+			ARG 1 width
+		METHOD method_73382 getContentY ()I
+		METHOD method_73383 setHeight (I)V
+			ARG 1 height
+		METHOD method_73384 getContentHeight ()I
+		METHOD method_73385 getContentMiddleY ()I
+		METHOD method_73386 getContentBottomEnd ()I
+		METHOD method_73387 getContentWidth ()I
+		METHOD method_73388 getContentMiddleX ()I
+		METHOD method_73389 getContentRightEnd ()I
 	CLASS class_352 Entries
 		FIELD field_2146 entries Ljava/util/List;
 		METHOD add (ILjava/lang/Object;)V
