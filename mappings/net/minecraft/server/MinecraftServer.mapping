@@ -24,7 +24,6 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4550 playerManager Lnet/minecraft/class_3324;
 	FIELD field_4551 lastPlayerSampleUpdate J
 	FIELD field_4552 keyPair Ljava/security/KeyPair;
-	FIELD field_4554 flightEnabled Z
 	FIELD field_4555 serverPort I
 	FIELD field_4558 scoreboard Lnet/minecraft/class_2995;
 	FIELD field_4560 preventProxyConnections Z
@@ -43,7 +42,6 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_4596 playerIdleTimeout I
 	FIELD field_4599 proxy Ljava/net/Proxy;
 	FIELD field_4602 random Lnet/minecraft/class_5819;
-	FIELD field_4604 pvpEnabled Z
 	FIELD field_16257 serverThread Ljava/lang/Thread;
 	FIELD field_17200 workerExecutor Ljava/util/concurrent/Executor;
 	FIELD field_17601 serverId Ljava/lang/String;
@@ -65,7 +63,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_33979 needsDebugSetup Z
 	FIELD field_34982 VANILLA Ljava/lang/String;
 	FIELD field_35437 saving Z
-	FIELD field_35641 ANONYMOUS_PLAYER_PROFILE Lcom/mojang/authlib/GameProfile;
+	FIELD field_35641 ANONYMOUS_PLAYER_PROFILE Lnet/minecraft/class_11560;
 	FIELD field_39214 hostProfile Lcom/mojang/authlib/GameProfile;
 	FIELD field_39440 apiServices Lnet/minecraft/class_7497;
 	FIELD field_42958 favicon Lnet/minecraft/class_2926$class_8145;
@@ -92,6 +90,7 @@ CLASS net/minecraft/server/MinecraftServer
 	FIELD field_53718 waitingForNextTick Z
 	FIELD field_54275 discontinuousFrame Lcom/mojang/jtracy/DiscontinuousFrame;
 	FIELD field_61872 chunkLoadProgress Lnet/minecraft/class_11545;
+	FIELD field_62494 managementListener Lnet/minecraft/class_11870;
 	METHOD <init> (Ljava/lang/Thread;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_3283;Lnet/minecraft/class_6904;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_7497;Lnet/minecraft/class_11545;)V
 		ARG 1 serverThread
 		ARG 2 session
@@ -130,8 +129,7 @@ CLASS net/minecraft/server/MinecraftServer
 		COMMENT @see #setHostProfile
 	METHOD method_3725 getIconFile ()Ljava/util/Optional;
 	METHOD method_3727 hasGui ()Z
-	METHOD method_3728 kickNonWhitelistedPlayers (Lnet/minecraft/class_2168;)V
-		ARG 1 source
+	METHOD method_3728 kickNonWhitelistedPlayers ()V
 	METHOD method_3729 isEnforceWhitelist ()Z
 	METHOD method_3730 setDemo (Z)V
 		ARG 1 demo
@@ -150,8 +148,6 @@ CLASS net/minecraft/server/MinecraftServer
 		ARG 1 tickable
 	METHOD method_3744 setCrashReport (Lnet/minecraft/class_128;)V
 		ARG 1 report
-	METHOD method_3745 setFlightEnabled (Z)V
-		ARG 1 flightEnabled
 	METHOD method_3747 stop (Z)V
 		COMMENT Stops this server.
 		COMMENT
@@ -200,7 +196,6 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3780 getTicks ()I
 		COMMENT Gets the amount of ticks the server has been running for.
 	METHOD method_3782 shutdown ()V
-	METHOD method_3783 isMonsterSpawningEnabled ()Z
 	METHOD method_3785 isSpawnProtected (Lnet/minecraft/class_3218;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)Z
 		ARG 1 world
 		ARG 2 pos
@@ -217,8 +212,6 @@ CLASS net/minecraft/server/MinecraftServer
 		COMMENT Specifies whether command blocks can execute commands on the server.
 	METHOD method_3813 tickWorlds (Ljava/util/function/BooleanSupplier;)V
 		ARG 1 shouldKeepTicking
-	METHOD method_3815 setPvpEnabled (Z)V
-		ARG 1 pvpEnabled
 	METHOD method_3816 isDedicated ()Z
 		COMMENT Checks whether this server is a dedicated server.
 		COMMENT
@@ -245,11 +238,11 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_3834 setMotd (Ljava/lang/String;)V
 		ARG 1 motd
 	METHOD method_3835 getPermissionLevel (Lnet/minecraft/class_11560;)I
+		ARG 1 player
 	METHOD method_3836 getDataPackManager ()Lnet/minecraft/class_3283;
 	METHOD method_3837 getBossBarManager ()Lnet/minecraft/class_3004;
 	METHOD method_3838 setDefaultGameMode (Lnet/minecraft/class_1934;)V
 		ARG 1 gameMode
-	METHOD method_3841 getSpawnProtectionRadius ()I
 	METHOD method_3842 setServerIp (Ljava/lang/String;)V
 		ARG 1 serverIp
 	METHOD method_3845 getScoreboard ()Lnet/minecraft/class_2995;
@@ -292,6 +285,7 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_19465 sendDifficulty (Lnet/minecraft/class_3222;)V
 		ARG 1 player
 	METHOD method_19466 isHost (Lnet/minecraft/class_11560;)Z
+		ARG 1 player
 	METHOD method_19467 setDifficultyLocked (Z)V
 		ARG 1 locked
 	METHOD method_20415 runOneTask ()Z
@@ -464,8 +458,6 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_60582 setWorldGenException (Ljava/lang/RuntimeException;)V
 		ARG 0 exception
 	METHOD method_60584 checkWorldGenException ()Z
-	METHOD method_60671 isWorldAllowed (Lnet/minecraft/class_1937;)Z
-		ARG 1 world
 	METHOD method_60672 getServerLinks ()Lnet/minecraft/class_9782;
 	METHOD method_61089 writeChunkIoReport (Lnet/minecraft/class_128;Lnet/minecraft/class_1923;Lnet/minecraft/class_9240;)V
 		ARG 1 report
@@ -490,6 +482,14 @@ CLASS net/minecraft/server/MinecraftServer
 	METHOD method_73046 getChunkLoadProgress ()Lnet/minecraft/class_11545;
 	METHOD method_73282 getCodeOfConductLanguages ()Ljava/util/Map;
 	METHOD method_73550 getApiServices ()Lnet/minecraft/class_7497;
+	METHOD method_73568 getUseAllowlist ()Z
+	METHOD method_73589 setUseAllowlist (Z)V
+	METHOD method_74055 getManagementListener ()Lnet/minecraft/class_11870;
+	METHOD method_74058 onGameRuleUpdated (Ljava/lang/String;Lnet/minecraft/class_1928$class_4315;)V
+		ARG 1 untypedGameRuleKey
+		ARG 2 rule
+	METHOD method_74060 getAutosave ()Z
+	METHOD method_74061 setAutosave (Z)Z
 	CLASS 1
 		FIELD field_61875 chunkLoadingManager Lnet/minecraft/class_3898;
 		FIELD field_61876 spawnChunkX I
