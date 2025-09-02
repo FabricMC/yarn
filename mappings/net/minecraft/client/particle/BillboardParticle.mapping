@@ -1,7 +1,30 @@
 CLASS net/minecraft/class_3940 net/minecraft/client/particle/BillboardParticle
 	COMMENT A {@link Particle} which renders a camera-facing sprite with a target texture scale.
 	FIELD field_17867 scale F
+	FIELD field_62632 sprite Lnet/minecraft/class_1058;
+	FIELD field_62633 red F
+	FIELD field_62634 green F
+	FIELD field_62635 blue F
+	FIELD field_62636 alpha F
+	METHOD <init> (Lnet/minecraft/class_638;DDDDDDLnet/minecraft/class_1058;)V
+		ARG 1 world
+		ARG 2 x
+		ARG 4 y
+		ARG 6 z
+		ARG 8 velocityX
+		ARG 10 velocityY
+		ARG 12 velocityZ
+		ARG 14 sprite
+	METHOD <init> (Lnet/minecraft/class_638;DDDLnet/minecraft/class_1058;)V
+		ARG 1 world
+		ARG 2 x
+		ARG 4 y
+		ARG 6 z
+		ARG 8 sprite
 	METHOD method_3074 render (Lnet/minecraft/class_11944;Lnet/minecraft/class_4184;F)V
+		ARG 1 submittable
+		ARG 2 camera
+		ARG 3 tickProgress
 	METHOD method_18132 getSize (F)F
 		COMMENT {@return the draw scale of this particle, which is used while rendering in {@link #buildGeometry}}
 		ARG 1 tickProgress
@@ -15,12 +38,28 @@ CLASS net/minecraft/class_3940 net/minecraft/client/particle/BillboardParticle
 		COMMENT {@return the upper V coordinate of the UV coordinates used to draw this particle}
 	METHOD method_55245 getRotator ()Lnet/minecraft/class_3940$class_8981;
 	METHOD method_60373 render (Lnet/minecraft/class_11944;Lnet/minecraft/class_4184;Lorg/joml/Quaternionf;F)V
+		ARG 1 submittable
 		ARG 2 camera
+		ARG 3 rotation
 		ARG 4 tickProgress
 	METHOD method_60375 renderVertex (Lnet/minecraft/class_11944;Lorg/joml/Quaternionf;FFFF)V
+		ARG 1 submittable
+		ARG 2 rotation
 		ARG 3 x
 		ARG 4 y
 		ARG 5 z
+		ARG 6 tickProgress
+	METHOD method_74255 getRenderType ()Lnet/minecraft/class_3940$class_11941;
+	METHOD method_74305 setColor (FFF)V
+		ARG 1 red
+		ARG 2 green
+		ARG 3 blue
+	METHOD method_74306 updateSprite (Lnet/minecraft/class_4002;)V
+		ARG 1 spriteProvider
+	METHOD method_74307 setSprite (Lnet/minecraft/class_1058;)V
+		ARG 1 sprite
+	METHOD method_74308 setAlpha (F)V
+		ARG 1 alpha
 	CLASS class_8981 Rotator
 		FIELD field_47457 ALL_AXIS Lnet/minecraft/class_3940$class_8981;
 		FIELD field_47458 Y_AND_W_ONLY Lnet/minecraft/class_3940$class_8981;
@@ -36,3 +75,8 @@ CLASS net/minecraft/class_3940 net/minecraft/client/particle/BillboardParticle
 			ARG 1 quaternion
 			ARG 2 camera
 			ARG 3 tickProgress
+	CLASS class_11941 RenderType
+		FIELD field_62642 renderLayer Lnet/minecraft/class_1921;
+		METHOD <init> (Ljava/lang/String;ILnet/minecraft/class_1921;)V
+			ARG 3 renderLayer
+		METHOD method_74309 getRenderLayer ()Lnet/minecraft/class_1921;
