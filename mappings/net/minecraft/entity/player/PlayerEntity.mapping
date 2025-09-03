@@ -13,6 +13,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	FIELD field_7504 experiencePickUpDelay I
 	FIELD field_7507 gameProfile Lcom/mojang/authlib/GameProfile;
 	FIELD field_7508 lastPlayedLevelUpSoundTime I
+	FIELD field_7509 baseFlySpeed F
 	FIELD field_7510 experienceProgress F
 	FIELD field_7511 SCORE Lnet/minecraft/class_2940;
 	FIELD field_7512 currentScreenHandler Lnet/minecraft/class_1703;
@@ -23,14 +24,27 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	FIELD field_7525 selectedItem Lnet/minecraft/class_1799;
 	FIELD field_18134 POSE_DIMENSIONS Ljava/util/Map;
 	FIELD field_18135 STANDING_DIMENSIONS Lnet/minecraft/class_4048;
+	FIELD field_30644 MAX_HEALTH I
+	FIELD field_30645 SLEEP_DURATION I
+	FIELD field_30646 WAKE_UP_DURATION I
+	FIELD field_30647 ENDER_SLOT_OFFSET I
+	FIELD field_30648 CROUCH_BOX_HEIGHT F
+	FIELD field_30649 SWIMMING_BOX_WIDTH F
+	FIELD field_30650 SWIMMING_BOX_HEIGHT F
 	FIELD field_39445 lastDeathPos Ljava/util/Optional;
 	FIELD field_41765 damageTiltYaw F
+	FIELD field_47819 BLOCK_INTERACTION_RANGE F
+	FIELD field_47820 ENTITY_INTERACTION_RANGE F
+	FIELD field_49734 HELD_ITEM_SLOT_OFFSET I
+	FIELD field_49735 CRAFTING_SLOT_OFFSET I
 	FIELD field_49989 currentExplosionImpactPos Lnet/minecraft/class_243;
 	FIELD field_49990 explodedBy Lnet/minecraft/class_1297;
 	FIELD field_49991 ignoreFallDamageFromCurrentExplosion Z
 	FIELD field_52223 currentExplosionResetGraceTime I
 	FIELD field_55203 remainingLoadTicks I
 	FIELD field_55204 loaded Z
+	FIELD field_62530 LEFT_SHOULDER_PARROT_VARIANT_ID Lnet/minecraft/class_2940;
+	FIELD field_62531 RIGHT_SHOULDER_PARROT_VARIANT_ID Lnet/minecraft/class_2940;
 	METHOD <init> (Lnet/minecraft/class_1937;Lcom/mojang/authlib/GameProfile;)V
 		ARG 1 world
 		ARG 2 profile
@@ -237,6 +251,8 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_23668 checkGliding ()Z
 	METHOD method_23669 startGliding ()V
 	METHOD method_26956 createPlayerAttributes ()Lnet/minecraft/class_5132$class_5133;
+	METHOD method_30263 isStandingOnSurface (F)Z
+		ARG 1 stepHeight
 	METHOD method_31548 getInventory ()Lnet/minecraft/class_1661;
 	METHOD method_31549 getAbilities ()Lnet/minecraft/class_1656;
 	METHOD method_31550 isUsingSpyglass ()Z
@@ -293,6 +309,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_59818 isSpaceAroundPlayerEmpty (DDD)Z
 		ARG 1 offsetX
 		ARG 3 offsetZ
+		ARG 5 stepHeight
 	METHOD method_59903 getDamageAgainst (Lnet/minecraft/class_1297;FLnet/minecraft/class_1282;)F
 		ARG 1 target
 		ARG 2 baseDamage
@@ -332,6 +349,22 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_71753 openDialog (Lnet/minecraft/class_6880;)V
 		ARG 1 dialog
 	METHOD method_72498 getPlayerConfigEntry ()Lnet/minecraft/class_11560;
+	METHOD method_74025 hasBlindnessEffect ()Z
+	METHOD method_74082 handleShoulderParrots ()V
+	METHOD method_74130 (Lnet/minecraft/class_1453$class_7989;)Ljava/util/OptionalInt;
+		ARG 0 variant
+	METHOD method_74131 mapParrotVariant (Ljava/util/Optional;)Ljava/util/OptionalInt;
+		ARG 0 variant
+	METHOD method_74132 mapParrotVariantIfPresent (Ljava/util/OptionalInt;)Ljava/util/Optional;
+		ARG 0 variantIndex
+	METHOD method_74133 setLeftShoulderParrotVariant (Ljava/util/Optional;)V
+		ARG 1 variant
+	METHOD method_74134 setRightShoulderParrotVariant (Ljava/util/Optional;)V
+		ARG 1 variant
+	METHOD method_74135 readParrotVariant (Lnet/minecraft/class_2487;)Ljava/util/Optional;
+		ARG 0 nbt
+	METHOD method_74136 getLeftShoulderParrotVariant ()Ljava/util/Optional;
+	METHOD method_74137 getRightShoulderParrotVariant ()Ljava/util/Optional;
 	CLASS class_1658 SleepFailureReason
 		COMMENT A reason why a player cannot start sleeping.
 		FIELD field_18593 message Lnet/minecraft/class_2561;
