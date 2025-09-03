@@ -22,16 +22,27 @@ CLASS net/minecraft/class_528 net/minecraft/client/gui/screen/world/WorldListWid
 	FIELD field_45576 JOIN_HIGHLIGHTED_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_45577 JOIN_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_46897 INCOMPATIBLE_TOOLTIP Lnet/minecraft/class_2561;
+	FIELD field_62188 worldListType Lnet/minecraft/class_528$class_11781;
+	FIELD field_62189 failedToGetLevels Z
+	FIELD field_62190 selectionCallback Ljava/util/function/Consumer;
+	FIELD field_62191 confirmationCallback Ljava/util/function/Consumer;
 	METHOD <init> (Lnet/minecraft/class_437;Lnet/minecraft/class_310;IILjava/lang/String;Lnet/minecraft/class_528;Ljava/util/function/Consumer;Ljava/util/function/Consumer;Lnet/minecraft/class_528$class_11781;)V
+		ARG 1 parent
 		ARG 2 client
 		ARG 3 width
 		ARG 4 height
+		ARG 5 search
+		ARG 6 predecessor
+		ARG 7 selectionCallback
+		ARG 8 confirmationCallback
+		ARG 9 worldListType
 	METHOD method_2752 getParent ()Lnet/minecraft/class_437;
 	METHOD method_20159 getSelectedAsOptional ()Ljava/util/Optional;
 	METHOD method_43453 shouldShow (Ljava/lang/String;Lnet/minecraft/class_34;)Z
 		ARG 1 search
 		ARG 2 summary
 	METHOD method_43454 showSummaries (Ljava/lang/String;Ljava/util/List;)V
+		ARG 1 search
 		ARG 2 summaries
 	METHOD method_43455 (Ljava/lang/Throwable;)Ljava/util/List;
 		ARG 1 throwable
@@ -42,14 +53,29 @@ CLASS net/minecraft/class_528 net/minecraft/client/gui/screen/world/WorldListWid
 	METHOD method_44677 setSearch (Ljava/lang/String;)V
 		ARG 1 search
 	METHOD method_44678 show (Ljava/util/List;)V
+		ARG 1 summaries
 	METHOD method_44679 tryGet ()Ljava/util/List;
 	METHOD method_44680 load ()V
+	METHOD method_73451 refresh ()V
+	METHOD method_73452 (Ljava/util/List;Lnet/minecraft/class_528$class_7414;)Z
+		ARG 1 child
+	METHOD method_73453 (Lnet/minecraft/class_528$class_7414;)V
+		ARG 1 entry
+	METHOD method_73454 (Ljava/lang/String;Lnet/minecraft/class_34;)Z
+		ARG 2 summary
 	CLASS class_4272 WorldEntry
 		FIELD field_19136 client Lnet/minecraft/class_310;
 		FIELD field_19137 screen Lnet/minecraft/class_437;
 		FIELD field_19138 level Lnet/minecraft/class_34;
 		FIELD field_19140 iconPath Ljava/nio/file/Path;
 		FIELD field_19141 icon Lnet/minecraft/class_8573;
+		FIELD field_62205 parent Lnet/minecraft/class_528;
+		FIELD field_62206 displayNameWidget Lnet/minecraft/class_7842;
+		FIELD field_62207 nameWidget Lnet/minecraft/class_7842;
+		FIELD field_62208 detailsWidget Lnet/minecraft/class_7842;
+		METHOD <init> (Lnet/minecraft/class_528;Lnet/minecraft/class_34;)V
+			ARG 1 parent
+			ARG 2 summary
 		METHOD method_20164 play ()V
 		METHOD method_20165 (Lnet/minecraft/class_1940;Lnet/minecraft/class_7193;Ljava/nio/file/Path;Z)V
 			ARG 4 confirmed
@@ -65,9 +91,44 @@ CLASS net/minecraft/class_528 net/minecraft/client/gui/screen/world/WorldListWid
 		METHOD method_52265 validateIconPath ()V
 		METHOD method_54628 (Lnet/minecraft/class_32$class_5143;Z)V
 			ARG 2 edited
+		METHOD method_73465 allowConfirmationByKeyboard ()Z
 	CLASS class_7414 Entry
+		METHOD method_73463 getLevel ()Lnet/minecraft/class_34;
 	CLASS class_7415 LoadingEntry
 		FIELD field_38997 LOADING_LIST_TEXT Lnet/minecraft/class_2561;
 		FIELD field_38998 client Lnet/minecraft/class_310;
 		METHOD <init> (Lnet/minecraft/class_310;)V
 			ARG 1 client
+	CLASS class_11780 Builder
+		FIELD field_62192 client Lnet/minecraft/class_310;
+		FIELD field_62193 parent Lnet/minecraft/class_437;
+		FIELD field_62194 width I
+		FIELD field_62195 height I
+		FIELD field_62196 search Ljava/lang/String;
+		FIELD field_62197 worldListType Lnet/minecraft/class_528$class_11781;
+		FIELD field_62198 predecessor Lnet/minecraft/class_528;
+		FIELD field_62199 selectionCallback Ljava/util/function/Consumer;
+		FIELD field_62200 confirmationCallback Ljava/util/function/Consumer;
+		METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_437;)V
+			ARG 1 client
+			ARG 2 parent
+		METHOD method_73455 uploadWorld ()Lnet/minecraft/class_528$class_11780;
+		METHOD method_73456 width (I)Lnet/minecraft/class_528$class_11780;
+			ARG 1 width
+		METHOD method_73457 predecessor (Lnet/minecraft/class_528;)Lnet/minecraft/class_528$class_11780;
+			ARG 1 predecessor
+		METHOD method_73458 search (Ljava/lang/String;)Lnet/minecraft/class_528$class_11780;
+			ARG 1 search
+		METHOD method_73459 selectionCallback (Ljava/util/function/Consumer;)Lnet/minecraft/class_528$class_11780;
+			ARG 1 selectionCallback
+		METHOD method_73460 toWidget ()Lnet/minecraft/class_528;
+		METHOD method_73461 height (I)Lnet/minecraft/class_528$class_11780;
+			ARG 1 height
+		METHOD method_73462 confirmationCallback (Ljava/util/function/Consumer;)Lnet/minecraft/class_528$class_11780;
+			ARG 1 confirmationCallback
+	CLASS class_11781 WorldListType
+	CLASS class_11782 EmptyListEntry
+		FIELD field_62204 widget Lnet/minecraft/class_7842;
+		METHOD <init> (Lnet/minecraft/class_2561;Lnet/minecraft/class_327;)V
+			ARG 1 text
+			ARG 2 textRenderer
