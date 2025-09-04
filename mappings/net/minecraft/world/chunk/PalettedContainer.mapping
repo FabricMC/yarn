@@ -6,8 +6,16 @@ CLASS net/minecraft/class_2841 net/minecraft/world/chunk/PalettedContainer
 	FIELD field_34560 data Lnet/minecraft/class_2841$class_6561;
 	FIELD field_34561 paletteProvider Lnet/minecraft/class_6563;
 	FIELD field_36300 lockHelper Lnet/minecraft/class_5798;
+	METHOD <init> (Ljava/lang/Object;Lnet/minecraft/class_6563;)V
+		ARG 1 defaultValue
+		ARG 2 paletteProvider
 	METHOD <init> (Lnet/minecraft/class_2841;)V
 		ARG 1 container
+	METHOD <init> (Lnet/minecraft/class_6563;Lnet/minecraft/class_11895;Lnet/minecraft/class_6490;Lnet/minecraft/class_2837;)V
+		ARG 1 paletteProvider
+		ARG 2 type
+		ARG 3 storage
+		ARG 4 palette
 	METHOD method_12322 set (ILjava/lang/Object;)V
 		ARG 1 index
 		ARG 2 value
@@ -59,13 +67,36 @@ CLASS net/minecraft/class_2841 net/minecraft/world/chunk/PalettedContainer
 		COMMENT Creates a codec for a paletted container with a specific palette provider.
 		COMMENT
 		COMMENT @return the created codec
+		ARG 0 entryCodec
+		ARG 1 provider
+		ARG 2 defaultValue
+		ARG 3 reader
+	METHOD method_38302 (Lnet/minecraft/class_6563;Lnet/minecraft/class_7522;)Lnet/minecraft/class_7522$class_6562;
+		ARG 1 container
 	METHOD method_39794 (Ljava/util/function/Consumer;Lnet/minecraft/class_2837;I)V
 		ARG 2 id
 	METHOD method_44341 (Lnet/minecraft/class_2841;)Lnet/minecraft/class_7522;
 		ARG 0 result
+	METHOD method_44342 (Lnet/minecraft/class_7522$class_7523;Lnet/minecraft/class_6563;Lnet/minecraft/class_7522$class_6562;)Lcom/mojang/serialization/DataResult;
+		ARG 2 serialized
 	METHOD method_44343 createPalettedContainerCodec (Lcom/mojang/serialization/Codec;Lnet/minecraft/class_6563;Ljava/lang/Object;)Lcom/mojang/serialization/Codec;
+		ARG 0 entryCodec
+		ARG 1 provider
+		ARG 2 defaultValue
 	METHOD method_44346 read (Lnet/minecraft/class_6563;Lnet/minecraft/class_7522$class_6562;)Lcom/mojang/serialization/DataResult;
+		ARG 0 provider
+		ARG 1 serialized
 	METHOD method_44347 createReadableContainerCodec (Lcom/mojang/serialization/Codec;Lnet/minecraft/class_6563;Ljava/lang/Object;)Lcom/mojang/serialization/Codec;
+		ARG 0 entryCodec
+		ARG 1 provider
+		ARG 2 defaultValue
+	METHOD method_44348 (Lnet/minecraft/class_6563;Lnet/minecraft/class_7522$class_6562;)Lcom/mojang/serialization/DataResult;
+		ARG 0 paletteProvider
+		ARG 1 serialized
+	METHOD method_74156 repack (Lnet/minecraft/class_6490;Lnet/minecraft/class_2837;Lnet/minecraft/class_2837;)[I
+		ARG 0 storage
+		ARG 1 oldPalette
+		ARG 2 newPalette
 	CLASS class_4464 Counter
 		COMMENT A counter that receives a palette entry and its number of occurrences
 		COMMENT in the container.
@@ -93,6 +124,7 @@ CLASS net/minecraft/class_2841 net/minecraft/world/chunk/PalettedContainer
 			COMMENT {@return the size of this data, in bytes, when written to a packet}
 			COMMENT
 			COMMENT @see #writePacket(PacketByteBuf)
+			ARG 1 idList
 		METHOD method_38308 importFrom (Lnet/minecraft/class_2837;Lnet/minecraft/class_6490;)V
 			COMMENT Imports the data from the other {@code storage} with the other
 			COMMENT {@code palette}.
@@ -100,4 +132,5 @@ CLASS net/minecraft/class_2841 net/minecraft/world/chunk/PalettedContainer
 			ARG 2 storage
 		METHOD method_38309 writePacket (Lnet/minecraft/class_2540;Lnet/minecraft/class_2359;)V
 			ARG 1 buf
+			ARG 2 idList
 		METHOD method_44338 copy ()Lnet/minecraft/class_2841$class_6561;
