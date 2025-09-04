@@ -33,12 +33,12 @@ CLASS net/minecraft/class_3558 net/minecraft/world/chunk/light/ChunkLightProvide
 		ARG 1 state
 	METHOD method_50018 getStateForLighting (Lnet/minecraft/class_2338;)Lnet/minecraft/class_2680;
 		ARG 1 pos
-	METHOD method_51529 (J)V
+	METHOD method_51529 checkForLightUpdate (J)V
 		ARG 1 blockPos
-	METHOD method_51530 (JJ)V
+	METHOD method_51530 propagateLightDecrease (JJ)V
 		ARG 1 blockPos
 		ARG 3 packed
-	METHOD method_51531 (JJI)V
+	METHOD method_51531 propagateLightIncrease (JJI)V
 		ARG 1 blockPos
 		ARG 3 packed
 		ARG 5 lightLevel
@@ -50,31 +50,34 @@ CLASS net/minecraft/class_3558 net/minecraft/world/chunk/light/ChunkLightProvide
 		ARG 1 direction
 	METHOD method_51563 isTrivialForLighting (Lnet/minecraft/class_2680;)Z
 		ARG 0 blockState
-	METHOD method_51565 (JJ)V
+	METHOD method_51565 queueLightDecrease (JJ)V
 		ARG 1 blockPos
 		ARG 3 flags
-	METHOD method_51566 (JJ)V
+	METHOD method_51566 queueLightIncrease (JJ)V
 		ARG 1 blockPos
 		ARG 3 flags
 	METHOD method_51568 getStatus (J)Lnet/minecraft/class_3560$class_8530;
 		ARG 1 sectionPos
-	CLASS class_8531
+	CLASS class_8531 PackedInfo
 		COMMENT Methods for manipulating a set of bitflags with yet unknown functionality.
 		COMMENT
 		COMMENT <ul>
-		COMMENT <li>Bits 0 – 3 likely store a light level.</li>
+		COMMENT <li>Bits 0 – 3 stores the light level.</li>
 		COMMENT <li>Bits 4 – 9 store a flag for each of the six directions.</li>
 		COMMENT <li>Bit 10 stores whether the block at this position is trivial for lighting — if its opacity is not directionally dependent.</li>
-		COMMENT <li>Bit 11 stores a flag with unknown function.</li>
+		COMMENT <li>Bit 11 stores a flag for forcibly setting the light level.</li>
 		COMMENT </ul>
 		FIELD field_44737 DIRECTION_BIT_OFFSET I
+		FIELD field_44739 LIGHT_LEVEL_MASK J
 		FIELD field_44740 DIRECTION_BIT_MASK J
+		FIELD field_44741 TRIVIAL_FLAG J
+		FIELD field_44742 FORCE_SET_FLAG J
 		METHOD method_51571 packWithAllDirectionsSet (I)J
 			ARG 0 lightLevel
 		METHOD method_51572 packWithOneDirectionCleared (ILnet/minecraft/class_2350;)J
 			ARG 0 lightLevel
 			ARG 1 direction
-		METHOD method_51573 (IZ)J
+		METHOD method_51573 packWithForce (IZ)J
 			ARG 0 lightLevel
 			ARG 1 trivial
 		METHOD method_51574 packWithOneDirectionCleared (IZLnet/minecraft/class_2350;)J
@@ -89,13 +92,13 @@ CLASS net/minecraft/class_3558 net/minecraft/world/chunk/light/ChunkLightProvide
 		METHOD method_51577 isDirectionBitSet (JLnet/minecraft/class_2350;)Z
 			ARG 0 packed
 			ARG 2 direction
-		METHOD method_51578 (ZZZZZ)J
+		METHOD method_51578 packSkyLightPropagation (ZZZZZ)J
 			ARG 0 down
 			ARG 1 north
 			ARG 2 south
 			ARG 3 west
 			ARG 4 east
-		METHOD method_51579 (IZLnet/minecraft/class_2350;)J
+		METHOD method_51579 packWithRepropagate (IZLnet/minecraft/class_2350;)J
 			ARG 0 lightLevel
 			ARG 1 trivial
 			ARG 2 direction
@@ -104,7 +107,7 @@ CLASS net/minecraft/class_3558 net/minecraft/world/chunk/light/ChunkLightProvide
 		METHOD method_51581 setDirectionBit (JLnet/minecraft/class_2350;)J
 			ARG 0 packed
 			ARG 2 direction
-		METHOD method_51582 (J)Z
+		METHOD method_51582 forceSet (J)Z
 			ARG 0 packed
 		METHOD method_51583 clearDirectionBit (JLnet/minecraft/class_2350;)J
 			ARG 0 packed
