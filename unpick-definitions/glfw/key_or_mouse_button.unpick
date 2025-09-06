@@ -1,6 +1,6 @@
 unpick v3
 
-group int key_code
+group int key_or_mouse_button
 	org.lwjgl.glfw.GLFW.GLFW_KEY_UNKNOWN
 	org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT
 	org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT
@@ -132,12 +132,16 @@ group int key_code
 	org.lwjgl.glfw.GLFW.GLFW_KEY_WORLD_2
 
 target_method net.minecraft.client.util.InputUtil$Type mapKey (Lnet/minecraft/client/util/InputUtil$Type;Ljava/lang/String;I)V
-	param 2 key_code
+	param 2 key_or_mouse_button
+
 target_method net.minecraft.client.util.InputUtil$Type createFromCode (I)Lnet/minecraft/client/util/InputUtil$Key;
-	param 0 key_code
+	param 0 key_or_mouse_button
+
 target_method net.minecraft.client.util.InputUtil$Key <init> (Ljava/lang/String;Lnet/minecraft/client/util/InputUtil$Type;I)V
-	param 2 key_code
+	param 2 key_or_mouse_button
+
 target_method net.minecraft.client.util.InputUtil$Key getCode ()I
-	return key_code
-target_method net.minecraft.client.util.InputUtil isKeyPressed (Lnet/minecraft/client/util/Window;I)Z
-	param 1 key_code
+	return key_or_mouse_button
+
+target_method net.minecraft.client.input.AbstractInput getKeycode ()I
+	return key
