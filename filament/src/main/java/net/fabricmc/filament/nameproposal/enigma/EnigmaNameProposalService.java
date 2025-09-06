@@ -33,14 +33,21 @@ import org.objectweb.asm.tree.ClassNode;
 
 import net.fabricmc.filament.nameproposal.MappingEntry;
 import net.fabricmc.filament.nameproposal.NameFinder;
+import net.fabricmc.filament.nameproposal.NameProposalConfig;
 
 public class EnigmaNameProposalService implements JarIndexerService, NameProposalService {
+	private final NameProposalConfig config;
+
 	private Map<String, String> recordNames;
 	Map<MappingEntry, String> fieldNames;
 
+	public EnigmaNameProposalService(NameProposalConfig config) {
+		this.config = config;
+	}
+
 	@Override
 	public void acceptJar(Set<String> classNames, ClassProvider classProvider, JarIndex jarIndex) {
-		NameFinder nameFinder = new NameFinder();
+		NameFinder nameFinder = new NameFinder(config);
 
 		for (String className : classNames) {
 			ClassNode classNode = classProvider.get(className);

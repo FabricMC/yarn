@@ -39,11 +39,11 @@ import net.fabricmc.mappingio.tree.MemoryMappingTree;
 public class MappingNameCompleter {
 	// <intermediaryJar> <inputYarnMappings> <inputIntermediaryMappings> <outputYarnMappings>
 	public static void main(String[] args) throws IOException {
-		completeNames(Paths.get(args[0]), Paths.get(args[1]), Paths.get(args[2]), Paths.get(args[3]));
+		completeNames(Paths.get(args[0]), Paths.get(args[1]), Paths.get(args[2]), Paths.get(args[3]), NameProposalConfig.DEFAULT);
 	}
 
-	public static void completeNames(Path intermediaryJar, Path inputYarnMappings, Path inputIntermediaryMappings, Path outputYarnMappings) throws IOException {
-		NameFinder nameFinder = new NameFinder();
+	public static void completeNames(Path intermediaryJar, Path inputYarnMappings, Path inputIntermediaryMappings, Path outputYarnMappings, NameProposalConfig config) throws IOException {
+		NameFinder nameFinder = new NameFinder(config);
 
 		acceptJar(nameFinder, intermediaryJar);
 

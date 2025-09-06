@@ -28,6 +28,8 @@ import net.fabricmc.mappingio.tree.MappingTree;
 import net.fabricmc.mappingio.tree.MemoryMappingTree;
 
 public class NameFinder {
+	private final NameProposalConfig config;
+
 	// comp_x -> name
 	private final Map<String, String> recordNames = new HashMap<>();
 	private final Map<MappingEntry, String> recordFieldNames = new HashMap<>();
@@ -35,6 +37,10 @@ public class NameFinder {
 
 	private final Map<String, Set<String>> enumFields = new HashMap<>();
 	private final Map<String, List<MethodNode>> methods = new HashMap<>();
+
+	public NameFinder(NameProposalConfig config) {
+		this.config = config;
+	}
 
 	public void accept(ClassNode classNode) {
 		classNode.accept(new NameFinderVisitor(Constants.ASM_VERSION, enumFields, methods));
@@ -88,7 +94,7 @@ public class NameFinder {
 	}
 
 	public Map<MappingEntry, String> getFieldNames() {
-		Map<MappingEntry, String> fieldNames = new HashMap<>(new FieldNameFinder().findNames(enumFields, methods));
+		Map<MappingEntry, String> fieldNames = new HashMap<>(new FieldNameFinder().findNames(enumFields, methods, config.fieldNameProvider()));
 		fieldNames.putAll(recordFieldNames);
 		return fieldNames;
 	}
