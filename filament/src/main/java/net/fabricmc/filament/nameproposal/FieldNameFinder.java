@@ -18,7 +18,6 @@ package net.fabricmc.filament.nameproposal;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -53,18 +52,20 @@ public class FieldNameFinder {
 			String owner = entry.getKey();
 			Set<String> enumFields = allEnumFields.getOrDefault(owner, Collections.emptySet());
 
-			Set<String> fieldNamesUsed = new HashSet<>();
-			Set<String> fieldNamesDuplicate = new HashSet<>();
+			String[] parts = owner.split("/");
+			String shortOwner = parts.length > 0 ? parts[parts.length - 1] : owner;
+
+			ConflictChecker<FieldData> checker = new ConflictChecker<>(shortOwner + " field");
 
 			for (MethodNode mn : entry.getValue()) {
-				findMethodNames(nameProvider, analyzer, fieldNames, owner, enumFields, fieldNamesUsed, fieldNamesDuplicate, mn);
+				findMethodNames(nameProvider, analyzer, fieldNames, owner, enumFields, checker, mn);
 			}
 		}
 
 		return fieldNames;
 	}
 
-	private void findMethodNames(FieldNameProvider nameProvider, Analyzer<SourceValue> analyzer, Map<MappingEntry, String> fieldNames, String owner, Set<String> enumFields, Set<String> fieldNamesUsed, Set<String> fieldNamesDuplicate, MethodNode mn) {
+	private void findMethodNames(FieldNameProvider nameProvider, Analyzer<SourceValue> analyzer, Map<MappingEntry, String> fieldNames, String owner, Set<String> enumFields, ConflictChecker<FieldData> checker, MethodNode mn) {
 		Frame<SourceValue>[] frames;
 
 		try {
@@ -103,15 +104,7 @@ public class FieldNameFinder {
 			var name = nameProvider.getName(field);
 
 			if (name != null) {
-				if (!fieldNamesDuplicate.contains(name)) {
-					if (!fieldNamesUsed.add(name)) {
-						System.out.println("Warning: Duplicate field name '" + name + "' was proposed! (" + field + ")");
-						fieldNamesDuplicate.add(name);
-						fieldNamesUsed.remove(name);
-					}
-				}
-
-				if (fieldNamesUsed.contains(name)) {
+				if (checker.add(name, field)) {
 					if (name.equals(((FieldInsnNode) instr2).name)) {
 						// No need to map names that are already named what we want to name it.
 						continue;
