@@ -19,17 +19,36 @@ package net.fabricmc.filament.nameproposal;
 import java.util.List;
 
 import net.fabricmc.filament.nameproposal.field.nameprovider.ConditionalFieldNameProvider;
+import net.fabricmc.filament.nameproposal.field.nameprovider.ConstantFieldNameProvider;
 import net.fabricmc.filament.nameproposal.field.nameprovider.FieldNameProvider;
+import net.fabricmc.filament.nameproposal.field.nameprovider.SequenceFieldNameProvider;
 import net.fabricmc.filament.nameproposal.field.nameprovider.StringArgumentFieldNameProvider;
+import net.fabricmc.filament.nameproposal.field.predicate.DescriptorFieldPredicate;
 import net.fabricmc.filament.nameproposal.field.predicate.InternalInitFieldPredicate;
 import net.fabricmc.filament.nameproposal.field.predicate.StaticFieldPredicate;
 
 public record NameProposalConfig(FieldNameProvider fieldNameProvider) {
-	public static final NameProposalConfig DEFAULT = new NameProposalConfig(new ConditionalFieldNameProvider(
-			StringArgumentFieldNameProvider.INSTANCE,
-			List.of(
-					new StaticFieldPredicate(true),
-					InternalInitFieldPredicate.INSTANCE
+	public static final NameProposalConfig DEFAULT = new NameProposalConfig(new SequenceFieldNameProvider(List.of(
+			new ConditionalFieldNameProvider(
+					StringArgumentFieldNameProvider.INSTANCE,
+					List.of(
+							new StaticFieldPredicate(true),
+							InternalInitFieldPredicate.INSTANCE
+					)
+			),
+			new ConditionalFieldNameProvider(
+					new ConstantFieldNameProvider("CODEC"),
+					List.of(
+							new StaticFieldPredicate(true),
+							new DescriptorFieldPredicate("Lcom/mojang/serialization/Codec;")
+					)
+			),
+			new ConditionalFieldNameProvider(
+					new ConstantFieldNameProvider("CODEC"),
+					List.of(
+							new StaticFieldPredicate(true),
+							new DescriptorFieldPredicate("Lcom/mojang/serialization/MapCodec;")
+					)
 			)
-	));
+	)));
 }
