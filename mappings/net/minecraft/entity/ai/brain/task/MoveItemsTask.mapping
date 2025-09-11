@@ -41,6 +41,8 @@ CLASS net/minecraft/class_11568 net/minecraft/entity/ai/brain/task/MoveItemsTask
 		ARG 0 inventory
 	METHOD method_72403 resetVisitedPositions (Lnet/minecraft/class_1314;)V
 		ARG 1 entity
+	METHOD method_72404 (Lnet/minecraft/class_1314;Lnet/minecraft/class_3218;Ljava/util/Set;Ljava/util/Set;Lnet/minecraft/class_238;Ljava/util/Map$Entry;)Ljava/util/stream/Stream;
+		ARG 6 entry
 	METHOD method_72405 canInsert (Lnet/minecraft/class_1314;Lnet/minecraft/class_1263;)Z
 		ARG 0 entity
 		ARG 1 inventory
@@ -63,9 +65,13 @@ CLASS net/minecraft/class_11568 net/minecraft/entity/ai/brain/task/MoveItemsTask
 		ARG 3 pos
 		ARG 4 blockEntity
 		ARG 5 visitedPositions
+		ARG 6 unreachablePositions
+		ARG 7 searchBox
 	METHOD method_72410 testContainer (Lnet/minecraft/class_1314;Lnet/minecraft/class_2680;)Z
 		ARG 1 entity
 		ARG 2 state
+	METHOD method_72411 (Lnet/minecraft/class_1314;Ljava/util/Set;Ljava/util/Set;Lnet/minecraft/class_1937;Lnet/minecraft/class_238;Lnet/minecraft/class_11568$class_11572;)Z
+		ARG 6 storage
 	METHOD method_72412 createSetInteractionStateCallback (Lnet/minecraft/class_11568$class_11569;)Ljava/util/function/BiConsumer;
 		ARG 1 state
 	METHOD method_72413 (Lnet/minecraft/class_11568$class_11569;Lnet/minecraft/class_1314;Lnet/minecraft/class_1263;)V
@@ -75,6 +81,8 @@ CLASS net/minecraft/class_11568 net/minecraft/entity/ai/brain/task/MoveItemsTask
 		ARG 1 state
 	METHOD method_72416 tickInteracting (Lnet/minecraft/class_11568$class_11572;Lnet/minecraft/class_1937;Lnet/minecraft/class_1314;)V
 		ARG 1 storage
+		ARG 2 world
+		ARG 3 entity
 	METHOD method_72417 (Lnet/minecraft/class_11568$class_11572;Lnet/minecraft/class_11568$class_11572;)Ljava/util/List;
 		ARG 1 storagex
 	METHOD method_72418 getContainerStorages (Lnet/minecraft/class_11568$class_11572;Lnet/minecraft/class_1937;)Ljava/util/List;
@@ -85,6 +93,7 @@ CLASS net/minecraft/class_11568 net/minecraft/entity/ai/brain/task/MoveItemsTask
 		ARG 2 world
 		ARG 3 entity
 	METHOD method_72420 hasValidTargetStorage (Lnet/minecraft/class_1937;Lnet/minecraft/class_1314;)Z
+		ARG 1 world
 		ARG 2 entity
 	METHOD method_72421 isUnchanged (Lnet/minecraft/class_1937;Lnet/minecraft/class_11568$class_11572;)Z
 		ARG 1 world
@@ -144,10 +153,14 @@ CLASS net/minecraft/class_11568 net/minecraft/entity/ai/brain/task/MoveItemsTask
 		ARG 1 entity
 	METHOD method_72445 (Lnet/minecraft/class_1314;Lnet/minecraft/class_1314;Lnet/minecraft/class_1263;)V
 		ARG 1 entity
+		ARG 2 entityx
+		ARG 3 inventory
 	METHOD method_72446 getVisitedPositions (Lnet/minecraft/class_1314;)Ljava/util/Set;
 		ARG 0 entity
 	METHOD method_72447 (Lnet/minecraft/class_1314;Lnet/minecraft/class_1314;Lnet/minecraft/class_1263;)V
 		ARG 1 entity
+		ARG 2 entityx
+		ARG 3 inventory
 	METHOD method_72448 canPickUpItem (Lnet/minecraft/class_1314;)Z
 		ARG 0 entity
 	METHOD method_72449 cooldown (Lnet/minecraft/class_1314;)V
@@ -156,6 +169,14 @@ CLASS net/minecraft/class_11568 net/minecraft/entity/ai/brain/task/MoveItemsTask
 		ARG 1 entity
 	METHOD method_74018 isVisible (Lnet/minecraft/class_1937;ZLnet/minecraft/class_2338;Lnet/minecraft/class_11568$class_11572;Lnet/minecraft/class_1314;)Z
 		ARG 1 world
+		ARG 2 nextToStorage
+		ARG 3 pos
+		ARG 4 storage
+		ARG 5 entity
+	METHOD method_74019 (Ljava/util/Set;Ljava/util/Set;Lnet/minecraft/class_4208;)Z
+		ARG 2 pos
+	METHOD method_74020 (Lnet/minecraft/class_1314;Ljava/util/Map$Entry;)Ljava/lang/Double;
+		ARG 1 entry
 	METHOD method_74021 markUnreachable (Lnet/minecraft/class_1314;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;)V
 		ARG 1 entity
 		ARG 2 world
@@ -168,6 +189,9 @@ CLASS net/minecraft/class_11568 net/minecraft/entity/ai/brain/task/MoveItemsTask
 		ARG 0 entity
 	METHOD method_74093 isLocked (Lnet/minecraft/class_11568$class_11572;)Z
 		ARG 1 storage
+	METHOD method_74663 isChestBlocked (Lnet/minecraft/class_1937;Lnet/minecraft/class_11568$class_11572;)Z
+		ARG 1 world
+		ARG 2 storage
 	CLASS class_11569 InteractionState
 	CLASS class_11570 InteractionCallback
 	CLASS class_11571 NavigationState
