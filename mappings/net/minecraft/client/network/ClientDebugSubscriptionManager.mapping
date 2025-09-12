@@ -1,0 +1,101 @@
+CLASS net/minecraft/class_12036 net/minecraft/client/network/ClientDebugSubscriptionManager
+	FIELD field_62932 networkHandler Lnet/minecraft/class_634;
+	FIELD field_62933 debugHud Lnet/minecraft/class_340;
+	FIELD field_62934 clientSubscriptions Ljava/util/Set;
+	FIELD field_62935 valuesBySubscription Ljava/util/Map;
+	METHOD <init> (Lnet/minecraft/class_634;Lnet/minecraft/class_340;)V
+		ARG 1 networkHandler
+		ARG 2 debugHud
+	METHOD method_74712 clearAllSubscriptions ()V
+	METHOD method_74713 startTick (J)V
+		ARG 1 time
+	METHOD method_74714 addEvent (JLnet/minecraft/class_12017$class_12018;)V
+		ARG 1 lifetime
+		ARG 3 value
+	METHOD method_74715 (JLnet/minecraft/class_12017;Lnet/minecraft/class_12036$class_12039;)V
+		ARG 2 type
+		ARG 3 valueMap
+	METHOD method_74716 updateEntity (JLnet/minecraft/class_1297;Lnet/minecraft/class_12017$class_12019;)V
+		ARG 1 lifetime
+		ARG 3 entity
+		ARG 4 optional
+	METHOD method_74717 updateChunk (JLnet/minecraft/class_1923;Lnet/minecraft/class_12017$class_12019;)V
+		ARG 1 lifetime
+		ARG 3 pos
+		ARG 4 optional
+	METHOD method_74718 updateBlock (JLnet/minecraft/class_2338;Lnet/minecraft/class_12017$class_12019;)V
+		ARG 1 lifetime
+		ARG 3 pos
+		ARG 4 optional
+	METHOD method_74719 updateTrackableValueMap (JLjava/lang/Object;Lnet/minecraft/class_12017$class_12019;Lnet/minecraft/class_12036$class_12038;)V
+		ARG 1 lifetime
+		ARG 3 object
+		ARG 4 optional
+	METHOD method_74720 getTrackableValueMaps (Lnet/minecraft/class_12017;)Lnet/minecraft/class_12036$class_12039;
+		ARG 1 type
+	METHOD method_74721 getValue (Lnet/minecraft/class_12017;Lnet/minecraft/class_12036$class_12038;)Lnet/minecraft/class_12036$class_12037;
+		ARG 1 type
+		ARG 2 getter
+	METHOD method_74722 forEachValue (Lnet/minecraft/class_12017;Lnet/minecraft/class_12036$class_12038;Ljava/util/function/BiConsumer;)V
+		ARG 1 type
+		ARG 2 getter
+		ARG 3 visitor
+	METHOD method_74723 getValue (Lnet/minecraft/class_12017;Ljava/lang/Object;Lnet/minecraft/class_12036$class_12038;)Ljava/lang/Object;
+		ARG 1 type
+		ARG 2 object
+		ARG 3 getter
+	METHOD method_74724 removeEntity (Lnet/minecraft/class_1297;)V
+		ARG 1 entity
+	METHOD method_74725 removeChunk (Lnet/minecraft/class_1923;)V
+		ARG 1 pos
+	METHOD method_74726 createWorldAccess (Lnet/minecraft/class_1937;)Lnet/minecraft/class_12021;
+		ARG 1 world
+	METHOD method_74727 (Lnet/minecraft/class_12036$class_12039;)Lnet/minecraft/class_12036$class_12037;
+		ARG 0 maps
+	METHOD method_74728 onSubscriptionsChanged (Ljava/util/Set;)V
+		ARG 1 types
+	METHOD method_74729 addDebugSubscription (Ljava/util/Set;Lnet/minecraft/class_12017;Z)V
+		ARG 0 types
+		ARG 1 type
+		ARG 2 enable
+	METHOD method_74730 clearValues ()V
+	METHOD method_74732 (Lnet/minecraft/class_12036$class_12039;)Lnet/minecraft/class_12036$class_12037;
+		ARG 0 maps
+	METHOD method_74733 getRequestedSubscriptions ()Ljava/util/Set;
+	METHOD method_74734 (Lnet/minecraft/class_12036$class_12039;)Lnet/minecraft/class_12036$class_12037;
+		ARG 0 maps
+	METHOD method_74735 forEntities ()Lnet/minecraft/class_12036$class_12038;
+	METHOD method_74736 forBlocks ()Lnet/minecraft/class_12036$class_12038;
+	METHOD method_74737 forChunks ()Lnet/minecraft/class_12036$class_12038;
+	CLASS 1
+		METHOD method_74738 (Lnet/minecraft/class_1937;Ljava/util/function/BiConsumer;Ljava/util/UUID;Ljava/lang/Object;)V
+			ARG 2 uuid
+			ARG 3 type
+	CLASS class_12037 TrackableValue
+		FIELD field_62938 trackableValues Ljava/util/Map;
+		METHOD method_74739 apply (JLjava/lang/Object;Lnet/minecraft/class_12017$class_12019;)V
+			ARG 4 value
+		METHOD method_74740 removeUUID (Ljava/lang/Object;)V
+		METHOD method_74741 forEach (Ljava/util/function/BiConsumer;)V
+		METHOD method_74743 removeAll (Ljava/util/function/Predicate;)V
+		METHOD method_74744 get (Ljava/lang/Object;)Ljava/lang/Object;
+			ARG 1 object
+		METHOD method_74745 removeKeys (Ljava/util/function/Predicate;)V
+	CLASS class_12038 TrackableValueGetter
+		METHOD get get (Lnet/minecraft/class_12036$class_12039;)Lnet/minecraft/class_12036$class_12037;
+			ARG 1 map
+	CLASS class_12039 TrackableValueMap
+		FIELD field_62939 chunks Lnet/minecraft/class_12036$class_12037;
+		FIELD field_62940 blocks Lnet/minecraft/class_12036$class_12037;
+		FIELD field_62941 entities Lnet/minecraft/class_12036$class_12037;
+		FIELD field_62942 values Ljava/util/List;
+		METHOD method_74746 ejectExpiredSubscriptions (J)V
+			ARG 1 time
+		METHOD method_74747 (JLnet/minecraft/class_12036$class_12040;)Z
+			ARG 2 time
+		METHOD method_74748 removeChunk (Lnet/minecraft/class_1923;)V
+			ARG 1 pos
+	CLASS class_12040 ValueWithExpiry
+		FIELD field_62943 INEXPIRABLE J
+		METHOD method_74749 hasExpired (J)Z
+			ARG 1 time
