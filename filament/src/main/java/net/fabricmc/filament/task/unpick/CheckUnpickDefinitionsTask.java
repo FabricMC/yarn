@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
-import com.google.common.base.Preconditions;
 import daomephsta.unpick.api.ValidatingUnpickV3Visitor;
 import daomephsta.unpick.api.classresolvers.ClassResolvers;
 import daomephsta.unpick.api.classresolvers.IClassResolver;
@@ -120,7 +119,9 @@ public abstract class CheckUnpickDefinitionsTask extends DefaultTask {
 		}
 
 		private static IClassResolver combineClassResolver(List<IClassResolver> classResolvers) {
-			Preconditions.checkArgument(!classResolvers.isEmpty(), "classResolvers cannot be empty");
+			if (classResolvers.isEmpty()) {
+				throw new IllegalArgumentException("classResolvers cannot be empty");
+			}
 
 			IClassResolver result = classResolvers.getFirst();
 

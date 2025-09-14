@@ -16,7 +16,6 @@
 
 package net.fabricmc.filament.nameproposal.enigma;
 
-import cuchaz.enigma.api.service.EnigmaServiceContext;
 import cuchaz.enigma.api.service.ObfuscationTestService;
 import cuchaz.enigma.translation.representation.entry.ClassEntry;
 import cuchaz.enigma.translation.representation.entry.Entry;
@@ -26,12 +25,12 @@ import cuchaz.enigma.translation.representation.entry.MethodEntry;
 public class IntermediaryObfuscationTestService implements ObfuscationTestService {
 	private final String prefix, classPrefix, classPackagePrefix, fieldPrefix, methodPrefix, componentPrefix;
 
-	public IntermediaryObfuscationTestService(EnigmaServiceContext<ObfuscationTestService> context) {
-		this.prefix = context.getArgument("package").orElse("net/minecraft") + "/";
-		this.classPrefix = context.getArgument("classPrefix").orElse("class_");
-		this.fieldPrefix = context.getArgument("fieldPrefix").orElse("field_");
-		this.methodPrefix = context.getArgument("methodPrefix").orElse("method_");
-		this.componentPrefix = context.getArgument("componentPrefix").orElse("comp_");
+	public IntermediaryObfuscationTestService() {
+		this.prefix = System.getProperty("obfTest.package", "net/minecraft") + "/";
+		this.classPrefix = System.getProperty("obfTest.classPrefix", "class_");
+		this.fieldPrefix = System.getProperty("obfTest.fieldPrefix", "field_");
+		this.methodPrefix = System.getProperty("obfTest.methodPrefix", "method_");
+		this.componentPrefix = System.getProperty("obfTest.componentPrefix", "comp_");
 
 		this.classPackagePrefix = this.prefix + this.classPrefix;
 	}

@@ -21,9 +21,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import cuchaz.enigma.analysis.index.JarIndex;
 import cuchaz.enigma.api.service.JarIndexerService;
 import cuchaz.enigma.api.service.NameProposalService;
+import cuchaz.enigma.api.view.index.JarIndexView;
 import cuchaz.enigma.classprovider.ClassProvider;
 import cuchaz.enigma.translation.mapping.EntryRemapper;
 import cuchaz.enigma.translation.representation.entry.Entry;
@@ -46,7 +46,7 @@ public class EnigmaNameProposalService implements JarIndexerService, NameProposa
 	}
 
 	@Override
-	public void acceptJar(Set<String> classNames, ClassProvider classProvider, JarIndex jarIndex) {
+	public void acceptJar(Set<String> classNames, ClassProvider classProvider, JarIndexView jarIndex) {
 		NameFinder nameFinder = new NameFinder(config);
 
 		for (String className : classNames) {

@@ -32,7 +32,7 @@ public class NameProposalServiceEnigmaPlugin implements EnigmaPlugin {
 		ctx.registerService(ID_PREFIX + "intermediary_obfuscation_test", ObfuscationTestService.TYPE, IntermediaryObfuscationTestService::new);
 
 		EnigmaNameProposalService service = new EnigmaNameProposalService(NameProposalConfig.DEFAULT);
-		ctx.registerService(ID_PREFIX + "jar_indexer", JarIndexerService.TYPE, ctx1 -> service);
-		ctx.registerService(ID_PREFIX + "name_proposal", NameProposalService.TYPE, ctx1 -> service);
+		ctx.registerService(ID_PREFIX + "jar_indexer", JarIndexerService.TYPE, () -> service);
+		ctx.registerService(ID_PREFIX + "name_proposal", NameProposalService.TYPE, () -> service);
 	}
 }

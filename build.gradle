@@ -72,6 +72,8 @@ dependencies {
 	enigmaRuntime "cuchaz:enigma-swing:${project.enigma_version}"
 	enigmaRuntime "net.fabricmc:cfr:${project.cfr_version}"
 	enigmaRuntime "org.vineflower:vineflower:${project.vineflower_version}"
+	enigmaRuntime "net.fabricmc.unpick:unpick:${project.unpick_version}"
+	enigmaRuntime "net.fabricmc.unpick:unpick-format-utils:${project.unpick_version}"
 	javadocClasspath "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 	javadocClasspath "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
 	javadocClasspath "com.google.code.findbugs:jsr305:3.0.2" // for some other jsr annotations
@@ -147,13 +149,17 @@ tasks.register('yarn', EnigmaTask) {
 	dependsOn mapIntermediaryJar
 	group = yarnGroup
 	jar = mapIntermediaryJar.output
+	libraries.from minecraftLibraries
 	mappings = mappingsDir
+	unpickDefinitions = file('unpick-definitions')
 }
 
 tasks.register('yarnCommon', EnigmaTask) {
 	group = yarnGroup
 	jar = mapServerIntermediaryJar.output
+	libraries.from minecraftLibraries
 	mappings = mappingsDir
+	unpickDefinitions = file('unpick-definitions')
 }
 
 def checkPackages = tasks.register('checkPackages') {
@@ -325,13 +331,6 @@ tasks.register('unpickIntermediaryJar', UnpickJarTask) {
 	output = layout.buildDirectory.file("${minecraft_version}-intermediary-unpicked.jar")
 	unpickDefinition = remapUnpickDefinitionsIntermediary.output
 	classpath.from minecraftLibraries
-}
-
-tasks.register('yarnUnpicked', EnigmaTask) {
-	dependsOn "unpickIntermediaryJar"
-	group = yarnGroup
-	jar = unpickIntermediaryJar.output
-	mappings = mappingsDir
 }
 
 tasks.register('mergeV2', MergeMappingsTask) {
@@ -645,6 +644,12 @@ abstract class EnigmaTask extends JavaExec {
 	@Input
 	abstract Property<File> getMappings()
 
+	@InputFiles
+	abstract ConfigurableFileCollection getLibraries()
+
+	@InputDirectory
+	abstract DirectoryProperty getUnpickDefinitions()
+
 	EnigmaTask() {
 		def filamentCodeSource = MappingPoetTask.class.getProtectionDomain().getCodeSource()
 		def filamentJarFile = new File(filamentCodeSource.getLocation().getFile())
@@ -665,6 +670,13 @@ abstract class EnigmaTask extends JavaExec {
 		args mappings.get().absolutePath
 		args '-profile'
 		args 'enigma_profile.json'
+
+		for (def library in getLibraries().files) {
+			args '-library', library.absolutePath
+		}
+
+		systemProperties 'unpick.directory': getUnpickDefinitions().get().asFile.absolutePath
+
 		super.exec()
 	}
 }

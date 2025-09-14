@@ -9,8 +9,15 @@ jobs:
           java-version: '21'
           distribution: 'microsoft'
       - uses: actions/checkout@v4
-      - run: ./gradlew build javadocJar checkMappings --stacktrace --warning-mode fail
+      - run: ./gradlew build javadocJar checkMappings --stacktrace --warning-mode fail -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError"
       - run: ./gradlew formatMappings --stacktrace --warning-mode fail
+      - name: Upload Heap Dump (if present)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: heap-dump
+          path: ./*.hprof
+          if-no-files-found: ignore
       - name: Check mapping format
         run: |
           git add -A
