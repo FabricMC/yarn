@@ -75,6 +75,8 @@ public final class FilamentGradlePlugin implements Plugin<Project> {
 		var minecraftLibraries = project.getConfigurations().register("minecraftLibraries");
 
 		GradleUtils.afterSuccessfulEvaluation(project, () -> {
+			System.setProperty("unpick.directory", extension.getUnpickDirectory().get().getAsFile().getAbsolutePath());
+
 			var name = minecraftLibraries.getName();
 
 			for (Dependency dependency : getDependencies(metaProvider.get(), project.getDependencies())) {

@@ -28,6 +28,7 @@ public abstract class FilamentExtension {
 
 	private final MinecraftVersionMetaHelper metaHelper;
 	private final Provider<MinecraftVersionMeta> metaProvider;
+	private final DirectoryProperty unpickDirectory;
 
 	@Inject
 	public FilamentExtension() {
@@ -36,6 +37,9 @@ public abstract class FilamentExtension {
 
 		metaHelper = getProject().getObjects().newInstance(MinecraftVersionMetaHelper.class, this);
 		metaProvider = getProject().provider(metaHelper::setup);
+		unpickDirectory = getProject().getObjects().directoryProperty().convention(
+				getProject().getLayout().dir(getProject().provider(() -> getProject().file("unpick-definitions")))
+		);
 	}
 
 	public DirectoryProperty getCacheDirectory() {
@@ -52,5 +56,9 @@ public abstract class FilamentExtension {
 
 	public Provider<MinecraftVersionMeta> getMinecraftVersionMetadata() {
 		return metaProvider;
+	}
+
+	public DirectoryProperty getUnpickDirectory() {
+		return unpickDirectory;
 	}
 }
