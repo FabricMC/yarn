@@ -1,9 +1,9 @@
 package net.fabricmc.filament.unpick.enigma;
 
+import java.io.InputStream;
+
 import cuchaz.enigma.api.service.I18nService;
 import org.jetbrains.annotations.Nullable;
-
-import java.io.InputStream;
 
 public class UnpickI18nService implements I18nService {
 	@Override

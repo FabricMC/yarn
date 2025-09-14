@@ -7,6 +7,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Objects;
 
+import javax.swing.KeyStroke;
+
 import cuchaz.enigma.api.DataInvalidationEvent;
 import cuchaz.enigma.api.service.GuiService;
 import cuchaz.enigma.api.view.GuiView;
@@ -19,8 +21,6 @@ import cuchaz.enigma.api.view.entry.MethodEntryView;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-
-import javax.swing.KeyStroke;
 
 public class UnpickGuiService implements GuiService {
 	private final UnpickEnigmaPlugin plugin;
@@ -108,21 +108,21 @@ public class UnpickGuiService implements GuiService {
 		EntryView deobfEntry = project.deobfuscate(hoveredReference.getEntry());
 
 		return switch (deobfEntry) {
-			case FieldEntryView field -> "target_field %s %s %s".formatted(
-					field.getParent().getFullName().replace('/', '.'),
-					field.getName(),
-					field.getDescriptor()
-			);
-			case MethodEntryView method -> "target_method %s %s %s".formatted(
-					method.getParent().getFullName().replace('/', '.'),
-					method.getName(),
-					method.getDescriptor()
-			);
-			case LocalVariableEntryView ignored -> {
-				int localIndex = getLocalIndex(project, (LocalVariableEntryView) obfEntry);
-				yield localIndex == -1 ? null : "param " + localIndex;
-			}
-			default -> null;
+		case FieldEntryView field -> "target_field %s %s %s".formatted(
+				field.getParent().getFullName().replace('/', '.'),
+				field.getName(),
+				field.getDescriptor()
+		);
+		case MethodEntryView method -> "target_method %s %s %s".formatted(
+				method.getParent().getFullName().replace('/', '.'),
+				method.getName(),
+				method.getDescriptor()
+		);
+		case LocalVariableEntryView ignored -> {
+			int localIndex = getLocalIndex(project, (LocalVariableEntryView) obfEntry);
+			yield localIndex == -1 ? null : "param " + localIndex;
+		}
+		default -> null;
 		};
 	}
 
@@ -135,6 +135,7 @@ public class UnpickGuiService implements GuiService {
 			if (varIndex == local.getIndex()) {
 				return localIndex;
 			}
+
 			varIndex += argTypes[localIndex].getSize();
 		}
 
@@ -157,8 +158,8 @@ public class UnpickGuiService implements GuiService {
 		}
 
 		return switch (field.getDescriptor()) {
-			case "B", "C", "D", "F", "I", "J", "S", "Ljava/lang/String;", "Ljava/lang/Class;" -> true;
-			default -> false;
+		case "B", "C", "D", "F", "I", "J", "S", "Ljava/lang/String;", "Ljava/lang/Class;" -> true;
+		default -> false;
 		};
 	}
 }
