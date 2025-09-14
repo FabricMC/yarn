@@ -119,7 +119,8 @@ public abstract class JavadocLintTask extends DefaultTask {
 				EntryTree<EntryMapping> mappings = new HashEntryTree<>();
 
 				for (Path file : files) {
-					MappingFormat.ENIGMA_FILE.read(file, ProgressListener.none(), new MappingSaveParameters(MappingFileNameFormat.BY_DEOBF), null);
+					EntryTree<EntryMapping> read = MappingFormat.ENIGMA_FILE.read(file, ProgressListener.none(), new MappingSaveParameters(MappingFileNameFormat.BY_DEOBF), null);
+					read.forEach(entry -> mappings.insert(entry.getEntry(), entry.getValue()));
 				}
 
 				List<String> errors = new ArrayList<>();
