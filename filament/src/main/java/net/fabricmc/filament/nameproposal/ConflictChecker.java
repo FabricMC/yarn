@@ -19,12 +19,11 @@ package net.fabricmc.filament.nameproposal;
 import java.util.HashSet;
 import java.util.Set;
 
-// import org.slf4j.Logger;
-// import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConflictChecker<T> {
-	// See https://github.com/FabricMC/yarn/pull/4297
-	// private static final Logger LOGGER = LoggerFactory.getLogger(ConflictChecker.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConflictChecker.class);
 
 	private final String type;
 
@@ -37,8 +36,7 @@ public class ConflictChecker<T> {
 
 	public boolean add(String name, T value) {
 		if (!conflictingNames.contains(name) && !usedNames.add(name)) {
-			// LOGGER.warn("Warning: Duplicate {} name '{}' was proposed! ({})", this.type, name, value);
-			System.out.println("Warning: Duplicate " + this.type + " name '" + name + "' was proposed! (" + value + ")");
+			LOGGER.warn("Warning: Duplicate {} name '{}' was proposed! ({})", this.type, name, value);
 
 			conflictingNames.add(name);
 			usedNames.remove(name);
