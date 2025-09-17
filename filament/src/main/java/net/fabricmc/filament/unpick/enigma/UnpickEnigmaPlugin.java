@@ -53,7 +53,7 @@ public class UnpickEnigmaPlugin implements EnigmaPlugin {
 			return;
 		}
 
-		unpickDir = Path.of(System.getProperty("unpick.directory"));
+		unpickDir = Path.of(unpickPath);
 
 		ctx.registerService("unpick:i18n", I18nService.TYPE, UnpickI18nService::new);
 		ctx.registerService("unpick:project", ProjectService.TYPE, () -> new UnpickProjectService(this));
