@@ -105,12 +105,12 @@ public class UnpickDecompilerInputTransformerService implements DecompilerInputT
 		Map<Path, String> unpickFileContents = new LinkedHashMap<>();
 
 		try {
-			Files.walkFileTree(UnpickEnigmaPlugin.UNPICK_DIR, new SimpleFileVisitor<>() {
+			Files.walkFileTree(UnpickEnigmaPlugin.unpickDir, new SimpleFileVisitor<>() {
 				@Override
 				@NotNull
 				public FileVisitResult visitFile(@NotNull Path file, @NotNull BasicFileAttributes attrs) throws IOException {
 					if (file.toString().endsWith(".unpick")) {
-						unpickFileContents.put(UnpickEnigmaPlugin.UNPICK_DIR.relativize(file), Files.readString(file));
+						unpickFileContents.put(UnpickEnigmaPlugin.unpickDir.relativize(file), Files.readString(file));
 					}
 
 					return FileVisitResult.CONTINUE;

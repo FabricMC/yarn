@@ -34,7 +34,7 @@ import daomephsta.unpick.api.ConstantUninliner;
 import org.jetbrains.annotations.NotNull;
 
 public class UnpickEnigmaPlugin implements EnigmaPlugin {
-	public static final Path UNPICK_DIR = Path.of(System.getProperty("unpick.directory"));
+	public static Path unpickDir;
 	public ProjectView project;
 	public boolean isWindowFocused = true;
 	public JFrame theFrame;
@@ -47,6 +47,14 @@ public class UnpickEnigmaPlugin implements EnigmaPlugin {
 
 	@Override
 	public void init(EnigmaPluginContext ctx) {
+		String unpickPath = System.getProperty("unpick.directory");
+
+		if (unpickPath == null) {
+			return;
+		}
+
+		unpickDir = Path.of(System.getProperty("unpick.directory"));
+
 		ctx.registerService("unpick:i18n", I18nService.TYPE, UnpickI18nService::new);
 		ctx.registerService("unpick:project", ProjectService.TYPE, () -> new UnpickProjectService(this));
 		ctx.registerService("unpick:gui", GuiService.TYPE, () -> new UnpickGuiService(this));
@@ -68,7 +76,7 @@ public class UnpickEnigmaPlugin implements EnigmaPlugin {
 			try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
 				Set<Path> alreadyWatchingDirs = new HashSet<>();
 				Map<WatchKey, Path> keys = new HashMap<>();
-				registerAll(watchService, alreadyWatchingDirs, keys, UNPICK_DIR);
+				registerAll(watchService, alreadyWatchingDirs, keys, unpickDir);
 				pollFileWatchEvents(watchService, alreadyWatchingDirs, keys);
 			} catch (IOException e) {
 				throw new UncheckedIOException(e);
