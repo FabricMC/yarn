@@ -19,6 +19,8 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_20950 blockBreakingProgressions Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
 	FIELD field_20951 bufferBuilders Lnet/minecraft/class_4599;
 	FIELD field_27741 blockEntityRenderManager Lnet/minecraft/class_824;
+	FIELD field_32759 SECTION_SIZE I
+	FIELD field_34812 HALF_SECTION_SIZE I
 	FIELD field_45614 chunkBuilder Lnet/minecraft/class_846;
 	FIELD field_45615 chunkRenderingDataPreparer Lnet/minecraft/class_8679;
 	FIELD field_45616 builtChunks Lit/unimi/dsi/fastutil/objects/ObjectArrayList;
@@ -32,11 +34,14 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 	FIELD field_53901 ENTITY_OUTLINE Lnet/minecraft/class_2960;
 	FIELD field_54160 lastTranslucencySortCameraPos Lnet/minecraft/class_2338;
 	FIELD field_54161 chunkIndex I
+	FIELD field_54162 NEARBY_SECTION_DISTANCE I
+	FIELD field_54163 MIN_TRANSPARENT_SORT_COUNT I
 	FIELD field_54164 nearbyChunks Lit/unimi/dsi/fastutil/objects/ObjectArrayList;
 	FIELD field_61737 entityRenderStates Lnet/minecraft/class_11658;
 	FIELD field_61738 entityRenderCommandQueue Lnet/minecraft/class_11661;
 	FIELD field_61739 entityRenderDispatcher Lnet/minecraft/class_11684;
 	FIELD field_62647 particleBatch Lnet/minecraft/class_11943;
+	FIELD field_62945 captureFrustum Z
 	FIELD field_63067 debugRenderer Lnet/minecraft/class_863;
 	FIELD field_63068 gameTestDebugRenderer Lnet/minecraft/class_4503;
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_898;Lnet/minecraft/class_824;Lnet/minecraft/class_4599;Lnet/minecraft/class_11658;Lnet/minecraft/class_11684;)V
@@ -104,7 +109,12 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 1 allocator
 		ARG 2 tickCounter
 		ARG 3 renderBlockOutline
+		ARG 4 mainCamera
+		ARG 5 matrix
 		ARG 6 projectionMatrix
+		ARG 7 cullingProjectionMatrix
+		ARG 9 fogColor
+		ARG 10 foggy
 	METHOD method_22712 drawBlockOutline (Lnet/minecraft/class_4587;Lnet/minecraft/class_4588;DDDLnet/minecraft/class_12074;I)V
 		ARG 2 vertexConsumer
 	METHOD method_22979 checkEmpty (Lnet/minecraft/class_4587;)V
@@ -216,6 +226,10 @@ CLASS net/minecraft/class_761 net/minecraft/client/render/WorldRenderer
 		ARG 1 camera
 		ARG 2 tickProgress
 		ARG 3 renderStates
+	METHOD method_74752 cullTerrain (Lnet/minecraft/class_4184;Lnet/minecraft/class_4604;Z)V
+		ARG 1 camera
+		ARG 2 frustum
+		ARG 3 isSpectator
 	CLASS class_10948 BrightnessGetter
 		FIELD field_58200 DEFAULT Lnet/minecraft/class_761$class_10948;
 		METHOD method_68890 (Lnet/minecraft/class_1920;Lnet/minecraft/class_2338;)I
