@@ -23,6 +23,9 @@ CLASS net/minecraft/class_10592 net/minecraft/server/world/ChunkTicketManager
 	METHOD method_66354 getLevel (JZ)I
 		ARG 1 pos
 		ARG 3 forSimulation
+	METHOD method_66355 (Lnet/minecraft/class_3228;J)Z
+		ARG 0 ticket
+		ARG 1 pos
 	METHOD method_66356 ticketsEqual (Lnet/minecraft/class_3228;Lnet/minecraft/class_3228;)Z
 		ARG 0 a
 		ARG 1 b
@@ -46,6 +49,7 @@ CLASS net/minecraft/class_10592 net/minecraft/server/world/ChunkTicketManager
 	METHOD method_66363 getAllChunksMatching (Ljava/util/function/Predicate;)Lit/unimi/dsi/fastutil/longs/LongSet;
 		ARG 1 predicate
 	METHOD method_66364 removeTicketsIf (Lnet/minecraft/class_10592$class_11581;Lit/unimi/dsi/fastutil/longs/Long2ObjectOpenHashMap;)V
+		ARG 1 predicate
 		ARG 2 transferTo
 	METHOD method_66367 promoteToRealTickets ()V
 	METHOD method_66368 getTicketsMutable (J)Ljava/util/List;
@@ -56,6 +60,9 @@ CLASS net/minecraft/class_10592 net/minecraft/server/world/ChunkTicketManager
 	METHOD method_66370 getDebugString (JZ)Ljava/lang/String;
 		ARG 1 pos
 		ARG 3 forSimulation
+	METHOD method_66371 (Lnet/minecraft/class_3898;Lnet/minecraft/class_3228;J)Z
+		ARG 2 ticket
+		ARG 3 pos
 	METHOD method_66372 removeTicket (Lnet/minecraft/class_3228;Lnet/minecraft/class_1923;)V
 		ARG 1 ticket
 		ARG 2 pos
@@ -74,6 +81,7 @@ CLASS net/minecraft/class_10592 net/minecraft/server/world/ChunkTicketManager
 	METHOD method_66380 (Lnet/minecraft/class_3228;)Z
 		ARG 0 ticket
 	METHOD method_66381 tick (Lnet/minecraft/class_3898;)V
+		ARG 1 chunkLoadingManager
 	METHOD method_66383 shutdown ()V
 	METHOD method_66384 getForcedChunks ()Lit/unimi/dsi/fastutil/longs/LongSet;
 	METHOD method_66385 recomputeForcedChunks ()V
@@ -90,9 +98,17 @@ CLASS net/minecraft/class_10592 net/minecraft/server/world/ChunkTicketManager
 		ARG 0 ticketConsumer
 		ARG 1 tickets
 	METHOD method_67400 getTickets ()Ljava/util/List;
+	METHOD method_72543 canTicketExpire (Lnet/minecraft/class_3898;Lnet/minecraft/class_3228;J)Z
+		ARG 1 chunkLoadingManager
+		ARG 2 ticket
+		ARG 3 pos
 	METHOD method_72544 shouldResetIdleTimeout ()Z
 	CLASS class_10593 LevelUpdater
 		METHOD update (JIZ)V
 			ARG 1 pos
 			ARG 3 level
 			ARG 4 added
+	CLASS class_11581 TicketPredicate
+		METHOD test (Lnet/minecraft/class_3228;J)Z
+			ARG 1 ticket
+			ARG 2 pos

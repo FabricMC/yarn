@@ -21,10 +21,20 @@ CLASS net/minecraft/class_447 net/minecraft/client/gui/screen/StatsScreen
 	METHOD method_2300 onStatsReady ()V
 	METHOD method_27027 getStatTranslationKey (Lnet/minecraft/class_3445;)Ljava/lang/String;
 		ARG 0 stat
+	METHOD method_73414 refreshTab (I)V
+		ARG 1 tab
 	METHOD method_73415 (Lnet/minecraft/class_339;)V
 		ARG 1 child
 	METHOD method_73416 (Lnet/minecraft/class_4185;)V
 		ARG 1 button
+	METHOD method_73417 (Lnet/minecraft/class_8030;Lnet/minecraft/class_339;)V
+		ARG 1 child
+	METHOD method_73418 (Lnet/minecraft/class_8030;Lnet/minecraft/class_8087;)V
+		ARG 1 tab
+	METHOD method_73419 (Lnet/minecraft/class_447;Lnet/minecraft/class_364;)V
+		ARG 1 child
+	METHOD method_73420 (Lnet/minecraft/class_447;Lnet/minecraft/class_364;)V
+		ARG 1 child
 	CLASS class_4198 GeneralStatsListWidget
 		METHOD <init> (Lnet/minecraft/class_447;Lnet/minecraft/class_310;)V
 			ARG 2 client
@@ -52,12 +62,18 @@ CLASS net/minecraft/class_447 net/minecraft/client/gui/screen/StatsScreen
 			ARG 1 headerColumn
 		METHOD method_57742 getIconX (I)I
 			ARG 1 index
+		METHOD method_73422 (Ljava/util/List;Lnet/minecraft/class_447$class_4200$class_11772;)V
+			ARG 1 child
+		METHOD method_73423 sortStats (Ljava/util/Comparator;)V
+			ARG 1 comparator
+		METHOD method_73424 getStatEntries ()Ljava/util/List;
 		CLASS class_450 ItemComparator
 			METHOD compare (Ljava/lang/Object;Ljava/lang/Object;)I
 				ARG 1 a
 				ARG 2 b
-		CLASS class_4199 Entry
+		CLASS class_4199 StatEntry
 			FIELD field_33830 item Lnet/minecraft/class_1792;
+			FIELD field_62169 button Lnet/minecraft/class_447$class_4200$class_4199$class_11775;
 			METHOD <init> (Lnet/minecraft/class_447$class_4200;Lnet/minecraft/class_1792;)V
 				ARG 2 item
 			METHOD method_19405 render (Lnet/minecraft/class_332;Lnet/minecraft/class_3445;IIZ)V
@@ -68,6 +84,30 @@ CLASS net/minecraft/class_447 net/minecraft/client/gui/screen/StatsScreen
 				ARG 5 white
 			METHOD method_37307 getItem ()Lnet/minecraft/class_1792;
 			CLASS class_11775 ItemStackInSlotWidget
+				METHOD <init> (Lnet/minecraft/class_447$class_4200$class_4199;Lnet/minecraft/class_1799;)V
+					ARG 2 stack
+		CLASS class_11772 Entry
+		CLASS class_11773 Header
+			FIELD field_62155 BLOCK_MINED_TEXTURE Lnet/minecraft/class_2960;
+			FIELD field_62156 ITEM_BROKEN_TEXTURE Lnet/minecraft/class_2960;
+			FIELD field_62157 ITEM_CRAFTED_TEXTURE Lnet/minecraft/class_2960;
+			FIELD field_62158 ITEM_USED_TEXTURE Lnet/minecraft/class_2960;
+			FIELD field_62159 ITEM_PICKED_UP_TEXTURE Lnet/minecraft/class_2960;
+			FIELD field_62160 ITEM_DROPPED_TEXTURE Lnet/minecraft/class_2960;
+			FIELD field_62161 blockMinedButton Lnet/minecraft/class_447$class_4200$class_11773$class_11774;
+			FIELD field_62162 itemBrokenButton Lnet/minecraft/class_447$class_4200$class_11773$class_11774;
+			FIELD field_62163 itemCraftedButton Lnet/minecraft/class_447$class_4200$class_11773$class_11774;
+			FIELD field_62164 itemUsedButton Lnet/minecraft/class_447$class_4200$class_11773$class_11774;
+			FIELD field_62165 itemPickedUpButton Lnet/minecraft/class_447$class_4200$class_11773$class_11774;
+			FIELD field_62166 itemDroppedButton Lnet/minecraft/class_447$class_4200$class_11773$class_11774;
+			FIELD field_62167 buttons Ljava/util/List;
+			CLASS class_11774 HeaderButton
+				FIELD field_62168 texture Lnet/minecraft/class_2960;
+				METHOD <init> (Lnet/minecraft/class_447$class_4200$class_11773;ILnet/minecraft/class_2960;)V
+					ARG 2 index
+					ARG 3 texture
+				METHOD method_73425 (ILnet/minecraft/class_447$class_4200;Lnet/minecraft/class_4185;)V
+					ARG 2 button
 	CLASS class_4202 EntityStatsListWidget
 		FIELD field_18763 screen Lnet/minecraft/class_447;
 		METHOD <init> (Lnet/minecraft/class_447;Lnet/minecraft/class_310;)V
@@ -80,8 +120,8 @@ CLASS net/minecraft/class_447 net/minecraft/client/gui/screen/StatsScreen
 			FIELD field_26552 killedByAny Z
 			METHOD <init> (Lnet/minecraft/class_447$class_4202;Lnet/minecraft/class_1299;)V
 				ARG 2 entityType
-	CLASS class_11776 StatisticsScreenTab
-		FIELD field_62171 entryList Lnet/minecraft/class_350;
+	CLASS class_11776 StatsTab
+		FIELD field_62171 widget Lnet/minecraft/class_350;
 		METHOD <init> (Lnet/minecraft/class_447;Lnet/minecraft/class_2561;Lnet/minecraft/class_350;)V
-			ARG 2 text
-			ARG 3 entryList
+			ARG 2 title
+			ARG 3 widget
