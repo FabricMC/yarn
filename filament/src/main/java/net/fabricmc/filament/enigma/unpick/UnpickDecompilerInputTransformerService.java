@@ -1,4 +1,4 @@
-package net.fabricmc.filament.unpick.enigma;
+package net.fabricmc.filament.enigma.unpick;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -45,11 +45,11 @@ public class UnpickDecompilerInputTransformerService implements DecompilerInputT
 	}
 
 	@Override
-	public void transform(ClassNode classNode) {
+	public ClassNode transform(ClassNode classNode) {
 		ProjectView project = plugin.project;
 
 		if (project == null) {
-			return;
+			return classNode;
 		}
 
 		ConstantUninliner uninliner = plugin.uninliner;
@@ -64,7 +64,10 @@ public class UnpickDecompilerInputTransformerService implements DecompilerInputT
 			}
 		}
 
-		uninliner.transform(classNode);
+		ClassNode transformed = new ClassNode();
+		classNode.accept(transformed);
+		uninliner.transform(transformed);
+		return transformed;
 	}
 
 	private ConstantUninliner createUninliner(ProjectView project) {

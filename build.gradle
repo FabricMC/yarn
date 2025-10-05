@@ -74,6 +74,12 @@ dependencies {
 	enigmaRuntime "org.vineflower:vineflower:${project.vineflower_version}"
 	enigmaRuntime "net.fabricmc.unpick:unpick:${project.unpick_version}"
 	enigmaRuntime "net.fabricmc.unpick:unpick-format-utils:${project.unpick_version}"
+	enigmaRuntime("net.fabricmc:fabric-loom:${project.loom_version}") {
+		transitive = false
+	}
+	enigmaRuntime "net.fabricmc:tiny-remapper:${project.tiny_remapper_version}"
+	enigmaRuntime gradleApi()
+
 	javadocClasspath "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 	javadocClasspath "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
 	javadocClasspath "com.google.code.findbugs:jsr305:3.0.2" // for some other jsr annotations
@@ -98,6 +104,8 @@ def minecraftLibraries = configurations.minecraftLibraries
 import cuchaz.enigma.command.CheckMappingsCommand
 import net.fabricmc.filament.task.DownloadTask
 import net.fabricmc.filament.task.MapJarTask
+import net.fabricmc.filament.task.annotations.CheckAnnotationsTask
+import net.fabricmc.filament.task.annotations.RemapAnnotationsTask
 import net.fabricmc.filament.task.unpick.CheckUnpickDefinitionsTask
 import net.fabricmc.filament.task.unpick.UnpickJarTask
 import net.fabricmc.filament.task.MappingPoetTask
@@ -152,6 +160,7 @@ tasks.register('yarn', EnigmaTask) {
 	libraries.from minecraftLibraries
 	mappings = mappingsDir
 	unpickDefinitions = file('unpick-definitions')
+	annotations = file('annotations.json')
 }
 
 tasks.register('yarnCommon', EnigmaTask) {
@@ -160,6 +169,7 @@ tasks.register('yarnCommon', EnigmaTask) {
 	libraries.from minecraftLibraries
 	mappings = mappingsDir
 	unpickDefinitions = file('unpick-definitions')
+	annotations = file('annotations.json')
 }
 
 def checkPackages = tasks.register('checkPackages') {
@@ -357,6 +367,9 @@ tasks.register('v2UnmergedYarnJar', Jar) {
 		expand version: project.version
 		rename unpickMetaFile.name, "extras/unpick.json"
 	}
+	from(remapAnnotationsIntermediary.output) {
+		rename remapAnnotationsIntermediary.output.get().asFile.name, "extras/annotations.json"
+	}
 	destinationDirectory.set(file("build/libs"))
 	manifest {
 		attributes("Minecraft-Version-Id": minecraft_version)
@@ -378,6 +391,9 @@ tasks.register('v2MergedYarnJar', Jar) {
 	from(file(unpickMetaFile)) {
 		expand version: project.version
 		rename unpickMetaFile.name, "extras/unpick.json"
+	}
+	from(remapAnnotationsIntermediary.output) {
+		rename remapAnnotationsIntermediary.output.get().asFile.name, "extras/annotations.json"
 	}
 	destinationDirectory.set(file("build/libs"))
 	manifest {
@@ -430,6 +446,25 @@ tasks.register('checkUnpickDefinitions', CheckUnpickDefinitionsTask) {
 
 check.dependsOn checkUnpickDefinitions
 unpickIntermediaryJar.mustRunAfter checkUnpickDefinitions // the check will give nicer error messages (not in intermediary)
+
+tasks.register('remapAnnotationsIntermediary', RemapAnnotationsTask) {
+	group = 'annotations'
+	input = file('annotations.json')
+	classpath.from(mapNamedNoUnpickJar)
+	mappings = insertNameProposalMappings.output
+	sourceNamespace = 'named'
+	targetNamespace = 'intermediary'
+	output = new File(tempDir, 'annotations-intermediary.json')
+}
+
+tasks.register('checkAnnotations', CheckAnnotationsTask) {
+	group = 'annotations'
+	input = file('annotations.json')
+	targetJars.from(mapNamedNoUnpickJar)
+	classpath.from(minecraftLibraries)
+}
+
+check.dependsOn checkAnnotations
 
 def mcLibsDir = file('build/tmp/mclibs')
 
@@ -650,6 +685,9 @@ abstract class EnigmaTask extends JavaExec {
 	@InputDirectory
 	abstract DirectoryProperty getUnpickDefinitions()
 
+	@InputFile
+	abstract RegularFileProperty getAnnotations()
+
 	EnigmaTask() {
 		def filamentCodeSource = MappingPoetTask.class.getProtectionDomain().getCodeSource()
 		def filamentJarFile = new File(filamentCodeSource.getLocation().getFile())
@@ -676,6 +714,7 @@ abstract class EnigmaTask extends JavaExec {
 		}
 
 		systemProperties 'unpick.directory': getUnpickDefinitions().get().asFile.absolutePath
+		systemProperties 'annotations.file': getAnnotations().get().asFile.absolutePath
 
 		super.exec()
 	}
