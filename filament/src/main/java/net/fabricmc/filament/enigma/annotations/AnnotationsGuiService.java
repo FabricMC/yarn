@@ -1,0 +1,80 @@
+package net.fabricmc.filament.enigma.annotations;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.Objects;
+
+import javax.imageio.ImageIO;
+
+import cuchaz.enigma.api.I18n;
+import cuchaz.enigma.api.service.GuiService;
+import cuchaz.enigma.api.view.GuiView;
+import cuchaz.enigma.api.view.entry.ClassEntryView;
+import cuchaz.enigma.api.view.entry.EntryView;
+import cuchaz.enigma.api.view.entry.FieldEntryView;
+import cuchaz.enigma.api.view.entry.MethodEntryView;
+import org.jetbrains.annotations.Nullable;
+
+import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.ClassAnnotationData;
+import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.GenericAnnotationData;
+import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.MethodAnnotationData;
+
+public class AnnotationsGuiService implements GuiService {
+	private static final BufferedImage ICON;
+	private static final BufferedImage ICON_DARK;
+
+	static {
+		try {
+			ICON = ImageIO.read(Objects.requireNonNull(AnnotationsGuiService.class.getResource("/icons/annotation_gutter.png")));
+			ICON_DARK = ImageIO.read(Objects.requireNonNull(AnnotationsGuiService.class.getResource("/icons/annotation_gutter_dark.png")));
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+	}
+
+	private final AnnotationsEnigmaPlugin plugin;
+
+	public AnnotationsGuiService(AnnotationsEnigmaPlugin plugin) {
+		this.plugin = plugin;
+	}
+
+	@Override
+	public void addGutterMarkers(GuiView gui, EntryView entry, GutterMarkerAdder gutter) {
+		if (plugin.project == null) {
+			return;
+		}
+
+		EntryView deobfEntry = plugin.project.deobfuscate(entry);
+
+		boolean hasAnnotations = switch (deobfEntry) {
+		case ClassEntryView classEntry -> hasData(plugin.data.classes().get(classEntry.getFullName()));
+		case FieldEntryView fieldEntry -> {
+			ClassAnnotationData classData = plugin.data.classes().get(fieldEntry.getParent().getFullName());
+			yield classData != null && hasData(classData.getFieldData(fieldEntry.getName(), fieldEntry.getDescriptor()));
+		}
+		case MethodEntryView methodEntry -> {
+			ClassAnnotationData classData = plugin.data.classes().get(methodEntry.getParent().getFullName());
+			yield classData != null && hasData(classData.getMethodData(methodEntry.getName(), methodEntry.getDescriptor()));
+		}
+		default -> false;
+		};
+
+		if (hasAnnotations) {
+			gutter.addMarker(gui.isDarkTheme() ? ICON_DARK : ICON, GutterMarkerAlignment.RIGHT)
+					.setTooltip(I18n.translate("annotations.gutter.tooltip"));
+		}
+	}
+
+	private static boolean hasData(@Nullable ClassAnnotationData data) {
+		return data != null && (!data.annotationsToRemove().isEmpty() || !data.annotationsToAdd().isEmpty() || !data.typeAnnotationsToRemove().isEmpty() || !data.typeAnnotationsToAdd().isEmpty());
+	}
+
+	private static boolean hasData(@Nullable GenericAnnotationData data) {
+		return data != null && (!data.annotationsToRemove().isEmpty() || !data.annotationsToAdd().isEmpty() || !data.typeAnnotationsToRemove().isEmpty() || !data.typeAnnotationsToAdd().isEmpty());
+	}
+
+	private static boolean hasData(@Nullable MethodAnnotationData data) {
+		return data != null && (!data.annotationsToRemove().isEmpty() || !data.annotationsToAdd().isEmpty() || !data.typeAnnotationsToRemove().isEmpty() || !data.typeAnnotationsToAdd().isEmpty() || data.parameters().values().stream().anyMatch(AnnotationsGuiService::hasData));
+	}
+}

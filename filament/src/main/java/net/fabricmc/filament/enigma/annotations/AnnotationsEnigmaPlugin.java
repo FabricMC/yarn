@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import cuchaz.enigma.api.EnigmaPlugin;
 import cuchaz.enigma.api.EnigmaPluginContext;
 import cuchaz.enigma.api.service.DecompilerInputTransformerService;
+import cuchaz.enigma.api.service.GuiService;
 import cuchaz.enigma.api.service.ProjectService;
 import cuchaz.enigma.api.view.ProjectView;
 
@@ -32,6 +33,8 @@ public class AnnotationsEnigmaPlugin implements EnigmaPlugin {
 		}
 
 		ctx.registerService("annotations:decompiler_input_transformer", DecompilerInputTransformerService.TYPE, () -> new AnnotationsDecompilerInputTransformerService(this));
+		ctx.registerService("annotations:gui", GuiService.TYPE, () -> new AnnotationsGuiService(this));
+		ctx.registerService("annotations:i18n", AnnotationsI18nService.TYPE, AnnotationsI18nService::new);
 		ctx.registerService("annotations:project", ProjectService.TYPE, () -> new AnnotationsProjectService(this));
 	}
 }
