@@ -1,12 +1,9 @@
 package net.fabricmc.filament.enigma.annotations;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.Objects;
 
-import javax.imageio.ImageIO;
-
+import cuchaz.enigma.api.EnigmaIcon;
 import cuchaz.enigma.api.I18n;
 import cuchaz.enigma.api.service.GuiService;
 import cuchaz.enigma.api.view.GuiView;
@@ -21,13 +18,13 @@ import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.Gen
 import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.MethodAnnotationData;
 
 public class AnnotationsGuiService implements GuiService {
-	private static final BufferedImage ICON;
-	private static final BufferedImage ICON_DARK;
+	private static final EnigmaIcon ICON;
+	private static final EnigmaIcon ICON_DARK;
 
 	static {
 		try {
-			ICON = ImageIO.read(Objects.requireNonNull(AnnotationsGuiService.class.getResource("/icons/annotation_gutter.png")));
-			ICON_DARK = ImageIO.read(Objects.requireNonNull(AnnotationsGuiService.class.getResource("/icons/annotation_gutter_dark.png")));
+			ICON = EnigmaIcon.loadResource("icons/annotation_gutter.svg");
+			ICON_DARK = EnigmaIcon.loadResource("icons/annotation_gutter_dark.svg");
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}

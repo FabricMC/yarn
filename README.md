@@ -3,6 +3,9 @@
 Yarn is a set of open, unencumbered Minecraft mappings, free for everyone to use under the Creative Commons Zero license. The intention is to let 
 everyone mod Minecraft freely and openly, while also being able to innovate and process the mappings as they see fit.
 
+Some icons in Filament, which we use to develop Yarn, are licensed under Apache-2.0. These can be found in `filament/src/main/resources/icons`.
+These icons are not shipped with Yarn.
+
 To see the current version being targeted, check the branch name!
 
 ## Usage
