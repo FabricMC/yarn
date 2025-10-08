@@ -14,6 +14,7 @@ import cuchaz.enigma.api.view.ProjectView;
 import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.AnnotationsData;
 
 public class AnnotationsEnigmaPlugin implements EnigmaPlugin {
+	public Path dataPath;
 	public AnnotationsData data;
 	public ProjectView project;
 
@@ -25,7 +26,9 @@ public class AnnotationsEnigmaPlugin implements EnigmaPlugin {
 			return;
 		}
 
-		try (Reader reader = Files.newBufferedReader(Path.of(annotationsPath))) {
+		dataPath = Path.of(annotationsPath);
+
+		try (Reader reader = Files.newBufferedReader(dataPath)) {
 			data = AnnotationsData.read(reader);
 		} catch (Exception e) {
 			System.err.println("Failed to read annotations file " + annotationsPath + ": " + e);
