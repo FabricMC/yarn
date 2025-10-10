@@ -1,4 +1,4 @@
-package net.fabricmc.filament.unpick.enigma;
+package net.fabricmc.filament.enigma.unpick;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;

@@ -39,7 +39,6 @@ CLASS net/minecraft/class_1921 net/minecraft/client/render/RenderLayer
 	FIELD field_34002 TEXT_POLYGON_OFFSET Ljava/util/function/Function;
 	FIELD field_34003 TEXT_INTENSITY_POLYGON_OFFSET Ljava/util/function/Function;
 	FIELD field_38345 ENTITY_TRANSLUCENT_EMISSIVE Ljava/util/function/BiFunction;
-	FIELD field_42521 DEBUG_LINE_STRIP Ljava/util/function/Function;
 	FIELD field_53130 ENTITY_SOLID_Z_OFFSET_FORWARD Ljava/util/function/Function;
 	FIELD field_54962 ARMOR_TRANSLUCENT Ljava/util/function/Function;
 	FIELD field_55143 WEATHER_ALL_MASK Ljava/util/function/Function;
@@ -82,7 +81,6 @@ CLASS net/minecraft/class_1921 net/minecraft/client/render/RenderLayer
 	METHOD method_23577 getSolid ()Lnet/minecraft/class_1921;
 	METHOD method_23578 getEntityCutoutNoCull (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
 		ARG 0 texture
-	METHOD method_23579 getCutoutMipped ()Lnet/minecraft/class_1921;
 	METHOD method_23580 getEntityTranslucent (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
 		ARG 0 texture
 	METHOD method_23581 getCutout ()Lnet/minecraft/class_1921;
@@ -136,7 +134,6 @@ CLASS net/minecraft/class_1921 net/minecraft/client/render/RenderLayer
 	METHOD method_29997 getTripwire ()Lnet/minecraft/class_1921;
 	METHOD method_30676 getGlintTranslucent ()Lnet/minecraft/class_1921;
 	METHOD method_34571 getEndGateway ()Lnet/minecraft/class_1921;
-	METHOD method_34572 getLineStrip ()Lnet/minecraft/class_1921;
 	METHOD method_34822 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
 		ARG 0 texture
 	METHOD method_34824 (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
@@ -195,14 +192,9 @@ CLASS net/minecraft/class_1921 net/minecraft/client/render/RenderLayer
 		ARG 0 texture
 	METHOD method_43332 areVerticesNotShared ()Z
 	METHOD method_49042 getDebugQuads ()Lnet/minecraft/class_1921;
-	METHOD method_49043 getDebugLineStrip (D)Lnet/minecraft/class_1921;
-		ARG 0 lineWidth
-	METHOD method_49044 (Ljava/lang/Double;)Lnet/minecraft/class_1921$class_4687;
-		ARG 0 lineWidth
 	METHOD method_49045 getTextBackground ()Lnet/minecraft/class_1921;
 	METHOD method_49046 getTextBackgroundSeeThrough ()Lnet/minecraft/class_1921;
 	METHOD method_49047 getDebugFilledBox ()Lnet/minecraft/class_1921;
-	METHOD method_51456 getDebugSectionQuads ()Lnet/minecraft/class_1921;
 	METHOD method_53491 createArmorDecalCutoutNoCull (Lnet/minecraft/class_2960;)Lnet/minecraft/class_1921;
 		ARG 0 texture
 	METHOD method_55251 getBreezeWind (Lnet/minecraft/class_2960;FF)Lnet/minecraft/class_1921;
@@ -214,7 +206,6 @@ CLASS net/minecraft/class_1921 net/minecraft/client/render/RenderLayer
 	METHOD method_60894 isTranslucent ()Z
 	METHOD method_60895 draw (Lnet/minecraft/class_9801;)V
 		ARG 1 buffer
-	METHOD method_61045 getDebugStructureQuads ()Lnet/minecraft/class_1921;
 	METHOD method_61046 getDragonRays ()Lnet/minecraft/class_1921;
 	METHOD method_61157 getDragonRaysDepth ()Lnet/minecraft/class_1921;
 	METHOD method_62278 getDebugTriangleFan ()Lnet/minecraft/class_1921;
@@ -272,15 +263,13 @@ CLASS net/minecraft/class_1921 net/minecraft/client/render/RenderLayer
 		FIELD field_21422 phases Lcom/google/common/collect/ImmutableList;
 		FIELD field_21852 outlineMode Lnet/minecraft/class_1921$class_4750;
 		FIELD field_57931 target Lnet/minecraft/class_4668$class_4678;
-		METHOD <init> (Lnet/minecraft/class_4668$class_5939;Lnet/minecraft/class_4668$class_4676;Lnet/minecraft/class_4668$class_4679;Lnet/minecraft/class_4668$class_4675;Lnet/minecraft/class_4668$class_4678;Lnet/minecraft/class_4668$class_4684;Lnet/minecraft/class_4668$class_4677;Lnet/minecraft/class_1921$class_4750;)V
+		METHOD <init> (Lnet/minecraft/class_4668$class_5939;Lnet/minecraft/class_4668$class_4676;Lnet/minecraft/class_4668$class_4679;Lnet/minecraft/class_4668$class_4675;Lnet/minecraft/class_4668$class_4678;Lnet/minecraft/class_4668$class_4684;Lnet/minecraft/class_1921$class_4750;)V
 			ARG 1 texture
 			ARG 2 lightMap
 			ARG 3 overlay
 			ARG 4 layering
 			ARG 5 target
 			ARG 6 texturing
-			ARG 7 lineWidth
-			ARG 8 outlineMode
 		METHOD method_23598 builder ()Lnet/minecraft/class_1921$class_4688$class_4689;
 		CLASS class_4689 Builder
 			FIELD field_21430 lightmap Lnet/minecraft/class_4668$class_4676;
@@ -288,14 +277,11 @@ CLASS net/minecraft/class_1921 net/minecraft/client/render/RenderLayer
 			FIELD field_21433 layering Lnet/minecraft/class_4668$class_4675;
 			FIELD field_21434 target Lnet/minecraft/class_4668$class_4678;
 			FIELD field_21435 texturing Lnet/minecraft/class_4668$class_4684;
-			FIELD field_21437 lineWidth Lnet/minecraft/class_4668$class_4677;
 			FIELD field_29462 texture Lnet/minecraft/class_4668$class_5939;
 			METHOD method_23607 layering (Lnet/minecraft/class_4668$class_4675;)Lnet/minecraft/class_1921$class_4688$class_4689;
 				ARG 1 layering
 			METHOD method_23608 lightmap (Lnet/minecraft/class_4668$class_4676;)Lnet/minecraft/class_1921$class_4688$class_4689;
 				ARG 1 lightmap
-			METHOD method_23609 lineWidth (Lnet/minecraft/class_4668$class_4677;)Lnet/minecraft/class_1921$class_4688$class_4689;
-				ARG 1 lineWidth
 			METHOD method_23610 target (Lnet/minecraft/class_4668$class_4678;)Lnet/minecraft/class_1921$class_4688$class_4689;
 				ARG 1 target
 			METHOD method_23611 overlay (Lnet/minecraft/class_4668$class_4679;)Lnet/minecraft/class_1921$class_4688$class_4689;
