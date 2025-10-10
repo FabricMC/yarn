@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
+import javax.swing.KeyStroke;
+
 import cuchaz.enigma.api.EnigmaIcon;
 import cuchaz.enigma.api.I18n;
 import cuchaz.enigma.api.service.GuiService;
@@ -15,11 +17,10 @@ import cuchaz.enigma.api.view.entry.FieldEntryView;
 import cuchaz.enigma.api.view.entry.MethodEntryView;
 import org.jetbrains.annotations.Nullable;
 
+import net.fabricmc.filament.enigma.annotations.editor.AnnotationsEditor;
 import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.ClassAnnotationData;
 import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.GenericAnnotationData;
 import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.MethodAnnotationData;
-
-import javax.swing.KeyStroke;
 
 public class AnnotationsGuiService implements GuiService {
 	private static final EnigmaIcon ICON;

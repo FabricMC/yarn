@@ -716,6 +716,10 @@ abstract class EnigmaTask extends JavaExec {
 		systemProperties 'unpick.directory': getUnpickDefinitions().get().asFile.absolutePath
 		systemProperties 'annotations.file': getAnnotations().get().asFile.absolutePath
 
+		if (Boolean.getBoolean('sun.awt.disablegrab')) {
+			systemProperties 'sun.awt.disablegrab': 'true'
+		}
+
 		super.exec()
 	}
 }

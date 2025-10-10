@@ -3,6 +3,7 @@ package net.fabricmc.filament.enigma.annotations;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 
 import cuchaz.enigma.api.EnigmaPlugin;
 import cuchaz.enigma.api.EnigmaPluginContext;
@@ -17,6 +18,7 @@ public class AnnotationsEnigmaPlugin implements EnigmaPlugin {
 	public Path dataPath;
 	public AnnotationsData data;
 	public ProjectView project;
+	public CompletableFuture<AnnotationsIndex> index;
 
 	@Override
 	public void init(EnigmaPluginContext ctx) {

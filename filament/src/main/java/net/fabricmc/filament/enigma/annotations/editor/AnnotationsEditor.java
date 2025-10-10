@@ -1,55 +1,9 @@
-package net.fabricmc.filament.enigma.annotations;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import cuchaz.enigma.api.DataInvalidationEvent;
-import cuchaz.enigma.api.I18n;
-import cuchaz.enigma.api.view.GuiView;
-import cuchaz.enigma.api.view.ProjectView;
-import cuchaz.enigma.api.view.entry.ClassEntryView;
-import cuchaz.enigma.api.view.entry.EntryView;
-import cuchaz.enigma.api.view.entry.FieldEntryView;
-import cuchaz.enigma.api.view.entry.MethodEntryView;
-
-import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.BaseAnnotationData;
-import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.ClassAnnotationData;
-import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.GenericAnnotationData;
-import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.MethodAnnotationData;
-import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.TypeAnnotationKey;
-import net.fabricmc.loom.util.Pair;
-
-import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.TypePath;
-import org.objectweb.asm.TypeReference;
-import org.objectweb.asm.signature.SignatureReader;
-import org.objectweb.asm.signature.SignatureVisitor;
-import org.objectweb.asm.tree.AnnotationNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.TypeAnnotationNode;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JEditorPane;
-import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
-import javax.swing.Scrollable;
-import javax.swing.SwingUtilities;
-import javax.swing.plaf.TextUI;
-import javax.swing.text.BadLocationException;
+package net.fabricmc.filament.enigma.annotations.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Insets;
-import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
@@ -64,15 +18,61 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Function;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JEditorPane;
+import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.text.BadLocationException;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import cuchaz.enigma.api.DataInvalidationEvent;
+import cuchaz.enigma.api.I18n;
+import cuchaz.enigma.api.view.GuiView;
+import cuchaz.enigma.api.view.ProjectView;
+import cuchaz.enigma.api.view.entry.ClassEntryView;
+import cuchaz.enigma.api.view.entry.EntryView;
+import cuchaz.enigma.api.view.entry.FieldEntryView;
+import cuchaz.enigma.api.view.entry.MethodEntryView;
+import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.TypePath;
+import org.objectweb.asm.TypeReference;
+import org.objectweb.asm.signature.SignatureReader;
+import org.objectweb.asm.signature.SignatureVisitor;
+import org.objectweb.asm.tree.AnnotationNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TypeAnnotationNode;
+
+import net.fabricmc.filament.enigma.annotations.AnnotationUtil;
+import net.fabricmc.filament.enigma.annotations.AnnotationsEnigmaPlugin;
+import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.BaseAnnotationData;
+import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.ClassAnnotationData;
+import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.GenericAnnotationData;
+import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.MethodAnnotationData;
+import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.TypeAnnotationKey;
+import net.fabricmc.loom.util.Pair;
 
 public class AnnotationsEditor extends JDialog {
 	private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 	private static final Comparator<TypeAnnotationKey> TYPE_ANNOTATION_KEY_COMPARATOR = Comparator.comparing(TypeAnnotationKey::name)
 			.thenComparingInt(TypeAnnotationKey::typeRef)
 			.thenComparing(TypeAnnotationKey::typePath);
+	private static final Comparator<AnnotationNode> ANNOTATION_COMPARATOR = Comparator.comparing(ann -> ann.desc);
+	private static final Comparator<TypeAnnotationNode> TYPE_ANNOTATION_COMPARATOR = Comparator.<TypeAnnotationNode, String>comparing(ann -> ann.desc)
+			.thenComparingInt(ann -> ann.typeRef)
+			.thenComparing(ann -> AnnotationUtil.typePathToString(ann.typePath));
 
 	private final AnnotationsEnigmaPlugin plugin;
 	private final ProjectView project;
+	private final GuiView gui;
 	private final Object declaration;
 	private final EntryView editingEntry;
 	private final BaseAnnotationData data;
@@ -85,6 +85,7 @@ public class AnnotationsEditor extends JDialog {
 
 		this.plugin = plugin;
 		this.project = project;
+		this.gui = gui;
 		this.declaration = declaration;
 		this.editingEntry = editingEntry;
 		this.data = getEditingData(editingEntry);
@@ -146,32 +147,32 @@ public class AnnotationsEditor extends JDialog {
 	@Nullable
 	private static Object getDeclaration(ProjectView project, EntryView entry) {
 		return switch (entry) {
-			case ClassEntryView classEntry -> project.getBytecode(classEntry.getFullName());
-			case FieldEntryView fieldEntry -> {
-				ClassNode bytecode = project.getBytecode(fieldEntry.getParent().getFullName());
+		case ClassEntryView classEntry -> project.getBytecode(classEntry.getFullName());
+		case FieldEntryView fieldEntry -> {
+			ClassNode bytecode = project.getBytecode(fieldEntry.getParent().getFullName());
 
-				if (bytecode == null) {
-					yield null;
-				}
-
-				yield bytecode.fields.stream()
-						.filter(field -> field.name.equals(fieldEntry.getName()) && field.desc.equals(fieldEntry.getDescriptor()))
-						.findFirst()
-						.orElse(null);
+			if (bytecode == null) {
+				yield null;
 			}
-			case MethodEntryView methodEntry -> {
-				ClassNode bytecode = project.getBytecode(methodEntry.getParent().getFullName());
 
-				if (bytecode == null) {
-					yield null;
-				}
+			yield bytecode.fields.stream()
+					.filter(field -> field.name.equals(fieldEntry.getName()) && field.desc.equals(fieldEntry.getDescriptor()))
+					.findFirst()
+					.orElse(null);
+		}
+		case MethodEntryView methodEntry -> {
+			ClassNode bytecode = project.getBytecode(methodEntry.getParent().getFullName());
 
-				yield bytecode.methods.stream()
-						.filter(method -> method.name.equals(methodEntry.getName()) && method.desc.equals(methodEntry.getDescriptor()))
-						.findFirst()
-						.orElse(null);
+			if (bytecode == null) {
+				yield null;
 			}
-			default -> throw new IllegalArgumentException("Unsupported entry type: " + entry.getClass().getName());
+
+			yield bytecode.methods.stream()
+					.filter(method -> method.name.equals(methodEntry.getName()) && method.desc.equals(methodEntry.getDescriptor()))
+					.findFirst()
+					.orElse(null);
+		}
+		default -> throw new IllegalArgumentException("Unsupported entry type: " + entry.getClass().getName());
 		};
 	}
 
@@ -179,35 +180,35 @@ public class AnnotationsEditor extends JDialog {
 		EntryView deobf = project.deobfuscate(editingEntry);
 
 		return switch (deobf) {
-			case ClassEntryView ignored -> {
-				ClassAnnotationData data = plugin.data.classes().get(deobf.getFullName());
-				yield data == null ? new ClassAnnotationData() : new ClassAnnotationData(data);
-			}
-			case FieldEntryView fieldEntry -> Objects.requireNonNullElseGet(
-					((ClassAnnotationData) getEditingData(fieldEntry.getParent())).getFieldData(fieldEntry.getName(), fieldEntry.getDescriptor()),
-					GenericAnnotationData::new
-			);
-			case MethodEntryView methodEntry -> Objects.requireNonNullElseGet(
-					((ClassAnnotationData) getEditingData(methodEntry.getParent())).getMethodData(methodEntry.getName(), methodEntry.getDescriptor()),
-					MethodAnnotationData::new
-			);
-			default -> throw new IllegalArgumentException("Unsupported entry type: " + deobf.getClass().getName());
+		case ClassEntryView ignored -> {
+			ClassAnnotationData data = plugin.data.classes().get(deobf.getFullName());
+			yield data == null ? new ClassAnnotationData() : new ClassAnnotationData(data);
+		}
+		case FieldEntryView fieldEntry -> Objects.requireNonNullElseGet(
+				((ClassAnnotationData) getEditingData(fieldEntry.getParent())).getFieldData(fieldEntry.getName(), fieldEntry.getDescriptor()),
+				GenericAnnotationData::new
+		);
+		case MethodEntryView methodEntry -> Objects.requireNonNullElseGet(
+				((ClassAnnotationData) getEditingData(methodEntry.getParent())).getMethodData(methodEntry.getName(), methodEntry.getDescriptor()),
+				MethodAnnotationData::new
+		);
+		default -> throw new IllegalArgumentException("Unsupported entry type: " + deobf.getClass().getName());
 		};
 	}
 
 	private static boolean isEmpty(BaseAnnotationData data) {
-		if (!data.annotationsToRemove().isEmpty() && !data.annotationsToAdd().isEmpty()) {
+		if (!data.annotationsToRemove().isEmpty() || !data.annotationsToAdd().isEmpty()) {
 			return false;
 		}
 
-		if (!data.typeAnnotationsToRemove().isEmpty() && !data.typeAnnotationsToAdd().isEmpty()) {
+		if (!data.typeAnnotationsToRemove().isEmpty() || !data.typeAnnotationsToAdd().isEmpty()) {
 			return false;
 		}
 
 		return switch (data) {
-			case ClassAnnotationData classData -> classData.fields().isEmpty() && classData.methods().isEmpty();
-			case MethodAnnotationData methodData -> methodData.parameters().values().stream().allMatch(AnnotationsEditor::isEmpty);
-			default -> true;
+		case ClassAnnotationData classData -> classData.fields().isEmpty() && classData.methods().isEmpty();
+		case MethodAnnotationData methodData -> methodData.parameters().values().stream().allMatch(AnnotationsEditor::isEmpty);
+		default -> true;
 		};
 	}
 
@@ -218,73 +219,73 @@ public class AnnotationsEditor extends JDialog {
 
 		if (isEmpty(data)) {
 			changed = switch (deobf) {
-				case ClassEntryView ignored -> plugin.data.classes().remove(deobf.getFullName()) != null;
-				case FieldEntryView fieldEntry -> {
-					ClassAnnotationData classData = plugin.data.classes().get(fieldEntry.getParent().getFullName());
-					boolean res = classData != null && classData.fields().remove(fieldEntry.getName() + ":" + fieldEntry.getDescriptor()) != null;
+			case ClassEntryView ignored -> plugin.data.classes().remove(deobf.getFullName()) != null;
+			case FieldEntryView fieldEntry -> {
+				ClassAnnotationData classData = plugin.data.classes().get(fieldEntry.getParent().getFullName());
+				boolean res = classData != null && classData.fields().remove(fieldEntry.getName() + ":" + fieldEntry.getDescriptor()) != null;
 
-					if (res && isEmpty(classData)) {
-						plugin.data.classes().remove(fieldEntry.getParent().getFullName());
-					}
-
-					yield res;
+				if (res && isEmpty(classData)) {
+					plugin.data.classes().remove(fieldEntry.getParent().getFullName());
 				}
-				case MethodEntryView methodEntry -> {
-					ClassAnnotationData classData = plugin.data.classes().get(methodEntry.getParent().getFullName());
-					boolean res = classData != null && classData.methods().remove(methodEntry.getName() + methodEntry.getDescriptor()) != null;
 
-					if (res && isEmpty(classData)) {
-						plugin.data.classes().remove(methodEntry.getParent().getFullName());
-					}
+				yield res;
+			}
+			case MethodEntryView methodEntry -> {
+				ClassAnnotationData classData = plugin.data.classes().get(methodEntry.getParent().getFullName());
+				boolean res = classData != null && classData.methods().remove(methodEntry.getName() + methodEntry.getDescriptor()) != null;
 
-					yield res;
+				if (res && isEmpty(classData)) {
+					plugin.data.classes().remove(methodEntry.getParent().getFullName());
 				}
-				default -> throw new IllegalArgumentException("Unsupported entry type: " + deobf.getClass().getName());
+
+				yield res;
+			}
+			default -> throw new IllegalArgumentException("Unsupported entry type: " + deobf.getClass().getName());
 			};
 		} else {
 			changed = switch (deobf) {
-				case ClassEntryView ignored -> {
-					boolean res = !data.equals(plugin.data.classes().get(deobf.getFullName()));
+			case ClassEntryView ignored -> {
+				boolean res = !data.equals(plugin.data.classes().get(deobf.getFullName()));
 
-					if (res) {
-						addSorted(plugin.data.classes(), deobf.getFullName(), (ClassAnnotationData) data);
-					}
-
-					yield res;
+				if (res) {
+					addSorted(plugin.data.classes(), deobf.getFullName(), (ClassAnnotationData) data);
 				}
-				case FieldEntryView fieldEntry -> {
-					ClassAnnotationData classData = plugin.data.classes().get(fieldEntry.getParent().getFullName());
 
-					if (classData == null) {
-						classData = new ClassAnnotationData();
-						addSorted(plugin.data.classes(), deobf.getFullName(), classData);
-					}
+				yield res;
+			}
+			case FieldEntryView fieldEntry -> {
+				ClassAnnotationData classData = plugin.data.classes().get(fieldEntry.getParent().getFullName());
 
-					boolean res = !data.equals(classData.getFieldData(fieldEntry.getName(), fieldEntry.getDescriptor()));
-
-					if (res) {
-						addSorted(classData.fields(), fieldEntry.getName() + ":" + fieldEntry.getDescriptor(), (GenericAnnotationData) data);
-					}
-
-					yield res;
+				if (classData == null) {
+					classData = new ClassAnnotationData();
+					addSorted(plugin.data.classes(), deobf.getFullName(), classData);
 				}
-				case MethodEntryView methodEntry -> {
-					ClassAnnotationData classData = plugin.data.classes().get(methodEntry.getParent().getFullName());
 
-					if (classData == null) {
-						classData = new ClassAnnotationData();
-						addSorted(plugin.data.classes(), deobf.getFullName(), classData);
-					}
+				boolean res = !data.equals(classData.getFieldData(fieldEntry.getName(), fieldEntry.getDescriptor()));
 
-					boolean res = !data.equals(classData.getMethodData(methodEntry.getName(), methodEntry.getDescriptor()));
-
-					if (res) {
-						addSorted(classData.methods(), methodEntry.getName() + methodEntry.getDescriptor(), (MethodAnnotationData) data);
-					}
-
-					yield res;
+				if (res) {
+					addSorted(classData.fields(), fieldEntry.getName() + ":" + fieldEntry.getDescriptor(), (GenericAnnotationData) data);
 				}
-				default -> throw new IllegalArgumentException("Unsupported entry type: " + deobf.getClass().getName());
+
+				yield res;
+			}
+			case MethodEntryView methodEntry -> {
+				ClassAnnotationData classData = plugin.data.classes().get(methodEntry.getParent().getFullName());
+
+				if (classData == null) {
+					classData = new ClassAnnotationData();
+					addSorted(plugin.data.classes(), deobf.getFullName(), classData);
+				}
+
+				boolean res = !data.equals(classData.getMethodData(methodEntry.getName(), methodEntry.getDescriptor()));
+
+				if (res) {
+					addSorted(classData.methods(), methodEntry.getName() + methodEntry.getDescriptor(), (MethodAnnotationData) data);
+				}
+
+				yield res;
+			}
+			default -> throw new IllegalArgumentException("Unsupported entry type: " + deobf.getClass().getName());
 			};
 		}
 
@@ -296,10 +297,10 @@ public class AnnotationsEditor extends JDialog {
 			}
 
 			ClassEntryView invalidatingClass = switch (editingEntry) {
-				case ClassEntryView classEntry -> classEntry;
-				case FieldEntryView fieldEntry -> fieldEntry.getParent();
-				case MethodEntryView methodEntry -> methodEntry.getParent();
-				default -> throw new IllegalArgumentException("Unsupported entry type: " + editingEntry.getClass().getName());
+			case ClassEntryView classEntry -> classEntry;
+			case FieldEntryView fieldEntry -> fieldEntry.getParent();
+			case MethodEntryView methodEntry -> methodEntry.getParent();
+			default -> throw new IllegalArgumentException("Unsupported entry type: " + editingEntry.getClass().getName());
 			};
 
 			project.invalidateData(invalidatingClass.getFullName(), DataInvalidationEvent.InvalidationType.DECOMPILE);
@@ -330,7 +331,7 @@ public class AnnotationsEditor extends JDialog {
 			try {
 				buttonsLocation = editor.modelToView2D(index);
 			} catch (BadLocationException e) {
-				throw new AssertionError(e);
+				throw new IllegalStateException(e);
 			}
 
 			int x = (int) buttonsLocation.getX();
@@ -349,7 +350,7 @@ public class AnnotationsEditor extends JDialog {
 			try {
 				editor.getDocument().insertString(index, " ".repeat(spaceCount), null);
 			} catch (BadLocationException e) {
-				throw new AssertionError(e);
+				throw new IllegalStateException(e);
 			}
 
 			offset += spaceCount;
@@ -358,42 +359,28 @@ public class AnnotationsEditor extends JDialog {
 		Dimension preferredSize = editor.getPreferredSize();
 		layeredPane.setSize(Math.max(preferredSize.width, scrollPane.getViewport().getWidth()), Math.max(preferredSize.height, scrollPane.getViewport().getHeight()));
 		editor.setBounds(0, 0, layeredPane.getWidth(), layeredPane.getHeight());
+		editor.setCaretPosition(0);
 	}
 
 	private TextWithButtons buildDeclarationUi() {
 		return switch (declaration) {
-			case ClassNode classNode -> buildDeclarationUi(classNode);
-			case FieldNode fieldNode -> buildDeclarationUi(fieldNode);
-			case MethodNode methodNode -> buildDeclarationUi(methodNode);
-			default -> throw new IllegalStateException("Unsupported declaration type: " + declaration.getClass().getName());
+		case ClassNode classNode -> buildDeclarationUi(classNode);
+		case FieldNode fieldNode -> buildDeclarationUi(fieldNode);
+		case MethodNode methodNode -> buildDeclarationUi(methodNode);
+		default -> throw new IllegalStateException("Unsupported declaration type: " + declaration.getClass().getName());
 		};
 	}
 
 	private TextWithButtons buildDeclarationUi(ClassNode declaration) {
 		TextWithButtons result = new TextWithButtons();
 
-		if (declaration.invisibleAnnotations != null) {
-			for (AnnotationNode ann : declaration.invisibleAnnotations) {
-				result.append(createAnnotationButton(ann));
-				result.append("\n");
-			}
-		}
-
-		if (declaration.visibleAnnotations != null) {
-			for (AnnotationNode ann : declaration.visibleAnnotations) {
-				result.append(createAnnotationButton(ann));
-				result.append("\n");
-			}
-		}
-
-		result.append(createPlusButton());
-		result.append("\n");
+		appendTopLevelAnnotations(declaration.visibleAnnotations, declaration.invisibleAnnotations, result);
 
 		ClassDeclType declType = ClassDeclType.infer(declaration);
 
-		result.append(declType.keyword);
+		result.append(declType.getKeyword());
 		result.append(" ");
-		result.append(getSimpleName(project.deobfuscate(ClassEntryView.create(declaration.name)).getFullName()));
+		result.append(AnnotationUtil.getSimpleName(project.deobfuscate(ClassEntryView.create(declaration.name)).getFullName()));
 
 		appendTypeParameters(result, declaration.signature, TypeReference.CLASS_TYPE_PARAMETER, TypeReference.CLASS_TYPE_PARAMETER_BOUND);
 
@@ -404,7 +391,7 @@ public class AnnotationsEditor extends JDialog {
 				new SignatureReader(declaration.signature).accept(new SignatureVisitor(Opcodes.ASM9) {
 					@Override
 					public SignatureVisitor visitSuperclass() {
-						return new TypeRefAppender(result, TypeReference.newTypeReference(TypeReference.CLASS_EXTENDS).getValue());
+						return new TypeRefAppender(result, TypeReference.newSuperTypeReference(-1).getValue());
 					}
 				});
 			} else {
@@ -450,7 +437,6 @@ public class AnnotationsEditor extends JDialog {
 						}
 
 						addedInterface = true;
-						result.append(createPlusButton());
 						return new TypeRefAppender(result, TypeReference.newSuperTypeReference(interfaceIndex).getValue());
 					}
 				});
@@ -477,6 +463,34 @@ public class AnnotationsEditor extends JDialog {
 		}
 
 		return result;
+	}
+
+	private void appendTopLevelAnnotations(
+			@Nullable List<AnnotationNode> visibleAnnotations,
+			@Nullable List<AnnotationNode> invisibleAnnotations,
+			TextWithButtons result
+	) {
+		if (invisibleAnnotations != null) {
+			for (AnnotationNode ann : invisibleAnnotations) {
+				result.append(createExistingAnnotationButton(ann));
+				result.append("\n");
+			}
+		}
+
+		if (visibleAnnotations != null) {
+			for (AnnotationNode ann : visibleAnnotations) {
+				result.append(createExistingAnnotationButton(ann));
+				result.append("\n");
+			}
+		}
+
+		for (AnnotationNode ann : data.annotationsToAdd()) {
+			result.append(createAddedAnnotationButton(ann));
+			result.append("\n");
+		}
+
+		result.append(createPlusButton(AnnotationNode::new));
+		result.append("\n");
 	}
 
 	private void appendTypeParameters(TextWithButtons result, @Nullable String signature, int paramRefSort, int paramBoundRefSort) {
@@ -544,13 +558,13 @@ public class AnnotationsEditor extends JDialog {
 		return new TextWithButtons();
 	}
 
-	private JButton createAnnotationButton(AnnotationNode annotation) {
-		String annotationName = annotation.desc.substring(1, annotation.desc.length() - 1);
-		String deobfName = project.deobfuscate(ClassEntryView.create(annotationName)).getFullName();
-		StrikeableButton button = new StrikeableButton("@" + getSimpleName(deobfName));
+	private JButton createExistingAnnotationButton(AnnotationNode annotation) {
+		String annotationName = project.deobfuscate(ClassEntryView.create(annotation.desc.substring(1, annotation.desc.length() - 1))).getFullName();
+		String annotationStr = new AnnotationStringifier().deobfuscateWith(project).shortenClassReferences().stringify(annotation);
+		StrikeableButton button = new StrikeableButton(annotationStr);
 
 		if (annotation instanceof TypeAnnotationNode typeAnnotation) {
-			TypeAnnotationKey key = new TypeAnnotationKey(typeAnnotation.typeRef, typeAnnotation.typePath == null ? "" : typeAnnotation.typePath.toString(), annotationName);
+			TypeAnnotationKey key = new TypeAnnotationKey(typeAnnotation.typeRef, AnnotationUtil.typePathToString(typeAnnotation.typePath), annotationName);
 			boolean[] isRemoved = { data.typeAnnotationsToRemove().contains(key) };
 			button.setStrikethrough(isRemoved[0]);
 			button.addActionListener(e -> {
@@ -583,22 +597,75 @@ public class AnnotationsEditor extends JDialog {
 		return button;
 	}
 
-	private JButton createPlusButton() {
-		return new JButton("+");
+	private JButton createAddedAnnotationButton(AnnotationNode annotation) {
+		String annotationStr = new AnnotationStringifier().shortenClassReferences().stringify(annotation);
+		StrikeableButton button = new StrikeableButton("*" + annotationStr);
+		button.addActionListener(e -> {
+			Function<String, AnnotationNode> annotationCreator;
+
+			if (annotation instanceof TypeAnnotationNode typeAnnotation) {
+				annotationCreator = desc -> new TypeAnnotationNode(typeAnnotation.typeRef, typeAnnotation.typePath, desc);
+			} else {
+				annotationCreator = AnnotationNode::new;
+			}
+
+			AnnotationNode newAnnotation = SingleAnnotationEditor.show(this, plugin, gui, annotationCreator, annotation);
+
+			if (newAnnotation == null) {
+				if (annotation instanceof TypeAnnotationNode) {
+					data.typeAnnotationsToAdd().remove(annotation);
+				} else {
+					data.annotationsToAdd().remove(annotation);
+				}
+			} else {
+				if (newAnnotation instanceof TypeAnnotationNode newTypeAnnotation) {
+					if (data.typeAnnotationsToAdd().contains(newTypeAnnotation)) {
+						return;
+					}
+
+					// replaces the annotation
+					addSorted(data.typeAnnotationsToAdd(), newTypeAnnotation, TYPE_ANNOTATION_COMPARATOR);
+				} else {
+					if (data.annotationsToAdd().contains(newAnnotation)) {
+						return;
+					}
+
+					// replaces the annotation
+					addSorted(data.annotationsToAdd(), newAnnotation, ANNOTATION_COMPARATOR);
+				}
+			}
+
+			refreshUi();
+		});
+		return button;
 	}
 
-	private static String getSimpleName(String internalName) {
-		int slashIndex = internalName.lastIndexOf('/');
-		String simpleName = internalName.substring(slashIndex + 1);
-		return simpleName.replace('$', '.');
+	private JButton createPlusButton(Function<String, AnnotationNode> annotationCreator) {
+		JButton button = new JButton("+");
+		button.addActionListener(e -> {
+			AnnotationNode newAnnotation = SingleAnnotationEditor.show(this, plugin, gui, annotationCreator, null);
+
+			if (newAnnotation == null) {
+				return;
+			}
+
+			if (newAnnotation instanceof TypeAnnotationNode newTypeAnnotation) {
+				addSorted(data.typeAnnotationsToAdd(), newTypeAnnotation, TYPE_ANNOTATION_COMPARATOR);
+			} else {
+				addSorted(data.annotationsToAdd(), newAnnotation, ANNOTATION_COMPARATOR);
+			}
+
+			refreshUi();
+		});
+		return button;
 	}
 
 	private void addTypeAnnotationButtons(TextWithButtons result, int typeRef, @Nullable TypePath typePath) {
 		switch (declaration) {
-			case ClassNode classNode -> addTypeAnnotationButtons(result, typeRef, typePath, classNode.invisibleTypeAnnotations, classNode.visibleTypeAnnotations);
-			case FieldNode fieldNode -> addTypeAnnotationButtons(result, typeRef, typePath, fieldNode.invisibleTypeAnnotations, fieldNode.visibleTypeAnnotations);
-			case MethodNode methodNode -> addTypeAnnotationButtons(result, typeRef, typePath, methodNode.invisibleTypeAnnotations, methodNode.visibleTypeAnnotations);
-			default -> throw new IllegalStateException("Unsupported declaration type: " + declaration.getClass().getName());
+		case ClassNode classNode -> addTypeAnnotationButtons(result, typeRef, typePath, classNode.invisibleTypeAnnotations, classNode.visibleTypeAnnotations);
+		case FieldNode fieldNode -> addTypeAnnotationButtons(result, typeRef, typePath, fieldNode.invisibleTypeAnnotations, fieldNode.visibleTypeAnnotations);
+		case MethodNode methodNode -> addTypeAnnotationButtons(result, typeRef, typePath, methodNode.invisibleTypeAnnotations, methodNode.visibleTypeAnnotations);
+		default -> throw new IllegalStateException("Unsupported declaration type: " + declaration.getClass().getName());
 		}
 	}
 
@@ -611,21 +678,27 @@ public class AnnotationsEditor extends JDialog {
 	) {
 		if (invisibleAnnotations != null) {
 			for (TypeAnnotationNode ann : invisibleAnnotations) {
-				if (ann.typeRef == typeRef && Objects.equals(ann.typePath, typePath)) {
-					result.append(createAnnotationButton(ann));
+				if (ann.typeRef == typeRef && AnnotationUtil.typePathToString(ann.typePath).equals(AnnotationUtil.typePathToString(typePath))) {
+					result.append(createExistingAnnotationButton(ann));
 				}
 			}
 		}
 
 		if (visibleAnnotations != null) {
 			for (TypeAnnotationNode ann : visibleAnnotations) {
-				if (ann.typeRef == typeRef && Objects.equals(ann.typePath, typePath)) {
-					result.append(createAnnotationButton(ann));
+				if (ann.typeRef == typeRef && AnnotationUtil.typePathToString(ann.typePath).equals(AnnotationUtil.typePathToString(typePath))) {
+					result.append(createExistingAnnotationButton(ann));
 				}
 			}
 		}
 
-		result.append(createPlusButton());
+		for (TypeAnnotationNode ann : data.typeAnnotationsToAdd()) {
+			if (ann.typeRef == typeRef && AnnotationUtil.typePathToString(ann.typePath).equals(AnnotationUtil.typePathToString(typePath))) {
+				result.append(createAddedAnnotationButton(ann));
+			}
+		}
+
+		result.append(createPlusButton(desc -> new TypeAnnotationNode(typeRef, typePath, desc)));
 	}
 
 	private static <E extends Comparable<E>> void addSorted(Set<E> set, E value) {
@@ -647,9 +720,20 @@ public class AnnotationsEditor extends JDialog {
 		set.addAll(list);
 	}
 
+	private static <E> void addSorted(List<E> list, E value, Comparator<E> comp) {
+		list.sort(comp);
+		int index = Collections.binarySearch(list, value, comp);
+
+		if (index < 0) {
+			list.add(-index - 1, value);
+		} else {
+			list.set(index, value);
+		}
+	}
+
 	private static <K extends Comparable<K>, V> void addSorted(Map<K, V> map, K key, V value) {
 		List<Pair<K, V>> entries = new ArrayList<>(map.size() + 1);
-		map.forEach((k, v) -> entries.add(new Pair<>(key, v)));
+		map.forEach((k, v) -> entries.add(new Pair<>(k, v)));
 		entries.sort(Comparator.comparing(Pair::left));
 
 		Pair<K, V> newEntry = new Pair<>(key, value);
@@ -665,42 +749,6 @@ public class AnnotationsEditor extends JDialog {
 
 		for (Pair<K, V> entry : entries) {
 			map.put(entry.left(), entry.right());
-		}
-	}
-
-	private enum ClassDeclType {
-		CLASS("class"),
-		INTERFACE("interface"),
-		ENUM("enum"),
-		ANNOTATION("@interface"),
-		RECORD("record"),
-		;
-
-		private final String keyword;
-
-		ClassDeclType(String keyword) {
-			this.keyword = keyword;
-		}
-
-		boolean isInterface() {
-			return this == INTERFACE || this == ANNOTATION;
-		}
-
-		static ClassDeclType infer(ClassNode classNode) {
-			return switch (classNode.superName) {
-				case "java/lang/Enum" -> ENUM;
-				case "java/lang/Record" -> RECORD;
-				case null -> CLASS;
-				default -> {
-					if (classNode.interfaces != null && classNode.interfaces.contains("java/lang/annotation/Annotation")) {
-						yield ANNOTATION;
-					} else if ((classNode.access & Opcodes.ACC_INTERFACE) != 0) {
-						yield INTERFACE;
-					} else {
-						yield CLASS;
-					}
-				}
-			};
 		}
 	}
 
@@ -735,7 +783,7 @@ public class AnnotationsEditor extends JDialog {
 			addTypeAnnotationButtons();
 
 			String deobfName = project.deobfuscate(ClassEntryView.create(innerParts[0])).getFullName();
-			result.append(getSimpleName(deobfName));
+			result.append(AnnotationUtil.getSimpleName(deobfName));
 
 			classSoFar = innerParts[0] + "$";
 
@@ -802,18 +850,18 @@ public class AnnotationsEditor extends JDialog {
 			TypePath prevTypePath = typePath;
 			typePath = nextTypePath(typeArgumentIndex + ";");
 			SignatureVisitor innerVisitor = switch (wildcard) {
-				case EXTENDS -> {
-					addTypeAnnotationButtons();
-					result.append("? extends ");
-					yield new TypeRefAppender(result, typeRef, nextTypePath("*"));
-				}
-				case SUPER -> {
-					addTypeAnnotationButtons();
-					result.append("? super ");
-					yield new TypeRefAppender(result, typeRef, nextTypePath("*"));
-				}
-				case INSTANCEOF -> new TypeRefAppender(result, typeRef, typePath);
-				default -> throw new IllegalStateException("Unsupported wildcard type: " + wildcard);
+			case EXTENDS -> {
+				addTypeAnnotationButtons();
+				result.append("? extends ");
+				yield new TypeRefAppender(result, typeRef, nextTypePath("*"));
+			}
+			case SUPER -> {
+				addTypeAnnotationButtons();
+				result.append("? super ");
+				yield new TypeRefAppender(result, typeRef, nextTypePath("*"));
+			}
+			case INSTANCEOF -> new TypeRefAppender(result, typeRef, typePath);
+			default -> throw new IllegalStateException("Unsupported wildcard type: " + wildcard);
 			};
 			typePath = prevTypePath;
 			return innerVisitor;
@@ -845,110 +893,6 @@ public class AnnotationsEditor extends JDialog {
 
 		void append(JButton button) {
 			this.buttons.computeIfAbsent(this.text.length(), k -> new ArrayList<>(1)).add(button);
-		}
-	}
-
-	private static class StrikeableButton extends JButton {
-		private boolean strikethrough;
-
-		public StrikeableButton(String text) {
-			super(text);
-		}
-
-		public void setStrikethrough(boolean strikethrough) {
-			if (strikethrough != this.strikethrough) {
-				this.strikethrough = strikethrough;
-				repaint();
-			}
-		}
-
-		@Override
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-
-			if (strikethrough) {
-				Insets margin = getMargin();
-				int middle = (margin.top + getHeight() - margin.bottom) / 2;
-				g.drawLine(margin.left, middle, getWidth() - margin.right, middle);
-			}
-		}
-	}
-
-	private static class ScrollableLayeredPane extends JLayeredPane implements Scrollable {
-		private final JEditorPane editor;
-
-		ScrollableLayeredPane(JEditorPane editor) {
-			this.editor = editor;
-			setLayout(null);
-			add(editor, DEFAULT_LAYER);
-		}
-
-		@Override
-		public Dimension getPreferredSize() {
-			return editor.getPreferredSize();
-		}
-
-		@Override
-		public Dimension getMinimumSize() {
-			return editor.getMinimumSize();
-		}
-
-		@Override
-		public Dimension getMaximumSize() {
-			return editor.getMaximumSize();
-		}
-
-		@Override
-		public Dimension getPreferredScrollableViewportSize() {
-			return getPreferredSize();
-		}
-
-		@Override
-		public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-			return editor.getScrollableUnitIncrement(visibleRect, orientation, direction);
-		}
-
-		@Override
-		public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
-			return editor.getScrollableBlockIncrement(visibleRect, orientation, direction);
-		}
-
-		@Override
-		public boolean getScrollableTracksViewportWidth() {
-			if (SwingUtilities.getUnwrappedParent(this) instanceof JViewport port) {
-				TextUI ui = editor.getUI();
-				int w = port.getWidth();
-				Dimension min = ui.getMinimumSize(editor);
-
-				if (w >= min.width) {
-					Dimension max = ui.getMaximumSize(editor);
-
-					if (w <= max.width) {
-						return true;
-					}
-				}
-			}
-
-			return false;
-		}
-
-		@Override
-		public boolean getScrollableTracksViewportHeight() {
-			if (SwingUtilities.getUnwrappedParent(this) instanceof JViewport port) {
-				TextUI ui = editor.getUI();
-				int h = port.getHeight();
-				Dimension min = ui.getMinimumSize(editor);
-
-				if (h >= min.height) {
-					Dimension max = ui.getMaximumSize(editor);
-
-					if (h <= max.height) {
-						return true;
-					}
-				}
-			}
-
-			return false;
 		}
 	}
 }
