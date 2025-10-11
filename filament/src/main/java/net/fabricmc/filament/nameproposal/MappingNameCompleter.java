@@ -128,7 +128,10 @@ public class MappingNameCompleter {
 				int currentLvIndex = lvIndex;
 				lvIndex += Type.getType(recordComponentNode.descriptor).getSize();
 				String name = recordNames.get(recordComponentNode.name);
-				if (name == null) continue;
+
+				if (name == null) {
+					continue;
+				}
 
 				yarn.visitMethodArg(-1, currentLvIndex, null);
 				MappingTree.MethodArgMapping argMapping = methodMapping.getArg(-1, currentLvIndex, null);
