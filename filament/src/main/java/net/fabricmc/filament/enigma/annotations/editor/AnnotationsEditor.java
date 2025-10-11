@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.function.Function;
 
 import javax.swing.JButton;
@@ -40,14 +39,8 @@ import cuchaz.enigma.api.view.entry.EntryView;
 import cuchaz.enigma.api.view.entry.FieldEntryView;
 import cuchaz.enigma.api.view.entry.MethodEntryView;
 import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.TypePath;
-import org.objectweb.asm.TypeReference;
-import org.objectweb.asm.signature.SignatureReader;
-import org.objectweb.asm.signature.SignatureVisitor;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeAnnotationNode;
 
@@ -144,6 +137,18 @@ public class AnnotationsEditor extends JDialog {
 		editor.setVisible(true);
 	}
 
+	public BaseAnnotationData getData() {
+		return data;
+	}
+
+	public Object getDeclaration() {
+		return declaration;
+	}
+
+	public EntryView getEditingEntry() {
+		return editingEntry;
+	}
+
 	@Nullable
 	private static Object getDeclaration(ProjectView project, EntryView entry) {
 		return switch (entry) {
@@ -161,16 +166,25 @@ public class AnnotationsEditor extends JDialog {
 					.orElse(null);
 		}
 		case MethodEntryView methodEntry -> {
-			ClassNode bytecode = project.getBytecode(methodEntry.getParent().getFullName());
+			String className = methodEntry.getParent().getFullName();
+			ClassNode bytecode = project.getBytecode(className);
 
 			if (bytecode == null) {
 				yield null;
 			}
 
-			yield bytecode.methods.stream()
-					.filter(method -> method.name.equals(methodEntry.getName()) && method.desc.equals(methodEntry.getDescriptor()))
-					.findFirst()
-					.orElse(null);
+			// Sometimes these methods have the name of the bridge but the descriptor of the specialized method.
+			// Find the specialized method
+			for (MethodNode method : bytecode.methods) {
+				MethodEntryView bridgeMethod = project.getJarIndex().getBridgeMethodIndex().getBridgeFromSpecialized(MethodEntryView.create(className, method.name, method.desc));
+				String methodName = bridgeMethod == null ? method.name : bridgeMethod.getName();
+
+				if (methodName.equals(methodEntry.getName()) && method.desc.equals(methodEntry.getDescriptor())) {
+					yield method;
+				}
+			}
+
+			yield null;
 		}
 		default -> throw new IllegalArgumentException("Unsupported entry type: " + entry.getClass().getName());
 		};
@@ -258,7 +272,7 @@ public class AnnotationsEditor extends JDialog {
 
 				if (classData == null) {
 					classData = new ClassAnnotationData();
-					addSorted(plugin.data.classes(), deobf.getFullName(), classData);
+					addSorted(plugin.data.classes(), fieldEntry.getParent().getFullName(), classData);
 				}
 
 				boolean res = !data.equals(classData.getFieldData(fieldEntry.getName(), fieldEntry.getDescriptor()));
@@ -274,7 +288,7 @@ public class AnnotationsEditor extends JDialog {
 
 				if (classData == null) {
 					classData = new ClassAnnotationData();
-					addSorted(plugin.data.classes(), deobf.getFullName(), classData);
+					addSorted(plugin.data.classes(), methodEntry.getParent().getFullName(), classData);
 				}
 
 				boolean res = !data.equals(classData.getMethodData(methodEntry.getName(), methodEntry.getDescriptor()));
@@ -314,16 +328,16 @@ public class AnnotationsEditor extends JDialog {
 			layeredPane.remove(oldButton);
 		}
 
-		TextWithButtons textWithButtons = buildDeclarationUi();
+		TextWithButtons textWithButtons = new DeclarationGenerator(project, this).generate();
 
-		textWithButtons.buttons.forEach((index, buttons) -> buttons.forEach(button -> layeredPane.add(button, JLayeredPane.PALETTE_LAYER)));
+		textWithButtons.buttons().forEach((index, buttons) -> buttons.forEach(button -> layeredPane.add(button, JLayeredPane.PALETTE_LAYER)));
 
 		int offset = 0;
 
-		editor.setText(textWithButtons.text.toString());
+		editor.setText(textWithButtons.text().toString());
 		FontMetrics metrics = editor.getFontMetrics(editor.getFont());
 
-		for (Map.Entry<Integer, List<JButton>> buttonEntry : textWithButtons.buttons.entrySet()) {
+		for (Map.Entry<Integer, List<JButton>> buttonEntry : textWithButtons.buttons().entrySet()) {
 			int index = buttonEntry.getKey() + offset;
 			List<JButton> buttons = buttonEntry.getValue();
 			Rectangle2D buttonsLocation;
@@ -362,203 +376,7 @@ public class AnnotationsEditor extends JDialog {
 		editor.setCaretPosition(0);
 	}
 
-	private TextWithButtons buildDeclarationUi() {
-		return switch (declaration) {
-		case ClassNode classNode -> buildDeclarationUi(classNode);
-		case FieldNode fieldNode -> buildDeclarationUi(fieldNode);
-		case MethodNode methodNode -> buildDeclarationUi(methodNode);
-		default -> throw new IllegalStateException("Unsupported declaration type: " + declaration.getClass().getName());
-		};
-	}
-
-	private TextWithButtons buildDeclarationUi(ClassNode declaration) {
-		TextWithButtons result = new TextWithButtons();
-
-		appendTopLevelAnnotations(declaration.visibleAnnotations, declaration.invisibleAnnotations, result);
-
-		ClassDeclType declType = ClassDeclType.infer(declaration);
-
-		result.append(declType.getKeyword());
-		result.append(" ");
-		result.append(AnnotationUtil.getSimpleName(project.deobfuscate(ClassEntryView.create(declaration.name)).getFullName()));
-
-		appendTypeParameters(result, declaration.signature, TypeReference.CLASS_TYPE_PARAMETER, TypeReference.CLASS_TYPE_PARAMETER_BOUND);
-
-		if (declType == ClassDeclType.CLASS && declaration.superName != null) {
-			result.append(" extends ");
-
-			if (declaration.signature != null) {
-				new SignatureReader(declaration.signature).accept(new SignatureVisitor(Opcodes.ASM9) {
-					@Override
-					public SignatureVisitor visitSuperclass() {
-						return new TypeRefAppender(result, TypeReference.newSuperTypeReference(-1).getValue());
-					}
-				});
-			} else {
-				TypeRefAppender appender = new TypeRefAppender(result, TypeReference.newSuperTypeReference(-1).getValue());
-				appender.visitClassType(declaration.superName);
-				appender.visitEnd();
-			}
-		}
-
-		boolean hasInterfaces = false;
-
-		if (declaration.interfaces != null) {
-			for (String itf : declaration.interfaces) {
-				if (!itf.equals("java/lang/annotation/Annotation")) {
-					hasInterfaces = true;
-					break;
-				}
-			}
-		}
-
-		if (hasInterfaces) {
-			if (declType.isInterface()) {
-				result.append(" extends ");
-			} else {
-				result.append(" implements ");
-			}
-
-			if (declaration.signature != null) {
-				new SignatureReader(declaration.signature).accept(new SignatureVisitor(Opcodes.ASM9) {
-					boolean addedInterface = false;
-					int interfaceIndex = 0;
-
-					@Override
-					public SignatureVisitor visitInterface() {
-						int interfaceIndex = this.interfaceIndex++;
-
-						if (declaration.interfaces.get(interfaceIndex).equals("java/lang/annotation/Annotation")) {
-							return this;
-						}
-
-						if (addedInterface) {
-							result.append(", ");
-						}
-
-						addedInterface = true;
-						return new TypeRefAppender(result, TypeReference.newSuperTypeReference(interfaceIndex).getValue());
-					}
-				});
-			} else {
-				boolean addedInterface = false;
-
-				for (int i = 0; i < declaration.interfaces.size(); i++) {
-					String itf = declaration.interfaces.get(i);
-
-					if (itf.equals("java/lang/annotation/Annotation")) {
-						continue;
-					}
-
-					if (addedInterface) {
-						result.append(", ");
-					}
-
-					addedInterface = true;
-					TypeRefAppender appender = new TypeRefAppender(result, TypeReference.newSuperTypeReference(i).getValue());
-					appender.visitClassType(itf);
-					appender.visitEnd();
-				}
-			}
-		}
-
-		return result;
-	}
-
-	private void appendTopLevelAnnotations(
-			@Nullable List<AnnotationNode> visibleAnnotations,
-			@Nullable List<AnnotationNode> invisibleAnnotations,
-			TextWithButtons result
-	) {
-		if (invisibleAnnotations != null) {
-			for (AnnotationNode ann : invisibleAnnotations) {
-				result.append(createExistingAnnotationButton(ann));
-				result.append("\n");
-			}
-		}
-
-		if (visibleAnnotations != null) {
-			for (AnnotationNode ann : visibleAnnotations) {
-				result.append(createExistingAnnotationButton(ann));
-				result.append("\n");
-			}
-		}
-
-		for (AnnotationNode ann : data.annotationsToAdd()) {
-			result.append(createAddedAnnotationButton(ann));
-			result.append("\n");
-		}
-
-		result.append(createPlusButton(AnnotationNode::new));
-		result.append("\n");
-	}
-
-	private void appendTypeParameters(TextWithButtons result, @Nullable String signature, int paramRefSort, int paramBoundRefSort) {
-		if (signature == null) {
-			return;
-		}
-
-		new SignatureReader(signature).accept(new SignatureVisitor(Opcodes.ASM9) {
-			int typeParameterIndex = -1;
-			int boundIndex = -1;
-
-			@Override
-			public void visitFormalTypeParameter(String name) {
-				typeParameterIndex++;
-
-				if (typeParameterIndex == 0) {
-					result.append("<");
-				} else {
-					result.append(", ");
-				}
-
-				addTypeAnnotationButtons(result, TypeReference.newTypeParameterReference(paramRefSort, typeParameterIndex).getValue(), null);
-
-				result.append(name);
-
-				boundIndex = -1;
-			}
-
-			@Override
-			public SignatureVisitor visitClassBound() {
-				boundIndex = 0;
-				result.append(" extends ");
-				return new TypeRefAppender(result, TypeReference.newTypeParameterBoundReference(paramBoundRefSort, typeParameterIndex, boundIndex).getValue());
-			}
-
-			@Override
-			public SignatureVisitor visitInterfaceBound() {
-				if (boundIndex == -1) {
-					result.append(" extends ");
-					boundIndex = 1;
-				} else {
-					result.append(" & ");
-					boundIndex++;
-				}
-
-				return new TypeRefAppender(result, TypeReference.newTypeParameterBoundReference(paramBoundRefSort, typeParameterIndex, boundIndex).getValue());
-			}
-
-			@Override
-			public void visitEnd() {
-				if (typeParameterIndex >= 0) {
-					result.append(">");
-				}
-			}
-		});
-	}
-
-	private TextWithButtons buildDeclarationUi(FieldNode declaration) {
-		// TODO
-		return new TextWithButtons();
-	}
-
-	private TextWithButtons buildDeclarationUi(MethodNode declaration) {
-		// TODO
-		return new TextWithButtons();
-	}
-
-	private JButton createExistingAnnotationButton(AnnotationNode annotation) {
+	public JButton createExistingAnnotationButton(AnnotationNode annotation) {
 		String annotationName = project.deobfuscate(ClassEntryView.create(annotation.desc.substring(1, annotation.desc.length() - 1))).getFullName();
 		String annotationStr = new AnnotationStringifier().deobfuscateWith(project).shortenClassReferences().stringify(annotation);
 		StrikeableButton button = new StrikeableButton(annotationStr);
@@ -597,7 +415,7 @@ public class AnnotationsEditor extends JDialog {
 		return button;
 	}
 
-	private JButton createAddedAnnotationButton(AnnotationNode annotation) {
+	public JButton createAddedAnnotationButton(AnnotationNode annotation) {
 		String annotationStr = new AnnotationStringifier().shortenClassReferences().stringify(annotation);
 		StrikeableButton button = new StrikeableButton("*" + annotationStr);
 		button.addActionListener(e -> {
@@ -640,7 +458,7 @@ public class AnnotationsEditor extends JDialog {
 		return button;
 	}
 
-	private JButton createPlusButton(Function<String, AnnotationNode> annotationCreator) {
+	public JButton createPlusButton(Function<String, AnnotationNode> annotationCreator) {
 		JButton button = new JButton("+");
 		button.addActionListener(e -> {
 			AnnotationNode newAnnotation = SingleAnnotationEditor.show(this, plugin, gui, annotationCreator, null);
@@ -658,47 +476,6 @@ public class AnnotationsEditor extends JDialog {
 			refreshUi();
 		});
 		return button;
-	}
-
-	private void addTypeAnnotationButtons(TextWithButtons result, int typeRef, @Nullable TypePath typePath) {
-		switch (declaration) {
-		case ClassNode classNode -> addTypeAnnotationButtons(result, typeRef, typePath, classNode.invisibleTypeAnnotations, classNode.visibleTypeAnnotations);
-		case FieldNode fieldNode -> addTypeAnnotationButtons(result, typeRef, typePath, fieldNode.invisibleTypeAnnotations, fieldNode.visibleTypeAnnotations);
-		case MethodNode methodNode -> addTypeAnnotationButtons(result, typeRef, typePath, methodNode.invisibleTypeAnnotations, methodNode.visibleTypeAnnotations);
-		default -> throw new IllegalStateException("Unsupported declaration type: " + declaration.getClass().getName());
-		}
-	}
-
-	private void addTypeAnnotationButtons(
-			TextWithButtons result,
-			int typeRef,
-			@Nullable TypePath typePath,
-			@Nullable List<TypeAnnotationNode> invisibleAnnotations,
-			@Nullable List<TypeAnnotationNode> visibleAnnotations
-	) {
-		if (invisibleAnnotations != null) {
-			for (TypeAnnotationNode ann : invisibleAnnotations) {
-				if (ann.typeRef == typeRef && AnnotationUtil.typePathToString(ann.typePath).equals(AnnotationUtil.typePathToString(typePath))) {
-					result.append(createExistingAnnotationButton(ann));
-				}
-			}
-		}
-
-		if (visibleAnnotations != null) {
-			for (TypeAnnotationNode ann : visibleAnnotations) {
-				if (ann.typeRef == typeRef && AnnotationUtil.typePathToString(ann.typePath).equals(AnnotationUtil.typePathToString(typePath))) {
-					result.append(createExistingAnnotationButton(ann));
-				}
-			}
-		}
-
-		for (TypeAnnotationNode ann : data.typeAnnotationsToAdd()) {
-			if (ann.typeRef == typeRef && AnnotationUtil.typePathToString(ann.typePath).equals(AnnotationUtil.typePathToString(typePath))) {
-				result.append(createAddedAnnotationButton(ann));
-			}
-		}
-
-		result.append(createPlusButton(desc -> new TypeAnnotationNode(typeRef, typePath, desc)));
 	}
 
 	private static <E extends Comparable<E>> void addSorted(Set<E> set, E value) {
@@ -749,150 +526,6 @@ public class AnnotationsEditor extends JDialog {
 
 		for (Pair<K, V> entry : entries) {
 			map.put(entry.left(), entry.right());
-		}
-	}
-
-	private class TypeRefAppender extends SignatureVisitor {
-		private final TextWithButtons result;
-		private final int typeRef;
-		@Nullable
-		private TypePath typePath;
-		private String classSoFar;
-		private boolean isArray = false;
-		private int typeArgumentIndex = -1;
-
-		TypeRefAppender(TextWithButtons result, int typeRef) {
-			this(result, typeRef, null);
-		}
-
-		TypeRefAppender(TextWithButtons result, int typeRef, @Nullable TypePath typePath) {
-			super(Opcodes.ASM9);
-			this.result = result;
-			this.typeRef = typeRef;
-			this.typePath = typePath;
-		}
-
-		private TypePath nextTypePath(String step) {
-			return typePath == null ? TypePath.fromString(step) : TypePath.fromString(typePath + step);
-		}
-
-		@Override
-		public void visitClassType(String name) {
-			String[] innerParts = name.split("\\$");
-
-			addTypeAnnotationButtons();
-
-			String deobfName = project.deobfuscate(ClassEntryView.create(innerParts[0])).getFullName();
-			result.append(AnnotationUtil.getSimpleName(deobfName));
-
-			classSoFar = innerParts[0] + "$";
-
-			for (int i = 1; i < innerParts.length; i++) {
-				visitInnerClassType(innerParts[i]);
-			}
-		}
-
-		@Override
-		public SignatureVisitor visitArrayType() {
-			isArray = true;
-			return new TypeRefAppender(result, typeRef, nextTypePath("["));
-		}
-
-		@Override
-		public void visitBaseType(char descriptor) {
-			addTypeAnnotationButtons();
-			result.append(org.objectweb.asm.Type.getType(String.valueOf(descriptor)).getClassName());
-		}
-
-		@Override
-		public void visitTypeVariable(String name) {
-			addTypeAnnotationButtons();
-			result.append(name);
-		}
-
-		@Override
-		public void visitInnerClassType(String name) {
-			result.append(".");
-			typePath = nextTypePath(".");
-			String deobfName = project.deobfuscate(ClassEntryView.create(classSoFar + name)).getFullName();
-			addTypeAnnotationButtons();
-			result.append(deobfName.substring(deobfName.lastIndexOf('$') + 1));
-			classSoFar += name + "$";
-		}
-
-		@Override
-		public void visitTypeArgument() {
-			typeArgumentIndex++;
-
-			if (typeArgumentIndex == 0) {
-				result.append("<");
-			} else {
-				result.append(", ");
-			}
-
-			TypePath prevTypePath = typePath;
-			typePath = nextTypePath(typeArgumentIndex + ";");
-			addTypeAnnotationButtons();
-			result.append("?");
-			typePath = prevTypePath;
-		}
-
-		@Override
-		public SignatureVisitor visitTypeArgument(char wildcard) {
-			typeArgumentIndex++;
-
-			if (typeArgumentIndex == 0) {
-				result.append("<");
-			} else {
-				result.append(", ");
-			}
-
-			TypePath prevTypePath = typePath;
-			typePath = nextTypePath(typeArgumentIndex + ";");
-			SignatureVisitor innerVisitor = switch (wildcard) {
-			case EXTENDS -> {
-				addTypeAnnotationButtons();
-				result.append("? extends ");
-				yield new TypeRefAppender(result, typeRef, nextTypePath("*"));
-			}
-			case SUPER -> {
-				addTypeAnnotationButtons();
-				result.append("? super ");
-				yield new TypeRefAppender(result, typeRef, nextTypePath("*"));
-			}
-			case INSTANCEOF -> new TypeRefAppender(result, typeRef, typePath);
-			default -> throw new IllegalStateException("Unsupported wildcard type: " + wildcard);
-			};
-			typePath = prevTypePath;
-			return innerVisitor;
-		}
-
-		@Override
-		public void visitEnd() {
-			if (isArray) {
-				addTypeAnnotationButtons();
-				result.append("[]");
-			} else if (typeArgumentIndex >= 0) {
-				result.append(">");
-			}
-		}
-
-		private void addTypeAnnotationButtons() {
-			AnnotationsEditor.this.addTypeAnnotationButtons(result, typeRef, typePath);
-		}
-	}
-
-	private record TextWithButtons(StringBuilder text, TreeMap<Integer, List<JButton>> buttons) {
-		TextWithButtons() {
-			this(new StringBuilder(), new TreeMap<>());
-		}
-
-		void append(String text) {
-			this.text.append(text);
-		}
-
-		void append(JButton button) {
-			this.buttons.computeIfAbsent(this.text.length(), k -> new ArrayList<>(1)).add(button);
 		}
 	}
 }
