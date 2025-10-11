@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.jar.JarEntry;
@@ -28,7 +29,9 @@ import java.util.jar.JarInputStream;
 import java.util.regex.Pattern;
 
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.RecordComponentNode;
 
 import net.fabricmc.mappingio.MappingReader;
 import net.fabricmc.mappingio.MappingWriter;
@@ -53,7 +56,7 @@ public class MappingNameCompleter {
 		Map<MappingEntry, String> fieldNames = nameFinder.getFieldNames();
 		Map<MappingEntry, String> methodNames = nameFinder.getMethodNames();
 		Map<String, String> recordNames = nameFinder.getRecordNames();
-		Map<String, String[]> recordComponentNames = nameFinder.getRecordComponentNames(); // class -> parameter name array
+		Map<String, List<RecordComponentNode>> recordComponentNames = nameFinder.getRecordComponents();
 
 		System.out.printf("Found %d field names%n", fieldNames.size());
 		System.out.printf("Found %d method names%n", methodNames.size());
@@ -100,27 +103,37 @@ public class MappingNameCompleter {
 			}
 		}
 
-		for (Map.Entry<String, String[]> entry : recordComponentNames.entrySet()) {
+		for (Map.Entry<String, List<RecordComponentNode>> entry : recordComponentNames.entrySet()) {
 			String classNameIntermediary = entry.getKey();
-			String[] recordComponents = entry.getValue();
+			List<RecordComponentNode> recordComponents = entry.getValue();
 
 			yarn.visitClass(classNameIntermediary);
 			MappingTree.ClassMapping classMapping = yarn.getClass(classNameIntermediary, yarnIntermediaryNs);
 
-			String initDesc = "(" + recordComponents[0] + ")V";
+			StringBuilder initDescBuilder = new StringBuilder();
+			initDescBuilder.append("(");
+
+			for (RecordComponentNode node : recordComponents) {
+				initDescBuilder.append(node.descriptor);
+			}
+
+			initDescBuilder.append(")V");
+			String initDesc = initDescBuilder.toString();
+
 			yarn.visitMethod("<init>", initDesc);
 			MappingTree.MethodMapping methodMapping = classMapping.getMethod("<init>", initDesc, yarnIntermediaryNs);
 			int lvIndex = 1;
 
-			for (int i = 2; i < recordComponents.length; i++) {
-				int argPosition = i - 2;
+			for (RecordComponentNode recordComponentNode : recordComponents) {
 				int currentLvIndex = lvIndex;
-				lvIndex += recordComponents[1].charAt(argPosition) - '0';
-				String name = recordComponents[i];
+				lvIndex += Type.getType(recordComponentNode.descriptor).getSize();
+				String name = recordNames.get(recordComponentNode.name);
 				if (name == null) continue;
+
 				yarn.visitMethodArg(-1, currentLvIndex, null);
 				MappingTree.MethodArgMapping argMapping = methodMapping.getArg(-1, currentLvIndex, null);
 				String yarnArgName = argMapping.getName(yarnNamedNs);
+
 				if (yarnArgName == null) {
 					argMapping.setDstName(name, yarnNamedNs);
 				}

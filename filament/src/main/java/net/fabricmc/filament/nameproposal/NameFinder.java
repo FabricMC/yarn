@@ -20,9 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.RecordComponentNode;
@@ -35,7 +33,7 @@ public class NameFinder {
 
 	// comp_x -> name
 	private final Map<String, String> recordNames = new HashMap<>();
-	private final Map<String, String[]> recordComponentNames = new HashMap<>();
+	private final Map<String, List<RecordComponentNode>> recordComponentNames = new HashMap<>();
 	private final Map<MappingEntry, String> recordFieldNames = new HashMap<>();
 	private final Map<MappingEntry, String> recordMethodNames = new HashMap<>();
 
@@ -51,7 +49,10 @@ public class NameFinder {
 
 		if ("java/lang/Record".equals(classNode.superName)) {
 			classNode.accept(new RecordComponentNameFinder(Constants.ASM_VERSION, recordNames));
-			acceptRecordClass(classNode);
+
+			if (classNode.recordComponents != null && !classNode.recordComponents.isEmpty()) {
+				recordComponentNames.put(classNode.name, classNode.recordComponents);
+			}
 		}
 	}
 
@@ -94,22 +95,6 @@ public class NameFinder {
 		}
 	}
 
-	private void acceptRecordClass(ClassNode classNode) {
-		if (classNode.recordComponents == null || classNode.recordComponents.isEmpty()) return;
-
-		String[] recordComponents = new String[classNode.recordComponents.size() + 2];
-		recordComponents[0] = classNode.recordComponents.stream().map(node -> node.descriptor).collect(Collectors.joining());
-		recordComponents[1] = "";
-
-		for (int i = 0; i < classNode.recordComponents.size(); i++) {
-			RecordComponentNode recordComponentNode = classNode.recordComponents.get(i);
-			recordComponents[i + 2] = recordNames.getOrDefault(recordComponentNode.name, null);
-			recordComponents[1] += String.valueOf(Type.getType(recordComponentNode.descriptor).getSize());
-		}
-
-		recordComponentNames.put(classNode.name, recordComponents);
-	}
-
 	public Map<String, String> getRecordNames() {
 		return recordNames;
 	}
@@ -124,7 +109,7 @@ public class NameFinder {
 		return recordMethodNames;
 	}
 
-	public Map<String, String[]> getRecordComponentNames() {
+	public Map<String, List<RecordComponentNode>> getRecordComponents() {
 		return recordComponentNames;
 	}
 }
