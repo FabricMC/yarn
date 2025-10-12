@@ -54,9 +54,15 @@ public class DeclarationGenerator {
 	private TextWithButtons generate(ClassNode declaration) {
 		TextWithButtons result = new TextWithButtons();
 
-		addTopLevelAnnotations(result, declaration.invisibleAnnotations, declaration.visibleAnnotations);
-
 		ClassDeclType declType = ClassDeclType.infer(declaration);
+
+		Set<ElementType> targets = EnumSet.of(ElementType.TYPE);
+
+		if (declType == ClassDeclType.ANNOTATION) {
+			targets.add(ElementType.ANNOTATION_TYPE);
+		}
+
+		addTopLevelAnnotations(result, targets, declaration.invisibleAnnotations, declaration.visibleAnnotations);
 
 		result.append(declType.getKeyword());
 		result.append(" ");
@@ -230,7 +236,13 @@ public class DeclarationGenerator {
 		}
 
 		if (Type.getReturnType(declaration.desc) == Type.VOID_TYPE) {
-			addTopLevelAnnotations(result, declaration.invisibleAnnotations, declaration.visibleAnnotations);
+			Set<ElementType> targets = EnumSet.of(ElementType.METHOD);
+
+			if (isConstructor) {
+				targets.add(ElementType.CONSTRUCTOR);
+			}
+
+			addTopLevelAnnotations(result, targets, declaration.invisibleAnnotations, declaration.visibleAnnotations);
 		} else {
 			addTopLevelBiPurposeAnnotations(
 					result,
@@ -576,6 +588,7 @@ public class DeclarationGenerator {
 
 	private void addTopLevelAnnotations(
 			TextWithButtons result,
+			Set<ElementType> elementTypes,
 			@Nullable List<AnnotationNode> invisibleAnnotations,
 			@Nullable List<AnnotationNode> visibleAnnotations
 	) {
@@ -594,11 +607,18 @@ public class DeclarationGenerator {
 		}
 
 		for (AnnotationNode ann : editor.getData().annotationsToAdd()) {
-			result.append(editor.createAddedAnnotationButton(List.of(ann), desc1 -> List.of(new AnnotationNode(desc1))));
+			result.append(editor.createAddedAnnotationButton(
+					List.of(ann),
+					desc1 -> List.of(new AnnotationNode(desc1)),
+					annClass -> getAnnotationTargets(annClass).stream().anyMatch(elementTypes::contains)
+			));
 			result.append("\n");
 		}
 
-		result.append(editor.createPlusButton(desc -> List.of(new AnnotationNode(desc))));
+		result.append(editor.createPlusButton(
+				desc -> List.of(new AnnotationNode(desc)),
+				annClass -> getAnnotationTargets(annClass).stream().anyMatch(elementTypes::contains)
+		));
 		result.append("\n");
 	}
 
@@ -627,11 +647,18 @@ public class DeclarationGenerator {
 
 		for (TypeAnnotationNode ann : editor.getData().typeAnnotationsToAdd()) {
 			if (ann.typeRef == typeRef && AnnotationUtil.typePathToString(ann.typePath).equals(AnnotationUtil.typePathToString(typePath))) {
-				result.append(editor.createAddedAnnotationButton(List.of(ann), desc1 -> List.of(new TypeAnnotationNode(typeRef, typePath, desc1))));
+				result.append(editor.createAddedAnnotationButton(
+						List.of(ann),
+						desc1 -> List.of(new TypeAnnotationNode(typeRef, typePath, desc1)),
+						annClass -> getAnnotationTargets(annClass).contains(ElementType.TYPE_USE)
+				));
 			}
 		}
 
-		result.append(editor.createPlusButton(desc -> List.of(new TypeAnnotationNode(typeRef, typePath, desc))));
+		result.append(editor.createPlusButton(
+				desc -> List.of(new TypeAnnotationNode(typeRef, typePath, desc)),
+				annClass -> getAnnotationTargets(annClass).contains(ElementType.TYPE_USE)
+		));
 	}
 
 	private void addTopLevelBiPurposeAnnotations(
@@ -702,11 +729,20 @@ public class DeclarationGenerator {
 		}
 
 		for (List<AnnotationNode> annotationGroup : addedMap.values()) {
-			result.append(editor.createAddedAnnotationButton(dataSupplier, annotationGroup, desc -> createBiPurposeAnnotations(desc, typeRef, typePath, topLevelElementTypes)));
+			result.append(editor.createAddedAnnotationButton(
+					dataSupplier,
+					annotationGroup,
+					desc -> createBiPurposeAnnotations(desc, typeRef, typePath, topLevelElementTypes),
+					annClass -> getAnnotationTargets(annClass).stream().anyMatch(target -> target == ElementType.TYPE_USE || topLevelElementTypes.contains(target))
+			));
 			result.append(separator);
 		}
 
-		result.append(editor.createPlusButton(dataSupplier, desc -> createBiPurposeAnnotations(desc, typeRef, typePath, topLevelElementTypes)));
+		result.append(editor.createPlusButton(
+				dataSupplier,
+				desc -> createBiPurposeAnnotations(desc, typeRef, typePath, topLevelElementTypes),
+				annClass -> getAnnotationTargets(annClass).stream().anyMatch(target -> target == ElementType.TYPE_USE || topLevelElementTypes.contains(target))
+		));
 		result.append(separator);
 	}
 
@@ -724,33 +760,7 @@ public class DeclarationGenerator {
 			return List.of(new AnnotationNode(desc));
 		}
 
-		List<ElementType> elementTypes = new ArrayList<>();
-
-		if (bytecode.visibleAnnotations != null) {
-			for (AnnotationNode metaAnnotation : bytecode.visibleAnnotations) {
-				if (!"Ljava/lang/annotation/Target;".equals(metaAnnotation.desc) || metaAnnotation.values == null) {
-					continue;
-				}
-
-				for (int i = 0; i < metaAnnotation.values.size(); i += 2) {
-					if (!"value".equals(metaAnnotation.values.get(i)) || !(metaAnnotation.values.get(i + 1) instanceof List<?> values)) {
-						continue;
-					}
-
-					for (Object value : values) {
-						if (!(value instanceof String[] enumValue)) {
-							continue;
-						}
-
-						try {
-							elementTypes.add(ElementType.valueOf(enumValue[1]));
-						} catch (IllegalArgumentException e) {
-							// ignore
-						}
-					}
-				}
-			}
-		}
+		List<ElementType> elementTypes = getAnnotationTargets(bytecode);
 
 		List<AnnotationNode> result = new ArrayList<>();
 
@@ -768,6 +778,40 @@ public class DeclarationGenerator {
 		}
 
 		return result;
+	}
+
+	private static List<ElementType> getAnnotationTargets(ClassNode annotationClass) {
+		List<ElementType> elementTypes = new ArrayList<>();
+
+		if (annotationClass.visibleAnnotations == null) {
+			return elementTypes;
+		}
+
+		for (AnnotationNode metaAnnotation : annotationClass.visibleAnnotations) {
+			if (!"Ljava/lang/annotation/Target;".equals(metaAnnotation.desc) || metaAnnotation.values == null) {
+				continue;
+			}
+
+			for (int i = 0; i < metaAnnotation.values.size(); i += 2) {
+				if (!"value".equals(metaAnnotation.values.get(i)) || !(metaAnnotation.values.get(i + 1) instanceof List<?> values)) {
+					continue;
+				}
+
+				for (Object value : values) {
+					if (!(value instanceof String[] enumValue)) {
+						continue;
+					}
+
+					try {
+						elementTypes.add(ElementType.valueOf(enumValue[1]));
+					} catch (IllegalArgumentException e) {
+						// ignore
+					}
+				}
+			}
+		}
+
+		return elementTypes;
 	}
 
 	private class TypeRefAppender extends SignatureVisitor {

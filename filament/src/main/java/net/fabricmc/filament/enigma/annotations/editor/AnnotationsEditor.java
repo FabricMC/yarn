@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -425,15 +426,15 @@ public class AnnotationsEditor extends JDialog {
 		return button;
 	}
 
-	public JButton createAddedAnnotationButton(List<AnnotationNode> annotations, Function<String, List<AnnotationNode>> annotationCreator) {
-		return createAddedAnnotationButton((create, isTypeAnnotation) -> this.data, annotations, annotationCreator);
+	public JButton createAddedAnnotationButton(List<AnnotationNode> annotations, Function<String, List<AnnotationNode>> annotationCreator, Predicate<ClassNode> isAnnotationAllowed) {
+		return createAddedAnnotationButton((create, isTypeAnnotation) -> this.data, annotations, annotationCreator, isAnnotationAllowed);
 	}
 
-	public JButton createAddedAnnotationButton(AnnotationDataSupplier dataSupplier, List<AnnotationNode> annotations, Function<String, List<AnnotationNode>> annotationCreator) {
+	public JButton createAddedAnnotationButton(AnnotationDataSupplier dataSupplier, List<AnnotationNode> annotations, Function<String, List<AnnotationNode>> annotationCreator, Predicate<ClassNode> isAnnotationAllowed) {
 		String annotationStr = new AnnotationStringifier().shortenClassReferences().stringify(annotations.getFirst());
 		StrikeableButton button = new StrikeableButton("*" + annotationStr);
 		button.addActionListener(e -> {
-			AnnotationNode templateAnnotation = SingleAnnotationEditor.show(this, plugin, gui, annotationCreator.andThen(List::getFirst), annotations.getFirst());
+			AnnotationNode templateAnnotation = SingleAnnotationEditor.show(this, plugin, gui, annotationCreator.andThen(List::getFirst), isAnnotationAllowed, annotations.getFirst());
 
 			if (templateAnnotation == null) {
 				for (AnnotationNode annotation : annotations) {
@@ -455,6 +456,8 @@ public class AnnotationsEditor extends JDialog {
 				List<AnnotationNode> newAnnotations = annotationCreator.apply(templateAnnotation.desc);
 
 				for (AnnotationNode newAnnotation : newAnnotations) {
+					templateAnnotation.accept(newAnnotation);
+
 					if (newAnnotation instanceof TypeAnnotationNode newTypeAnnotation) {
 						BaseAnnotationData data = dataSupplier.get(true, true);
 
@@ -482,14 +485,14 @@ public class AnnotationsEditor extends JDialog {
 		return button;
 	}
 
-	public JButton createPlusButton(Function<String, List<AnnotationNode>> annotationCreator) {
-		return createPlusButton((create, isTypeAnnotation) -> this.data, annotationCreator);
+	public JButton createPlusButton(Function<String, List<AnnotationNode>> annotationCreator, Predicate<ClassNode> isAnnotationAllowed) {
+		return createPlusButton((create, isTypeAnnotation) -> this.data, annotationCreator, isAnnotationAllowed);
 	}
 
-	public JButton createPlusButton(AnnotationDataSupplier dataSupplier, Function<String, List<AnnotationNode>> annotationCreator) {
+	public JButton createPlusButton(AnnotationDataSupplier dataSupplier, Function<String, List<AnnotationNode>> annotationCreator, Predicate<ClassNode> isAnnotationAllowed) {
 		JButton button = new JButton("+");
 		button.addActionListener(e -> {
-			AnnotationNode templateAnnotation = SingleAnnotationEditor.show(this, plugin, gui, annotationCreator.andThen(List::getFirst), null);
+			AnnotationNode templateAnnotation = SingleAnnotationEditor.show(this, plugin, gui, annotationCreator.andThen(List::getFirst), isAnnotationAllowed, null);
 
 			if (templateAnnotation == null) {
 				return;

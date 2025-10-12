@@ -17,6 +17,7 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -41,12 +42,14 @@ import cuchaz.enigma.api.I18n;
 import cuchaz.enigma.api.view.GuiView;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.AnnotationNode;
+import org.objectweb.asm.tree.ClassNode;
 
 import net.fabricmc.filament.enigma.annotations.AnnotationsEnigmaPlugin;
 
 public class SingleAnnotationEditor extends JDialog {
 	private final AnnotationsEnigmaPlugin plugin;
 	private final Function<String, AnnotationNode> annotationCreator;
+	private final Predicate<ClassNode> isAnnotationAllowed;
 	@Nullable
 	private AnnotationNode annotation;
 	private boolean hasResult = false;
@@ -67,7 +70,14 @@ public class SingleAnnotationEditor extends JDialog {
 
 	private final AWTEventListener globalListener;
 
-	public SingleAnnotationEditor(JDialog owner, AnnotationsEnigmaPlugin plugin, GuiView gui, Function<String, AnnotationNode> annotationCreator, @Nullable AnnotationNode original) {
+	public SingleAnnotationEditor(
+			JDialog owner,
+			AnnotationsEnigmaPlugin plugin,
+			GuiView gui,
+			Function<String, AnnotationNode> annotationCreator,
+			Predicate<ClassNode> isAnnotationAllowed,
+			@Nullable AnnotationNode original
+	) {
 		super(owner, I18n.translate("annotations.edit.single"), true);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setSize((int) (600 * gui.getScale()), (int) (300 * gui.getScale()));
@@ -75,6 +85,7 @@ public class SingleAnnotationEditor extends JDialog {
 
 		this.plugin = plugin;
 		this.annotationCreator = annotationCreator;
+		this.isAnnotationAllowed = isAnnotationAllowed;
 		this.annotation = original;
 		this.editor = gui.createEditorPane();
 
@@ -217,7 +228,7 @@ public class SingleAnnotationEditor extends JDialog {
 			// only update completions popup if it's already visible
 			if (completionsPopup.isVisible()) {
 				AnnotationParser parser = new AnnotationParser(plugin, editor.getCaretPosition());
-				parser.parse(editor.getText(), annotationCreator, ann -> true); // TODO: filter annotations
+				parser.parse(editor.getText(), annotationCreator, isAnnotationAllowed);
 				startAutoCompletion(parser.getCompletions());
 			}
 		});
@@ -282,8 +293,15 @@ public class SingleAnnotationEditor extends JDialog {
 	}
 
 	@Nullable
-	public static AnnotationNode show(JDialog owner, AnnotationsEnigmaPlugin plugin, GuiView gui, Function<String, AnnotationNode> annotationCreator, @Nullable AnnotationNode original) {
-		SingleAnnotationEditor editor = new SingleAnnotationEditor(owner, plugin, gui, annotationCreator, original);
+	public static AnnotationNode show(
+			JDialog owner,
+			AnnotationsEnigmaPlugin plugin,
+			GuiView gui,
+			Function<String, AnnotationNode> annotationCreator,
+			Predicate<ClassNode> isAnnotationAllowed,
+			@Nullable AnnotationNode original
+	) {
+		SingleAnnotationEditor editor = new SingleAnnotationEditor(owner, plugin, gui, annotationCreator, isAnnotationAllowed, original);
 		editor.setVisible(true);
 		Toolkit.getDefaultToolkit().removeAWTEventListener(editor.globalListener);
 		return editor.annotation;
@@ -320,7 +338,7 @@ public class SingleAnnotationEditor extends JDialog {
 			hideErrorPopup();
 			editor.getHighlighter().removeAllHighlights();
 			AnnotationParser parser = new AnnotationParser(plugin, caretPosition);
-			AnnotationNode parsedAnnotation = parser.parse(editor.getText(), annotationCreator, ann -> true); // TODO: filter annotations
+			AnnotationNode parsedAnnotation = parser.parse(editor.getText(), annotationCreator, isAnnotationAllowed);
 			errors = parser.getErrors();
 
 			// even if inserting completion, keep going if we're not on an identifier

@@ -104,7 +104,7 @@ public class AnnotationParser {
 			c.addErrorRange(nameStart, nameEnd, "Type is not an annotation: " + canonical);
 		}
 
-		if (!isAnnotationAllowed.test(annotationClass)) {
+		if (annotationClass != null && !isAnnotationAllowed.test(annotationClass)) {
 			c.addErrorRange(nameStart, nameEnd, "This annotation is not allowed here");
 		}
 
