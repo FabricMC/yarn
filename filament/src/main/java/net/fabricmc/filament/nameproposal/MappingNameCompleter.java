@@ -122,6 +122,7 @@ public class MappingNameCompleter {
 
 			yarn.visitMethod("<init>", initDesc);
 			MappingTree.MethodMapping methodMapping = classMapping.getMethod("<init>", initDesc, yarnIntermediaryNs);
+			methodMapping.setDstName("<init>", yarnNamedNs);
 			int lvIndex = 1;
 
 			for (RecordComponentNode recordComponentNode : recordComponents) {
