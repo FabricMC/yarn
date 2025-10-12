@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Dependency;
+import org.gradle.api.artifacts.ModuleDependency;
 import org.gradle.api.artifacts.dsl.DependencyHandler;
 import org.gradle.api.file.RegularFile;
 import org.gradle.api.provider.Provider;
@@ -12,14 +13,14 @@ import org.gradle.api.tasks.Delete;
 import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.TaskProvider;
 
-import net.fabricmc.filament.task.unpick.CombineUnpickDefinitionsTask;
 import net.fabricmc.filament.task.DownloadTask;
 import net.fabricmc.filament.task.GeneratePackageInfoMappingsTask;
 import net.fabricmc.filament.task.JavadocLintTask;
-import net.fabricmc.filament.task.unpick.RemapUnpickDefinitionsTask;
 import net.fabricmc.filament.task.base.WithFileOutput;
 import net.fabricmc.filament.task.minecraft.ExtractBundledServerTask;
 import net.fabricmc.filament.task.minecraft.MergeMinecraftTask;
+import net.fabricmc.filament.task.unpick.CombineUnpickDefinitionsTask;
+import net.fabricmc.filament.task.unpick.RemapUnpickDefinitionsTask;
 import net.fabricmc.loom.configuration.providers.minecraft.MinecraftVersionMeta;
 import net.fabricmc.loom.util.gradle.GradleUtils;
 
@@ -78,7 +79,11 @@ public final class FilamentGradlePlugin implements Plugin<Project> {
 			var name = minecraftLibraries.getName();
 
 			for (Dependency dependency : getDependencies(metaProvider.get(), project.getDependencies())) {
-				project.getDependencies().add(name, dependency);
+				Dependency created = project.getDependencies().add(name, dependency);
+
+				if (created instanceof ModuleDependency md) {
+					md.setTransitive(false);
+				}
 			}
 		});
 	}

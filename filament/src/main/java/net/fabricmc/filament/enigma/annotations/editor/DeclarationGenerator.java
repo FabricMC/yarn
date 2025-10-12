@@ -1,8 +1,12 @@
 package net.fabricmc.filament.enigma.annotations.editor;
 
+import java.lang.annotation.ElementType;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -25,6 +29,9 @@ import org.objectweb.asm.tree.ParameterNode;
 import org.objectweb.asm.tree.TypeAnnotationNode;
 
 import net.fabricmc.filament.enigma.annotations.AnnotationUtil;
+import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.BaseAnnotationData;
+import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.GenericAnnotationData;
+import net.fabricmc.loom.configuration.providers.mappings.extras.annotations.MethodAnnotationData;
 
 public class DeclarationGenerator {
 	private final ProjectView project;
@@ -47,7 +54,7 @@ public class DeclarationGenerator {
 	private TextWithButtons generate(ClassNode declaration) {
 		TextWithButtons result = new TextWithButtons();
 
-		appendTopLevelAnnotations(declaration.visibleAnnotations, declaration.invisibleAnnotations, result);
+		addTopLevelAnnotations(result, declaration.invisibleAnnotations, declaration.visibleAnnotations);
 
 		ClassDeclType declType = ClassDeclType.infer(declaration);
 
@@ -143,10 +150,27 @@ public class DeclarationGenerator {
 	private TextWithButtons generate(FieldNode declaration) {
 		TextWithButtons result = new TextWithButtons();
 
-		appendTopLevelAnnotations(declaration.visibleAnnotations, declaration.invisibleAnnotations, result);
+		String effectiveSignature = Objects.requireNonNullElse(declaration.signature, declaration.desc);
+		int signatureArrayDims = 0;
 
-		new SignatureReader(Objects.requireNonNullElse(declaration.signature, declaration.desc))
-				.acceptType(new TypeRefAppender(result, TypeReference.newTypeReference(TypeReference.FIELD).getValue()));
+		while (signatureArrayDims < effectiveSignature.length() && effectiveSignature.charAt(signatureArrayDims) == '[') {
+			signatureArrayDims++;
+		}
+
+		addTopLevelBiPurposeAnnotations(
+				result,
+				"\n",
+				TypeReference.newTypeReference(TypeReference.FIELD).getValue(),
+				signatureArrayDims == 0 ? null : TypePath.fromString("[".repeat(signatureArrayDims)),
+				EnumSet.of(ElementType.FIELD), // TODO: record components?
+				declaration.invisibleAnnotations,
+				declaration.visibleAnnotations,
+				declaration.invisibleTypeAnnotations,
+				declaration.visibleTypeAnnotations,
+				(create, isTypeAnnotation) -> editor.getData()
+		);
+
+		new SignatureReader(effectiveSignature).acceptType(new TypeRefAppender(result, TypeReference.newTypeReference(TypeReference.FIELD).getValue(), false));
 		result.append(" ");
 		result.append(project.deobfuscate(editor.getEditingEntry()).getName());
 		result.append(";");
@@ -161,7 +185,66 @@ public class DeclarationGenerator {
 		ClassEntryView obfOwnerEntry = ((MethodEntryView) editor.getEditingEntry()).getParent();
 		String deobfOwnerName = project.deobfuscate(obfOwnerEntry).getFullName();
 
-		appendTopLevelAnnotations(declaration.visibleAnnotations, declaration.invisibleAnnotations, result);
+		int returnTypeSignatureArrayDims;
+
+		if (declaration.signature != null) {
+			var visitor = new SignatureVisitor(Opcodes.ASM9) {
+				int arrayDims = 0;
+				boolean inReturnTypeArray = false;
+
+				@Override
+				public SignatureVisitor visitReturnType() {
+					inReturnTypeArray = true;
+					return this;
+				}
+
+				@Override
+				public SignatureVisitor visitArrayType() {
+					if (inReturnTypeArray) {
+						arrayDims++;
+					}
+
+					return this;
+				}
+
+				@Override
+				public void visitBaseType(char descriptor) {
+					inReturnTypeArray = false;
+				}
+
+				@Override
+				public void visitTypeVariable(String name) {
+					inReturnTypeArray = false;
+				}
+
+				@Override
+				public void visitClassType(String name) {
+					inReturnTypeArray = false;
+				}
+			};
+			new SignatureReader(declaration.signature).accept(visitor);
+			returnTypeSignatureArrayDims = visitor.arrayDims;
+		} else {
+			Type returnType = Type.getReturnType(declaration.desc);
+			returnTypeSignatureArrayDims = returnType.getSort() == Type.ARRAY ? returnType.getDimensions() : 0;
+		}
+
+		if (Type.getReturnType(declaration.desc) == Type.VOID_TYPE) {
+			addTopLevelAnnotations(result, declaration.invisibleAnnotations, declaration.visibleAnnotations);
+		} else {
+			addTopLevelBiPurposeAnnotations(
+					result,
+					"\n",
+					TypeReference.newTypeReference(TypeReference.METHOD_RETURN).getValue(),
+					returnTypeSignatureArrayDims == 0 ? null : TypePath.fromString("[".repeat(returnTypeSignatureArrayDims)),
+					EnumSet.of(ElementType.METHOD),
+					declaration.invisibleAnnotations,
+					declaration.visibleAnnotations,
+					declaration.invisibleTypeAnnotations,
+					declaration.visibleTypeAnnotations,
+					(create, isTypeAnnotation) -> editor.getData()
+			);
+		}
 
 		if (appendTypeParameters(result, declaration.signature, TypeReference.METHOD_TYPE_PARAMETER, TypeReference.METHOD_TYPE_PARAMETER_BOUND)) {
 			result.append(" ");
@@ -174,12 +257,12 @@ public class DeclarationGenerator {
 				new SignatureReader(declaration.signature).accept(new SignatureVisitor(Opcodes.ASM9) {
 					@Override
 					public SignatureVisitor visitReturnType() {
-						return new TypeRefAppender(result, TypeReference.newTypeReference(TypeReference.METHOD_RETURN).getValue());
+						return new TypeRefAppender(result, TypeReference.newTypeReference(TypeReference.METHOD_RETURN).getValue(), false);
 					}
 				});
 			} else {
 				new SignatureReader(Type.getReturnType(declaration.desc).getDescriptor())
-						.acceptType(new TypeRefAppender(result, TypeReference.newTypeReference(TypeReference.METHOD_RETURN).getValue()));
+						.acceptType(new TypeRefAppender(result, TypeReference.newTypeReference(TypeReference.METHOD_RETURN).getValue(), false));
 			}
 
 			result.append(" ");
@@ -199,8 +282,18 @@ public class DeclarationGenerator {
 			result.append(" this");
 		}
 
+		class ParameterInfo {
+			final String variableName;
+			TextWithButtons typeWithButtons;
+			int signatureArrayDims;
+
+			ParameterInfo(String variableName) {
+				this.variableName = variableName;
+			}
+		}
+
 		Set<String> usedVariableNames = new HashSet<>();
-		List<String> variableNames = new ArrayList<>();
+		List<ParameterInfo> parameterInfos = new ArrayList<>();
 		int lvIndex = (declaration.access & Opcodes.ACC_STATIC) == 0 ? 1 : 0;
 		Type[] paramTypes = Type.getArgumentTypes(declaration.desc);
 		List<ParameterNode> params = Objects.requireNonNullElse(declaration.parameters, List.of());
@@ -221,68 +314,134 @@ public class DeclarationGenerator {
 				}
 
 				usedVariableNames.add(variableName);
-				variableNames.add(variableName);
+				parameterInfos.add(new ParameterInfo(variableName));
 			}
 
 			lvIndex += paramTypes[i].getSize();
 		}
 
 		if (declaration.signature != null) {
-			var visitor = new SignatureVisitor(Opcodes.ASM9) {
+			new SignatureReader(declaration.signature).accept(new SignatureVisitor(Opcodes.ASM9) {
 				int paramIndex = -1;
 
 				@Override
 				public SignatureVisitor visitParameterType() {
-					// append the previous variable name
-					if (paramIndex >= 0 && paramIndex < variableNames.size()) {
-						result.append(variableNames.get(paramIndex));
+					paramIndex++;
+					TextWithButtons paramTypeWithButtons = new TextWithButtons();
+
+					if (paramIndex < parameterInfos.size()) {
+						parameterInfos.get(paramIndex).typeWithButtons = paramTypeWithButtons;
 					}
 
+					return new TypeRefAppender(paramTypeWithButtons, TypeReference.newFormalParameterReference(paramIndex).getValue(), false);
+				}
+			});
+
+			new SignatureReader(declaration.signature).accept(new SignatureVisitor(Opcodes.ASM9) {
+				int paramIndex = -1;
+				@Nullable
+				ParameterInfo currentParameterInfo;
+
+				@Override
+				public SignatureVisitor visitParameterType() {
 					paramIndex++;
 
-					if (paramIndex != 0 || hasThisParam) {
-						result.append(",");
+					if (paramIndex < parameterInfos.size()) {
+						currentParameterInfo = parameterInfos.get(paramIndex);
 					}
 
-					result.append("\n\t");
-					return new TypeRefAppender(result, TypeReference.newFormalParameterReference(paramIndex).getValue());
-				}
-			};
-			new SignatureReader(declaration.signature).accept(visitor);
-
-			if (visitor.paramIndex >= 0) {
-				// append the last variable name
-				if (visitor.paramIndex < variableNames.size()) {
-					result.append(variableNames.get(visitor.paramIndex));
+					return this;
 				}
 
-				result.append("\n");
-			}
+				@Override
+				public SignatureVisitor visitArrayType() {
+					if (currentParameterInfo != null) {
+						currentParameterInfo.signatureArrayDims++;
+					}
+
+					return this;
+				}
+
+				@Override
+				public void visitBaseType(char descriptor) {
+					currentParameterInfo = null;
+				}
+
+				@Override
+				public void visitClassType(String name) {
+					currentParameterInfo = null;
+				}
+
+				@Override
+				public void visitTypeVariable(String name) {
+					currentParameterInfo = null;
+				}
+			});
 		} else {
 			int nonSyntheticParamIndex = -1;
 
 			for (int i = 0; i < paramTypes.length; i++) {
-				if (i >= params.size() || (params.get(i).access & Opcodes.ACC_SYNTHETIC) == 0) {
-					nonSyntheticParamIndex++;
-
-					if (nonSyntheticParamIndex != 0 || hasThisParam) {
-						result.append(",");
-					}
-
-					result.append("\n\t");
-					new SignatureReader(paramTypes[i].getDescriptor())
-							.acceptType(new TypeRefAppender(result, TypeReference.newFormalParameterReference(nonSyntheticParamIndex).getValue()));
-					result.append(" ");
-
-					if (nonSyntheticParamIndex < variableNames.size()) {
-						result.append(variableNames.get(nonSyntheticParamIndex));
-					}
+				if (i < params.size() && (params.get(i).access & Opcodes.ACC_SYNTHETIC) != 0) {
+					continue;
 				}
+
+				nonSyntheticParamIndex++;
+
+				if (nonSyntheticParamIndex >= parameterInfos.size()) {
+					continue;
+				}
+
+				TextWithButtons paramTypeWithButtons = new TextWithButtons();
+				parameterInfos.get(nonSyntheticParamIndex).typeWithButtons = paramTypeWithButtons;
+				new SignatureReader(paramTypes[i].getDescriptor())
+						.acceptType(new TypeRefAppender(paramTypeWithButtons, TypeReference.newFormalParameterReference(nonSyntheticParamIndex).getValue(), false));
+
+				parameterInfos.get(nonSyntheticParamIndex).signatureArrayDims = paramTypes[i].getSort() == Type.ARRAY ? paramTypes[i].getDimensions() : 0;
+			}
+		}
+
+		for (int i = 0; i < parameterInfos.size(); i++) {
+			int paramIndex = i;
+			ParameterInfo paramInfo = parameterInfos.get(i);
+
+			if (paramInfo.typeWithButtons == null) {
+				continue;
 			}
 
-			if (nonSyntheticParamIndex >= 0) {
-				result.append("\n");
+			if (i != 0 || hasThisParam) {
+				result.append(",");
 			}
+
+			result.append("\n\t");
+
+			addTopLevelBiPurposeAnnotations(
+					result,
+					"",
+					TypeReference.newFormalParameterReference(i).getValue(),
+					paramInfo.signatureArrayDims == 0 ? null : TypePath.fromString("[".repeat(paramInfo.signatureArrayDims)),
+					EnumSet.of(ElementType.PARAMETER),
+					declaration.invisibleParameterAnnotations == null || i >= declaration.invisibleParameterAnnotations.length ? null : declaration.invisibleParameterAnnotations[i],
+					declaration.visibleParameterAnnotations == null || i >= declaration.visibleParameterAnnotations.length ? null : declaration.visibleParameterAnnotations[i],
+					declaration.invisibleTypeAnnotations,
+					declaration.visibleTypeAnnotations,
+					(create, isTypeAnnotation) -> {
+						if (isTypeAnnotation) {
+							return editor.getData();
+						} else if (create) {
+							return ((MethodAnnotationData) editor.getData()).parameters().computeIfAbsent(paramIndex, k -> new GenericAnnotationData());
+						} else {
+							return ((MethodAnnotationData) editor.getData()).parameters().get(paramIndex);
+						}
+					}
+			);
+
+			result.append(paramInfo.typeWithButtons);
+			result.append(" ");
+			result.append(paramInfo.variableName);
+		}
+
+		if (!parameterInfos.isEmpty()) {
+			result.append("\n");
 		}
 
 		result.append(")");
@@ -356,34 +515,6 @@ public class DeclarationGenerator {
 		}
 	}
 
-	private void appendTopLevelAnnotations(
-			@Nullable List<AnnotationNode> visibleAnnotations,
-			@Nullable List<AnnotationNode> invisibleAnnotations,
-			TextWithButtons result
-	) {
-		if (invisibleAnnotations != null) {
-			for (AnnotationNode ann : invisibleAnnotations) {
-				result.append(editor.createExistingAnnotationButton(ann));
-				result.append("\n");
-			}
-		}
-
-		if (visibleAnnotations != null) {
-			for (AnnotationNode ann : visibleAnnotations) {
-				result.append(editor.createExistingAnnotationButton(ann));
-				result.append("\n");
-			}
-		}
-
-		for (AnnotationNode ann : editor.getData().annotationsToAdd()) {
-			result.append(editor.createAddedAnnotationButton(ann));
-			result.append("\n");
-		}
-
-		result.append(editor.createPlusButton(AnnotationNode::new));
-		result.append("\n");
-	}
-
 	private boolean appendTypeParameters(TextWithButtons result, @Nullable String signature, int paramRefSort, int paramBoundRefSort) {
 		if (signature == null) {
 			return false;
@@ -443,6 +574,34 @@ public class DeclarationGenerator {
 		return visitor.typeParameterIndex >= 0;
 	}
 
+	private void addTopLevelAnnotations(
+			TextWithButtons result,
+			@Nullable List<AnnotationNode> invisibleAnnotations,
+			@Nullable List<AnnotationNode> visibleAnnotations
+	) {
+		if (invisibleAnnotations != null) {
+			for (AnnotationNode ann : invisibleAnnotations) {
+				result.append(editor.createExistingAnnotationButton(List.of(ann)));
+				result.append("\n");
+			}
+		}
+
+		if (visibleAnnotations != null) {
+			for (AnnotationNode ann : visibleAnnotations) {
+				result.append(editor.createExistingAnnotationButton(List.of(ann)));
+				result.append("\n");
+			}
+		}
+
+		for (AnnotationNode ann : editor.getData().annotationsToAdd()) {
+			result.append(editor.createAddedAnnotationButton(List.of(ann), desc1 -> List.of(new AnnotationNode(desc1))));
+			result.append("\n");
+		}
+
+		result.append(editor.createPlusButton(desc -> List.of(new AnnotationNode(desc))));
+		result.append("\n");
+	}
+
 	private void addTypeAnnotationButtons(
 			TextWithButtons result,
 			int typeRef,
@@ -453,7 +612,7 @@ public class DeclarationGenerator {
 		if (invisibleAnnotations != null) {
 			for (TypeAnnotationNode ann : invisibleAnnotations) {
 				if (ann.typeRef == typeRef && AnnotationUtil.typePathToString(ann.typePath).equals(AnnotationUtil.typePathToString(typePath))) {
-					result.append(editor.createExistingAnnotationButton(ann));
+					result.append(editor.createExistingAnnotationButton(List.of(ann)));
 				}
 			}
 		}
@@ -461,18 +620,154 @@ public class DeclarationGenerator {
 		if (visibleAnnotations != null) {
 			for (TypeAnnotationNode ann : visibleAnnotations) {
 				if (ann.typeRef == typeRef && AnnotationUtil.typePathToString(ann.typePath).equals(AnnotationUtil.typePathToString(typePath))) {
-					result.append(editor.createExistingAnnotationButton(ann));
+					result.append(editor.createExistingAnnotationButton(List.of(ann)));
 				}
 			}
 		}
 
 		for (TypeAnnotationNode ann : editor.getData().typeAnnotationsToAdd()) {
 			if (ann.typeRef == typeRef && AnnotationUtil.typePathToString(ann.typePath).equals(AnnotationUtil.typePathToString(typePath))) {
-				result.append(editor.createAddedAnnotationButton(ann));
+				result.append(editor.createAddedAnnotationButton(List.of(ann), desc1 -> List.of(new TypeAnnotationNode(typeRef, typePath, desc1))));
 			}
 		}
 
-		result.append(editor.createPlusButton(desc -> new TypeAnnotationNode(typeRef, typePath, desc)));
+		result.append(editor.createPlusButton(desc -> List.of(new TypeAnnotationNode(typeRef, typePath, desc))));
+	}
+
+	private void addTopLevelBiPurposeAnnotations(
+			TextWithButtons result,
+			String separator,
+			int typeRef,
+			@Nullable TypePath typePath,
+			Set<ElementType> topLevelElementTypes,
+			@Nullable List<AnnotationNode> invisibleAnnotations,
+			@Nullable List<AnnotationNode> visibleAnnotations,
+			@Nullable List<TypeAnnotationNode> invisibleTypeAnnotations,
+			@Nullable List<TypeAnnotationNode> visibleTypeAnnotations,
+			AnnotationsEditor.AnnotationDataSupplier dataSupplier
+	) {
+		Map<String, List<AnnotationNode>> existingMap = new LinkedHashMap<>();
+
+		if (invisibleAnnotations != null) {
+			for (AnnotationNode annotation : invisibleAnnotations) {
+				existingMap.computeIfAbsent(annotation.desc, k -> new ArrayList<>()).add(annotation);
+			}
+		}
+
+		if (visibleAnnotations != null) {
+			for (AnnotationNode annotation : visibleAnnotations) {
+				existingMap.computeIfAbsent(annotation.desc, k -> new ArrayList<>()).add(annotation);
+			}
+		}
+
+		if (invisibleTypeAnnotations != null) {
+			for (TypeAnnotationNode annotation : invisibleTypeAnnotations) {
+				if (annotation.typeRef == typeRef && AnnotationUtil.typePathToString(annotation.typePath).equals(AnnotationUtil.typePathToString(typePath))) {
+					existingMap.computeIfAbsent(annotation.desc, k -> new ArrayList<>()).add(annotation);
+				}
+			}
+		}
+
+		if (visibleTypeAnnotations != null) {
+			for (TypeAnnotationNode annotation : visibleTypeAnnotations) {
+				if (annotation.typeRef == typeRef && AnnotationUtil.typePathToString(annotation.typePath).equals(AnnotationUtil.typePathToString(typePath))) {
+					existingMap.computeIfAbsent(annotation.desc, k -> new ArrayList<>()).add(annotation);
+				}
+			}
+		}
+
+		Map<String, List<AnnotationNode>> addedMap = new LinkedHashMap<>();
+
+		BaseAnnotationData data = dataSupplier.get(false, false);
+
+		if (data != null) {
+			for (AnnotationNode annotation : data.annotationsToAdd()) {
+				addedMap.computeIfAbsent(annotation.desc, k -> new ArrayList<>()).add(annotation);
+			}
+		}
+
+		BaseAnnotationData typeData = dataSupplier.get(false, true);
+
+		if (typeData != null) {
+			for (TypeAnnotationNode annotation : typeData.typeAnnotationsToAdd()) {
+				if (annotation.typeRef == typeRef && AnnotationUtil.typePathToString(annotation.typePath).equals(AnnotationUtil.typePathToString(typePath))) {
+					addedMap.computeIfAbsent(annotation.desc, k -> new ArrayList<>()).add(annotation);
+				}
+			}
+		}
+
+		for (List<AnnotationNode> annotationGroup : existingMap.values()) {
+			result.append(editor.createExistingAnnotationButton(dataSupplier, annotationGroup));
+			result.append(separator);
+		}
+
+		for (List<AnnotationNode> annotationGroup : addedMap.values()) {
+			result.append(editor.createAddedAnnotationButton(dataSupplier, annotationGroup, desc -> createBiPurposeAnnotations(desc, typeRef, typePath, topLevelElementTypes)));
+			result.append(separator);
+		}
+
+		result.append(editor.createPlusButton(dataSupplier, desc -> createBiPurposeAnnotations(desc, typeRef, typePath, topLevelElementTypes)));
+		result.append(separator);
+	}
+
+	private List<AnnotationNode> createBiPurposeAnnotations(
+			String desc,
+			int typeRef,
+			@Nullable TypePath typePath,
+			Set<ElementType> topLevelElementTypes
+	) {
+		String deobfName = desc.substring(1, desc.length() - 1);
+		String obfName = project.obfuscate(ClassEntryView.create(deobfName)).getFullName();
+		ClassNode bytecode = project.getBytecode(obfName);
+
+		if (bytecode == null) {
+			return List.of(new AnnotationNode(desc));
+		}
+
+		List<ElementType> elementTypes = new ArrayList<>();
+
+		if (bytecode.visibleAnnotations != null) {
+			for (AnnotationNode metaAnnotation : bytecode.visibleAnnotations) {
+				if (!"Ljava/lang/annotation/Target;".equals(metaAnnotation.desc) || metaAnnotation.values == null) {
+					continue;
+				}
+
+				for (int i = 0; i < metaAnnotation.values.size(); i += 2) {
+					if (!"value".equals(metaAnnotation.values.get(i)) || !(metaAnnotation.values.get(i + 1) instanceof List<?> values)) {
+						continue;
+					}
+
+					for (Object value : values) {
+						if (!(value instanceof String[] enumValue)) {
+							continue;
+						}
+
+						try {
+							elementTypes.add(ElementType.valueOf(enumValue[1]));
+						} catch (IllegalArgumentException e) {
+							// ignore
+						}
+					}
+				}
+			}
+		}
+
+		List<AnnotationNode> result = new ArrayList<>();
+
+		if (elementTypes.stream().anyMatch(topLevelElementTypes::contains)) {
+			result.add(new AnnotationNode(desc));
+		}
+
+		if (elementTypes.contains(ElementType.TYPE_USE)) {
+			result.add(new TypeAnnotationNode(typeRef, typePath, desc));
+		}
+
+		// fallback
+		if (result.isEmpty()) {
+			result.add(new AnnotationNode(desc));
+		}
+
+		return result;
 	}
 
 	private class TypeRefAppender extends SignatureVisitor {
@@ -483,16 +778,22 @@ public class DeclarationGenerator {
 		private String classSoFar;
 		private boolean isArray = false;
 		private int typeArgumentIndex = -1;
+		private final boolean createLeading;
 
 		TypeRefAppender(TextWithButtons result, int typeRef) {
-			this(result, typeRef, null);
+			this(result, typeRef, true);
 		}
 
-		TypeRefAppender(TextWithButtons result, int typeRef, @Nullable TypePath typePath) {
+		TypeRefAppender(TextWithButtons result, int typeRef, boolean createLeading) {
+			this(result, typeRef, null, createLeading);
+		}
+
+		TypeRefAppender(TextWithButtons result, int typeRef, @Nullable TypePath typePath, boolean createLeading) {
 			super(Opcodes.ASM9);
 			this.result = result;
 			this.typeRef = typeRef;
 			this.typePath = typePath;
+			this.createLeading = createLeading;
 		}
 
 		private TypePath nextTypePath(String step) {
@@ -503,7 +804,9 @@ public class DeclarationGenerator {
 		public void visitClassType(String name) {
 			String[] innerParts = name.split("\\$");
 
-			addTypeAnnotationButtons();
+			if (createLeading) {
+				addTypeAnnotationButtons();
+			}
 
 			String deobfName = project.deobfuscate(ClassEntryView.create(innerParts[0])).getFullName();
 			result.append(AnnotationUtil.getSimpleName(deobfName));
@@ -518,19 +821,33 @@ public class DeclarationGenerator {
 		@Override
 		public SignatureVisitor visitArrayType() {
 			isArray = true;
-			return new TypeRefAppender(result, typeRef, nextTypePath("["));
+			return new TypeRefAppender(result, typeRef, nextTypePath("["), createLeading) {
+				@Override
+				public void visitEnd() {
+					super.visitEnd();
+					TypeRefAppender.this.visitEnd();
+				}
+			};
 		}
 
 		@Override
 		public void visitBaseType(char descriptor) {
-			addTypeAnnotationButtons();
+			if (createLeading) {
+				addTypeAnnotationButtons();
+			}
+
 			result.append(Type.getType(String.valueOf(descriptor)).getClassName());
+			visitEnd();
 		}
 
 		@Override
 		public void visitTypeVariable(String name) {
-			addTypeAnnotationButtons();
+			if (createLeading) {
+				addTypeAnnotationButtons();
+			}
+
 			result.append(name);
+			visitEnd();
 		}
 
 		@Override
@@ -576,14 +893,14 @@ public class DeclarationGenerator {
 			case EXTENDS -> {
 				addTypeAnnotationButtons();
 				result.append("? extends ");
-				yield new TypeRefAppender(result, typeRef, nextTypePath("*"));
+				yield new TypeRefAppender(result, typeRef, nextTypePath("*"), true);
 			}
 			case SUPER -> {
 				addTypeAnnotationButtons();
 				result.append("? super ");
-				yield new TypeRefAppender(result, typeRef, nextTypePath("*"));
+				yield new TypeRefAppender(result, typeRef, nextTypePath("*"), true);
 			}
-			case INSTANCEOF -> new TypeRefAppender(result, typeRef, typePath);
+			case INSTANCEOF -> new TypeRefAppender(result, typeRef, typePath, true);
 			default -> throw new IllegalStateException("Unsupported wildcard type: " + wildcard);
 			};
 			typePath = prevTypePath;

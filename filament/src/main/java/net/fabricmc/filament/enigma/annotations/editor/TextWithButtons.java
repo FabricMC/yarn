@@ -18,4 +18,12 @@ public record TextWithButtons(StringBuilder text, TreeMap<Integer, List<JButton>
 	public void append(JButton button) {
 		this.buttons.computeIfAbsent(this.text.length(), k -> new ArrayList<>(1)).add(button);
 	}
+
+	public void append(TextWithButtons other) {
+		other.buttons.forEach((index, buttons) -> {
+			this.buttons.computeIfAbsent(this.text.length() + index, k -> new ArrayList<>(buttons.size())).addAll(buttons);
+		});
+
+		this.text.append(other.text);
+	}
 }

@@ -11,7 +11,6 @@ import cuchaz.enigma.api.I18n;
 import cuchaz.enigma.api.service.GuiService;
 import cuchaz.enigma.api.view.GuiView;
 import cuchaz.enigma.api.view.entry.ClassEntryView;
-import cuchaz.enigma.api.view.entry.EntryReferenceView;
 import cuchaz.enigma.api.view.entry.EntryView;
 import cuchaz.enigma.api.view.entry.FieldEntryView;
 import cuchaz.enigma.api.view.entry.MethodEntryView;
@@ -46,21 +45,22 @@ public class AnnotationsGuiService implements GuiService {
 		registrar.addSeparator();
 		registrar.add("annotations.edit")
 				.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_DOWN_MASK))
-				.setEnabledWhen(() -> gui.isCursorOnDeclaration() && supportsAnnotationsMenu(gui.getCursorReference()))
+				.setEnabledWhen(() -> supportsAnnotationsMenu(gui.getCursorDeclaration()))
 				.setAction(() -> {
-					if (gui.isCursorOnDeclaration() && supportsAnnotationsMenu(gui.getCursorReference())) {
-						AnnotationsEditor.open(gui, plugin, gui.getCursorReference().getEntry());
+					EntryView declaration = gui.getCursorDeclaration();
+
+					if (supportsAnnotationsMenu(declaration)) {
+						AnnotationsEditor.open(gui, plugin, gui.getCursorDeclaration());
 					}
 				});
 	}
 
-	private static boolean supportsAnnotationsMenu(@Nullable EntryReferenceView reference) {
-		if (reference == null) {
+	private static boolean supportsAnnotationsMenu(@Nullable EntryView declaration) {
+		if (declaration == null) {
 			return false;
 		}
 
-		EntryView entry = reference.getEntry();
-		return entry instanceof ClassEntryView || entry instanceof FieldEntryView || entry instanceof MethodEntryView;
+		return declaration instanceof ClassEntryView || declaration instanceof FieldEntryView || declaration instanceof MethodEntryView;
 	}
 
 	@Override

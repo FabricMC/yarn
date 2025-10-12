@@ -38,6 +38,7 @@ import cuchaz.enigma.api.view.entry.ClassEntryView;
 import cuchaz.enigma.api.view.entry.EntryView;
 import cuchaz.enigma.api.view.entry.FieldEntryView;
 import cuchaz.enigma.api.view.entry.MethodEntryView;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -294,6 +295,7 @@ public class AnnotationsEditor extends JDialog {
 				boolean res = !data.equals(classData.getMethodData(methodEntry.getName(), methodEntry.getDescriptor()));
 
 				if (res) {
+					((MethodAnnotationData) data).parameters().values().removeIf(AnnotationsEditor::isEmpty);
 					addSorted(classData.methods(), methodEntry.getName() + methodEntry.getDescriptor(), (MethodAnnotationData) data);
 				}
 
@@ -376,80 +378,102 @@ public class AnnotationsEditor extends JDialog {
 		editor.setCaretPosition(0);
 	}
 
-	public JButton createExistingAnnotationButton(AnnotationNode annotation) {
-		String annotationName = project.deobfuscate(ClassEntryView.create(annotation.desc.substring(1, annotation.desc.length() - 1))).getFullName();
-		String annotationStr = new AnnotationStringifier().deobfuscateWith(project).shortenClassReferences().stringify(annotation);
+	public JButton createExistingAnnotationButton(List<AnnotationNode> annotations) {
+		return createExistingAnnotationButton((create, isTypeAnnotation) -> this.data, annotations);
+	}
+
+	public JButton createExistingAnnotationButton(AnnotationDataSupplier dataSupplier, List<AnnotationNode> annotations) {
+		String annotationDesc = annotations.getFirst().desc;
+		String annotationName = project.deobfuscate(ClassEntryView.create(annotationDesc.substring(1, annotationDesc.length() - 1))).getFullName();
+		String annotationStr = new AnnotationStringifier().deobfuscateWith(project).shortenClassReferences().stringify(annotations.getFirst());
 		StrikeableButton button = new StrikeableButton(annotationStr);
 
-		if (annotation instanceof TypeAnnotationNode typeAnnotation) {
-			TypeAnnotationKey key = new TypeAnnotationKey(typeAnnotation.typeRef, AnnotationUtil.typePathToString(typeAnnotation.typePath), annotationName);
-			boolean[] isRemoved = { data.typeAnnotationsToRemove().contains(key) };
-			button.setStrikethrough(isRemoved[0]);
-			button.addActionListener(e -> {
-				if (isRemoved[0]) {
-					isRemoved[0] = false;
-					data.typeAnnotationsToRemove().remove(key);
-				} else {
-					isRemoved[0] = true;
-					addSorted(data.typeAnnotationsToRemove(), key, TYPE_ANNOTATION_KEY_COMPARATOR);
-				}
+		boolean[] isRemoved = new boolean[1];
 
-				button.setStrikethrough(isRemoved[0]);
-			});
+		if (annotations.getFirst() instanceof TypeAnnotationNode typeAnnotation) {
+			BaseAnnotationData data = dataSupplier.get(false, true);
+			isRemoved[0] = data != null && data.typeAnnotationsToRemove().contains(new TypeAnnotationKey(typeAnnotation.typeRef, AnnotationUtil.typePathToString(typeAnnotation.typePath), annotationName));
 		} else {
-			boolean[] isRemoved = { data.annotationsToRemove().contains(annotationName) };
-			button.setStrikethrough(isRemoved[0]);
-			button.addActionListener(e -> {
-				if (isRemoved[0]) {
-					isRemoved[0] = false;
-					data.annotationsToRemove().remove(annotationName);
-				} else {
-					isRemoved[0] = true;
-					addSorted(data.annotationsToRemove(), annotationName);
-				}
-
-				button.setStrikethrough(isRemoved[0]);
-			});
+			BaseAnnotationData data = dataSupplier.get(false, false);
+			isRemoved[0] = data != null && data.annotationsToRemove().contains(annotationName);
 		}
+
+		button.setStrikethrough(isRemoved[0]);
+		button.addActionListener(e -> {
+			for (AnnotationNode annotation : annotations) {
+				if (annotation instanceof TypeAnnotationNode typeAnnotation) {
+					TypeAnnotationKey key = new TypeAnnotationKey(typeAnnotation.typeRef, AnnotationUtil.typePathToString(typeAnnotation.typePath), annotationName);
+
+					if (isRemoved[0]) {
+						dataSupplier.get(true, true).typeAnnotationsToRemove().remove(key);
+					} else {
+						addSorted(dataSupplier.get(true, true).typeAnnotationsToRemove(), key, TYPE_ANNOTATION_KEY_COMPARATOR);
+					}
+				} else {
+					if (isRemoved[0]) {
+						dataSupplier.get(true, false).annotationsToRemove().remove(annotationName);
+					} else {
+						addSorted(dataSupplier.get(true, false).annotationsToRemove(), annotationName);
+					}
+				}
+			}
+
+			isRemoved[0] = !isRemoved[0];
+			button.setStrikethrough(isRemoved[0]);
+		});
 
 		return button;
 	}
 
-	public JButton createAddedAnnotationButton(AnnotationNode annotation) {
-		String annotationStr = new AnnotationStringifier().shortenClassReferences().stringify(annotation);
+	public JButton createAddedAnnotationButton(List<AnnotationNode> annotations, Function<String, List<AnnotationNode>> annotationCreator) {
+		return createAddedAnnotationButton((create, isTypeAnnotation) -> this.data, annotations, annotationCreator);
+	}
+
+	public JButton createAddedAnnotationButton(AnnotationDataSupplier dataSupplier, List<AnnotationNode> annotations, Function<String, List<AnnotationNode>> annotationCreator) {
+		String annotationStr = new AnnotationStringifier().shortenClassReferences().stringify(annotations.getFirst());
 		StrikeableButton button = new StrikeableButton("*" + annotationStr);
 		button.addActionListener(e -> {
-			Function<String, AnnotationNode> annotationCreator;
+			AnnotationNode templateAnnotation = SingleAnnotationEditor.show(this, plugin, gui, annotationCreator.andThen(List::getFirst), annotations.getFirst());
 
-			if (annotation instanceof TypeAnnotationNode typeAnnotation) {
-				annotationCreator = desc -> new TypeAnnotationNode(typeAnnotation.typeRef, typeAnnotation.typePath, desc);
-			} else {
-				annotationCreator = AnnotationNode::new;
-			}
+			if (templateAnnotation == null) {
+				for (AnnotationNode annotation : annotations) {
+					if (annotation instanceof TypeAnnotationNode) {
+						BaseAnnotationData data = dataSupplier.get(false, true);
 
-			AnnotationNode newAnnotation = SingleAnnotationEditor.show(this, plugin, gui, annotationCreator, annotation);
+						if (data != null) {
+							data.typeAnnotationsToAdd().remove(annotation);
+						}
+					} else {
+						BaseAnnotationData data = dataSupplier.get(false, false);
 
-			if (newAnnotation == null) {
-				if (annotation instanceof TypeAnnotationNode) {
-					data.typeAnnotationsToAdd().remove(annotation);
-				} else {
-					data.annotationsToAdd().remove(annotation);
+						if (data != null) {
+							data.annotationsToAdd().remove(annotation);
+						}
+					}
 				}
 			} else {
-				if (newAnnotation instanceof TypeAnnotationNode newTypeAnnotation) {
-					if (data.typeAnnotationsToAdd().contains(newTypeAnnotation)) {
-						return;
-					}
+				List<AnnotationNode> newAnnotations = annotationCreator.apply(templateAnnotation.desc);
 
-					// replaces the annotation
-					addSorted(data.typeAnnotationsToAdd(), newTypeAnnotation, TYPE_ANNOTATION_COMPARATOR);
-				} else {
-					if (data.annotationsToAdd().contains(newAnnotation)) {
-						return;
-					}
+				for (AnnotationNode newAnnotation : newAnnotations) {
+					if (newAnnotation instanceof TypeAnnotationNode newTypeAnnotation) {
+						BaseAnnotationData data = dataSupplier.get(true, true);
 
-					// replaces the annotation
-					addSorted(data.annotationsToAdd(), newAnnotation, ANNOTATION_COMPARATOR);
+						if (data.typeAnnotationsToAdd().contains(newTypeAnnotation)) {
+							return;
+						}
+
+						// replaces the annotation
+						addSorted(data.typeAnnotationsToAdd(), newTypeAnnotation, TYPE_ANNOTATION_COMPARATOR);
+					} else {
+						BaseAnnotationData data = dataSupplier.get(true, false);
+
+						if (data.annotationsToAdd().contains(newAnnotation)) {
+							return;
+						}
+
+						// replaces the annotation
+						addSorted(data.annotationsToAdd(), newAnnotation, ANNOTATION_COMPARATOR);
+					}
 				}
 			}
 
@@ -458,19 +482,29 @@ public class AnnotationsEditor extends JDialog {
 		return button;
 	}
 
-	public JButton createPlusButton(Function<String, AnnotationNode> annotationCreator) {
+	public JButton createPlusButton(Function<String, List<AnnotationNode>> annotationCreator) {
+		return createPlusButton((create, isTypeAnnotation) -> this.data, annotationCreator);
+	}
+
+	public JButton createPlusButton(AnnotationDataSupplier dataSupplier, Function<String, List<AnnotationNode>> annotationCreator) {
 		JButton button = new JButton("+");
 		button.addActionListener(e -> {
-			AnnotationNode newAnnotation = SingleAnnotationEditor.show(this, plugin, gui, annotationCreator, null);
+			AnnotationNode templateAnnotation = SingleAnnotationEditor.show(this, plugin, gui, annotationCreator.andThen(List::getFirst), null);
 
-			if (newAnnotation == null) {
+			if (templateAnnotation == null) {
 				return;
 			}
 
-			if (newAnnotation instanceof TypeAnnotationNode newTypeAnnotation) {
-				addSorted(data.typeAnnotationsToAdd(), newTypeAnnotation, TYPE_ANNOTATION_COMPARATOR);
-			} else {
-				addSorted(data.annotationsToAdd(), newAnnotation, ANNOTATION_COMPARATOR);
+			List<AnnotationNode> newAnnotations = annotationCreator.apply(templateAnnotation.desc);
+
+			for (AnnotationNode newAnnotation : newAnnotations) {
+				templateAnnotation.accept(newAnnotation);
+
+				if (newAnnotation instanceof TypeAnnotationNode newTypeAnnotation) {
+					addSorted(dataSupplier.get(true, true).typeAnnotationsToAdd(), newTypeAnnotation, TYPE_ANNOTATION_COMPARATOR);
+				} else {
+					addSorted(dataSupplier.get(true, false).annotationsToAdd(), newAnnotation, ANNOTATION_COMPARATOR);
+				}
 			}
 
 			refreshUi();
@@ -527,5 +561,12 @@ public class AnnotationsEditor extends JDialog {
 		for (Pair<K, V> entry : entries) {
 			map.put(entry.left(), entry.right());
 		}
+	}
+
+	@FunctionalInterface
+	public interface AnnotationDataSupplier {
+		@Nullable
+		@Contract("true, _ -> !null")
+		BaseAnnotationData get(boolean create, boolean isTypeAnnotation);
 	}
 }
