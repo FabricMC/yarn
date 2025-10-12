@@ -13,6 +13,7 @@ import cuchaz.enigma.api.view.GuiView;
 import cuchaz.enigma.api.view.entry.ClassEntryView;
 import cuchaz.enigma.api.view.entry.EntryView;
 import cuchaz.enigma.api.view.entry.FieldEntryView;
+import cuchaz.enigma.api.view.entry.LocalVariableEntryView;
 import cuchaz.enigma.api.view.entry.MethodEntryView;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +51,11 @@ public class AnnotationsGuiService implements GuiService {
 					EntryView declaration = gui.getCursorDeclaration();
 
 					if (supportsAnnotationsMenu(declaration)) {
-						AnnotationsEditor.open(gui, plugin, gui.getCursorDeclaration());
+						if (declaration instanceof LocalVariableEntryView lv) {
+							declaration = lv.getParent();
+						}
+
+						AnnotationsEditor.open(gui, plugin, declaration);
 					}
 				});
 	}
@@ -60,7 +65,10 @@ public class AnnotationsGuiService implements GuiService {
 			return false;
 		}
 
-		return declaration instanceof ClassEntryView || declaration instanceof FieldEntryView || declaration instanceof MethodEntryView;
+		return declaration instanceof ClassEntryView
+				|| declaration instanceof FieldEntryView
+				|| declaration instanceof MethodEntryView
+				|| (declaration instanceof LocalVariableEntryView lv && lv.isArgument());
 	}
 
 	@Override
