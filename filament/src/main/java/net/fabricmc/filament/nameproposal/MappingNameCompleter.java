@@ -28,7 +28,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.regex.Pattern;
 
-import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
@@ -180,7 +179,7 @@ public class MappingNameCompleter {
 		MappingReader.read(path, mappingTree);
 		return mappingTree;
 	}
-	
+
 	private static String getConstructorDesc(List<RecordComponentNode> recordComponents) {
 		StringBuilder initDescBuilder = new StringBuilder();
 		initDescBuilder.append("(");
