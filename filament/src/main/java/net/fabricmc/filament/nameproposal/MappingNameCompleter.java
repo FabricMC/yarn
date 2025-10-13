@@ -180,18 +180,6 @@ public class MappingNameCompleter {
 		return mappingTree;
 	}
 
-	private static String getConstructorDesc(List<RecordComponentNode> recordComponents) {
-		StringBuilder initDescBuilder = new StringBuilder();
-		initDescBuilder.append("(");
-
-		for (RecordComponentNode node : recordComponents) {
-			initDescBuilder.append(node.descriptor);
-		}
-
-		initDescBuilder.append(")V");
-		return initDescBuilder.toString();
-	}
-
 	/**
 	 * Based off loom: https://github.com/FabricMC/fabric-loom/commit/98d8f3767253a1a3308542c2e896cbf5f4382033.
 	 */
