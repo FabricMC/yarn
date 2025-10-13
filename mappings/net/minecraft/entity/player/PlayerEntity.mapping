@@ -50,12 +50,17 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7256 shouldDamagePlayer (Lnet/minecraft/class_1657;)Z
 		ARG 1 player
 	METHOD method_7257 openCommandBlockMinecartScreen (Lnet/minecraft/class_1697;)V
+		ARG 1 minecart
 	METHOD method_7259 incrementStat (Lnet/minecraft/class_3445;)V
 		ARG 1 stat
 	METHOD method_7261 getAttackCooldownProgress (F)F
 		ARG 1 baseTime
 	METHOD method_7262 dropShoulderEntities ()V
-	METHOD method_7263 spawnSweepAttackParticles (Lnet/minecraft/class_1297;FLnet/minecraft/class_1282;F)V
+	METHOD method_7263 doSweepingAttack (Lnet/minecraft/class_1297;FLnet/minecraft/class_1282;F)V
+		ARG 1 target
+		ARG 2 damage
+		ARG 3 damageSource
+		ARG 4 cooldownProgress
 	METHOD method_7265 createCooldownManager ()Lnet/minecraft/class_1796;
 	METHOD method_7266 resetStat (Lnet/minecraft/class_3445;)V
 		ARG 1 stat
@@ -146,6 +151,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 	METHOD method_7323 openCommandBlockScreen (Lnet/minecraft/class_2593;)V
 		ARG 1 commandBlock
 	METHOD method_7324 attack (Lnet/minecraft/class_1297;)V
+		ARG 1 target
 	METHOD method_7326 doesNotSuffocate (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
 	METHOD method_7328 dropItem (Lnet/minecraft/class_1799;Z)Lnet/minecraft/class_1542;
@@ -182,7 +188,7 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		COMMENT <p>This method can be called on either logical side, and it will synchronize
 		COMMENT the closing automatically to the other.
 	METHOD method_7349 getNextLevelExperience ()I
-	METHOD method_7350 resetLastAttackedTicks ()V
+	METHOD method_7350 resetTicksSince ()V
 	METHOD method_7351 getBlockBreakingSpeed (Lnet/minecraft/class_2680;)F
 		ARG 1 block
 	METHOD method_7353 sendMessage (Lnet/minecraft/class_2561;Z)V
@@ -355,6 +361,38 @@ CLASS net/minecraft/class_1657 net/minecraft/entity/player/PlayerEntity
 		ARG 0 nbt
 	METHOD method_74136 getLeftShoulderParrotVariant ()Ljava/util/Optional;
 	METHOD method_74137 getRightShoulderParrotVariant ()Ljava/util/Optional;
+	METHOD method_75004 getPermissions ()Lnet/minecraft/class_12096;
+	METHOD method_75194 getHandEquippingProgress (F)F
+		ARG 1 baseTime
+	METHOD method_75195 cannotAttack (Lnet/minecraft/class_1297;)Z
+		ARG 1 target
+	METHOD method_75196 tryDeflect (Lnet/minecraft/class_1297;)Z
+		ARG 1 entity
+	METHOD method_75197 isCriticalHit (Lnet/minecraft/class_1297;)Z
+		ARG 1 target
+	METHOD method_75198 handleAttackDamage (Lnet/minecraft/class_1297;F)V
+		ARG 1 target
+		ARG 2 healthBeforeAttack
+	METHOD method_75199 onTargetDamaged (Lnet/minecraft/class_1297;Lnet/minecraft/class_1799;Lnet/minecraft/class_1282;)V
+		ARG 1 target
+		ARG 2 stack
+		ARG 3 damageSource
+	METHOD method_75200 addAttackParticlesAndSounds (Lnet/minecraft/class_1297;ZZZF)V
+		ARG 1 target
+		ARG 2 criticalHit
+		ARG 3 sweeping
+		ARG 4 cooldownPassed
+		ARG 5 enchantDamage
+	METHOD method_75201 canUseSweepAttack (ZZZ)Z
+		ARG 1 cooldownPassed
+		ARG 2 criticalHit
+		ARG 3 knockback
+	METHOD method_75202 isBelowMinimumAttackCharge (Lnet/minecraft/class_1799;I)Z
+		ARG 1 stack
+		ARG 2 baseTime
+	METHOD method_75203 resetTicksSinceLastAttack ()V
+	METHOD method_75204 getDamageSource (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1282;
+		ARG 1 stack
 	CLASS class_1658 SleepFailureReason
 		COMMENT A reason why a player cannot start sleeping.
 		FIELD field_18593 message Lnet/minecraft/class_2561;
