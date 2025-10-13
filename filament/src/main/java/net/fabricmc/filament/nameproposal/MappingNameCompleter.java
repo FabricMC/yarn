@@ -28,6 +28,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
@@ -109,6 +110,11 @@ public class MappingNameCompleter {
 
 			yarn.visitClass(classNameIntermediary);
 			MappingTree.ClassMapping classMapping = yarn.getClass(classNameIntermediary, yarnIntermediaryNs);
+			String className = classMapping.getName(yarnNamedNs);
+
+			if (className == null) {
+				classMapping.setDstName(classNameIntermediary, yarnNamedNs);
+			}
 
 			StringBuilder initDescBuilder = new StringBuilder();
 			initDescBuilder.append("(");
@@ -173,6 +179,18 @@ public class MappingNameCompleter {
 		MemoryMappingTree mappingTree = new MemoryMappingTree();
 		MappingReader.read(path, mappingTree);
 		return mappingTree;
+	}
+	
+	private static String getConstructorDesc(List<RecordComponentNode> recordComponents) {
+		StringBuilder initDescBuilder = new StringBuilder();
+		initDescBuilder.append("(");
+
+		for (RecordComponentNode node : recordComponents) {
+			initDescBuilder.append(node.descriptor);
+		}
+
+		initDescBuilder.append(")V");
+		return initDescBuilder.toString();
 	}
 
 	/**
