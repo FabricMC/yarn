@@ -117,7 +117,7 @@ public class MappingNameCompleter {
 			for (RecordComponentNode recordComponentNode : recordComponents) {
 				int currentLvIndex = lvIndex;
 				lvIndex += Type.getType(recordComponentNode.descriptor).getSize();
-				String name = getNameForComponent(recordComponentNode, recordNames, classMapping, yarnIntermediaryNs, yarnNamedNs);
+				String name = getNameForComponent(recordComponentNode, classMapping, yarnIntermediaryNs, yarnNamedNs);
 
 				if (name == null) {
 					continue;
@@ -127,14 +127,12 @@ public class MappingNameCompleter {
 
 				if (classMapping == null) {
 					classMapping = yarn.getClass(classNameIntermediary, yarnIntermediaryNs);
-					classMapping.setDstName(classNameIntermediary, yarnNamedNs);
 				}
 
 				yarn.visitMethod("<init>", initDesc);
 
 				if (constructorMapping == null) {
 					constructorMapping = classMapping.getMethod("<init>", initDesc, yarnIntermediaryNs);
-					constructorMapping.setDstName("<init>", yarnNamedNs);
 				}
 
 				yarn.visitMethodArg(-1, currentLvIndex, null);
@@ -154,12 +152,8 @@ public class MappingNameCompleter {
 		}
 	}
 
-	private static @Nullable String getNameForComponent(RecordComponentNode recordComponentNode, Map<String, String> recordNames,
-														MappingTree.ClassMapping classMapping, int yarnIntermediaryNs, int yarnNamedNs) {
-		if (recordNames.containsKey(recordComponentNode.name)) {
-			return recordNames.get(recordComponentNode.name);
-		}
-
+	private static @Nullable String getNameForComponent(RecordComponentNode recordComponentNode, MappingTree.ClassMapping classMapping,
+														int yarnIntermediaryNs, int yarnNamedNs) {
 		if (!recordComponentNode.name.startsWith("comp_")) {
 			return recordComponentNode.name;
 		}
