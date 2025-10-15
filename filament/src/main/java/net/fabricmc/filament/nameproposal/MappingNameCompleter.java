@@ -28,7 +28,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.regex.Pattern;
 
-import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
@@ -108,35 +107,40 @@ public class MappingNameCompleter {
 			String classNameIntermediary = entry.getKey();
 			List<RecordComponentNode> recordComponents = entry.getValue();
 
+			yarn.visitClass(classNameIntermediary);
 			MappingTree.ClassMapping classMapping = yarn.getClass(classNameIntermediary, yarnIntermediaryNs);
-			String initDesc = getConstructorDesc(recordComponents);
+			String className = classMapping.getName(yarnNamedNs);
 
-			MappingTree.MethodMapping constructorMapping = classMapping == null ? null : classMapping.getMethod("<init>", initDesc, yarnIntermediaryNs);
+			if (className == null) {
+				classMapping.setDstName(classNameIntermediary, yarnNamedNs);
+			}
+
+			StringBuilder initDescBuilder = new StringBuilder();
+			initDescBuilder.append("(");
+
+			for (RecordComponentNode node : recordComponents) {
+				initDescBuilder.append(node.descriptor);
+			}
+
+			initDescBuilder.append(")V");
+			String initDesc = initDescBuilder.toString();
+
+			yarn.visitMethod("<init>", initDesc);
+			MappingTree.MethodMapping methodMapping = classMapping.getMethod("<init>", initDesc, yarnIntermediaryNs);
+			methodMapping.setDstName("<init>", yarnNamedNs);
 			int lvIndex = 1;
 
 			for (RecordComponentNode recordComponentNode : recordComponents) {
 				int currentLvIndex = lvIndex;
 				lvIndex += Type.getType(recordComponentNode.descriptor).getSize();
-				String name = getNameForComponent(recordComponentNode, classMapping, yarnIntermediaryNs, yarnNamedNs);
+				String name = recordNames.get(recordComponentNode.name);
 
 				if (name == null) {
 					continue;
 				}
 
-				yarn.visitClass(classNameIntermediary);
-
-				if (classMapping == null) {
-					classMapping = yarn.getClass(classNameIntermediary, yarnIntermediaryNs);
-				}
-
-				yarn.visitMethod("<init>", initDesc);
-
-				if (constructorMapping == null) {
-					constructorMapping = classMapping.getMethod("<init>", initDesc, yarnIntermediaryNs);
-				}
-
 				yarn.visitMethodArg(-1, currentLvIndex, null);
-				MappingTree.MethodArgMapping argMapping = constructorMapping.getArg(-1, currentLvIndex, null);
+				MappingTree.MethodArgMapping argMapping = methodMapping.getArg(-1, currentLvIndex, null);
 				String yarnArgName = argMapping.getName(yarnNamedNs);
 
 				if (yarnArgName == null) {
@@ -150,31 +154,6 @@ public class MappingNameCompleter {
 		try (MappingWriter mappingWriter = MappingWriter.create(outputYarnMappings, MappingFormat.TINY_2_FILE)) {
 			yarn.accept(mappingWriter);
 		}
-	}
-
-	private static @Nullable String getNameForComponent(RecordComponentNode recordComponentNode, MappingTree.ClassMapping classMapping,
-														int yarnIntermediaryNs, int yarnNamedNs) {
-		if (!recordComponentNode.name.startsWith("comp_")) {
-			return recordComponentNode.name;
-		}
-
-		if (classMapping == null) {
-			return null;
-		}
-
-		MappingTree.MethodMapping componentGetter = classMapping.getMethod(recordComponentNode.name, "()" + recordComponentNode.descriptor, yarnIntermediaryNs);
-
-		if (componentGetter != null && componentGetter.getName(yarnNamedNs) != null) {
-			return componentGetter.getName(yarnNamedNs);
-		}
-
-		MappingTree.FieldMapping componentField = classMapping.getField(recordComponentNode.name, recordComponentNode.descriptor, yarnIntermediaryNs);
-
-		if (componentField != null && componentField.getName(yarnNamedNs) != null) {
-			return componentField.getName(yarnNamedNs);
-		}
-
-		return null;
 	}
 
 	private static void acceptJar(NameFinder nameFinder, Path jar) throws IOException {
@@ -199,18 +178,6 @@ public class MappingNameCompleter {
 		MemoryMappingTree mappingTree = new MemoryMappingTree();
 		MappingReader.read(path, mappingTree);
 		return mappingTree;
-	}
-
-	private static String getConstructorDesc(List<RecordComponentNode> recordComponents) {
-		StringBuilder initDescBuilder = new StringBuilder();
-		initDescBuilder.append("(");
-
-		for (RecordComponentNode node : recordComponents) {
-			initDescBuilder.append(node.descriptor);
-		}
-
-		initDescBuilder.append(")V");
-		return initDescBuilder.toString();
 	}
 
 	/**
