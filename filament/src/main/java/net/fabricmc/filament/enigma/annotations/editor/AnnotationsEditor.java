@@ -68,6 +68,7 @@ public class AnnotationsEditor extends JDialog {
 	private final AnnotationsEnigmaPlugin plugin;
 	private final ProjectView project;
 	private final GuiView gui;
+	private final ClassNode containingClass;
 	private final Object declaration;
 	private final EntryView editingEntry;
 	private final BaseAnnotationData data;
@@ -75,12 +76,13 @@ public class AnnotationsEditor extends JDialog {
 	private final JLayeredPane layeredPane;
 	private final JScrollPane scrollPane;
 
-	private AnnotationsEditor(GuiView gui, AnnotationsEnigmaPlugin plugin, ProjectView project, EntryView editingEntry, Object declaration) {
+	private AnnotationsEditor(GuiView gui, AnnotationsEnigmaPlugin plugin, ProjectView project, EntryView editingEntry, ClassNode containingClass, Object declaration) {
 		super(gui.getFrame(), I18n.translate("annotations.edit"), true);
 
 		this.plugin = plugin;
 		this.project = project;
 		this.gui = gui;
+		this.containingClass = containingClass;
 		this.declaration = declaration;
 		this.editingEntry = editingEntry;
 		this.data = getEditingData(editingEntry);
@@ -129,18 +131,33 @@ public class AnnotationsEditor extends JDialog {
 			return;
 		}
 
-		Object declaration = getDeclaration(project, editingEntry);
+		ClassNode containingClass = switch (editingEntry) {
+		case ClassEntryView classEntry -> project.getBytecode(classEntry.getFullName());
+		case FieldEntryView fieldEntry -> project.getBytecode(fieldEntry.getParent().getFullName());
+		case MethodEntryView methodEntry -> project.getBytecode(methodEntry.getParent().getFullName());
+		default -> throw new IllegalArgumentException("Unsupported entry type: " + editingEntry.getClass().getName());
+		};
+
+		if (containingClass == null) {
+			return;
+		}
+
+		Object declaration = getDeclaration(project, containingClass, editingEntry);
 
 		if (declaration == null) {
 			return;
 		}
 
-		AnnotationsEditor editor = new AnnotationsEditor(gui, plugin, project, editingEntry, declaration);
+		AnnotationsEditor editor = new AnnotationsEditor(gui, plugin, project, editingEntry, containingClass, declaration);
 		editor.setVisible(true);
 	}
 
 	public BaseAnnotationData getData() {
 		return data;
+	}
+
+	public ClassNode getContainingClass() {
+		return containingClass;
 	}
 
 	public Object getDeclaration() {
@@ -152,33 +169,18 @@ public class AnnotationsEditor extends JDialog {
 	}
 
 	@Nullable
-	private static Object getDeclaration(ProjectView project, EntryView entry) {
+	private static Object getDeclaration(ProjectView project, ClassNode containingClass, EntryView entry) {
 		return switch (entry) {
-		case ClassEntryView classEntry -> project.getBytecode(classEntry.getFullName());
-		case FieldEntryView fieldEntry -> {
-			ClassNode bytecode = project.getBytecode(fieldEntry.getParent().getFullName());
-
-			if (bytecode == null) {
-				yield null;
-			}
-
-			yield bytecode.fields.stream()
-					.filter(field -> field.name.equals(fieldEntry.getName()) && field.desc.equals(fieldEntry.getDescriptor()))
-					.findFirst()
-					.orElse(null);
-		}
+		case ClassEntryView ignored -> containingClass;
+		case FieldEntryView fieldEntry -> containingClass.fields.stream()
+				.filter(field -> field.name.equals(fieldEntry.getName()) && field.desc.equals(fieldEntry.getDescriptor()))
+				.findFirst()
+				.orElse(null);
 		case MethodEntryView methodEntry -> {
-			String className = methodEntry.getParent().getFullName();
-			ClassNode bytecode = project.getBytecode(className);
-
-			if (bytecode == null) {
-				yield null;
-			}
-
 			// Sometimes these methods have the name of the bridge but the descriptor of the specialized method.
 			// Find the specialized method
-			for (MethodNode method : bytecode.methods) {
-				MethodEntryView bridgeMethod = project.getJarIndex().getBridgeMethodIndex().getBridgeFromSpecialized(MethodEntryView.create(className, method.name, method.desc));
+			for (MethodNode method : containingClass.methods) {
+				MethodEntryView bridgeMethod = project.getJarIndex().getBridgeMethodIndex().getBridgeFromSpecialized(MethodEntryView.create(containingClass.name, method.name, method.desc));
 				String methodName = bridgeMethod == null ? method.name : bridgeMethod.getName();
 
 				if (methodName.equals(methodEntry.getName()) && method.desc.equals(methodEntry.getDescriptor())) {

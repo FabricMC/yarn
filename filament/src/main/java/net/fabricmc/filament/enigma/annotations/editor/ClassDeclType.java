@@ -25,7 +25,7 @@ public enum ClassDeclType {
 	}
 
 	public static ClassDeclType infer(ClassNode classNode) {
-		if ("java/lang/Record".equals(classNode.superName)) {
+		if ((classNode.access & Opcodes.ACC_RECORD) != 0) {
 			return RECORD;
 		}
 

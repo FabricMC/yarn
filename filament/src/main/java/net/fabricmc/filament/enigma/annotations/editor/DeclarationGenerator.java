@@ -163,12 +163,20 @@ public class DeclarationGenerator {
 			signatureArrayDims++;
 		}
 
+		Set<ElementType> targets = EnumSet.of(ElementType.FIELD);
+
+		if ((editor.getContainingClass().access & Opcodes.ACC_RECORD) != 0) {
+			targets.add(ElementType.RECORD_COMPONENT);
+			targets.add(ElementType.METHOD);
+			targets.add(ElementType.PARAMETER);
+		}
+
 		addTopLevelBiPurposeAnnotations(
 				result,
 				"\n",
 				TypeReference.newTypeReference(TypeReference.FIELD).getValue(),
 				signatureArrayDims == 0 ? null : TypePath.fromString("[".repeat(signatureArrayDims)),
-				EnumSet.of(ElementType.FIELD), // TODO: record components?
+				targets,
 				declaration.invisibleAnnotations,
 				declaration.visibleAnnotations,
 				declaration.invisibleTypeAnnotations,
