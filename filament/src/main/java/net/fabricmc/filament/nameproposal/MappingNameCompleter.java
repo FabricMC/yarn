@@ -129,10 +129,15 @@ public class MappingNameCompleter {
 					classMapping = yarn.getClass(classNameIntermediary, yarnIntermediaryNs);
 				}
 
+				if (classMapping.getName(yarnNamedNs) == null) {
+					classMapping.setDstName(classNameIntermediary, yarnNamedNs);
+				}
+
 				yarn.visitMethod("<init>", initDesc);
 
 				if (constructorMapping == null) {
 					constructorMapping = classMapping.getMethod("<init>", initDesc, yarnIntermediaryNs);
+					constructorMapping.setDstName("<init>", yarnNamedNs);
 				}
 
 				yarn.visitMethodArg(-1, currentLvIndex, null);
