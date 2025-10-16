@@ -8,12 +8,21 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 	FIELD field_61531 spriteHolder Lnet/minecraft/class_11701;
 	FIELD field_61532 spriteAtlasTexture Lnet/minecraft/class_1059;
 	FIELD field_62463 cursor Lnet/minecraft/class_11875;
+	FIELD field_63846 x I
+	FIELD field_63847 y I
+	FIELD field_63848 hoverStyle Lnet/minecraft/class_2583;
+	FIELD field_63849 clickStyle Lnet/minecraft/class_2583;
 	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_11246;II)V
 		ARG 1 client
 		ARG 2 state
+		ARG 3 x
+		ARG 4 y
 	METHOD <init> (Lnet/minecraft/class_310;Lorg/joml/Matrix3x2fStack;Lnet/minecraft/class_11246;II)V
+		ARG 1 client
 		ARG 2 matrices
 		ARG 3 state
+		ARG 4 x
+		ARG 5 y
 	METHOD method_25290 drawTexture (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_2960;IIFFIIII)V
 		COMMENT Draws a textured rectangle from a region in a texture.
 		COMMENT
@@ -470,6 +479,16 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 	METHOD method_70847 drawTexturedQuad (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lcom/mojang/blaze3d/textures/GpuTextureView;Lnet/minecraft/class_12137;IIIIFFFFI)V
 		ARG 1 pipeline
 		ARG 2 texture
+		ARG 3 sampler
+		ARG 4 x1
+		ARG 5 y1
+		ARG 6 x2
+		ARG 7 y2
+		ARG 8 u1
+		ARG 9 v1
+		ARG 10 u2
+		ARG 11 v2
+		ARG 12 color
 	METHOD method_70848 fill (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_11231;IIIIILjava/lang/Integer;)V
 		ARG 1 pipeline
 		ARG 2 textureSetup
@@ -567,12 +586,17 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 2 y1
 		ARG 3 x2
 		ARG 4 y2
+		ARG 5 invert
 	METHOD method_72740 getScaling (Lnet/minecraft/class_1058;)Lnet/minecraft/class_8690;
 		ARG 0 sprite
 	METHOD method_72741 getSprite (Lnet/minecraft/class_4730;)Lnet/minecraft/class_1058;
 		ARG 1 id
 	METHOD method_73198 drawStrokedRectangle (IIIII)V
+		ARG 1 x
 		ARG 2 y
+		ARG 3 width
+		ARG 4 height
+		ARG 5 color
 	METHOD method_73199 drawDeferredElements ()V
 	METHOD method_74036 applyCursorTo (Lnet/minecraft/class_1041;)V
 		ARG 1 window
@@ -581,6 +605,29 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 	METHOD method_74707 drawTiledTexturedQuad (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lcom/mojang/blaze3d/textures/GpuTextureView;Lnet/minecraft/class_12137;IIIIIIFFFFI)V
 		ARG 1 pipeline
 		ARG 2 texture
+		ARG 3 sampler
+		ARG 4 tileWidth
+		ARG 5 tileHeight
+		ARG 6 x0
+		ARG 7 y0
+		ARG 8 x1
+		ARG 9 y1
+		ARG 10 u0
+		ARG 11 v0
+		ARG 12 u1
+		ARG 13 v1
+		ARG 14 color
+	METHOD method_75784 getTransformationForCurrentState (F)Lnet/minecraft/class_12225$class_12227;
+		ARG 1 opacity
+	METHOD method_75785 getTextConsumer (Lnet/minecraft/class_332$class_12228;)Lnet/minecraft/class_12225;
+		ARG 1 hoverType
+	METHOD method_75786 getTextConsumer (Lnet/minecraft/class_332$class_12228;Ljava/util/function/Consumer;)Lnet/minecraft/class_12225;
+		ARG 1 hoverType
+		ARG 2 styleCallback
+	METHOD method_75787 getHoverListener (Lnet/minecraft/class_339;Lnet/minecraft/class_332$class_12228;)Lnet/minecraft/class_12225;
+		ARG 1 widget
+		ARG 2 hoverType
+	METHOD method_75788 getTextConsumer ()Lnet/minecraft/class_12225;
 	CLASS class_8214 ScissorStack
 		FIELD field_43099 stack Ljava/util/Deque;
 		METHOD method_49699 pop ()Lnet/minecraft/class_8030;
@@ -590,3 +637,21 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 			ARG 1 x
 			ARG 2 y
 		METHOD method_70863 peekLast ()Lnet/minecraft/class_8030;
+	CLASS class_12228 HoverType
+		FIELD field_63853 tooltip Z
+		FIELD field_63854 cursor Z
+		METHOD <init> (Ljava/lang/String;IZZ)V
+			ARG 3 tooltip
+			ARG 4 cursor
+		METHOD method_75790 fromTooltip (Z)Lnet/minecraft/class_332$class_12228;
+			ARG 0 tooltip
+	CLASS class_12229 TextConsumerImpl
+		FIELD field_63857 transformation Lnet/minecraft/class_12225$class_12227;
+		FIELD field_63858 hoverType Lnet/minecraft/class_332$class_12228;
+		FIELD field_63859 styleCallback Ljava/util/function/Consumer;
+		METHOD <init> (Lnet/minecraft/class_332;Lnet/minecraft/class_12225$class_12227;Lnet/minecraft/class_332$class_12228;Ljava/util/function/Consumer;)V
+			ARG 2 transformation
+			ARG 3 hoverType
+			ARG 4 styleCallback
+		METHOD accept (Ljava/lang/Object;)V
+			ARG 1 style

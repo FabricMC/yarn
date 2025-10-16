@@ -17,6 +17,8 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 	FIELD field_40392 removalQueue Ljava/util/List;
 	FIELD field_62002 draft Lnet/minecraft/class_338$class_11733;
 	FIELD field_62003 screen Lnet/minecraft/class_408;
+	FIELD field_63863 EXPAND_CHAT_QUEUE_ID Lnet/minecraft/class_2960;
+	FIELD field_63865 CHAT_QUEUE_STYLE Lnet/minecraft/class_2583;
 	METHOD <init> (Lnet/minecraft/class_310;)V
 		ARG 1 client
 	METHOD method_1802 scroll (I)V
@@ -25,7 +27,6 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 		ARG 1 message
 	METHOD method_1805 render (Lnet/minecraft/class_338$class_12233;IIZ)V
 		ARG 2 currentTick
-		ARG 3 mouseX
 	METHOD method_1806 getWidth (D)I
 		ARG 0 widthOption
 	METHOD method_1808 clear (Z)V
@@ -82,6 +83,11 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 	METHOD method_73205 setScreen ()V
 	METHOD method_73206 removeScreen ()Lnet/minecraft/class_408;
 		COMMENT @return the previous screen
+	METHOD method_75804 (Lnet/minecraft/class_332;Lnet/minecraft/class_327;IIIZ)V
+		ARG 1 context
+		ARG 2 textRenderer
+		ARG 4 x
+		ARG 5 y
 	CLASS class_7731 RemovalQueuedMessage
 	CLASS class_9477 ChatState
 		FIELD field_50218 messages Ljava/util/List;
@@ -109,3 +115,46 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 			ARG 1 draft
 				COMMENT the saved draft
 	CLASS class_11733 Draft
+	CLASS class_12232
+		METHOD calculate (Lnet/minecraft/class_303$class_7590;)F
+			ARG 1 line
+		METHOD method_75805 (ILnet/minecraft/class_303$class_7590;)F
+			ARG 1 line
+	CLASS class_12233
+		METHOD method_75807 (IFLnet/minecraft/class_5481;)Z
+			ARG 1 y
+			ARG 3 text
+		METHOD method_75808 (IIIIFLnet/minecraft/class_7591;)V
+			ARG 6 indicator
+		METHOD method_75809 (IIIII)V
+			ARG 1 x1
+			ARG 2 y1
+			ARG 3 x2
+			ARG 4 y2
+			ARG 5 color
+		METHOD method_75810 (IIZLnet/minecraft/class_7591;Lnet/minecraft/class_7591$class_7592;)V
+			ARG 4 indicator
+			ARG 5 icon
+		METHOD method_75811 updatePose (Ljava/util/function/Consumer;)V
+	CLASS class_12234
+		FIELD field_63875 drawer Lnet/minecraft/class_12225;
+		METHOD <init> (Lnet/minecraft/class_12225;)V
+			ARG 1 drawer
+	CLASS class_12235
+		FIELD field_63876 context Lnet/minecraft/class_332;
+		FIELD field_63877 textRenderer Lnet/minecraft/class_327;
+		FIELD field_63879 transformation Lnet/minecraft/class_12225$class_12227;
+		FIELD field_63880 x I
+		FIELD field_63881 y I
+		FIELD field_63882 untransformedOffset Lorg/joml/Vector2f;
+		FIELD field_63883 style Lnet/minecraft/class_2583;
+		METHOD <init> (Lnet/minecraft/class_332;Lnet/minecraft/class_327;II)V
+			ARG 1 context
+			ARG 2 textRenderer
+			ARG 3 x
+			ARG 4 y
+		METHOD accept (Ljava/lang/Object;)V
+			ARG 1 style
+		METHOD method_75812 calculateUntransformedOffset ()V
+		METHOD method_75814 (Lnet/minecraft/class_7591;)V
+			ARG 1 indicator
