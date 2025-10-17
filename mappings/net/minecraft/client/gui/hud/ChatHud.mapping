@@ -26,7 +26,10 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 	METHOD method_1803 addToMessageHistory (Ljava/lang/String;)V
 		ARG 1 message
 	METHOD method_1805 render (Lnet/minecraft/class_338$class_12233;IIZ)V
-		ARG 2 currentTick
+		ARG 1 drawer
+		ARG 2 windowHeight
+		ARG 3 currentTick
+		ARG 4 expanded
 	METHOD method_1806 getWidth (D)I
 		ARG 0 widthOption
 	METHOD method_1808 clear (Z)V
@@ -71,6 +74,9 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 		ARG 1 message
 	METHOD method_58745 toChatState ()Lnet/minecraft/class_338$class_9477;
 	METHOD method_71990 forEachVisibleLine (Lnet/minecraft/class_338$class_12232;Lnet/minecraft/class_338$class_11511;)I
+		COMMENT {@return the number of lines accepted by {@code lineConsumer}}
+		ARG 1 opacityRule
+		ARG 2 lineConsumer
 	METHOD method_73201 createScreen (Lnet/minecraft/class_338$class_11732;Lnet/minecraft/class_408$class_11738;)Lnet/minecraft/class_408;
 		ARG 1 method
 		ARG 2 factory
@@ -83,11 +89,24 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 	METHOD method_73205 setScreen ()V
 	METHOD method_73206 removeScreen ()Lnet/minecraft/class_408;
 		COMMENT @return the previous screen
-	METHOD method_75804 (Lnet/minecraft/class_332;Lnet/minecraft/class_327;IIIZ)V
+	METHOD method_75801 (FLorg/joml/Matrix3x2f;)V
+		ARG 1 pose
+	METHOD method_75802 (IILnet/minecraft/class_338$class_12233;IFLnet/minecraft/class_303$class_7590;IF)V
+		ARG 5 line
+		ARG 6 y
+		ARG 7 opacity
+	METHOD method_75803 render (Lnet/minecraft/class_12225;IIZ)V
+		ARG 1 textConsumer
+		ARG 2 windowHeight
+		ARG 3 currentTick
+		ARG 4 expanded
+	METHOD method_75804 render (Lnet/minecraft/class_332;Lnet/minecraft/class_327;IIIZ)V
 		ARG 1 context
 		ARG 2 textRenderer
+		ARG 3 currentTick
 		ARG 4 mouseX
 		ARG 5 mouseY
+		ARG 6 expanded
 	CLASS class_7731 RemovalQueuedMessage
 	CLASS class_9477 ChatState
 		FIELD field_50218 messages Ljava/util/List;
@@ -99,7 +118,9 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 			ARG 3 removalQueue
 	CLASS class_11511 LineConsumer
 		METHOD accept (Lnet/minecraft/class_303$class_7590;IF)V
+			ARG 1 line
 			ARG 2 y1
+			ARG 3 opacity
 	CLASS class_11732 ChatMethod
 		FIELD field_62006 replacement Ljava/lang/String;
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;)V
@@ -115,34 +136,47 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 			ARG 1 draft
 				COMMENT the saved draft
 	CLASS class_11733 Draft
-	CLASS class_12232
+	CLASS class_12232 OpacityRule
+		FIELD field_63874 CONSTANT Lnet/minecraft/class_338$class_12232;
 		METHOD calculate (Lnet/minecraft/class_303$class_7590;)F
 			ARG 1 line
 		METHOD method_75805 (ILnet/minecraft/class_303$class_7590;)F
 			ARG 1 line
-	CLASS class_12233
-		METHOD method_75807 (IFLnet/minecraft/class_5481;)Z
+		METHOD timeBased (I)Lnet/minecraft/class_338$class_12232;
+			ARG 0 currentTick
+	CLASS class_12233 Backend
+		METHOD method_75807 text (IFLnet/minecraft/class_5481;)Z
 			ARG 1 y
+			ARG 2 opacity
 			ARG 3 text
-		METHOD method_75808 (IIIIFLnet/minecraft/class_7591;)V
+		METHOD method_75808 indicator (IIIIFLnet/minecraft/class_7591;)V
+			ARG 1 x1
+			ARG 2 y1
+			ARG 3 x2
+			ARG 4 y2
+			ARG 5 opacity
 			ARG 6 indicator
-		METHOD method_75809 (IIIII)V
+		METHOD method_75809 fill (IIIII)V
 			ARG 1 x1
 			ARG 2 y1
 			ARG 3 x2
 			ARG 4 y2
 			ARG 5 color
-		METHOD method_75810 (IIZLnet/minecraft/class_7591;Lnet/minecraft/class_7591$class_7592;)V
+		METHOD method_75810 indicatorIcon (IIZLnet/minecraft/class_7591;Lnet/minecraft/class_7591$class_7592;)V
+			ARG 1 left
+			ARG 2 bottom
+			ARG 3 forceDraw
 			ARG 4 indicator
 			ARG 5 icon
 		METHOD method_75811 updatePose (Ljava/util/function/Consumer;)V
-	CLASS class_12234
+	CLASS class_12234 Forwarder
 		FIELD field_63875 drawer Lnet/minecraft/class_12225;
 		METHOD <init> (Lnet/minecraft/class_12225;)V
 			ARG 1 drawer
-	CLASS class_12235
+	CLASS class_12235 Drawer
 		FIELD field_63876 context Lnet/minecraft/class_332;
 		FIELD field_63877 textRenderer Lnet/minecraft/class_327;
+		FIELD field_63878 drawer Lnet/minecraft/class_12225;
 		FIELD field_63879 transformation Lnet/minecraft/class_12225$class_12227;
 		FIELD field_63880 mouseX I
 		FIELD field_63881 mouseY I
@@ -156,5 +190,10 @@ CLASS net/minecraft/class_338 net/minecraft/client/gui/hud/ChatHud
 		METHOD accept (Ljava/lang/Object;)V
 			ARG 1 style
 		METHOD method_75812 calculateUntransformedOffset ()V
-		METHOD method_75814 (Lnet/minecraft/class_7591;)V
+		METHOD method_75813 isWithinBounds (IIII)Z
+			ARG 1 left
+			ARG 2 top
+			ARG 3 right
+			ARG 4 bottom
+		METHOD method_75814 indicatorTooltip (Lnet/minecraft/class_7591;)V
 			ARG 1 indicator
