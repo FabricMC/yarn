@@ -25,6 +25,7 @@ import javax.swing.SwingUtilities;
 import cuchaz.enigma.api.DataInvalidationEvent;
 import cuchaz.enigma.api.EnigmaPlugin;
 import cuchaz.enigma.api.EnigmaPluginContext;
+import cuchaz.enigma.api.Ordering;
 import cuchaz.enigma.api.service.DecompilerInputTransformerService;
 import cuchaz.enigma.api.service.GuiService;
 import cuchaz.enigma.api.service.I18nService;
@@ -58,7 +59,12 @@ public class UnpickEnigmaPlugin implements EnigmaPlugin {
 		ctx.registerService("unpick:i18n", I18nService.TYPE, UnpickI18nService::new);
 		ctx.registerService("unpick:project", ProjectService.TYPE, () -> new UnpickProjectService(this));
 		ctx.registerService("unpick:gui", GuiService.TYPE, () -> new UnpickGuiService(this));
-		ctx.registerService("unpick:decompiler_input_transformer", DecompilerInputTransformerService.TYPE, () -> new UnpickDecompilerInputTransformerService(this));
+		ctx.registerService(
+				"unpick:decompiler_input_transformer",
+				DecompilerInputTransformerService.TYPE,
+				() -> new UnpickDecompilerInputTransformerService(this),
+				Ordering.after("annotations:decompiler_input_transformer") // make sure annotations are applied first so unpick can use them
+		);
 
 		registerFileWatcher();
 	}
