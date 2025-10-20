@@ -145,7 +145,6 @@ public class AnnotationParser {
 
 					if (c.peek() == ',') {
 						c.consume();
-						continue;
 					} else if (c.peek() == ')') {
 						c.consume();
 						break;
@@ -158,10 +157,7 @@ public class AnnotationParser {
 
 						if (c.peek() == ',') {
 							c.consume();
-							continue;
-						}
-
-						if (c.peek() == ')') {
+						} else if (c.peek() == ')') {
 							c.consume();
 							break;
 						}
