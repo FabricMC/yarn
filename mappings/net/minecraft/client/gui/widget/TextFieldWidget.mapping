@@ -5,7 +5,6 @@ CLASS net/minecraft/class_342 net/minecraft/client/gui/widget/TextFieldWidget
 	FIELD field_2095 drawsBackground Z
 	FIELD field_2096 focusUnlocked Z
 	FIELD field_2098 uneditableColor I
-	FIELD field_2099 renderTextProvider Ljava/util/function/BiFunction;
 	FIELD field_2100 editableColor I
 	FIELD field_2101 selectionEnd I
 	FIELD field_2102 selectionStart I
@@ -16,18 +15,18 @@ CLASS net/minecraft/class_342 net/minecraft/client/gui/widget/TextFieldWidget
 	FIELD field_2106 suggestion Ljava/lang/String;
 	FIELD field_2108 maxLength I
 	FIELD field_32196 DEFAULT_EDITABLE_COLOR I
-	FIELD field_32198 VERTICAL_CURSOR_COLOR I
 	FIELD field_32199 HORIZONTAL_CURSOR Ljava/lang/String;
 	FIELD field_41100 placeholder Lnet/minecraft/class_2561;
 	FIELD field_45352 lastSwitchFocusTime J
 	FIELD field_45914 TEXTURES Lnet/minecraft/class_8666;
-	METHOD <init> (Lnet/minecraft/class_327;IIIILnet/minecraft/class_2561;)V
-		ARG 1 textRenderer
-		ARG 2 x
-		ARG 3 y
-		ARG 4 width
-		ARG 5 height
-		ARG 6 text
+	FIELD field_60435 textX I
+	FIELD field_60436 textY I
+	FIELD field_60437 centered Z
+	FIELD field_60438 textShadow Z
+	FIELD field_62008 formatters Ljava/util/List;
+	FIELD field_62465 PLACEHOLDER_STYLE Lnet/minecraft/class_2583;
+	FIELD field_62466 SEARCH_STYLE Lnet/minecraft/class_2583;
+	FIELD field_63506 invertSelectionBackground Z
 	METHOD <init> (Lnet/minecraft/class_327;IIIILnet/minecraft/class_342;Lnet/minecraft/class_2561;)V
 		ARG 1 textRenderer
 		ARG 2 x
@@ -36,20 +35,23 @@ CLASS net/minecraft/class_342 net/minecraft/client/gui/widget/TextFieldWidget
 		ARG 5 height
 		ARG 6 copyFrom
 		ARG 7 text
+	METHOD <init> (Lnet/minecraft/class_327;IIIILnet/minecraft/class_2561;)V
+		ARG 1 textRenderer
+		ARG 2 x
+		ARG 3 y
+		ARG 4 width
+		ARG 5 height
+		ARG 6 text
 	METHOD <init> (Lnet/minecraft/class_327;IILnet/minecraft/class_2561;)V
 		ARG 1 textRenderer
 		ARG 2 width
 		ARG 3 height
 		ARG 4 text
-	METHOD method_16873 erase (I)V
-		ARG 1 offset
 	METHOD method_1851 drawsBackground ()Z
 	METHOD method_1852 setText (Ljava/lang/String;)V
 		ARG 1 text
 	METHOD method_1853 getWordSkipPosition (I)I
 		ARG 1 wordOffset
-	METHOD method_1854 setRenderTextProvider (Ljava/util/function/BiFunction;)V
-		ARG 1 renderTextProvider
 	METHOD method_1855 moveCursor (IZ)V
 		ARG 1 offset
 		ARG 2 shiftKeyPressed
@@ -81,9 +83,6 @@ CLASS net/minecraft/class_342 net/minecraft/client/gui/widget/TextFieldWidget
 		ARG 1 shiftKeyPressed
 	METHOD method_1872 setCursorToEnd (Z)V
 		ARG 1 shiftKeyPressed
-	METHOD method_1873 (Ljava/lang/String;Ljava/lang/Integer;)Lnet/minecraft/class_5481;
-		ARG 0 string
-		ARG 1 firstCharacterIndex
 	METHOD method_1874 onChanged (Ljava/lang/String;)V
 		ARG 1 newText
 	METHOD method_1875 setSelectionStart (I)V
@@ -98,16 +97,10 @@ CLASS net/minecraft/class_342 net/minecraft/client/gui/widget/TextFieldWidget
 	METHOD method_1882 getText ()Ljava/lang/String;
 	METHOD method_1883 setCursor (IZ)V
 		ARG 1 cursor
-		ARG 2 shiftKeyPressed
+		ARG 2 select
 	METHOD method_1884 setSelectionEnd (I)V
 		ARG 1 index
 	METHOD method_1885 isVisible ()Z
-	METHOD method_1886 drawSelectionHighlight (Lnet/minecraft/class_332;IIII)V
-		ARG 1 context
-		ARG 2 x1
-		ARG 3 y1
-		ARG 4 x2
-		ARG 5 y2
 	METHOD method_1887 setSuggestion (Ljava/lang/String;)V
 		ARG 1 suggestion
 	METHOD method_1888 setEditable (Z)V
@@ -116,6 +109,9 @@ CLASS net/minecraft/class_342 net/minecraft/client/gui/widget/TextFieldWidget
 		ARG 1 index
 	METHOD method_1890 setTextPredicate (Ljava/util/function/Predicate;)V
 		ARG 1 textPredicate
+	METHOD method_16873 erase (IZ)V
+		ARG 1 offset
+		ARG 2 words
 	METHOD method_20315 isActive ()Z
 	METHOD method_20316 isEditable ()Z
 	METHOD method_27537 getCursorPosWithOffset (I)I
@@ -126,3 +122,24 @@ CLASS net/minecraft/class_342 net/minecraft/client/gui/widget/TextFieldWidget
 		ARG 1 cursor
 	METHOD method_55506 eraseCharactersTo (I)V
 		ARG 1 position
+	METHOD method_71502 setCentered (Z)V
+		ARG 1 centered
+	METHOD method_71503 setTextShadow (Z)V
+		ARG 1 textShadow
+	METHOD method_71504 updateTextPosition ()V
+	METHOD method_71505 isCentered ()Z
+	METHOD method_73210 addFormatter (Lnet/minecraft/class_342$class_11734;)V
+		ARG 1 formatter
+	METHOD method_73211 format (Ljava/lang/String;I)Lnet/minecraft/class_5481;
+		ARG 1 string
+		ARG 2 firstCharacterIndex
+	METHOD method_74215 calculateCursorPos (Lnet/minecraft/class_11909;)I
+		ARG 1 click
+	METHOD method_74216 selectWord (Lnet/minecraft/class_11909;)V
+		ARG 1 click
+	METHOD method_75351 setInvertSelectionBackground (Z)V
+		ARG 1 invertSelectionBackground
+	CLASS class_11734 Formatter
+		METHOD format (Ljava/lang/String;I)Lnet/minecraft/class_5481;
+			ARG 1 string
+			ARG 2 firstCharacterIndex

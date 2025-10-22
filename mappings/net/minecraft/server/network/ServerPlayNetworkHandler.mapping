@@ -39,6 +39,7 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	FIELD field_52364 movedThisTick Z
 	FIELD field_54291 messageCooldown Lnet/minecraft/class_10222;
 	FIELD field_54292 creativeItemDropCooldown Lnet/minecraft/class_10222;
+	FIELD field_58079 globalChatMessageIndex I
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_2535;Lnet/minecraft/class_3222;Lnet/minecraft/class_8792;)V
 		ARG 1 server
 		ARG 2 connection
@@ -68,12 +69,13 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 6 yaw
 		ARG 7 pitch
 	METHOD method_14372 syncWithPlayerPosition ()V
-	METHOD method_20630 isPlayerNotCollidingWithBlocks (Lnet/minecraft/class_4538;Lnet/minecraft/class_238;DDD)Z
+	METHOD method_20630 isEntityNotCollidingWithBlocks (Lnet/minecraft/class_4538;Lnet/minecraft/class_1297;Lnet/minecraft/class_238;DDD)Z
 		ARG 1 world
-		ARG 2 box
-		ARG 3 newX
-		ARG 5 newY
-		ARG 7 newZ
+		ARG 2 entity
+		ARG 3 box
+		ARG 4 newX
+		ARG 6 newY
+		ARG 8 newZ
 	METHOD method_27913 canPlace (Lnet/minecraft/class_3222;Lnet/minecraft/class_1799;)Z
 		COMMENT Checks if a player can place a block or fluid from a bucket.
 		COMMENT
@@ -123,15 +125,12 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 	METHOD method_43669 checkForSpam ()V
 	METHOD method_44155 handleDecoratedMessage (Lnet/minecraft/class_7471;)V
 		ARG 1 message
-	METHOD method_44337 validateMessage (Ljava/lang/String;Ljava/lang/Runnable;)V
+	METHOD method_44337 validateMessage (Ljava/lang/String;ZLjava/lang/Runnable;)V
 		COMMENT {@return the validated acknowledgment if the message is valid, or an empty optional
 		COMMENT if it is not}
 		COMMENT
 		COMMENT <p>This disconnects the player if the message arrives in
 		COMMENT improper order or if chat is disabled.
-		ARG 1 message
-		ARG 2 callback
-	METHOD method_44897 addPendingAcknowledgment (Lnet/minecraft/class_7471;)V
 		ARG 1 message
 	METHOD method_45002 (Lnet/minecraft/class_7448;Lnet/minecraft/class_2168;)Lnet/minecraft/class_2168;
 		ARG 2 source
@@ -191,6 +190,11 @@ CLASS net/minecraft/class_3244 net/minecraft/server/network/ServerPlayNetworkHan
 		ARG 1 world
 		ARG 2 pos
 		ARG 3 stack
+	METHOD method_73086 tickMovement ()Z
+		COMMENT Ticks player position updating.
+		COMMENT
+		COMMENT @return {@code true} if the player is kicked for illegal movement
+	METHOD method_75005 resetFloatingTicks ()V
 	CLASS 1
 		METHOD method_33897 processInteract (Lnet/minecraft/class_1268;Lnet/minecraft/class_3244$class_5860;)V
 			ARG 1 hand

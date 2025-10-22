@@ -1,4 +1,6 @@
 CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
+	FIELD field_9196 rules Ljava/util/Map;
+	FIELD field_9197 RULE_TYPES Ljava/util/Map;
 	FIELD field_19388 DO_MOB_GRIEFING Lnet/minecraft/class_1928$class_4313;
 		COMMENT A {@linkplain Rule game rule} which regulates whether mobs can modify the world.
 		COMMENT
@@ -36,8 +38,6 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		COMMENT A {@linkplain Rule game rule} which regulates whether a player should immediately respawn upon death.
 	FIELD field_30963 DEFAULT_RANDOM_TICK_SPEED I
 	FIELD field_52615 enabledFeatures Lnet/minecraft/class_7699;
-	FIELD field_9196 rules Ljava/util/Map;
-	FIELD field_9197 RULE_TYPES Ljava/util/Map;
 	METHOD <init> (Ljava/util/Map;Lnet/minecraft/class_7699;)V
 		ARG 1 rules
 		ARG 2 enabledFeatures
@@ -46,6 +46,20 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 	METHOD <init> (Lnet/minecraft/class_7699;Lcom/mojang/serialization/DynamicLike;)V
 		ARG 1 enabledFeatures
 		ARG 2 values
+	METHOD method_8355 getBoolean (Lnet/minecraft/class_1928$class_4313;)Z
+		ARG 1 rule
+	METHOD method_8356 getInt (Lnet/minecraft/class_1928$class_4313;)I
+		ARG 1 rule
+	METHOD method_8357 load (Lcom/mojang/serialization/DynamicLike;)V
+		ARG 1 values
+	METHOD method_8358 toNbt ()Lnet/minecraft/class_2487;
+	METHOD method_8359 register (Ljava/lang/String;Lnet/minecraft/class_1928$class_5198;Lnet/minecraft/class_1928$class_4314;)Lnet/minecraft/class_1928$class_4313;
+		ARG 0 name
+		ARG 1 category
+		ARG 2 type
+	METHOD method_8361 (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4310;)V
+		ARG 0 server
+		ARG 1 rule
 	METHOD method_20744 accept (Lnet/minecraft/class_1928$class_4311;)V
 		COMMENT Make the visitor visit all registered game rules.
 		COMMENT
@@ -87,9 +101,6 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 	METHOD method_53839 (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4310;)V
 		ARG 0 server
 		ARG 1 rule
-	METHOD method_56113 (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4312;)V
-		ARG 0 server
-		ARG 1 value
 	METHOD method_61724 (Lnet/minecraft/class_7699;Ljava/util/Map$Entry;)Z
 		ARG 1 entry
 	METHOD method_61725 streamAllRules (Lnet/minecraft/class_7699;)Ljava/util/stream/Stream;
@@ -107,18 +118,12 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		ARG 1 ruleType
 	METHOD method_66707 (Ljava/lang/String;Lnet/minecraft/class_1928$class_4313;)Z
 		ARG 1 key
-	METHOD method_8355 getBoolean (Lnet/minecraft/class_1928$class_4313;)Z
+	METHOD method_70741 (Lnet/minecraft/class_1928$class_4310;Lnet/minecraft/class_3218;)V
+		ARG 1 world
+	METHOD method_70742 (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4310;)V
+		ARG 0 server
 		ARG 1 rule
-	METHOD method_8356 getInt (Lnet/minecraft/class_1928$class_4313;)I
-		ARG 1 rule
-	METHOD method_8357 load (Lcom/mojang/serialization/DynamicLike;)V
-		ARG 1 values
-	METHOD method_8358 toNbt ()Lnet/minecraft/class_2487;
-	METHOD method_8359 register (Ljava/lang/String;Lnet/minecraft/class_1928$class_5198;Lnet/minecraft/class_1928$class_4314;)Lnet/minecraft/class_1928$class_4313;
-		ARG 0 name
-		ARG 1 category
-		ARG 2 type
-	METHOD method_8361 (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4310;)V
+	METHOD method_74678 (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_1928$class_4310;)V
 		ARG 0 server
 		ARG 1 rule
 	CLASS class_4310 BooleanRule
@@ -140,6 +145,12 @@ CLASS net/minecraft/class_1928 net/minecraft/world/GameRules
 		METHOD method_20760 create (ZLjava/util/function/BiConsumer;)Lnet/minecraft/class_1928$class_4314;
 			ARG 0 initialValue
 			ARG 1 changeCallback
+		METHOD method_70743 create (ZLjava/util/function/BiConsumer;Lnet/minecraft/class_7699;)Lnet/minecraft/class_1928$class_4314;
+			ARG 0 initialValue
+			ARG 1 changeCallback
+			ARG 2 requiredFeatures
+		METHOD method_70744 (ZLnet/minecraft/class_1928$class_4314;)Lnet/minecraft/class_1928$class_4310;
+			ARG 1 type
 	CLASS class_4311 Visitor
 		COMMENT A visitor used to visit all game rules.
 		METHOD method_20762 visit (Lnet/minecraft/class_1928$class_4313;Lnet/minecraft/class_1928$class_4314;)V

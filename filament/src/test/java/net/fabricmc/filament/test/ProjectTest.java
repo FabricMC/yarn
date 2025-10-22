@@ -17,6 +17,7 @@ abstract class ProjectTest {
 	protected final void setupProject(String name, String... extraFiles) {
 		try {
 			copyProjectFile(name, "build.gradle");
+			copyProjectFile(name, "gradle.properties");
 			copyProjectFile(name, "settings.gradle");
 
 			for (String file : extraFiles) {
@@ -51,9 +52,11 @@ abstract class ProjectTest {
 
 	private void copyProjectFile(String projectName, String from, String to) throws IOException {
 		try (InputStream in = getProjectFile(projectName, from)) {
-			Path target = projectDirectory.toPath().resolve(to);
-			Files.createDirectories(target.getParent());
-			Files.copy(in, target);
+			if (in != null) {
+				Path target = projectDirectory.toPath().resolve(to);
+				Files.createDirectories(target.getParent());
+				Files.copy(in, target);
+			}
 		}
 	}
 }

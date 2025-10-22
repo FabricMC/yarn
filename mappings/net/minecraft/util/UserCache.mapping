@@ -1,34 +1,21 @@
 CLASS net/minecraft/class_3312 net/minecraft/util/UserCache
 	FIELD field_14310 byUuid Ljava/util/Map;
 	FIELD field_14312 byName Ljava/util/Map;
-	FIELD field_14313 useRemote Z
 	FIELD field_14314 cacheFile Ljava/io/File;
 	FIELD field_14315 profileRepository Lcom/mojang/authlib/GameProfileRepository;
 	FIELD field_14318 gson Lcom/google/gson/Gson;
 	FIELD field_25724 accessCount Ljava/util/concurrent/atomic/AtomicLong;
 	FIELD field_25805 LOGGER Lorg/slf4j/Logger;
 	FIELD field_29788 MAX_SAVED_ENTRIES I
-	FIELD field_33860 pendingRequests Ljava/util/Map;
-	FIELD field_33861 executor Ljava/util/concurrent/Executor;
+	FIELD field_61163 offlineMode Z
 	METHOD <init> (Lcom/mojang/authlib/GameProfileRepository;Ljava/io/File;)V
 		ARG 1 profileRepository
 		ARG 2 cacheFile
-	METHOD method_14508 add (Lcom/mojang/authlib/GameProfile;)V
-		ARG 1 profile
 	METHOD method_14509 findProfileByName (Lcom/mojang/authlib/GameProfileRepository;Ljava/lang/String;)Ljava/util/Optional;
-		ARG 0 repository
-		ARG 1 name
-	METHOD method_14510 setUseRemote (Z)V
-		ARG 0 value
-	METHOD method_14512 getByUuid (Ljava/util/UUID;)Ljava/util/Optional;
-		ARG 1 uuid
-	METHOD method_14514 shouldUseRemote ()Z
-	METHOD method_14515 findByName (Ljava/lang/String;)Ljava/util/Optional;
-		ARG 1 name
+		ARG 1 repository
 	METHOD method_14516 getLastAccessedEntries (I)Ljava/util/stream/Stream;
 		ARG 1 limit
 	METHOD method_14517 load ()Ljava/util/List;
-	METHOD method_14518 save ()V
 	METHOD method_30164 add (Lnet/minecraft/class_3312$class_3313;)V
 		ARG 1 entry
 	METHOD method_30165 entryToJson (Lnet/minecraft/class_3312$class_3313;Ljava/text/DateFormat;)Lcom/google/gson/JsonElement;
@@ -43,25 +30,18 @@ CLASS net/minecraft/class_3312 net/minecraft/util/UserCache
 		ARG 2 json
 	METHOD method_30169 incrementAndGetAccessCount ()J
 	METHOD method_30170 getDateFormat ()Ljava/text/DateFormat;
-	METHOD method_37155 (Ljava/lang/String;Ljava/util/Optional;Ljava/lang/Throwable;)V
-		ARG 2 profile
-		ARG 3 throwable
-	METHOD method_37156 findByNameAsync (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
-		ARG 1 username
-	METHOD method_37157 setExecutor (Ljava/util/concurrent/Executor;)V
-		ARG 1 executor
-	METHOD method_39753 clearExecutor ()V
 	METHOD method_53912 getOfflinePlayerProfile (Ljava/lang/String;)Ljava/util/Optional;
-		ARG 0 name
+	METHOD method_72368 addToCache (Lnet/minecraft/class_11560;)Lnet/minecraft/class_3312$class_3313;
+		ARG 1 player
 	CLASS class_3313 Entry
 		FIELD field_14319 expirationDate Ljava/util/Date;
-		FIELD field_14321 profile Lcom/mojang/authlib/GameProfile;
 		FIELD field_25726 lastAccessed J
-		METHOD <init> (Lcom/mojang/authlib/GameProfile;Ljava/util/Date;)V
-			ARG 1 profile
+		FIELD field_61164 player Lnet/minecraft/class_11560;
+		METHOD <init> (Lnet/minecraft/class_11560;Ljava/util/Date;)V
+			ARG 1 player
 			ARG 2 expirationDate
-		METHOD method_14519 getProfile ()Lcom/mojang/authlib/GameProfile;
 		METHOD method_14520 getExpirationDate ()Ljava/util/Date;
 		METHOD method_30171 setLastAccessed (J)V
 			ARG 1 lastAccessed
 		METHOD method_30172 getLastAccessed ()J
+		METHOD method_72369 getPlayer ()Lnet/minecraft/class_11560;

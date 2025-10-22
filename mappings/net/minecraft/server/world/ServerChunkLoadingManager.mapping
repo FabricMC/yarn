@@ -8,9 +8,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	FIELD field_17221 unloadedChunks Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_17222 chunkHolderListDirty Z
 	FIELD field_17228 levelManager Lnet/minecraft/class_3898$class_3216;
-	FIELD field_17230 totalChunksLoadedCount Ljava/util/concurrent/atomic/AtomicInteger;
-	FIELD field_17442 worldGenerationProgressListener Lnet/minecraft/class_3949;
-	FIELD field_17705 persistentStateManagerFactory Ljava/util/function/Supplier;
 	FIELD field_17707 saveDir Ljava/lang/String;
 	FIELD field_18241 playerChunkWatchingManager Lnet/minecraft/class_3210;
 	FIELD field_18242 entityTrackers Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
@@ -37,7 +34,7 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 	FIELD field_54964 chunksToSave Lit/unimi/dsi/fastutil/longs/LongSet;
 	FIELD field_54965 chunksBeingSavedCount Ljava/util/concurrent/atomic/AtomicInteger;
 	FIELD field_55588 ticketManager Lnet/minecraft/class_10592;
-	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_3949;Lnet/minecraft/class_5567;Ljava/util/function/Supplier;Lnet/minecraft/class_10592;IZ)V
+	METHOD <init> (Lnet/minecraft/class_3218;Lnet/minecraft/class_32$class_5143;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/class_3485;Ljava/util/concurrent/Executor;Lnet/minecraft/class_1255;Lnet/minecraft/class_2823;Lnet/minecraft/class_2794;Lnet/minecraft/class_5567;Ljava/util/function/Supplier;Lnet/minecraft/class_10592;IZ)V
 		ARG 1 world
 		ARG 2 session
 		ARG 3 dataFixer
@@ -46,12 +43,11 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 6 mainThreadExecutor
 		ARG 7 chunkProvider
 		ARG 8 chunkGenerator
-		ARG 9 worldGenerationProgressListener
-		ARG 10 chunkStatusChangeListener
-		ARG 11 persistentStateManagerFactory
-		ARG 12 ticketManager
-		ARG 13 viewDistance
-		ARG 14 dsync
+		ARG 9 chunkStatusChangeListener
+		ARG 10 persistentStateManagerFactory
+		ARG 11 ticketManager
+		ARG 12 viewDistance
+		ARG 13 dsync
 	METHOD method_17212 getLightingProvider ()Lnet/minecraft/class_3227;
 	METHOD method_17214 setViewDistance (I)V
 		ARG 1 watchDistance
@@ -86,21 +82,16 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 0 distance
 	METHOD method_17247 makeChunkEntitiesTickable (Lnet/minecraft/class_3193;)Ljava/util/concurrent/CompletableFuture;
 		ARG 1 holder
-	METHOD method_17253 getTotalChunksLoadedCount ()I
 	METHOD method_17254 (I)Lnet/minecraft/class_2806;
 		ARG 0 distance
 	METHOD method_17255 getCurrentChunkHolder (J)Lnet/minecraft/class_3193;
 		ARG 1 pos
 	METHOD method_17260 getLoadedChunkCount ()I
 	METHOD method_17263 getLevelManager ()Lnet/minecraft/class_3204;
-	METHOD method_17264 entryIterator ()Ljava/lang/Iterable;
 	METHOD method_17604 getCompletedLevelSupplier (J)Ljava/util/function/IntSupplier;
 		ARG 1 pos
 	METHOD method_18701 loadEntity (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
-	METHOD method_18702 sendToOtherNearbyPlayers (Lnet/minecraft/class_1297;Lnet/minecraft/class_2596;)V
-		ARG 1 entity
-		ARG 2 packet
 	METHOD method_18704 getSquaredDistance (Lnet/minecraft/class_1923;Lnet/minecraft/class_243;)D
 		ARG 0 pos
 	METHOD method_18713 updatePosition (Lnet/minecraft/class_3222;)V
@@ -114,9 +105,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 2 added
 	METHOD method_18716 unloadEntity (Lnet/minecraft/class_1297;)V
 		ARG 1 entity
-	METHOD method_18717 sendToNearbyPlayers (Lnet/minecraft/class_1297;Lnet/minecraft/class_2596;)V
-		ARG 1 entity
-		ARG 2 packet
 	METHOD method_18722 doesNotGenerateChunks (Lnet/minecraft/class_3222;)Z
 		ARG 1 player
 	METHOD method_18727 tickEntityMovement ()V
@@ -230,9 +218,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 0 player
 	METHOD method_51282 (Lnet/minecraft/class_9259;)Lnet/minecraft/class_9259;
 		ARG 0 chunk
-	METHOD method_51834 (Lnet/minecraft/class_9259;Ljava/lang/Throwable;)Ljava/lang/Object;
-		ARG 1 chunk
-		ARG 2 throwable
 	METHOD method_52345 isTracked (Lnet/minecraft/class_3222;II)Z
 		ARG 1 player
 		ARG 2 chunkX
@@ -296,6 +281,30 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		ARG 1 chunkConsumer
 	METHOD method_67499 (Ljava/util/function/Consumer;J)V
 		ARG 2 chunkPos
+	METHOD method_72252 (ILnet/minecraft/class_3193;)Z
+		ARG 1 holder
+	METHOD method_72253 getChunkHolders (Lnet/minecraft/class_2806;)Ljava/util/stream/Stream;
+		COMMENT {@return chunk holders with a level less than or equal to {@code status}}
+		ARG 1 status
+	METHOD method_72254 getStatus (J)Lnet/minecraft/class_2806;
+		ARG 1 chunkPos
+	METHOD method_74525 forEachEntityTrackedBy (Lnet/minecraft/class_3222;Ljava/util/function/Consumer;)V
+		ARG 1 player
+		ARG 2 action
+	METHOD method_74526 sendToOtherNearbyPlayers (Lnet/minecraft/class_1297;Lnet/minecraft/class_2596;)V
+		ARG 1 entity
+		ARG 2 packet
+	METHOD method_74527 sendToOtherNearbyPlayersIf (Lnet/minecraft/class_1297;Lnet/minecraft/class_2596;Ljava/util/function/Predicate;)V
+		ARG 1 entity
+		ARG 2 packet
+		ARG 3 predicate
+	METHOD method_74528 sendToNearbyPlayers (Lnet/minecraft/class_1297;Lnet/minecraft/class_2596;)V
+		ARG 1 entity
+		ARG 2 packet
+	METHOD method_74529 forEachChunk (Ljava/util/function/Consumer;)V
+		ARG 1 action
+	METHOD method_74530 hasTrackingPlayer (Lnet/minecraft/class_1297;)Z
+		ARG 1 entity
 	CLASS class_3208 EntityTracker
 		COMMENT An entity tracker governs which players' clients can see an entity. Each
 		COMMENT tracker corresponds to one entity in a server world and is mapped from the
@@ -324,12 +333,8 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 			COMMENT
 			COMMENT @see updateTrackedStatus(ServerPlayerEntity)
 			ARG 1 players
-		METHOD method_18730 sendToOtherNearbyPlayers (Lnet/minecraft/class_2596;)V
-			ARG 1 packet
 		METHOD method_18733 stopTracking (Lnet/minecraft/class_3222;)V
 			ARG 1 player
-		METHOD method_18734 sendToNearbyPlayers (Lnet/minecraft/class_2596;)V
-			ARG 1 packet
 		METHOD method_18736 updateTrackedStatus (Lnet/minecraft/class_3222;)V
 			COMMENT Updates the tracked status of this tracker's entity for the {@code player}.
 			COMMENT
@@ -341,9 +346,6 @@ CLASS net/minecraft/class_3898 net/minecraft/server/world/ServerChunkLoadingMana
 		METHOD method_22844 getMaxTrackDistance ()I
 		METHOD method_27906 adjustTrackingDistance (I)I
 			ARG 1 initialDistance
-		METHOD method_66006 sendToOtherNearbyPlayers (Lnet/minecraft/class_2596;Ljava/util/List;)V
-			ARG 1 packet
-			ARG 2 except
 	CLASS class_3216 LevelManager
 		METHOD <init> (Lnet/minecraft/class_3898;Lnet/minecraft/class_10592;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)V
 			ARG 2 ticketManager

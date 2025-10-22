@@ -1,18 +1,23 @@
 package net.fabricmc.filament.task;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.StreamSupport;
 
 import javax.inject.Inject;
 
 import cuchaz.enigma.ProgressListener;
 import cuchaz.enigma.translation.mapping.EntryMapping;
+import cuchaz.enigma.translation.mapping.serde.MappingFileNameFormat;
+import cuchaz.enigma.translation.mapping.serde.MappingFormat;
 import cuchaz.enigma.translation.mapping.serde.MappingParseException;
-import cuchaz.enigma.translation.mapping.serde.enigma.EnigmaMappingsReader;
+import cuchaz.enigma.translation.mapping.serde.MappingSaveParameters;
 import cuchaz.enigma.translation.mapping.tree.EntryTree;
+import cuchaz.enigma.translation.mapping.tree.HashEntryTree;
 import cuchaz.enigma.translation.representation.entry.Entry;
 import cuchaz.enigma.translation.representation.entry.LocalVariableEntry;
 import cuchaz.enigma.translation.representation.entry.MethodEntry;
@@ -56,8 +61,10 @@ public abstract class JavadocLintTask extends DefaultTask {
 
 	@TaskAction
 	public void run(InputChanges changes) {
-		List<FileChange> fileChanges = new ArrayList<>();
-		changes.getFileChanges(mappingDirectory).forEach(fileChanges::add);
+		List<File> fileChanges = StreamSupport.stream(changes.getFileChanges(mappingDirectory).spliterator(), false)
+				.filter(change -> change.getChangeType() != ChangeType.REMOVED && change.getFileType() == FileType.FILE)
+				.map(FileChange::getFile)
+				.toList();
 
 		if (fileChanges.isEmpty()) {
 			// Nothing changed, nothing to do!
@@ -67,11 +74,7 @@ public abstract class JavadocLintTask extends DefaultTask {
 		WorkQueue workQueue = getWorkerExecutor().noIsolation();
 
 		workQueue.submit(LintAction.class, parameters -> {
-			for (FileChange change : fileChanges) {
-				if (change.getChangeType() != ChangeType.REMOVED && change.getFileType() == FileType.FILE) {
-					parameters.getMappingFiles().from(change.getFile());
-				}
-			}
+			parameters.getMappingFiles().setFrom(fileChanges);
 		});
 	}
 
@@ -113,7 +116,13 @@ public abstract class JavadocLintTask extends DefaultTask {
 		public void execute() {
 			try {
 				Path[] files = FileUtil.toPaths(getParameters().getMappingFiles().getFiles()).toArray(new Path[0]);
-				EntryTree<EntryMapping> mappings = EnigmaMappingsReader.readFiles(ProgressListener.none(), files);
+				EntryTree<EntryMapping> mappings = new HashEntryTree<>();
+
+				for (Path file : files) {
+					EntryTree<EntryMapping> read = MappingFormat.ENIGMA_FILE.read(file, ProgressListener.none(), new MappingSaveParameters(MappingFileNameFormat.BY_DEOBF), null);
+					read.forEach(entry -> mappings.insert(entry.getEntry(), entry.getValue()));
+				}
+
 				List<String> errors = new ArrayList<>();
 
 				mappings.getAllEntries().parallel().forEach(entry -> {

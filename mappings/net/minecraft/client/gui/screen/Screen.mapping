@@ -18,11 +18,8 @@ CLASS net/minecraft/class_437 net/minecraft/client/gui/screen/Screen
 	FIELD field_33822 narrator Lnet/minecraft/class_6385;
 	FIELD field_33823 elementNarrationStartTime J
 	FIELD field_33824 screenNarrationStartTime J
-	FIELD field_41685 tooltip Lnet/minecraft/class_437$class_7998;
 	FIELD field_42156 screenInitialized Z
 	FIELD field_44944 executor Ljava/util/concurrent/Executor;
-	FIELD field_49508 PANORAMA_RENDERER Lnet/minecraft/class_751;
-	FIELD field_49509 ROTATING_PANORAMA_RENDERER Lnet/minecraft/class_766;
 	FIELD field_49511 MENU_BACKGROUND_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_49894 INWORLD_MENU_BACKGROUND_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_49895 HEADER_SEPARATOR_TEXTURE Lnet/minecraft/class_2960;
@@ -36,13 +33,12 @@ CLASS net/minecraft/class_437 net/minecraft/client/gui/screen/Screen
 	METHOD method_25408 getTooltipFromItem (Lnet/minecraft/class_310;Lnet/minecraft/class_1799;)Ljava/util/List;
 		ARG 0 client
 		ARG 1 stack
-	METHOD method_25410 resize (Lnet/minecraft/class_310;II)V
-		ARG 1 client
-		ARG 2 width
-		ARG 3 height
-	METHOD method_25414 isValidCharacterForName (Ljava/lang/String;CI)Z
+	METHOD method_25410 resize (II)V
+		ARG 1 width
+		ARG 2 height
+	METHOD method_25414 isValidCharacterForName (Ljava/lang/String;II)Z
 		ARG 1 name
-		ARG 2 character
+		ARG 2 codepoint
 		ARG 3 cursorPos
 	METHOD method_25415 insertText (Ljava/lang/String;Z)V
 		ARG 1 text
@@ -61,32 +57,18 @@ CLASS net/minecraft/class_437 net/minecraft/client/gui/screen/Screen
 	METHOD method_25421 shouldPause ()Z
 	METHOD method_25422 shouldCloseOnEsc ()Z
 		COMMENT Checks whether this screen should be closed when the escape key is pressed.
-	METHOD method_25423 init (Lnet/minecraft/class_310;II)V
-		ARG 1 client
-		ARG 2 width
-		ARG 3 height
+	METHOD method_25423 init (II)V
+		ARG 1 width
+		ARG 2 height
 	METHOD method_25426 init ()V
 		COMMENT Called when a screen should be initialized.
 		COMMENT
 		COMMENT <p>This method is called when this screen is {@linkplain net.minecraft.client.MinecraftClient#setScreen(Screen) opened} or resized.
 	METHOD method_25429 addSelectableChild (Lnet/minecraft/class_364;)Lnet/minecraft/class_364;
 		ARG 1 child
-	METHOD method_25430 handleTextClick (Lnet/minecraft/class_2583;)Z
-		ARG 1 style
 	METHOD method_25432 removed ()V
 	METHOD method_25435 getNarratedTitle ()Lnet/minecraft/class_2561;
-	METHOD method_25436 isCut (I)Z
-		ARG 0 code
-	METHOD method_25437 isPaste (I)Z
-		ARG 0 code
-	METHOD method_25438 isCopy (I)Z
-		ARG 0 code
-	METHOD method_25439 isSelectAll (I)Z
-		ARG 0 code
 	METHOD method_25440 getTitle ()Lnet/minecraft/class_2561;
-	METHOD method_25441 hasControlDown ()Z
-	METHOD method_25442 hasShiftDown ()Z
-	METHOD method_25443 hasAltDown ()Z
 	METHOD method_29638 onFilesDropped (Ljava/util/List;)V
 		ARG 1 paths
 	METHOD method_37056 addElementNarrations (Lnet/minecraft/class_6382;)V
@@ -121,23 +103,11 @@ CLASS net/minecraft/class_437 net/minecraft/client/gui/screen/Screen
 	METHOD method_37071 updateNarrator ()V
 	METHOD method_37073 isNarratorActive ()Z
 	METHOD method_41843 clearAndInit ()V
-	METHOD method_47412 setTooltip (Lnet/minecraft/class_7919;Lnet/minecraft/class_8000;Z)V
-		ARG 1 tooltip
-		ARG 2 positioner
-		ARG 3 focused
 	METHOD method_47413 renderWithTooltip (Lnet/minecraft/class_332;IIF)V
 		ARG 1 context
 		ARG 2 mouseX
 		ARG 3 mouseY
 		ARG 4 deltaTicks
-	METHOD method_47414 setTooltip (Ljava/util/List;)V
-		ARG 1 tooltip
-	METHOD method_47415 setTooltip (Lnet/minecraft/class_2561;)V
-		ARG 1 tooltip
-	METHOD method_47942 setTooltip (Ljava/util/List;Lnet/minecraft/class_8000;Z)V
-		ARG 1 tooltip
-		ARG 2 positioner
-		ARG 3 focused
 	METHOD method_48262 hasUsageText ()Z
 	METHOD method_48263 switchFocus (Lnet/minecraft/class_8016;)V
 		COMMENT Switches focus from the currently focused element, if any, to {@code path}.
@@ -148,15 +118,13 @@ CLASS net/minecraft/class_437 net/minecraft/client/gui/screen/Screen
 		COMMENT Sets the initial focus of this screen. This should be called inside the overridden
 		COMMENT {@link #setInitialFocus()} method by screen implementations.
 		ARG 1 element
-	METHOD method_48266 getTabNavigation ()Lnet/minecraft/class_8023$class_8026;
+	METHOD method_48266 getTabNavigation (Z)Lnet/minecraft/class_8023$class_8026;
 	METHOD method_48267 blur ()V
 	METHOD method_48640 refreshWidgetPositions ()V
 	METHOD method_49589 onDisplayed ()V
 		COMMENT Called when the screen is displayed using {@link MinecraftClient#setScreen}
-		COMMENT before {@link #init()} or {@link #initTabNavigation()} is called.
+		COMMENT before {@link #init()} or {@link #refreshWidgetPositions()} is called.
 	METHOD method_50024 getMusic ()Lnet/minecraft/class_5195;
-	METHOD method_52221 (Ljava/lang/Runnable;)V
-		ARG 1 runnable
 	METHOD method_52752 renderInGameBackground (Lnet/minecraft/class_332;)V
 		COMMENT Renders the translucent background gradient used as the in-game screen background.
 		ARG 1 context
@@ -166,7 +134,8 @@ CLASS net/minecraft/class_437 net/minecraft/client/gui/screen/Screen
 	METHOD method_57728 renderPanoramaBackground (Lnet/minecraft/class_332;F)V
 		ARG 1 context
 		ARG 2 deltaTicks
-	METHOD method_57734 applyBlur ()V
+	METHOD method_57734 applyBlur (Lnet/minecraft/class_332;)V
+		ARG 1 context
 	METHOD method_57735 renderDarkening (Lnet/minecraft/class_332;)V
 		ARG 1 context
 	METHOD method_57736 renderDarkening (Lnet/minecraft/class_332;IIII)V
@@ -184,23 +153,48 @@ CLASS net/minecraft/class_437 net/minecraft/client/gui/screen/Screen
 		ARG 5 v
 		ARG 6 width
 		ARG 7 height
-	METHOD method_59840 clearTooltip ()V
-	METHOD method_61039 (Ljava/net/URI;Z)V
-		ARG 2 confirmed
 	METHOD method_61040 refreshNarrator (Z)V
 		ARG 1 previouslyDisabled
 	METHOD method_64506 getTextRenderer ()Lnet/minecraft/class_327;
-	METHOD method_64507 shouldHideStatusEffectHud ()Z
+	METHOD method_64507 showsStatusEffects ()Z
 	METHOD method_65027 addCrashReportSection (Lnet/minecraft/class_128;)V
 		ARG 1 report
 	METHOD method_65517 (Lnet/minecraft/class_6379;)Ljava/util/stream/Stream;
 		ARG 0 selectable
+	METHOD method_71536 setWidgetAlpha (F)V
+		ARG 1 alpha
+	METHOD method_71843 handleOpenUri (Lnet/minecraft/class_310;Lnet/minecraft/class_437;Ljava/net/URI;)Z
+		ARG 0 client
+		ARG 1 screen
+		ARG 2 uri
+	METHOD method_71844 handleRunCommand (Lnet/minecraft/class_746;Ljava/lang/String;Lnet/minecraft/class_437;)V
+		ARG 0 player
+		ARG 1 command
+		ARG 2 screenAfterRun
+	METHOD method_71845 (Ljava/net/URI;Lnet/minecraft/class_310;Lnet/minecraft/class_437;Z)V
+		ARG 3 confirmed
+	METHOD method_71847 handleBasicClickEvent (Lnet/minecraft/class_2558;Lnet/minecraft/class_310;Lnet/minecraft/class_437;)V
+		ARG 0 clickEvent
+		ARG 1 client
+		ARG 2 screenAfterRun
+	METHOD method_71999 handleClickEvent (Lnet/minecraft/class_2558;Lnet/minecraft/class_310;Lnet/minecraft/class_437;)V
+		ARG 0 clickEvent
+		ARG 1 client
+		ARG 2 screenAfterRun
+	METHOD method_72798 allowRotatingPanorama ()Z
+	METHOD method_72802 setElementNarrationStartTime (J)V
+		ARG 1 startTimeMs
+	METHOD method_73150 deferSubtitles ()Z
+	METHOD method_73217 keepOpenThroughPortal ()Z
+	METHOD method_73339 canInterruptOtherScreen ()Z
 	CLASS class_6390 SelectedElementNarrationData
-		FIELD field_33825 selectable Lnet/minecraft/class_6379;
-		FIELD field_33826 index I
-		FIELD field_33827 selectType Lnet/minecraft/class_6379$class_6380;
+		FIELD comp_4463 selectable Lnet/minecraft/class_6379;
+		FIELD comp_4464 index I
+		FIELD comp_4465 selectType Lnet/minecraft/class_6379$class_6380;
 		METHOD <init> (Lnet/minecraft/class_6379;ILnet/minecraft/class_6379$class_6380;)V
 			ARG 1 selectable
 			ARG 2 index
 			ARG 3 selectType
-	CLASS class_7998 PositionedTooltip
+		METHOD comp_4463 selectable ()Lnet/minecraft/class_6379;
+		METHOD comp_4464 index ()I
+		METHOD comp_4465 selectType ()Lnet/minecraft/class_6379$class_6380;

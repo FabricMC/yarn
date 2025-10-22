@@ -35,21 +35,40 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 	FIELD field_41750 RAIN_WEATHER_DURATION_PROVIDER Lnet/minecraft/class_6017;
 	FIELD field_41751 THUNDER_WEATHER_DURATION_PROVIDER Lnet/minecraft/class_6017;
 	FIELD field_44857 randomSequences Lnet/minecraft/class_8565;
-	FIELD field_48271 spawnChunkRadius I
 	FIELD field_49172 pathNodeTypeCache Lnet/minecraft/class_9315;
-	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5268;Lnet/minecraft/class_5321;Lnet/minecraft/class_5363;Lnet/minecraft/class_3949;ZJLjava/util/List;ZLnet/minecraft/class_8565;)V
+	FIELD field_59630 waypointHandler Lnet/minecraft/class_11179;
+	FIELD field_62841 subscriptionTracker Lnet/minecraft/class_12026;
+	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/class_32$class_5143;Lnet/minecraft/class_5268;Lnet/minecraft/class_5321;Lnet/minecraft/class_5363;ZJLjava/util/List;ZLnet/minecraft/class_8565;)V
 		ARG 1 server
 		ARG 2 workerExecutor
 		ARG 3 session
 		ARG 4 properties
 		ARG 5 worldKey
 		ARG 6 dimensionOptions
-		ARG 7 worldGenerationProgressListener
-		ARG 8 debugWorld
-		ARG 9 seed
-		ARG 11 spawners
-		ARG 12 shouldTickTime
-		ARG 13 randomSequencesState
+		ARG 7 debugWorld
+		ARG 8 seed
+		ARG 10 spawners
+		ARG 11 shouldTickTime
+		ARG 12 randomSequenceState
+	METHOD method_8448 updateSleepingPlayers ()V
+	METHOD method_8487 locateStructure (Lnet/minecraft/class_6862;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
+		COMMENT Tries to find the closest structure of a given type near a given block.
+		COMMENT <p>
+		COMMENT New chunks will only be generated up to the {@link net.minecraft.world.chunk.ChunkStatus#STRUCTURE_STARTS} phase by this method.
+		COMMENT <p>
+		COMMENT The radius is ignored for strongholds.
+		COMMENT
+		COMMENT @return the position of the structure, or {@code null} if no structure could be found within the given search radius
+		COMMENT
+		COMMENT @see net.minecraft.world.gen.chunk.ChunkGenerator#locateStructure(ServerWorld, RegistryEntryList, BlockPos, int, boolean)
+		ARG 1 structureTag
+		ARG 2 pos
+			COMMENT the position to start the searching at
+		ARG 3 radius
+			COMMENT the search radius in chunks around the chunk the given block position is in; a radius of 0 will only search in the given chunk
+		ARG 4 skipReferencedStructures
+			COMMENT whether to exclude structures that were previously located (has positive
+			COMMENT {@link net.minecraft.structure.StructureStart#references})
 	METHOD method_14166 spawnParticles (Lnet/minecraft/class_3222;Lnet/minecraft/class_2394;ZZDDDIDDDD)Z
 		COMMENT Spawns a particle visible to {@code viewer}, if the viewer is near the provided
 		COMMENT coordinates.
@@ -58,8 +77,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		COMMENT
 		COMMENT @implNote If {@code count} is {@code 0}, a single particle will be spawned with its
 		COMMENT velocity being {@code deltaX},{@code deltaY},{@code deltaZ} multiplied by {@code speed}.
-		COMMENT
-		COMMENT @see #spawnParticles(ParticleEffect, double, double, double, int, double, double, double, double)
 		ARG 1 viewer
 		ARG 2 parameters
 		ARG 3 force
@@ -119,8 +136,6 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		COMMENT
 		COMMENT @implNote If {@code count} is {@code 0}, a single particle will be spawned with its
 		COMMENT velocity being {@code deltaX},{@code deltaY},{@code deltaZ} multiplied by {@code speed}.
-		COMMENT
-		COMMENT @see #spawnParticles(ServerPlayerEntity, ParticleEffect, boolean, double, double, double, int, double, double, double, double)
 		ARG 1 parameters
 		ARG 2 force
 		ARG 3 important
@@ -132,6 +147,10 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 13 offsetY
 		ARG 15 offsetZ
 		ARG 17 speed
+	METHOD method_17889 increaseAndGetMapId ()Lnet/minecraft/class_9209;
+	METHOD method_17890 putMapState (Lnet/minecraft/class_9209;Lnet/minecraft/class_22;)V
+		ARG 1 id
+		ARG 2 state
 	METHOD method_17983 getPersistentStateManager ()Lnet/minecraft/class_26;
 	METHOD method_17984 getForcedChunks ()Lit/unimi/dsi/fastutil/longs/LongSet;
 		COMMENT {@return the set that contains {@link ChunkPos} of forced chunks serialized as a long}
@@ -264,9 +283,8 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		COMMENT
 		COMMENT @see net.minecraft.world.level.ServerWorldProperties#setTimeOfDay
 		ARG 1 timeOfDay
-	METHOD method_29202 tickSpawners (ZZ)V
+	METHOD method_29202 tickSpawners (Z)V
 		ARG 1 spawnMonsters
-		ARG 2 spawnAnimals
 	METHOD method_29203 tickTime ()V
 	METHOD method_30736 spawnNewEntityAndPassengers (Lnet/minecraft/class_1297;)Z
 		COMMENT Checks whether any of the entity and its passengers already exist
@@ -382,29 +400,21 @@ CLASS net/minecraft/class_3218 net/minecraft/server/world/ServerWorld
 		ARG 1 pos
 	METHOD method_67506 shouldTickBlockAt (Lnet/minecraft/class_2338;)Z
 		ARG 1 pos
-	METHOD method_8448 updateSleepingPlayers ()V
-	METHOD method_8487 locateStructure (Lnet/minecraft/class_6862;Lnet/minecraft/class_2338;IZ)Lnet/minecraft/class_2338;
-		COMMENT Tries to find the closest structure of a given type near a given block.
-		COMMENT <p>
-		COMMENT New chunks will only be generated up to the {@link net.minecraft.world.chunk.ChunkStatus#STRUCTURE_STARTS} phase by this method.
-		COMMENT <p>
-		COMMENT The radius is ignored for strongholds.
-		COMMENT
-		COMMENT @return the position of the structure, or {@code null} if no structure could be found within the given search radius
-		COMMENT
-		COMMENT @see net.minecraft.world.gen.chunk.ChunkGenerator#locateStructure(ServerWorld, RegistryEntryList, BlockPos, int, boolean)
-		ARG 1 structureTag
-		ARG 2 pos
-			COMMENT the position to start the searching at
-		ARG 3 radius
-			COMMENT the search radius in chunks around the chunk the given block position is in; a radius of 0 will only search in the given chunk
-		ARG 4 skipReferencedStructures
-			COMMENT whether to exclude structures that were previously located (has positive
-			COMMENT {@link net.minecraft.structure.StructureStart#references})
-	METHOD method_8554 setSpawnPos (Lnet/minecraft/class_2338;F)V
-		COMMENT Sets the world spawn point.
+	METHOD method_70635 onStateReplacedWithCommands (Lnet/minecraft/class_2338;Lnet/minecraft/class_2680;)V
 		ARG 1 pos
-			COMMENT the position of the spawn point
-		ARG 2 angle
-			COMMENT the angle of the spawned entity
+		ARG 2 oldState
+	METHOD method_70636 getWaypointHandler ()Lnet/minecraft/class_11179;
+	METHOD method_72270 loadChunks (Lnet/minecraft/class_1923;I)V
+		ARG 1 center
+		ARG 2 radius
+	METHOD method_74534 (Lnet/minecraft/class_2338;)V
+		ARG 1 pos
+	METHOD method_74535 getSubscriptionTracker ()Lnet/minecraft/class_12026;
+	METHOD method_74962 shouldSpawnMonsters ()Z
+	METHOD method_74999 isPvpEnabled ()Z
+	METHOD method_75000 areCommandBlocksEnabled ()Z
+	METHOD method_75001 areSpawnerBlocksEnabled ()Z
+	METHOD method_75002 isEnterableWithPortal (Lnet/minecraft/class_1937;)Z
+		ARG 1 destination
+	METHOD method_75003 getDay ()J
 	CLASS class_5526 ServerEntityHandler

@@ -1,23 +1,34 @@
 CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
+	FIELD field_44655 BACKGROUND_MARGIN I
 	FIELD field_44656 client Lnet/minecraft/class_310;
-	FIELD field_44657 matrices Lnet/minecraft/class_4587;
-	FIELD field_44658 vertexConsumers Lnet/minecraft/class_4597$class_4598;
+	FIELD field_44657 matrices Lorg/joml/Matrix3x2fStack;
 	FIELD field_44659 scissorStack Lnet/minecraft/class_332$class_8214;
-	FIELD field_45337 guiAtlasManager Lnet/minecraft/class_8658;
-	FIELD field_55257 itemRenderState Lnet/minecraft/class_10444;
-	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_4587;Lnet/minecraft/class_4597$class_4598;)V
+	FIELD field_59826 state Lnet/minecraft/class_11246;
+	FIELD field_60305 tooltipDrawer Ljava/lang/Runnable;
+	FIELD field_61531 spriteHolder Lnet/minecraft/class_11701;
+	FIELD field_61532 spriteAtlasTexture Lnet/minecraft/class_1059;
+	FIELD field_62463 cursor Lnet/minecraft/class_11875;
+	FIELD field_63846 mouseX I
+	FIELD field_63847 mouseY I
+	FIELD field_63848 hoverStyle Lnet/minecraft/class_2583;
+	FIELD field_63849 clickStyle Lnet/minecraft/class_2583;
+	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_11246;II)V
+		ARG 1 client
+		ARG 2 state
+		ARG 3 mouseX
+		ARG 4 mouseY
+	METHOD <init> (Lnet/minecraft/class_310;Lorg/joml/Matrix3x2fStack;Lnet/minecraft/class_11246;II)V
 		ARG 1 client
 		ARG 2 matrices
-		ARG 3 vertexConsumers
-	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_4597$class_4598;)V
-		ARG 1 client
-		ARG 2 vertexConsumers
-	METHOD method_25290 drawTexture (Ljava/util/function/Function;Lnet/minecraft/class_2960;IIFFIIII)V
+		ARG 3 state
+		ARG 4 mouseX
+		ARG 5 mouseY
+	METHOD method_25290 drawTexture (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_2960;IIFFIIII)V
 		COMMENT Draws a textured rectangle from a region in a texture.
 		COMMENT
 		COMMENT <p>The width and height of the region are the same as
 		COMMENT the dimensions of the rectangle.
-		ARG 1 renderLayers
+		ARG 1 pipeline
 		ARG 2 sprite
 		ARG 3 x
 		ARG 4 y
@@ -27,12 +38,12 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 8 height
 		ARG 9 textureWidth
 		ARG 10 textureHeight
-	METHOD method_25291 drawTexture (Ljava/util/function/Function;Lnet/minecraft/class_2960;IIFFIIIII)V
+	METHOD method_25291 drawTexture (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_2960;IIFFIIIII)V
 		COMMENT Draws a textured rectangle from a region in a texture.
 		COMMENT
 		COMMENT <p>The width and height of the region are the same as
 		COMMENT the dimensions of the rectangle.
-		ARG 1 renderLayers
+		ARG 1 pipeline
 		ARG 2 sprite
 		ARG 3 x
 		ARG 4 y
@@ -43,14 +54,9 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 9 textureWidth
 		ARG 10 textureHeight
 		ARG 11 color
-	METHOD method_25292 drawHorizontalLine (IIII)V
-		ARG 1 x1
-		ARG 2 x2
-		ARG 3 y
-		ARG 4 color
-	METHOD method_25293 drawTexture (Ljava/util/function/Function;Lnet/minecraft/class_2960;IIFFIIIIIII)V
+	METHOD method_25293 drawTexture (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_2960;IIFFIIIIIII)V
 		COMMENT Draws a textured rectangle from a region in a texture.
-		ARG 1 renderLayers
+		ARG 1 pipeline
 		ARG 2 sprite
 		ARG 3 x
 		ARG 4 y
@@ -69,8 +75,8 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 3 x2
 		ARG 4 y2
 		ARG 5 color
-	METHOD method_25295 drawTexturedQuad (Ljava/util/function/Function;Lnet/minecraft/class_2960;IIIIFFFFI)V
-		ARG 1 renderLayers
+	METHOD method_25295 drawTexturedQuad (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_2960;IIIIFFFFI)V
+		ARG 1 pipeline
 		ARG 2 sprite
 		ARG 3 x1
 		ARG 4 x2
@@ -94,19 +100,14 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 3 centerX
 		ARG 4 y
 		ARG 5 color
-	METHOD method_25301 drawVerticalLine (IIII)V
-		ARG 1 x
-		ARG 2 y1
-		ARG 3 y2
-		ARG 4 color
-	METHOD method_25302 drawTexture (Ljava/util/function/Function;Lnet/minecraft/class_2960;IIFFIIIIII)V
+	METHOD method_25302 drawTexture (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_2960;IIFFIIIIII)V
 		COMMENT Draws a textured rectangle from a region in a 256x256 texture.
 		COMMENT
 		COMMENT <p>The Z coordinate of the rectangle is {@code 0}.
 		COMMENT
 		COMMENT <p>The width and height of the region are the same as
 		COMMENT the dimensions of the rectangle.
-		ARG 1 renderLayers
+		ARG 1 pipeline
 		ARG 2 sprite
 		ARG 3 x
 		ARG 4 y
@@ -114,52 +115,35 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 6 v
 		ARG 7 width
 		ARG 8 height
-		ARG 9 regionWith
+		ARG 9 regionWidth
 		ARG 10 regionHeight
 		ARG 11 textureWidth
 		ARG 12 textureHeight
-	METHOD method_25303 drawTextWithShadow (Lnet/minecraft/class_327;Ljava/lang/String;III)I
+	METHOD method_25303 drawTextWithShadow (Lnet/minecraft/class_327;Ljava/lang/String;III)V
 		ARG 1 textRenderer
 		ARG 2 text
 		ARG 3 x
 		ARG 4 y
 		ARG 5 color
-	METHOD method_27533 fillGradient (Lnet/minecraft/class_4588;IIIIIII)V
-		ARG 1 vertexConsumer
-		ARG 2 startX
-		ARG 3 startY
-		ARG 4 endX
-		ARG 5 endY
-		ARG 6 z
-		ARG 7 colorStart
-		ARG 8 colorEnd
 	METHOD method_27534 drawCenteredTextWithShadow (Lnet/minecraft/class_327;Lnet/minecraft/class_2561;III)V
 		ARG 1 textRenderer
 		ARG 2 text
 		ARG 3 centerX
 		ARG 4 y
 		ARG 5 color
-	METHOD method_27535 drawTextWithShadow (Lnet/minecraft/class_327;Lnet/minecraft/class_2561;III)I
+	METHOD method_27535 drawTextWithShadow (Lnet/minecraft/class_327;Lnet/minecraft/class_2561;III)V
 		ARG 1 textRenderer
 		ARG 2 text
 		ARG 3 x
 		ARG 4 y
 		ARG 5 color
-	METHOD method_33284 fillGradient (IIIIIII)V
-		ARG 1 startX
-		ARG 2 startY
-		ARG 3 endX
-		ARG 4 endY
-		ARG 5 z
-		ARG 6 colorStart
-		ARG 7 colorEnd
 	METHOD method_35719 drawCenteredTextWithShadow (Lnet/minecraft/class_327;Lnet/minecraft/class_5481;III)V
 		ARG 1 textRenderer
 		ARG 2 text
 		ARG 3 centerX
 		ARG 4 y
 		ARG 5 color
-	METHOD method_35720 drawTextWithShadow (Lnet/minecraft/class_327;Lnet/minecraft/class_5481;III)I
+	METHOD method_35720 drawTextWithShadow (Lnet/minecraft/class_327;Lnet/minecraft/class_5481;III)V
 		ARG 1 textRenderer
 		ARG 2 text
 		ARG 3 x
@@ -171,22 +155,13 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 3 x2
 		ARG 4 y2
 	METHOD method_44380 disableScissor ()V
-	METHOD method_48196 fill (Lnet/minecraft/class_1921;IIIIII)V
-		ARG 1 layer
+	METHOD method_48196 fill (Lcom/mojang/blaze3d/pipeline/RenderPipeline;IIIII)V
+		ARG 1 pipeline
 		ARG 2 x1
 		ARG 3 y1
 		ARG 4 x2
 		ARG 5 y2
-		ARG 6 z
-		ARG 7 color
-	METHOD method_49601 drawBorder (IIIII)V
-		ARG 1 x
-		ARG 2 y
-		ARG 3 width
-		ARG 4 height
-		ARG 5 color
-	METHOD method_49698 setScissor (Lnet/minecraft/class_8030;)V
-		ARG 1 rect
+		ARG 6 color
 	METHOD method_51421 getScaledWindowWidth ()I
 	METHOD method_51423 drawItem (Lnet/minecraft/class_1309;Lnet/minecraft/class_1799;III)V
 		ARG 1 entity
@@ -194,21 +169,13 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 3 x
 		ARG 4 y
 		ARG 5 seed
-	METHOD method_51424 drawItem (Lnet/minecraft/class_1309;Lnet/minecraft/class_1937;Lnet/minecraft/class_1799;III)V
+	METHOD method_51425 drawItem (Lnet/minecraft/class_1309;Lnet/minecraft/class_1937;Lnet/minecraft/class_1799;III)V
 		ARG 1 entity
 		ARG 2 world
 		ARG 3 stack
 		ARG 4 x
 		ARG 5 y
 		ARG 6 seed
-	METHOD method_51425 drawItem (Lnet/minecraft/class_1309;Lnet/minecraft/class_1937;Lnet/minecraft/class_1799;IIII)V
-		ARG 1 entity
-		ARG 2 world
-		ARG 3 stack
-		ARG 4 x
-		ARG 5 y
-		ARG 6 seed
-		ARG 7 z
 	METHOD method_51427 drawItem (Lnet/minecraft/class_1799;II)V
 		ARG 1 item
 		ARG 2 x
@@ -218,13 +185,7 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 2 x
 		ARG 3 y
 		ARG 4 seed
-	METHOD method_51429 drawItem (Lnet/minecraft/class_1799;IIII)V
-		ARG 1 stack
-		ARG 2 x
-		ARG 3 y
-		ARG 4 seed
-		ARG 5 z
-	METHOD method_51430 drawText (Lnet/minecraft/class_327;Lnet/minecraft/class_5481;IIIZ)I
+	METHOD method_51430 drawText (Lnet/minecraft/class_327;Lnet/minecraft/class_5481;IIIZ)V
 		ARG 1 textRenderer
 		ARG 2 text
 		ARG 3 x
@@ -242,7 +203,7 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 3 x
 		ARG 4 y
 		ARG 5 stackCountText
-	METHOD method_51433 drawText (Lnet/minecraft/class_327;Ljava/lang/String;IIIZ)I
+	METHOD method_51433 drawText (Lnet/minecraft/class_327;Ljava/lang/String;IIIZ)V
 		ARG 1 textRenderer
 		ARG 2 text
 		ARG 3 x
@@ -254,19 +215,20 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 2 text
 		ARG 3 x
 		ARG 4 y
-	METHOD method_51435 drawTooltip (Lnet/minecraft/class_327;Ljava/util/List;IILnet/minecraft/class_8000;Lnet/minecraft/class_2960;)V
+	METHOD method_51435 drawTooltipImmediately (Lnet/minecraft/class_327;Ljava/util/List;IILnet/minecraft/class_8000;Lnet/minecraft/class_2960;)V
 		ARG 1 textRenderer
 		ARG 2 components
 		ARG 3 x
 		ARG 4 y
 		ARG 5 positioner
 		ARG 6 texture
-	METHOD method_51436 drawTooltip (Lnet/minecraft/class_327;Ljava/util/List;Lnet/minecraft/class_8000;II)V
+	METHOD method_51436 drawTooltip (Lnet/minecraft/class_327;Ljava/util/List;Lnet/minecraft/class_8000;IIZ)V
 		ARG 1 textRenderer
 		ARG 2 text
 		ARG 3 positioner
 		ARG 4 x
 		ARG 5 y
+		ARG 6 focused
 	METHOD method_51437 drawTooltip (Lnet/minecraft/class_327;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/class_2960;)V
 		ARG 1 textRenderer
 		ARG 2 text
@@ -279,7 +241,7 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 2 text
 		ARG 3 x
 		ARG 4 y
-	METHOD method_51439 drawText (Lnet/minecraft/class_327;Lnet/minecraft/class_2561;IIIZ)I
+	METHOD method_51439 drawText (Lnet/minecraft/class_327;Lnet/minecraft/class_2561;IIIZ)V
 		ARG 1 textRenderer
 		ARG 2 text
 		ARG 3 x
@@ -297,10 +259,8 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 	METHOD method_51441 drawHoverEvent (Lnet/minecraft/class_327;Lnet/minecraft/class_2583;II)V
 		ARG 1 textRenderer
 		ARG 2 style
-		ARG 3 x
-		ARG 4 y
-	METHOD method_51442 (Ljava/util/List;Lnet/minecraft/class_5632;)V
-		ARG 1 data
+		ARG 3 mouseX
+		ARG 4 mouseY
 	METHOD method_51443 getScaledWindowHeight ()I
 	METHOD method_51445 drawItemWithoutEntity (Lnet/minecraft/class_1799;II)V
 		ARG 1 stack
@@ -316,64 +276,45 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 2 text
 		ARG 3 x
 		ARG 4 y
-	METHOD method_51448 getMatrices ()Lnet/minecraft/class_4587;
-	METHOD method_51452 draw ()V
-	METHOD method_51737 fill (IIIIII)V
+	METHOD method_51448 getMatrices ()Lorg/joml/Matrix3x2fStack;
+	METHOD method_51738 drawHorizontalLine (IIII)V
 		ARG 1 x1
+		ARG 2 x2
+		ARG 3 y
+		ARG 4 color
+	METHOD method_51739 fill (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_11231;IIII)V
+		ARG 1 pipeline
+		ARG 2 textureSetup
+		ARG 3 x1
+		ARG 4 y1
+		ARG 5 x2
+		ARG 6 y2
+	METHOD method_51742 drawVerticalLine (IIII)V
+		ARG 1 x
 		ARG 2 y1
-		ARG 3 x2
-		ARG 4 y2
-		ARG 5 z
-		ARG 6 color
-	METHOD method_51738 drawHorizontalLine (Lnet/minecraft/class_1921;IIII)V
-		ARG 1 layer
-		ARG 2 x1
-		ARG 3 x2
-		ARG 4 y
-		ARG 5 color
-	METHOD method_51739 fill (Lnet/minecraft/class_1921;IIIII)V
-		ARG 1 layer
-		ARG 2 x1
-		ARG 3 y1
-		ARG 4 x2
-		ARG 5 y2
-		ARG 6 color
-	METHOD method_51740 fillGradient (Lnet/minecraft/class_1921;IIIIIII)V
-		ARG 1 layer
-		ARG 2 startX
-		ARG 3 startY
-		ARG 4 endX
-		ARG 5 endY
-		ARG 6 colorStart
-		ARG 7 colorEnd
-		ARG 8 z
-	METHOD method_51742 drawVerticalLine (Lnet/minecraft/class_1921;IIII)V
-		ARG 1 layer
-		ARG 2 x
-		ARG 3 y1
-		ARG 4 y2
-		ARG 5 color
-	METHOD method_52706 drawGuiTexture (Ljava/util/function/Function;Lnet/minecraft/class_2960;IIII)V
-		ARG 1 renderLayers
+		ARG 3 y2
+		ARG 4 color
+	METHOD method_52706 drawGuiTexture (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_2960;IIII)V
+		ARG 1 pipeline
 		ARG 2 sprite
 		ARG 3 x
 		ARG 4 y
 		ARG 5 width
 		ARG 6 height
-	METHOD method_52707 drawGuiTexture (Ljava/util/function/Function;Lnet/minecraft/class_2960;IIIII)V
-		ARG 1 renderLayers
+	METHOD method_52707 drawGuiTexture (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_2960;IIIII)V
+		ARG 1 pipeline
 		ARG 2 sprite
 		ARG 3 x
 		ARG 4 y
 		ARG 5 width
 		ARG 6 height
 		ARG 7 color
-	METHOD method_52708 drawGuiTexture (Ljava/util/function/Function;Lnet/minecraft/class_2960;IIIIIIII)V
+	METHOD method_52708 drawGuiTexture (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_2960;IIIIIIIII)V
 		COMMENT Draws a textured rectangle from a region in a gui texture.
 		COMMENT
 		COMMENT <p>The width and height of the region are the same as
 		COMMENT the dimensions of the rectangle.
-		ARG 1 renderLayers
+		ARG 1 pipeline
 		ARG 2 sprite
 		ARG 3 textureWidth
 			COMMENT the width of the entire texture
@@ -388,23 +329,24 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 9 width
 		ARG 10 height
 			COMMENT the height of the drawn rectangle and of the region in the texture
-	METHOD method_52709 drawSpriteStretched (Ljava/util/function/Function;Lnet/minecraft/class_1058;IIII)V
-		ARG 1 renderLayers
+		ARG 11 color
+	METHOD method_52709 drawSpriteStretched (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_1058;IIII)V
+		ARG 1 pipeline
 		ARG 2 sprite
 		ARG 3 x
 		ARG 4 y
 		ARG 5 width
 		ARG 6 height
-	METHOD method_52710 drawSpriteStretched (Ljava/util/function/Function;Lnet/minecraft/class_1058;IIIII)V
-		ARG 1 renderLayers
+	METHOD method_52710 drawSpriteStretched (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_1058;IIIII)V
+		ARG 1 pipeline
 		ARG 2 sprite
 		ARG 3 x
 		ARG 4 y
 		ARG 5 width
 		ARG 6 height
 		ARG 7 color
-	METHOD method_52711 drawSpriteRegion (Ljava/util/function/Function;Lnet/minecraft/class_1058;IIIIIIIII)V
-		ARG 1 renderLayers
+	METHOD method_52711 drawSpriteRegion (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_1058;IIIIIIIII)V
+		ARG 1 pipeline
 		ARG 2 sprite
 		ARG 3 textureWidth
 		ARG 4 textureHeight
@@ -415,8 +357,8 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 9 width
 		ARG 10 height
 		ARG 11 color
-	METHOD method_52712 drawSpriteTiled (Ljava/util/function/Function;Lnet/minecraft/class_1058;IIIIIIIIIII)V
-		ARG 1 renderLayers
+	METHOD method_52712 drawSpriteTiled (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_1058;IIIIIIIIIII)V
+		ARG 1 pipeline
 		ARG 2 sprite
 		ARG 3 x
 		ARG 4 y
@@ -429,8 +371,8 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 11 textureWidth
 		ARG 12 textureHeight
 		ARG 13 color
-	METHOD method_52713 drawSpriteNineSliced (Ljava/util/function/Function;Lnet/minecraft/class_1058;Lnet/minecraft/class_8690$class_8691;IIIII)V
-		ARG 1 renderLayers
+	METHOD method_52713 drawSpriteNineSliced (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_1058;Lnet/minecraft/class_8690$class_8691;IIIII)V
+		ARG 1 pipeline
 		ARG 2 sprite
 		ARG 3 nineSlice
 		ARG 4 x
@@ -443,17 +385,10 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 2 x
 		ARG 3 y
 		ARG 4 seed
-	METHOD method_57709 fillWithLayer (Lnet/minecraft/class_1921;IIIII)V
-		ARG 1 layer
-		ARG 2 startX
-		ARG 3 startY
-		ARG 4 endX
-		ARG 5 endY
-		ARG 6 z
 	METHOD method_58135 scissorContains (II)Z
 		ARG 1 x
 		ARG 2 y
-	METHOD method_60649 drawTextWithBackground (Lnet/minecraft/class_327;Lnet/minecraft/class_2561;IIII)I
+	METHOD method_60649 drawTextWithBackground (Lnet/minecraft/class_327;Lnet/minecraft/class_2561;IIII)V
 		ARG 1 textRenderer
 		ARG 2 text
 		ARG 3 x
@@ -472,10 +407,8 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 3 data
 		ARG 4 x
 		ARG 5 y
-	METHOD method_64039 draw (Ljava/util/function/Consumer;)V
-		ARG 1 drawer
-	METHOD method_64040 drawInnerSprite (Ljava/util/function/Function;Lnet/minecraft/class_8690$class_8691;Lnet/minecraft/class_1058;IIIIIIIIIII)V
-		ARG 1 renderLayers
+	METHOD method_64040 drawInnerSprite (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_8690$class_8691;Lnet/minecraft/class_1058;IIIIIIIIIII)V
+		ARG 1 pipeline
 		ARG 2 nineSlice
 		ARG 3 sprite
 		ARG 4 x
@@ -522,6 +455,179 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		ARG 4 y
 		ARG 5 width
 		ARG 6 color
+	METHOD method_70845 drawTexturedQuad (Lnet/minecraft/class_2960;IIIIFFFF)V
+		ARG 1 sprite
+		ARG 2 x1
+		ARG 3 y1
+		ARG 4 x2
+		ARG 5 y2
+		ARG 6 u1
+		ARG 7 u2
+		ARG 8 v1
+		ARG 9 v2
+	METHOD method_70846 drawGuiTexture (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_2960;IIIIIIII)V
+		ARG 1 pipeline
+		ARG 2 sprite
+		ARG 3 textureWidth
+		ARG 4 textureHeight
+		ARG 5 u
+		ARG 6 v
+		ARG 7 x
+		ARG 8 y
+		ARG 9 width
+		ARG 10 height
+	METHOD method_70847 drawTexturedQuad (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lcom/mojang/blaze3d/textures/GpuTextureView;Lnet/minecraft/class_12137;IIIIFFFFI)V
+		ARG 1 pipeline
+		ARG 2 texture
+		ARG 3 sampler
+		ARG 4 x1
+		ARG 5 y1
+		ARG 6 x2
+		ARG 7 y2
+		ARG 8 u1
+		ARG 9 v1
+		ARG 10 u2
+		ARG 11 v2
+		ARG 12 color
+	METHOD method_70848 fill (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_11231;IIIIILjava/lang/Integer;)V
+		ARG 1 pipeline
+		ARG 2 textureSetup
+		ARG 3 x1
+		ARG 4 y1
+		ARG 5 x2
+		ARG 6 y2
+		ARG 7 color
+		ARG 8 color2
+	METHOD method_70852 addBookModel (Lnet/minecraft/class_557;Lnet/minecraft/class_2960;FFFIIII)V
+		ARG 1 bookModel
+		ARG 2 texture
+		ARG 3 scale
+		ARG 4 open
+		ARG 5 flip
+		ARG 6 x1
+		ARG 7 y1
+		ARG 8 x2
+		ARG 9 y2
+	METHOD method_70853 addSign (Lnet/minecraft/class_3879$class_9948;FLnet/minecraft/class_4719;IIII)V
+		ARG 1 model
+		ARG 2 scale
+		ARG 3 woodType
+		ARG 4 x1
+		ARG 5 y1
+		ARG 6 x2
+		ARG 7 y2
+	METHOD method_70854 addPlayerSkin (Lnet/minecraft/class_591;Lnet/minecraft/class_2960;FFFFIIII)V
+		ARG 1 playerModel
+		ARG 2 texture
+		ARG 3 scale
+		ARG 4 xRotation
+		ARG 5 yRotation
+		ARG 6 yPivot
+		ARG 7 x1
+		ARG 8 y1
+		ARG 9 x2
+		ARG 10 y2
+	METHOD method_70855 addBannerResult (Lnet/minecraft/class_10377;Lnet/minecraft/class_1767;Lnet/minecraft/class_9307;IIII)V
+		ARG 1 bannerModel
+		ARG 2 baseColor
+		ARG 3 resultBannerPatterns
+		ARG 4 x1
+		ARG 5 y1
+		ARG 6 x2
+		ARG 7 y2
+	METHOD method_70856 addEntity (Lnet/minecraft/class_10017;FLorg/joml/Vector3f;Lorg/joml/Quaternionf;Lorg/joml/Quaternionf;IIII)V
+		ARG 1 entityState
+		ARG 2 scale
+		ARG 3 translation
+		ARG 4 rotation
+		ARG 5 overrideCameraAngle
+		ARG 6 x1
+		ARG 7 y1
+		ARG 8 x2
+		ARG 9 y2
+	METHOD method_70857 drawMap (Lnet/minecraft/class_10090;)V
+		ARG 1 mapState
+	METHOD method_70858 addProfilerChart (Ljava/util/List;IIII)V
+		ARG 1 chartData
+		ARG 2 x1
+		ARG 3 y1
+		ARG 4 x2
+		ARG 5 y2
+	METHOD method_71048 createNewRootLayer ()V
+	METHOD method_71273 drawTooltip (Lnet/minecraft/class_327;Ljava/util/List;IILnet/minecraft/class_8000;Lnet/minecraft/class_2960;Z)V
+		ARG 1 textRenderer
+		ARG 2 components
+		ARG 3 x
+		ARG 4 y
+		ARG 5 positioner
+		ARG 6 texture
+		ARG 7 focused
+	METHOD method_71274 drawTooltip (Ljava/util/List;II)V
+		ARG 1 text
+		ARG 2 x
+		ARG 3 y
+	METHOD method_71275 (Ljava/util/List;Lnet/minecraft/class_5632;)V
+		ARG 1 datax
+	METHOD method_71276 drawTooltip (Lnet/minecraft/class_2561;II)V
+		ARG 1 text
+		ARG 2 x
+		ARG 3 y
+	METHOD method_71278 applyBlur ()V
+	METHOD method_71501 drawGuiTexture (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/class_2960;IIIIF)V
+		ARG 1 pipeline
+		ARG 2 sprite
+		ARG 3 x
+		ARG 4 y
+		ARG 5 width
+		ARG 6 height
+		ARG 7 alpha
+	METHOD method_72238 drawSelection (IIIIZ)V
+		ARG 1 x1
+		ARG 2 y1
+		ARG 3 x2
+		ARG 4 y2
+		ARG 5 invert
+	METHOD method_72740 getScaling (Lnet/minecraft/class_1058;)Lnet/minecraft/class_8690;
+		ARG 0 sprite
+	METHOD method_72741 getSprite (Lnet/minecraft/class_4730;)Lnet/minecraft/class_1058;
+		ARG 1 id
+	METHOD method_73198 drawStrokedRectangle (IIIII)V
+		ARG 1 x
+		ARG 2 y
+		ARG 3 width
+		ARG 4 height
+		ARG 5 color
+	METHOD method_73199 drawDeferredElements ()V
+	METHOD method_74036 applyCursorTo (Lnet/minecraft/class_1041;)V
+		ARG 1 window
+	METHOD method_74037 setCursor (Lnet/minecraft/class_11875;)V
+		ARG 1 cursor
+	METHOD method_74707 drawTiledTexturedQuad (Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lcom/mojang/blaze3d/textures/GpuTextureView;Lnet/minecraft/class_12137;IIIIIIFFFFI)V
+		ARG 1 pipeline
+		ARG 2 texture
+		ARG 3 sampler
+		ARG 4 tileWidth
+		ARG 5 tileHeight
+		ARG 6 x0
+		ARG 7 y0
+		ARG 8 x1
+		ARG 9 y1
+		ARG 10 u0
+		ARG 11 v0
+		ARG 12 u1
+		ARG 13 v1
+		ARG 14 color
+	METHOD method_75784 getTransformationForCurrentState (F)Lnet/minecraft/class_12225$class_12227;
+		ARG 1 opacity
+	METHOD method_75785 getTextConsumer (Lnet/minecraft/class_332$class_12228;)Lnet/minecraft/class_12225;
+		ARG 1 hoverType
+	METHOD method_75786 getTextConsumer (Lnet/minecraft/class_332$class_12228;Ljava/util/function/Consumer;)Lnet/minecraft/class_12225;
+		ARG 1 hoverType
+		ARG 2 styleCallback
+	METHOD method_75787 getHoverListener (Lnet/minecraft/class_339;Lnet/minecraft/class_332$class_12228;)Lnet/minecraft/class_12225;
+		ARG 1 widget
+		ARG 2 hoverType
+	METHOD method_75788 getTextConsumer ()Lnet/minecraft/class_12225;
 	CLASS class_8214 ScissorStack
 		FIELD field_43099 stack Ljava/util/Deque;
 		METHOD method_49699 pop ()Lnet/minecraft/class_8030;
@@ -530,3 +636,22 @@ CLASS net/minecraft/class_332 net/minecraft/client/gui/DrawContext
 		METHOD method_58136 contains (II)Z
 			ARG 1 x
 			ARG 2 y
+		METHOD method_70863 peekLast ()Lnet/minecraft/class_8030;
+	CLASS class_12228 HoverType
+		FIELD field_63853 tooltip Z
+		FIELD field_63854 cursor Z
+		METHOD <init> (Ljava/lang/String;IZZ)V
+			ARG 3 tooltip
+			ARG 4 cursor
+		METHOD method_75790 fromTooltip (Z)Lnet/minecraft/class_332$class_12228;
+			ARG 0 tooltip
+	CLASS class_12229 TextConsumerImpl
+		FIELD field_63857 transformation Lnet/minecraft/class_12225$class_12227;
+		FIELD field_63858 hoverType Lnet/minecraft/class_332$class_12228;
+		FIELD field_63859 styleCallback Ljava/util/function/Consumer;
+		METHOD <init> (Lnet/minecraft/class_332;Lnet/minecraft/class_12225$class_12227;Lnet/minecraft/class_332$class_12228;Ljava/util/function/Consumer;)V
+			ARG 2 transformation
+			ARG 3 hoverType
+			ARG 4 styleCallback
+		METHOD accept (Ljava/lang/Object;)V
+			ARG 1 style

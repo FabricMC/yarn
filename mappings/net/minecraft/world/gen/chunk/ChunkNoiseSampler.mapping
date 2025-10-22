@@ -15,7 +15,6 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 	FIELD field_34613 aquiferSampler Lnet/minecraft/class_6350;
 	FIELD field_35487 blender Lnet/minecraft/class_6748;
 	FIELD field_35674 generationShapeConfig Lnet/minecraft/class_5309;
-	FIELD field_36273 surfaceHeightEstimateCache Lit/unimi/dsi/fastutil/longs/Long2IntMap;
 	FIELD field_36572 startBlockY I
 	FIELD field_36573 startBlockZ I
 	FIELD field_36574 cellBlockX I
@@ -32,7 +31,6 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 		COMMENT block in the cell (cell-local coordinate {@code 0} for X, Y and Z).
 	FIELD field_36581 caches Ljava/util/List;
 	FIELD field_36582 actualDensityFunctionCache Ljava/util/Map;
-	FIELD field_36583 initialDensityWithoutJaggedness Lnet/minecraft/class_6910;
 	FIELD field_36584 blockStateSampler Lnet/minecraft/class_6568$class_6569;
 	FIELD field_36585 cachedBlendAlphaDensityFunction Lnet/minecraft/class_6568$class_6951;
 	FIELD field_36586 cachedBlendOffsetDensityFunction Lnet/minecraft/class_6568$class_6951;
@@ -45,6 +43,8 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 	FIELD field_36593 isSamplingForCaches Z
 	FIELD field_36594 startBlockX I
 	FIELD field_37113 beardifying Lnet/minecraft/class_6916$class_7050;
+	FIELD field_61471 surfaceHeightEstimateCache Lit/unimi/dsi/fastutil/longs/Long2IntMap;
+	FIELD field_61472 preliminarySurfaceLevel Lnet/minecraft/class_6910;
 	METHOD <init> (ILnet/minecraft/class_7138;IILnet/minecraft/class_5309;Lnet/minecraft/class_6916$class_7050;Lnet/minecraft/class_5284;Lnet/minecraft/class_6350$class_6565;Lnet/minecraft/class_6748;)V
 		ARG 1 horizontalCellCount
 		ARG 2 noiseConfig
@@ -141,6 +141,11 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 		COMMENT Stops the interpolation loop for this chunk.
 	METHOD method_42361 getHorizontalCellBlockCount ()I
 	METHOD method_42362 getVerticalCellBlockCount ()I
+	METHOD method_72685 estimateHighestSurfaceLevel (IIII)I
+		ARG 1 minX
+		ARG 2 minZ
+		ARG 3 maxX
+		ARG 4 maxZ
 	CLASS class_5917 DensityInterpolator
 		FIELD field_29227 startDensityBuffer [[D
 		FIELD field_29228 endDensityBuffer [[D
@@ -208,7 +213,8 @@ CLASS net/minecraft/class_6568 net/minecraft/world/gen/chunk/ChunkNoiseSampler
 			ARG 2 delegate
 	CLASS class_6951 FlatCache
 		FIELD field_36612 delegate Lnet/minecraft/class_6910;
-		FIELD field_36613 cache [[D
+		FIELD field_36613 cache [D
+		FIELD field_61473 horizontalCacheSize I
 		METHOD <init> (Lnet/minecraft/class_6568;Lnet/minecraft/class_6910;Z)V
 			ARG 2 delegate
 			ARG 3 sample

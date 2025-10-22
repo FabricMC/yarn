@@ -12,11 +12,11 @@ import org.gradle.api.tasks.Delete;
 import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.TaskProvider;
 
-import net.fabricmc.filament.task.CombineUnpickDefinitionsTask;
+import net.fabricmc.filament.task.unpick.CombineUnpickDefinitionsTask;
 import net.fabricmc.filament.task.DownloadTask;
 import net.fabricmc.filament.task.GeneratePackageInfoMappingsTask;
 import net.fabricmc.filament.task.JavadocLintTask;
-import net.fabricmc.filament.task.RemapUnpickDefinitionsTask;
+import net.fabricmc.filament.task.unpick.RemapUnpickDefinitionsTask;
 import net.fabricmc.filament.task.base.WithFileOutput;
 import net.fabricmc.filament.task.minecraft.ExtractBundledServerTask;
 import net.fabricmc.filament.task.minecraft.MergeMinecraftTask;

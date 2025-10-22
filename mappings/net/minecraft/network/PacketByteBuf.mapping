@@ -168,6 +168,14 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 index
 	METHOD getByte (I)B
 		ARG 1 index
+	METHOD getBytes (I[B)Lio/netty/buffer/ByteBuf;
+		ARG 1 index
+		ARG 2 bytes
+	METHOD getBytes (I[BII)Lio/netty/buffer/ByteBuf;
+		ARG 1 index
+		ARG 2 bytes
+		ARG 3 outputIndex
+		ARG 4 length
 	METHOD getBytes (ILio/netty/buffer/ByteBuf;)Lio/netty/buffer/ByteBuf;
 		ARG 1 index
 		ARG 2 buf
@@ -196,14 +204,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 index
 		ARG 2 channel
 		ARG 3 length
-	METHOD getBytes (I[B)Lio/netty/buffer/ByteBuf;
-		ARG 1 index
-		ARG 2 bytes
-	METHOD getBytes (I[BII)Lio/netty/buffer/ByteBuf;
-		ARG 1 index
-		ARG 2 bytes
-		ARG 3 outputIndex
-		ARG 4 length
 	METHOD getChar (I)C
 		ARG 1 index
 	METHOD getCharSequence (IILjava/nio/charset/Charset;)Ljava/lang/CharSequence;
@@ -329,14 +329,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readByteArray(int)
 		COMMENT @see #writeByteArray(byte[])
 		COMMENT @return the read byte array
-	METHOD method_10796 writeDate (Ljava/util/Date;)Lnet/minecraft/class_2540;
-		COMMENT Writes a date to this buf. A date is represented by its time, a regular
-		COMMENT long.
-		COMMENT
-		COMMENT @return this buf, for chaining
-		COMMENT @see #readDate()
-		ARG 1 date
-			COMMENT the date to write
 	METHOD method_10797 writeUuid (Ljava/util/UUID;)Lnet/minecraft/class_2540;
 		COMMENT Writes a UUID (universally unique identifier) to this buf. A UUID is
 		COMMENT represented by two regular longs.
@@ -401,12 +393,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readLongArray(long[], int)
 		COMMENT @return the read long array
 		ARG 0 buf
-	METHOD method_10802 readDate ()Ljava/util/Date;
-		COMMENT Reads a date from this buf. A date is represented by its time, a regular
-		COMMENT long.
-		COMMENT
-		COMMENT @return the read date
-		COMMENT @see #writeDate(Date)
 	METHOD method_10803 readByteArray (I)[B
 		COMMENT Reads an array of primitive bytes from this buf. The array first has a
 		COMMENT var int indicating its length, followed by the actual bytes. The array
@@ -534,12 +520,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT
 		COMMENT @return the read block hit result
 		COMMENT @see #writeBlockHitResult(BlockHitResult)
-	METHOD method_19456 readChunkSectionPos ()Lnet/minecraft/class_4076;
-		COMMENT Reads a chunk section position from this buf. A chunk section position is
-		COMMENT represented by a regular long.
-		COMMENT
-		COMMENT @return the read chunk section pos
-		COMMENT @see #writeChunkSectionPos(ChunkSectionPos)
 	METHOD method_19772 readString ()Ljava/lang/String;
 		COMMENT Reads a string from this buf. A string is represented by a byte array of
 		COMMENT its UTF-8 data. The string can have a maximum length of {@value
@@ -715,14 +695,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		COMMENT @see #readChunkPos()
 		ARG 1 pos
 			COMMENT the chunk position to write
-	METHOD method_36131 writeChunkSectionPos (Lnet/minecraft/class_4076;)Lnet/minecraft/class_2540;
-		COMMENT Reads a chunk section position from this buf. A chunk section position is
-		COMMENT represented by a regular long.
-		COMMENT
-		COMMENT @return this buf, for chaining
-		COMMENT @see #readChunkSectionPos()
-		ARG 1 pos
-			COMMENT the section position to write
 	METHOD method_36133 readChunkPos ()Lnet/minecraft/class_1923;
 		COMMENT Reads a chunk position from this buf. A chunk position is represented by
 		COMMENT a regular long.
@@ -951,12 +923,12 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	METHOD method_56337 writeUuid (Lio/netty/buffer/ByteBuf;Ljava/util/UUID;)V
 		ARG 0 buf
 		ARG 1 uuid
-	METHOD method_56338 writeQuaternionf (Lio/netty/buffer/ByteBuf;Lorg/joml/Quaternionf;)V
+	METHOD method_56338 writeQuaternionf (Lio/netty/buffer/ByteBuf;Lorg/joml/Quaternionfc;)V
 		ARG 0 buf
 		ARG 1 quaternion
-	METHOD method_56339 writeVector3f (Lio/netty/buffer/ByteBuf;Lorg/joml/Vector3f;)V
+	METHOD method_56339 writeVector3f (Lio/netty/buffer/ByteBuf;Lorg/joml/Vector3fc;)V
 		ARG 0 buf
-		ARG 1 vector
+		ARG 1 vec
 	METHOD method_56340 readNbt (Lio/netty/buffer/ByteBuf;Lnet/minecraft/class_2505;)Lnet/minecraft/class_2520;
 		ARG 0 buf
 		ARG 1 sizeTracker
@@ -1017,6 +989,22 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 values
 	METHOD method_68089 readFixedLengthLongArray ([J)[J
 		ARG 1 values
+	METHOD method_70966 writeEither (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/class_9142;Lnet/minecraft/class_9142;)V
+		ARG 1 either
+		ARG 2 leftEncoder
+		ARG 3 rightEncoder
+	METHOD method_70968 readEither (Lnet/minecraft/class_9141;Lnet/minecraft/class_9141;)Lcom/mojang/datafixers/util/Either;
+		ARG 1 leftDecoder
+		ARG 2 rightDecoder
+	METHOD method_73167 writeVelocity (Lnet/minecraft/class_243;)V
+		COMMENT Writes a {@link Vec3d} representing a velocity to this buf.
+		COMMENT
+		COMMENT @see #readVelocity()
+		ARG 1 velocity
+	METHOD method_73168 readVelocity ()Lnet/minecraft/class_243;
+		COMMENT Reads a {@link Vec3d} representing a velocity from this buf.
+		COMMENT
+		COMMENT @see #writeVelocity(Vec3d)
 	METHOD nioBuffer (II)Ljava/nio/ByteBuffer;
 		ARG 1 index
 		ARG 2 length
@@ -1025,6 +1013,12 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 2 length
 	METHOD order (Ljava/nio/ByteOrder;)Lio/netty/buffer/ByteBuf;
 		ARG 1 byteOrder
+	METHOD readBytes ([B)Lio/netty/buffer/ByteBuf;
+		ARG 1 bytes
+	METHOD readBytes ([BII)Lio/netty/buffer/ByteBuf;
+		ARG 1 bytes
+		ARG 2 outputIndex
+		ARG 3 length
 	METHOD readBytes (I)Lio/netty/buffer/ByteBuf;
 		ARG 1 length
 	METHOD readBytes (Lio/netty/buffer/ByteBuf;)Lio/netty/buffer/ByteBuf;
@@ -1048,21 +1042,15 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	METHOD readBytes (Ljava/nio/channels/GatheringByteChannel;I)I
 		ARG 1 channel
 		ARG 2 length
-	METHOD readBytes ([B)Lio/netty/buffer/ByteBuf;
-		ARG 1 bytes
-	METHOD readBytes ([BII)Lio/netty/buffer/ByteBuf;
-		ARG 1 bytes
-		ARG 2 outputIndex
-		ARG 3 length
 	METHOD readCharSequence (ILjava/nio/charset/Charset;)Ljava/lang/CharSequence;
 		ARG 1 length
 		ARG 2 charset
+	METHOD readerIndex (I)Lio/netty/buffer/ByteBuf;
+		ARG 1 index
 	METHOD readRetainedSlice (I)Lio/netty/buffer/ByteBuf;
 		ARG 1 length
 	METHOD readSlice (I)Lio/netty/buffer/ByteBuf;
 		ARG 1 length
-	METHOD readerIndex (I)Lio/netty/buffer/ByteBuf;
-		ARG 1 index
 	METHOD release (I)Z
 		ARG 1 decrement
 	METHOD retain (I)Lio/netty/buffer/ByteBuf;
@@ -1078,6 +1066,14 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	METHOD setByte (II)Lio/netty/buffer/ByteBuf;
 		ARG 1 index
 		ARG 2 value
+	METHOD setBytes (I[B)Lio/netty/buffer/ByteBuf;
+		ARG 1 index
+		ARG 2 bytes
+	METHOD setBytes (I[BII)Lio/netty/buffer/ByteBuf;
+		ARG 1 index
+		ARG 2 bytes
+		ARG 3 sourceIndex
+		ARG 4 length
 	METHOD setBytes (ILio/netty/buffer/ByteBuf;)Lio/netty/buffer/ByteBuf;
 		ARG 1 index
 		ARG 2 buf
@@ -1106,14 +1102,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 index
 		ARG 2 channel
 		ARG 3 length
-	METHOD setBytes (I[B)Lio/netty/buffer/ByteBuf;
-		ARG 1 index
-		ARG 2 bytes
-	METHOD setBytes (I[BII)Lio/netty/buffer/ByteBuf;
-		ARG 1 index
-		ARG 2 bytes
-		ARG 3 sourceIndex
-		ARG 4 length
 	METHOD setChar (II)Lio/netty/buffer/ByteBuf;
 		ARG 1 index
 		ARG 2 value
@@ -1174,6 +1162,12 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 value
 	METHOD writeByte (I)Lio/netty/buffer/ByteBuf;
 		ARG 1 value
+	METHOD writeBytes ([B)Lio/netty/buffer/ByteBuf;
+		ARG 1 bytes
+	METHOD writeBytes ([BII)Lio/netty/buffer/ByteBuf;
+		ARG 1 bytes
+		ARG 2 sourceIndex
+		ARG 3 length
 	METHOD writeBytes (Lio/netty/buffer/ByteBuf;)Lio/netty/buffer/ByteBuf;
 		ARG 1 buf
 	METHOD writeBytes (Lio/netty/buffer/ByteBuf;I)Lio/netty/buffer/ByteBuf;
@@ -1195,12 +1189,6 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 	METHOD writeBytes (Ljava/nio/channels/ScatteringByteChannel;I)I
 		ARG 1 channel
 		ARG 2 length
-	METHOD writeBytes ([B)Lio/netty/buffer/ByteBuf;
-		ARG 1 bytes
-	METHOD writeBytes ([BII)Lio/netty/buffer/ByteBuf;
-		ARG 1 bytes
-		ARG 2 sourceIndex
-		ARG 3 length
 	METHOD writeChar (I)Lio/netty/buffer/ByteBuf;
 		ARG 1 value
 	METHOD writeCharSequence (Ljava/lang/CharSequence;Ljava/nio/charset/Charset;)I
@@ -1222,11 +1210,11 @@ CLASS net/minecraft/class_2540 net/minecraft/network/PacketByteBuf
 		ARG 1 value
 	METHOD writeMediumLE (I)Lio/netty/buffer/ByteBuf;
 		ARG 1 value
+	METHOD writerIndex (I)Lio/netty/buffer/ByteBuf;
+		ARG 1 index
 	METHOD writeShort (I)Lio/netty/buffer/ByteBuf;
 		ARG 1 value
 	METHOD writeShortLE (I)Lio/netty/buffer/ByteBuf;
 		ARG 1 value
 	METHOD writeZero (I)Lio/netty/buffer/ByteBuf;
 		ARG 1 length
-	METHOD writerIndex (I)Lio/netty/buffer/ByteBuf;
-		ARG 1 index

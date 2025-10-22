@@ -16,6 +16,8 @@ CLASS net/minecraft/class_7530 net/minecraft/client/gui/EditBox
 	FIELD field_39520 width I
 	FIELD field_39521 changeListener Ljava/util/function/Consumer;
 	FIELD field_39522 cursorChangeListener Ljava/lang/Runnable;
+	FIELD field_60450 maxLines I
+	FIELD field_61063 LOGGER Lorg/slf4j/Logger;
 	METHOD <init> (Lnet/minecraft/class_327;I)V
 		ARG 1 textRenderer
 		ARG 2 width
@@ -52,9 +54,10 @@ CLASS net/minecraft/class_7530 net/minecraft/client/gui/EditBox
 	METHOD method_44413 setCursorChangeListener (Ljava/lang/Runnable;)V
 		COMMENT Sets the cursor change listener that is called every time the cursor position changes.
 		ARG 1 cursorChangeListener
-	METHOD method_44414 setText (Ljava/lang/String;)V
+	METHOD method_44414 setText (Ljava/lang/String;Z)V
 		COMMENT Sets the text of the edit box and moves the cursor to the end of the edit box.
 		ARG 1 text
+		ARG 2 allowOverflow
 	METHOD method_44415 setChangeListener (Ljava/util/function/Consumer;)V
 		COMMENT Sets the change listener that is called every time the text changes.
 		ARG 1 changeListener
@@ -112,9 +115,9 @@ CLASS net/minecraft/class_7530 net/minecraft/client/gui/EditBox
 		ARG 1 value
 	METHOD method_44427 getSelection ()Lnet/minecraft/class_7530$class_7531;
 		COMMENT {@return the current selection}
-	METHOD method_44428 handleSpecialKey (I)Z
+	METHOD method_44428 handleSpecialKey (Lnet/minecraft/class_11908;)Z
 		COMMENT Handles the special keys, such as copy, cut, linebreak, and cursor movements.
-		ARG 1 keyCode
+		ARG 1 key
 	METHOD method_44429 (Ljava/lang/String;)V
 		ARG 0 text
 	METHOD method_44430 getLineCount ()I
@@ -160,6 +163,14 @@ CLASS net/minecraft/class_7530 net/minecraft/client/gui/EditBox
 		COMMENT {@link #changeListener}, then calls {@link #cursorChangeListener}.
 	METHOD method_44441 rewrap ()V
 		COMMENT Rewraps the text. This is called whenever the text changes.
+	METHOD method_71517 setMaxLines (I)V
+		ARG 1 maxLines
+	METHOD method_71518 hasMaxLines ()Z
+	METHOD method_71519 exceedsMaxLines (Ljava/lang/String;)Z
+		ARG 1 text
+	METHOD method_72235 setText (Ljava/lang/String;)V
+		ARG 1 setText
+	METHOD method_72748 selectWord ()V
 	CLASS class_7531 Substring
 		COMMENT A substring of an edit box's text, specified using the indices of the
 		COMMENT start and the end. This can indicate selections, lines, words, etc. This

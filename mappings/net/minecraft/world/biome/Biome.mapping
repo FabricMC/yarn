@@ -1,4 +1,6 @@
 CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
+	FIELD field_9324 FOLIAGE_NOISE Lnet/minecraft/class_3543;
+	FIELD field_9335 TEMPERATURE_NOISE Lnet/minecraft/class_3543;
 	FIELD field_20335 temperatureCache Ljava/lang/ThreadLocal;
 	FIELD field_22039 effects Lnet/minecraft/class_4763;
 	FIELD field_24677 REGISTRY_CODEC Lcom/mojang/serialization/Codec;
@@ -10,63 +12,13 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	FIELD field_26635 generationSettings Lnet/minecraft/class_5485;
 	FIELD field_26750 REGISTRY_ENTRY_LIST_CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_30978 MAX_TEMPERATURE_CACHE_SIZE I
-	FIELD field_9324 FOLIAGE_NOISE Lnet/minecraft/class_3543;
-	FIELD field_9335 TEMPERATURE_NOISE Lnet/minecraft/class_3543;
-	METHOD <init> (Lnet/minecraft/class_1959$class_5482;Lnet/minecraft/class_4763;Lnet/minecraft/class_5485;Lnet/minecraft/class_5483;)V
+	FIELD field_63809 environmentAttributes Lnet/minecraft/class_12199;
+	METHOD <init> (Lnet/minecraft/class_1959$class_5482;Lnet/minecraft/class_12199;Lnet/minecraft/class_4763;Lnet/minecraft/class_5485;Lnet/minecraft/class_5483;)V
 		ARG 1 weather
 		ARG 2 effects
-		ARG 3 generationSettings
-		ARG 4 spawnSettings
-	METHOD method_21740 getTemperature (Lnet/minecraft/class_2338;I)F
-		ARG 1 blockPos
-		ARG 2 seaLevel
-	METHOD method_24376 getFogColor ()I
-	METHOD method_24377 getEffects ()Lnet/minecraft/class_4763;
-	METHOD method_24378 getParticleConfig ()Ljava/util/Optional;
-	METHOD method_24935 getLoopSound ()Ljava/util/Optional;
-	METHOD method_24936 getMoodSound ()Ljava/util/Optional;
-	METHOD method_24937 getAdditionsSound ()Ljava/util/Optional;
-	METHOD method_27343 getMusic ()Ljava/util/Optional;
-	METHOD method_28409 (Lnet/minecraft/class_1959;)Lnet/minecraft/class_1959$class_5482;
-		ARG 0 biome
-	METHOD method_28417 (Lnet/minecraft/class_1959;)Lnet/minecraft/class_5483;
-		ARG 0 biome
-	METHOD method_28418 (Lnet/minecraft/class_1959;)Lnet/minecraft/class_5485;
-		ARG 0 biome
-	METHOD method_28421 (Lnet/minecraft/class_1959;)Lnet/minecraft/class_4763;
-		ARG 0 biome
-	METHOD method_28423 (Lnet/minecraft/class_1959;)Lnet/minecraft/class_1959$class_5482;
-		ARG 0 biome
-	METHOD method_30773 getDefaultGrassColor ()I
-	METHOD method_30774 getDefaultFoliageColor ()I
-	METHOD method_30776 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
-		ARG 0 instance
-	METHOD method_30966 getSpawnSettings ()Lnet/minecraft/class_5483;
-	METHOD method_30970 getGenerationSettings ()Lnet/minecraft/class_5485;
-	METHOD method_30971 (Lnet/minecraft/class_1959;)Lnet/minecraft/class_4763;
-		ARG 0 biome
-	METHOD method_33599 isCold (Lnet/minecraft/class_2338;I)Z
-		ARG 1 pos
-		ARG 2 seaLevel
-	METHOD method_38103 (Lnet/minecraft/class_1959$class_5482;Lnet/minecraft/class_4763;)Lnet/minecraft/class_1959;
-		ARG 0 weather
-		ARG 1 effects
-	METHOD method_38104 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
-		ARG 0 instance
-	METHOD method_39927 doesNotSnow (Lnet/minecraft/class_2338;I)Z
-		ARG 1 pos
-		ARG 2 seaLevel
-	METHOD method_39928 shouldGenerateLowerFrozenOceanSurface (Lnet/minecraft/class_2338;I)Z
-		ARG 1 pos
-		ARG 2 seaLevel
-	METHOD method_48162 getPrecipitation (Lnet/minecraft/class_2338;I)Lnet/minecraft/class_1959$class_1963;
-		ARG 1 pos
-		ARG 2 seaLevel
-	METHOD method_48163 hasPrecipitation ()Z
-	METHOD method_65133 getMusicVolume ()F
-	METHOD method_66386 getGrassColor ()I
-	METHOD method_68145 getDryFoliageColor ()I
-	METHOD method_68146 getDefaultDryFoliageColor ()I
+		ARG 3 biomeEffects
+		ARG 4 generationSettings
+		ARG 5 spawnSettings
 	METHOD method_8685 canSetIce (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;Z)Z
 		ARG 1 world
 		ARG 2 pos
@@ -75,7 +27,6 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 	METHOD method_8696 canSetSnow (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z
 		ARG 1 world
 		ARG 2 pos
-	METHOD method_8697 getSkyColor ()I
 	METHOD method_8698 getFoliageColor ()I
 	METHOD method_8705 canSetIce (Lnet/minecraft/class_4538;Lnet/minecraft/class_2338;)Z
 		ARG 1 world
@@ -87,18 +38,67 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 		ARG 1 x
 		ARG 3 z
 	METHOD method_8712 getTemperature ()F
-	METHOD method_8713 getWaterFogColor ()I
+	METHOD method_21740 getTemperature (Lnet/minecraft/class_2338;I)F
+		ARG 1 blockPos
+		ARG 2 seaLevel
+	METHOD method_24377 getEffects ()Lnet/minecraft/class_4763;
+	METHOD method_28409 (Lnet/minecraft/class_1959;)Lnet/minecraft/class_1959$class_5482;
+		ARG 0 biome
+	METHOD method_28417 (Lnet/minecraft/class_1959;)Lnet/minecraft/class_5483;
+		ARG 0 biome
+	METHOD method_28418 (Lnet/minecraft/class_1959;)Lnet/minecraft/class_5485;
+		ARG 0 biome
+	METHOD method_28423 (Lnet/minecraft/class_1959;)Lnet/minecraft/class_1959$class_5482;
+		ARG 0 biome
+	METHOD method_30773 getDefaultGrassColor ()I
+	METHOD method_30774 getDefaultFoliageColor ()I
+	METHOD method_30966 getSpawnSettings ()Lnet/minecraft/class_5483;
+	METHOD method_30970 getGenerationSettings ()Lnet/minecraft/class_5485;
+	METHOD method_33599 isCold (Lnet/minecraft/class_2338;I)Z
+		ARG 1 pos
+		ARG 2 seaLevel
+	METHOD method_38103 (Lnet/minecraft/class_1959$class_5482;Lnet/minecraft/class_12199;Lnet/minecraft/class_4763;)Lnet/minecraft/class_1959;
+		ARG 0 weather
+		ARG 1 attributes
+		ARG 2 effects
+	METHOD method_39927 doesNotSnow (Lnet/minecraft/class_2338;I)Z
+		ARG 1 pos
+		ARG 2 seaLevel
+	METHOD method_39928 shouldGenerateLowerFrozenOceanSurface (Lnet/minecraft/class_2338;I)Z
+		ARG 1 pos
+		ARG 2 seaLevel
+	METHOD method_48162 getPrecipitation (Lnet/minecraft/class_2338;I)Lnet/minecraft/class_1959$class_1963;
+		ARG 1 pos
+		ARG 2 seaLevel
+	METHOD method_48163 hasPrecipitation ()Z
+	METHOD method_66386 getGrassColor ()I
+	METHOD method_68145 getDryFoliageColor ()I
+	METHOD method_68146 getDefaultDryFoliageColor ()I
+	METHOD method_75729 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 0 instance
+	METHOD method_75730 (Lnet/minecraft/class_1959;)Lnet/minecraft/class_4763;
+		ARG 0 biome
+	METHOD method_75731 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 0 instance
+	METHOD method_75733 (Lnet/minecraft/class_1959;)Lnet/minecraft/class_4763;
+		ARG 0 biome
+	METHOD method_75734 getEnvironmentAttributes ()Lnet/minecraft/class_12199;
 	CLASS 1
 		METHOD rehash (I)V
 			ARG 1 n
 	CLASS class_1960 Builder
+		FIELD field_9349 temperature Ljava/lang/Float;
+		FIELD field_9351 downfall Ljava/lang/Float;
 		FIELD field_22042 specialEffects Lnet/minecraft/class_4763;
 		FIELD field_26396 temperatureModifier Lnet/minecraft/class_1959$class_5484;
 		FIELD field_26636 spawnSettings Lnet/minecraft/class_5483;
 		FIELD field_26637 generationSettings Lnet/minecraft/class_5485;
 		FIELD field_41767 precipitation Z
-		FIELD field_9349 temperature Ljava/lang/Float;
-		FIELD field_9351 downfall Ljava/lang/Float;
+		FIELD field_63810 environmentAttributeBuilder Lnet/minecraft/class_12199$class_12200;
+		METHOD method_8727 downfall (F)Lnet/minecraft/class_1959$class_1960;
+			ARG 1 downfall
+		METHOD method_8747 temperature (F)Lnet/minecraft/class_1959$class_1960;
+			ARG 1 temperature
 		METHOD method_24379 effects (Lnet/minecraft/class_4763;)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 effects
 		METHOD method_30777 temperatureModifier (Lnet/minecraft/class_1959$class_5484;)Lnet/minecraft/class_1959$class_1960;
@@ -110,10 +110,17 @@ CLASS net/minecraft/class_1959 net/minecraft/world/biome/Biome
 			ARG 1 spawnSettings
 		METHOD method_48164 precipitation (Z)Lnet/minecraft/class_1959$class_1960;
 			ARG 1 precipitation
-		METHOD method_8727 downfall (F)Lnet/minecraft/class_1959$class_1960;
-			ARG 1 downfall
-		METHOD method_8747 temperature (F)Lnet/minecraft/class_1959$class_1960;
-			ARG 1 temperature
+		METHOD method_75736 setEnvironmentAttributeModifier (Lnet/minecraft/class_12197;Lnet/minecraft/class_12212;Ljava/lang/Object;)Lnet/minecraft/class_1959$class_1960;
+			ARG 1 attribute
+			ARG 2 modifier
+			ARG 3 value
+		METHOD method_75737 setEnvironmentAttribute (Lnet/minecraft/class_12197;Ljava/lang/Object;)Lnet/minecraft/class_1959$class_1960;
+			ARG 1 attribute
+			ARG 2 value
+		METHOD method_75738 addEnvironmentAttributes (Lnet/minecraft/class_12199$class_12200;)Lnet/minecraft/class_1959$class_1960;
+			ARG 1 builder
+		METHOD method_75739 addEnvironmentAttributes (Lnet/minecraft/class_12199;)Lnet/minecraft/class_1959$class_1960;
+			ARG 1 map
 	CLASS class_1963 Precipitation
 		FIELD field_46251 CODEC Lcom/mojang/serialization/Codec;
 		FIELD field_46252 name Ljava/lang/String;

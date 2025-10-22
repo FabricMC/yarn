@@ -2,21 +2,28 @@ name: Build
 on: [push, pull_request]
 jobs:
   build:
-    strategy:
-      matrix:
-        java: [21-jdk]
     runs-on: ubuntu-24.04
-    container:
-      image: eclipse-temurin:${{ matrix.java }}
-      options: --user root
     steps:
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'microsoft'
       - uses: actions/checkout@v4
-      - run: ./gradlew build javadocJar checkMappings --stacktrace --warning-mode fail
+      - run: ./gradlew build javadocJar checkMappings --stacktrace --warning-mode fail -Dorg.gradle.jvmargs="-XX:+HeapDumpOnOutOfMemoryError"
       - run: ./gradlew formatMappings --stacktrace --warning-mode fail
+      - name: Upload Heap Dump (if present)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: heap-dump
+          path: ./*.hprof
+          if-no-files-found: ignore
       - name: Check mapping format
-        run: if [ -n "$(git status --porcelain)" ]; then exit 1; fi
+        run: |
+          git add -A
+          git status
+          if [ -n "$(git status --porcelain)" ]; then exit 1; fi
       - name: Build artifacts
-        if: ${{ matrix.java == '21-jdk' }}
         continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
@@ -25,10 +32,11 @@ jobs:
 
   test-build-logic:
     runs-on: ubuntu-24.04
-    container:
-      image: eclipse-temurin:21-jdk
-      options: --user root
     steps:
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'microsoft'
       - uses: actions/checkout@v4
-      - uses: gradle/wrapper-validation-action@v2
+      - uses: gradle/actions/wrapper-validation@v4
       - run: ./gradlew :filament:build

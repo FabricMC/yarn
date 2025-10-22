@@ -202,7 +202,7 @@ public class MethodBuilder {
 
 		builder.returns(typeName);
 
-		if (typeName != TypeName.VOID && !builder.modifiers.contains(Modifier.ABSTRACT)) {
+		if (typeName != TypeName.VOID && !builder.modifiers.contains(Modifier.ABSTRACT) && !builder.modifiers.contains(Modifier.NATIVE)) {
 			builder.addStatement("throw new RuntimeException()");
 		} else if (methodNode.annotationDefault != null) {
 			builder.defaultValue(FieldBuilder.codeFromAnnoValue(methodNode.annotationDefault));

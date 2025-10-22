@@ -1,16 +1,5 @@
 CLASS net/minecraft/class_4597 net/minecraft/client/render/VertexConsumerProvider
 	COMMENT Manages rendering with multiple {@linkplain RenderLayer render layers}.
-	METHOD getBuffer (Lnet/minecraft/class_1921;)Lnet/minecraft/class_4588;
-		COMMENT Starts building a buffer that will be drawn with {@code layer}.
-		COMMENT
-		COMMENT <p>The returned vertex consumer can only be safely used until this
-		COMMENT method is called with a different render layer.
-		COMMENT
-		COMMENT <p>Note that the user of this method cannot modify states controlled
-		COMMENT by the render layer. Those states will be overridden by the render layer
-		COMMENT before drawing them. If you need to set states yourself, consider using
-		COMMENT {@link Tessellator} or making a custom render layer.
-		ARG 1 layer
 	METHOD method_22991 immediate (Lnet/minecraft/class_9799;)Lnet/minecraft/class_4597$class_4598;
 		COMMENT {@return a vertex consumer provider that immediately draws the current
 		COMMENT buffer builder when a different render layer is requested}.
@@ -28,13 +17,24 @@ CLASS net/minecraft/class_4597 net/minecraft/client/render/VertexConsumerProvide
 		COMMENT visible.
 		ARG 0 layerBuffers
 		ARG 1 fallbackBuffer
+	METHOD method_73477 getBuffer (Lnet/minecraft/class_1921;)Lnet/minecraft/class_4588;
+		COMMENT Starts building a buffer that will be drawn with {@code layer}.
+		COMMENT
+		COMMENT <p>The returned vertex consumer can only be safely used until this
+		COMMENT method is called with a different render layer.
+		COMMENT
+		COMMENT <p>Note that the user of this method cannot modify states controlled
+		COMMENT by the render layer. Those states will be overridden by the render layer
+		COMMENT before drawing them. If you need to set states yourself, consider using
+		COMMENT {@link Tessellator} or making a custom render layer.
+		ARG 1 layer
 	CLASS class_4598 Immediate
 		COMMENT A vertex consumer provider that immediately draws the current buffer
 		COMMENT builder when a different render layer is requested except for render
 		COMMENT layers specified in the constructor.
 		COMMENT
 		COMMENT @see VertexConsumerProvider#immediate(BufferAllocator)
-		COMMENT @see VertexConsumerProvider#immediate(Map, BufferAllocator)
+		COMMENT @see VertexConsumerProvider#immediate(SequencedMap, BufferAllocator)
 		FIELD field_20953 layerBuffers Ljava/util/SequencedMap;
 		FIELD field_52156 allocator Lnet/minecraft/class_9799;
 		FIELD field_52157 pending Ljava/util/Map;

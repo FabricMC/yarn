@@ -20,27 +20,28 @@ file('../gradle.properties').newInputStream().withCloseable {
 
 repositories {
 	maven {
-		name "Fabric Repository"
-		url 'https://maven.fabricmc.net'
+		name = "Fabric Repository"
+		url = 'https://maven.fabricmc.net'
 	}
 	mavenCentral()
 	mavenLocal()
 }
 
 dependencies {
+	implementation "com.google.code.gson:gson:${properties.gson_version}"
 	implementation "org.ow2.asm:asm:${properties.asm_version}"
 	implementation "org.ow2.asm:asm-tree:${properties.asm_version}"
+	implementation "org.ow2.asm:asm-analysis:${properties.asm_version}"
 	implementation "cuchaz:enigma:$properties.enigma_version"
 	implementation "cuchaz:enigma-cli:$properties.enigma_version"
 	implementation "net.fabricmc.unpick:unpick:$properties.unpick_version"
 	implementation "net.fabricmc.unpick:unpick-format-utils:$properties.unpick_version"
-	implementation "net.fabricmc.unpick:unpick-cli:$properties.unpick_version"
 	implementation "net.fabricmc:tiny-remapper:$properties.tiny_remapper_version"
-	implementation 'net.fabricmc:mapping-io:0.6.1'
+	implementation 'net.fabricmc:mapping-io:0.7.1'
 	implementation 'net.fabricmc:javapoet:0.1.1'
 
 	// Contains a number of useful utilities we can re-use.
-	implementation ("net.fabricmc:fabric-loom:1.7.3") {
+	implementation ("net.fabricmc:fabric-loom:$properties.loom_version") {
 		transitive = false
 	}
 
@@ -56,7 +57,7 @@ java {
 
 tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
-	options.release = 17
+	options.release = 21
 }
 
 test {
@@ -88,8 +89,8 @@ publishing {
 	repositories {
 		if (ENV.MAVEN_URL) {
 			repositories.maven {
-				name "fabric"
-				url ENV.MAVEN_URL
+				name = "fabric"
+				url = ENV.MAVEN_URL
 				credentials {
 					username ENV.MAVEN_USERNAME
 					password ENV.MAVEN_PASSWORD

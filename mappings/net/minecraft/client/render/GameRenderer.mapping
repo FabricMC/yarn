@@ -1,4 +1,19 @@
 CLASS net/minecraft/class_757 net/minecraft/client/render/GameRenderer
+	FIELD field_3993 LOGGER Lorg/slf4j/Logger;
+	FIELD field_3994 random Lnet/minecraft/class_5819;
+	FIELD field_3997 lastSkyDarkness F
+	FIELD field_3998 lastWindowFocusedTime J
+	FIELD field_3999 lastFovMultiplier F
+	FIELD field_4001 renderingPanorama Z
+	FIELD field_4002 skyDarkness F
+	FIELD field_4009 blockOutlineEnabled Z
+	FIELD field_4012 firstPersonRenderer Lnet/minecraft/class_759;
+	FIELD field_4013 postProcessorEnabled Z
+	FIELD field_4015 client Lnet/minecraft/class_310;
+	FIELD field_4017 lastWorldIconUpdate J
+	FIELD field_4019 fovMultiplier F
+	FIELD field_4025 viewDistanceBlocks F
+	FIELD field_4028 lightmapTextureManager Lnet/minecraft/class_765;
 	FIELD field_18765 camera Lnet/minecraft/class_4184;
 	FIELD field_20948 buffers Lnet/minecraft/class_4599;
 	FIELD field_20949 overlayTexture Lnet/minecraft/class_4608;
@@ -8,56 +23,36 @@ CLASS net/minecraft/class_757 net/minecraft/client/render/GameRenderer
 		COMMENT
 		COMMENT @see Camera#getProjection()
 	FIELD field_34055 hasWorldIcon Z
-	FIELD field_3988 zoomX F
-	FIELD field_3992 renderHand Z
-	FIELD field_3993 LOGGER Lorg/slf4j/Logger;
-	FIELD field_3994 random Lnet/minecraft/class_5819;
-	FIELD field_3997 lastSkyDarkness F
-	FIELD field_3998 lastWindowFocusedTime J
-	FIELD field_3999 lastFovMultiplier F
-	FIELD field_4001 renderingPanorama Z
-	FIELD field_4002 skyDarkness F
-	FIELD field_4003 floatingItemHeight F
-	FIELD field_4004 zoomY F
-	FIELD field_4005 zoom F
-	FIELD field_4006 floatingItem Lnet/minecraft/class_1799;
-	FIELD field_4007 floatingItemTimeLeft I
-	FIELD field_4009 blockOutlineEnabled Z
-	FIELD field_4012 firstPersonRenderer Lnet/minecraft/class_759;
-	FIELD field_4013 postProcessorEnabled Z
-	FIELD field_4015 client Lnet/minecraft/class_310;
-	FIELD field_4017 lastWorldIconUpdate J
-	FIELD field_4018 resourceManager Lnet/minecraft/class_3300;
-	FIELD field_4019 fovMultiplier F
-	FIELD field_4025 viewDistanceBlocks F
-	FIELD field_4028 lightmapTextureManager Lnet/minecraft/class_765;
-	FIELD field_4029 floatingItemWidth F
 	FIELD field_53066 pool Lnet/minecraft/class_9920;
 	FIELD field_53898 postProcessorId Lnet/minecraft/class_2960;
 	FIELD field_53899 BLUR_ID Lnet/minecraft/class_2960;
 	FIELD field_55871 nauseaEffectTime F
 	FIELD field_55872 nauseaEffectSpeed F
-	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_759;Lnet/minecraft/class_3300;Lnet/minecraft/class_4599;)V
+	FIELD field_59965 guiRenderer Lnet/minecraft/class_11228;
+	FIELD field_59966 guiState Lnet/minecraft/class_11246;
+	FIELD field_59967 overlayRenderer Lnet/minecraft/class_4603;
+	FIELD field_60103 diffuseLighting Lnet/minecraft/class_308;
+	FIELD field_60104 globalSettings Lnet/minecraft/class_11284;
+	FIELD field_60105 worldProjectionMatrix Lnet/minecraft/class_11286;
+	FIELD field_60106 hudProjectionMatrix Lnet/minecraft/class_11279;
+	FIELD field_60579 panoramaRenderer Lnet/minecraft/class_751;
+	FIELD field_60580 rotatingPanoramaRenderer Lnet/minecraft/class_766;
+	FIELD field_60793 fogRenderer Lnet/minecraft/class_758;
+	FIELD field_61732 worldRenderState Lnet/minecraft/class_11658;
+	FIELD field_61733 orderedRenderCommandQueue Lnet/minecraft/class_11661;
+	FIELD field_61734 entityRenderDispatcher Lnet/minecraft/class_11684;
+	METHOD <init> (Lnet/minecraft/class_310;Lnet/minecraft/class_759;Lnet/minecraft/class_4599;Lnet/minecraft/class_776;)V
 		ARG 1 client
-		ARG 2 heldItemRenderer
-		ARG 3 resourceManager
-		ARG 4 buffers
-	METHOD method_19418 getCamera ()Lnet/minecraft/class_4184;
-	METHOD method_22973 getBasicProjectionMatrix (F)Lorg/joml/Matrix4f;
-		ARG 1 fovDegrees
-	METHOD method_22974 getLightmapTextureManager ()Lnet/minecraft/class_765;
-	METHOD method_22975 getOverlayTexture ()Lnet/minecraft/class_4608;
+		ARG 2 firstPersonHeldItemRenderer
+		ARG 3 buffers
+		ARG 4 blockRenderManager
 	METHOD method_3167 onCameraEntitySet (Lnet/minecraft/class_1297;)V
-		ARG 1 entity
 	METHOD method_3169 onResized (II)V
 		ARG 1 width
 		ARG 2 height
-	METHOD method_3171 renderFloatingItem (Lnet/minecraft/class_332;F)V
-		ARG 1 context
-		ARG 2 tickProgress
-	METHOD method_3172 renderHand (Lnet/minecraft/class_4184;FLorg/joml/Matrix4f;)V
-		ARG 1 camera
-		ARG 2 tickProgress
+	METHOD method_3172 renderHand (FZLorg/joml/Matrix4f;)V
+		ARG 1 tickProgress
+		ARG 2 sleeping
 		ARG 3 positionMatrix
 	METHOD method_3174 getNightVisionStrength (Lnet/minecraft/class_1309;F)F
 		ARG 0 entity
@@ -91,16 +86,15 @@ CLASS net/minecraft/class_757 net/minecraft/client/render/GameRenderer
 	METHOD method_3199 updateFovMultiplier ()V
 	METHOD method_3202 shouldRenderBlockOutline ()Z
 	METHOD method_3203 reset ()V
+	METHOD method_19418 getCamera ()Lnet/minecraft/class_4184;
+	METHOD method_22973 getBasicProjectionMatrix (F)Lorg/joml/Matrix4f;
+		ARG 1 fovDegrees
+	METHOD method_22974 getLightmapTextureManager ()Lnet/minecraft/class_765;
+	METHOD method_22975 getOverlayTexture ()Lnet/minecraft/class_4608;
 	METHOD method_32796 getFarPlaneDistance ()F
 	METHOD method_34521 preloadPrograms (Lnet/minecraft/class_5912;)V
 		ARG 1 factory
 	METHOD method_35765 isRenderingPanorama ()Z
-	METHOD method_35766 renderWithZoom (FFF)V
-		ARG 1 zoom
-		ARG 2 zoomX
-		ARG 3 zoomY
-	METHOD method_35768 setRenderHand (Z)V
-		ARG 1 renderHand
 	METHOD method_35769 setBlockOutlineEnabled (Z)V
 		ARG 1 blockOutlineEnabled
 	METHOD method_35770 setRenderingPanorama (Z)V
@@ -123,5 +117,26 @@ CLASS net/minecraft/class_757 net/minecraft/client/render/GameRenderer
 		ARG 1 id
 	METHOD method_62905 clearPostProcessor ()V
 	METHOD method_62906 getPostProcessorId ()Lnet/minecraft/class_2960;
-	METHOD method_64055 (Lnet/minecraft/class_4587;Lnet/minecraft/class_4597;)V
-		ARG 2 vertexConsumers
+	METHOD method_68164 (Ljava/nio/file/Path;Lnet/minecraft/class_1011;)V
+		ARG 1 screenshot
+	METHOD method_68479 (Lnet/minecraft/class_5912;Lnet/minecraft/class_2960;Lcom/mojang/blaze3d/shaders/ShaderType;)Ljava/lang/String;
+		ARG 1 id
+		ARG 2 type
+	METHOD method_71112 setWorld (Lnet/minecraft/class_638;)V
+		ARG 1 world
+	METHOD method_71113 getGlobalSettings ()Lnet/minecraft/class_11284;
+	METHOD method_71114 getDiffuseLighting ()Lnet/minecraft/class_308;
+	METHOD method_71649 getRotatingPanoramaRenderer ()Lnet/minecraft/class_766;
+	METHOD method_72910 getEntityRenderCommandQueue ()Lnet/minecraft/class_11661;
+	METHOD method_72911 getEntityRenderDispatcher ()Lnet/minecraft/class_11684;
+	METHOD method_72912 getEntityRenderStates ()Lnet/minecraft/class_11658;
+	METHOD method_74751 getProjectionMatrix (F)Lorg/joml/Matrix4f;
+	METHOD method_74920 updateCameraState (F)V
+	METHOD method_75836 (Lnet/minecraft/class_11247;)V
+		ARG 1 text
+	METHOD method_75837 renderActiveTextAreas ()V
+	CLASS 1
+		FIELD field_63914 index I
+		METHOD method_75838 addGlyph (Lnet/minecraft/class_12236;Z)V
+			ARG 1 glyph
+			ARG 2 empty

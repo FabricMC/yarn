@@ -1,0 +1,75 @@
+CLASS net/minecraft/class_10769 net/minecraft/util/thread/AsyncHelper
+	FIELD field_56616 MAX_TASKS I
+	METHOD method_67611 mapValues (Ljava/util/Map;Ljava/util/function/BiFunction;ILjava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 futures
+		ARG 1 function
+		ARG 2 batchSize
+		ARG 3 executor
+	METHOD method_67612 mapValues (Ljava/util/Map;Ljava/util/function/BiFunction;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+		ARG 0 futures
+		ARG 1 function
+		ARG 2 executor
+	CLASS class_10770 Batch
+		FIELD field_56618 entries Ljava/util/Map;
+		FIELD field_56619 size I
+		FIELD field_56620 start I
+		METHOD method_67617 newTask (Ljava/util/Map;IILnet/minecraft/class_10769$class_10771;)Ljava/lang/Runnable;
+			ARG 0 futures
+			ARG 1 size
+			ARG 2 maxCount
+			ARG 3 entry
+		METHOD method_67618 (Ljava/util/Map;Ljava/lang/Object;)Ljava/util/Map;
+			ARG 1 obj
+	CLASS class_10771 Future
+		METHOD <init> (Ljava/util/function/BiFunction;I)V
+			ARG 1 function
+			ARG 2 size
+		METHOD method_67620 keySize ()I
+		METHOD method_67621 apply (I)V
+			ARG 1 index
+		METHOD method_67622 put (ILjava/lang/Object;Ljava/lang/Object;)V
+			ARG 1 index
+			ARG 2 key
+			ARG 3 value
+		METHOD method_67623 copy (ILjava/util/Map;)V
+			ARG 1 index
+			ARG 2 futures
+		METHOD method_67624 getKey (I)Ljava/lang/Object;
+			ARG 1 index
+		METHOD method_67625 getValue (I)Ljava/lang/Object;
+			ARG 1 index
+		METHOD method_67626 getUValue (I)Ljava/lang/Object;
+			ARG 1 index
+	CLASS class_10772 Single
+		METHOD <init> (Ljava/util/function/BiFunction;I)V
+			ARG 1 function
+			ARG 2 size
+		METHOD method_67628 (Lnet/minecraft/class_10769$class_10771;Ljava/lang/Object;)Ljava/util/Map;
+			ARG 1 obj
+	CLASS class_10773 Batcher
+		FIELD field_56622 lastBatch I
+		FIELD field_56624 index I
+		FIELD field_56625 futures [Ljava/util/concurrent/CompletableFuture;
+		FIELD field_56626 batch I
+		FIELD field_56627 entry Lnet/minecraft/class_10769$class_10771;
+		METHOD <init> (Ljava/util/function/BiFunction;II)V
+			ARG 1 function
+			ARG 2 size
+			ARG 3 startAt
+		METHOD method_67614 getLastIndex (I)I
+			ARG 1 batch
+		METHOD method_67616 newBatch (Lnet/minecraft/class_10769$class_10771;IILjava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 futures
+			ARG 2 size
+			ARG 3 maxCount
+			ARG 4 executor
+		METHOD method_67619 addLastTask (Ljava/util/concurrent/CompletableFuture;Lnet/minecraft/class_10769$class_10771;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 future
+			ARG 2 entry
+		METHOD method_67629 nextSize ()I
+		METHOD method_67630 mapAsync (Ljava/util/Map;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;
+			ARG 1 future
+			ARG 2 executor
+		METHOD method_67631 (Ljava/util/concurrent/Executor;Ljava/lang/Object;Ljava/lang/Object;)V
+			ARG 2 key
+			ARG 3 value

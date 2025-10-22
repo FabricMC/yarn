@@ -1,8 +1,8 @@
 buildscript {
 	repositories {
 		maven {
-			name "Fabric Repository"
-			url 'https://maven.fabricmc.net'
+			name = "Fabric Repository"
+			url = 'https://maven.fabricmc.net'
 		}
 		mavenCentral()
 		mavenLocal()
@@ -13,13 +13,13 @@ buildscript {
 }
 
 plugins {
-	id 'java' // for constants, packages, javadoc
+	id 'java' // for packages, javadoc
 	id 'maven-publish'
-	id "com.diffplug.spotless" version "6.21.0"
+	id "com.diffplug.spotless" version "7.2.1"
 	id 'net.fabricmc.filament'
 }
 
-def minecraft_version = "25w09b"
+def minecraft_version = "25w43a"
 
 filament {
 	minecraftVersion = minecraft_version
@@ -47,12 +47,12 @@ repositories {
 		}
 	}
 	maven {
-		name "Fabric Repository"
-		url 'https://maven.fabricmc.net'
+		name = "Fabric Repository"
+		url = 'https://maven.fabricmc.net'
 	}
 	maven {
-		name "Mojang"
-		url 'https://libraries.minecraft.net/'
+		name = "Mojang"
+		url = 'https://libraries.minecraft.net/'
 	}
 	mavenLocal()
 }
@@ -72,6 +72,14 @@ dependencies {
 	enigmaRuntime "cuchaz:enigma-swing:${project.enigma_version}"
 	enigmaRuntime "net.fabricmc:cfr:${project.cfr_version}"
 	enigmaRuntime "org.vineflower:vineflower:${project.vineflower_version}"
+	enigmaRuntime "net.fabricmc.unpick:unpick:${project.unpick_version}"
+	enigmaRuntime "net.fabricmc.unpick:unpick-format-utils:${project.unpick_version}"
+	enigmaRuntime("net.fabricmc:fabric-loom:${project.loom_version}") {
+		transitive = false
+	}
+	enigmaRuntime "net.fabricmc:tiny-remapper:${project.tiny_remapper_version}"
+	enigmaRuntime gradleApi()
+
 	javadocClasspath "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 	javadocClasspath "org.jetbrains:annotations:${project.jetbrains_annotations_version}"
 	javadocClasspath "com.google.code.findbugs:jsr305:3.0.2" // for some other jsr annotations
@@ -94,10 +102,13 @@ def libs = new File("build/libs/")
 def minecraftLibraries = configurations.minecraftLibraries
 
 import cuchaz.enigma.command.CheckMappingsCommand
-import net.fabricmc.filament.task.MapJarTask
 import net.fabricmc.filament.task.DownloadTask
-import net.fabricmc.filament.task.UnpickJarTask
-import net.fabricmc.filament.task.MappingPoetTask;
+import net.fabricmc.filament.task.MapJarTask
+import net.fabricmc.filament.task.annotations.CheckAnnotationsTask
+import net.fabricmc.filament.task.annotations.RemapAnnotationsTask
+import net.fabricmc.filament.task.unpick.CheckUnpickDefinitionsTask
+import net.fabricmc.filament.task.unpick.UnpickJarTask
+import net.fabricmc.filament.task.MappingPoetTask
 import net.fabricmc.filament.task.base.WithFileInput
 import net.fabricmc.filament.task.base.WithFileOutput
 import net.fabricmc.filament.task.enigma.MapSpecializedMethodsTask
@@ -108,6 +119,7 @@ import net.fabricmc.filament.task.mappingio.MergeMappingsTask
 import net.fabricmc.filament.task.mappingio.CheckMappingsTask
 import net.fabricmc.filament.task.mappingio.CheckMergedMappingsTask
 import net.fabricmc.filament.nameproposal.MappingNameCompleter
+import net.fabricmc.filament.nameproposal.NameProposalConfig
 import net.fabricmc.mappingio.format.MappingFormat
 import org.gradle.work.DisableCachingByDefault
 import com.diffplug.spotless.LineEnding
@@ -127,7 +139,6 @@ tasks.register('mapIntermediaryJar', MapJarTask) {
 	output = layout.buildDirectory.file("${minecraft_version}-intermediary.jar")
 	input = mergeMinecraftJars.output
 	mappings = downloadIntermediary.output
-	classpath.from minecraftLibraries
 	from = 'official'
 	to = 'intermediary'
 }
@@ -138,7 +149,6 @@ tasks.register('mapServerIntermediaryJar', MapJarTask) {
 	output = layout.buildDirectory.file("${minecraft_version}-server-intermediary.jar")
 	input = extractBundledServer.output
 	mappings = downloadIntermediary.output
-	classpath.from minecraftLibraries
 	from = 'official'
 	to = 'intermediary'
 }
@@ -147,13 +157,19 @@ tasks.register('yarn', EnigmaTask) {
 	dependsOn mapIntermediaryJar
 	group = yarnGroup
 	jar = mapIntermediaryJar.output
+	libraries.from minecraftLibraries
 	mappings = mappingsDir
+	unpickDefinitions = file('unpick-definitions')
+	annotations = file('annotations.json')
 }
 
 tasks.register('yarnCommon', EnigmaTask) {
 	group = yarnGroup
 	jar = mapServerIntermediaryJar.output
+	libraries.from minecraftLibraries
 	mappings = mappingsDir
+	unpickDefinitions = file('unpick-definitions')
+	annotations = file('annotations.json')
 }
 
 def checkPackages = tasks.register('checkPackages') {
@@ -255,13 +271,7 @@ clean.doFirst {
 }
 
 sourceSets {
-	constants
 	packageDocs // package info files
-}
-
-tasks.register('constantsJar', Jar) {
-	from sourceSets.constants.output
-	archiveClassifier = "constants"
 }
 
 tasks.build.dependsOn "compressTiny","tinyJar","v2UnmergedYarnJar", "v2MergedYarnJar", "javadocJar"
@@ -271,8 +281,6 @@ combineUnpickDefinitions {
 	input = file('unpick-definitions')
 	output = new File(tempDir, 'definitions.unpick')
 }
-
-// Setup the build for the unpicked constants
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_21
@@ -297,17 +305,7 @@ spotless {
 	}
 }
 
-tasks.register('sourcesJar', Jar) {
-	dependsOn classes
-	archiveClassifier = "sources"
-	from sourceSets.constants.allSource
-}
-
-// Only build jars for package infos if we need to actually expose stuff like annotation in the future.
-
-build.dependsOn constantsJar
-
-tasks.register('insertAutoGeneratedEnumMappings', FileInputOutput) {
+tasks.register('insertNameProposalMappings', FileInputOutput) {
 	dependsOn mapIntermediaryJar, downloadIntermediary
 	group = buildMappingGroup
 	input = completeMappings.output
@@ -324,7 +322,8 @@ tasks.register('insertAutoGeneratedEnumMappings', FileInputOutput) {
 			intermediaryJarPath,
 			inputPath,
 			intermediaryMappingsPath,
-			outputPath
+			outputPath,
+			NameProposalConfig.DEFAULT
 		)
 	}
 }
@@ -332,7 +331,8 @@ tasks.register('insertAutoGeneratedEnumMappings', FileInputOutput) {
 remapUnpickDefinitionsIntermediary {
 	group = 'unpick'
 	output = new File(tempDir, 'intermediary-definitions.unpick')
-	mappings = insertAutoGeneratedEnumMappings.output
+	classpath.from(mapIntermediaryJar, minecraftLibraries)
+	mappings = insertNameProposalMappings.output
 }
 
 tasks.register('unpickIntermediaryJar', UnpickJarTask) {
@@ -340,40 +340,35 @@ tasks.register('unpickIntermediaryJar', UnpickJarTask) {
 	input = mapIntermediaryJar.output
 	output = layout.buildDirectory.file("${minecraft_version}-intermediary-unpicked.jar")
 	unpickDefinition = remapUnpickDefinitionsIntermediary.output
-	constantsJarFile = constantsJar.archiveFile
 	classpath.from minecraftLibraries
-}
-
-tasks.register('yarnUnpicked', EnigmaTask) {
-	dependsOn "unpickIntermediaryJar"
-	group = yarnGroup
-	jar = unpickIntermediaryJar.output
-	mappings = mappingsDir
 }
 
 tasks.register('mergeV2', MergeMappingsTask) {
 	group = buildMappingGroup
 	output = new File(tempDir, "merged-v2.tiny")
 	mappingInputs.from downloadIntermediary.output
-	mappingInputs.from insertAutoGeneratedEnumMappings.output
+	mappingInputs.from insertNameProposalMappings.output
 	outputFormat = MappingFormat.TINY_2_FILE
 }
 
 tasks.register('v2UnmergedYarnJar', Jar) {
-	dependsOn insertAutoGeneratedEnumMappings, combineUnpickDefinitions
-	def mappings = insertAutoGeneratedEnumMappings.output
+	dependsOn insertNameProposalMappings, combineUnpickDefinitions
+	def mappings = insertNameProposalMappings.output
 	group = "mapping build"
 	archiveFileName = "yarn-${yarnVersion}-v2.jar"
 
 	from(file(mappings)) {
 		rename mappings.get().asFile.name, "mappings/mappings.tiny"
 	}
-	from(combineUnpickDefinitions.output) {
-		rename combineUnpickDefinitions.output.get().asFile.name, "extras/definitions.unpick"
+	from(remapUnpickDefinitionsIntermediary.output) {
+		rename remapUnpickDefinitionsIntermediary.output.get().asFile.name, "extras/definitions.unpick"
 	}
 	from(file(unpickMetaFile)) {
-		expand version: project.unpick_version
+		expand version: project.version
 		rename unpickMetaFile.name, "extras/unpick.json"
+	}
+	from(remapAnnotationsIntermediary.output) {
+		rename remapAnnotationsIntermediary.output.get().asFile.name, "extras/annotations.json"
 	}
 	destinationDirectory.set(file("build/libs"))
 	manifest {
@@ -390,12 +385,15 @@ tasks.register('v2MergedYarnJar', Jar) {
 	from(file(mappings)) {
 		rename mappings.name, "mappings/mappings.tiny"
 	}
-	from(combineUnpickDefinitions.output) {
-		rename combineUnpickDefinitions.output.get().asFile.name, "extras/definitions.unpick"
+	from(remapUnpickDefinitionsIntermediary.output) {
+		rename remapUnpickDefinitionsIntermediary.output.get().asFile.name, "extras/definitions.unpick"
 	}
 	from(file(unpickMetaFile)) {
-		expand version: project.unpick_version
+		expand version: project.version
 		rename unpickMetaFile.name, "extras/unpick.json"
+	}
+	from(remapAnnotationsIntermediary.output) {
+		rename remapAnnotationsIntermediary.output.get().asFile.name, "extras/annotations.json"
 	}
 	destinationDirectory.set(file("build/libs"))
 	manifest {
@@ -409,7 +407,6 @@ tasks.register('mapNamedJar', MapJarTask) {
 	output = layout.buildDirectory.file("${minecraft_version}-named.jar")
 	input = unpickIntermediaryJar.output
 	mappings = mergeV2.output
-	classpath.from minecraftLibraries
 	from = 'intermediary'
 	to = 'named'
 	classMappings = [
@@ -418,6 +415,56 @@ tasks.register('mapNamedJar', MapJarTask) {
 		"javax/annotation/concurrent/Immutable": "org/jetbrains/annotations/Unmodifiable"
 	]
 }
+
+// Test that we can remap back to intermediary.
+tasks.register('remapIntermediaryJar', MapJarTask) {
+	group = mapJarGroup
+	output = layout.buildDirectory.file("${minecraft_version}-remapped.jar")
+	input = mapNamedJar.output
+	mappings = mergeV2.output
+	from = 'named'
+	to = 'intermediary'
+}
+
+check.dependsOn remapIntermediaryJar
+
+tasks.register('mapNamedNoUnpickJar', MapJarTask) {
+	dependsOn mergeV2
+	group = mapJarGroup
+	output = layout.buildDirectory.file("${minecraft_version}-named-no-unpick.jar")
+	input = mapIntermediaryJar.output
+	mappings = mergeV2.output
+	from = 'intermediary'
+	to = 'named'
+}
+
+tasks.register('checkUnpickDefinitions', CheckUnpickDefinitionsTask) {
+	group = 'unpick'
+	input = file('unpick-definitions')
+	classpath.from(mapNamedNoUnpickJar.output, minecraftLibraries)
+}
+
+check.dependsOn checkUnpickDefinitions
+unpickIntermediaryJar.mustRunAfter checkUnpickDefinitions // the check will give nicer error messages (not in intermediary)
+
+tasks.register('remapAnnotationsIntermediary', RemapAnnotationsTask) {
+	group = 'annotations'
+	input = file('annotations.json')
+	classpath.from(mapNamedNoUnpickJar)
+	mappings = insertNameProposalMappings.output
+	sourceNamespace = 'named'
+	targetNamespace = 'intermediary'
+	output = new File(tempDir, 'annotations-intermediary.json')
+}
+
+tasks.register('checkAnnotations', CheckAnnotationsTask) {
+	group = 'annotations'
+	input = file('annotations.json')
+	targetJars.from(mapNamedNoUnpickJar)
+	classpath.from(minecraftLibraries)
+}
+
+check.dependsOn checkAnnotations
 
 def mcLibsDir = file('build/tmp/mclibs')
 
@@ -456,10 +503,11 @@ tasks.register('decompileVineflower', JavaExec) {
 	dependsOn mapNamedJar
 	mainClass = "org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler"
 	classpath.from configurations.decompileClasspath
-	minecraftLibraries.files().forEach { file ->
-		args "--add-external=${jar.absolutePath}"
+	minecraftLibraries.files.forEach { file ->
+		args "--add-external=${file.absolutePath}"
 	}
 	args "--folder", mapNamedJar.outputFile.getAbsolutePath(), decompileOutput.get().asFile.absolutePath
+	jvmArgs "-Xmx4G"
 }
 
 tasks.register("formatMappings", FormatMappingsTask) {
@@ -522,7 +570,7 @@ javadoc {
 		addBooleanOption 'Xdoclint:reference', true
 		addBooleanOption 'Xdoclint:accessibility', true
 	}
-	source fileTree(fakeSourceDir) + sourceSets.constants.allJava + sourceSets.packageDocs.allJava
+	source fileTree(fakeSourceDir) + sourceSets.packageDocs.allJava
 	classpath = configurations.javadocClasspath.plus minecraftLibraries
 
 	def filamentCodeSource = MappingPoetTask.class.getProtectionDomain().getCodeSource()
@@ -573,25 +621,21 @@ check.dependsOn javadocLint
 publishing {
 	publications {
 		register("maven", MavenPublication) {
-			groupId 'net.fabricmc'
-			artifactId "yarn"
-			version yarnVersion
+			groupId = 'net.fabricmc'
+			artifactId = "yarn"
+			version = yarnVersion
 
 			artifact(compressTiny.output) {
-				classifier "tiny"
+				classifier = "tiny"
 				builtBy compressTiny
 			}
 			artifact(tinyJar)
 			artifact(v2UnmergedYarnJar) {
-				classifier "v2"
+				classifier = "v2"
 			}
 			artifact(v2MergedYarnJar) {
-				classifier "mergedv2"
+				classifier = "mergedv2"
 			}
-			artifact(constantsJar) {
-				classifier "constants"
-			}
-			artifact sourcesJar
 			artifact javadocJar
 		}
 
@@ -599,10 +643,10 @@ publishing {
 	repositories {
 		if (ENV.MAVEN_URL) {
 			maven {
-				url ENV.MAVEN_URL
+				url = ENV.MAVEN_URL
 				credentials {
-					username ENV.MAVEN_USERNAME
-					password ENV.MAVEN_PASSWORD
+					username = ENV.MAVEN_USERNAME
+					password = ENV.MAVEN_PASSWORD
 				}
 			}
 		}
@@ -635,6 +679,15 @@ abstract class EnigmaTask extends JavaExec {
 	@Input
 	abstract Property<File> getMappings()
 
+	@InputFiles
+	abstract ConfigurableFileCollection getLibraries()
+
+	@InputDirectory
+	abstract DirectoryProperty getUnpickDefinitions()
+
+	@InputFile
+	abstract RegularFileProperty getAnnotations()
+
 	EnigmaTask() {
 		def filamentCodeSource = MappingPoetTask.class.getProtectionDomain().getCodeSource()
 		def filamentJarFile = new File(filamentCodeSource.getLocation().getFile())
@@ -655,6 +708,14 @@ abstract class EnigmaTask extends JavaExec {
 		args mappings.get().absolutePath
 		args '-profile'
 		args 'enigma_profile.json'
+
+		for (def library in getLibraries().files) {
+			args '-library', library.absolutePath
+		}
+
+		systemProperties 'unpick.directory': getUnpickDefinitions().get().asFile.absolutePath
+		systemProperties 'annotations.file': getAnnotations().get().asFile.absolutePath
+
 		super.exec()
 	}
 }

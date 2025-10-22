@@ -1,10 +1,5 @@
 CLASS net/minecraft/class_2499 net/minecraft/nbt/NbtList
 	COMMENT Represents a mutable NBT list. Its type is {@value NbtElement#LIST_TYPE}.
-	COMMENT <p>
-	COMMENT An NBT list holds values of the same {@linkplain NbtElement#getType NBT type}.
-	COMMENT The {@linkplain AbstractNbtList#getHeldType NBT type} of an NBT list is determined
-	COMMENT once its first element is inserted; empty NBT lists return {@link NbtElement#END_TYPE}
-	COMMENT as their held {@linkplain AbstractNbtList#getHeldType NBT type}.
 	COMMENT
 	COMMENT <p>To get values from this list, use methods with type names, such as
 	COMMENT {@link #getInt(int)}. Where applicable, these methods return Java types (e.g. {@code int},
@@ -17,6 +12,12 @@ CLASS net/minecraft/class_2499 net/minecraft/nbt/NbtList
 	FIELD field_11550 value Ljava/util/List;
 	FIELD field_21039 TYPE Lnet/minecraft/class_4614;
 	FIELD field_41725 SIZE I
+	FIELD field_57977 HOMOGENIZED_ENTRY_KEY Ljava/lang/String;
+	METHOD <init> (Ljava/util/List;)V
+		ARG 1 value
+	METHOD add (ILjava/lang/Object;)V
+		ARG 1 index
+		ARG 2 element
 	METHOD equals (Ljava/lang/Object;)Z
 		ARG 1 o
 	METHOD get (I)Ljava/lang/Object;
@@ -58,11 +59,53 @@ CLASS net/minecraft/class_2499 net/minecraft/nbt/NbtList
 		COMMENT @apiNote Modifying the returned array also modifies the NBT int array.
 		ARG 1 index
 	METHOD method_36112 getLongArray (I)Ljava/util/Optional;
-		COMMENT {@return the long array at {@code index}, or an empty int array if the index is
+		COMMENT {@return the long array at {@code index}, or an empty long array if the index is
 		COMMENT out of bounds or if this is not a list of long arrays}
 		COMMENT
 		COMMENT @apiNote Modifying the returned array also modifies the NBT long array.
 		ARG 1 index
+	METHOD method_68573 wrapIfNeeded (BLnet/minecraft/class_2520;)Lnet/minecraft/class_2520;
+		ARG 0 type
+		ARG 1 value
+	METHOD method_68574 getDouble (ID)D
+		ARG 1 index
+		ARG 2 fallback
+	METHOD method_68575 getFloat (IF)F
+		ARG 1 index
+		ARG 2 fallback
+	METHOD method_68576 getInt (II)I
+		ARG 1 index
+		ARG 2 fallback
+	METHOD method_68577 getString (ILjava/lang/String;)Ljava/lang/String;
+		ARG 1 index
+		ARG 2 fallback
+	METHOD method_68578 getShort (IS)S
+		ARG 1 index
+		ARG 2 fallback
+	METHOD method_68579 unwrap (Lnet/minecraft/class_2487;)Lnet/minecraft/class_2520;
+		ARG 0 nbt
+	METHOD method_68580 unwrapAndAdd (Lnet/minecraft/class_2520;)V
+		ARG 1 nbt
+	METHOD method_68581 (Lnet/minecraft/class_2520;Ljava/util/function/Consumer;)V
+		ARG 0 nbt
+		ARG 1 callback
+	METHOD method_68582 getCompoundOrEmpty (I)Lnet/minecraft/class_2487;
+		ARG 1 index
+	METHOD method_68583 isConvertedEntry (Lnet/minecraft/class_2487;)Z
+		ARG 0 nbt
+	METHOD method_68584 convertToCompound (Lnet/minecraft/class_2520;)Lnet/minecraft/class_2487;
+		ARG 0 nbt
+	METHOD method_68587 getValueType ()B
+	METHOD method_68588 getListOrEmpty (I)Lnet/minecraft/class_2499;
+		ARG 1 index
+	METHOD method_68589 streamCompounds ()Ljava/util/stream/Stream;
+	METHOD method_68590 getNullable (I)Lnet/minecraft/class_2520;
+		ARG 1 index
+	METHOD method_68591 getOptional (I)Ljava/util/Optional;
+		ARG 1 index
+	METHOD set (ILjava/lang/Object;)Ljava/lang/Object;
+		ARG 1 index
+		ARG 2 element
 	CLASS 1
 		METHOD method_53894 scanList (Ljava/io/DataInput;Lnet/minecraft/class_6836;Lnet/minecraft/class_2505;)Lnet/minecraft/class_6836$class_6838;
 			ARG 0 input
@@ -71,3 +114,5 @@ CLASS net/minecraft/class_2499 net/minecraft/nbt/NbtList
 		METHOD method_53895 readList (Ljava/io/DataInput;Lnet/minecraft/class_2505;)Lnet/minecraft/class_2499;
 			ARG 0 input
 			ARG 1 tracker
+		METHOD method_72224 readListLength (Ljava/io/DataInput;)I
+			ARG 0 input

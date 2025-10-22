@@ -31,6 +31,91 @@ CLASS net/minecraft/class_1263 net/minecraft/inventory/Inventory
 	COMMENT @see net.minecraft.entity.vehicle.VehicleInventory
 	COMMENT @see net.minecraft.block.entity.LockableContainerBlockEntity
 	FIELD field_48319 DEFAULT_MAX_INTERACTION_RANGE F
+	METHOD method_5431 markDirty ()V
+		COMMENT Marks the inventory as modified. Implementations should call this method
+		COMMENT every time the inventory is changed in any way.
+		COMMENT
+		COMMENT @apiNote Implementations should mark the inventory for synchronization or
+		COMMENT saving in this method. Since this is called frequently, it is not recommended to
+		COMMENT synchronize or save the inventory directly in this method. If this inventory is
+		COMMENT implemented in a block entity, then it should <strong>always</strong> call
+		COMMENT {@code super.markDirty();} to ensure the block entity gets saved.
+		COMMENT
+		COMMENT @see net.minecraft.block.entity.BlockEntity#markDirty
+	METHOD method_5432 onClose (Lnet/minecraft/class_11565;)V
+		COMMENT Called when the inventory is closed. Specifically, this is called inside
+		COMMENT {@link net.minecraft.screen.ScreenHandler#onClosed}. This does nothing
+		COMMENT by default.
+		COMMENT
+		COMMENT <p>The method is called in both the client and the server. However, because
+		COMMENT clientside screen handler is created with a {@link net.minecraft.inventory.SimpleInventory},
+		COMMENT other implementations can (and the vanilla code does) assume that the method is called
+		COMMENT in the server.
+		ARG 1 user
+	METHOD method_5434 removeStack (II)Lnet/minecraft/class_1799;
+		COMMENT Removes a specific number of items from {@code slot}.
+		COMMENT
+		COMMENT @return the removed items as a stack
+		ARG 1 slot
+		ARG 2 amount
+	METHOD method_5435 onOpen (Lnet/minecraft/class_11565;)V
+		COMMENT Called when the inventory is opened. Specifically, this is called inside the
+		COMMENT {@link net.minecraft.screen.ScreenHandler} constructor. This does nothing
+		COMMENT by default.
+		COMMENT
+		COMMENT <p>The method is called in both the client and the server. However, because
+		COMMENT clientside screen handler is created with a {@link net.minecraft.inventory.SimpleInventory},
+		COMMENT other implementations can (and the vanilla code does) assume that the method is called
+		COMMENT in the server.
+		ARG 1 user
+	METHOD method_5437 isValid (ILnet/minecraft/class_1799;)Z
+		COMMENT {@return whether {@code stack} is valid for the {@code slot}}
+		COMMENT
+		COMMENT <p>Implementations can, for example, use this to check whether the item
+		COMMENT is in a specific tag. This returns {@code true} by default.
+		ARG 1 slot
+		ARG 2 stack
+	METHOD method_5438 getStack (I)Lnet/minecraft/class_1799;
+		COMMENT {@return the stack currently stored at {@code slot}}
+		COMMENT
+		COMMENT <p>If the slot is empty, or is outside the bounds of this inventory,
+		COMMENT this returns {@link ItemStack#EMPTY}.
+		ARG 1 slot
+	METHOD method_5439 size ()I
+		COMMENT {@return the size of the inventory}
+		COMMENT
+		COMMENT <p>The inventory should support the slot ID from {@code 0} to {@code size() - 1}.
+		COMMENT This should remain constant throughout the inventory's lifetime.
+	METHOD method_5441 removeStack (I)Lnet/minecraft/class_1799;
+		COMMENT Removes the stack currently stored at {@code slot}.
+		COMMENT
+		COMMENT @return the stack previously stored at the indicated slot
+		ARG 1 slot
+	METHOD method_5442 isEmpty ()Z
+		COMMENT {@return whether the inventory consists entirely of {@linkplain ItemStack#isEmpty
+		COMMENT empty item stacks}}
+	METHOD method_5443 canPlayerUse (Lnet/minecraft/class_1657;)Z
+		COMMENT {@return whether {@code player} can use this inventory}
+		COMMENT
+		COMMENT <p>This is called by {@link net.minecraft.screen.ScreenHandler#canUse}.
+		COMMENT
+		COMMENT @apiNote Implementations should check the distance between the inventory
+		COMMENT holder and {@code player}. For convenience, this interface offers two methods
+		COMMENT used by block entities to implement this check.
+		COMMENT
+		COMMENT @see #canPlayerUse(BlockEntity, PlayerEntity)
+		COMMENT @see #canPlayerUse(BlockEntity, PlayerEntity, int)
+		ARG 1 player
+	METHOD method_5444 getMaxCountPerStack ()I
+		COMMENT {@return the maximum {@linkplain ItemStack#getCount number of items} a stack
+		COMMENT can contain when placed inside this inventory}
+		COMMENT
+		COMMENT <p>No slots may have more than this number of items. It is effectively the
+		COMMENT stacking limit for this inventory's slots.
+	METHOD method_5447 setStack (ILnet/minecraft/class_1799;)V
+		COMMENT Sets the stack stored at {@code slot} to {@code stack}.
+		ARG 1 slot
+		ARG 2 stack
 	METHOD method_18861 count (Lnet/minecraft/class_1792;)I
 		COMMENT {@return the number of times {@code item} occurs in this inventory
 		COMMENT across all stored stacks}
@@ -81,93 +166,9 @@ CLASS net/minecraft/class_1263 net/minecraft/inventory/Inventory
 		ARG 0 blockEntity
 		ARG 1 player
 		ARG 2 range
-	METHOD method_5431 markDirty ()V
-		COMMENT Marks the inventory as modified. Implementations should call this method
-		COMMENT every time the inventory is changed in any way.
-		COMMENT
-		COMMENT @apiNote Implementations should mark the inventory for synchronization or
-		COMMENT saving in this method. Since this is called frequently, it is not recommended to
-		COMMENT synchronize or save the inventory directly in this method. If this inventory is
-		COMMENT implemented in a block entity, then it should <strong>always</strong> call
-		COMMENT {@code super.markDirty();} to ensure the block entity gets saved.
-		COMMENT
-		COMMENT @see net.minecraft.block.entity.BlockEntity#markDirty
-	METHOD method_5432 onClose (Lnet/minecraft/class_1657;)V
-		COMMENT Called when the inventory is closed. Specifically, this is called inside
-		COMMENT {@link net.minecraft.screen.ScreenHandler#onClosed}. This does nothing
-		COMMENT by default.
-		COMMENT
-		COMMENT <p>The method is called in both the client and the server. However, because
-		COMMENT clientside screen handler is created with a {@link net.minecraft.inventory.SimpleInventory},
-		COMMENT other implementations can (and the vanilla code does) assume that the method is called
-		COMMENT in the server.
-		ARG 1 player
-	METHOD method_5434 removeStack (II)Lnet/minecraft/class_1799;
-		COMMENT Removes a specific number of items from {@code slot}.
-		COMMENT
-		COMMENT @return the removed items as a stack
-		ARG 1 slot
-		ARG 2 amount
-	METHOD method_5435 onOpen (Lnet/minecraft/class_1657;)V
-		COMMENT Called when the inventory is opened. Specifically, this is called inside the
-		COMMENT {@link net.minecraft.screen.ScreenHandler} constructor. This does nothing
-		COMMENT by default.
-		COMMENT
-		COMMENT <p>The method is called in both the client and the server. However, because
-		COMMENT clientside screen handler is created with a {@link net.minecraft.inventory.SimpleInventory},
-		COMMENT other implementations can (and the vanilla code does) assume that the method is called
-		COMMENT in the server.
-		ARG 1 player
-	METHOD method_5437 isValid (ILnet/minecraft/class_1799;)Z
-		COMMENT {@return whether {@code stack} is valid for the {@code slot}}
-		COMMENT
-		COMMENT <p>Implementations can, for example, use this to check whether the item
-		COMMENT is in a specific tag. This returns {@code true} by default.
-		ARG 1 slot
-		ARG 2 stack
-	METHOD method_5438 getStack (I)Lnet/minecraft/class_1799;
-		COMMENT {@return the stack currently stored at {@code slot}}
-		COMMENT
-		COMMENT <p>If the slot is empty, or is outside the bounds of this inventory,
-		COMMENT this returns {@link ItemStack#EMPTY}.
-		ARG 1 slot
-	METHOD method_5439 size ()I
-		COMMENT {@return the size of the inventory}
-		COMMENT
-		COMMENT <p>The inventory should support the slot ID from {@code 0} to {@code size() - 1}.
-		COMMENT This should remain constant throughout the inventory's lifetime.
-	METHOD method_5441 removeStack (I)Lnet/minecraft/class_1799;
-		COMMENT Removes the stack currently stored at {@code slot}.
-		COMMENT
-		COMMENT @return the stack previously stored at the indicated slot
-		ARG 1 slot
-	METHOD method_5442 isEmpty ()Z
-		COMMENT {@return whether the inventory consists entirely of {@linkplain ItemStack#isEmpty
-		COMMENT empty item stacks}}
-	METHOD method_5443 canPlayerUse (Lnet/minecraft/class_1657;)Z
-		COMMENT {@return whether {@code player} can use this inventory}
-		COMMENT
-		COMMENT <p>This is called by {@link net.minecraft.screen.ScreenHandler#canUse}.
-		COMMENT
-		COMMENT @apiNote Implementations should check the distance between the inventory
-		COMMENT holder and {@code player}. For convenience, this interface offers two methods
-		COMMENT used by block entities to implement this check.
-		COMMENT
-		COMMENT @see #canPlayerUse(BlockEntity, PlayerEntity)
-		COMMENT @see #canPlayerUse(BlockEntity, PlayerEntity, int)
-		ARG 1 player
-	METHOD method_5444 getMaxCountPerStack ()I
-		COMMENT {@return the maximum {@linkplain ItemStack#getCount number of items} a stack
-		COMMENT can contain when placed inside this inventory}
-		COMMENT
-		COMMENT <p>No slots may have more than this number of items. It is effectively the
-		COMMENT stacking limit for this inventory's slots.
-	METHOD method_5447 setStack (ILnet/minecraft/class_1799;)V
-		COMMENT Sets the stack stored at {@code slot} to {@code stack}.
-		ARG 1 slot
-		ARG 2 stack
 	METHOD method_58350 getMaxCount (Lnet/minecraft/class_1799;)I
 		ARG 1 stack
+	METHOD method_72379 getViewingUsers ()Ljava/util/List;
 	CLASS class_10755 Iterator
 		FIELD field_56532 inventory Lnet/minecraft/class_1263;
 		FIELD field_56533 index I

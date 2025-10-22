@@ -21,9 +21,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import cuchaz.enigma.analysis.index.JarIndex;
 import cuchaz.enigma.api.service.JarIndexerService;
 import cuchaz.enigma.api.service.NameProposalService;
+import cuchaz.enigma.api.view.index.JarIndexView;
 import cuchaz.enigma.classprovider.ClassProvider;
 import cuchaz.enigma.translation.mapping.EntryRemapper;
 import cuchaz.enigma.translation.representation.entry.Entry;
@@ -33,14 +33,21 @@ import org.objectweb.asm.tree.ClassNode;
 
 import net.fabricmc.filament.nameproposal.MappingEntry;
 import net.fabricmc.filament.nameproposal.NameFinder;
+import net.fabricmc.filament.nameproposal.NameProposalConfig;
 
 public class EnigmaNameProposalService implements JarIndexerService, NameProposalService {
+	private final NameProposalConfig config;
+
 	private Map<String, String> recordNames;
 	Map<MappingEntry, String> fieldNames;
 
+	public EnigmaNameProposalService(NameProposalConfig config) {
+		this.config = config;
+	}
+
 	@Override
-	public void acceptJar(Set<String> classNames, ClassProvider classProvider, JarIndex jarIndex) {
-		NameFinder nameFinder = new NameFinder();
+	public void acceptJar(Set<String> classNames, ClassProvider classProvider, JarIndexView jarIndex) {
+		NameFinder nameFinder = new NameFinder(config);
 
 		for (String className : classNames) {
 			ClassNode classNode = classProvider.get(className);

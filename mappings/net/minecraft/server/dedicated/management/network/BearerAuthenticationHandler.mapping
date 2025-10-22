@@ -1,0 +1,52 @@
+CLASS net/minecraft/class_12000 net/minecraft/server/dedicated/management/network/BearerAuthenticationHandler
+	FIELD field_62831 BEARER_PREFIX Ljava/lang/String;
+	FIELD field_62832 LOGGER Lorg/slf4j/Logger;
+	FIELD field_62833 token Lnet/minecraft/class_12003;
+	FIELD field_63006 AUTHENTICATED_KEY Lio/netty/util/AttributeKey;
+	FIELD field_63671 WEBSOCKET_AUTH_ALLOWED_KEY Lio/netty/util/AttributeKey;
+	FIELD field_63672 PROTOCOL Ljava/lang/String;
+	FIELD field_63673 PROTOCOL_PREFIX Ljava/lang/String;
+	FIELD field_63674 allowedOrigins Ljava/util/Set;
+	METHOD <init> (Lnet/minecraft/class_12003;Ljava/lang/String;)V
+		ARG 1 token
+		ARG 2 allowedOrigins
+	METHOD channelRead (Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Object;)V
+		ARG 1 context
+		ARG 2 object
+	METHOD method_74508 getHostAddress (Lio/netty/channel/ChannelHandlerContext;)Ljava/lang/String;
+		ARG 1 context
+	METHOD method_74509 (Lio/netty/channel/ChannelHandlerContext;Lio/netty/util/concurrent/Future;)V
+		ARG 1 future
+	METHOD method_74510 sendUnauthorizedError (Lio/netty/channel/ChannelHandlerContext;Ljava/lang/String;)V
+		ARG 1 context
+		ARG 2 message
+	METHOD method_74511 authenticate (Lio/netty/handler/codec/http/HttpRequest;)Lnet/minecraft/class_12000$class_12001;
+		ARG 1 request
+	METHOD method_74512 tokenMatches (Ljava/lang/String;)Z
+		ARG 1 requestToken
+	METHOD method_75593 isOriginAllowed (Lio/netty/handler/codec/http/HttpRequest;)Z
+		ARG 1 request
+	METHOD method_75594 getBearerToken (Lio/netty/handler/codec/http/HttpRequest;)Ljava/lang/String;
+		ARG 1 request
+	METHOD method_75595 getProtocolToken (Lio/netty/handler/codec/http/HttpRequest;)Ljava/lang/String;
+		ARG 1 request
+	METHOD write (Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Object;Lio/netty/channel/ChannelPromise;)V
+		ARG 1 context
+		ARG 2 value
+		ARG 3 promise
+	CLASS class_12001 Result
+		FIELD field_62834 successful Z
+		FIELD field_62835 message Ljava/lang/String;
+		FIELD field_63675 mustReturnProtocol Z
+		METHOD <init> (ZLjava/lang/String;Z)V
+			ARG 1 successful
+			ARG 2 message
+			ARG 3 mustReturnProtocol
+		METHOD method_74515 success ()Lnet/minecraft/class_12000$class_12001;
+		METHOD method_74516 failure (Ljava/lang/String;)Lnet/minecraft/class_12000$class_12001;
+			ARG 0 message
+		METHOD method_74517 isSuccessful ()Z
+		METHOD method_74518 getMessage ()Ljava/lang/String;
+		METHOD method_75596 success (Z)Lnet/minecraft/class_12000$class_12001;
+			ARG 0 mustReturnProtocol
+		METHOD method_75597 mustReturnProtocol ()Z

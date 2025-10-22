@@ -4,12 +4,10 @@ CLASS net/minecraft/class_4341 net/minecraft/client/realms/RealmsClient
 	FIELD field_19580 username Ljava/lang/String;
 	FIELD field_22568 JSON Lnet/minecraft/class_4869;
 	FIELD field_26901 client Lnet/minecraft/class_310;
-	FIELD field_32058 COUNT_PENDING_ENDPOINT Ljava/lang/String;
 	FIELD field_32059 PENDING_ENDPOINT Ljava/lang/String;
 	FIELD field_32060 ACCEPT_INVITATION_ENDPOINT Ljava/lang/String;
 	FIELD field_32061 REJECT_INVITATION_ENDPOINT Ljava/lang/String;
 	FIELD field_32062 WORLD_ENDPOINT_4 Ljava/lang/String;
-	FIELD field_32063 WORLD_ENDPOINT_5 Ljava/lang/String;
 	FIELD field_32064 WORLD_SLOT_ENDPOINT Ljava/lang/String;
 	FIELD field_32065 WORLD_OPEN_ENDPOINT Ljava/lang/String;
 	FIELD field_32066 WORLD_CLOSE_ENDPOINT Ljava/lang/String;
@@ -30,7 +28,6 @@ CLASS net/minecraft/class_4341 net/minecraft/client/realms/RealmsClient
 	FIELD field_32082 PING_STAT_ENDPOINT Ljava/lang/String;
 	FIELD field_32083 TRIAL_ENDPOINT Ljava/lang/String;
 	FIELD field_32084 WORLD_INITIALIZE_ENDPOINT Ljava/lang/String;
-	FIELD field_32085 WORLD_ENDPOINT Ljava/lang/String;
 	FIELD field_32086 LIVEPLAYERLIST_ENDPOINT Ljava/lang/String;
 	FIELD field_32087 WORLD_ENDPOINT_2 Ljava/lang/String;
 	FIELD field_32088 WORLD_PROFILE_ENDPOINT Ljava/lang/String;
@@ -48,6 +45,11 @@ CLASS net/minecraft/class_4341 net/minecraft/client/realms/RealmsClient
 	FIELD field_46687 LIST_USER_WORLDS_OF_TYPE_ANY_ENDPOINT Ljava/lang/String;
 	FIELD field_46688 CREATE_PRERELEASE_REALM_ENDPOINT Ljava/lang/String;
 	FIELD field_46689 LIST_PRERELEASE_ELIGIBLE_WORLDS_ENDPOINT Ljava/lang/String;
+	FIELD field_57916 instance Lnet/minecraft/class_4341;
+	FIELD field_57917 featureFlagsFuture Ljava/util/concurrent/CompletableFuture;
+	FIELD field_57918 FEATURE_ENDPOINT Ljava/lang/String;
+	FIELD field_60171 WORLD_CONFIGURATION_ENDPOINT Ljava/lang/String;
+	FIELD field_60172 PREFERRED_REGIONS_ENDPOINT Ljava/lang/String;
 	METHOD <init> (Ljava/lang/String;Ljava/lang/String;Lnet/minecraft/class_310;)V
 		ARG 1 sessionId
 		ARG 2 username
@@ -63,10 +65,11 @@ CLASS net/minecraft/class_4341 net/minecraft/client/realms/RealmsClient
 	METHOD method_20992 switchSlot (JI)Z
 		ARG 1 worldId
 		ARG 3 slot
-	METHOD method_20993 updateSlot (JILnet/minecraft/class_4883;)V
+	METHOD method_20993 updateSlot (JILnet/minecraft/class_4883;Ljava/util/List;)V
 		ARG 1 worldId
 		ARG 3 slot
 		ARG 4 options
+		ARG 5 settings
 	METHOD method_20994 uninvite (JLjava/util/UUID;)V
 		ARG 1 worldId
 		ARG 3 profileUuid
@@ -83,17 +86,16 @@ CLASS net/minecraft/class_4341 net/minecraft/client/realms/RealmsClient
 	METHOD method_21003 download (JI)Lnet/minecraft/class_4889;
 		ARG 1 worldId
 		ARG 3 slotId
-	METHOD method_21004 invite (JLjava/lang/String;)Lnet/minecraft/class_4877;
+	METHOD method_21004 invite (JLjava/lang/String;)Ljava/util/List;
 		ARG 1 worldId
 		ARG 3 profileName
-	METHOD method_21005 update (JLjava/lang/String;Ljava/lang/String;)V
-		ARG 1 worldId
-		ARG 3 name
-		ARG 4 motd
 	METHOD method_21006 rejectInvitation (Ljava/lang/String;)V
 		ARG 1 invitationId
 	METHOD method_21007 url (Ljava/lang/String;Ljava/lang/String;Z)Ljava/lang/String;
-	METHOD method_21009 join (J)Lnet/minecraft/class_4878;
+		ARG 0 path
+		ARG 1 queryString
+		ARG 2 aks
+	METHOD method_21009 join (J)Lnet/minecraft/class_11459;
 		ARG 1 worldId
 	METHOD method_21010 restoreWorld (JLjava/lang/String;)V
 		ARG 1 worldId
@@ -136,8 +138,6 @@ CLASS net/minecraft/class_4341 net/minecraft/client/realms/RealmsClient
 	METHOD method_21033 trialAvailable ()Ljava/lang/Boolean;
 	METHOD method_31381 isOwnerBlocked (Lnet/minecraft/class_4871;)Z
 		ARG 1 invite
-	METHOD method_35684 getPlayerActivities (J)Lnet/minecraft/class_6193;
-		ARG 1 worldId
 	METHOD method_44616 create ()Lnet/minecraft/class_4341;
 	METHOD method_49569 markNotificationsAsSeen (Ljava/util/List;)V
 		ARG 1 notifications
@@ -150,6 +150,20 @@ CLASS net/minecraft/class_4341 net/minecraft/client/realms/RealmsClient
 	METHOD method_54360 createPrereleaseServer (Ljava/lang/Long;)Lnet/minecraft/class_4877;
 		ARG 1 parentWorldId
 	METHOD method_54361 getPrereleaseEligibleServers ()Ljava/util/List;
+	METHOD method_68464 url (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+		ARG 1 path
+		ARG 2 queryString
+	METHOD method_68465 getFeatureFlags ()Ljava/util/Set;
+	METHOD method_68466 fetchFeatureFlags ()Ljava/util/Set;
+	METHOD method_71168 configure (JLjava/lang/String;Ljava/lang/String;Lnet/minecraft/class_11310;ILnet/minecraft/class_4883;Ljava/util/List;)V
+		ARG 1 worldId
+		ARG 3 name
+		ARG 4 description
+		ARG 5 regionSelectionPreference
+		ARG 6 slotId
+		ARG 7 options
+		ARG 8 settings
+	METHOD method_71169 getRegionDataList ()Lnet/minecraft/class_11301;
 	CLASS class_4342 CompatibleVersionResponse
 		FIELD field_19582 COMPATIBLE Lnet/minecraft/class_4341$class_4342;
 		FIELD field_19583 OUTDATED Lnet/minecraft/class_4341$class_4342;
@@ -162,9 +176,11 @@ CLASS net/minecraft/class_4341 net/minecraft/client/realms/RealmsClient
 		FIELD field_19588 LOCAL Lnet/minecraft/class_4341$class_4343;
 		FIELD field_19589 baseUrl Ljava/lang/String;
 		FIELD field_19590 protocol Ljava/lang/String;
+		FIELD field_57919 aksUrl Ljava/lang/String;
 		METHOD <init> (Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 			ARG 3 baseUrl
-			ARG 4 protocol
+			ARG 4 aksUrl
+			ARG 5 protocol
 		METHOD method_52215 fromName (Ljava/lang/String;)Ljava/util/Optional;
 			ARG 0 name
 		METHOD valueOf (Ljava/lang/String;)Lnet/minecraft/class_4341$class_4343;

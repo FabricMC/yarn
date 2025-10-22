@@ -21,7 +21,7 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	COMMENT get the component values. Use {@link #set} or {@link #remove} to set the components.
 	COMMENT
 	COMMENT <h2 id="nbt-serialization">NBT serialization</h2>
-	COMMENT <p>An Item Stack can be serialized with {@link #encode(RegistryWrapper.WrapperLookup)}, and deserialized with {@link #fromNbt(RegistryWrapper.WrapperLookup, NbtCompound)}.
+	COMMENT <p>An Item Stack can be serialized with {@link #toNbt(RegistryWrapper.WrapperLookup)}, and deserialized with {@link #fromNbt(RegistryWrapper.WrapperLookup, NbtCompound)}.
 	COMMENT
 	COMMENT <div class="fabric">
 	COMMENT <table border=1>
@@ -40,6 +40,16 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	COMMENT </tr>
 	COMMENT </table>
 	COMMENT </div>
+	FIELD field_8030 bobbingAnimationTime I
+	FIELD field_8031 count I
+	FIELD field_8033 LOGGER Lorg/slf4j/Logger;
+	FIELD field_8037 EMPTY Lnet/minecraft/class_1799;
+		COMMENT The empty item stack that holds no item.
+		COMMENT
+		COMMENT <p>This should never be mutated.
+		COMMENT
+		COMMENT @see ItemStack#isEmpty
+	FIELD field_8038 item Lnet/minecraft/class_1792;
 	FIELD field_24093 holder Lnet/minecraft/class_1297;
 	FIELD field_24671 CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_40211 DISABLED_TEXT Lnet/minecraft/class_2561;
@@ -55,16 +65,8 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 	FIELD field_55546 OPERATOR_WARNINGS Ljava/util/List;
 	FIELD field_55709 MAP_CODEC Lcom/mojang/serialization/MapCodec;
 	FIELD field_56297 UNBREAKABLE_TEXT Lnet/minecraft/class_2561;
-	FIELD field_8030 bobbingAnimationTime I
-	FIELD field_8031 count I
-	FIELD field_8033 LOGGER Lorg/slf4j/Logger;
-	FIELD field_8037 EMPTY Lnet/minecraft/class_1799;
-		COMMENT The empty item stack that holds no item.
-		COMMENT
-		COMMENT <p>This should never be mutated.
-		COMMENT
-		COMMENT @see ItemStack#isEmpty
-	FIELD field_8038 item Lnet/minecraft/class_1792;
+	FIELD field_58141 LENGTH_PREPENDED_OPTIONAL_PACKET_CODEC Lnet/minecraft/class_9139;
+	FIELD field_63379 INTANGIBLE_TEXT Lnet/minecraft/class_2561;
 	METHOD <init> (Ljava/lang/Void;)V
 		ARG 1 v
 	METHOD <init> (Lnet/minecraft/class_1935;)V
@@ -85,321 +87,6 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 1 item
 		ARG 2 count
 		ARG 3 changes
-	METHOD method_27319 getHolder ()Lnet/minecraft/class_1297;
-		COMMENT {@return the entity that holds the stack, or {@code null} if inapplicable}
-		COMMENT
-		COMMENT @see #isInFrame
-		COMMENT @see #getFrame
-		COMMENT @see #setHolder
-	METHOD method_27320 setHolder (Lnet/minecraft/class_1297;)V
-		COMMENT Sets the stack's holder to {@code holder}.
-		COMMENT
-		COMMENT <p>This is used by item frames and item entities, and does not need to be called
-		COMMENT for other entities.
-		COMMENT
-		COMMENT @see #isInFrame
-		COMMENT @see #getFrame
-		COMMENT @see #getHolder
-		ARG 1 holder
-	METHOD method_31573 isIn (Lnet/minecraft/class_6862;)Z
-		COMMENT {@return whether the item is in {@code tag}}
-		ARG 1 tag
-	METHOD method_31574 isOf (Lnet/minecraft/class_1792;)Z
-		COMMENT {@return whether the item is {@code item}}
-		ARG 1 item
-	METHOD method_31575 onStackClicked (Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;)Z
-		ARG 1 slot
-		ARG 2 clickType
-		ARG 3 player
-	METHOD method_31576 onClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;Lnet/minecraft/class_5630;)Z
-		ARG 1 stack
-		ARG 2 slot
-		ARG 3 clickType
-		ARG 4 player
-		ARG 5 cursorStackReference
-	METHOD method_31577 areItemsAndComponentsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
-		COMMENT {@return whether the given item stacks' items and components are equal}
-		COMMENT
-		COMMENT <p>If this returns {@code true}, the two item stacks can be combined into one,
-		COMMENT as long as the resulting item count does not exceed {@linkplain Item#getMaxCount
-		COMMENT the maximum item count}
-		COMMENT
-		COMMENT @see #areEqual
-		COMMENT @see #areItemsEqual
-		ARG 0 stack
-		ARG 1 otherStack
-	METHOD method_31578 isItemBarVisible ()Z
-	METHOD method_31579 getItemBarStep ()I
-		COMMENT {@return the length of the filled section of the durability bar in pixels (out of 13)}
-	METHOD method_31580 getItemBarColor ()I
-		COMMENT {@return the color of the filled section of the durability bar}
-	METHOD method_32347 getTooltipData ()Ljava/util/Optional;
-	METHOD method_33262 onItemEntityDestroyed (Lnet/minecraft/class_1542;)V
-		ARG 1 entity
-	METHOD method_40133 streamTags ()Ljava/util/stream/Stream;
-		COMMENT {@return a stream of all tags the item is in}
-		COMMENT
-		COMMENT @see #isIn(TagKey)
-	METHOD method_41406 itemMatches (Lnet/minecraft/class_6880;)Z
-		COMMENT {@return whether the item's registry entry matches {@code itemEntry}}
-		COMMENT
-		COMMENT @see #itemMatches(Predicate)
-		COMMENT @see #isOf(Item)
-		ARG 1 itemEntry
-	METHOD method_41407 itemMatches (Ljava/util/function/Predicate;)Z
-		COMMENT {@return whether the item's registry entry passes the {@code predicate}}
-		COMMENT
-		COMMENT @see #itemMatches(RegistryEntry)
-		COMMENT @see #isOf(Item)
-		ARG 1 predicate
-	METHOD method_41409 getRegistryEntry ()Lnet/minecraft/class_6880;
-	METHOD method_45435 isItemEnabled (Lnet/minecraft/class_7699;)Z
-		ARG 1 enabledFeatures
-	METHOD method_46651 copyWithCount (I)Lnet/minecraft/class_1799;
-		COMMENT {@return a copy of this item stack, including the components, and {@linkplain #getBobbingAnimationTime bobbing animation time}},
-		COMMENT with the item count set to {@code count}
-		COMMENT
-		COMMENT @see #copy
-		COMMENT @see #copyComponentsToNewStack
-		COMMENT @see #copyComponentsToNewStackIgnoreEmpty
-		ARG 1 count
-			COMMENT the item count of the resultant stack
-	METHOD method_51164 copyAndEmpty ()Lnet/minecraft/class_1799;
-	METHOD method_53187 isIn (Lnet/minecraft/class_6885;)Z
-		ARG 1 registryEntryList
-	METHOD method_54466 onCraftByCrafter (Lnet/minecraft/class_1937;)V
-		ARG 1 world
-	METHOD method_56097 (Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;Lnet/minecraft/class_1792;)V
-		ARG 2 item
-	METHOD method_56700 (Lnet/minecraft/class_1799;)Ljava/util/Optional;
-		ARG 0 stack
-	METHOD method_56701 copyComponentsToNewStack (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1799;
-		COMMENT {@return a new item stack with the components copied from this item stack}
-		COMMENT
-		COMMENT @see #copy
-		COMMENT @see #copyWithCount
-		COMMENT @see #copyComponentsToNewStackIgnoreEmpty
-		ARG 1 item
-			COMMENT the item of the resultant stack
-		ARG 2 count
-			COMMENT the item count of the resultant stack
-	METHOD method_56702 createOptionalCodec (Ljava/lang/String;)Lcom/mojang/serialization/MapCodec;
-		ARG 0 fieldName
-	METHOD method_56703 (Ljava/util/Optional;)Lnet/minecraft/class_1799;
-		ARG 0 optional
-	METHOD method_56704 copyComponentsToNewStackIgnoreEmpty (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1799;
-		COMMENT {@return a new item stack with the components copied from this item stack, even if this stack is empty}
-		COMMENT
-		COMMENT @see #copy
-		COMMENT @see #copyWithCount
-		COMMENT @see #copyComponentsToNewStack
-		ARG 1 item
-			COMMENT the item of the resultant stack
-		ARG 2 count
-			COMMENT the item count of the resultant stack
-	METHOD method_57008 decrementUnlessCreative (ILnet/minecraft/class_1309;)V
-		COMMENT Decrements the count of items in this item stack, unless {@code entity}
-		COMMENT is a creative mode player.
-		ARG 1 amount
-		ARG 2 entity
-	METHOD method_57352 (Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/MapCodec;
-		ARG 0 codec
-	METHOD method_57354 applyAttributeModifiers (Lnet/minecraft/class_1304;Ljava/util/function/BiConsumer;)V
-		ARG 1 slot
-		ARG 2 attributeModifierConsumer
-	METHOD method_57355 hashCode (Lnet/minecraft/class_1799;)I
-		ARG 0 stack
-	METHOD method_57356 (Lnet/minecraft/class_6880;ILnet/minecraft/class_9304$class_9305;)V
-		ARG 2 builder
-	METHOD method_57357 canPlaceOn (Lnet/minecraft/class_2694;)Z
-		ARG 1 pos
-	METHOD method_57358 toNbt (Lnet/minecraft/class_7225$class_7874;)Lnet/minecraft/class_2520;
-		ARG 1 registries
-	METHOD method_57360 fromNbt (Lnet/minecraft/class_7225$class_7874;Lnet/minecraft/class_2520;)Ljava/util/Optional;
-		ARG 0 registries
-		ARG 1 nbt
-	METHOD method_57361 listHashCode (Ljava/util/List;)I
-		ARG 0 stacks
-	METHOD method_57362 stacksEqual (Ljava/util/List;Ljava/util/List;)Z
-		ARG 0 left
-		ARG 1 right
-	METHOD method_57363 appendAttributeModifiersTooltip (Ljava/util/function/Consumer;Lnet/minecraft/class_10712;Lnet/minecraft/class_1657;)V
-		ARG 1 textConsumer
-		ARG 2 displayComponent
-		ARG 3 player
-	METHOD method_57364 appendAttributeModifierTooltip (Ljava/util/function/Consumer;Lnet/minecraft/class_1657;Lnet/minecraft/class_6880;Lnet/minecraft/class_1322;)V
-		ARG 1 textConsumer
-		ARG 2 player
-		ARG 3 attribute
-		ARG 4 modifier
-	METHOD method_57365 applyComponentsFrom (Lnet/minecraft/class_9323;)V
-		ARG 1 components
-	METHOD method_57366 applyUnvalidatedChanges (Lnet/minecraft/class_9326;)V
-		ARG 1 changes
-	METHOD method_57367 apply (Lnet/minecraft/class_9331;Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
-		COMMENT Sets the component {@code type} by passing the current value and {@code change}
-		COMMENT to {@code applier}, then setting its return value as the value. If the component is
-		COMMENT missing, {@code defaultValue} is used as the default.
-		COMMENT
-		COMMENT <p>In practice, {@code applier} is a reference to a method of the component
-		COMMENT class with one parameter, that returns a new instance of the component with the
-		COMMENT specific value changed to {@code change}. For example, adding a lore can be accomplished
-		COMMENT by passing reference to {@link net.minecraft.component.type.LoreComponent#with}
-		COMMENT and the added lore, like
-		COMMENT {@code stack.apply(DataComponentTypes.LORE, LoreComponent.DEFAULT, text, LoreComponent::with)}.
-		COMMENT
-		COMMENT @implNote This is the same as setting {@code applier.apply(stack.getOrDefault(type, defaultValue), change)}.
-		COMMENT
-		COMMENT @return the previous value set
-		COMMENT @see #apply(DataComponentType, Object, UnaryOperator)
-		COMMENT @see #set
-		ARG 1 type
-		ARG 2 defaultValue
-		ARG 3 change
-		ARG 4 applier
-	METHOD method_57368 apply (Lnet/minecraft/class_9331;Ljava/lang/Object;Ljava/util/function/UnaryOperator;)Ljava/lang/Object;
-		COMMENT Sets the component {@code type} by passing the current value (or {@code defaultValue}
-		COMMENT if the component is missing) to {@code applier} and then setting its return value as
-		COMMENT the value.
-		COMMENT
-		COMMENT @implNote This is the same as setting {@code applier.apply(stack.getOrDefault(type, defaultValue))}.
-		COMMENT
-		COMMENT @return the previous value set
-		COMMENT @see #set
-		COMMENT @see #apply(DataComponentType, Object, Object, BiFunction)
-		ARG 1 type
-		ARG 2 defaultValue
-		ARG 3 applier
-	METHOD method_57369 appendComponentTooltip (Lnet/minecraft/class_9331;Lnet/minecraft/class_1792$class_9635;Lnet/minecraft/class_10712;Ljava/util/function/Consumer;Lnet/minecraft/class_1836;)V
-		ARG 1 componentType
-		ARG 2 context
-		ARG 3 displayComponent
-		ARG 4 textConsumer
-		ARG 5 type
-	METHOD method_57370 (Lorg/apache/commons/lang3/mutable/MutableBoolean;Ljava/util/function/Consumer;Lnet/minecraft/class_9274;Lnet/minecraft/class_1657;Lnet/minecraft/class_6880;Lnet/minecraft/class_1322;)V
-		ARG 5 attribute
-		ARG 6 modifier
-	METHOD method_57371 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
-		ARG 0 instance
-	METHOD method_57372 validate (Lnet/minecraft/class_1799;)Lcom/mojang/serialization/DataResult;
-		ARG 0 stack
-	METHOD method_57373 canBreak (Lnet/minecraft/class_2694;)Z
-		ARG 1 pos
-	METHOD method_57376 toNbt (Lnet/minecraft/class_7225$class_7874;Lnet/minecraft/class_2520;)Lnet/minecraft/class_2520;
-		ARG 1 registries
-		ARG 2 prefix
-	METHOD method_57377 (Ljava/lang/String;)V
-		ARG 0 error
-	METHOD method_57378 (Ljava/util/Optional;)Lnet/minecraft/class_1799;
-		ARG 0 optional
-	METHOD method_57379 set (Lnet/minecraft/class_9331;Ljava/lang/Object;)Ljava/lang/Object;
-		COMMENT Sets the component {@code type} for this item stack to {@code value}.
-		COMMENT
-		COMMENT <p>If {@code value} is {@code null}, the component is removed and the base component
-		COMMENT is unset. To reverse the stack-specific change, instead pass the default value
-		COMMENT as {@code value}.
-		COMMENT
-		COMMENT @return the previous value set
-		COMMENT @see #apply(DataComponentType, Object, UnaryOperator)
-		COMMENT @see #apply(DataComponentType, Object, Object, BiFunction)
-		ARG 1 type
-		ARG 2 value
-	METHOD method_57380 getComponentChanges ()Lnet/minecraft/class_9326;
-	METHOD method_57381 remove (Lnet/minecraft/class_9331;)Ljava/lang/Object;
-		COMMENT Removes the component {@code type}. If it is in the stack's base component,
-		COMMENT it is unset and the component becomes missing. To reverse the stack-specific change,
-		COMMENT instead pass the default value as {@code value}.
-		COMMENT
-		COMMENT @return the previous value set
-		ARG 1 type
-	METHOD method_57382 (Lnet/minecraft/class_1799;)Ljava/util/Optional;
-		ARG 0 stack
-	METHOD method_57383 (Lnet/minecraft/class_1799;Lnet/minecraft/class_3902;)Lnet/minecraft/class_1799;
-		ARG 1 v
-	METHOD method_57385 (Lnet/minecraft/class_1799;)Lnet/minecraft/class_9326;
-		ARG 0 stack
-	METHOD method_58092 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
-		ARG 0 instance
-	METHOD method_58093 (Lnet/minecraft/class_6880;Lnet/minecraft/class_9326;)Lnet/minecraft/class_1799;
-		ARG 0 item
-		ARG 1 components
-	METHOD method_58094 (Lnet/minecraft/class_1799;)Lnet/minecraft/class_9326;
-		ARG 0 stack
-	METHOD method_58407 takesDamageFrom (Lnet/minecraft/class_1282;)Z
-		ARG 1 source
-	METHOD method_58408 capCount (I)V
-		COMMENT Sets the count of items in this item stack to not exceed {@code maxCount}.
-		ARG 1 maxCount
-	METHOD method_58657 getEnchantments ()Lnet/minecraft/class_9304;
-	METHOD method_58658 getDefaultComponents ()Lnet/minecraft/class_9323;
-	METHOD method_59691 validateComponents (Lnet/minecraft/class_9323;)Lcom/mojang/serialization/DataResult;
-		ARG 0 components
-	METHOD method_59692 applyChanges (Lnet/minecraft/class_9326;)V
-		ARG 1 changes
-	METHOD method_59693 createExtraValidatingPacketCodec (Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
-		COMMENT {@return a packet codec that ensures the validity of the decoded stack by
-		COMMENT checking if it can be re-encoded}
-		COMMENT
-		COMMENT <p>This should be used when serializing {@link ItemStack} in C2S packets.
-		COMMENT Encoding is unaffected.
-		ARG 0 basePacketCodec
-	METHOD method_59979 postDamageEntity (Lnet/minecraft/class_1309;Lnet/minecraft/class_1309;)V
-		ARG 1 target
-		ARG 2 user
-	METHOD method_60503 withItem (Lnet/minecraft/class_1935;)Lnet/minecraft/class_1799;
-		ARG 1 item
-	METHOD method_60504 splitUnlessCreative (ILnet/minecraft/class_1309;)Lnet/minecraft/class_1799;
-		ARG 1 amount
-		ARG 2 entity
-	METHOD method_60617 applyAttributeModifier (Lnet/minecraft/class_9274;Ljava/util/function/BiConsumer;)V
-		ARG 1 slot
-		ARG 2 attributeModifierConsumer
-	METHOD method_60986 damage (ILnet/minecraft/class_1935;Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
-		ARG 1 amount
-		ARG 2 itemAfterBreaking
-		ARG 3 entity
-		ARG 4 slot
-	METHOD method_61651 calculateDamage (ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;)I
-		ARG 1 baseDamage
-		ARG 2 world
-		ARG 3 player
-	METHOD method_61652 onDurabilityChange (ILnet/minecraft/class_3222;Ljava/util/function/Consumer;)V
-		ARG 1 damage
-		ARG 2 player
-		ARG 3 breakCallback
-	METHOD method_61653 damage (ILnet/minecraft/class_1657;)V
-		ARG 1 amount
-		ARG 2 player
-	METHOD method_61654 (Lnet/minecraft/class_1792;)V
-		ARG 0 item
-	METHOD method_61655 canRepairWith (Lnet/minecraft/class_1799;)Z
-		ARG 1 ingredient
-	METHOD method_61657 shouldBreak ()Z
-	METHOD method_62837 applyRemainderAndCooldown (Lnet/minecraft/class_1309;Lnet/minecraft/class_1799;)Lnet/minecraft/class_1799;
-		ARG 1 user
-		ARG 2 stack
-	METHOD method_63015 getFormattedName ()Lnet/minecraft/class_2561;
-	METHOD method_63692 willBreakNextUse ()Z
-	METHOD method_63693 getItemName ()Lnet/minecraft/class_2561;
-	METHOD method_65130 getCustomName ()Lnet/minecraft/class_2561;
-		COMMENT {@return the custom name or book title of the stack if it exists, or {@code null}}
-	METHOD method_65359 getImmutableComponents ()Lnet/minecraft/class_9323;
-	METHOD method_65797 hasChangedComponent (Lnet/minecraft/class_9331;)Z
-		ARG 1 type
-	METHOD method_66334 canMine (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)Z
-		ARG 1 state
-		ARG 2 world
-		ARG 3 pos
-		ARG 4 player
-	METHOD method_66697 copy (Lnet/minecraft/class_9331;Lnet/minecraft/class_9473;)V
-		ARG 1 type
-		ARG 2 from
-	METHOD method_67194 appendTooltip (Lnet/minecraft/class_1792$class_9635;Lnet/minecraft/class_10712;Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;Ljava/util/function/Consumer;)V
-		ARG 1 context
-		ARG 2 displayComponent
-		ARG 3 player
-		ARG 4 type
-		ARG 5 textConsumer
 	METHOD method_7909 getItem ()Lnet/minecraft/class_1792;
 		COMMENT {@return the item of this stack}
 		COMMENT
@@ -619,10 +306,9 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		ARG 2 user
 	METHOD method_7981 useOnBlock (Lnet/minecraft/class_1838;)Lnet/minecraft/class_1269;
 		ARG 1 context
-	METHOD method_7982 onCraftByPlayer (Lnet/minecraft/class_1937;Lnet/minecraft/class_1657;I)V
-		ARG 1 world
-		ARG 2 player
-		ARG 3 amount
+	METHOD method_7982 onCraftByPlayer (Lnet/minecraft/class_1657;I)V
+		ARG 1 player
+		ARG 2 amount
 	METHOD method_7984 areItemsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
 		COMMENT {@return whether the given item stacks contain the same item, regardless of item count or components}
 		COMMENT
@@ -635,4 +321,333 @@ CLASS net/minecraft/class_1799 net/minecraft/item/ItemStack
 		COMMENT
 		COMMENT @see #isDamageable
 		COMMENT @see #getDamage
+	METHOD method_27319 getHolder ()Lnet/minecraft/class_1297;
+		COMMENT {@return the entity that holds the stack, or {@code null} if inapplicable}
+		COMMENT
+		COMMENT @see #isInFrame
+		COMMENT @see #getFrame
+		COMMENT @see #setHolder
+	METHOD method_27320 setHolder (Lnet/minecraft/class_1297;)V
+		COMMENT Sets the stack's holder to {@code holder}.
+		COMMENT
+		COMMENT <p>This is used by item frames and item entities, and does not need to be called
+		COMMENT for other entities.
+		COMMENT
+		COMMENT @see #isInFrame
+		COMMENT @see #getFrame
+		COMMENT @see #getHolder
+		ARG 1 holder
+	METHOD method_31573 isIn (Lnet/minecraft/class_6862;)Z
+		COMMENT {@return whether the item is in {@code tag}}
+		ARG 1 tag
+	METHOD method_31574 isOf (Lnet/minecraft/class_1792;)Z
+		COMMENT {@return whether the item is {@code item}}
+		ARG 1 item
+	METHOD method_31575 onStackClicked (Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;)Z
+		ARG 1 slot
+		ARG 2 clickType
+		ARG 3 player
+	METHOD method_31576 onClicked (Lnet/minecraft/class_1799;Lnet/minecraft/class_1735;Lnet/minecraft/class_5536;Lnet/minecraft/class_1657;Lnet/minecraft/class_5630;)Z
+		ARG 1 stack
+		ARG 2 slot
+		ARG 3 clickType
+		ARG 4 player
+		ARG 5 cursorStackReference
+	METHOD method_31577 areItemsAndComponentsEqual (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+		COMMENT {@return whether the given item stacks' items and components are equal}
+		COMMENT
+		COMMENT <p>If this returns {@code true}, the two item stacks can be combined into one,
+		COMMENT as long as the resulting item count does not exceed {@linkplain Item#getMaxCount
+		COMMENT the maximum item count}
+		COMMENT
+		COMMENT @see #areEqual
+		COMMENT @see #areItemsEqual
+		ARG 0 stack
+		ARG 1 otherStack
+	METHOD method_31578 isItemBarVisible ()Z
+	METHOD method_31579 getItemBarStep ()I
+		COMMENT {@return the length of the filled section of the durability bar in pixels (out of 13)}
+	METHOD method_31580 getItemBarColor ()I
+		COMMENT {@return the color of the filled section of the durability bar}
+	METHOD method_32347 getTooltipData ()Ljava/util/Optional;
+	METHOD method_33262 onItemEntityDestroyed (Lnet/minecraft/class_1542;)V
+		ARG 1 entity
+	METHOD method_40133 streamTags ()Ljava/util/stream/Stream;
+		COMMENT {@return a stream of all tags the item is in}
+		COMMENT
+		COMMENT @see #isIn(TagKey)
+	METHOD method_41406 itemMatches (Lnet/minecraft/class_6880;)Z
+		COMMENT {@return whether the item's registry entry matches {@code itemEntry}}
+		COMMENT
+		COMMENT @see #itemMatches(Predicate)
+		COMMENT @see #isOf(Item)
+		ARG 1 itemEntry
+	METHOD method_41407 itemMatches (Ljava/util/function/Predicate;)Z
+		COMMENT {@return whether the item's registry entry passes the {@code predicate}}
+		COMMENT
+		COMMENT @see #itemMatches(RegistryEntry)
+		COMMENT @see #isOf(Item)
+		ARG 1 predicate
+	METHOD method_41409 getRegistryEntry ()Lnet/minecraft/class_6880;
+	METHOD method_45435 isItemEnabled (Lnet/minecraft/class_7699;)Z
+		ARG 1 enabledFeatures
+	METHOD method_46651 copyWithCount (I)Lnet/minecraft/class_1799;
+		COMMENT {@return a copy of this item stack, including the components, and {@linkplain #getBobbingAnimationTime bobbing animation time},
+		COMMENT with the item count set to {@code count}}
+		COMMENT
+		COMMENT @see #copy
+		COMMENT @see #copyComponentsToNewStack
+		COMMENT @see #copyComponentsToNewStackIgnoreEmpty
+		ARG 1 count
+			COMMENT the item count of the resultant stack
+	METHOD method_51164 copyAndEmpty ()Lnet/minecraft/class_1799;
+	METHOD method_53187 isIn (Lnet/minecraft/class_6885;)Z
+		ARG 1 registryEntryList
+	METHOD method_54466 onCraftByCrafter (Lnet/minecraft/class_1937;)V
+		ARG 1 world
+	METHOD method_56097 (Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;Lnet/minecraft/class_1792;)V
+		ARG 2 item
+	METHOD method_56700 (Lnet/minecraft/class_1799;)Ljava/util/Optional;
+		ARG 0 stack
+	METHOD method_56701 copyComponentsToNewStack (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1799;
+		COMMENT {@return a new item stack with the components copied from this item stack}
+		COMMENT
+		COMMENT @see #copy
+		COMMENT @see #copyWithCount
+		COMMENT @see #copyComponentsToNewStackIgnoreEmpty
+		ARG 1 item
+			COMMENT the item of the resultant stack
+		ARG 2 count
+			COMMENT the item count of the resultant stack
+	METHOD method_56702 createOptionalCodec (Ljava/lang/String;)Lcom/mojang/serialization/MapCodec;
+		ARG 0 fieldName
+	METHOD method_56703 (Ljava/util/Optional;)Lnet/minecraft/class_1799;
+		ARG 0 optional
+	METHOD method_56704 copyComponentsToNewStackIgnoreEmpty (Lnet/minecraft/class_1935;I)Lnet/minecraft/class_1799;
+		COMMENT {@return a new item stack with the components copied from this item stack, even if this stack is empty}
+		COMMENT
+		COMMENT @see #copy
+		COMMENT @see #copyWithCount
+		COMMENT @see #copyComponentsToNewStack
+		ARG 1 item
+			COMMENT the item of the resultant stack
+		ARG 2 count
+			COMMENT the item count of the resultant stack
+	METHOD method_57008 decrementUnlessCreative (ILnet/minecraft/class_1309;)V
+		COMMENT Decrements the count of items in this item stack, unless {@code entity}
+		COMMENT is a creative mode player.
+		ARG 1 amount
+		ARG 2 entity
+	METHOD method_57352 (Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/MapCodec;
+		ARG 0 codec
+	METHOD method_57354 applyAttributeModifiers (Lnet/minecraft/class_1304;Ljava/util/function/BiConsumer;)V
+		ARG 1 slot
+		ARG 2 attributeModifierConsumer
+	METHOD method_57355 hashCode (Lnet/minecraft/class_1799;)I
+		ARG 0 stack
+	METHOD method_57356 (Lnet/minecraft/class_6880;ILnet/minecraft/class_9304$class_9305;)V
+		ARG 2 builder
+	METHOD method_57357 canPlaceOn (Lnet/minecraft/class_2694;)Z
+		ARG 1 pos
+	METHOD method_57361 listHashCode (Ljava/util/List;)I
+		ARG 0 stacks
+	METHOD method_57362 stacksEqual (Ljava/util/List;Ljava/util/List;)Z
+		ARG 0 left
+		ARG 1 right
+	METHOD method_57363 appendAttributeModifiersTooltip (Ljava/util/function/Consumer;Lnet/minecraft/class_10712;Lnet/minecraft/class_1657;)V
+		ARG 1 textConsumer
+		ARG 2 displayComponent
+		ARG 3 player
+	METHOD method_57365 applyComponentsFrom (Lnet/minecraft/class_9323;)V
+		ARG 1 components
+	METHOD method_57366 applyUnvalidatedChanges (Lnet/minecraft/class_9326;)V
+		ARG 1 changes
+	METHOD method_57367 apply (Lnet/minecraft/class_9331;Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+		COMMENT Sets the component {@code type} by passing the current value and {@code change}
+		COMMENT to {@code applier}, then setting its return value as the value. If the component is
+		COMMENT missing, {@code defaultValue} is used as the default.
+		COMMENT
+		COMMENT <p>In practice, {@code applier} is a reference to a method of the component
+		COMMENT class with one parameter, that returns a new instance of the component with the
+		COMMENT specific value changed to {@code change}. For example, adding a lore can be accomplished
+		COMMENT by passing reference to {@link net.minecraft.component.type.LoreComponent#with}
+		COMMENT and the added lore, like
+		COMMENT {@code stack.apply(DataComponentTypes.LORE, LoreComponent.DEFAULT, text, LoreComponent::with)}.
+		COMMENT
+		COMMENT @implNote This is the same as setting {@code applier.apply(stack.getOrDefault(type, defaultValue), change)}.
+		COMMENT
+		COMMENT @return the previous value set
+		COMMENT @see #apply(DataComponentType, Object, UnaryOperator)
+		COMMENT @see #set
+		ARG 1 type
+		ARG 2 defaultValue
+		ARG 3 change
+		ARG 4 applier
+	METHOD method_57368 apply (Lnet/minecraft/class_9331;Ljava/lang/Object;Ljava/util/function/UnaryOperator;)Ljava/lang/Object;
+		COMMENT Sets the component {@code type} by passing the current value (or {@code defaultValue}
+		COMMENT if the component is missing) to {@code applier} and then setting its return value as
+		COMMENT the value.
+		COMMENT
+		COMMENT @implNote This is the same as setting {@code applier.apply(stack.getOrDefault(type, defaultValue))}.
+		COMMENT
+		COMMENT @return the previous value set
+		COMMENT @see #set
+		COMMENT @see #apply(DataComponentType, Object, Object, BiFunction)
+		ARG 1 type
+		ARG 2 defaultValue
+		ARG 3 applier
+	METHOD method_57369 appendComponentTooltip (Lnet/minecraft/class_9331;Lnet/minecraft/class_1792$class_9635;Lnet/minecraft/class_10712;Ljava/util/function/Consumer;Lnet/minecraft/class_1836;)V
+		ARG 1 componentType
+		ARG 2 context
+		ARG 3 displayComponent
+		ARG 4 textConsumer
+		ARG 5 type
+	METHOD method_57370 (Lorg/apache/commons/lang3/mutable/MutableBoolean;Ljava/util/function/Consumer;Lnet/minecraft/class_9274;Lnet/minecraft/class_1657;Lnet/minecraft/class_6880;Lnet/minecraft/class_1322;Lnet/minecraft/class_9285$class_11193;)V
+		ARG 4 attribute
+		ARG 5 modifier
+		ARG 6 display
+	METHOD method_57371 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 0 instance
+	METHOD method_57372 validate (Lnet/minecraft/class_1799;)Lcom/mojang/serialization/DataResult;
+		ARG 0 stack
+	METHOD method_57373 canBreak (Lnet/minecraft/class_2694;)Z
+		ARG 1 pos
+	METHOD method_57378 (Ljava/util/Optional;)Lnet/minecraft/class_1799;
+		ARG 0 optional
+	METHOD method_57379 set (Lnet/minecraft/class_9331;Ljava/lang/Object;)Ljava/lang/Object;
+		COMMENT Sets the component {@code type} for this item stack to {@code value}.
+		COMMENT
+		COMMENT <p>If {@code value} is {@code null}, the component is removed and the base component
+		COMMENT is unset. To reverse the stack-specific change, instead pass the default value
+		COMMENT as {@code value}.
+		COMMENT
+		COMMENT @return the previous value set
+		COMMENT @see #apply(DataComponentType, Object, UnaryOperator)
+		COMMENT @see #apply(DataComponentType, Object, Object, BiFunction)
+		ARG 1 type
+		ARG 2 value
+	METHOD method_57380 getComponentChanges ()Lnet/minecraft/class_9326;
+	METHOD method_57381 remove (Lnet/minecraft/class_9331;)Ljava/lang/Object;
+		COMMENT Removes the component {@code type}. If it is in the stack's base component,
+		COMMENT it is unset and the component becomes missing. To reverse the stack-specific change,
+		COMMENT instead pass the default value as {@code value}.
+		COMMENT
+		COMMENT @return the previous value set
+		ARG 1 type
+	METHOD method_57382 (Lnet/minecraft/class_1799;)Ljava/util/Optional;
+		ARG 0 stack
+	METHOD method_57383 (Lnet/minecraft/class_1799;Lnet/minecraft/class_3902;)Lnet/minecraft/class_1799;
+		ARG 1 v
+	METHOD method_57385 (Lnet/minecraft/class_1799;)Lnet/minecraft/class_9326;
+		ARG 0 stack
+	METHOD method_58092 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+		ARG 0 instance
+	METHOD method_58093 (Lnet/minecraft/class_6880;Lnet/minecraft/class_9326;)Lnet/minecraft/class_1799;
+		ARG 0 item
+		ARG 1 components
+	METHOD method_58094 (Lnet/minecraft/class_1799;)Lnet/minecraft/class_9326;
+		ARG 0 stack
+	METHOD method_58407 takesDamageFrom (Lnet/minecraft/class_1282;)Z
+		ARG 1 source
+	METHOD method_58408 capCount (I)V
+		COMMENT Sets the count of items in this item stack to not exceed {@code maxCount}.
+		ARG 1 maxCount
+	METHOD method_58657 getEnchantments ()Lnet/minecraft/class_9304;
+	METHOD method_58658 getDefaultComponents ()Lnet/minecraft/class_9323;
+	METHOD method_59691 validateComponents (Lnet/minecraft/class_9323;)Lcom/mojang/serialization/DataResult;
+		ARG 0 components
+	METHOD method_59692 applyChanges (Lnet/minecraft/class_9326;)V
+		ARG 1 changes
+	METHOD method_59693 createExtraValidatingPacketCodec (Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
+		COMMENT {@return a packet codec that ensures the validity of the decoded stack by
+		COMMENT checking if it can be re-encoded}
+		COMMENT
+		COMMENT <p>This should be used when serializing {@link ItemStack} in C2S packets.
+		COMMENT Encoding is unaffected.
+		ARG 0 basePacketCodec
+	METHOD method_59979 postDamageEntity (Lnet/minecraft/class_1309;Lnet/minecraft/class_1309;)V
+		ARG 1 target
+		ARG 2 user
+	METHOD method_60503 withItem (Lnet/minecraft/class_1935;)Lnet/minecraft/class_1799;
+		ARG 1 item
+	METHOD method_60504 splitUnlessCreative (ILnet/minecraft/class_1309;)Lnet/minecraft/class_1799;
+		ARG 1 amount
+		ARG 2 entity
+	METHOD method_60617 applyAttributeModifier (Lnet/minecraft/class_9274;Lorg/apache/commons/lang3/function/TriConsumer;)V
+		ARG 1 slot
+		ARG 2 attributeModifierConsumer
+	METHOD method_60986 damage (ILnet/minecraft/class_1935;Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)Lnet/minecraft/class_1799;
+		ARG 1 amount
+		ARG 2 itemAfterBreaking
+		ARG 3 entity
+		ARG 4 slot
+	METHOD method_61651 calculateDamage (ILnet/minecraft/class_3218;Lnet/minecraft/class_3222;)I
+		ARG 1 baseDamage
+		ARG 2 world
+		ARG 3 player
+	METHOD method_61652 onDurabilityChange (ILnet/minecraft/class_3222;Ljava/util/function/Consumer;)V
+		ARG 1 damage
+		ARG 2 player
+		ARG 3 breakCallback
+	METHOD method_61653 damage (ILnet/minecraft/class_1657;)V
+		ARG 1 amount
+		ARG 2 player
+	METHOD method_61654 (Lnet/minecraft/class_1792;)V
+		ARG 0 item
+	METHOD method_61655 canRepairWith (Lnet/minecraft/class_1799;)Z
+		ARG 1 ingredient
+	METHOD method_61657 shouldBreak ()Z
+	METHOD method_62837 applyRemainderAndCooldown (Lnet/minecraft/class_1309;Lnet/minecraft/class_1799;)Lnet/minecraft/class_1799;
+		ARG 1 user
+		ARG 2 stack
+	METHOD method_63015 getFormattedName ()Lnet/minecraft/class_2561;
+	METHOD method_63692 willBreakNextUse ()Z
+	METHOD method_63693 getItemName ()Lnet/minecraft/class_2561;
+	METHOD method_65130 getCustomName ()Lnet/minecraft/class_2561;
+		COMMENT {@return the custom name or book title of the stack if it exists, or {@code null}}
+	METHOD method_65359 getImmutableComponents ()Lnet/minecraft/class_9323;
+	METHOD method_65797 hasChangedComponent (Lnet/minecraft/class_9331;)Z
+		ARG 1 type
+	METHOD method_66334 canMine (Lnet/minecraft/class_2680;Lnet/minecraft/class_1937;Lnet/minecraft/class_2338;Lnet/minecraft/class_1657;)Z
+		ARG 1 state
+		ARG 2 world
+		ARG 3 pos
+		ARG 4 player
+	METHOD method_66697 copy (Lnet/minecraft/class_9331;Lnet/minecraft/class_9473;)V
+		ARG 1 type
+		ARG 2 from
+	METHOD method_67194 appendTooltip (Lnet/minecraft/class_1792$class_9635;Lnet/minecraft/class_10712;Lnet/minecraft/class_1657;Lnet/minecraft/class_1836;Ljava/util/function/Consumer;)V
+		ARG 1 context
+		ARG 2 displayComponent
+		ARG 3 player
+		ARG 4 type
+		ARG 5 textConsumer
+	METHOD method_68810 createOptionalPacketCodec (Lnet/minecraft/class_9139;)Lnet/minecraft/class_9139;
+		ARG 0 componentsPacketCodec
+	METHOD method_70724 (Lorg/apache/commons/lang3/function/TriConsumer;Lnet/minecraft/class_6880;Lnet/minecraft/class_1322;)V
+		ARG 1 attribute
+		ARG 2 modifier
+	METHOD method_71012 damage (ILnet/minecraft/class_1309;Lnet/minecraft/class_1268;)V
+		ARG 1 amount
+		ARG 2 entity
+		ARG 3 hand
+	METHOD method_74887 set (Lnet/minecraft/class_9336;)Ljava/lang/Object;
+		ARG 1 component
+	METHOD method_75218 getSwingAnimation ()Lnet/minecraft/class_12126;
+	METHOD method_75219 (Lnet/minecraft/class_1309;Lnet/minecraft/class_9791;)Ljava/util/Optional;
+		ARG 1 ref
+	METHOD method_75220 getDamageSource (Lnet/minecraft/class_1309;Ljava/util/function/Supplier;)Lnet/minecraft/class_1282;
+		ARG 1 attacker
+		ARG 2 fallbackSupplier
+	METHOD method_75221 (Lnet/minecraft/class_1309;Lnet/minecraft/class_6880;)Lnet/minecraft/class_1282;
+		ARG 1 typeEntry
+	METHOD method_75222 shouldSkipHandAnimationOnSwap (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;Ljava/util/function/Predicate;)Z
+		ARG 0 from
+		ARG 1 to
+		ARG 2 skippedComponent
+	METHOD method_75223 appendTooltipIfComponentExists (Lnet/minecraft/class_9331;Lnet/minecraft/class_2561;Lnet/minecraft/class_10712;Ljava/util/function/Consumer;)V
+		ARG 1 type
+		ARG 2 tooltip
+		ARG 3 displayComponent
+		ARG 4 textConsumer
 	CLASS 1

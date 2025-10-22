@@ -3,10 +3,11 @@ on: [workflow_dispatch] # Manual trigger
 jobs:
   build:
     runs-on: ubuntu-24.04
-    container:
-      image: eclipse-temurin:21-jdk
-      options: --user root
     steps:
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'microsoft'
       - uses: actions/checkout@v4
       - run: ./gradlew :filament:build :filament:publish --stacktrace --no-configuration-cache
         env:

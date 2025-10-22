@@ -1,18 +1,17 @@
 CLASS com/mojang/blaze3d/systems/RenderSystem
-	METHOD activeTexture (I)V
-		ARG 0 texture
-	METHOD enableScissor (IIII)V
-		ARG 0 x
-		ARG 1 y
-		ARG 2 width
-		ARG 3 height
-	METHOD flipFrame (JLnet/minecraft/class_10219;)V
+	METHOD bindDefaultUniforms (Lcom/mojang/blaze3d/systems/RenderPass;)V
+		ARG 0 pass
+	METHOD flipFrame (Lnet/minecraft/class_1041;Lnet/minecraft/class_10219;)V
 		ARG 0 window
-		ARG 2 capturer
-	METHOD getSequentialBuffer (Lnet/minecraft/class_293$class_5596;)Lcom/mojang/blaze3d/systems/RenderSystem$class_5590;
+		ARG 1 capturer
+	METHOD getSequentialBuffer (Lcom/mojang/blaze3d/vertex/VertexFormat$class_5596;)Lcom/mojang/blaze3d/systems/RenderSystem$class_5590;
 		ARG 0 drawMode
-	METHOD getShaderTexture (I)Lnet/minecraft/class_10792;
-		ARG 0 texture
+	METHOD initRenderer (JIZLjava/util/function/BiFunction;Z)V
+		ARG 0 windowHandle
+		ARG 2 debugVerbosity
+		ARG 3 sync
+		ARG 4 shaderSourceGetter
+		ARG 5 renderDebugLabels
 	METHOD lambda$static$0 (Lit/unimi/dsi/fastutil/ints/IntConsumer;I)V
 		ARG 0 indexConsumer
 		ARG 1 firstVertexIndex
@@ -21,25 +20,19 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		ARG 1 firstVertexIndex
 	METHOD limitDisplayFPS (I)V
 		ARG 0 fps
-	METHOD lineWidth (F)V
-		ARG 0 width
+	METHOD queueFencedTask (Ljava/lang/Runnable;)V
+		ARG 0 task
 	METHOD setErrorCallback (Lorg/lwjgl/glfw/GLFWErrorCallbackI;)V
 		ARG 0 callback
-	METHOD setProjectionMatrix (Lorg/joml/Matrix4f;Lnet/minecraft/class_10366;)V
-		ARG 0 projectionMatrix
+	METHOD setGlobalSettingsUniform (Lcom/mojang/blaze3d/buffers/GpuBuffer;)V
+		ARG 0 globalSettingsUniform
+	METHOD setProjectionMatrix (Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lnet/minecraft/class_10366;)V
+		ARG 0 projectionMatrixBuffer
 		ARG 1 projectionType
-	METHOD setShaderColor (FFFF)V
-		ARG 0 red
-		ARG 1 green
-		ARG 2 blue
-		ARG 3 alpha
-	METHOD setShaderGameTime (JF)V
-		ARG 0 time
-		ARG 2 tickProgress
-	METHOD setShaderTexture (ILnet/minecraft/class_10792;)V
-		ARG 0 texture
-	METHOD setTextureMatrix (Lorg/joml/Matrix4f;)V
-		ARG 0 textureMatrix
+	METHOD setShaderFog (Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V
+		ARG 0 shaderFog
+	METHOD setShaderLights (Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V
+		ARG 0 shaderLightDirections
 	CLASS class_5590 ShapeIndexBuffer
 		COMMENT An index buffer that holds a pre-made indices for a specific shape. If
 		COMMENT this buffer is not large enough for the required number of indices when
@@ -48,9 +41,9 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 		FIELD field_27332 vertexCountInShape I
 		FIELD field_27333 vertexCountInTriangulated I
 		FIELD field_27334 triangulator Lcom/mojang/blaze3d/systems/RenderSystem$class_5590$class_5591;
-		FIELD field_27336 indexType Lnet/minecraft/class_293$class_5595;
+		FIELD field_27336 indexType Lcom/mojang/blaze3d/vertex/VertexFormat$class_5595;
 		FIELD field_27337 size I
-		FIELD field_54299 buffer Lnet/minecraft/class_10227;
+		FIELD field_54299 indexBuffer Lcom/mojang/blaze3d/buffers/GpuBuffer;
 		METHOD <init> (IILcom/mojang/blaze3d/systems/RenderSystem$class_5590$class_5591;)V
 			ARG 1 vertexCountInShape
 				COMMENT the number of vertices in a shape
@@ -64,8 +57,10 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 			ARG 1 indexBuffer
 		METHOD method_31923 (Ljava/nio/ByteBuffer;I)V
 			ARG 1 index
-		METHOD method_31924 getIndexType ()Lnet/minecraft/class_293$class_5595;
+		METHOD method_31924 getIndexType ()Lcom/mojang/blaze3d/vertex/VertexFormat$class_5595;
 		METHOD method_43409 isLargeEnough (I)Z
+			ARG 1 requiredSize
+		METHOD method_68274 getIndexBuffer (I)Lcom/mojang/blaze3d/buffers/GpuBuffer;
 			ARG 1 requiredSize
 		CLASS class_5591 Triangulator
 			COMMENT A functional interface that decomposes a shape into triangles.
@@ -81,3 +76,4 @@ CLASS com/mojang/blaze3d/systems/RenderSystem
 					COMMENT the consumer that accepts triangles
 				ARG 2 firstVertexIndex
 					COMMENT the index of the first vertex in the input shape
+	CLASS class_10827 Task

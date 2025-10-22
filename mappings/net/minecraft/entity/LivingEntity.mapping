@@ -1,39 +1,5 @@
 CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	COMMENT Represents an entity which has a health value and can receive damage.
-	FIELD field_18072 SLEEPING_DIMENSIONS Lnet/minecraft/class_4048;
-	FIELD field_18073 SLEEPING_POSITION Lnet/minecraft/class_2940;
-	FIELD field_18321 brain Lnet/minecraft/class_4095;
-	FIELD field_20347 stuckStingerTimer I
-	FIELD field_20348 STINGER_COUNT Lnet/minecraft/class_2940;
-	FIELD field_22418 climbingPos Ljava/util/Optional;
-	FIELD field_27859 POWDER_SNOW_SPEED_MODIFIER_ID Lnet/minecraft/class_2960;
-	FIELD field_30064 USING_ITEM_FLAG I
-	FIELD field_30065 OFF_HAND_ACTIVE_FLAG I
-	FIELD field_30066 USING_RIPTIDE_FLAG I
-	FIELD field_30068 BABY_SCALE_FACTOR F
-	FIELD field_30071 EQUIPMENT_SLOT_ID I
-	FIELD field_30073 GLOWING_FLAG I
-	FIELD field_30076 GRAVITY D
-	FIELD field_30077 DEATH_TICKS I
-	FIELD field_30082 noDrag Z
-	FIELD field_33908 MAX_ENTITY_VIEWING_DISTANCE D
-	FIELD field_36332 LOGGER Lorg/slf4j/Logger;
-	FIELD field_37421 experienceDroppingDisabled Z
-	FIELD field_42108 limbAnimator Lnet/minecraft/class_8080;
-	FIELD field_45123 serverHeadYaw D
-	FIELD field_45740 ACTIVE_EFFECTS_NBT_KEY Ljava/lang/String;
-	FIELD field_49792 POTION_SWIRLS Lnet/minecraft/class_2940;
-	FIELD field_51569 riptideAttackDamage F
-	FIELD field_51570 riptideStack Lnet/minecraft/class_1799;
-	FIELD field_51571 locationBasedEnchantmentEffects Ljava/util/EnumMap;
-	FIELD field_51995 ATTRIBUTES_NBT_KEY Ljava/lang/String;
-	FIELD field_51996 SPRINTING_SPEED_MODIFIER_ID Lnet/minecraft/class_2960;
-	FIELD field_52447 elytraFlightController Lnet/minecraft/class_9863;
-	FIELD field_54564 NOT_WEARING_GAZE_DISGUISE_PREDICATE Ljava/util/function/Predicate;
-	FIELD field_55674 attackerReference Lnet/minecraft/class_10583;
-	FIELD field_55675 interpolator Lnet/minecraft/class_10584;
-	FIELD field_55951 lastEquipmentStacks Ljava/util/Map;
-	FIELD field_56535 equipment Lnet/minecraft/class_10630;
 	FIELD field_6212 sidewaysSpeed F
 	FIELD field_6213 deathTime I
 	FIELD field_6214 POTION_SWIRLS_AMBIENT Lnet/minecraft/class_2940;
@@ -70,10 +36,9 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6265 headTrackingIncrements I
 	FIELD field_6266 preferredHand Lnet/minecraft/class_1268;
 	FIELD field_6268 lastBlockPos Lnet/minecraft/class_2338;
-	FIELD field_6269 defaultMaxHealth I
 	FIELD field_6270 lastAttackTime I
 	FIELD field_6272 dead Z
-	FIELD field_6273 lastAttackedTicks I
+	FIELD field_6273 ticksSinceLastAttack I
 	FIELD field_6276 lastDamageSource Lnet/minecraft/class_1282;
 	FIELD field_6277 activeItemStack Lnet/minecraft/class_1799;
 	FIELD field_6278 despawnCounter I
@@ -83,281 +48,60 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	FIELD field_6283 bodyYaw F
 	FIELD field_6285 effectsChanged Z
 	FIELD field_6287 movementSpeed F
-	METHOD method_16077 dropLoot (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;Z)V
-		ARG 1 world
-		ARG 2 damageSource
-		ARG 3 causedByPlayer
-	METHOD method_16078 dropInventory (Lnet/minecraft/class_3218;)V
-		ARG 1 world
-	METHOD method_16080 drop (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;)V
-		ARG 1 world
-		ARG 2 damageSource
-	METHOD method_16826 setDespawnCounter (I)V
-		ARG 1 despawnCounter
-	METHOD method_17825 getScaleFactor ()F
-	METHOD method_18390 getAttackDistanceScalingFactor (Lnet/minecraft/class_1297;)D
-		ARG 1 entity
-	METHOD method_18392 setPositionInBed (Lnet/minecraft/class_2338;)V
-		ARG 1 pos
-	METHOD method_18393 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2338;)V
-		ARG 1 pos
-	METHOD method_18395 canTarget (Lnet/minecraft/class_1309;)Z
-		ARG 1 target
-	METHOD method_18396 getArmorVisibility ()F
-	METHOD method_18398 getSleepingPosition ()Ljava/util/Optional;
-	METHOD method_18399 clearSleepingPosition ()V
-	METHOD method_18400 wakeUp ()V
-		COMMENT Wakes this entity up.
-		COMMENT
-		COMMENT @see net.minecraft.entity.player.PlayerEntity#wakeUp(boolean, boolean) a more specific overload for players
-	METHOD method_18401 getSleepingDirection ()Lnet/minecraft/class_2350;
-	METHOD method_18402 setSleepingPosition (Lnet/minecraft/class_2338;)V
-		ARG 1 pos
-	METHOD method_18403 sleep (Lnet/minecraft/class_2338;)V
-		ARG 1 pos
-	METHOD method_18404 (Lnet/minecraft/class_2338;)V
-		ARG 1 pos
-	METHOD method_18405 (Lnet/minecraft/class_2338;)Ljava/lang/Boolean;
-		ARG 1 pos
-	METHOD method_18406 isSleepingInBed ()Z
-	METHOD method_18801 applyClimbingSpeed (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
-		ARG 1 motion
-	METHOD method_18802 getMovementSpeed (F)F
-		ARG 1 slipperiness
-	METHOD method_18808 getProjectileType (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1799;
-		ARG 1 stack
-	METHOD method_18867 deserializeBrain (Lcom/mojang/serialization/Dynamic;)Lnet/minecraft/class_4095;
-		ARG 1 dynamic
-	METHOD method_18868 getBrain ()Lnet/minecraft/class_4095;
-	METHOD method_20235 sendEquipmentBreakStatus (Lnet/minecraft/class_1792;Lnet/minecraft/class_1304;)V
-		ARG 1 item
-		ARG 2 slot
-	METHOD method_20237 getEquipmentBreakStatus (Lnet/minecraft/class_1304;)B
-		ARG 0 slot
-	METHOD method_21753 getStingerCount ()I
-	METHOD method_21754 isHoldingOntoLadder ()Z
-		COMMENT @return {@code true} if this entity should not lose height while in a climbing state
-		COMMENT @see net.minecraft.entity.LivingEntity
-	METHOD method_21755 setStingerCount (I)V
-		ARG 1 stingerCount
-	METHOD method_23328 playBlockFallSound ()V
-	METHOD method_23329 computeFallDamage (DF)I
-		ARG 1 fallDistance
-		ARG 3 damagePerDistance
-	METHOD method_23667 swingHand (Lnet/minecraft/class_1268;Z)V
-		ARG 1 hand
-		ARG 2 fromServerPlayer
-	METHOD method_23733 onKilledBy (Lnet/minecraft/class_1309;)V
-		COMMENT Performs secondary effects after this mob has been killed.
-		COMMENT
-		COMMENT <p> The default behavior spawns a wither rose if {@code adversary} is a {@code WitherEntity}.
-		ARG 1 adversary
-			COMMENT the main adversary responsible for this entity's death
-	METHOD method_23883 dropExperience (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)V
-		COMMENT Drops experience when this entity is killed.
-		COMMENT
-		COMMENT <p>To control the details of experience dropping, consider overriding
-		COMMENT {@link #shouldAlwaysDropExperience()}, {@link #shouldDropExperience()}, and
-		COMMENT {@link #getExperienceToDrop()}.
-		ARG 1 world
-		ARG 2 attacker
-	METHOD method_24518 isHolding (Lnet/minecraft/class_1792;)Z
-		COMMENT Checks if this entity is holding a certain item.
-		COMMENT
-		COMMENT <p>This checks both the entity's main and off hand.
-		ARG 1 item
-	METHOD method_24519 (Lnet/minecraft/class_1792;Lnet/minecraft/class_1799;)Z
-		ARG 1 stack
-	METHOD method_24520 isHolding (Ljava/util/function/Predicate;)Z
-		COMMENT Checks if this entity is holding a certain item.
-		COMMENT
-		COMMENT <p>This checks both the entity's main and off hand.
-		ARG 1 predicate
-	METHOD method_24831 getPoses ()Lcom/google/common/collect/ImmutableList;
-	METHOD method_24832 getClimbingPos ()Ljava/util/Optional;
-	METHOD method_24833 getBoundingBox (Lnet/minecraft/class_4050;)Lnet/minecraft/class_238;
-		ARG 1 pose
-	METHOD method_26082 setStatusEffect (Lnet/minecraft/class_1293;Lnet/minecraft/class_1297;)V
-		COMMENT Sets a status effect in this entity.
-		COMMENT
-		COMMENT <p>The preexistent status effect of the same type on this entity, if there is one, is cleared.
-		COMMENT To actually add a status effect and undergo effect combination logic, call
-		COMMENT {@link #addStatusEffect(StatusEffectInstance, Entity)}.
-		COMMENT
-		COMMENT @apiNote In vanilla, this is exclusively used by the client to set a status
-		COMMENT effect on the player upon {@linkplain
-		COMMENT net.minecraft.client.network.ClientPlayNetworkHandler#onEntityStatusEffect
-		COMMENT reception} of the status effect packet.
-		ARG 1 effect
-			COMMENT the effect to set
-		ARG 2 source
-			COMMENT the source entity or {@code null} for non-entity sources
-	METHOD method_26317 applyFluidMovingSpeed (DZLnet/minecraft/class_243;)Lnet/minecraft/class_243;
-		ARG 1 gravity
-		ARG 3 falling
-		ARG 4 motion
-	METHOD method_26318 applyMovementInput (Lnet/minecraft/class_243;F)Lnet/minecraft/class_243;
-		ARG 1 movementInput
-		ARG 2 slipperiness
-	METHOD method_26319 canWalkOnFluid (Lnet/minecraft/class_3610;)Z
-		ARG 1 state
-	METHOD method_26827 createLivingAttributes ()Lnet/minecraft/class_5132$class_5133;
-	METHOD method_27071 shouldDropLoot ()Z
-	METHOD method_28305 (Lnet/minecraft/class_2487;Lnet/minecraft/class_2520;)V
-		ARG 1 brain
-	METHOD method_28306 createBrainProfile ()Lnet/minecraft/class_4095$class_5303;
-	METHOD method_29242 updateLimbs (Z)V
-		ARG 1 flutter
-	METHOD method_29499 triggerItemPickedUpByEntityCriteria (Lnet/minecraft/class_1542;)V
-		COMMENT Called to trigger advancement criteria when an entity picks up an item
-		COMMENT thrown by a player.
-		ARG 1 item
-	METHOD method_29503 hurtByWater ()Z
-	METHOD method_29504 isDead ()Z
-	METHOD method_29505 setAttacking (Lnet/minecraft/class_10583;I)V
-		ARG 1 attackingPlayer
-		ARG 2 playerHitTimer
-	METHOD method_29920 shouldSwimInFluids ()Z
-	METHOD method_30121 checkHandStackSwap (Ljava/util/Map;)V
-		COMMENT Notifies nearby players if the stacks in the hands have been swapped.
-		ARG 1 equipmentChanges
-	METHOD method_30123 sendEquipmentChanges (Ljava/util/Map;)V
-		COMMENT Sends equipment changes to nearby players.
-		COMMENT
-		COMMENT @see #sendEquipmentChanges()
-		ARG 1 equipmentChanges
-	METHOD method_30127 swapHandStacks ()V
-	METHOD method_30128 sendEquipmentChanges ()V
-		COMMENT Sends equipment changes to nearby players.
-	METHOD method_30129 getEquipmentChanges ()Ljava/util/Map;
-		COMMENT {@return the difference between the last sent equipment set and the
-		COMMENT current one}
-	METHOD method_31079 positionInPortal (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
-		ARG 0 pos
-	METHOD method_32321 getStackReference (Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)Lnet/minecraft/class_5630;
-		ARG 0 entity
-		ARG 1 slot
-	METHOD method_32322 getEquipmentSlot (I)Lnet/minecraft/class_1304;
-		ARG 0 slotId
-	METHOD method_32323 (Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)Z
-		ARG 2 stack
-	METHOD method_32324 removePowderSnowSlow ()V
-	METHOD method_32325 addPowderSnowSlowIfNeeded ()V
-	METHOD method_32326 getPreferredEquipmentSlot (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1304;
-		ARG 1 stack
-	METHOD method_33190 canTakeDamage ()Z
-	METHOD method_35053 hasNoDrag ()Z
-	METHOD method_35054 setNoDrag (Z)V
-		ARG 1 noDrag
-	METHOD method_36362 updateGlowing ()V
-	METHOD method_36549 addDeathParticles ()V
-	METHOD method_36608 isPartOfGame ()Z
-	METHOD method_36977 damageHelmet (Lnet/minecraft/class_1282;F)V
-		ARG 1 source
-		ARG 2 amount
-	METHOD method_37119 tickItemStackUsage (Lnet/minecraft/class_1799;)V
-		ARG 1 stack
-	METHOD method_37222 addStatusEffect (Lnet/minecraft/class_1293;Lnet/minecraft/class_1297;)Z
-		COMMENT Adds a status effect to this entity.
-		COMMENT
-		COMMENT @implNote A status effect may fail to be added due to getting overridden by
-		COMMENT existing effects or the effect being incompatible with this entity.
-		COMMENT
-		COMMENT @return whether the active status effects of this entity has been modified
-		ARG 1 effect
-			COMMENT the effect to add
-		ARG 2 source
-			COMMENT the source entity or {@code null} for non-entity sources
-	METHOD method_37416 getJumpBoostVelocityModifier ()F
-	METHOD method_39760 getFallSounds ()Lnet/minecraft/class_1309$class_6823;
-	METHOD method_41329 disableExperienceDropping ()V
-	METHOD method_41330 isExperienceDroppingDisabled ()Z
-	METHOD method_44201 isArmorSlot (Lnet/minecraft/class_1304;)Z
-		ARG 1 slot
-	METHOD method_45324 areItemsDifferent (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
-		ARG 1 stack
-		ARG 2 stack2
-	METHOD method_45325 getAttributeValue (Lnet/minecraft/class_6880;)D
-		ARG 1 attribute
-	METHOD method_45326 getAttributeBaseValue (Lnet/minecraft/class_6880;)D
-		ARG 1 attribute
-	METHOD method_48157 getDamageTiltYaw ()F
-	METHOD method_48565 updateLimbs (F)V
-		ARG 1 posDelta
-	METHOD method_48761 tiltScreen (DD)V
-		ARG 1 deltaX
-		ARG 3 deltaZ
-	METHOD method_49481 tickControlled (Lnet/minecraft/class_1657;Lnet/minecraft/class_243;)V
-		ARG 1 controllingPlayer
-		ARG 2 movementInput
-	METHOD method_49482 getControlledMovementInput (Lnet/minecraft/class_1657;Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
-		ARG 1 controllingPlayer
-		ARG 2 movementInput
-	METHOD method_49483 travelControlled (Lnet/minecraft/class_1657;Lnet/minecraft/class_243;)V
-		ARG 1 controllingPlayer
-		ARG 2 movementInput
-	METHOD method_49484 getOffGroundSpeed ()F
-	METHOD method_49485 getSaddledSpeed (Lnet/minecraft/class_1657;)F
-		ARG 1 controllingPlayer
-	METHOD method_51851 getLootTableSeed ()J
-	METHOD method_52197 sendEffectToControllingPlayer (Lnet/minecraft/class_1293;)V
-		ARG 1 effect
-	METHOD method_52539 lerpHeadYaw (ID)V
-		ARG 1 headTrackingIncrements
-		ARG 2 serverHeadYaw
-	METHOD method_52540 updateAttribute (Lnet/minecraft/class_6880;)V
-		ARG 1 attribute
-	METHOD method_52541 getMaxAbsorption ()F
-	METHOD method_52542 wouldNotSuffocateInPose (Lnet/minecraft/class_4050;)Z
-		ARG 1 pose
-	METHOD method_52543 updateAttributes ()V
-	METHOD method_52544 setAbsorptionAmountUnclamped (F)V
-		ARG 1 absorptionAmount
-	METHOD method_53510 getHitbox ()Lnet/minecraft/class_238;
-		COMMENT Gets the area in which this entity can be attacked by mobs whose attack box overlaps it.
-		COMMENT
-		COMMENT @see net.minecraft.entity.mob.MobEntity#getAttackBox
-	METHOD method_53964 getMaxRelativeHeadRotation ()F
-		COMMENT {@return the maximum rotation of the head relative to the body in degrees}
-	METHOD method_55693 getScale ()F
-	METHOD method_55694 getBaseDimensions (Lnet/minecraft/class_4050;)Lnet/minecraft/class_4048;
-		ARG 1 pose
-	METHOD method_56077 clampScale (F)F
-		ARG 1 scale
-	METHOD method_56078 playSound (Lnet/minecraft/class_3414;)V
-		ARG 1 sound
-	METHOD method_56079 getSlotForHand (Lnet/minecraft/class_1268;)Lnet/minecraft/class_1304;
-		ARG 0 hand
+	FIELD field_18072 SLEEPING_DIMENSIONS Lnet/minecraft/class_4048;
+	FIELD field_18073 SLEEPING_POSITION Lnet/minecraft/class_2940;
+	FIELD field_18321 brain Lnet/minecraft/class_4095;
+	FIELD field_20347 stuckStingerTimer I
+	FIELD field_20348 STINGER_COUNT Lnet/minecraft/class_2940;
+	FIELD field_22418 climbingPos Ljava/util/Optional;
+	FIELD field_27859 POWDER_SNOW_SPEED_MODIFIER_ID Lnet/minecraft/class_2960;
+	FIELD field_30064 USING_ITEM_FLAG I
+	FIELD field_30065 OFF_HAND_ACTIVE_FLAG I
+	FIELD field_30066 USING_RIPTIDE_FLAG I
+	FIELD field_30068 BABY_SCALE_FACTOR F
+	FIELD field_30071 EQUIPMENT_SLOT_ID I
+	FIELD field_30076 GRAVITY D
+	FIELD field_30077 DEATH_TICKS I
+	FIELD field_30082 noDrag Z
+	FIELD field_33908 MAX_ENTITY_VIEWING_DISTANCE D
+	FIELD field_36332 LOGGER Lorg/slf4j/Logger;
+	FIELD field_37421 experienceDroppingDisabled Z
+	FIELD field_42108 limbAnimator Lnet/minecraft/class_8080;
+	FIELD field_45123 serverHeadYaw D
+	FIELD field_45740 ACTIVE_EFFECTS_KEY Ljava/lang/String;
+	FIELD field_49792 POTION_SWIRLS Lnet/minecraft/class_2940;
+	FIELD field_51569 riptideAttackDamage F
+	FIELD field_51570 riptideStack Lnet/minecraft/class_1799;
+	FIELD field_51571 locationBasedEnchantmentEffects Ljava/util/EnumMap;
+	FIELD field_51995 ATTRIBUTES_KEY Ljava/lang/String;
+	FIELD field_51996 SPRINTING_SPEED_MODIFIER_ID Lnet/minecraft/class_2960;
+	FIELD field_52447 elytraFlightController Lnet/minecraft/class_9863;
+	FIELD field_54564 NOT_WEARING_GAZE_DISGUISE_PREDICATE Ljava/util/function/Predicate;
+	FIELD field_55674 attackerReference Lnet/minecraft/class_10583;
+	FIELD field_55675 interpolator Lnet/minecraft/class_10584;
+	FIELD field_55951 lastEquipmentStacks Ljava/util/Map;
+	FIELD field_56535 equipment Lnet/minecraft/class_10630;
+	FIELD field_59669 waypointConfig Lnet/minecraft/class_11208$class_11209;
+	FIELD field_60356 BRAIN Lcom/mojang/serialization/Dynamic;
+	FIELD field_60537 SLEEPING_POS_KEY Ljava/lang/String;
+	FIELD field_60538 EQUIPMENT_KEY Ljava/lang/String;
+	FIELD field_60539 BRAIN_KEY Ljava/lang/String;
+	FIELD field_60540 FALL_FLYING_KEY Ljava/lang/String;
+	FIELD field_60541 HURT_TIME_KEY Ljava/lang/String;
+	FIELD field_60542 DEATH_TIME_KEY Ljava/lang/String;
+	FIELD field_60543 HURT_BY_TIMESTAMP_KEY Ljava/lang/String;
+	FIELD field_60544 HEALTH_KEY Ljava/lang/String;
+	FIELD field_63291 ticksSinceHandEquipping I
+	FIELD field_63292 piercingCooldowns Lit/unimi/dsi/fastutil/objects/Object2LongMap;
 	METHOD method_5673 equipStack (Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)V
 		ARG 1 slot
 		ARG 2 stack
 	METHOD method_5679 isInvulnerableTo (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;)Z
 		ARG 1 world
 		ARG 2 source
-	METHOD method_56991 canUseSlot (Lnet/minecraft/class_1304;)Z
-		ARG 1 slot
-	METHOD method_56992 isInCreativeMode ()Z
-	METHOD method_56993 getSafeFallDistance (F)I
-		ARG 1 health
-	METHOD method_56994 getJumpVelocity (F)F
-		ARG 1 strength
-	METHOD method_57292 damageEquipment (Lnet/minecraft/class_1282;F[Lnet/minecraft/class_1304;)V
-		ARG 1 source
-		ARG 2 amount
-		ARG 3 slots
-	METHOD method_58150 updatePotionSwirls ()V
 	METHOD method_5936 canPickUpLoot ()Z
 	METHOD method_5973 canTarget (Lnet/minecraft/class_1299;)Z
 		ARG 1 type
-	METHOD method_59923 getExperienceToDrop (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)I
-		ARG 1 world
-		ARG 2 attacker
-	METHOD method_59924 getAttackKnockbackAgainst (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;)F
-		ARG 1 target
-		ARG 2 damageSource
-	METHOD method_59925 hasLandedInFluid ()Z
-	METHOD method_59926 getLocationBasedEnchantmentEffects (Lnet/minecraft/class_1304;)Ljava/util/Map;
-		ARG 1 slot
 	METHOD method_5996 getAttributeInstance (Lnet/minecraft/class_6880;)Lnet/minecraft/class_1324;
 		ARG 1 attribute
 	METHOD method_5997 attackLivingEntity (Lnet/minecraft/class_1309;)V
@@ -490,9 +234,6 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6067 getAbsorptionAmount ()F
 	METHOD method_6068 getMainArm ()Lnet/minecraft/class_1306;
 	METHOD method_6069 clearPotionSwirls ()V
-	METHOD method_60699 onRemoval (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297$class_5529;)V
-		ARG 1 world
-		ARG 2 reason
 	METHOD method_6070 tickCramming ()V
 	METHOD method_6071 shouldAlwaysDropExperience ()Z
 		COMMENT Returns if this entity may always drop experience, skipping any
@@ -635,6 +376,276 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_6132 applyArmorToDamage (Lnet/minecraft/class_1282;F)F
 		ARG 1 source
 		ARG 2 amount
+	METHOD method_7292 getLuck ()F
+	METHOD method_7329 dropItem (Lnet/minecraft/class_1799;ZZ)Lnet/minecraft/class_1542;
+		ARG 1 stack
+		ARG 2 dropAtSelf
+		ARG 3 retainOwnership
+	METHOD method_16077 dropLoot (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;Z)V
+		ARG 1 world
+		ARG 2 damageSource
+		ARG 3 causedByPlayer
+	METHOD method_16078 dropInventory (Lnet/minecraft/class_3218;)V
+		ARG 1 world
+	METHOD method_16080 drop (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;)V
+		ARG 1 world
+		ARG 2 damageSource
+	METHOD method_16826 setDespawnCounter (I)V
+		ARG 1 despawnCounter
+	METHOD method_17825 getScaleFactor ()F
+	METHOD method_18390 getAttackDistanceScalingFactor (Lnet/minecraft/class_1297;)D
+		ARG 1 entity
+	METHOD method_18392 setPositionInBed (Lnet/minecraft/class_2338;)V
+		ARG 1 pos
+	METHOD method_18395 canTarget (Lnet/minecraft/class_1309;)Z
+		ARG 1 target
+	METHOD method_18396 getArmorVisibility ()F
+	METHOD method_18398 getSleepingPosition ()Ljava/util/Optional;
+	METHOD method_18399 clearSleepingPosition ()V
+	METHOD method_18400 wakeUp ()V
+		COMMENT Wakes this entity up.
+		COMMENT
+		COMMENT @see net.minecraft.entity.player.PlayerEntity#wakeUp(boolean, boolean) a more specific overload for players
+	METHOD method_18401 getSleepingDirection ()Lnet/minecraft/class_2350;
+	METHOD method_18402 setSleepingPosition (Lnet/minecraft/class_2338;)V
+		ARG 1 pos
+	METHOD method_18403 sleep (Lnet/minecraft/class_2338;)V
+		ARG 1 pos
+	METHOD method_18404 (Lnet/minecraft/class_2338;)V
+		ARG 1 pos
+	METHOD method_18405 (Lnet/minecraft/class_2338;)Ljava/lang/Boolean;
+		ARG 1 pos
+	METHOD method_18406 isSleepingInBed ()Z
+	METHOD method_18801 applyClimbingSpeed (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 1 motion
+	METHOD method_18802 getMovementSpeed (F)F
+		ARG 1 slipperiness
+	METHOD method_18808 getProjectileType (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1799;
+		ARG 1 stack
+	METHOD method_18867 deserializeBrain (Lcom/mojang/serialization/Dynamic;)Lnet/minecraft/class_4095;
+		ARG 1 dynamic
+	METHOD method_18868 getBrain ()Lnet/minecraft/class_4095;
+	METHOD method_20235 sendEquipmentBreakStatus (Lnet/minecraft/class_1792;Lnet/minecraft/class_1304;)V
+		ARG 1 item
+		ARG 2 slot
+	METHOD method_20237 getEquipmentBreakStatus (Lnet/minecraft/class_1304;)B
+		ARG 0 slot
+	METHOD method_21753 getStingerCount ()I
+	METHOD method_21754 isHoldingOntoLadder ()Z
+		COMMENT @return {@code true} if this entity should not lose height while in a climbing state
+		COMMENT @see net.minecraft.entity.LivingEntity
+	METHOD method_21755 setStingerCount (I)V
+		ARG 1 stingerCount
+	METHOD method_23328 playBlockFallSound ()V
+	METHOD method_23329 computeFallDamage (DF)I
+		ARG 1 fallDistance
+		ARG 3 damagePerDistance
+	METHOD method_23667 swingHand (Lnet/minecraft/class_1268;Z)V
+		ARG 1 hand
+		ARG 2 fromServerPlayer
+	METHOD method_23733 onKilledBy (Lnet/minecraft/class_1309;)V
+		COMMENT Performs secondary effects after this mob has been killed.
+		COMMENT
+		COMMENT <p> The default behavior spawns a wither rose if {@code adversary} is a {@code WitherEntity}.
+		ARG 1 adversary
+			COMMENT the main adversary responsible for this entity's death
+	METHOD method_23883 dropExperience (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)V
+		COMMENT Drops experience when this entity is killed.
+		COMMENT
+		COMMENT <p>To control the details of experience dropping, consider overriding
+		COMMENT {@link #shouldAlwaysDropExperience()}, {@link #shouldDropExperience()}, and
+		COMMENT {@link #getExperienceToDrop()}.
+		ARG 1 world
+		ARG 2 attacker
+	METHOD method_24518 isHolding (Lnet/minecraft/class_1792;)Z
+		COMMENT Checks if this entity is holding a certain item.
+		COMMENT
+		COMMENT <p>This checks both the entity's main and off hand.
+		ARG 1 item
+	METHOD method_24519 (Lnet/minecraft/class_1792;Lnet/minecraft/class_1799;)Z
+		ARG 1 stack
+	METHOD method_24520 isHolding (Ljava/util/function/Predicate;)Z
+		COMMENT Checks if this entity is holding a certain item.
+		COMMENT
+		COMMENT <p>This checks both the entity's main and off hand.
+		ARG 1 predicate
+	METHOD method_24831 getPoses ()Lcom/google/common/collect/ImmutableList;
+	METHOD method_24832 getClimbingPos ()Ljava/util/Optional;
+	METHOD method_24833 getBoundingBox (Lnet/minecraft/class_4050;)Lnet/minecraft/class_238;
+		ARG 1 pose
+	METHOD method_26082 setStatusEffect (Lnet/minecraft/class_1293;Lnet/minecraft/class_1297;)V
+		COMMENT Sets a status effect in this entity.
+		COMMENT
+		COMMENT <p>The preexistent status effect of the same type on this entity, if there is one, is cleared.
+		COMMENT To actually add a status effect and undergo effect combination logic, call
+		COMMENT {@link #addStatusEffect(StatusEffectInstance, Entity)}.
+		COMMENT
+		COMMENT @apiNote In vanilla, this is exclusively used by the client to set a status
+		COMMENT effect on the player upon {@linkplain
+		COMMENT net.minecraft.client.network.ClientPlayNetworkHandler#onEntityStatusEffect
+		COMMENT reception} of the status effect packet.
+		ARG 1 effect
+			COMMENT the effect to set
+		ARG 2 source
+			COMMENT the source entity or {@code null} for non-entity sources
+	METHOD method_26317 applyFluidMovingSpeed (DZLnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 1 gravity
+		ARG 3 falling
+		ARG 4 motion
+	METHOD method_26318 applyMovementInput (Lnet/minecraft/class_243;F)Lnet/minecraft/class_243;
+		ARG 1 movementInput
+		ARG 2 slipperiness
+	METHOD method_26319 canWalkOnFluid (Lnet/minecraft/class_3610;)Z
+		ARG 1 state
+	METHOD method_26827 createLivingAttributes ()Lnet/minecraft/class_5132$class_5133;
+	METHOD method_27071 shouldDropLoot (Lnet/minecraft/class_3218;)Z
+		ARG 1 world
+	METHOD method_28306 createBrainProfile ()Lnet/minecraft/class_4095$class_5303;
+	METHOD method_29242 updateLimbs (Z)V
+		ARG 1 flutter
+	METHOD method_29499 triggerItemPickedUpByEntityCriteria (Lnet/minecraft/class_1542;)V
+		COMMENT Called to trigger advancement criteria when an entity picks up an item
+		COMMENT thrown by a player.
+		ARG 1 item
+	METHOD method_29503 hurtByWater ()Z
+	METHOD method_29504 isDead ()Z
+	METHOD method_29505 setAttacking (Lnet/minecraft/class_10583;I)V
+		ARG 1 attackingPlayer
+		ARG 2 playerHitTimer
+	METHOD method_29920 shouldSwimInFluids ()Z
+	METHOD method_30121 checkHandStackSwap (Ljava/util/Map;)V
+		COMMENT Notifies nearby players if the stacks in the hands have been swapped.
+		ARG 1 equipmentChanges
+	METHOD method_30123 sendEquipmentChanges (Ljava/util/Map;)V
+		COMMENT Sends equipment changes to nearby players.
+		COMMENT
+		COMMENT @see #sendEquipmentChanges()
+		ARG 1 equipmentChanges
+	METHOD method_30127 swapHandStacks ()V
+	METHOD method_30128 sendEquipmentChanges ()V
+		COMMENT Sends equipment changes to nearby players.
+	METHOD method_30129 getEquipmentChanges ()Ljava/util/Map;
+		COMMENT {@return the difference between the last sent equipment set and the
+		COMMENT current one}
+	METHOD method_31079 positionInPortal (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 0 pos
+	METHOD method_32321 getStackReference (Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;)Lnet/minecraft/class_5630;
+		ARG 0 entity
+		ARG 1 slot
+	METHOD method_32322 getEquipmentSlot (I)Lnet/minecraft/class_1304;
+		ARG 0 slotId
+	METHOD method_32323 (Lnet/minecraft/class_1309;Lnet/minecraft/class_1304;Lnet/minecraft/class_1799;)Z
+		ARG 2 stack
+	METHOD method_32324 removePowderSnowSlow ()V
+	METHOD method_32325 addPowderSnowSlowIfNeeded ()V
+	METHOD method_32326 getPreferredEquipmentSlot (Lnet/minecraft/class_1799;)Lnet/minecraft/class_1304;
+		ARG 1 stack
+	METHOD method_33190 canTakeDamage ()Z
+	METHOD method_35053 hasNoDrag ()Z
+	METHOD method_35054 setNoDrag (Z)V
+		ARG 1 noDrag
+	METHOD method_36362 updateGlowing ()V
+	METHOD method_36549 addDeathParticles ()V
+	METHOD method_36608 isPartOfGame ()Z
+	METHOD method_36977 damageHelmet (Lnet/minecraft/class_1282;F)V
+		ARG 1 source
+		ARG 2 amount
+	METHOD method_37119 tickItemStackUsage (Lnet/minecraft/class_1799;)V
+		ARG 1 stack
+	METHOD method_37222 addStatusEffect (Lnet/minecraft/class_1293;Lnet/minecraft/class_1297;)Z
+		COMMENT Adds a status effect to this entity.
+		COMMENT
+		COMMENT @implNote A status effect may fail to be added due to getting overridden by
+		COMMENT existing effects or the effect being incompatible with this entity.
+		COMMENT
+		COMMENT @return whether the active status effects of this entity has been modified
+		ARG 1 effect
+			COMMENT the effect to add
+		ARG 2 source
+			COMMENT the source entity or {@code null} for non-entity sources
+	METHOD method_37416 getJumpBoostVelocityModifier ()F
+	METHOD method_39760 getFallSounds ()Lnet/minecraft/class_1309$class_6823;
+	METHOD method_41329 disableExperienceDropping ()V
+	METHOD method_41330 isExperienceDroppingDisabled ()Z
+	METHOD method_44201 isArmorSlot (Lnet/minecraft/class_1304;)Z
+		ARG 1 slot
+	METHOD method_45324 areItemsDifferent (Lnet/minecraft/class_1799;Lnet/minecraft/class_1799;)Z
+		ARG 1 stack
+		ARG 2 stack2
+	METHOD method_45325 getAttributeValue (Lnet/minecraft/class_6880;)D
+		ARG 1 attribute
+	METHOD method_45326 getAttributeBaseValue (Lnet/minecraft/class_6880;)D
+		ARG 1 attribute
+	METHOD method_48157 getDamageTiltYaw ()F
+	METHOD method_48565 updateLimbs (F)V
+		ARG 1 posDelta
+	METHOD method_48761 tiltScreen (DD)V
+		ARG 1 deltaX
+		ARG 3 deltaZ
+	METHOD method_49481 tickControlled (Lnet/minecraft/class_1657;Lnet/minecraft/class_243;)V
+		ARG 1 controllingPlayer
+		ARG 2 movementInput
+	METHOD method_49482 getControlledMovementInput (Lnet/minecraft/class_1657;Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
+		ARG 1 controllingPlayer
+		ARG 2 movementInput
+	METHOD method_49483 travelControlled (Lnet/minecraft/class_1657;Lnet/minecraft/class_243;)V
+		ARG 1 controllingPlayer
+		ARG 2 movementInput
+	METHOD method_49484 getOffGroundSpeed ()F
+	METHOD method_49485 getSaddledSpeed (Lnet/minecraft/class_1657;)F
+		ARG 1 controllingPlayer
+	METHOD method_51851 getLootTableSeed ()J
+	METHOD method_52197 sendEffectToControllingPlayer (Lnet/minecraft/class_1293;)V
+		ARG 1 effect
+	METHOD method_52539 lerpHeadYaw (ID)V
+		ARG 1 headTrackingIncrements
+		ARG 2 serverHeadYaw
+	METHOD method_52540 updateAttribute (Lnet/minecraft/class_6880;)V
+		ARG 1 attribute
+	METHOD method_52541 getMaxAbsorption ()F
+	METHOD method_52542 wouldNotSuffocateInPose (Lnet/minecraft/class_4050;)Z
+		ARG 1 pose
+	METHOD method_52543 updateAttributes ()V
+	METHOD method_52544 setAbsorptionAmountUnclamped (F)V
+		ARG 1 absorptionAmount
+	METHOD method_53510 getHitbox ()Lnet/minecraft/class_238;
+		COMMENT Gets the area in which this entity can be attacked by mobs whose attack box overlaps it.
+		COMMENT
+		COMMENT @see net.minecraft.entity.mob.MobEntity#getAttackBox
+	METHOD method_53964 getMaxRelativeHeadRotation ()F
+		COMMENT {@return the maximum rotation of the head relative to the body in degrees}
+	METHOD method_55693 getScale ()F
+	METHOD method_55694 getBaseDimensions (Lnet/minecraft/class_4050;)Lnet/minecraft/class_4048;
+		ARG 1 pose
+	METHOD method_56077 clampScale (F)F
+		ARG 1 scale
+	METHOD method_56078 playSound (Lnet/minecraft/class_3414;)V
+		ARG 1 sound
+	METHOD method_56991 canUseSlot (Lnet/minecraft/class_1304;)Z
+		ARG 1 slot
+	METHOD method_56992 isInCreativeMode ()Z
+	METHOD method_56993 getSafeFallDistance (F)I
+		ARG 1 health
+	METHOD method_56994 getJumpVelocity (F)F
+		ARG 1 strength
+	METHOD method_57292 damageEquipment (Lnet/minecraft/class_1282;F[Lnet/minecraft/class_1304;)V
+		ARG 1 source
+		ARG 2 amount
+		ARG 3 slots
+	METHOD method_58150 updatePotionSwirls ()V
+	METHOD method_59923 getExperienceToDrop (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)I
+		ARG 1 world
+		ARG 2 attacker
+	METHOD method_59924 getAttackKnockbackAgainst (Lnet/minecraft/class_1297;Lnet/minecraft/class_1282;)F
+		ARG 1 target
+		ARG 2 damageSource
+	METHOD method_59925 hasLandedInFluid ()Z
+	METHOD method_59926 getLocationBasedEnchantmentEffects (Lnet/minecraft/class_1304;)Ljava/util/Map;
+		ARG 1 slot
+	METHOD method_59928 playAttackSound ()V
+	METHOD method_60699 onRemoval (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297$class_5529;)V
+		ARG 1 world
+		ARG 2 reason
 	METHOD method_61417 travelGliding (Lnet/minecraft/class_243;)V
 		ARG 1 movementInput
 	METHOD method_61418 (DLnet/minecraft/class_243;)Lnet/minecraft/class_243;
@@ -754,9 +765,61 @@ CLASS net/minecraft/class_1309 net/minecraft/entity/LivingEntity
 	METHOD method_67518 createEquipment ()Lnet/minecraft/class_10630;
 	METHOD method_67650 (Lnet/minecraft/class_2338;)V
 		ARG 1 pos
-	METHOD method_7292 getLuck ()F
-	METHOD method_7329 dropItem (Lnet/minecraft/class_1799;ZZ)Lnet/minecraft/class_1542;
-		ARG 1 stack
-		ARG 2 dropAtSelf
-		ARG 3 retainOwnership
+	METHOD method_68264 (Ljava/lang/String;)V
+		ARG 1 team
+	METHOD method_70670 travelFlying (Lnet/minecraft/class_243;F)V
+		ARG 1 movementInput
+		ARG 2 speed
+	METHOD method_70671 travelFlying (Lnet/minecraft/class_243;FFF)V
+		ARG 1 movementInput
+		ARG 2 inWaterSpeed
+		ARG 3 inLavaSpeed
+		ARG 4 regularSpeed
+	METHOD method_70673 isJumping ()Z
+	METHOD method_71374 (Lnet/minecraft/class_11372;Lcom/mojang/serialization/Dynamic;)V
+		ARG 1 brain
+	METHOD method_71375 (Lnet/minecraft/class_11372;Lnet/minecraft/class_2338;)V
+		ARG 1 pos
+	METHOD method_71377 (Lcom/mojang/serialization/Dynamic;)V
+		ARG 1 brain
+	METHOD method_72394 forEachBrushedItem (Lnet/minecraft/class_3218;Lnet/minecraft/class_5321;Lnet/minecraft/class_1297;Lnet/minecraft/class_1799;Ljava/util/function/BiConsumer;)Z
+		ARG 1 world
+		ARG 2 lootTableKey
+		ARG 3 interactingEntity
+		ARG 4 tool
+		ARG 5 lootConsumer
+	METHOD method_72395 dropLoot (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;ZLnet/minecraft/class_5321;)V
+		ARG 1 world
+		ARG 2 damageSource
+		ARG 3 causedByPlayer
+		ARG 4 lootTableKey
+	METHOD method_72396 generateLoot (Lnet/minecraft/class_3218;Lnet/minecraft/class_1282;ZLnet/minecraft/class_5321;Ljava/util/function/Consumer;)V
+		ARG 1 world
+		ARG 2 damageSource
+		ARG 3 causedByPlayer
+		ARG 4 lootTableKey
+		ARG 5 lootConsumer
+	METHOD method_72397 (Lnet/minecraft/class_1297;Lnet/minecraft/class_1799;Lnet/minecraft/class_8567$class_8568;)Lnet/minecraft/class_8567;
+		ARG 3 parameterSetBuilder
+	METHOD method_74092 shouldDrown ()Z
+	METHOD method_75118 isInPiercingCooldown (Lnet/minecraft/class_1297;I)Z
+		ARG 1 target
+	METHOD method_75119 startPiercingCooldown (Lnet/minecraft/class_1297;)V
+		ARG 1 target
+	METHOD method_75120 getItemUseTime (F)F
+		ARG 1 baseTime
+	METHOD method_75122 knockbackTarget (Lnet/minecraft/class_1297;FLnet/minecraft/class_243;)V
+		ARG 1 target
+		ARG 2 strength
+		ARG 3 playerTargetVelocity
+	METHOD method_75123 pierce (Lnet/minecraft/class_1304;Lnet/minecraft/class_1297;FZZZ)Z
+		ARG 1 slot
+		ARG 2 target
+		ARG 3 damage
+		ARG 4 dealDamage
+		ARG 5 knockback
+		ARG 6 dismount
+	METHOD method_75124 beforePlayerAttack ()V
+	METHOD method_75125 onAttack ()V
+	METHOD method_75126 handleEffectsChanged ()V
 	CLASS class_6823 FallSounds

@@ -22,6 +22,8 @@ import cuchaz.enigma.api.service.JarIndexerService;
 import cuchaz.enigma.api.service.NameProposalService;
 import cuchaz.enigma.api.service.ObfuscationTestService;
 
+import net.fabricmc.filament.nameproposal.NameProposalConfig;
+
 public class NameProposalServiceEnigmaPlugin implements EnigmaPlugin {
 	private static final String ID_PREFIX = "nameproposal:";
 
@@ -29,8 +31,8 @@ public class NameProposalServiceEnigmaPlugin implements EnigmaPlugin {
 	public void init(EnigmaPluginContext ctx) {
 		ctx.registerService(ID_PREFIX + "intermediary_obfuscation_test", ObfuscationTestService.TYPE, IntermediaryObfuscationTestService::new);
 
-		EnigmaNameProposalService service = new EnigmaNameProposalService();
-		ctx.registerService(ID_PREFIX + "jar_indexer", JarIndexerService.TYPE, ctx1 -> service);
-		ctx.registerService(ID_PREFIX + "name_proposal", NameProposalService.TYPE, ctx1 -> service);
+		EnigmaNameProposalService service = new EnigmaNameProposalService(NameProposalConfig.DEFAULT);
+		ctx.registerService(ID_PREFIX + "jar_indexer", JarIndexerService.TYPE, () -> service);
+		ctx.registerService(ID_PREFIX + "name_proposal", NameProposalService.TYPE, () -> service);
 	}
 }

@@ -19,7 +19,6 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 	FIELD field_26460 OPEN_TEXT Lnet/minecraft/class_2561;
 	FIELD field_26461 CLOSED_TEXT Lnet/minecraft/class_2561;
 	FIELD field_33776 UNINITIALIZED_BUTTON_NARRATION Lnet/minecraft/class_2561;
-	FIELD field_37267 lastPlayButtonClickTime J
 	FIELD field_39681 serverFilterer Lnet/minecraft/class_7580;
 	FIELD field_42859 PLAY_TEXT Lnet/minecraft/class_2561;
 	FIELD field_42860 LEAVE_TEXT Lnet/minecraft/class_2561;
@@ -29,7 +28,6 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 	FIELD field_45191 CLOSED_STATUS_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_45192 INVITE_ICON_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_45193 NEWS_ICON_TEXTURE Lnet/minecraft/class_2960;
-	FIELD field_45194 REALMS_TITLE_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_45195 NO_REALMS_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_45196 MENU_TEXT Lnet/minecraft/class_2561;
 	FIELD field_45197 LOADING_TEXT Lnet/minecraft/class_2561;
@@ -51,7 +49,7 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 	FIELD field_45218 EXPIRES_SOON_STATUS_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_45219 OPEN_STATUS_TEXTURE Lnet/minecraft/class_2960;
 	FIELD field_46669 availableSnapshotServers Ljava/util/List;
-	FIELD field_46672 gameOnSnapshot Z
+	FIELD field_46672 GAME_ON_SNAPSHOT Z
 	FIELD field_46673 showingSnapshotRealms Z
 	FIELD field_51815 INCOMPATIBLE_POPUP_TITLE Lnet/minecraft/class_2561;
 	FIELD field_51816 INCOMPATIBLE_RELEASE_TYPE_MESSAGE Lnet/minecraft/class_2561;
@@ -62,8 +60,6 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 	METHOD method_20853 play (Lnet/minecraft/class_4877;Lnet/minecraft/class_437;)V
 		ARG 0 serverData
 		ARG 1 parent
-	METHOD method_20874 shouldPlayButtonBeActive (Lnet/minecraft/class_4877;)Z
-		ARG 1 server
 	METHOD method_20884 shouldRenewButtonBeActive (Lnet/minecraft/class_4877;)Z
 		ARG 1 server
 	METHOD method_20903 configureClicked (Lnet/minecraft/class_4877;)V
@@ -191,14 +187,14 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 		ARG 0 id
 		ARG 1 hardcore
 	CLASS class_4329 RealmSelectionList
-		METHOD method_64840 refresh (Lnet/minecraft/class_4325;Lnet/minecraft/class_4877;)V
+		METHOD method_64840 refresh (Lnet/minecraft/class_4325;)V
 			ARG 1 mainScreen
-			ARG 2 selectedServer
-		METHOD method_64841 addVisitEntries (Lnet/minecraft/class_8204$class_8205;Lnet/minecraft/class_4325;)V
+		METHOD method_64841 addVisitEntries (Lnet/minecraft/class_8204$class_8205;Lnet/minecraft/class_4325;Lnet/minecraft/class_4325$class_4866;)V
 			ARG 1 url
 			ARG 2 mainScreen
-		METHOD method_64842 addServerEntries (Lnet/minecraft/class_4877;)V
-			ARG 1 selectedServer
+			ARG 3 selectedEntry
+		METHOD method_64842 addServerEntries (Lnet/minecraft/class_4325$class_4866;)V
+			ARG 1 selectedEntry
 	CLASS class_4330 RealmSelectionListEntry
 		FIELD field_19518 server Lnet/minecraft/class_4877;
 		FIELD field_46686 tooltip Lnet/minecraft/class_9110;
@@ -208,24 +204,14 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 		METHOD method_38506 getRealmsServer ()Lnet/minecraft/class_4877;
 		METHOD method_52653 play ()V
 		METHOD method_52654 createRealm ()V
-		METHOD method_54566 drawDescription (Lnet/minecraft/class_332;III)V
-			ARG 1 context
-			ARG 2 y
-			ARG 3 x
-			ARG 4 entryWidth
-		METHOD method_54567 drawServerNameAndVersion (Lnet/minecraft/class_332;III)V
-			ARG 1 context
-			ARG 2 y
-			ARG 3 x
-			ARG 4 width
-		METHOD method_60862 drawPlayers (Lnet/minecraft/class_332;IIIIII)Z
-			ARG 1 context
+		METHOD method_60862 drawPlayers (Lnet/minecraft/class_332;IIIIIIF)Z
 			ARG 2 top
 			ARG 3 left
 			ARG 4 width
 			ARG 5 height
 			ARG 6 mouseX
 			ARG 7 mouseY
+			ARG 8 tickProgress
 	CLASS class_4866 Entry
 		METHOD method_54345 getNameY (I)I
 			ARG 1 y
@@ -277,10 +263,19 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 			ARG 1 x
 			ARG 2 width
 			ARG 3 gameMode
-	CLASS class_8200 VisitButtonEntry
-		FIELD field_42999 button Lnet/minecraft/class_4185;
-		METHOD <init> (Lnet/minecraft/class_4325;Lnet/minecraft/class_4185;)V
-			ARG 2 button
+		METHOD method_71040 drawServerNameAndVersion (Lnet/minecraft/class_332;IIIILnet/minecraft/class_4877;)V
+			ARG 1 context
+			ARG 2 y
+			ARG 3 x
+			ARG 4 width
+			ARG 5 color
+			ARG 6 server
+		METHOD method_71041 drawDescription (Lnet/minecraft/class_332;IIILnet/minecraft/class_4877;)V
+			ARG 1 context
+			ARG 2 y
+			ARG 3 x
+			ARG 4 width
+			ARG 5 server
 	CLASS class_8201 CrossButton
 		FIELD field_45222 TEXTURES Lnet/minecraft/class_8666;
 		METHOD <init> (Lnet/minecraft/class_4185$class_4241;Lnet/minecraft/class_2561;)V
@@ -294,19 +289,22 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 		FIELD field_43009 grid Lnet/minecraft/class_7845;
 		FIELD field_43010 textGrid Lnet/minecraft/class_7843;
 		FIELD field_43011 width I
-		FIELD field_46218 lines I
-		METHOD <init> (Lnet/minecraft/class_4325;Lnet/minecraft/class_2561;ILnet/minecraft/class_8204;)V
-			ARG 2 message
+		FIELD field_62083 urlButton Lnet/minecraft/class_4185;
+		METHOD <init> (Lnet/minecraft/class_4325;Lnet/minecraft/class_4325;ILnet/minecraft/class_2561;Lnet/minecraft/class_8204$class_8205;)V
+			ARG 2 parent
 			ARG 3 lines
-			ARG 4 notification
-		METHOD method_49564 setWidth (I)V
-			ARG 1 width
-		METHOD method_49565 (Lnet/minecraft/class_332;IIFLnet/minecraft/class_339;)V
-			ARG 4 child
-		METHOD method_49566 (Lnet/minecraft/class_8204;Lnet/minecraft/class_4185;)V
+			ARG 4 message
+			ARG 5 url
+		METHOD method_49564 setWidth ()V
+		METHOD method_49566 (Lnet/minecraft/class_8204$class_8205;Lnet/minecraft/class_4185;)V
 			ARG 2 button
 		METHOD method_49567 updateWidth (I)V
 			ARG 1 width
+		METHOD method_73337 (Lnet/minecraft/class_332;IIFLnet/minecraft/class_339;)V
+			ARG 4 child
+		METHOD method_74177 getMessage ()Lnet/minecraft/class_2561;
+		METHOD method_74178 getTextWidth (I)I
+			ARG 0 width
 	CLASS class_8203 Request
 		METHOD request (Lnet/minecraft/class_4341;)Ljava/lang/Object;
 			ARG 1 client
@@ -316,16 +314,16 @@ CLASS net/minecraft/class_4325 net/minecraft/client/realms/gui/screen/RealmsMain
 		FIELD field_45229 SIZE I
 		FIELD field_45230 TEXTURE_SIZE I
 		FIELD field_45231 notificationCount I
-		METHOD <init> (Lnet/minecraft/class_2561;Lnet/minecraft/class_2960;Lnet/minecraft/class_4185$class_4241;)V
+		METHOD <init> (Lnet/minecraft/class_2561;Lnet/minecraft/class_2960;Lnet/minecraft/class_4185$class_4241;Lnet/minecraft/class_2561;)V
 			ARG 1 message
 			ARG 2 texture
 			ARG 3 onPress
+			ARG 4 tooltip
 		METHOD method_52651 setNotificationCount (I)V
 			ARG 1 notificationCount
 		METHOD method_52652 render (Lnet/minecraft/class_332;)V
 			ARG 1 context
 		METHOD method_53794 getNotificationCount ()I
-	CLASS class_8802 EmptyEntry
 	CLASS class_8840 SnapshotEntry
 		FIELD field_46676 START_TEXT Lnet/minecraft/class_2561;
 		FIELD field_46678 tooltip Lnet/minecraft/class_9110;

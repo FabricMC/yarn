@@ -1,13 +1,19 @@
 CLASS net/minecraft/class_1330 net/minecraft/entity/ai/control/BodyControl
 	COMMENT The body control ensures a mob's head and body yaws are kept up with each other.
-	FIELD field_30194 BODY_KEEP_UP_THRESHOLD I
-	FIELD field_30195 ROTATE_BODY_START_TICK I
-	FIELD field_30196 ROTATION_INCREMENTS I
 	FIELD field_6354 lastHeadYaw F
 	FIELD field_6355 bodyAdjustTicks I
 	FIELD field_6356 entity Lnet/minecraft/class_1308;
+	FIELD field_30194 BODY_KEEP_UP_THRESHOLD I
+	FIELD field_30195 ROTATE_BODY_START_TICK I
+	FIELD field_30196 ROTATION_INCREMENTS I
 	METHOD <init> (Lnet/minecraft/class_1308;)V
 		ARG 1 entity
+	METHOD method_6224 tick ()V
+		COMMENT Ticks the body control.
+		COMMENT
+		COMMENT @implSpec If the entity {@linkplain #isMoving() has moved}, its body yaw
+		COMMENT adjusts to its head yaw. Otherwise, if the entity is {@linkplain
+		COMMENT #isIndependent() not steered}, its head yaw adjusts to its body yaw.
 	METHOD method_20243 keepUpBody ()V
 		COMMENT Keeps up the body yaw by ensuring it is within the {@linkplain
 		COMMENT MobEntity#getMaxHeadRotation max head rotation} from the head yaw.
@@ -19,9 +25,3 @@ CLASS net/minecraft/class_1330 net/minecraft/entity/ai/control/BodyControl
 		COMMENT {@linkplain #bodyAdjustTicks wait} and finishes by the 20th tick.
 	METHOD method_20246 isIndependent ()Z
 	METHOD method_20247 isMoving ()Z
-	METHOD method_6224 tick ()V
-		COMMENT Ticks the body control.
-		COMMENT
-		COMMENT @implSpec If the entity {@linkplain #isMoving() has moved}, its body yaw
-		COMMENT adjusts to its head yaw. Otherwise, if the entity is {@linkplain
-		COMMENT #isIndependent() not steered}, its head yaw adjusts to its body yaw.

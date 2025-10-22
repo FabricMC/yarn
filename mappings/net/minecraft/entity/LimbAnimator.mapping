@@ -1,19 +1,34 @@
 CLASS net/minecraft/class_8080 net/minecraft/entity/LimbAnimator
 	FIELD field_42109 lastSpeed F
 	FIELD field_42110 speed F
-	FIELD field_42111 pos F
-	FIELD field_52449 scale F
+		COMMENT The speed of the limb movement, also affects the amplitude of their swing.
+	FIELD field_42111 animationProgress F
+		COMMENT How far the limbs have progressed in swinging over time.
+		COMMENT
+		COMMENT <p>This value is uncapped. It's in arbitrary units and is scaled differently by different entity models
+		COMMENT (shorter legs need to swing faster to make the entity appear to be running at the same speed).
+	FIELD field_52449 timeScale F
+		COMMENT Like {@link #speed}, affects the speed of the limb movement, but without affecting the amplitude of the limb swings.
+		COMMENT Used by baby zombies etc.
 	METHOD method_48566 getSpeed ()F
 	METHOD method_48567 setSpeed (F)V
 		ARG 1 speed
 	METHOD method_48568 updateLimbs (FFF)V
-		ARG 1 speed
-		ARG 2 multiplier
-		ARG 3 scale
-	METHOD method_48569 getPos ()F
-	METHOD method_48570 getSpeed (F)F
+		COMMENT Called every tick to update limbs.
+		ARG 1 targetSpeed
+			COMMENT the target limb speed, that may be reached over multiple ticks.
+			COMMENT Limb speed affects the amplitude of the limb swings as well as how fast they move
+		ARG 2 speedChangeRate
+			COMMENT the rate that the current speed will be updated to the target speed, from 0 to 1.
+			COMMENT A value of 1 means the target speed will be reached immediately.
+			COMMENT A value of 0.5 means that the speed will be updated half way towards the target speed each time this method is called.
+			COMMENT Used to smooth out changes in amplitude
+		ARG 3 timeScale
+			COMMENT affects the speed of the limb movement, but without affecting the amplitude of the limb swings
+	METHOD method_48569 getAnimationProgress ()F
+	METHOD method_48570 getAmplitude (F)F
 		ARG 1 tickProgress
 	METHOD method_48571 isLimbMoving ()Z
-	METHOD method_48572 getPos (F)F
+	METHOD method_48572 getAnimationProgress (F)F
 		ARG 1 tickProgress
 	METHOD method_61433 reset ()V

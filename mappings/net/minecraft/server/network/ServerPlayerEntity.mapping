@@ -60,11 +60,21 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	FIELD field_54402 commandOutput Lnet/minecraft/class_2165;
 	FIELD field_56606 SET_SPAWN_TEXT Lnet/minecraft/class_2561;
 	FIELD field_56607 respawn Lnet/minecraft/class_3222$class_10766;
+	FIELD field_57112 DEFAULT_SEEN_CREDITS Z
+	FIELD field_57113 DEFAULT_SPAWN_EXTRA_PARTICLES_ON_FALL Z
+	FIELD field_59631 WAYPOINT_TRANSMIT_RANGE_CROUCH_MODIFIER Lnet/minecraft/class_1322;
+	FIELD field_60522 DIMENSION_KEY Ljava/lang/String;
+	FIELD field_62503 shoulderMountTime J
+	FIELD field_62504 leftShoulderNbt Lnet/minecraft/class_2487;
+	FIELD field_62505 rightShoulderNbt Lnet/minecraft/class_2487;
+	FIELD field_62842 subscribedTypes Ljava/util/Set;
 	METHOD <init> (Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_3218;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/class_8791;)V
 		ARG 1 server
 		ARG 2 world
 		ARG 3 profile
 		ARG 4 clientOptions
+	METHOD method_7336 changeGameMode (Lnet/minecraft/class_1934;)Z
+		ARG 1 gameMode
 	METHOD method_14203 copyFrom (Lnet/minecraft/class_3222;Z)V
 		ARG 1 oldPlayer
 		ARG 2 alive
@@ -115,8 +125,6 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_14239 isDisconnected ()Z
 	METHOD method_14240 onTeleportationDone ()V
 	METHOD method_14242 getCameraEntity ()Lnet/minecraft/class_1297;
-	METHOD method_14244 calculateSpawnOffsetMultiplier (I)I
-		ARG 1 horizontalSpawnArea
 	METHOD method_14248 getStatHandler ()Lnet/minecraft/class_3442;
 	METHOD method_14250 (ILnet/minecraft/class_9014;)V
 		ARG 1 innerScore
@@ -155,8 +163,8 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 0 entity
 	METHOD method_29779 forgiveMobAnger ()V
 	METHOD method_31273 getTextStream ()Lnet/minecraft/class_5513;
-	METHOD method_32745 gameModeFromNbt (Lnet/minecraft/class_2487;Ljava/lang/String;)Lnet/minecraft/class_1934;
-		ARG 0 nbt
+	METHOD method_32745 gameModeFromData (Lnet/minecraft/class_11368;Ljava/lang/String;)Lnet/minecraft/class_1934;
+		ARG 0 view
 		ARG 1 key
 	METHOD method_32746 getServerGameMode (Lnet/minecraft/class_1934;)Lnet/minecraft/class_1934;
 		COMMENT Returns the server game mode the player should be set to, namely the forced game mode.
@@ -166,10 +174,8 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		COMMENT
 		COMMENT @see MinecraftServer#getForcedGameMode
 		ARG 1 backupGameMode
-	METHOD method_32748 readGameModeNbt (Lnet/minecraft/class_2487;)V
-		ARG 1 nbt
-	METHOD method_32749 writeGameModeNbt (Lnet/minecraft/class_2487;)V
-		ARG 1 nbt
+	METHOD method_32749 writeGameModeData (Lnet/minecraft/class_11372;)V
+		ARG 1 view
 	METHOD method_33795 shouldFilterMessagesSentTo (Lnet/minecraft/class_3222;)Z
 		ARG 1 player
 	METHOD method_34225 onSpawn ()V
@@ -241,6 +247,7 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 1 startRaidPos
 	METHOD method_60588 findRespawnPosition (Lnet/minecraft/class_3218;Lnet/minecraft/class_3222$class_10766;Z)Ljava/util/Optional;
 		ARG 0 world
+		ARG 1 respawn
 	METHOD method_60589 (Lnet/minecraft/class_2338;Lnet/minecraft/class_243;)Lnet/minecraft/class_3222$class_9773;
 		ARG 1 respawnPos
 	METHOD method_60590 getRespawnTarget (ZLnet/minecraft/class_5454$class_9823;)Lnet/minecraft/class_5454;
@@ -252,9 +259,6 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 1 respawnPos
 	METHOD method_60594 detachForDimensionChange ()V
 	METHOD method_61272 getPlayerListOrder ()I
-	METHOD method_61274 canSpawnIn (Lnet/minecraft/class_3218;Lnet/minecraft/class_238;)Z
-		ARG 1 world
-		ARG 2 box
 	METHOD method_63561 setPlayerInput (Lnet/minecraft/class_10185;)V
 		ARG 1 playerInput
 	METHOD method_63562 getPlayerInput ()Lnet/minecraft/class_10185;
@@ -264,21 +268,23 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 		ARG 1 chunkPos
 	METHOD method_64124 addEnderPearl (Lnet/minecraft/class_1684;)V
 		ARG 1 enderPearl
-	METHOD method_64125 readRootVehicle (Lnet/minecraft/class_2487;)V
+	METHOD method_64125 readRootVehicle (Lnet/minecraft/class_11368;)V
+		ARG 1 view
 	METHOD method_64128 getEnderPearls ()Ljava/util/Set;
 	METHOD method_64130 removeEnderPearl (Lnet/minecraft/class_1684;)V
 		ARG 1 enderPearl
-	METHOD method_64131 readEnderPearls (Lnet/minecraft/class_2487;)V
+	METHOD method_64131 readEnderPearls (Lnet/minecraft/class_11368;)V
+		ARG 1 view
 	METHOD method_64132 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)Lnet/minecraft/class_1297;
 		ARG 1 entity
 	METHOD method_64133 handleThrownEnderPearl (Lnet/minecraft/class_1684;)J
 		ARG 1 enderPearl
 	METHOD method_64134 sendMapPacket (Lnet/minecraft/class_1799;)V
 		ARG 1 stack
-	METHOD method_64135 writeRootVehicle (Lnet/minecraft/class_2487;)V
-		ARG 1 nbt
-	METHOD method_64136 writeEnderPearls (Lnet/minecraft/class_2487;)V
-		ARG 1 nbt
+	METHOD method_64135 writeRootVehicle (Lnet/minecraft/class_11372;)V
+		ARG 1 view
+	METHOD method_64136 writeEnderPearls (Lnet/minecraft/class_11372;)V
+		ARG 1 view
 	METHOD method_64396 getCommandSource ()Lnet/minecraft/class_2168;
 	METHOD method_64398 sendMessage (Lnet/minecraft/class_2561;)V
 		ARG 1 message
@@ -289,13 +295,51 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 	METHOD method_64580 (Lnet/minecraft/class_5321;)Z
 		ARG 1 recipeKey
 	METHOD method_67564 getRespawn ()Lnet/minecraft/class_3222$class_10766;
-	METHOD method_7336 changeGameMode (Lnet/minecraft/class_1934;)Z
-		ARG 1 gameMode
+	METHOD method_68174 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)Lnet/minecraft/class_1297;
+		ARG 1 enderPearl
+	METHOD method_68175 readEnderPearl (Lnet/minecraft/class_11368;)V
+		ARG 1 view
+	METHOD method_70637 canReceiveWaypoints ()Z
+	METHOD method_71330 (Lnet/minecraft/class_3441$class_11328;)V
+		ARG 1 recipeBook
+	METHOD method_74073 mountOntoShoulder (Lnet/minecraft/class_2487;)Z
+		ARG 1 shoulderNbt
+	METHOD method_74074 getLeftShoulderNbt ()Lnet/minecraft/class_2487;
+	METHOD method_74075 getRightShoulderNbt ()Lnet/minecraft/class_2487;
+	METHOD method_74076 setLeftShoulderNbt (Lnet/minecraft/class_2487;)V
+		ARG 1 leftShoulderNbt
+	METHOD method_74077 setRightShoulderNbt (Lnet/minecraft/class_2487;)V
+		ARG 1 rightShoulderNbt
+	METHOD method_74078 (Lnet/minecraft/class_3218;Lnet/minecraft/class_1297;)V
+		ARG 2 entity
+	METHOD method_74079 playShoulderEntitySound (Lnet/minecraft/class_2487;)V
+		ARG 1 nbt
+	METHOD method_74080 spawnShoulderEntity (Lnet/minecraft/class_2487;)V
+		ARG 1 nbt
+	METHOD method_74537 setSubscribedTypes (Ljava/util/Set;)V
+		ARG 1 subscribedTypes
+	METHOD method_74538 getSubscribedTypes ()Ljava/util/Set;
 	CLASS 1
-		METHOD method_34227 sendPropertyUpdate (Lnet/minecraft/class_1703;II)V
+		FIELD field_58076 componentHashCache Lcom/google/common/cache/LoadingCache;
+		METHOD method_68736 sendPropertyUpdate (Lnet/minecraft/class_1703;II)V
 			ARG 1 handler
 			ARG 2 property
 			ARG 3 value
+		CLASS 1
+			FIELD field_58078 hashOps Lcom/mojang/serialization/DynamicOps;
+			METHOD load (Ljava/lang/Object;)Ljava/lang/Object;
+				ARG 1 component
+			METHOD method_68738 (Lnet/minecraft/class_9336;Ljava/lang/String;)Ljava/lang/IllegalArgumentException;
+				ARG 1 error
+	CLASS class_9773 RespawnPos
+		FIELD comp_2811 pos Lnet/minecraft/class_243;
+		METHOD comp_2811 pos ()Lnet/minecraft/class_243;
+		METHOD method_60595 fromCurrentPos (Lnet/minecraft/class_243;Lnet/minecraft/class_2338;F)Lnet/minecraft/class_3222$class_9773;
+			ARG 0 respawnPos
+			ARG 1 currentPos
+		METHOD method_60596 getYaw (Lnet/minecraft/class_243;Lnet/minecraft/class_2338;)F
+			ARG 0 respawnPos
+			ARG 1 currentPos
 	CLASS class_10766 Respawn
 		FIELD field_56608 CODEC Lcom/mojang/serialization/Codec;
 		METHOD method_67565 posEquals (Lnet/minecraft/class_3222$class_10766;)Z
@@ -304,12 +348,8 @@ CLASS net/minecraft/class_3222 net/minecraft/server/network/ServerPlayerEntity
 			ARG 0 instance
 		METHOD method_67567 getDimension (Lnet/minecraft/class_3222$class_10766;)Lnet/minecraft/class_5321;
 			ARG 0 respawn
-	CLASS class_9773 RespawnPos
-		FIELD comp_2811 pos Lnet/minecraft/class_243;
-		METHOD comp_2811 pos ()Lnet/minecraft/class_243;
-		METHOD method_60595 fromCurrentPos (Lnet/minecraft/class_243;Lnet/minecraft/class_2338;)Lnet/minecraft/class_3222$class_9773;
-			ARG 0 respawnPos
-			ARG 1 currentPos
-		METHOD method_60596 getYaw (Lnet/minecraft/class_243;Lnet/minecraft/class_2338;)F
-			ARG 0 respawnPos
-			ARG 1 currentPos
+	CLASS class_11543 SavePos
+		FIELD field_61094 CODEC Lcom/mojang/serialization/MapCodec;
+		FIELD field_61095 EMPTY Lnet/minecraft/class_3222$class_11543;
+		METHOD method_72272 (Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;
+			ARG 0 instance
