@@ -12,6 +12,10 @@ CLASS net/minecraft/class_2784 net/minecraft/world/border/WorldBorder
 	FIELD field_36191 MAX_CENTER_COORDINATES D
 	FIELD field_62536 CODEC Lcom/mojang/serialization/Codec;
 	FIELD field_62537 TYPE Lnet/minecraft/class_10741;
+	FIELD field_63953 properties Lnet/minecraft/class_2784$class_5200;
+	FIELD field_63954 initialized Z
+	METHOD <init> (Lnet/minecraft/class_2784$class_5200;)V
+		ARG 1 properties
 	METHOD method_11951 contains (Lnet/minecraft/class_1923;)Z
 		ARG 1 chunkPos
 	METHOD method_11952 contains (Lnet/minecraft/class_2338;)Z
@@ -37,7 +41,8 @@ CLASS net/minecraft/class_2784 net/minecraft/world/border/WorldBorder
 	METHOD method_11957 interpolateSize (DDJJ)V
 		ARG 1 fromSize
 		ARG 3 toSize
-		ARG 5 time
+		ARG 5 timeDuration
+		ARG 7 timeStart
 	METHOD method_11958 getBoundNorth ()D
 	METHOD method_11959 getMaxRadius ()I
 		COMMENT Returns the maximum radius of this border, in blocks.
@@ -128,18 +133,32 @@ CLASS net/minecraft/class_2784 net/minecraft/world/border/WorldBorder
 		ARG 5 z
 	METHOD method_61770 clamp (Lnet/minecraft/class_243;)Lnet/minecraft/class_243;
 		ARG 1 pos
+	METHOD method_75884 getBoundWest (F)D
+		ARG 1 tickProgress
+	METHOD method_75885 ensureInitialized (J)V
+		ARG 1 time
+	METHOD method_75886 getBoundNorth (F)D
+		ARG 1 tickProgress
+	METHOD method_75887 getBoundEast (F)D
+		ARG 1 tickProgress
+	METHOD method_75888 getBoundSouth (F)D
+		ARG 1 tickProgress
 	CLASS class_2785 Area
 		METHOD method_11984 getSize ()D
 		METHOD method_11985 getBoundSouth (F)D
+			ARG 1 tickProgress
 		METHOD method_11986 getAreaInstance ()Lnet/minecraft/class_2784$class_2785;
 		METHOD method_11987 getShrinkingSpeed ()D
 		METHOD method_11988 getSizeLerpTarget ()D
 		METHOD method_11989 onMaxRadiusChanged ()V
 		METHOD method_11990 onCenterChanged ()V
 		METHOD method_11991 getBoundEast (F)D
+			ARG 1 tickProgress
 		METHOD method_11992 getBoundNorth (F)D
+			ARG 1 tickProgress
 		METHOD method_11993 getSizeLerpTime ()J
 		METHOD method_11994 getBoundWest (F)D
+			ARG 1 tickProgress
 		METHOD method_11995 getStage ()Lnet/minecraft/class_2789;
 		METHOD method_17906 asVoxelShape ()Lnet/minecraft/class_265;
 	CLASS class_2786 MovingArea
@@ -148,10 +167,16 @@ CLASS net/minecraft/class_2784 net/minecraft/world/border/WorldBorder
 		FIELD field_12741 timeStart J
 		FIELD field_12742 timeEnd J
 		FIELD field_12744 timeDuration D
+		FIELD field_63955 remainingTimeDuration J
+		FIELD field_63956 currentSize D
+		FIELD field_63957 lastSize D
 		METHOD <init> (Lnet/minecraft/class_2784;DDJJ)V
 			ARG 2 oldSize
 			ARG 4 newSize
 			ARG 6 timeDuration
+			ARG 8 timeStart
+		METHOD method_75889 getLastSize ()D
+		METHOD method_75890 currentSize ()D
 	CLASS class_2787 StaticArea
 		FIELD field_12745 boundNorth D
 		FIELD field_12746 boundWest D

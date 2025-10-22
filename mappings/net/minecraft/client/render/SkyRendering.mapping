@@ -11,6 +11,12 @@ CLASS net/minecraft/class_9975 net/minecraft/client/render/SkyRendering
 	FIELD field_62959 sunRiseVertexBuffer Lcom/mojang/blaze3d/buffers/GpuBuffer;
 	FIELD field_62960 endFlashVertexBuffer Lcom/mojang/blaze3d/buffers/GpuBuffer;
 	FIELD field_62961 indexBuffer2 Lcom/mojang/blaze3d/systems/RenderSystem$class_5590;
+	FIELD field_63578 SUN_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_63579 END_FLASH_TEXTURE Lnet/minecraft/class_2960;
+	FIELD field_63580 celestialAtlasTexture Lnet/minecraft/class_1059;
+	METHOD <init> (Lnet/minecraft/class_1060;Lnet/minecraft/class_11697;)V
+		ARG 1 textureManager
+		ARG 2 atlasManager
 	METHOD method_62302 renderTopSky (FFF)V
 		ARG 1 red
 		ARG 2 green
@@ -19,12 +25,20 @@ CLASS net/minecraft/class_9975 net/minecraft/client/render/SkyRendering
 		ARG 1 alpha
 		ARG 2 matrices
 	METHOD method_62304 renderMoon (Lnet/minecraft/class_12131;FLnet/minecraft/class_4587;)V
+		ARG 1 moonPhase
 		ARG 2 alpha
+		ARG 3 matrices
 	METHOD method_62305 renderSkyDark ()V
 	METHOD method_62306 renderGlowingSky (Lnet/minecraft/class_4587;FI)V
 		ARG 1 matrices
+		ARG 2 solarAngle
+		ARG 3 color
 	METHOD method_62307 renderCelestialBodies (Lnet/minecraft/class_4587;FLnet/minecraft/class_12131;FF)V
 		ARG 1 matrices
+		ARG 2 time
+		ARG 3 moonPhase
+		ARG 4 sunAndMoonAlpha
+		ARG 5 starBrightness
 	METHOD method_62309 createSky (Lnet/minecraft/class_4588;F)V
 		ARG 1 vertexConsumer
 		ARG 2 height
@@ -35,14 +49,28 @@ CLASS net/minecraft/class_9975 net/minecraft/client/render/SkyRendering
 	METHOD method_65233 createStars ()Lcom/mojang/blaze3d/buffers/GpuBuffer;
 	METHOD method_65234 createEndSky ()Lcom/mojang/blaze3d/buffers/GpuBuffer;
 	METHOD method_73244 drawEndLightFlash (Lnet/minecraft/class_4587;FFF)V
-		ARG 3 skyFactor
-		ARG 4 pitch
+		ARG 1 matrices
+		ARG 2 intensity
+		ARG 3 pitch
+		ARG 4 yaw
 	METHOD method_74757 bindTexture (Lnet/minecraft/class_1060;Lnet/minecraft/class_2960;)Lnet/minecraft/class_1044;
+		ARG 1 textureManager
+		ARG 2 texture
 	METHOD method_74758 createSunRise ()Lcom/mojang/blaze3d/buffers/GpuBuffer;
 	METHOD method_74759 createSun (Lnet/minecraft/class_1059;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+		ARG 0 atlas
 	METHOD method_74760 createMoonPhases (Lnet/minecraft/class_1059;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+		ARG 0 atlas
 	METHOD method_74761 createEndFlash (Lnet/minecraft/class_1059;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+		ARG 0 atlas
 	METHOD method_74925 isSkyDark (FLnet/minecraft/class_638;)Z
+		ARG 1 tickProgress
+		ARG 2 world
 	METHOD method_74926 updateRenderState (Lnet/minecraft/class_638;FLnet/minecraft/class_4184;Lnet/minecraft/class_12076;)V
 		ARG 1 world
+		ARG 2 tickProgress
+		ARG 3 camera
 		ARG 4 state
+	METHOD method_75418 createQuadVertexBuffer (Ljava/lang/String;Lnet/minecraft/class_1058;)Lcom/mojang/blaze3d/buffers/GpuBuffer;
+		ARG 0 description
+		ARG 1 sprite
