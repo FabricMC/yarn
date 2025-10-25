@@ -12,6 +12,7 @@ import org.gradle.api.tasks.Delete;
 import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.TaskProvider;
 
+import net.fabricmc.filament.task.GzipTask;
 import net.fabricmc.filament.task.unpick.CombineUnpickDefinitionsTask;
 import net.fabricmc.filament.task.DownloadTask;
 import net.fabricmc.filament.task.GeneratePackageInfoMappingsTask;
@@ -62,11 +63,16 @@ public final class FilamentGradlePlugin implements Plugin<Project> {
 		tasks.register("javadocLint", JavadocLintTask.class);
 
 		var combineUnpickDefinitions = tasks.register("combineUnpickDefinitions", CombineUnpickDefinitionsTask.class);
-		tasks.register("remapUnpickDefinitionsIntermediary", RemapUnpickDefinitionsTask.class, task -> {
+		var remapUnpick = tasks.register("remapUnpickDefinitionsIntermediary", RemapUnpickDefinitionsTask.class, task -> {
 			task.dependsOn(combineUnpickDefinitions);
 			task.getInput().set(combineUnpickDefinitions.flatMap(CombineUnpickDefinitionsTask::getOutput));
 			task.getSourceNamespace().set("named");
 			task.getTargetNamespace().set("intermediary");
+		});
+
+		tasks.register("gzipUnpickDefinitions", GzipTask.class, task -> {
+			task.getInput().set(remapUnpick.flatMap(RemapUnpickDefinitionsTask::getOutput));
+			task.getFileName().set("definitions.unpick");
 		});
 
 		var cleanFilament = tasks.register("cleanFilament", Delete.class, task -> task.delete(extension.getCacheDirectory()));
