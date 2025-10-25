@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.RecordComponentNode;
 
 import net.fabricmc.mappingio.tree.MappingTree;
 import net.fabricmc.mappingio.tree.MemoryMappingTree;
@@ -32,6 +33,7 @@ public class NameFinder {
 
 	// comp_x -> name
 	private final Map<String, String> recordNames = new HashMap<>();
+	private final Map<String, List<RecordComponentNode>> recordComponentNames = new HashMap<>();
 	private final Map<MappingEntry, String> recordFieldNames = new HashMap<>();
 	private final Map<MappingEntry, String> recordMethodNames = new HashMap<>();
 
@@ -47,6 +49,10 @@ public class NameFinder {
 
 		if ("java/lang/Record".equals(classNode.superName)) {
 			classNode.accept(new RecordComponentNameFinder(Constants.ASM_VERSION, recordNames));
+
+			if (classNode.recordComponents != null && !classNode.recordComponents.isEmpty()) {
+				recordComponentNames.put(classNode.name, classNode.recordComponents);
+			}
 		}
 	}
 
@@ -101,5 +107,9 @@ public class NameFinder {
 
 	public Map<MappingEntry, String> getMethodNames() {
 		return recordMethodNames;
+	}
+
+	public Map<String, List<RecordComponentNode>> getRecordComponents() {
+		return recordComponentNames;
 	}
 }

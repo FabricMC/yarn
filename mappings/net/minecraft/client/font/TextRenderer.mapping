@@ -14,14 +14,6 @@ CLASS net/minecraft/class_327 net/minecraft/client/font/TextRenderer
 	FIELD field_61529 fonts Lnet/minecraft/class_327$class_11602;
 	METHOD <init> (Lnet/minecraft/class_327$class_11602;)V
 		ARG 1 fonts
-	METHOD method_1713 getWrappedLinesHeight (Ljava/lang/String;I)I
-		COMMENT Gets the height of the text when it has been wrapped.
-		COMMENT
-		COMMENT @return the height of the wrapped text
-		COMMENT @see TextRenderer#wrapLines(StringVisitable, int)
-		COMMENT @see #getWrappedLinesHeight(StringVisitable, int)
-		ARG 1 text
-		ARG 2 maxWidth
 	METHOD method_1714 trimToWidth (Lnet/minecraft/class_5348;I)Lnet/minecraft/class_5348;
 		COMMENT Trims a string to be at most {@code maxWidth} wide.
 		COMMENT
@@ -125,13 +117,14 @@ CLASS net/minecraft/class_327 net/minecraft/client/font/TextRenderer
 		COMMENT @see #getWrappedLinesHeight(String, int)
 		ARG 1 text
 		ARG 2 maxWidth
-	METHOD method_71795 prepare (Lnet/minecraft/class_5481;FFIZI)Lnet/minecraft/class_327$class_11465;
+	METHOD method_71795 prepare (Lnet/minecraft/class_5481;FFIZZI)Lnet/minecraft/class_327$class_11465;
 		ARG 1 text
 		ARG 2 x
 		ARG 3 y
 		ARG 4 color
 		ARG 5 shadow
-		ARG 6 backgroundColor
+		ARG 6 trackEmpty
+		ARG 7 backgroundColor
 	METHOD method_71796 prepare (Ljava/lang/String;FFIZI)Lnet/minecraft/class_327$class_11465;
 		ARG 1 string
 		ARG 2 x
@@ -163,17 +156,21 @@ CLASS net/minecraft/class_327 net/minecraft/client/font/TextRenderer
 		FIELD field_60705 maxBackgroundX F
 		FIELD field_60706 maxBackgroundY F
 		FIELD field_60707 drawnGlyphs Ljava/util/List;
-		METHOD <init> (Lnet/minecraft/class_327;FFIIZ)V
+		FIELD field_63844 trackEmpty Z
+		FIELD field_63845 emptyGlyphRects Ljava/util/List;
+		METHOD <init> (Lnet/minecraft/class_327;FFIIZZ)V
 			ARG 2 x
 			ARG 3 y
 			ARG 4 color
 			ARG 5 backgroundColor
 			ARG 6 shadow
-		METHOD <init> (Lnet/minecraft/class_327;FFIZ)V
+			ARG 7 trackEmpty
+		METHOD <init> (Lnet/minecraft/class_327;FFIZZ)V
 			ARG 2 x
 			ARG 3 y
 			ARG 4 color
 			ARG 5 shadow
+			ARG 6 trackEmpty
 		METHOD method_27532 addRectangle (Lnet/minecraft/class_11767;)V
 			ARG 1 rectangle
 		METHOD method_65177 getShadowColor (Lnet/minecraft/class_2583;I)I
@@ -190,23 +187,27 @@ CLASS net/minecraft/class_327 net/minecraft/client/font/TextRenderer
 			ARG 2 minY
 			ARG 3 maxX
 			ARG 4 maxY
-		METHOD method_71804 addGlyph (Lnet/minecraft/class_11767;)V
+		METHOD method_71804 addGlyph (Lnet/minecraft/class_11767$class_12238;)V
 			ARG 1 glyph
 		METHOD method_72733 accept (ILnet/minecraft/class_2583;Lnet/minecraft/class_11768;)Z
 			ARG 1 index
 			ARG 2 style
 			ARG 3 glyph
+		METHOD method_75783 addEmptyGlyphRect (Lnet/minecraft/class_12237;)V
+			ARG 1 rect
 	CLASS class_6415 TextLayerType
 	CLASS class_11464 GlyphDrawer
-		METHOD method_71797 drawGlyph (Lnet/minecraft/class_11767;)V
+		METHOD method_71797 drawGlyph (Lnet/minecraft/class_11767$class_12238;)V
 			ARG 1 glyph
 		METHOD method_71798 drawRectangle (Lnet/minecraft/class_11767;)V
-			ARG 1 bakedGlyph
+			ARG 1 rect
 		METHOD method_71799 drawing (Lnet/minecraft/class_4597;Lorg/joml/Matrix4f;Lnet/minecraft/class_327$class_6415;I)Lnet/minecraft/class_327$class_11464;
 			ARG 0 vertexConsumers
 			ARG 1 matrix
 			ARG 2 layerType
 			ARG 3 light
+		METHOD method_75775 drawEmptyGlyphRect (Lnet/minecraft/class_12237;)V
+			ARG 1 rect
 		CLASS 1
 			METHOD method_73365 draw (Lnet/minecraft/class_11767;)V
 				ARG 1 glyph

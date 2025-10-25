@@ -21,14 +21,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.RecordComponentNode;
 
 import net.fabricmc.mappingio.MappingReader;
 import net.fabricmc.mappingio.MappingWriter;
@@ -53,10 +57,12 @@ public class MappingNameCompleter {
 		Map<MappingEntry, String> fieldNames = nameFinder.getFieldNames();
 		Map<MappingEntry, String> methodNames = nameFinder.getMethodNames();
 		Map<String, String> recordNames = nameFinder.getRecordNames();
+		Map<String, List<RecordComponentNode>> recordComponentNames = nameFinder.getRecordComponents();
 
 		System.out.printf("Found %d field names%n", fieldNames.size());
 		System.out.printf("Found %d method names%n", methodNames.size());
 		System.out.printf("Found %d record names%n", recordNames.size());
+		System.out.printf("Found %d record constructors%n", recordComponentNames.size());
 
 		final MemoryMappingTree yarn = readMappings(inputYarnMappings);
 		final int yarnIntermediaryNs = yarn.getNamespaceId("intermediary");
@@ -98,11 +104,82 @@ public class MappingNameCompleter {
 			}
 		}
 
+		for (Map.Entry<String, List<RecordComponentNode>> entry : recordComponentNames.entrySet()) {
+			String classNameIntermediary = entry.getKey();
+			List<RecordComponentNode> recordComponents = entry.getValue();
+
+			MappingTree.ClassMapping classMapping = yarn.getClass(classNameIntermediary, yarnIntermediaryNs);
+			String initDesc = getConstructorDesc(recordComponents);
+
+			MappingTree.MethodMapping constructorMapping = classMapping == null ? null : classMapping.getMethod("<init>", initDesc, yarnIntermediaryNs);
+			int lvIndex = 1;
+
+			for (RecordComponentNode recordComponentNode : recordComponents) {
+				int currentLvIndex = lvIndex;
+				lvIndex += Type.getType(recordComponentNode.descriptor).getSize();
+				String name = getNameForComponent(recordComponentNode, classMapping, yarnIntermediaryNs, yarnNamedNs);
+
+				if (name == null) {
+					continue;
+				}
+
+				yarn.visitClass(classNameIntermediary);
+
+				if (classMapping == null) {
+					classMapping = yarn.getClass(classNameIntermediary, yarnIntermediaryNs);
+				}
+
+				if (classMapping.getName(yarnNamedNs) == null) {
+					classMapping.setDstName(classNameIntermediary, yarnNamedNs);
+				}
+
+				yarn.visitMethod("<init>", initDesc);
+
+				if (constructorMapping == null) {
+					constructorMapping = classMapping.getMethod("<init>", initDesc, yarnIntermediaryNs);
+					constructorMapping.setDstName("<init>", yarnNamedNs);
+				}
+
+				yarn.visitMethodArg(-1, currentLvIndex, null);
+				MappingTree.MethodArgMapping argMapping = constructorMapping.getArg(-1, currentLvIndex, null);
+				String yarnArgName = argMapping.getName(yarnNamedNs);
+
+				if (yarnArgName == null) {
+					argMapping.setDstName(name, yarnNamedNs);
+				}
+			}
+		}
+
 		inheritMappedNamesOfEnclosingClasses(yarn);
 
 		try (MappingWriter mappingWriter = MappingWriter.create(outputYarnMappings, MappingFormat.TINY_2_FILE)) {
 			yarn.accept(mappingWriter);
 		}
+	}
+
+	private static @Nullable String getNameForComponent(RecordComponentNode recordComponentNode, MappingTree.ClassMapping classMapping,
+														int yarnIntermediaryNs, int yarnNamedNs) {
+		if (!recordComponentNode.name.startsWith("comp_")) {
+			return recordComponentNode.name;
+		}
+
+		if (classMapping == null) {
+			return null;
+		}
+
+		MappingTree.MethodMapping componentGetter = classMapping.getMethod(recordComponentNode.name, "()" + recordComponentNode.descriptor, yarnIntermediaryNs);
+
+		if (componentGetter != null && componentGetter.getName(yarnNamedNs) != null) {
+			return componentGetter.getName(yarnNamedNs);
+		}
+
+		MappingTree.FieldMapping componentField = classMapping.getField(recordComponentNode.name, recordComponentNode.descriptor, yarnIntermediaryNs);
+
+		if (componentField != null && componentField.getName(yarnNamedNs) != null) {
+			return componentField.getName(yarnNamedNs);
+		}
+
+		return null;
 	}
 
 	private static void acceptJar(NameFinder nameFinder, Path jar) throws IOException {
@@ -127,6 +204,18 @@ public class MappingNameCompleter {
 		MemoryMappingTree mappingTree = new MemoryMappingTree();
 		MappingReader.read(path, mappingTree);
 		return mappingTree;
+	}
+
+	private static String getConstructorDesc(List<RecordComponentNode> recordComponents) {
+		StringBuilder initDescBuilder = new StringBuilder();
+		initDescBuilder.append("(");
+
+		for (RecordComponentNode node : recordComponents) {
+			initDescBuilder.append(node.descriptor);
+		}
+
+		initDescBuilder.append(")V");
+		return initDescBuilder.toString();
 	}
 
 	/**
