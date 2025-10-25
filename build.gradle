@@ -242,28 +242,12 @@ tasks.register('tinyJar', Jar) {
 	}
 }
 
-tasks.register('compressTiny', FileInputOutput) {
+tasks.register('compressTiny', net.fabricmc.filament.task.GzipTask) {
 	dependsOn tinyJar, mergeTiny
 	group = buildMappingGroup
 
 	input = mergeTiny.output
-	output = new File(libs, "yarn-tiny-${yarnVersion}.gz")
-
-	doLast {
-		def buffer = new byte[1024]
-		def fileOutputStream = new FileOutputStream(outputFile)
-		def outputStream = new GZIPOutputStream(fileOutputStream)
-		def fileInputStream = new FileInputStream(inputFile)
-
-		def length
-		while ((length = fileInputStream.read(buffer)) > 0) {
-			outputStream.write(buffer, 0, length)
-		}
-
-		fileInputStream.close()
-		outputStream.finish()
-		outputStream.close()
-	}
+	fileName = "yarn-tiny-${yarnVersion}"
 }
 
 clean.doFirst {
