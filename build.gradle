@@ -385,9 +385,9 @@ tasks.register('v2MergedYarnJar', Jar) {
 	}
 }
 
-tasks.register("unpickDefinitionsJar", Jar) {
+tasks.register("extrasJar", Jar) {
 	group = "mapping build"
-	archiveFileName = "yarn-${yarnVersion}-unpick-definitions.jar"
+	archiveFileName = "yarn-${yarnVersion}-extras.jar"
 	from(remapUnpickDefinitionsIntermediary) {
 		rename remapUnpickDefinitionsIntermediary.output.get().asFile.name, "extras/definitions.unpick"
 	}
@@ -395,6 +395,10 @@ tasks.register("unpickDefinitionsJar", Jar) {
 		expand version: project.version
 		rename unpickMetaFile.name, "extras/unpick.json"
 	}
+	from(remapAnnotationsIntermediary.output) {
+		rename remapAnnotationsIntermediary.output.get().asFile.name, "extras/annotations.json"
+	}
+	destinationDirectory.set(file("build/libs"))
 	manifest {
 		attributes("Minecraft-Version-Id": minecraft_version)
 	}
@@ -635,8 +639,8 @@ publishing {
 			artifact(v2MergedYarnJar) {
 				classifier = "mergedv2"
 			}
-			artifact(unpickDefinitionsJar) {
-				classifier = "unpick"
+			artifact(extrasJar) {
+				classifier = "extras"
 			}
 			artifact javadocJar
 		}
