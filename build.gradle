@@ -19,7 +19,7 @@ plugins {
 	id 'net.fabricmc.filament'
 }
 
-def minecraft_version = "25w43a"
+def minecraft_version = "25w44a"
 
 filament {
 	minecraftVersion = minecraft_version
@@ -244,28 +244,12 @@ tasks.register('tinyJar', Jar) {
 	}
 }
 
-tasks.register('compressTiny', FileInputOutput) {
+tasks.register('compressTiny', net.fabricmc.filament.task.GzipTask) {
 	dependsOn tinyJar, mergeTiny
 	group = buildMappingGroup
 
 	input = mergeTiny.output
-	output = new File(libs, "yarn-tiny-${yarnVersion}.gz")
-
-	doLast {
-		def buffer = new byte[1024]
-		def fileOutputStream = new FileOutputStream(outputFile)
-		def outputStream = new GZIPOutputStream(fileOutputStream)
-		def fileInputStream = new FileInputStream(inputFile)
-
-		def length
-		while ((length = fileInputStream.read(buffer)) > 0) {
-			outputStream.write(buffer, 0, length)
-		}
-
-		fileInputStream.close()
-		outputStream.finish()
-		outputStream.close()
-	}
+	fileName = "yarn-tiny-${yarnVersion}"
 }
 
 clean.doFirst {
@@ -388,6 +372,25 @@ tasks.register('v2MergedYarnJar', Jar) {
 		rename mappings.name, "mappings/mappings.tiny"
 	}
 	from(remapUnpickDefinitionsIntermediary.output) {
+		rename remapUnpickDefinitionsIntermediary.output.get().asFile.name, "extras/definitions.unpick"
+	}
+	from(file(unpickMetaFile)) {
+		expand version: project.version
+		rename unpickMetaFile.name, "extras/unpick.json"
+	}
+	from(remapAnnotationsIntermediary.output) {
+		rename remapAnnotationsIntermediary.output.get().asFile.name, "extras/annotations.json"
+	}
+	destinationDirectory.set(file("build/libs"))
+	manifest {
+		attributes("Minecraft-Version-Id": minecraft_version)
+	}
+}
+
+tasks.register("extrasJar", Jar) {
+	group = "mapping build"
+	archiveFileName = "yarn-${yarnVersion}-extras.jar"
+	from(remapUnpickDefinitionsIntermediary) {
 		rename remapUnpickDefinitionsIntermediary.output.get().asFile.name, "extras/definitions.unpick"
 	}
 	from(file(unpickMetaFile)) {
@@ -637,6 +640,9 @@ publishing {
 			}
 			artifact(v2MergedYarnJar) {
 				classifier = "mergedv2"
+			}
+			artifact(extrasJar) {
+				classifier = "extras"
 			}
 			artifact javadocJar
 		}

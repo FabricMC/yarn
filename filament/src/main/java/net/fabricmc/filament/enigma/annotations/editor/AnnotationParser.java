@@ -12,6 +12,8 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import cuchaz.enigma.api.view.entry.ClassEntryView;
+import cuchaz.enigma.api.view.entry.FieldEntryView;
+import cuchaz.enigma.api.view.entry.MethodEntryView;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -93,7 +95,7 @@ public class AnnotationParser {
 		int nameEnd = c.index;
 
 		String internal = resolveToInternalName(canonical);
-		ClassNode annotationClass = internal != null ? plugin.project.getBytecode(internal) : null;
+		ClassNode annotationClass = internal != null ? plugin.project.getBytecode(plugin.project.obfuscate(ClassEntryView.create(internal)).getFullName()) : null;
 
 		if (internal == null) {
 			internal = canonical.replace('.', '/');
@@ -279,7 +281,8 @@ public class AnnotationParser {
 
 			for (MethodNode method : annotationClass.methods) {
 				if ((method.access & Opcodes.ACC_ABSTRACT) != 0 && method.annotationDefault == null) {
-					missingRequiredAttributes.add(method.name);
+					String deobfName = plugin.project.deobfuscate(MethodEntryView.create(annotationClass.name, method.name, method.desc)).getName();
+					missingRequiredAttributes.add(deobfName);
 				}
 			}
 
@@ -314,10 +317,12 @@ public class AnnotationParser {
 			List<CompletionOption> completions = new ArrayList<>();
 
 			for (MethodNode method : annotationClass.methods) {
-				if ((method.access & Opcodes.ACC_ABSTRACT) != 0 && !existingAttributes.contains(method.name)) {
+				String deobfName = plugin.project.deobfuscate(MethodEntryView.create(annotationClass.name, method.name, method.desc)).getName();
+
+				if ((method.access & Opcodes.ACC_ABSTRACT) != 0 && !existingAttributes.contains(deobfName)) {
 					String attributeType = deobfuscateType(Type.getReturnType(method.desc)).getClassName();
 					String simpleName = attributeType.substring(attributeType.lastIndexOf('.') + 1);
-					completions.add(new CompletionOption(method.name, method.name + " = ", simpleName.replace('$', '.')));
+					completions.add(new CompletionOption(deobfName, deobfName + " = ", simpleName.replace('$', '.')));
 				}
 			}
 
@@ -476,10 +481,11 @@ public class AnnotationParser {
 								Stream.of("void", "boolean", "byte", "char", "short", "int", "long", "float", "double")
 										.map(type -> new CompletionOption(type, type + ".class", null)),
 								index.allClasses().stream().map(type -> {
+									type = plugin.project.deobfuscate(ClassEntryView.create(type)).getFullName();
 									int simpleNameIndex = Math.max(type.lastIndexOf('/'), type.lastIndexOf('$'));
 									String simpleName = type.substring(simpleNameIndex + 1);
 									String context = simpleNameIndex == -1 ? null : type.substring(0, simpleNameIndex).replace('/', '.').replace('$', '.');
-									return new CompletionOption(simpleName, type.replace('/', '.').replace('$', '.'), context);
+									return new CompletionOption(simpleName, type.replace('/', '.').replace('$', '.') + ".class", context);
 								})
 						).toList();
 					}
@@ -488,7 +494,7 @@ public class AnnotationParser {
 
 					if (expectedType.getSort() == Type.OBJECT) {
 						String enumInternalName = expectedType.getInternalName();
-						ClassNode enumClass = plugin.project.getBytecode(expectedType.getInternalName());
+						ClassNode enumClass = plugin.project.getBytecode(plugin.project.obfuscate(ClassEntryView.create(expectedType.getInternalName())).getFullName());
 
 						if (enumClass != null && (enumClass.access & Opcodes.ACC_ENUM) != 0 && enumClass.fields != null) {
 							String enumCanonicalName = enumInternalName.replace('/', '.').replace('$', '.');
@@ -497,7 +503,8 @@ public class AnnotationParser {
 
 							for (FieldNode field : enumClass.fields) {
 								if ((field.access & Opcodes.ACC_ENUM) != 0) {
-									completions.add(new CompletionOption(field.name, enumCanonicalName + "." + field.name, enumSimpleName));
+									String deobfName = plugin.project.deobfuscate(FieldEntryView.create(enumClass.name, field.name, field.desc)).getName();
+									completions.add(new CompletionOption(deobfName, enumCanonicalName + "." + deobfName, enumSimpleName));
 								}
 							}
 
@@ -682,7 +689,7 @@ public class AnnotationParser {
 						return null;
 					}
 
-					ClassNode cn = plugin.project.getBytecode(intern);
+					ClassNode cn = plugin.project.getBytecode(plugin.project.obfuscate(ClassEntryView.create(intern)).getFullName());
 
 					if (cn == null || !enumHasConstant(cn, constName)) {
 						addErrorRange(start, index, "Enum constant not found: " + typeCanonical);
@@ -898,7 +905,8 @@ public class AnnotationParser {
 			}
 
 			String internal = expectedDesc.substring(1, expectedDesc.length() - 1);
-			ClassNode cn = plugin.project.getBytecode(internal);
+			String obfInternal = plugin.project.obfuscate(ClassEntryView.create(internal)).getFullName();
+			ClassNode cn = plugin.project.getBytecode(obfInternal);
 
 			if (cn == null) {
 				// class not found?!
@@ -930,8 +938,9 @@ public class AnnotationParser {
 			String[] packageNameParts = Arrays.copyOfRange(parts, 0, packageNamePartCount);
 			String[] classNameParts = Arrays.copyOfRange(parts, packageNamePartCount, parts.length);
 			String possibleInternalName = String.join("/", packageNameParts) + "/" + String.join("$", classNameParts);
+			String possibleObfName = plugin.project.obfuscate(ClassEntryView.create(possibleInternalName)).getFullName();
 
-			if (plugin.project.getBytecode(possibleInternalName) != null) {
+			if (plugin.project.getBytecode(possibleObfName) != null) {
 				return possibleInternalName;
 			}
 		}
@@ -945,7 +954,9 @@ public class AnnotationParser {
 		}
 
 		for (FieldNode f : enumClass.fields) {
-			if ((f.access & Opcodes.ACC_ENUM) != 0 && f.name.equals(constName)) {
+			String deobfName = plugin.project.deobfuscate(FieldEntryView.create(enumClass.name, f.name, f.desc)).getName();
+
+			if ((f.access & Opcodes.ACC_ENUM) != 0 && deobfName.equals(constName)) {
 				return true;
 			}
 		}
@@ -978,8 +989,10 @@ public class AnnotationParser {
 		}
 
 		for (MethodNode m : annotationClass.methods) {
-			if (m.name.equals(attrName) && (m.access & Opcodes.ACC_ABSTRACT) != 0) {
-				return Type.getReturnType(m.desc).getDescriptor();
+			String deobfName = plugin.project.deobfuscate(MethodEntryView.create(annotationClass.name, m.name, m.desc)).getName();
+
+			if (deobfName.equals(attrName) && (m.access & Opcodes.ACC_ABSTRACT) != 0) {
+				return deobfuscateType(Type.getReturnType(m.desc)).getDescriptor();
 			}
 		}
 
