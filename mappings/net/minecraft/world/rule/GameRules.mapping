@@ -43,8 +43,10 @@ CLASS net/minecraft/class_1928 net/minecraft/world/rule/GameRules
 		ARG 0 name
 		ARG 1 category
 		ARG 2 type
+		ARG 3 argumentType
+		ARG 4 codec
 		ARG 5 defaultValue
-		ARG 6 featureSet
+		ARG 6 requiredFeatures
 		ARG 7 acceptor
 		ARG 8 commandResultSupplier
 	METHOD method_20744 accept (Lnet/minecraft/class_4311;)V
@@ -52,11 +54,13 @@ CLASS net/minecraft/class_1928 net/minecraft/world/rule/GameRules
 		COMMENT
 		COMMENT <p>The visitation involves calling both {@link Visitor#visit(GameRules.Key, GameRules.Type)} and {@code visitX} for every game rule, where X is the current rule's concrete type such as a boolean.
 		ARG 1 visitor
-	METHOD method_27325 copy (Lnet/minecraft/class_7699;)Lnet/minecraft/class_1928;
+	METHOD method_27325 withEnabledFeatures (Lnet/minecraft/class_7699;)Lnet/minecraft/class_1928;
 		ARG 1 enabledFeatures
 	METHOD method_76181 streamRules ()Ljava/util/stream/Stream;
 	METHOD method_76182 createCodec (Lnet/minecraft/class_7699;)Lcom/mojang/serialization/Codec;
 		ARG 0 featureSet
+	METHOD method_76183 (Lnet/minecraft/class_7699;Lnet/minecraft/class_12279;)Z
+		ARG 1 rule
 	METHOD method_76184 (Lnet/minecraft/class_7699;Lnet/minecraft/class_12280;)Lnet/minecraft/class_1928;
 		ARG 1 rules
 	METHOD method_76185 getValue (Lnet/minecraft/class_12279;)Ljava/lang/Object;
@@ -65,11 +69,11 @@ CLASS net/minecraft/class_1928 net/minecraft/world/rule/GameRules
 		ARG 1 rule
 		ARG 2 value
 		ARG 3 server
-	METHOD method_76187 updateValue (Lnet/minecraft/class_12280;Lnet/minecraft/class_12279;Lnet/minecraft/server/MinecraftServer;)V
+	METHOD method_76187 copyFrom (Lnet/minecraft/class_12280;Lnet/minecraft/class_12279;Lnet/minecraft/server/MinecraftServer;)V
 		ARG 1 rules
 		ARG 2 rule
 		ARG 3 server
-	METHOD method_76188 updateValues (Lnet/minecraft/class_12280;Lnet/minecraft/server/MinecraftServer;)V
+	METHOD method_76188 copyFrom (Lnet/minecraft/class_12280;Lnet/minecraft/server/MinecraftServer;)V
 		ARG 1 rules
 		ARG 2 server
 	METHOD method_76189 (Lnet/minecraft/class_12280;Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_12279;)V
@@ -78,11 +82,13 @@ CLASS net/minecraft/class_1928 net/minecraft/world/rule/GameRules
 		ARG 1 rule
 	METHOD method_76191 (Lnet/minecraft/class_1928;)Lnet/minecraft/class_12280;
 		ARG 0 gameRules
-	METHOD method_76192 updateValues (Lnet/minecraft/class_1928;Lnet/minecraft/server/MinecraftServer;)V
+	METHOD method_76192 copyFrom (Lnet/minecraft/class_1928;Lnet/minecraft/server/MinecraftServer;)V
 		ARG 1 rules
 		ARG 2 server
 	METHOD method_76193 (Ljava/lang/Boolean;)I
-		ARG 0 bool
+		ARG 0 value
+	METHOD method_76194 (Ljava/lang/Integer;)I
+		ARG 0 value
 	METHOD method_76195 registerIntRule (Ljava/lang/String;Lnet/minecraft/class_5198;II)Lnet/minecraft/class_12279;
 		ARG 0 name
 		ARG 1 category
@@ -100,12 +106,12 @@ CLASS net/minecraft/class_1928 net/minecraft/world/rule/GameRules
 		ARG 2 defaultValue
 		ARG 3 minValue
 		ARG 4 maxValue
-		ARG 5 featureSet
+		ARG 5 requiredFeatures
 	METHOD method_76198 registerBooleanRule (Ljava/lang/String;Lnet/minecraft/class_5198;Z)Lnet/minecraft/class_12279;
 		ARG 0 name
 		ARG 1 category
 		ARG 2 defaultValue
-	METHOD method_76199 getDefault (Lnet/minecraft/class_2378;)Lnet/minecraft/class_12279;
+	METHOD method_76199 registerAndGetDefault (Lnet/minecraft/class_2378;)Lnet/minecraft/class_12279;
 		ARG 0 registry
 	METHOD method_76200 getRuleValueName (Lnet/minecraft/class_12279;)Ljava/lang/String;
 		ARG 1 rule

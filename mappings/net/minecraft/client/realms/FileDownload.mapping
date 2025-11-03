@@ -8,8 +8,10 @@ CLASS net/minecraft/class_4333 net/minecraft/client/realms/FileDownload
 	FIELD field_19530 currentThread Ljava/lang/Thread;
 	FIELD field_19532 INVALID_FILE_NAMES [Ljava/lang/String;
 	FIELD field_20490 backupFile Ljava/io/File;
+	FIELD field_64188 future Ljava/util/concurrent/CompletableFuture;
 	METHOD method_20948 cancel ()V
 	METHOD method_20955 contentLength (Ljava/lang/String;)Ljava/util/OptionalLong;
+		ARG 0 uri
 	METHOD method_20956 untarGzipArchive (Ljava/lang/String;Ljava/io/File;Lnet/minecraft/class_32;)V
 		ARG 1 name
 		ARG 2 archive
@@ -20,10 +22,33 @@ CLASS net/minecraft/class_4333 net/minecraft/client/realms/FileDownload
 	METHOD method_20961 isError ()Z
 	METHOD method_20964 isExtracting ()Z
 	METHOD method_22100 downloadWorld (Lnet/minecraft/class_4889;Ljava/lang/String;Lnet/minecraft/class_4392$class_4393;Lnet/minecraft/class_32;)V
+		ARG 1 download
 		ARG 2 message
+		ARG 3 status
 		ARG 4 storage
+	METHOD method_76235 validateAndCopy (Lnet/minecraft/class_4392$class_4393;Ljava/io/File;Lnet/minecraft/class_4889;)V
+		ARG 1 status
+		ARG 2 file
+		ARG 3 download
+	METHOD method_76236 download (Lnet/minecraft/class_4392$class_4393;Ljava/net/http/HttpClient;Ljava/lang/String;Ljava/io/File;)V
+		ARG 1 status
+		ARG 2 client
+		ARG 3 uri
+		ARG 4 output
+	METHOD method_76237 extract (Ljava/lang/String;Ljava/io/File;Lnet/minecraft/class_32;Lnet/minecraft/class_4392$class_4393;)V
+		ARG 1 name
+		ARG 2 archive
+		ARG 3 storage
+		ARG 4 status
+	METHOD method_76238 submit (Ljava/util/concurrent/CompletableFuture;)Ljava/lang/Object;
+		ARG 1 future
+	METHOD method_76239 createRequestBuilder (Ljava/lang/String;)Ljava/net/http/HttpRequest$Builder;
+		ARG 0 uri
+	METHOD method_76240 createClient ()Ljava/net/http/HttpClient;
 	CLASS class_4334 DownloadCountingOutputStream
+		FIELD field_64189 status Lnet/minecraft/class_4392$class_4393;
 		METHOD <init> (Ljava/io/OutputStream;Lnet/minecraft/class_4392$class_4393;)V
 			ARG 1 stream
+			ARG 2 status
 		METHOD afterWrite (I)V
 			ARG 1 n
