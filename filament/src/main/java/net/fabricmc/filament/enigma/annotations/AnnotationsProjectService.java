@@ -14,10 +14,12 @@ public class AnnotationsProjectService implements ProjectService {
 	public void onProjectOpen(ProjectView project) {
 		plugin.project = project;
 		project.registerForInverseMappings();
+		plugin.index = AnnotationsIndex.index(project);
 	}
 
 	@Override
 	public void onProjectClose(ProjectView project) {
 		plugin.project = null;
+		plugin.index = null;
 	}
 }

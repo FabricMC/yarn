@@ -35,6 +35,7 @@ import net.fabricmc.loom.util.FileSystemUtil;
 
 public abstract class CheckUnpickDefinitionsTask extends DefaultTask {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CheckUnpickDefinitionsTask.class);
+	private static final int CURRENT_UNPICK_VERSION = 4;
 
 	@InputDirectory
 	public abstract DirectoryProperty getInput();
@@ -134,14 +135,25 @@ public abstract class CheckUnpickDefinitionsTask extends DefaultTask {
 
 		private static List<UnpickSyntaxException> validateUnpickFile(File file, IClassResolver classResolver, List<FileSystemUtil.Delegate> classpathJars) throws IOException {
 			try (UnpickV3Reader reader = new UnpickV3Reader(new FileReader(file))) {
+				List<UnpickSyntaxException> errors = new ArrayList<>();
 				ValidatingUnpickV3Visitor validator = new ValidatingUnpickV3Visitor(classResolver) {
+					@Override
+					public void visitHeader(int version) {
+						if (version != CURRENT_UNPICK_VERSION) {
+							errors.add(new UnpickSyntaxException(1, 1, "Unpick file is v" + version + ", should be v" + CURRENT_UNPICK_VERSION));
+						}
+
+						super.visitHeader(version);
+					}
+
 					@Override
 					public boolean packageExists(String packageName) {
 						return CheckAction.packageExists(classpathJars, packageName);
 					}
 				};
 				reader.accept(validator);
-				return validator.finishValidation();
+				errors.addAll(validator.finishValidation());
+				return errors;
 			}
 		}
 

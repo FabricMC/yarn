@@ -19,21 +19,12 @@ CLASS net/minecraft/class_7764 net/minecraft/client/texture/SpriteContents
 		ARG 5 additionalMetadata
 	METHOD method_45808 generateMipmaps (I)V
 		ARG 1 mipmapLevels
-	METHOD method_45809 upload (IILcom/mojang/blaze3d/textures/GpuTexture;)V
-		ARG 1 x
+	METHOD method_45809 upload (Lcom/mojang/blaze3d/textures/GpuTexture;I)V
 		ARG 2 y
-		ARG 3 texture
 	METHOD method_45810 isPixelTransparent (III)Z
 		ARG 1 frame
 		ARG 2 x
 		ARG 3 y
-	METHOD method_45811 upload (IIII[Lnet/minecraft/class_1011;Lcom/mojang/blaze3d/textures/GpuTexture;)V
-		ARG 1 x
-		ARG 2 y
-		ARG 3 unpackSkipPixels
-		ARG 4 unpackSkipRows
-		ARG 5 images
-		ARG 6 texture
 	METHOD method_45812 createAnimation (Lnet/minecraft/class_7771;IILnet/minecraft/class_1079;)Lnet/minecraft/class_7764$class_5790;
 		ARG 1 dimensions
 		ARG 2 imageWidth
@@ -42,26 +33,13 @@ CLASS net/minecraft/class_7764 net/minecraft/client/texture/SpriteContents
 	METHOD method_45813 (Lit/unimi/dsi/fastutil/ints/IntSet;I)Z
 		ARG 0 frameIndex
 	METHOD method_45817 getDistinctFrameCount ()Ljava/util/stream/IntStream;
-	METHOD method_45818 createAnimator ()Lnet/minecraft/class_7768;
+	METHOD method_45818 createAnimator (Lcom/mojang/blaze3d/buffers/GpuBufferSlice;I)Lnet/minecraft/class_7764$class_12298;
 	METHOD method_45819 getFrameCount ()I
 	METHOD method_65869 (Lnet/minecraft/class_7771;Lnet/minecraft/class_1011;Lnet/minecraft/class_1079;)Lnet/minecraft/class_7764$class_5790;
 		ARG 3 animationMetadata
 	METHOD method_73020 isAnimated ()Z
 	METHOD method_73021 getAdditionalMetadataValue (Lnet/minecraft/class_7677;)Ljava/util/Optional;
 		ARG 1 serializer
-	CLASS class_4728 Interpolation
-		FIELD field_21758 images [Lnet/minecraft/class_1011;
-		METHOD method_24128 upload (IILnet/minecraft/class_7764$class_7765;Lcom/mojang/blaze3d/textures/GpuTexture;)V
-			ARG 1 x
-			ARG 2 y
-			ARG 3 animator
-		METHOD method_24130 getPixelColor (Lnet/minecraft/class_7764$class_5790;IIII)I
-			COMMENT {@return the pixel color at frame {@code frameIndex} within mipmap {@code layer} at sprite relative coordinates}
-			ARG 1 animation
-			ARG 2 frameIndex
-			ARG 3 layer
-			ARG 4 x
-			ARG 5 y
 	CLASS class_5790 Animation
 		FIELD field_28472 frames Ljava/util/List;
 		FIELD field_28473 frameCount I
@@ -70,10 +48,6 @@ CLASS net/minecraft/class_7764 net/minecraft/client/texture/SpriteContents
 			ARG 2 frames
 			ARG 3 frameCount
 			ARG 4 interpolation
-		METHOD method_33445 upload (IILcom/mojang/blaze3d/textures/GpuTexture;)V
-			ARG 1 x
-			ARG 2 y
-			ARG 3 texture
 		METHOD method_33446 getFrameX (I)I
 			ARG 1 frame
 		METHOD method_33449 (Lnet/minecraft/class_7764$class_5791;)I
@@ -81,12 +55,6 @@ CLASS net/minecraft/class_7764 net/minecraft/client/texture/SpriteContents
 		METHOD method_33450 getDistinctFrameCount ()Ljava/util/stream/IntStream;
 		METHOD method_33451 getFrameY (I)I
 			ARG 1 frame
-		METHOD method_33455 upload (IIILcom/mojang/blaze3d/textures/GpuTexture;)V
-			ARG 1 x
-			ARG 2 y
-			ARG 3 frame
-			ARG 4 texture
-		METHOD method_45823 createAnimator ()Lnet/minecraft/class_7768;
 	CLASS class_5791 AnimationFrame
 		FIELD comp_3445 index I
 		FIELD comp_3446 time I
@@ -95,11 +63,3 @@ CLASS net/minecraft/class_7764 net/minecraft/client/texture/SpriteContents
 			ARG 2 time
 		METHOD comp_3445 index ()I
 		METHOD comp_3446 time ()I
-	CLASS class_7765 AnimatorImpl
-		FIELD field_40544 frame I
-		FIELD field_40545 currentTime I
-		FIELD field_40546 animation Lnet/minecraft/class_7764$class_5790;
-		FIELD field_40547 interpolation Lnet/minecraft/class_7764$class_4728;
-		METHOD <init> (Lnet/minecraft/class_7764;Lnet/minecraft/class_7764$class_5790;Lnet/minecraft/class_7764$class_4728;)V
-			ARG 2 animation
-			ARG 3 interpolation

@@ -1,0 +1,119 @@
+CLASS net/minecraft/class_1928 net/minecraft/world/rule/GameRules
+	FIELD field_9196 rules Lnet/minecraft/class_12280;
+	FIELD field_19388 DO_MOB_GRIEFING Lnet/minecraft/class_12279;
+		COMMENT A {@linkplain Rule game rule} which regulates whether mobs can modify the world.
+		COMMENT
+		COMMENT <p>Generally one is expected to test this rule before an entity modifies the world.
+		COMMENT
+		COMMENT <p>In vanilla, this includes:
+		COMMENT <ul>
+		COMMENT <li>Whether creeper explosions destroy blocks
+		COMMENT <li>Whether a zombie can break down a door
+		COMMENT <li>Whether a wither killing an entity will place or drop a wither rose
+		COMMENT </ul>
+	FIELD field_19389 KEEP_INVENTORY Lnet/minecraft/class_12279;
+		COMMENT A {@linkplain Rule game rule} which regulates whether player inventories should be persist through respawning.
+	FIELD field_19390 DO_MOB_SPAWNING Lnet/minecraft/class_12279;
+		COMMENT A {@linkplain Rule game rule} which regulates whether mobs can spawn naturally.
+	FIELD field_19391 DO_MOB_LOOT Lnet/minecraft/class_12279;
+		COMMENT A {@linkplain Rule game rule} which regulates whether mobs should drop loot on death.
+	FIELD field_19392 DO_TILE_DROPS Lnet/minecraft/class_12279;
+		COMMENT A {@linkplain Rule game rule} which regulates whether blocks should drop their items when broken.
+	FIELD field_19401 REDUCED_DEBUG_INFO Lnet/minecraft/class_12279;
+		COMMENT A {@linkplain Rule game rule} which regulates whether clients' {@linkplain net.minecraft.client.gui.hud.DebugHud debug HUD}s show reduced information.
+		COMMENT
+		COMMENT <p>When the value of this rule is changed, all connected clients will be notified to update their display.
+		COMMENT In vanilla, this includes the visibility of coordinates on the clients' debug HUDs.
+	FIELD field_19405 MAX_ENTITY_CRAMMING Lnet/minecraft/class_12279;
+		COMMENT A {@linkplain Rule game rule} which regulates the number of entities that can be crammed into a block space before they incur cramming damage.
+	FIELD field_19409 ANNOUNCE_ADVANCEMENTS Lnet/minecraft/class_12279;
+		COMMENT A {@linkplain Rule game rule} which regulates whether a player's advancements should be announced in chat.
+	FIELD field_19422 DISABLE_RAIDS Lnet/minecraft/class_12279;
+		COMMENT A {@linkplain Rule game rule} which regulates whether raids should occur.
+		COMMENT
+		COMMENT <p>If this rule is set to {@code true} while raids are occurring, the raids will be stopped.
+	FIELD field_20638 DO_IMMEDIATE_RESPAWN Lnet/minecraft/class_12279;
+		COMMENT A {@linkplain Rule game rule} which regulates whether a player should immediately respawn upon death.
+	METHOD <init> (Lnet/minecraft/class_7699;)V
+		ARG 1 enabledFeatures
+	METHOD <init> (Lnet/minecraft/class_7699;Lnet/minecraft/class_12280;)V
+		ARG 1 enabledFeatures
+		ARG 2 rules
+	METHOD method_8359 register (Ljava/lang/String;Lnet/minecraft/class_5198;Lnet/minecraft/class_11845;Lcom/mojang/brigadier/arguments/ArgumentType;Lcom/mojang/serialization/Codec;Ljava/lang/Object;Lnet/minecraft/class_7699;Lnet/minecraft/class_1928$class_5199;Ljava/util/function/ToIntFunction;)Lnet/minecraft/class_12279;
+		ARG 0 name
+		ARG 1 category
+		ARG 2 type
+		ARG 3 argumentType
+		ARG 4 codec
+		ARG 5 defaultValue
+		ARG 6 requiredFeatures
+		ARG 7 acceptor
+		ARG 8 commandResultSupplier
+	METHOD method_20744 accept (Lnet/minecraft/class_4311;)V
+		COMMENT Make the visitor visit all registered game rules.
+		COMMENT
+		COMMENT <p>The visitation involves calling both {@link Visitor#visit(GameRules.Key, GameRules.Type)} and {@code visitX} for every game rule, where X is the current rule's concrete type such as a boolean.
+		ARG 1 visitor
+	METHOD method_27325 withEnabledFeatures (Lnet/minecraft/class_7699;)Lnet/minecraft/class_1928;
+		ARG 1 enabledFeatures
+	METHOD method_76181 streamRules ()Ljava/util/stream/Stream;
+	METHOD method_76182 createCodec (Lnet/minecraft/class_7699;)Lcom/mojang/serialization/Codec;
+		ARG 0 featureSet
+	METHOD method_76184 (Lnet/minecraft/class_7699;Lnet/minecraft/class_12280;)Lnet/minecraft/class_1928;
+		ARG 1 rules
+	METHOD method_76185 getValue (Lnet/minecraft/class_12279;)Ljava/lang/Object;
+		ARG 1 rule
+	METHOD method_76186 setValue (Lnet/minecraft/class_12279;Ljava/lang/Object;Lnet/minecraft/server/MinecraftServer;)V
+		ARG 1 rule
+		ARG 2 value
+		ARG 3 server
+	METHOD method_76187 copyFrom (Lnet/minecraft/class_12280;Lnet/minecraft/class_12279;Lnet/minecraft/server/MinecraftServer;)V
+		ARG 1 rules
+		ARG 2 rule
+		ARG 3 server
+	METHOD method_76188 copyFrom (Lnet/minecraft/class_12280;Lnet/minecraft/server/MinecraftServer;)V
+		ARG 1 rules
+		ARG 2 server
+	METHOD method_76189 (Lnet/minecraft/class_12280;Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/class_12279;)V
+		ARG 3 rule
+	METHOD method_76190 (Lnet/minecraft/class_4311;Lnet/minecraft/class_12279;)V
+		ARG 1 rule
+	METHOD method_76191 (Lnet/minecraft/class_1928;)Lnet/minecraft/class_12280;
+		ARG 0 gameRules
+	METHOD method_76192 copyFrom (Lnet/minecraft/class_1928;Lnet/minecraft/server/MinecraftServer;)V
+		ARG 1 rules
+		ARG 2 server
+	METHOD method_76193 (Ljava/lang/Boolean;)I
+		ARG 0 value
+	METHOD method_76194 (Ljava/lang/Integer;)I
+		ARG 0 value
+	METHOD method_76195 registerIntRule (Ljava/lang/String;Lnet/minecraft/class_5198;II)Lnet/minecraft/class_12279;
+		ARG 0 name
+		ARG 1 category
+		ARG 2 defaultValue
+		ARG 3 minValue
+	METHOD method_76196 registerIntRule (Ljava/lang/String;Lnet/minecraft/class_5198;III)Lnet/minecraft/class_12279;
+		ARG 0 name
+		ARG 1 category
+		ARG 2 defaultValue
+		ARG 3 minValue
+		ARG 4 maxValue
+	METHOD method_76197 registerIntRule (Ljava/lang/String;Lnet/minecraft/class_5198;IIILnet/minecraft/class_7699;)Lnet/minecraft/class_12279;
+		ARG 0 name
+		ARG 1 category
+		ARG 2 defaultValue
+		ARG 3 minValue
+		ARG 4 maxValue
+		ARG 5 requiredFeatures
+	METHOD method_76198 registerBooleanRule (Ljava/lang/String;Lnet/minecraft/class_5198;Z)Lnet/minecraft/class_12279;
+		ARG 0 name
+		ARG 1 category
+		ARG 2 defaultValue
+	METHOD method_76199 registerAndGetDefault (Lnet/minecraft/class_2378;)Lnet/minecraft/class_12279;
+		ARG 0 registry
+	METHOD method_76200 getRuleValueName (Lnet/minecraft/class_12279;)Ljava/lang/String;
+		ARG 1 rule
+	CLASS class_5199 Acceptor
+		METHOD call (Lnet/minecraft/class_4311;Lnet/minecraft/class_12279;)V
+			ARG 1 consumer
+			ARG 2 rule

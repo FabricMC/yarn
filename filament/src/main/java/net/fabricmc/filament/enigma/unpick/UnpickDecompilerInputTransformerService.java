@@ -29,8 +29,6 @@ import daomephsta.unpick.constantmappers.datadriven.parser.v3.UnpickV3Remapper;
 import daomephsta.unpick.constantmappers.datadriven.tree.UnpickV3Visitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
@@ -196,16 +194,8 @@ public class UnpickDecompilerInputTransformerService implements DecompilerInputT
 	private record EnigmaClassResolver(ProjectView project) implements IClassResolver {
 		@Override
 		@Nullable
-		public ClassReader resolveClass(String internalName) {
-			ClassNode node = project.getBytecode(internalName);
-
-			if (node == null) {
-				return null;
-			}
-
-			ClassWriter writer = new ClassWriter(0);
-			node.accept(writer);
-			return new ClassReader(writer.toByteArray());
+		public ClassNode resolveClass(String internalName) {
+			return project.getBytecode(internalName);
 		}
 	}
 
@@ -244,16 +234,16 @@ public class UnpickDecompilerInputTransformerService implements DecompilerInputT
 	private record IntermediaryToYarnRemappingClassResolver(IClassResolver downstream, ProjectView project, Remapper remapper) implements IClassResolver {
 		@Override
 		@Nullable
-		public ClassReader resolveClass(String internalName) {
-			ClassReader reader = downstream.resolveClass(project.obfuscate(ClassEntryView.create(internalName)).getFullName());
+		public ClassNode resolveClass(String internalName) {
+			ClassNode node = downstream.resolveClass(project.obfuscate(ClassEntryView.create(internalName)).getFullName());
 
-			if (reader == null) {
+			if (node == null) {
 				return null;
 			}
 
-			ClassWriter writer = new ClassWriter(0);
-			reader.accept(new ClassRemapper(writer, remapper), 0);
-			return new ClassReader(writer.toByteArray());
+			ClassNode remapped = new ClassNode();
+			node.accept(new ClassRemapper(remapped, remapper));
+			return remapped;
 		}
 	}
 
